@@ -1,0 +1,312 @@
+*{box-sizing:border-box}
+html,body{margin:0;background:#0b1020;font-family:system-ui,-apple-system,sans-serif}
+.hero{position:relative;width:100%;overflow:hidden;background:#4f8fd0}
+.plate-sky{background:linear-gradient(180deg,#4f8fd0 0%,#93c3e4 52%,#d6ecf2 100%)}
+
+/* ============================================================
+   PLATE SYSTEM -- traditional multiplane-camera layering (sky, celestial, aurora,
+      clouds, background, midground, foreground, fx, ui), rebuilt from ad hoc z-index
+         after repeated stacking bugs. Every plate is position:absolute;inset:0 with NO
+            z-index property at all -- depth comes purely from DOM order (declared once in
+               index.html, later plates paint on top of earlier ones). This is the ENTIRE
+                  layering mechanism now: to put something behind or in front of something else,
+                     put it in the right plate. No z-index arithmetic, no insertBefore/nextSibling
+                        ordering tricks, nothing to compute or get wrong.
+                           pointer-events:none on every plate except plate-ui, so clicks pass through the
+                              scene to whatever's actually interactive (tabs, buttons) in the UI plate.
+                                 ============================================================ */
+.plate{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.plate-ui{pointer-events:none;z-index:6} /* children (buttons, tabs) opt back in via their own rules */
+
+.art-layer{position:relative;width:100%}
+/* no landscape.svg -- scene is entirely procedural */
+#skyGradient{position:absolute;inset:0;transition:background .8s linear}
+.motion{position:absolute;inset:0;pointer-events:none}
+.belowfold{height:60vh;background:#fff}
+/* Deciduous tree seasonal fills -- override the catalog's baked-in fall colors */
+.deciduous.spring [data-r="canopy-hi"]  { fill: #90d850 }
+.deciduous.spring [data-r="canopy-mid"] { fill: #60b830 }
+.deciduous.spring [data-r="canopy-dk"]  { fill: #408820 }
+.deciduous.summer [data-r="canopy-hi"]  { fill: #58c030 }
+.deciduous.summer [data-r="canopy-mid"] { fill: #3a9820 }
+.deciduous.summer [data-r="canopy-dk"]  { fill: #287018 }
+.deciduous.fall   [data-r="canopy-hi"]  { fill: #FBDD18 }
+.deciduous.fall   [data-r="canopy-mid"] { fill: #BE9800 }
+.deciduous.fall   [data-r="canopy-dk"]  { fill: #9B4800 }
+.deciduous.winter [data-r="canopy-hi"]  { fill: #8a7860; opacity: .15 }
+.deciduous.winter [data-r="canopy-mid"] { fill: #6a5a48; opacity: .12 }
+.deciduous.winter [data-r="canopy-dk"]  { fill: #4a3a28; opacity: .10 }
+.deciduous.winter [data-r="snow"]       { display: block }
+.deciduous:not(.winter) [data-r="snow"] { display: none }
+.deciduous [data-r] { transition: fill 0.7s linear, opacity 0.7s linear; }
+.pine-detailed [data-bucket] { transition: fill 0.7s linear; }
+
+
+/* ===== seasonal color grading overlays (ported from the old site's render()) =====
+   Full-bleed, pointer-events:none, sit above the art but below .motion. Colors/opacity
+      are set every frame by scene.js via kfc()/kf() against the continuous season clock.
+         transition on background/opacity gives the same .8s crossfade the rest of the scene's
+            day/night and layer-filter changes already use, so a season handoff feels consistent.
+               NOT currently placed in a plate or added to index.html (still disabled per the earlier
+                  sepia-wash investigation) -- kept here for whenever that system is revisited. */
+.grade,.wash{position:absolute;inset:0;pointer-events:none}
+.grade-mul{mix-blend-mode:multiply;transition:background .8s linear}
+.grade-scr{mix-blend-mode:screen;transition:background .8s linear,opacity .8s linear}
+.grade-sat{background:#808080;mix-blend-mode:saturation;transition:opacity .8s linear}
+.wash{mix-blend-mode:soft-light;transition:opacity .8s linear}
+
+.wash-summer{background:#ffdf9e}
+.wash-fall{background:#e8823a}
+.wash-spring{background:#bdf2a0}
+
+
+/* ===== chrome (ported from old site) ===== */
+:root{
+      --paper: 245,248,239;
+      --ink: 47,74,42;
+      --accent: 216,97,143;
+      --accent2: 124,179,66;
+      --font-display: "Nunito","Poppins","Arial Rounded MT Bold","Avenir Next Rounded","Avenir Next","Segoe UI",Arial,sans-serif;
+      --font-body: "Nunito","Avenir Next","Avenir","Segoe UI","Helvetica Neue",Arial,sans-serif;
+      /* motion tokens: Bezier fallback, replaced by generated springs where linear() is supported */
+      --spring-soft: cubic-bezier(.2,.9,.25,1.15);
+      --spring-soft-time: 1500ms;
+      --spring-pop: cubic-bezier(.3,1.4,.4,1);
+      --spring-pop-time: 900ms;
+}
+.site-head{
+      display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;
+      padding:22px clamp(20px,5vw,72px) 8px;position:relative;z-index:3;background:#fff
+  }
+.brand{display:flex;align-items:center;gap:12px;font-family:var(--font-display);font-weight:800;font-size:24px;line-height:1;letter-spacing:-.01em;text-decoration:none;color:#0f4d47}
+.brand .mark{width:44px;height:44px;border-radius:50%;background:rgb(var(--accent));box-shadow:inset -8px -10px 0 rgba(0,0,0,.15);transition:background .8s}
+.tabs{display:flex;gap:6px;padding:0;margin:0;list-style:none}
+.tab{
+      appearance:none;border:0;background:none;cursor:pointer;font:inherit;
+      font-family:var(--font-display);font-weight:700;font-size:17px;color:#0f4d47;
+      padding:10px 14px 12px;border-radius:10px;position:relative;
+      transition:color 220ms ease-out,background 220ms ease-out,transform var(--spring-pop-time) var(--spring-pop)
+  }
+.tab::after{content:"";position:absolute;left:14px;right:14px;bottom:6px;height:3px;border-radius:3px;background:rgb(var(--accent));transform:scaleX(0);transform-origin:0 50%;transition:transform 240ms ease-out,background .8s}
+.tab:hover{background:rgba(15,77,71,.06)}
+.tab:hover::after,.tab:focus-visible::after{transform:scaleX(1)}
+.tab:active{transform:scale(.94);transition-duration:80ms}
+.tab[aria-selected="true"]{color:rgb(var(--accent))}
+.tab[aria-selected="true"]::after{transform:scaleX(1)}
+.tab:focus-visible{outline:3px solid rgb(var(--accent));outline-offset:2px}
+.hero-copy{position:absolute;z-index:2;left:clamp(20px,7vw,110px);top:44%;transform:translateY(-50%);width:min(520px,80%);color:#fff}
+.hero-copy::before{content:"";position:absolute;inset:-60px -80px;background:radial-gradient(closest-side,rgba(10,25,40,.34),rgba(10,25,40,0));z-index:-1;pointer-events:none}
+.hero-copy h1{font-family:var(--font-display);font-weight:800;font-size:clamp(36px,4.6vw,60px);line-height:1.05;letter-spacing:-.01em;margin:0 0 18px;text-shadow:0 2px 0 rgba(0,0,0,.12)}
+.hero-copy p{font-size:17px;line-height:1.55;margin:0 0 26px;text-shadow:0 1px 0 rgba(0,0,0,.18);max-width:44ch}
+.btn{
+      display:inline-block;font-family:var(--font-display);font-weight:700;font-size:15px;text-decoration:none;
+      padding:13px 26px;border-radius:12px;color:#fff;background:#1c4f8f;
+      box-shadow:0 8px 20px -10px rgba(0,0,0,.5);
+      transition:transform var(--spring-pop-time) var(--spring-pop),background .8s
+  }
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:scale(.96);transition-duration:80ms}
+.btn.solid{background:rgb(var(--accent))}
+.btn:focus-visible{outline:3px solid rgb(var(--accent));outline-offset:3px}
+.view{display:none}
+.view.on{display:block;animation:rise var(--spring-soft-time) var(--spring-soft) both}
+.view.on .works li{animation:rowIn 320ms ease-out both}
+.view.on .works li:nth-child(1){animation-delay:140ms}
+.view.on .works li:nth-child(2){animation-delay:200ms}
+.view.on .works li:nth-child(3){animation-delay:260ms}
+.hiding .view.on{animation:sink .35s ease-in both}
+.hiding .view.on .works li{animation:none}
+/* ---------- white section ---------- */
+  .about{position:relative;padding:40px clamp(20px,6vw,80px) 90px;text-align:center;overflow:hidden;background:#fff}
+.about-inner{position:relative;z-index:1;max-width:760px;margin:0 auto}
+.season-line{font-size:14px;color:rgb(var(--accent));margin:0 0 6px;transition:color .8s}
+.lede{font-size:18px;line-height:1.6;color:#3c5561;margin:0 auto 38px;max-width:58ch}
+.works{margin:0 0 38px;padding:0;list-style:none;display:grid;grid-template-columns:repeat(3,1fr);gap:28px;text-align:left}
+.works li{display:grid;grid-template-columns:1fr auto;gap:4px 12px;padding-top:14px;border-top:3px solid rgb(var(--accent));transition:border-color .8s}
+.works b{font-family:var(--font-display);font-weight:700;font-size:17px;color:#0f4d47;line-height:1.25}
+.works i{font-style:normal;font-family:var(--font-display);font-weight:700;font-size:13px;color:rgb(var(--accent));padding-top:3px}
+.works p{grid-column:1/3;margin:0;font-size:14px;line-height:1.5;color:#4a6470}
+.decor{position:absolute;bottom:0;width:clamp(180px,26vw,360px);height:auto;z-index:0;pointer-events:none}
+.decor.left{left:-30px}
+.decor.right{right:-30px}
+.decor .puff{fill:rgb(var(--accent));opacity:.28;transition:fill .8s}
+.decor .puff .lit{fill:#fff;opacity:.7}
+.decor.left .puff{animation:puffDrift 9s ease-in-out infinite alternate}
+.decor.right .puff{animation:puffDrift 11s ease-in-out infinite alternate-reverse}
+.credit{font-size:12px;color:#7a8a94;margin:30px 0 0}
+.clock{
+      position:relative;z-index:1;display:inline-flex;gap:14px;align-items:center;margin-top:48px;
+      font-size:13px;color:#3c5561;background:#f1f5f7;padding:6px 6px 6px 16px;border-radius:99px
+  }
+.clock button{
+      appearance:none;font:inherit;font-family:var(--font-display);font-weight:700;font-size:13px;cursor:pointer;
+      border:0;background:rgb(var(--accent));color:#fff;padding:8px 14px;border-radius:99px;transition:background .8s,filter .2s
+  }
+.clock button:hover{filter:brightness(1.1)}
+.clock #modeBtn{background:#243b46}
+.clock button:focus-visible{outline:3px solid rgb(var(--accent));outline-offset:2px}
+.clock button[disabled]{opacity:.5;cursor:default}
+
+:root {
+        /* stiffness 170, damping 14 */
+        --spring-soft: linear(0.000, 0.056 2.5%, 0.194 5.0%, 0.373 7.5%, 0.561 10.0%, 0.735 12.5%, 0.882 15.0%, 0.994 17.5%, 1.071 20.0%, 1.116 22.5%, 1.134 25.0%, 1.132 27.5%, 1.117 30.0%, 1.095 32.5%, 1.069 35.0%, 1.045 37.5%, 1.023 40.0%, 1.006 42.5%, 0.994 45.0%, 0.986 47.5%, 0.982 50.0%, 0.982 52.5%, 0.983 55.0%, 0.986 57.5%, 0.989 60.0%, 0.993 62.5%, 0.996 65.0%, 0.998 67.5%, 1.000 70.0%, 1.002 72.5%, 1.002 75.0%, 1.002 77.5%, 1.002 80.0%, 1.002 82.5%, 1.002 85.0%, 1.001 87.5%, 1.001 90.0%, 1.000 92.5%, 1.000 95.0%, 1.000 97.5%, 1.000);
+        /* stiffness 300, damping 11 */
+        --spring-pop: linear(0.000, 0.069 2.5%, 0.247 5.0%, 0.486 7.5%, 0.740 10.0%, 0.974 12.5%, 1.159 15.0%, 1.283 17.5%, 1.342 20.0%, 1.343 22.5%, 1.298 25.0%, 1.223 27.5%, 1.135 30.0%, 1.048 32.5%, 0.974 35.0%, 0.920 37.5%, 0.888 40.0%, 0.878 42.5%, 0.886 45.0%, 0.908 47.5%, 0.937 50.0%, 0.968 52.5%, 0.997 55.0%, 1.019 57.5%, 1.035 60.0%, 1.042 62.5%, 1.042 65.0%, 1.036 67.5%, 1.027 70.0%, 1.017 72.5%, 1.006 75.0%, 0.997 77.5%, 0.990 80.0%, 0.986 82.5%, 0.985 85.0%, 0.986 87.5%, 0.989 90.0%, 0.992 92.5%, 0.996 95.0%, 1.000 97.5%, 1.000);
+}
+:root{--spring-soft:ease-out;--spring-soft-time:200ms;--spring-pop:ease-out;--spring-pop-time:150ms}
+.view.on{animation-duration:200ms}
+.view.on .works li,.view.on .foot{animation:none}
+.hiding .view.on{animation:none}
+.tab:not([aria-selected="true"]){transform:none}
+.site-head{padding:14px 16px 6px}
+.tab{padding:8px 10px 10px;font-size:15px}
+.tab::after{left:10px;right:10px}
+.hero-copy{left:20px;width:calc(100% - 40px);top:46%}
+.works{grid-template-columns:1fr;gap:18px}
+.about{padding-bottom:70px}
+
+.hero{position:relative;width:100%;overflow:hidden}
+.aurora-fill{position:absolute;inset:0;z-index:0;background:linear-gradient(180deg,#1a2f52 0%,#2d4a7a 30%,#3d6299 55%,#5a85b8 100%)}
+.aurora-fill::before{content:"";position:absolute;inset:0;background:
+                       radial-gradient(ellipse 60% 40% at 20% 15%,rgba(120,220,190,.22),transparent 70%),
+                       radial-gradient(ellipse 50% 35% at 80% 10%,rgba(150,140,220,.18),transparent 70%);
+                       mix-blend-mode:screen}
+.scene-core{position:relative;z-index:1;width:min(100%,1800px);margin:0 auto;aspect-ratio:5003.8931/3333.3333;overflow:hidden}
+
+/* ── Bottom wave — blends hero scene into the white page below ──────────────
+   Uses mask-image with an inline SVG data URI for a single smooth cubic
+      bezier wave. The SVG is 1200x200 so it scales naturally with the hero width.
+         The hero is fully opaque above the wave, then fades to transparent at the
+            very bottom so the white page shows through cleanly.                      */
+.hero::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 18%;
+    background: #fff;
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,60 C200,120 400,0 600,60 C800,120 1000,20 1200,60 L1200,120 L0,120 Z' fill='%23fff'/%3E%3C/svg%3E");
+    -webkit-mask-size: 100% 100%;
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,60 C200,120 400,0 600,60 C800,120 1000,20 1200,60 L1200,120 L0,120 Z' fill='%23fff'/%3E%3C/svg%3E");
+    mask-size: 100% 100%;
+    pointer-events: none;
+    z-index: 5;
+}
+.hero-copy{position:absolute;z-index:10;left:6%;top:8%;max-width:34%;pointer-events:none}
+.hero-copy .view{pointer-events:auto}
+.hero-copy .view:not(.on){display:none}
+.about .view:not(.on){display:none}
+
+/* ============================================================
+   WIND RUFFLE VOCABULARY
+      Each material expresses the shared --wind field in its own way.
+         Layer-level ruffle is gentle (artwork foliage isn't split into parts);
+            true per-part weighted ruffle comes with our generated trees.
+               ============================================================ */
+
+/* pine TIER: ruffles at the tip, settles with weight. Low amplitude, eased. */
+.pine-tier{
+    transform-box: fill-box; transform-origin: 50% 100%;
+    animation: pineTier var(--dur, 3.2s) cubic-bezier(.37,0,.63,1) infinite alternate;
+    animation-delay: var(--delay, 0s);
+}
+@keyframes pineTier{
+    from{ transform: rotate(-1deg); }
+    to  { transform: rotate(1.6deg); }
+}
+
+/* LEAF clump (aspen/broadleaf): fast, light flutter — low weight = quick + jittery. */
+.leaf-flutter{
+    transform-box: fill-box; transform-origin: 50% 100%;
+    animation: leafFlutter var(--dur, 0.9s) ease-in-out infinite alternate;
+    animation-delay: var(--delay, 0s);
+}
+@keyframes leafFlutter{
+    from{ transform: rotate(-5deg); }
+    to  { transform: rotate(5deg); }
+}
+
+/* GRASS/reed blade: bends from base, springy recovery (strong ease-back). */
+.grass-bend{
+    transform-box: fill-box; transform-origin: 50% 100%;
+    animation: grassBend var(--dur, 2.4s) cubic-bezier(.5,0,.3,1.4) infinite alternate;
+    animation-delay: var(--delay, 0s);
+}
+@keyframes grassBend{ from{ transform: rotate(-2deg) skewX(-1deg); } to  { transform: rotate(4deg) skewX(1.5deg); } }
+
+/* FLOWER: whole bloom nods on its stem — medium weight, slow, low amplitude. */
+.flower-nod{
+    transform-box: fill-box; transform-origin: 50% 100%;
+    animation: flowerNod var(--dur, 3.6s) ease-in-out infinite alternate;
+    animation-delay: var(--delay, 0s);
+}
+@keyframes flowerNod{ from{ transform: rotate(-1.5deg); } to  { transform: rotate(2.5deg); } }
+
+/* ============================================================
+   DEVICE-TIER visibility — deliberate subset per width (blueprint ch.11)
+      ============================================================ */
+@media (max-width: 1024px){
+    [data-tier="d"]{ display:none !important; }
+}
+@media (max-width: 640px){
+    [data-tier="md"]{ display:none !important; }
+}
+
+.hero{padding-top:0}
+.hero-copy{top:7%;transform:none;}
+.hero-copy h1{margin-top:0;line-height:1.05;}
+@media (max-width:1024px){ .hero-copy{max-width:48%;top:6%;} }
+@media (max-width:640px){ .hero-copy{max-width:82%;left:6%;top:5%;} }
+
+.foliage-sway{
+    transform-box: fill-box;
+    transform-origin: 50% 90%;
+    animation: foliageSway var(--dur, 3.5s) ease-in-out infinite alternate;
+    animation-delay: var(--delay, 0s);
+    will-change: transform;
+}
+@keyframes foliageSway{ from{ transform: rotate(-1.2deg); } to  { transform: rotate(1.4deg); } }
+
+.pine-detailed-sway{
+    animation: pineDetailedSway var(--dur, 5.5s) ease-in-out infinite alternate;
+    animation-delay: var(--delay, 0s);
+    will-change: transform;
+}
+@keyframes pineDetailedSway{ from{ transform: rotate(-0.6deg); } to  { transform: rotate(0.9deg); } }
+
+.tree-isolated-sway{
+    animation: treeIsolatedSway var(--dur, 6s) ease-in-out infinite alternate;
+    animation-delay: var(--delay, 0s);
+    will-change: transform;
+}
+@keyframes treeIsolatedSway{ from{ transform: rotate(-0.4deg); } to  { transform: rotate(0.5deg); } }
+
+.grass-clump-sway{
+    transform-box: fill-box; transform-origin: 50% 100%;
+    animation: grassClumpSway 1.4s cubic-bezier(.65,0,.35,1) infinite alternate;
+    animation-duration: calc(var(--dur, 1.4s) * 1);
+}
+@keyframes grassClumpSway{
+    from{ transform: rotate(-3deg); }
+    to  { transform: rotate(4deg); }
+}
+
+.water-ripple{ transform-box: fill-box; transform-origin: 50% 50%; }
+.water-ripple-rain{ animation: waterRippleGrow var(--dur) cubic-bezier(.15,.6,.35,1) forwards; }
+.water-ripple-snow{ stroke: #ffffff !important; animation: waterRippleGrowSnow var(--dur) cubic-bezier(.2,.5,.4,1) forwards; }
+@keyframes waterRippleGrow{
+    0%{ opacity:.95; stroke-width:3; transform:scale(.08); }
+    100%{ opacity:0; stroke-width:.4; transform:scale(1); }
+}
+@keyframes waterRippleGrowSnow{
+    0%{ opacity:1; stroke-width:3; transform:scale(.08); }
+    55%{ opacity:.75; stroke-width:1.6; }
+    100%{ opacity:0; stroke-width:.4; transform:scale(1); }
+}
+.water-drop-rain{ animation: waterFallRain var(--dur) linear forwards; }
+.water-drop-snow{ animation: waterFallSnow var(--dur) ease-in-out forwards; }
+@keyframes waterFallRain{ from{ transform:translateY(0); } to{ transform:translateY(var(--dist)); } }
+@keyframes waterFallSnow{
+    0%{ transform:translate(0,0); }
+    50%{ transform:translate(calc(var(--sway) * -1), calc(var(--dist) * .5)); }
+    100%{ transform:translate(0,var(--dist)); }
+}
