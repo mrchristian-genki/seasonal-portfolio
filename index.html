@@ -1,82 +1,104 @@
 <!DOCTYPE html>
-  <html lang="en">
-  <head>
-  <meta charset="UTF-8">
+<html lang="en">
+<head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Christian Gehrke — four seasons of work</title>
-  <link rel="stylesheet" href="css/scene.css?v=1789290000">
-  </head>
-  <body>
-  <header class="site-head">
-    <a class="brand" href="#"><span class="mark" aria-hidden="true"></span>Christian Gehrke</a>
-    <ul class="tabs" role="tablist" aria-label="Sections">
-      <li><button class="tab" role="tab" data-season="1" aria-selected="true" id="t-studio">Books</button></li>
-      <li><button class="tab" role="tab" data-season="2" aria-selected="false" id="t-signal">Web</button></li>
-      <li><button class="tab" role="tab" data-season="3" aria-selected="false" id="t-workshop">Workshop</button></li>
-      <li><button class="tab" role="tab" data-season="0" aria-selected="false" id="t-lab">Lab</button></li>
-    </ul>
-  </header>
-  <section class="hero" id="hero">
-    <div class="aurora-fill" id="auroraFill"></div>
-    <div class="scene-core" id="sceneCore">
-    <div class="plate plate-sky" id="plateSky"></div>
-    <div class="plate plate-celestial" id="plateCelestial"></div>
-    <div class="plate plate-aurora" id="plateAurora"></div>
-    <div class="plate plate-clouds" id="plateClouds"></div>
-    <div class="plate plate-background" id="plateBackground"></div>
-    <div class="plate plate-midground" id="plateMidground"></div>
-    <div class="plate plate-foreground" id="plateForeground"></div>
-    <div class="plate plate-fx" id="plateFx"></div>
-    <div class="plate plate-ui" id="plateUi">
-    <div class="hero-copy" id="heroCopy">
-      <div class="view on" data-view="studio">
-        <h1>Sixty-eight coloring books and counting</h1>
+<title>Christian Gehrke — four seasons of work</title>
+<link rel="stylesheet" href="css/scene.css?v=1789290000">
+</head>
+<body>
+<header class="site-head">
+  <a class="brand" href="#"><span class="mark" aria-hidden="true"></span>Christian Gehrke</a>
+  <ul class="tabs" role="tablist" aria-label="Sections">
+    <li><button class="tab" role="tab" data-season="1" aria-selected="true" id="t-studio">Books</button></li>
+    <li><button class="tab" role="tab" data-season="2" aria-selected="false" id="t-signal">Web</button></li>
+    <li><button class="tab" role="tab" data-season="3" aria-selected="false" id="t-workshop">Workshop</button></li>
+    <li><button class="tab" role="tab" data-season="0" aria-selected="false" id="t-lab">Lab</button></li>
+  </ul>
+</header>
+<section class="hero" id="hero">
+  <div class="aurora-fill" id="auroraFill"></div>
+  <div class="scene-core" id="sceneCore">
+  <!-- ============================================================
+       PLATE SYSTEM (traditional multiplane-camera layering, like a cel animation
+       stack) -- rebuilt from ad hoc z-index/insertBefore ordering per explicit
+       request, after repeated bugs trying to get "sun behind mountains" working
+       via computed stacking contexts. Each plate below is a real, always-present,
+       unambiguous container in a FIXED DOM order. Depth is simply which plate
+       something lives in -- never a z-index number to compute or fight with.
+       Order here (first = furthest back, last = furthest front):
+         1. plate-sky        - the animated sky gradient (#skyGradient)
+         2. plate-celestial  - sun + moon (#celestial)
+         3. plate-aurora     - aurora effect (empty for now -- future work)
+         4. plate-clouds     - the 4 cloud families (empty for now -- future work)
+         5. plate-background - mountains + distant treeline (from landscape.svg)
+         6. plate-midground  - lake + mid-distance foliage + our generated trees
+         7. plate-foreground - near foliage/rocks + the big foreground tree
+         8. plate-fx         - wind-driven motion, water shimmer, weather (#motion)
+         9. plate-ui         - hero text/tabs (#heroCopy), unchanged
+       scene.js populates plate-background/midground/foreground by re-parenting
+       the artwork's existing .layer-mountains/.layer-lake/.layer-foreground/
+       .layer-treeline groups into the right plate once landscape.svg loads --
+       the art itself isn't redrawn, just sorted into the correct plate.
+       ============================================================ -->
+  <div class="plate plate-sky" id="plateSky"></div>
+  <div class="plate plate-celestial" id="plateCelestial"></div>
+  <div class="plate plate-aurora" id="plateAurora"></div>
+  <div class="plate plate-clouds" id="plateClouds"></div>
+  <div class="plate plate-background" id="plateBackground"></div>
+  <div class="plate plate-midground" id="plateMidground"></div>
+  <div class="plate plate-foreground" id="plateForeground"></div>
+  <div class="plate plate-fx" id="plateFx"></div>
+  <div class="plate plate-ui" id="plateUi">
+  <div class="hero-copy" id="heroCopy">
+    <div class="view on" data-view="studio">
+      <h1>Sixty-eight coloring books and counting</h1>
       <p>I publish adult coloring books as everthecynic: food and drink, travel, and the odd translucent tortoise. Drawn with generative tools, finished by hand, printed through KDP.</p>
-        <a class="btn" href="https://everthecynic.com" target="_blank" rel="noopener">Browse the catalog</a>
+      <a class="btn" href="https://everthecynic.com" target="_blank" rel="noopener">Browse the catalog</a>
     </div>
     <div class="view" data-view="signal">
       <h1>Websites since 1997, professionally since 1999</h1>
-        <p>Through 123 ADAPT I've built sites and strategies for banks, hospitals, and financial firms, and I still like the work. Web is the part that pays for the pictures.</p>
-        <a class="btn" href="https://www.linkedin.com/in/christiangehrke/" target="_blank" rel="noopener">See my LinkedIn</a>
+      <p>Through 123 ADAPT I've built sites and strategies for banks, hospitals, and financial firms, and I still like the work. Web is the part that pays for the pictures.</p>
+      <a class="btn" href="https://www.linkedin.com/in/christiangehrke/" target="_blank" rel="noopener">See my LinkedIn</a>
     </div>
     <div class="view" data-view="workshop">
       <h1>Tools that make more books</h1>
-        <p>The ProPre Engine runs the whole publishing pipeline, from prompt to print-ready cover. This page is a workshop project too: one illustration, four seasons, no images.</p>
-        <a class="btn" href="#about">Open the workshop</a>
+      <p>The ProPre Engine runs the whole publishing pipeline, from prompt to print-ready cover. This page is a workshop project too: one illustration, four seasons, no images.</p>
+      <a class="btn" href="#about">Open the workshop</a>
     </div>
     <div class="view" data-view="lab">
       <h1>The plumbing under the art</h1>
-        <p>Generative AI as a working hobby: image models, prompt systems, and the unglamorous fixes that keep a pipeline honest at production scale.</p>
-        <a class="btn" href="#about">Read the notes</a>
+      <p>Generative AI as a working hobby: image models, prompt systems, and the unglamorous fixes that keep a pipeline honest at production scale.</p>
+      <a class="btn" href="#about">Read the notes</a>
     </div>
   </div>
   </div>
 
   </div>
 </section>
-  <section class="about" id="about">
-    <svg class="decor left" viewBox="0 0 320 140" aria-hidden="true"><g class="puff"><ellipse cx="60" cy="100" rx="60" ry="30"/><ellipse cx="130" cy="80" rx="70" ry="42"/><ellipse cx="220" cy="95" rx="70" ry="34"/><ellipse cx="285" cy="112" rx="50" ry="22"/><ellipse cx="120" cy="52" rx="34" ry="16" class="lit"/></g></svg>
-    <svg class="decor right" viewBox="0 0 320 140" aria-hidden="true"><g class="puff"><ellipse cx="40" cy="108" rx="50" ry="24"/><ellipse cx="120" cy="88" rx="66" ry="38"/><ellipse cx="200" cy="72" rx="74" ry="46"/><ellipse cx="275" cy="100" rx="56" ry="28"/><ellipse cx="205" cy="40" rx="36" ry="16" class="lit"/></g></svg>
-    <div class="about-inner" id="aboutInner">
-      <div class="view on" data-view="studio">
-        <p class="season-line">Spring, when everything is starting</p>
-        <h2>everthecynic</h2>
-        <p class="lede">An independent imprint of adult coloring books, sixty-eight titles across many series, from "Color in a Cup" to hikes, kitchens, wine, and the American West. Every interior is clean black-and-white line art; every cover follows one house template.</p>
-        <ul class="works">
-          <li><b>Color in a Cup</b><i>series</i><p>Where the operation began. Worlds inside teacups, then coffee, wine, and beer.</p></li>
-          <li><b>Travel and the West</b><i>series</i><p>Ireland, Italy, Hawaii, the US states, and a Mountain West jar series.</p></li>
-          <li><b>Creatures and curiosities</b><i>ongoing</i><p>Translucent tortoises and chameleons, fairy homes, tiny treehouses, collector's shelves.</p></li>
-        </ul>
-        <a class="btn solid" href="https://everthecynic.com" target="_blank" rel="noopener">See all sixty-eight</a>
-      </div>
-      <div class="view" data-view="signal">
-        <p class="season-line">Summer, long days and full sun</p>
-        <h2>123 ADAPT</h2>
-        <p class="lede">Over twenty-five years of web development and internet strategy for a wide range of businesses. I think quickly, adapt to new environments, and can do just about anything that involves the internet.</p>
-        <ul class="works">
-          <li><b>Prudential Financial</b><i>web</i><p>Websites and strategy for a major financial services company.</p></li>
-          <li><b>First Hawaiian Bank</b><i>web</i><p>Web work for Hawaii's oldest bank.</p></li>
-          <li><b>Hawaii Pacific Health</b><i>web</i><p>Sites and strategy for a statewide healthcare system.</p></li>
+<section class="about" id="about">
+  <svg class="decor left" viewBox="0 0 320 140" aria-hidden="true"><g class="puff"><ellipse cx="60" cy="100" rx="60" ry="30"/><ellipse cx="130" cy="80" rx="70" ry="42"/><ellipse cx="220" cy="95" rx="70" ry="34"/><ellipse cx="285" cy="112" rx="50" ry="22"/><ellipse cx="120" cy="52" rx="34" ry="16" class="lit"/></g></svg>
+  <svg class="decor right" viewBox="0 0 320 140" aria-hidden="true"><g class="puff"><ellipse cx="40" cy="108" rx="50" ry="24"/><ellipse cx="120" cy="88" rx="66" ry="38"/><ellipse cx="200" cy="72" rx="74" ry="46"/><ellipse cx="275" cy="100" rx="56" ry="28"/><ellipse cx="205" cy="40" rx="36" ry="16" class="lit"/></g></svg>
+  <div class="about-inner" id="aboutInner">
+    <div class="view on" data-view="studio">
+      <p class="season-line">Spring, when everything is starting</p>
+      <h2>everthecynic</h2>
+      <p class="lede">An independent imprint of adult coloring books, sixty-eight titles across many series, from "Color in a Cup" to hikes, kitchens, wine, and the American West. Every interior is clean black-and-white line art; every cover follows one house template.</p>
+      <ul class="works">
+        <li><b>Color in a Cup</b><i>series</i><p>Where the operation began. Worlds inside teacups, then coffee, wine, and beer.</p></li>
+        <li><b>Travel and the West</b><i>series</i><p>Ireland, Italy, Hawaii, the US states, and a Mountain West jar series.</p></li>
+        <li><b>Creatures and curiosities</b><i>ongoing</i><p>Translucent tortoises and chameleons, fairy homes, tiny treehouses, collector's shelves.</p></li>
+      </ul>
+      <a class="btn solid" href="https://everthecynic.com" target="_blank" rel="noopener">See all sixty-eight</a>
+    </div>
+    <div class="view" data-view="signal">
+      <p class="season-line">Summer, long days and full sun</p>
+      <h2>123 ADAPT</h2>
+      <p class="lede">Over twenty-five years of web development and internet strategy for a wide range of businesses. I think quickly, adapt to new environments, and can do just about anything that involves the internet.</p>
+      <ul class="works">
+        <li><b>Prudential Financial</b><i>web</i><p>Websites and strategy for a major financial services company.</p></li>
+        <li><b>First Hawaiian Bank</b><i>web</i><p>Web work for Hawaii's oldest bank.</p></li>
+        <li><b>Hawaii Pacific Health</b><i>web</i><p>Sites and strategy for a statewide healthcare system.</p></li>
       </ul>
       <a class="btn solid" href="https://www.linkedin.com/in/christiangehrke/" target="_blank" rel="noopener">Recommendations on LinkedIn</a>
     </div>
@@ -84,34 +106,33 @@
       <p class="season-line">Fall, time to harvest what grew</p>
       <h2>The workshop</h2>
       <p class="lede">Where the books get made. Custom tools that turn ideas into print-ready files, in batches, and a few side projects that exist because they were fun to build.</p>
-        <ul class="works">
-          <li><b>ProPre Engine</b><i>tool</i><p>The production pipeline: edition selectors, metadata, prompt generation, and print-ready PDFs.</p></li>
-          <li><b>Catalog site</b><i>web</i><p>Every book, filterable by series, with covers that reveal the colored art on hover.</p></li>
+      <ul class="works">
+        <li><b>ProPre Engine</b><i>tool</i><p>The production pipeline: edition selectors, metadata, prompt generation, and print-ready PDFs.</p></li>
+        <li><b>Catalog site</b><i>web</i><p>Every book, filterable by series, with covers that reveal the colored art on hover.</p></li>
         <li><b>This page</b><i>2026</i><p>One illustration, four seasons, weather, a day and a night mode. All SVG and code; no images.</p></li>
       </ul>
-        <a class="btn solid" href="https://everthecynic.com/propre/" target="_blank" rel="noopener">Visit the ProPre Engine</a>
-      </div>
-      <div class="view" data-view="lab">
-        <p class="season-line">Winter, the quiet work underneath</p>
-        <h2>The lab</h2>
-        <p class="lede">Generative AI as a working hobby, pointed at real production. Image models, prompt systems, and the fixes that keep a pipeline usable at scale.</p>
-        <ul class="works">
-          <li><b>Prompt systems</b><i>ongoing</i><p>Catalog builders for books and shirts, with content-policy-safe phrasing built in.</p></li>
-          <li><b>Image pipelines</b><i>ongoing</i><p>Batch generation, review, and cleanup so a forty-page book looks like one hand drew it.</p></li>
-          <li><b>Scene engines</b><i>2026</i><p>Illustrations taken apart and put back together with seasons, weather, and wind.</p></li>
-        </ul>
-        <a class="btn solid" href="https://www.linkedin.com/in/christiangehrke/" target="_blank" rel="noopener">Get in touch</a>
+      <a class="btn solid" href="https://everthecynic.com/propre/" target="_blank" rel="noopener">Visit the ProPre Engine</a>
+    </div>
+    <div class="view" data-view="lab">
+      <p class="season-line">Winter, the quiet work underneath</p>
+      <h2>The lab</h2>
+      <p class="lede">Generative AI as a working hobby, pointed at real production. Image models, prompt systems, and the fixes that keep a pipeline usable at scale.</p>
+      <ul class="works">
+        <li><b>Prompt systems</b><i>ongoing</i><p>Catalog builders for books and shirts, with content-policy-safe phrasing built in.</p></li>
+        <li><b>Image pipelines</b><i>ongoing</i><p>Batch generation, review, and cleanup so a forty-page book looks like one hand drew it.</p></li>
+        <li><b>Scene engines</b><i>2026</i><p>Illustrations taken apart and put back together with seasons, weather, and wind.</p></li>
+      </ul>
+      <a class="btn solid" href="https://www.linkedin.com/in/christiangehrke/" target="_blank" rel="noopener">Get in touch</a>
     </div>
   </div>
   <p class="credit">Illustration adapted from a Vecteezy vector. Seasons, weather, and motion built on top of it.</p>
   <div class="clock">
     <span id="clockLabel">Spring</span>
     <button id="playYear" type="button">Play the whole year</button>
-      <button id="modeBtn" type="button" aria-pressed="false">Night mode</button>
-    </div>
-  </section>
-  <script src="js/components.js?v=1789290000"></script>
-  <script src="js/scene.js?v=1789290000"></script>
-  </body>
-  </html>
-  
+    <button id="modeBtn" type="button" aria-pressed="false">Night mode</button>
+  </div>
+</section>
+<script src="js/components.js?v=1789290000"></script>
+<script src="js/scene.js?v=1789290000"></script>
+</body>
+</html>
