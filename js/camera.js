@@ -9,8 +9,6 @@
 //   - Left alone, the glass drifts to a nearby spot now and then, and swings to any animal that
 //     walks in out of view.
 //   - Parallax: sun/moon, aurora and clouds are further away, so they slide less than the ground.
-//   - Tilt: after the first tap on the scene (iOS shows its motion permission prompt then) or the
-//     tilt toggle, tilting the phone shifts each plate by its depth, near plates the most.
 //
 // At rest the camera is plain layout (`left`, see place()); a glide is a CSS transition the browser
 // runs itself (see setCam() for why not a resting transform). Only a drag writes every frame.
@@ -29,18 +27,13 @@
   const GLANCES = [0.18, 0.3, 0.44, 0.55, 0.66, 0.78, 0.86];
   // How far each plate slides when the camera pans (1 = with the ground). Sky has no features.
   const PARALLAX = { plateCelestial: 0.45, plateAurora: 0.3, plateClouds: 0.7 };
-  // Tilt travel per plate in px at full tilt, far to near.
-  const TILT = { plateCelestial: 2, plateAurora: 1, plateClouds: 4, plateBackground: 6, plateBirds: 8,
-    plateMidground: 10, plateForeground: 18, plateFx: 18, plateUi: 16 };
-  const TILT_MARGIN = 20; // camera stops this far from the core's edges so tilt never shows one
 
   let on = false, viewW = 0, coreW = 0, camX = 0;
   let userUntil = 0, subject = null, glanceT = 0, followT = 0;
   const parEls = Object.keys(PARALLAX).map((id) => [$(id), PARALLAX[id]]).filter((p) => p[0]);
-  const tiltEls = Object.keys(TILT).map((id) => [$(id), TILT[id]]).filter((p) => p[0]);
-  let lens = null, track = null, win = null, tiltBtn = null;
+  let lens = null, track = null, win = null;
 
-  const clampX = (x) => Math.max(TILT_MARGIN, Math.min(coreW - viewW - TILT_MARGIN, x));
+  const clampX = (x) => Math.max(0, Math.min(coreW - viewW, x));
   const selectedSeason = () => { const t = document.querySelector('.tab[aria-selected="true"]'); return t ? +t.dataset.season : 1; };
   const xForFrac = (f) => clampX(f * coreW - viewW / 2);
 
@@ -160,11 +153,6 @@
       track = document.createElement('div'); track.className = 'spy-track';
       track.setAttribute('aria-hidden', 'true');
       win = document.createElement('i'); track.appendChild(win);
-      tiltBtn = document.createElement('button');
-      tiltBtn.type = 'button'; tiltBtn.className = 'spy-tilt';
-      tiltBtn.setAttribute('aria-label', 'Tilt the phone to look around'); tiltBtn.setAttribute('aria-pressed', 'false');
-      tiltBtn.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="3" width="10" height="18" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 9c-1.3 2-1.3 4 0 6M21 9c1.3 2 1.3 4 0 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
-      tiltBtn.addEventListener('click', (e) => { e.stopPropagation(); tilt.enabled ? tilt.stop(true) : tilt.request(); });
       track.addEventListener('click', (e) => {
         const r = track.getBoundingClientRect();
         userUntil = performance.now() + 12000;
@@ -172,7 +160,7 @@
       });
     }
     hero.insertBefore(lens, core.nextSibling);
-    hero.appendChild(track); hero.appendChild(tiltBtn);
+    hero.appendChild(track);
     if (!reduced && !iris.el) {
       // First time only: the page loads behind a closed iris, which opens once the scene has
       // been built and had a moment to paint.
@@ -189,10 +177,9 @@
     on = false;
     hero.classList.remove('spyglass');
     copy.style.left = '';
-    [lens, track, tiltBtn, iris.el].forEach((el) => el && el.remove());
+    [lens, track, iris.el].forEach((el) => el && el.remove());
     settle(); core.style.left = '';
     parEls.forEach(([el]) => { el.style.left = el.style.right = ''; });
-    tilt.stop(false);
   }
 
   function relayout() {
@@ -287,68 +274,5 @@
   }
   glanceT = setTimeout(glance, 16000);
 
-  // ── tilt parallax ──
-  // deviceorientation beta (front-back) and gamma (left-right), in degrees. A slowly-following
-  // baseline makes "how you're holding it now" neutral, so only changes in tilt move the plates.
-  const tilt = {
-    enabled: false, base: null, gx: 0, gy: 0, sx: 0, sy: 0, raf: 0, last: 0,
-    onEvt(e) {
-      if (e.beta == null || e.gamma == null) return;
-      const b = e.beta, g = e.gamma;
-      if (!tilt.base) tilt.base = { b, g };
-      tilt.base.b += (b - tilt.base.b) * 0.01;   // ~2 s to re-centre on a new hold
-      tilt.base.g += (g - tilt.base.g) * 0.01;
-      const norm = (d) => Math.max(-1, Math.min(1, d / 18)); // 18° of tilt = full travel
-      tilt.gx = norm(g - tilt.base.g); tilt.gy = norm(b - tilt.base.b);
-      if (!tilt.raf) tilt.raf = requestAnimationFrame(tilt.frame);
-    },
-    frame(now) {
-      tilt.raf = 0;
-      // Low-pass (sensor jitter) and cap the writes at ~30 fps.
-      tilt.sx += (tilt.gx - tilt.sx) * 0.25; tilt.sy += (tilt.gy - tilt.sy) * 0.25;
-      if (now - tilt.last < 32) { tilt.raf = requestAnimationFrame(tilt.frame); return; }
-      tilt.last = now;
-      tiltEls.forEach(([el, d]) => {
-        const tx = (-tilt.sx * d).toFixed(1), ty = (-tilt.sy * d * 0.5).toFixed(1);
-        const v = `${tx}px ${ty}px`;
-        if (el.__tilt !== v) { el.__tilt = v; el.style.translate = v; }
-      });
-      if (Math.abs(tilt.gx - tilt.sx) > 0.01 || Math.abs(tilt.gy - tilt.sy) > 0.01) tilt.raf = requestAnimationFrame(tilt.frame);
-    },
-    start() {
-      if (tilt.enabled || !on) return;
-      tilt.enabled = true; tilt.base = null;
-      addEventListener('deviceorientation', tilt.onEvt);
-      if (tiltBtn) tiltBtn.setAttribute('aria-pressed', 'true');
-    },
-    stop(byUser) {
-      if (byUser) tilt.optOut = true;
-      tilt.enabled = false;
-      removeEventListener('deviceorientation', tilt.onEvt);
-      cancelAnimationFrame(tilt.raf); tilt.raf = 0;
-      tiltEls.forEach(([el]) => { el.__tilt = ''; el.style.translate = ''; });
-      if (tiltBtn) tiltBtn.setAttribute('aria-pressed', 'false');
-    },
-    // iOS 13+ only hands out motion data after a tap and a permission prompt; others just start.
-    request() {
-      tilt.optOut = false;
-      const D = window.DeviceOrientationEvent;
-      if (!D) return;
-      if (typeof D.requestPermission === 'function') {
-        D.requestPermission().then((r) => { if (r === 'granted') tilt.start(); else tilt.optOut = true; }).catch(() => {});
-      } else tilt.start();
-    },
-  };
-  // Tilt starts on the first tap on the scene itself (not a link), on every platform: iOS needs
-  // the tap for its permission prompt, and elsewhere it keeps per-frame plate updates opt-in.
-  if (!reduced && window.DeviceOrientationEvent) {
-    const firstTap = (e) => {
-      if (!on || tilt.enabled || tilt.optOut || e.target.closest('a,button')) return;
-      hero.removeEventListener('click', firstTap);
-      tilt.request();
-    };
-    hero.addEventListener('click', firstTap);
-  }
-
-  window.__camera = { glide: (f, ms) => on && glide(xForFrac(f), ms), get x() { return camX; }, get on() { return on; }, tilt };
+  window.__camera = { glide: (f, ms) => on && glide(xForFrac(f), ms), get x() { return camX; }, get on() { return on; } };
 })();

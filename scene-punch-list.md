@@ -16,13 +16,12 @@ marked **OBSOLETE** rather than left dangling.
   in `css/scene.css`). Below 820px in portrait the core is ~1.85 screens wide and 80svh tall, and
   a camera pans it: a shot per tab, reached through a six-blade iris shutter (closes, cuts,
   reopens) that also opens the page on load; swipe sideways to look around; idle glances; the
-  glass swings to any animal that turns up out of view; sun/moon, aurora and clouds pan slower
-  (parallax); and after the first tap on the scene (iOS asks for motion permission then), tilting
-  the phone shifts each plate by its depth. Verified in headless Chromium at 390x700 (all four
-  shots, swipe, follow, tilt, rotation to landscape and back; desktop and landscape unchanged).
-  **Still to check on a real iPhone:** frame rate during glides and tilt (`?fps`), memory
-  (`?diag` after a long session), the iOS motion prompt, and whether the far-left trigger rocks
-  are now reachable (the hero button no longer sits on them in most shots). The `SHOTS`
+  glass swings to any animal that turns up out of view; and sun/moon, aurora and clouds pan slower
+  (parallax). A gyroscope tilt parallax was tried and removed Sept 25: swiping was enough.
+  Verified in headless Chromium at 390x700 (all four shots, swipe, follow, rotation to landscape
+  and back; desktop and landscape unchanged), and confirmed live by Christian.
+  **Still to check on a real iPhone:** frame rate during glides (`?fps`), memory (`?diag` after a
+  long session), and whether the far-left trigger rocks are now reachable (the hero button no longer sits on them in most shots). The `SHOTS`
   framings in camera.js are first guesses; tune by eye.
 
 - ✅ **Leaf-fall sprites 404 on the live site** (Sept 23): `assets/leaves/` uploaded;
