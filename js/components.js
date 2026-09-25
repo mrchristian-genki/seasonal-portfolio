@@ -1,8 +1,8 @@
 // ============================================================
-// components.js — parametric scene objects that plug into the WIND field.
+// components.js -- parametric scene objects that plug into the WIND field.
 //
 // PRINCIPLE (see blueprint ch.11):
-//   - Wind is a FIELD (--wind on #hero, eased gusts). Each object responds by its
+//   - Wind is a FIELD (window.WIND, eased gusts, read from JS; no longer a CSS var). Each object responds by its
 //     own WEIGHT, expressed via CSS ruffle classes (pine-tier, leaf-flutter,
 //     grass-bend, flower-nod). Heavier part = less/slower motion + more delay.
 //   - Animation UNIT = smallest part the eye reads as moving:
@@ -18,136 +18,76 @@ const SVGNS = 'http://www.w3.org/2000/svg';
 function el(tag, attrs, parent){ const n=document.createElementNS(SVGNS,tag); for(const k in attrs) n.setAttribute(k,attrs[k]); if(parent) parent.appendChild(n); return n; }
 function rand(a,b){ return a+Math.random()*(b-a); }
 
-// ---------- PINE: 4 foliage tiers + static base. Gust travels DOWN (top catches first). ----------
-// opts: {x, y, h (height in art units), tone ('summer'|'fall'|'winter'|'spring'), tier ('d'|'md'|'mobile')}
-function makePine(opts){
-  const {x, y, h=520, tier='d'} = opts;
-  const w = h*0.62;                                  // canopy width ~ proportional to height
-  const g = el('g', { class:'obj pine', 'data-tier':tier, transform:`translate(${x} ${y})` });
-  // trunk (static anchor)
-  el('path', { d:`M${-w*0.03} 0 L${w*0.03} 0 L${w*0.018} ${-h*0.16} L${-w*0.018} ${-h*0.16} Z`, fill:'#6b4a2f', class:'pine-trunk' }, g);
-  // 4 tiers bottom->top. weight decreases upward: amplitude up, duration down, delay down.
-  // tier geometry: stacked triangles, each narrower and higher.
-  const tierDefs = [
-    // [yBase, width, height, dur, delay]  (heavier bottom first)
-    [-h*0.14, w*1.00, h*0.34, 4.6, 0.45],
-    [-h*0.36, w*0.80, h*0.32, 3.9, 0.30],
-    [-h*0.56, w*0.60, h*0.30, 3.2, 0.16],
-    [-h*0.74, w*0.40, h*0.30, 2.5, 0.00],
-  ];
-  // Three-tone palette per tone (shadow/base/highlight), replacing the original flat
-  // dark+light pair. Studied from the real artist trees in landscape.svg: light reads
-  // as coming from the upper-right on every tier -- a darker inset wedge on the left,
-  // a brighter wedge reaching further up on the right, plus a thin dark gap line at
-  // each tier's base to separate it visually from the tier below.
-  const palettes = {
-    summer: ['#2f6b2c', '#3f7d3a', '#7ec44a'],
-    spring: ['#3d8536', '#4f9a44', '#9ad866'],
-    fall:   ['#4a6b2a', '#5a7d38', '#b8c24a'],
-    // Frosted, not just a duller green -- pines don't go bare in winter, so
-    // what should read is snow/frost sitting on the needles, close to white
-    // with just enough cool tint to still look like a conifer underneath.
-    winter: ['#a7bcc2', '#cddade', '#f2f7f8'],
-  };
-  const [shadow, base, highlight] = palettes[opts.tone||'summer'];
-  tierDefs.forEach(([yb, tw, th, dur, delay], i)=>{
-    // each tier is its own ruffling unit
-    const t = el('g', { class:'pine-tier', 'data-tier':tier, style:`--dur:${dur}s;--delay:${delay}s` }, g);
-    // base tier shape (mid tone), full triangle both sides
-    el('path', { d:`M0 ${yb} L${-tw/2} ${yb} L0 ${yb-th} Z M0 ${yb} L${tw/2} ${yb} L0 ${yb-th} Z`, fill:base }, t);
-    // shadow wedge: left side only, inset slightly -- suggests light from the right
-    el('path', { d:`M0 ${yb} L${-tw/2} ${yb} L${-tw*0.08} ${yb-th*0.94} L0 ${yb-th} Z`, fill:shadow, opacity:0.9 }, t);
-    // highlight wedge: right side, brighter, reaching a bit further toward the tip
-    el('path', { d:`M0 ${yb} L${tw*0.42} ${yb-th*0.12} L${tw*0.1} ${yb-th*0.96} L0 ${yb-th} Z`, fill:highlight, opacity:0.85 }, t);
-    // thin dark gap line at the tier's bottom edge, separating it from the tier below
-    el('path', { d:`M${-tw*0.5} ${yb} L${tw*0.5} ${yb} L${tw*0.46} ${yb+th*0.05} L${-tw*0.46} ${yb+th*0.05} Z`, fill:shadow, opacity:0.35 }, t);
-  });
-  return g;
-}
-
-// ---------- GRASS CLUMP: base-pivot bend, springy. Split into sub-fans w/ phase offsets. ----------
-// opts: {x, y, h, tier}
-function makeGrass(opts){
-  const {x, y, h=90, tier='d'} = opts;
-  const g = el('g', { class:'obj grass', 'data-tier':tier, transform:`translate(${x} ${y})` });
-  const cols = ['#5a8f3a','#6fa348','#4f7d33'];
-  const n = tier==='mobile' ? 3 : 5;                // fewer blades on mobile
-  // sub-fans: 2-3 groups with different phase so the clump shimmers, not one stiff block
-  const fans = tier==='mobile' ? 1 : 2;
-  for(let f=0; f<fans; f++){
-    const fan = el('g', { class:'grass-bend', 'data-tier':tier, style:`--dur:${(2.0+f*0.6).toFixed(1)}s;--delay:${(f*0.5).toFixed(1)}s` }, g);
-    for(let i=0;i<n;i++){
-      const bx = rand(-h*0.35, h*0.35);
-      const bh = h*rand(0.6,1.0);
-      const lean = rand(-h*0.12, h*0.12);
-      el('path', { d:`M${bx} 0 Q ${bx+lean*0.5} ${-bh*0.6} ${bx+lean} ${-bh}`, fill:'none', stroke:cols[i%cols.length], 'stroke-width':h*0.06, 'stroke-linecap':'round' }, fan);
-    }
-  }
-  return g;
-}
-
 // ---------- FLOWER: whole bloom nods on stem. NOT petal-level. ----------
-// opts: {x, y, h, color, tier}
+// opts: {x, y, h, color, tier='mobile', variant=0|1|2}
+// No runtime filters: two-tone petals are a 'petal-base' ellipse (season-recolored) plus a
+// lighten()-derived highlight. variant: 0 round 5-petal, 1 slender 8-petal, 2 6-petal cup.
+// tier defaults to 'mobile': a 'd' default hides every flower below 1024px.
+function lighten(hex, amt){
+  const n = hex.replace('#','');
+  const num = parseInt(n.length===3 ? n.split('').map(c=>c+c).join('') : n, 16);
+  let r=(num>>16)&255, g=(num>>8)&255, b=num&255;
+  r=Math.min(255,Math.round(r+(255-r)*amt)); g=Math.min(255,Math.round(g+(255-g)*amt)); b=Math.min(255,Math.round(b+(255-b)*amt));
+  return `rgb(${r},${g},${b})`;
+}
+function darken(hex, amt){
+  const n = hex.replace('#','');
+  const num = parseInt(n.length===3 ? n.split('').map(c=>c+c).join('') : n, 16);
+  let r=(num>>16)&255, g=(num>>8)&255, b=num&255;
+  r=Math.max(0,Math.round(r*(1-amt))); g=Math.max(0,Math.round(g*(1-amt))); b=Math.max(0,Math.round(b*(1-amt)));
+  return `rgb(${r},${g},${b})`;
+}
 function makeFlower(opts){
-  const {x, y, h=140, color='#d64b4b', tier='d'} = opts;
+  const {x, y, h=140, color='#d64b4b', tier='mobile', variant=0} = opts;
   const g = el('g', { class:'obj flower', 'data-tier':tier, transform:`translate(${x} ${y})` });
   // the whole bloom+stem is ONE nodding unit (pivot at stem base)
   const nod = el('g', { class:'flower-nod', 'data-tier':tier, style:`--dur:${rand(3.2,4.2).toFixed(1)}s;--delay:${rand(0,1.5).toFixed(1)}s` }, g);
   el('path', { d:`M0 0 Q ${h*0.06} ${-h*0.5} 0 ${-h*0.82}`, fill:'none', stroke:'#3f6b3a', 'stroke-width':h*0.05, 'stroke-linecap':'round' }, nod);  // stem
-  // bloom: a few stiff petals (they move as one via the nod, no petal animation)
+  // small paired leaves partway up the stem, ground the flower like a real plant
+  el('path', { d:`M0 ${-h*0.34} Q ${-h*0.22} ${-h*0.30} ${-h*0.30} ${-h*0.44} Q ${-h*0.10} ${-h*0.44} 0 ${-h*0.34}`, fill:'#4a7a42' }, nod);
+  el('path', { d:`M0 ${-h*0.46} Q ${h*0.20} ${-h*0.42} ${h*0.27} ${-h*0.55} Q ${h*0.09} ${-h*0.56} 0 ${-h*0.46}`, fill:'#3f6b3a' }, nod);
   const bx=0, by=-h*0.82, r=h*0.16;
-  for(let p=0;p<5;p++){ const a=(p/5)*Math.PI*2 - Math.PI/2; el('ellipse',{cx:bx+Math.cos(a)*r*0.7, cy:by+Math.sin(a)*r*0.7, rx:r*0.62, ry:r*0.95, fill:color, transform:`rotate(${a*180/Math.PI+90} ${bx+Math.cos(a)*r*0.7} ${by+Math.sin(a)*r*0.7})`}, nod); }
+  const petalCount = variant===1 ? 8 : variant===2 ? 6 : 5;
+  const petalStretch = variant===1 ? 1.35 : variant===2 ? 0.85 : 1;
+  const highlight = lighten(color, 0.42);
+  for(let p=0;p<petalCount;p++){
+    const a=(p/petalCount)*Math.PI*2 - Math.PI/2;
+    const cx=bx+Math.cos(a)*r*0.7, cy=by+Math.sin(a)*r*0.7;
+    const rot=`rotate(${a*180/Math.PI+90} ${cx} ${cy})`;
+    el('ellipse',{cx, cy, rx:r*0.62*(petalStretch>1?0.72:1), ry:r*0.95*petalStretch, fill:color, class:'petal-base', transform:rot}, nod);
+    // highlight toward the bloom center: painted shading with flat shapes, no filter cost
+    const hx=bx+Math.cos(a)*r*0.42, hy=by+Math.sin(a)*r*0.42;
+    el('ellipse',{cx:hx, cy:hy, rx:r*0.30, ry:r*0.46*petalStretch, fill:highlight, class:'petal-highlight', opacity:'0.75', transform:rot}, nod);
+  }
   el('circle',{cx:bx, cy:by, r:r*0.5, fill:'#f0c94a'}, nod);  // center
-  // Live color update for season changes -- only touches fill, never rebuilds
-  // the element, so the flower-nod animation (and its current position in
-  // its cycle) is never interrupted. The center circle is excluded since
-  // querying only 'ellipse' already skips it (the 5 petals are the only
-  // ellipses here).
+  el('circle',{cx:bx-r*0.12, cy:by-r*0.12, r:r*0.18, fill:'#f7dd82'}, nod);  // center highlight, painterly speck
+  // Season change only re-fills (highlight re-derived), never rebuilds: flower-nod keeps running.
   g.setColor = function (newColor) {
-    g.querySelectorAll('ellipse').forEach(e => e.setAttribute('fill', newColor));
+    g.querySelectorAll('.petal-base').forEach(e => e.setAttribute('fill', newColor));
+    const hi = lighten(newColor, 0.42);
+    g.querySelectorAll('.petal-highlight').forEach(e => e.setAttribute('fill', hi));
   };
   return g;
 }
 
 // ---------- DETAILED PINE: real traced artist artwork, randomized seasonal greens. ----------
-// Each call randomizes 3-tone palette within a narrow seasonal band so no two trees
-// look identical. Source: 53-path traced Vecteezy pine.
-// procedural 4-tier geometry, this is a flat list of 53 organically-shaped paths with no
-// sub-grouping by tier -- there's no reliable way to split it into independently-swaying
-// pieces without risking the same "tree tears itself apart" bug that hit the artwork's
-// original foreground trees earlier (see scene.js's placeAnimatedPines() comment). So this
-// sways as ONE UNIT, pivoting at its measured base (1916, 3784 in its own 4000x4000 art
-// space) -- a real technique for how a whole young/slender tree actually moves in wind,
-// and much safer than guessing tier boundaries in unstructured path data.
-// opts: {x, y, scale (default 1, ~1 = full 4000-unit-tall art size), tier ('d'|'md'|'mobile'), sway (default true)}
-// x,y is where the tree's BASE (trunk-ground point) should land in scene coordinates --
-// matching makePine()'s convention. Internally this requires translate(x - BASE_X*scale,
-// y - BASE_Y*scale), NOT translate(x,y) directly, since scale() also shrinks the distance
-// from the group's local origin to the tree's own base point. Getting this wrong the first
-// time put the tree almost entirely below the visible frame (confirmed by render -- only
-// the very top tip peeked into view) -- fixed by computing the offset correctly here.
+// 53 traced paths with no tier grouping, so it sways as ONE UNIT from its measured base
+// (1916, 3784 art units). Don't guess tier splits: the tree tears apart (see placeAnimatedPines).
+// opts: {x, y, scale (1 = 4000-unit art), tier ('d'|'md'|'mobile'), sway=true, season}
+// x,y = trunk-ground BASE in scene coords. scale() also shrinks the offset to that point, so
+// translate by (x - BASE_X*scale, y - BASE_Y*scale), not (x, y).
 function makeDetailedPine(opts){
   const {x, y, scale=1, tier='d', sway=true, season='summer'} = opts;
   const BASE_X = 1916, BASE_Y = 3784;
   const tx = x - BASE_X*scale, ty = y - BASE_Y*scale;
   const g = el('g', { class:'obj pine-detailed', 'data-tier':tier, transform:`translate(${tx.toFixed(1)} ${ty.toFixed(1)}) scale(${scale})` });
   const inner = sway
-    // transform-origin must be in THIS group's own local coordinate space
-    // (the art's native unscaled coordinates, same space BASE_X/BASE_Y are
-    // defined in) -- NOT the outer scene-placement x/y. This group is
-    // nested inside `g`, which already carries translate(tx,ty) scale(scale);
-    // its own children are still drawn in the original ~3560x5758 art space.
-    // Using the placement x/y here put the rotation pivot at a wildly wrong
-    // point (near the art's own top-left corner, far from the trunk base),
-    // which is exactly why the whole tree appeared to translate instead of
-    // sway from its root.
+    // transform-origin is in LOCAL art units (where BASE_X/BASE_Y live), not scene x/y: the
+    // parent already applies translate+scale. Scene x/y puts the pivot far from the trunk.
     ? el('g', { class:'pine-detailed-sway', style:`--dur:${rand(4.5,6.5).toFixed(1)}s;--delay:${rand(0,2).toFixed(1)}s;transform-origin:${BASE_X}px ${BASE_Y}px` }, g)
     : el('g', {}, g);
 
-  // ── Seasonal color spectrum — narrow random range per instance ─────────────
-  // Each pine gets slightly different greens so a grove reads as alive, not stamped.
-  // Ranges are tight enough to stay cohesive within the season's palette.
-  // [dark, mid, light, trunk, trunk-shadow]
+  // Seasonal [dark, mid, light] ranges, randomized per instance so a grove isn't stamped.
   const spectra = {
     summer: [
       r=>[`hsl(${r(128,140)},${r(52,62)}%,${r(14,22)}%)`],  // dark shadow
@@ -159,10 +99,12 @@ function makeDetailedPine(opts){
       r=>[`hsl(${r(112,128)},${r(58,70)}%,${r(32,42)}%)`],
       r=>[`hsl(${r(92,115)},${r(65,78)}%,${r(46,58)}%)`],
     ],
+    // Fall is amber/rust/gold (15-48): pines take color from these fills via setSeason, NOT
+    // from the GRADE.foliage CSS filter, so a filter tweak can't make them read as autumn.
     fall: [
-      r=>[`hsl(${r(120,138)},${r(35,48)}%,${r(18,26)}%)`],
-      r=>[`hsl(${r(120,140)},${r(32,46)}%,${r(26,34)}%)`],
-      r=>[`hsl(${r(85,110)},${r(38,52)}%,${r(36,46)}%)`],
+      r=>[`hsl(${r(14,26)},${r(55,70)}%,${r(16,24)}%)`],
+      r=>[`hsl(${r(20,32)},${r(60,75)}%,${r(30,40)}%)`],
+      r=>[`hsl(${r(35,48)},${r(70,85)}%,${r(48,58)}%)`],
     ],
     winter: [
       r=>[`hsl(${r(170,185)},${r(15,25)}%,${r(45,55)}%)`],
@@ -174,8 +116,7 @@ function makeDetailedPine(opts){
   const rr = (a, b) => a + Math.random() * (b - a);
   const [dk, md, hi] = spectra[sn].map(fn => fn(rr)[0]);
   const winterTrunk = sn === 'winter';
-  // Bark doesn't turn white the way needles/snow-catching foliage does --
-  // winter trunk gets a light, slightly frosted dusting, not full white.
+  // Bark doesn't go white like snowy needles: winter trunk is only lightly frosted.
   const trunkCol = winterTrunk
     ? `hsl(${rr(24,34)},${rr(14,22)}%,${rr(46,54)}%)`
     : `hsl(${rr(22,32)},${rr(45,58)}%,${rr(28,36)}%)`;
@@ -183,12 +124,7 @@ function makeDetailedPine(opts){
     ? `hsl(${rr(24,32)},${rr(12,18)}%,${rr(34,42)}%)`
     : `hsl(${rr(22,30)},${rr(38,50)}%,${rr(20,28)}%)`;
 
-  // Original art uses these fill values — map them to our randomized seasonal tones:
-  // #214f31 / #1a372e / #1f4831 → dark shadow
-  // #266131 / #286744 / #2f6131 → mid green
-  // #5a1e16 / #100f0d             → trunk darks
-  // #8dd247 / #8ed353 / #81cf5d / #9ad866 → highlights
-  // We remap by luminance bucket after insertion.
+  // Traced art; its original fills are remapped to the seasonal palette below.
   inner.innerHTML = `
   <path d="m 18622.8,8207.1 c -142.7,48.4 -318,134.2 -466.2,151.6 -38.1,4.4 -67,-7.4 -101.7,-21.2 409.1,-381 913.5,-678.7 1448.9,-845.1 244,-75.9 496.3,-118 748.3,-157.5 l -261.1,506.3 c -198.5,7.1 -407.8,88.9 -598.4,142.2 l -769.8,223.7" fill="#214f31" transform="matrix(0.13333333,0,0,-0.13333333,0,4000)"/>
   <path d="m 21803.5,13675.6 c -77.8,-30.5 -140,-49.1 -222.5,-69 -691.3,-166.7 -1463.1,-37.3 -2082.7,303.6 -128.2,70.5 -232.8,170.6 -356.1,242.8 l -21,11.9 c 34.9,-124.2 131.8,-250 206.2,-354.2 45.8,-64.1 89.5,-133.8 143.4,-191.3 h 2 c 49.1,-27.1 91.1,-63.7 135.1,-98.1 342.5,-268.3 807.3,-362.9 1232.9,-310 440.4,54.6 915.8,185.1 1250.6,492.4 l -274,-6.3 7.5,-17.1 -21.4,-4.7" fill="#214f31" transform="matrix(0.13333333,0,0,-0.13333333,0,4000)"/>
@@ -245,17 +181,8 @@ function makeDetailedPine(opts){
   <path d="m 15898.4,13575.4 -259.8,429.1 c -35.2,-85.4 -57.1,-172.5 -87.8,-259 -82.7,-233.7 -177.8,-463.6 -283.8,-687.6 -67.9,-143.4 -143.1,-301.2 -241,-426.9 20.1,-164.8 19.2,-360.9 2.2,-526.1 l 8.6,-40.3 c 88.3,-73 165.5,-164.4 260.5,-228 132.8,-88.8 286.2,-148.6 437.4,-197.5 406.3,-131 848.9,-177.6 1274.2,-136.2 301.6,29.4 607.1,110.3 891.2,214.4 l -629.1,981.3 c -589.6,107.5 -1028.6,380.6 -1372.6,876.8" fill="#266131" transform="matrix(0.13333333,0,0,-0.13333333,0,4000)"/>
   `;
 
-  // ── Remap fill colors to per-instance randomized seasonal palette ───────────
-  // Original art uses 5 distinct fill buckets. We remap each by its original hex:
-  //   dark shadow: #214f31, #1a372e, #1f4831  → dk (our darkest)
-  //   mid green:   #266131, #286744           → md (our mid)
-  //   highlight:   #8dd247, #8ed353, #81cf5d, #9ad866 → hi (our lightest)
-  //   trunk dark:  #893120, #ab4530, #5a1e16, #100f0d  → trunkCol
-  //   trunk shadow:#5a1e16, #100f0d           → trunkShd
-  // Each path gets a data-bucket TAG (not just its one-time color) so a later
-  // season change can look the bucket back up and recolor in place -- the
-  // original hex is gone after the first recolor, so bucket-by-hex only
-  // works once without this.
+  // Tag each path with data-bucket so setSeason can recolor later: the original hex (what
+  // bucketMap keys on) is gone after the first recolor.
   const bucketMap = {
     '#214f31': 'dk', '#1a372e': 'dk', '#1f4831': 'dk',
     '#266131': 'md', '#286744': 'md',
@@ -275,10 +202,8 @@ function makeDetailedPine(opts){
 
   if (sn === 'winter') addPineSnowDust(inner, BASE_X, BASE_Y);
 
-  // Live season update: recolors every bucketed path in place (CSS
-  // transition on fill, set up in catalog.css, makes this fade rather than
-  // snap) and shows/hides the winter snow-dust -- never rebuilds the tree,
-  // so .pine-detailed-sway keeps running uninterrupted through a season change.
+  // Recolors in place (catalog.css fill transition fades it) and toggles snow-dust. Never
+  // rebuilds, so .pine-detailed-sway keeps running.
   g.setSeason = function (newSeason) {
     const sn2 = newSeason in spectra ? newSeason : 'summer';
     const rr2 = (a, b) => a + Math.random() * (b - a);
@@ -305,216 +230,108 @@ function makeDetailedPine(opts){
 }
 
 
-// ---------- DECIDUOUS TREE: seasonal canopy blobs + branching trunk. ----------
-// Extracted from scene_parts_catalog_4.html (lines 674-703).
-// viewBox source: 1212 126 919 1708 — tree center X≈1671, base Y=1834.
-// Seasonal fills driven by CSS class on parent g: .summer .fall .spring .winter
-// (same data-r="canopy-hi/mid/dk" system as the catalog).
-// Wind: canopy groups get leaf-flutter class; trunk is static anchor.
-// opts: {x, y, h (height in art units, default 900), season ('summer'|'fall'|'spring'|'winter'), tier}
 // ---------- ISOLATED MOUNTAIN with real season-reactive snow cap ----------
-// Built from files Christian isolated and cropped himself in Illustrator --
-// each is a single mountain, exactly two fill classes: one dark body, one
-// near-white cap. Confirmed by direct inspection, not assumed.
-//
-// Cap color per season is computed by mixing white with the mountain's OWN
-// body color (lightened), not a fixed palette -- so a darker mountain's
-// "bare rock" summer tone stays consistent with its own body shade instead
-// of every mountain converging on one generic grey.
+// Source: single mountains cropped in Illustrator, each with exactly two fill classes
+// (dark body, near-white cap). opts: {shape: {markup, viewBox}, season, scale, x, y}
 function hexToRgb(hex) {
   const h = hex.replace('#', '');
   return [parseInt(h.slice(0,2),16), parseInt(h.slice(2,4),16), parseInt(h.slice(4,6),16)];
 }
-function rgbToHex(r, g, b) {
-  const c = v => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, '0');
-  return `#${c(r)}${c(g)}${c(b)}`;
-}
-function mixHex(hexA, hexB, t) {
-  const [r1,g1,b1] = hexToRgb(hexA), [r2,g2,b2] = hexToRgb(hexB);
-  return rgbToHex(r1+(r2-r1)*t, g1+(g2-g1)*t, b1+(b2-b1)*t);
-}
-// How far each season sits from "full white cap" (0) toward "bare lit rock,
-// no snow" (1). Winter is pure white; summer shows the most rock.
-const MOUNTAIN_SEASON_T = { winter: 0, spring: 0.35, summer: 0.85, fall: 0.7 };
+// Colors come from this per-season palette; the source's neutral gray two-tone only sorts body
+// vs cap. CSS hue-rotate/saturate can't substitute: nothing to shift on zero-saturation gray.
+const MOUNTAIN_PALETTE = {
+  // body: shadowed rock face. cap: sunlit snow/peak.
+  winter: { body: '#7a91c2', cap: '#fbfcff' }, // cool blue-lavender rock, near-pure white snow
+  spring: { body: '#5c72a8', cap: '#eef3fb' }, // medium blue-purple, soft white-blue snow
+  summer: { body: '#8a7a68', cap: '#d9d2c8' }, // warm bare-rock tan, patchy pale-warm remaining snow
+  fall:   { body: '#8a7098', cap: '#f0e6d2' }, // dusty mauve-purple, pale gold-white snow
+};
 
+// Each fill is a 3-stop vertical <linearGradient> (lifted top -> tone -> shadowed base): a static
+// paint server, no per-frame cost, so it keeps the "no SVG filters in steady state" rule.
+let __mountainGradId = 0;
+function makeGradientFill(defs, baseColor, { shadowAmt = 0.35, liftAmt = 0.28 } = {}) {
+  const id = `mtnGrad${__mountainGradId++}`;
+  const gradEl = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
+  gradEl.setAttribute('id', id);
+  gradEl.setAttribute('x1', '0'); gradEl.setAttribute('y1', '0');
+  gradEl.setAttribute('x2', '0'); gradEl.setAttribute('y2', '1');
+  const stops = [
+    [0,   lighten(baseColor, liftAmt)],
+    [0.55, baseColor],
+    [1,   darken(baseColor, shadowAmt)],
+  ];
+  stops.forEach(([off, col]) => {
+    const s = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+    s.setAttribute('offset', off); s.setAttribute('stop-color', col);
+    gradEl.appendChild(s);
+  });
+  defs.appendChild(gradEl);
+  return { id, gradEl };
+}
 function makeMountainIsolated(opts) {
   const { shape, season = 'winter', scale = 1, x = 0, y = 0 } = opts;
   const gNS = 'http://www.w3.org/2000/svg';
   const parser = new DOMParser();
-  // Wrap the fragment (a <style> plus <path>/<g> siblings, no single root) in
-  // a temporary <svg> so DOMParser gives us a valid tree to pull nodes from.
+  // Wrap the rootless fragment in a temporary <svg> so DOMParser returns a valid tree.
   const doc = parser.parseFromString(`<svg xmlns="${gNS}">${shape.markup}</svg>`, 'image/svg+xml');
   const srcRoot = doc.documentElement;
 
-  // Read the two fill colors straight from the <style> block rather than
-  // assuming which class number means what -- that varies file to file.
+  // Source fills vary per file; used ONLY to sort body vs cap by luminance (cap is lighter).
   const styleText = srcRoot.querySelector('style')?.textContent || '';
   const classColors = {};
   styleText.replace(/\.(\w+)\{fill:(#[0-9A-Fa-f]{6})/g, (m, cls, hex) => { classColors[cls] = hex; return m; });
   const classNames = Object.keys(classColors);
-  // Body = the darker of the two (lower sum of RGB channels); cap = the other.
   const luminance = hex => hexToRgb(hex).reduce((a,b) => a+b, 0);
   classNames.sort((a, b) => luminance(classColors[a]) - luminance(classColors[b]));
   const bodyClass = classNames[0], capClass = classNames[1];
-  const bodyColor = classColors[bodyClass];
 
   const g = document.createElementNS(gNS, 'g');
   g.setAttribute('class', `obj mountain-isolated ${season}`);
   g.setAttribute('transform', `translate(${x},${y}) scale(${scale})`);
+  const defs = document.createElementNS(gNS, 'defs');
+  g.appendChild(defs);
 
-  // Copy every path node into our group, tagging body/cap by CLASS, then
-  // drop the class attribute in favor of a direct fill (so this doesn't
-  // depend on carrying the source <style> block along with it).
+  const palette = MOUNTAIN_PALETTE[season] || MOUNTAIN_PALETTE.summer;
+  // One gradient per bucket, not per path, so facets share a consistent light direction.
+  let bodyGrad = makeGradientFill(defs, palette.body, { shadowAmt: 0.32, liftAmt: 0.22 });
+  let capGrad = makeGradientFill(defs, palette.cap, { shadowAmt: 0.14, liftAmt: 0.10 });
+
+  // Copy paths tagged body/cap with a direct fill (no dependence on the source <style>).
   srcRoot.querySelectorAll('path').forEach(srcPath => {
     const cls = srcPath.getAttribute('class');
     const p = document.createElementNS(gNS, 'path');
     p.setAttribute('d', srcPath.getAttribute('d'));
     if (cls === bodyClass) {
       p.dataset.bucket = 'body';
-      p.setAttribute('fill', bodyColor);
+      p.setAttribute('fill', `url(#${bodyGrad.id})`);
     } else if (cls === capClass) {
       p.dataset.bucket = 'cap';
-      p.setAttribute('fill', mixHex('#ffffff', bodyColor, MOUNTAIN_SEASON_T[season] ?? 0));
+      p.setAttribute('fill', `url(#${capGrad.id})`);
     }
     g.appendChild(p);
   });
 
   g.setSeason = function (newSeason) {
-    const t = MOUNTAIN_SEASON_T[newSeason] ?? 0;
-    const capColor = mixHex('#ffffff', bodyColor, t);
-    g.querySelectorAll('[data-bucket="cap"]').forEach(p => p.setAttribute('fill', capColor));
+    const pal = MOUNTAIN_PALETTE[newSeason] || MOUNTAIN_PALETTE.summer;
+    // Re-stop the gradients in place rather than swapping fills, so shading persists.
+    const restops = (gradEl, baseColor, shadowAmt, liftAmt) => {
+      const stops = gradEl.querySelectorAll('stop');
+      stops[0].setAttribute('stop-color', lighten(baseColor, liftAmt));
+      stops[1].setAttribute('stop-color', baseColor);
+      stops[2].setAttribute('stop-color', darken(baseColor, shadowAmt));
+    };
+    restops(bodyGrad.gradEl, pal.body, 0.32, 0.22);
+    restops(capGrad.gradEl, pal.cap, 0.14, 0.10);
   };
 
   g._viewBox = shape.viewBox;
-  g._bodyColor = bodyColor;
   return g;
 }
 
-function makeDeciduous(opts) {
-  // ── Flat-style deciduous tree, lobed-cluster canopy ─────────────────────
-  // Previous version used 2 giant overlapping circles for the whole canopy,
-  // which read as a plain round blob rather than a tree (flagged directly:
-  // "big blob of a tree"). This builds the canopy from a cluster of smaller
-  // lobes instead -- same lighting convention as the pines (light from the
-  // upper-right: darker lobes lower-left, brighter lobes upper-right) so it
-  // reads as one coherent illustration style across the catalog.
-  //
-  // Seasonal palette [winter, spring, summer, fall]:
-  //   winter: frosted near-white -- these trees aren't bare, they're
-  //           snow/frost-covered, so winter should read as white, not a
-  //           duller green.
-  //   spring: bright fresh green
-  //   summer: baseline art colors
-  //   fall:   warm amber-orange
-
-  const CANOPY = {
-    winter: { main: '#eef3f4', shadow: '#cddadd', dark: '#b9c9cd' },
-    spring: { main: '#7aa823', shadow: '#4a881d', dark: '#3c7a1b' },
-    summer: { main: '#689648', shadow: '#365d17', dark: '#3d5e00' },
-    fall:   { main: '#a97232', shadow: '#7a5020', dark: '#5a3010' },
-  };
-  const TRUNK = {
-    // Bark gets a light frosted dusting in winter, not full white.
-    winter: { main: '#9aa4a2', shadow: '#7c8886' },
-    spring: { main: '#8c6238', shadow: '#6a4828' },
-    summer: { main: '#86643f', shadow: '#7a5b3b' },
-    fall:   { main: '#86643f', shadow: '#6a4828' },
-  };
-
-  const { x, y, h = 900, season = 'summer', tier = 'd' } = opts;
-  const sns = season in CANOPY ? season : 'summer';
-  const C = CANOPY[sns], T = TRUNK[sns];
-
-  const tw = h * 0.10, th = h * 0.38;
-  const cr = h * 0.34; // canopy reference radius
-  const cx = x, cy = y - th - cr * 0.15; // crown sits a bit above the trunk top
-
-  const gNS = 'http://www.w3.org/2000/svg';
-  const g = document.createElementNS(gNS, 'g');
-  g.setAttribute('class', `obj deciduous ${sns}`);
-  g.setAttribute('data-tier', tier);
-
-  const p = (tag, attrs) => {
-    const e = document.createElementNS(gNS, tag);
-    for (const k in attrs) e.setAttribute(k, attrs[k]);
-    g.appendChild(e); return e;
-  };
-
-  // ── Trunk ──
-  p('path', {
-    'data-bucket': 'trunk',
-    d: `M${cx-tw*1.3},${y} C${cx-tw},${y-th*0.5} ${cx-tw*0.6},${y-th*0.8} ${cx-tw*0.4},${y-th} L${cx+tw*0.4},${y-th} C${cx+tw*0.6},${y-th*0.8} ${cx+tw},${y-th*0.5} ${cx+tw*1.3},${y} Z`,
-    fill: T.main,
-  });
-  p('path', {
-    'data-bucket': 'trunkShd',
-    d: `M${cx+tw*0.1},${y} C${cx+tw*0.3},${y-th*0.5} ${cx+tw*0.5},${y-th*0.8} ${cx+tw*0.4},${y-th} L${cx+tw*0.4},${y-th} C${cx+tw*0.6},${y-th*0.8} ${cx+tw},${y-th*0.5} ${cx+tw*1.3},${y} Z`,
-    fill: T.shadow,
-  });
-
-  // ── Canopy: a lobed cluster instead of two giant circles ─────────────────
-  // Fixed relative layout (not fully random) so the silhouette is reliably
-  // tree-shaped rather than accidentally lumpy: shadow lobes lower-left
-  // (drawn first, behind), a broad base of mid-tone lobes filling most of
-  // the mass, highlight lobes upper-right (drawn last, in front) -- same
-  // light-direction convention the pines use.
-  const shadowLobes = [
-    [-0.55, 0.18, 0.60], [-0.18, 0.38, 0.56], [0.22, 0.40, 0.50], [-0.62, -0.05, 0.42],
-  ];
-  const midLobes = [
-    [-0.42, -0.12, 0.66], [0.00, -0.22, 0.76], [0.36, -0.02, 0.64],
-    [-0.14, 0.10, 0.68], [0.16, 0.20, 0.60], [-0.58, -0.08, 0.48],
-    [0.52, 0.16, 0.50], [0.00, 0.30, 0.58], [-0.30, 0.28, 0.50],
-  ];
-  const hiLobes = [
-    [0.30, -0.44, 0.40], [0.50, -0.24, 0.36], [0.10, -0.50, 0.38], [0.56, 0.00, 0.30],
-  ];
-  shadowLobes.forEach(([dx, dy, r]) => {
-    p('circle', { 'data-bucket': 'shadow', cx: cx + dx * cr, cy: cy + dy * cr, r: r * cr, fill: C.shadow });
-  });
-  midLobes.forEach(([dx, dy, r]) => {
-    p('circle', { 'data-bucket': 'main', cx: cx + dx * cr, cy: cy + dy * cr, r: r * cr, fill: C.main });
-  });
-  hiLobes.forEach(([dx, dy, r]) => {
-    p('circle', { 'data-bucket': 'hi', cx: cx + dx * cr, cy: cy + dy * cr, r: r * cr, fill: C.main });
-  });
-  // Grounding shadow beneath the canopy, same role the old dark base ellipse played.
-  p('ellipse', { 'data-bucket': 'dark', cx, cy: cy + cr * 0.5, rx: cr * 0.78, ry: cr * 0.24, fill: C.dark });
-
-  // Live season update -- recolors every bucketed shape in place (CSS
-  // transition on fill handles the fade) without rebuilding anything, so
-  // this never interrupts an animation. 'hi' lobes use the same C.main as
-  // 'main' lobes today (the highlight read comes from lobe SIZE/POSITION,
-  // not a separate tone) but is tagged separately so a future pass can give
-  // it its own lighter tone without touching placement logic.
-  g.setSeason = function (newSeason) {
-    const nc = CANOPY[newSeason] || CANOPY.summer;
-    const nt = TRUNK[newSeason] || TRUNK.summer;
-    const map = { shadow: nc.shadow, main: nc.main, hi: nc.main, dark: nc.dark, trunk: nt.main, trunkShd: nt.shadow };
-    g.querySelectorAll('[data-bucket]').forEach(e => e.setAttribute('fill', map[e.dataset.bucket]));
-  };
-  // Kept as an alias -- scene.js and any existing callers use setDecidSeason.
-  g.setDecidSeason = g.setSeason;
-
-  return g;
-}
-
-// (Old makeMountainCollective, built from geometry parsed out of the messy
-// composite Mountains_Collective_1.svg, has been superseded by
-// makeMountainIsolated above -- built from the 8 individual files Christian
-// isolated and cropped himself in Illustrator, which are cleaner and
-// confirmed-correct rather than parsed-and-hoped-correct.)
-
-// Called from makeDetailedPine when season is winter. The traced art is one
-// big silhouette path, not separable tiers, so this doesn't try to dust
-// individual branches -- it scatters a handful of soft white blobs across
-// the canopy's own rough bounding area, which reads as snow-dusting without
-// needing to touch the traced paths.
-//
-// IMPORTANT: this appends INSIDE the pine's own group, which already carries
-// `translate(tx ty) scale(scale)` -- so positions here must be in the art's
-// own native coordinate space (same space BASE_X/BASE_Y are defined in),
-// not scene-space. Passing scene x/y/scale here would double-transform.
+// Winter snow-dust: soft white blobs over the canopy's rough bounds (art isn't split by tier).
+// Appended INSIDE the pine's translate+scale group, so use native art coords (BASE_X/BASE_Y);
+// scene x/y/scale here would double-transform.
 function addPineSnowDust(g, BASE_X, BASE_Y){
   const dustGroup = el('g', { 'data-snow-dust': '1', opacity: '0.85' }, g);
   const canopyTop = BASE_Y - 2900;
@@ -532,14 +349,8 @@ function addPineSnowDust(g, BASE_X, BASE_Y){
   return dustGroup;
 }
 
-// ---------- CLOUDS: the four V1 families, reconstructed from the documented spec ----------
-// PORTED VERBATIM from catalog_final_optimized_v3.html (a previous, more
-// complete catalog build the user had) -- exact puff() geometry, exact
-// seasonal opacity gates, and the real requestAnimationFrame drift loop.
-// My earlier version of this file was a from-memory RECONSTRUCTION with no
-// animation loop at all, which is why those clouds never moved -- this
-// replaces it with the actual working implementation instead of guessing
-// again.
+// ---------- CLOUDS: the four V1 cloud families (cumulus, cirrus, altocumulus, cumulonimbus) ----------
+// Ported from catalog_final_optimized_v3.html. CLOUD_GATES = per-season opacity.
 let cloudSeed = 7;
 function cloudRnd(a = 0, b = 1) { cloudSeed = (cloudSeed * 16807) % 2147483647; return a + (b - a) * (cloudSeed / 2147483647); }
 function puff(parent, x, y, w, h, top, bottom) {
@@ -595,20 +406,27 @@ const CLOUD_BUILDERS = {
   },
 };
 
-// Builds a cloud family directly into the given <svg> (must already have its
-// viewBox set to CLOUD_VIEWBOX[family]) and returns { g, stopDrift } -- call
-// stopDrift() before rebuilding/discarding the svg to avoid leaking the
-// rAF loop, since this animates continuously rather than on a per-render basis.
+// Builds a cloud family into `svg` (viewBox must already be CLOUD_VIEWBOX[family]) and returns
+// { g, stopDrift }. Call stopDrift() before discarding the svg or the rAF loop leaks.
 function buildCloudFamily(family, svg, season, getWind) {
   const g = CLOUD_BUILDERS[family](svg);
   g.setAttribute('opacity', CLOUD_GATES[family][CLOUD_SEASON_IDX[season] ?? 2]);
   const vbW = parseFloat(svg.getAttribute('viewBox').split(' ')[2]);
   const wrap = vbW + 400;
   let raf;
+  // Integrate per frame (distance += speed * dt). Never use elapsed * current speed: speed
+  // follows gusting wind, so each change rescales all history and clouds jump back and forth.
+  let lastTs = null;
+  let distance = 0;
   function tick(ts) {
-    const t = ts / 1000;
+    if (lastTs == null) lastTs = ts;
+    const dt = Math.min((ts - lastTs) / 1000, 0.5);
+    lastTs = ts;
     const w = getWind ? getWind() : 1;
     const speed = 8 + w * 6;
+    distance += speed * dt;
+    // Hidden family: keep the clock running so it reappears in place, skip DOM writes.
+    if (g.style.display === 'none') { raf = requestAnimationFrame(tick); return; }
     Array.from(g.children).forEach((child, i) => {
       if (!child.dataset.phase) {
         const m = (child.getAttribute('transform') || '').match(/translate\(([-\d.]+)[ ,]+([-\d.]+)\)/);
@@ -617,8 +435,10 @@ function buildCloudFamily(family, svg, season, getWind) {
         child.dataset.phase = String(((ox % wrap) + wrap) % wrap);
       }
       const phase = parseFloat(child.dataset.phase);
-      const drift = ((t * speed + phase) % wrap) - 200;
-      child.setAttribute('transform', 'translate(' + drift.toFixed(0) + ' ' + child.dataset.oy + ')');
+      const drift = ((distance + phase) % wrap) - 200;
+      // Whole-unit steps: only write when the value changes (a same-value write still repaints).
+      const t = 'translate(' + drift.toFixed(0) + ' ' + child.dataset.oy + ')';
+      if (child.__t !== t) { child.__t = t; child.setAttribute('transform', t); }
     });
     raf = requestAnimationFrame(tick);
   }
@@ -626,76 +446,89 @@ function buildCloudFamily(family, svg, season, getWind) {
   return { g, stopDrift: () => cancelAnimationFrame(raf) };
 }
 
-// ---------- SNOWFALL: falling snow particles, mirrors the existing rain-canvas
-// approach but as SVG circles so it can live inside a catalog demo card
-// without needing its own <canvas>. The production/scene-wide version should
-// stay canvas-based like rain, for the same performance reasons. ----------
-// opts: {width, height, intensity: 'calm'|'blizzard'}
-// Intensity controls density, fall speed, and flake size range -- the point
-// of this card is to show the RANGE a weather object covers in the scene,
-// not just "does it move" (see project note: a snow panel should showcase
-// calm vs blizzard directly, with everything else in the micro-scene kept
-// trivial so the range itself is what reads).
-const SNOW_INTENSITY = {
-  calm:     { count: 18, durRange: [7, 12], sizeRange: [1.0, 2.2], driftRange: [-8, 8] },
-  blizzard: { count: 60, durRange: [2.2, 4], sizeRange: [1.8, 3.6], driftRange: [-40, 40] },
-};
-function makeSnowfall(opts){
-  const { width = 300, height = 300, intensity = 'calm' } = opts;
-  const preset = SNOW_INTENSITY[intensity] || SNOW_INTENSITY.calm;
-  const g = el('g', { class: `obj snowfall snow-${intensity}` });
-  for (let i = 0; i < preset.count; i++) {
-    el('circle', {
-      cx: rand(0, width), cy: rand(-height, height), r: rand(...preset.sizeRange),
-      fill: '#ffffff', opacity: String(rand(0.5, 0.95)),
-      class: 'snow-flake',
-      style: `--fall-dur:${rand(...preset.durRange).toFixed(1)}s; --fall-delay:${rand(0, 6).toFixed(1)}s; --drift:${rand(...preset.driftRange).toFixed(0)}px;`,
-    }, g);
-  }
-  return g;
+// HTML-layer variant used by the scene: each cloud (puff group / wisp path) is its own small
+// <svg> inside its own div, and drift moves the DIV with a CSS translate. That runs on the
+// compositor, so drifting clouds no longer repaint the whole cloud plate (which they did on
+// nearly every frame). Layout matches buildCloudFamily exactly: same builders/seed, same
+// drift = ((distance + phase) % wrap) - 200 in family viewBox units, now sub-pixel smooth.
+// `container` is the family's band div (world-frame %). Returns { g: container, stopDrift }.
+function cloudChildBox(child) {
+  // Analytic bounds (no getBBox/layout): ellipses, or paths made of M + relative q segments,
+  // whose control points bound the curve. Padded a little for antialiasing.
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  const add = (x, y) => { x0 = Math.min(x0, x); y0 = Math.min(y0, y); x1 = Math.max(x1, x); y1 = Math.max(y1, y); };
+  const shapes = child.tagName.toLowerCase() === 'g' ? Array.from(child.children) : [child];
+  shapes.forEach((e) => {
+    if (e.tagName.toLowerCase() === 'ellipse') {
+      const cx = +e.getAttribute('cx'), cy = +e.getAttribute('cy'), rx = +e.getAttribute('rx'), ry = +e.getAttribute('ry');
+      add(cx - rx, cy - ry); add(cx + rx, cy + ry);
+    } else if (e.tagName.toLowerCase() === 'path') {
+      const t = e.getAttribute('d').match(/[MmQqZz]|-?[\d.]+(?:e-?\d+)?/g);
+      let cmd = 'M', x = 0, y = 0, i = 0;
+      while (i < t.length) {
+        if (/[A-Za-z]/.test(t[i])) { cmd = t[i++]; if (/z/i.test(cmd)) continue; }
+        if (cmd === 'M') { x = +t[i]; y = +t[i + 1]; i += 2; add(x, y); cmd = 'L'; }
+        else if (cmd === 'm') { x += +t[i]; y += +t[i + 1]; i += 2; add(x, y); }
+        else if (cmd === 'q') { add(x + +t[i], y + +t[i + 1]); x += +t[i + 2]; y += +t[i + 3]; add(x, y); i += 4; }
+        else if (cmd === 'Q') { add(+t[i], +t[i + 1]); x = +t[i + 2]; y = +t[i + 3]; add(x, y); i += 4; }
+        else i++;
+      }
+    }
+  });
+  const p = 4;
+  return { x: x0 - p, y: y0 - p, w: x1 - x0 + 2 * p, h: y1 - y0 + 2 * p };
 }
-
-// opts: {width, height, intensity: 'calm'|'monsoon'}
-// Rain already exists live in scene.js as a canvas-drawn effect; this SVG
-// version is for the catalog demo only, same reasoning as makeSnowfall.
-const RAIN_INTENSITY = {
-  calm:    { count: 20, durRange: [0.9, 1.4], lenRange: [12, 20], opacityRange: [0.25, 0.5] },
-  monsoon: { count: 70, durRange: [0.35, 0.55], lenRange: [22, 34], opacityRange: [0.4, 0.75] },
-};
-function makeRainfall(opts){
-  const { width = 300, height = 300, intensity = 'calm' } = opts;
-  const preset = RAIN_INTENSITY[intensity] || RAIN_INTENSITY.calm;
-  const g = el('g', { class: `obj rainfall rain-${intensity}` });
-  for (let i = 0; i < preset.count; i++) {
-    const len = rand(...preset.lenRange);
-    const rx = rand(0, width), ry = rand(-height, height);
-    el('line', {
-      x1: rx, y1: ry, x2: rx + 4, y2: ry + len,
-      stroke: `rgba(180,210,240,${rand(...preset.opacityRange).toFixed(2)})`,
-      'stroke-width': 1.4, 'stroke-linecap': 'round',
-      class: 'rain-drop',
-      style: `--fall-dur:${rand(...preset.durRange).toFixed(2)}s; --fall-delay:${rand(0, 1.4).toFixed(2)}s;`,
-    }, g);
+function buildCloudFamilyLayers(family, container, season, getWind) {
+  const [, , vbW, vbH] = CLOUD_VIEWBOX[family].split(' ').map(Number);
+  const scratch = el('svg', {});                 // builders append into an svg; detached is fine
+  const src = CLOUD_BUILDERS[family](scratch);
+  container.style.opacity = CLOUD_GATES[family][CLOUD_SEASON_IDX[season] ?? 2];
+  const wrap = vbW + 400;
+  const kids = Array.from(src.children);
+  const layers = kids.map((child, i) => {
+    const m = (child.getAttribute('transform') || '').match(/translate\(([-\d.]+)[ ,]+([-\d.]+)\)/);
+    const ox = m ? parseFloat(m[1]) : (i / Math.max(1, kids.length)) * wrap;
+    const oy = m ? parseFloat(m[2]) : 0;
+    child.removeAttribute('transform');
+    const b = cloudChildBox(child);
+    const div = document.createElement('div');
+    div.className = 'cloud-layer';
+    div.style.cssText = `left:${(b.x / vbW * 100).toFixed(4)}%;top:${((b.y + oy) / vbH * 100).toFixed(4)}%;` +
+      `width:${(b.w / vbW * 100).toFixed(4)}%;height:${(b.h / vbH * 100).toFixed(4)}%`;
+    const svg = el('svg', { viewBox: `${b.x} ${b.y} ${b.w} ${b.h}`, preserveAspectRatio: 'none' });
+    svg.appendChild(child);
+    div.appendChild(svg);
+    container.appendChild(div);
+    return { div, phase: ((ox % wrap) + wrap) % wrap, last: '' };
+  });
+  // Family-unit -> px factor, cached; recomputed when the container's width changes.
+  let pxPer = 0, lastW = -1;
+  const measure = () => { const w = container.clientWidth; if (w !== lastW) { lastW = w; pxPer = w / vbW; } };
+  window.addEventListener('resize', () => { lastW = -1; });
+  let raf, lastTs = null, distance = 0;
+  function tick(ts) {
+    raf = requestAnimationFrame(tick);
+    if (lastTs == null) lastTs = ts;
+    const dt = Math.min((ts - lastTs) / 1000, 0.5);
+    lastTs = ts;
+    const w = getWind ? getWind() : 1;
+    distance += (8 + w * 6) * dt;   // integrate: never elapsed * current speed (see buildCloudFamily)
+    if (container.style.display === 'none') return;
+    if (lastW < 0 || !pxPer) measure();
+    layers.forEach((l) => {
+      const drift = ((distance + l.phase) % wrap) - 200;
+      const t = `translate3d(${(drift * pxPer).toFixed(2)}px,0,0)`;
+      if (t !== l.last) { l.last = t; l.div.style.transform = t; }
+    });
   }
-  return g;
+  raf = requestAnimationFrame(tick);
+  return { g: container, stopDrift: () => cancelAnimationFrame(raf) };
 }
-
 
 // ---------- BIRDS (finalized wing rig, ported from bird-rig-test.html) ----------
-// This replaces the earlier dart-shaped boids flock. That version could
-// flock (rotate to face an arbitrary heading) because a dart looks correct
-// pointing any direction. This bird can't do the same: its design (head
-// leaning right, body hanging below the wing root, wings spread left-right)
-// only reads correctly upright and roughly horizontal -- rotating it to
-// face a boid's arbitrary heading (steep turns, vertical headings) would
-// break the calibrated head/body relationship. So this is independent
-// flapping + gentle horizontal drift per bird (a loose group, safe with
-// this design), not true separation/alignment/cohesion flocking.
-//
-// Species table, wingPath geometry, and the head/body/beak hang position
-// are all ported verbatim from the validated standalone rig -- proportions
-// were measured directly off Christian's own reference files (see the
-// asset-intake-process notes), not re-guessed here.
+// Not boids: this bird (head leaning right, body under the wing root) only reads correctly
+// upright and near-horizontal, so it must never rotate toward a heading. Species, wing and
+// head/body/beak numbers were measured from reference files (see asset-intake notes).
 const BIRD_SPECIES = {
   song:  { span: 24, armFrac: .42, chord: 3.2, up: .78, down: .62, lag: .13, beat: 1.05, body: .9,  hand: 1.1,  sweep: .12, tip: .85 },
   swift: { span: 30, armFrac: .3,  chord: 3.6, up: .85, down: .7,  lag: .1,  beat: .38,  body: .8,  hand: 1.3,  sweep: .08, tip: 1.1 },
@@ -760,19 +593,19 @@ function tickRealBird(bd, tsec) {
   bd.body.setAttribute('transform', `translate(0 ${va * 1.4}) rotate(${-va * 3})`);
 }
 
-// Builds a small independently-flapping group into `svg`, each bird
-// drifting horizontally at its own speed (wrapping at the edges) so they
-// read as flying rather than flapping in place -- no rotation-to-heading,
-// so the asymmetric head/body design stays correct at every moment.
+// Independently flapping birds, each drifting at its own speed and wrapping at the edges.
 function buildRealBirdFlock(svg, vbw, vbh) {
+  // World units/sec. Clouds render via small viewBoxes scaled ~3-5x to VW (~25-70 units/sec
+  // on screen); birds must read faster than the clouds, hence 60-100.
   const specs = [
-    { kind: 'dove',  scale: 0.9, y: vbh * 0.22, driftSpeed: 7 },
-    { kind: 'song',  scale: 0.75, y: vbh * 0.42, driftSpeed: 11 },
-    { kind: 'gull',  scale: 1.0, y: vbh * 0.62, driftSpeed: 5 },
+    // Silhouettes read as distant birds, so they're kept small and slow (Sept 24: halved).
+    { kind: 'dove',  scale: 0.9, y: vbh * 0.22, driftSpeed: 42 },
+    { kind: 'song',  scale: 0.75, y: vbh * 0.42, driftSpeed: 34 },
+    { kind: 'gull',  scale: 1.0, y: vbh * 0.62, driftSpeed: 55 },
   ];
   const g = document.createElementNS(SVGNS, 'g');
   svg.appendChild(g);
-  const flock = specs.map((s, i) => ({ ...s, x: vbw * (0.2 + i * 0.3), bd: makeRealBird(g, s.scale * 2.8, '#1a1a1a', s.kind) }));
+  const flock = specs.map((s, i) => ({ ...s, x: vbw * (0.2 + i * 0.3), bd: makeRealBird(g, s.scale * 1.4, '#1a1a1a', s.kind) }));
 
   let raf = null, stopped = false;
   const start = performance.now();
@@ -791,27 +624,119 @@ function buildRealBirdFlock(svg, vbw, vbh) {
   return { g, stop: () => { stopped = true; if (raf) cancelAnimationFrame(raf); } };
 }
 
+// ---------- PAINTERLY OVERLAY: "paint pass" for real traced art ----------
+// Extends the gradient-shading look (mountains, flower highlights) to boulders, shore banks and
+// foreground plants. These are real multi-path traced assets (dozens of already-varied fills),
+// so paths are NOT reclassified or refilled -- that would risk breaking baked-in shading.
+// Instead two soft radial glows are laid ON TOP in the asset's own viewBox space: warm highlight
+// upper right, cool shadow pool lower left (the scene's light-from-upper-right convention).
+// opts: highlightOpacity, shadowOpacity, radius (gradient r).
+//
+// Rule: plain low-opacity gradient fills only, NO runtime <filter> and NO mix-blend-mode --
+// blend modes inside nested <svg> are the kind of thing that has repeatedly broken on WebKit.
+// The glow is clipped to a <clipPath> of CLONES of the asset's own top-level shapes (clip-path
+// uses geometry only, so their fill refs don't matter), so it never paints over transparent
+// gaps inside the viewBox (would show as a pale floating rectangle). Bbox via plain getBBox().
+// Batched: calls are queued and flushed in one microtask (all getBBox reads, then all writes),
+// so boot pays for one layout instead of one per boulder/plant.
+let __paintGlowId = 0;
+const __paintQueue = [];
+function addPainterlyOverlay(wrap, opts) {
+  if (!__paintQueue.length) queueMicrotask(flushPainterly);
+  __paintQueue.push([wrap, opts]);
+}
+function flushPainterly() {
+  const queued = __paintQueue.splice(0);
+  // Measure unswayed: bbox includes the sway rotation, so pause it for the read (was measured
+  // before the class was added when this ran inline).
+  const swaying = queued.flatMap(([w]) => Array.from(w.querySelectorAll('.grass-clump-sway')));
+  swaying.forEach((e) => e.classList.remove('grass-clump-sway'));
+  const jobs = queued.map(([wrap, opts]) => {
+    let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+    const shapeNodes = [];
+    Array.from(wrap.children).forEach((child) => {
+      const tag = child.tagName && child.tagName.toLowerCase();
+      if (tag === 'defs' || tag === 'style' || tag === 'title') return;
+      let b;
+      try { b = child.getBBox(); } catch (e) { return; }
+      if (!b || (b.width === 0 && b.height === 0)) return;
+      x0 = Math.min(x0, b.x); y0 = Math.min(y0, b.y);
+      x1 = Math.max(x1, b.x + b.width); y1 = Math.max(y1, b.y + b.height);
+      shapeNodes.push(child);
+    });
+    return [wrap, opts, shapeNodes, x0, y0, x1, y1];
+  });
+  swaying.forEach((e) => e.classList.add('grass-clump-sway'));
+  jobs.forEach((j) => paintOverlay(...j));
+}
+function paintOverlay(wrap, opts, shapeNodes, x0, y0, x1, y1) {
+  const gNS = 'http://www.w3.org/2000/svg';
+  if (!isFinite(x0) || !shapeNodes.length) return;
+  const vx = x0, vy = y0, vw = x1 - x0, vh = y1 - y0;
+  const { highlightOpacity = 0.20, shadowOpacity = 0.16, radius = 0.75 } = opts || {};
+  const clipId = `paintClip${__paintGlowId++}`;
+  const hlId = `paintHl${__paintGlowId++}`;
+  const shId = `paintSh${__paintGlowId++}`;
+
+  const defs = document.createElementNS(gNS, 'defs');
+  const clip = document.createElementNS(gNS, 'clipPath');
+  clip.setAttribute('id', clipId);
+  shapeNodes.forEach((n) => {
+    const c = n.cloneNode(true);
+    // Clip copies stay static: drop the sway class/inline style added after queueing.
+    [c, ...c.querySelectorAll('.grass-clump-sway')].forEach((e) => {
+      if (e.classList && e.classList.contains('grass-clump-sway')) { e.classList.remove('grass-clump-sway'); e.removeAttribute('style'); }
+    });
+    clip.appendChild(c);
+  });
+  defs.appendChild(clip);
+
+  const hlGrad = document.createElementNS(gNS, 'radialGradient');
+  hlGrad.setAttribute('id', hlId);
+  hlGrad.setAttribute('cx', '0.72'); hlGrad.setAttribute('cy', '0.2'); hlGrad.setAttribute('r', String(radius));
+  const hlStop0 = document.createElementNS(gNS, 'stop');
+  hlStop0.setAttribute('offset', '0'); hlStop0.setAttribute('stop-color', '#fff3d6'); hlStop0.setAttribute('stop-opacity', String(highlightOpacity));
+  const hlStop1 = document.createElementNS(gNS, 'stop');
+  hlStop1.setAttribute('offset', '1'); hlStop1.setAttribute('stop-color', '#fff3d6'); hlStop1.setAttribute('stop-opacity', '0');
+  hlGrad.appendChild(hlStop0); hlGrad.appendChild(hlStop1);
+
+  const shGrad = document.createElementNS(gNS, 'radialGradient');
+  shGrad.setAttribute('id', shId);
+  shGrad.setAttribute('cx', '0.24'); shGrad.setAttribute('cy', '0.86'); shGrad.setAttribute('r', String(radius));
+  const shStop0 = document.createElementNS(gNS, 'stop');
+  shStop0.setAttribute('offset', '0'); shStop0.setAttribute('stop-color', '#1c2836'); shStop0.setAttribute('stop-opacity', String(shadowOpacity));
+  const shStop1 = document.createElementNS(gNS, 'stop');
+  shStop1.setAttribute('offset', '1'); shStop1.setAttribute('stop-color', '#1c2836'); shStop1.setAttribute('stop-opacity', '0');
+  shGrad.appendChild(shStop0); shGrad.appendChild(shStop1);
+
+  defs.appendChild(hlGrad); defs.appendChild(shGrad);
+  wrap.appendChild(defs);
+
+  const glowGroup = document.createElementNS(gNS, 'g');
+  glowGroup.setAttribute('class', 'paint-glow');
+  glowGroup.setAttribute('clip-path', `url(#${clipId})`);
+  glowGroup.style.pointerEvents = 'none';
+  const mkRect = (fillId) => {
+    const r = document.createElementNS(gNS, 'rect');
+    r.setAttribute('x', String(vx)); r.setAttribute('y', String(vy));
+    r.setAttribute('width', String(vw)); r.setAttribute('height', String(vh));
+    r.setAttribute('fill', `url(#${fillId})`);
+    return r;
+  };
+  glowGroup.appendChild(mkRect(hlId));
+  glowGroup.appendChild(mkRect(shId));
+  wrap.appendChild(glowGroup);
+}
+
 // ---------- BOULDER + GRASS (real traced art, fetched per-variant) ----------
-// Source: a 12-variant boulder+grass sprite sheet, split into individual
-// per-variant SVG files (assets/boulder-grass-<id>.svg) since embedding all
-// 12 variants' real path data inline would have added ~1.6MB to this file --
-// fetched on demand instead, same reasoning as the other large traced-art
-// assets in this catalog. Each variant file has two groups: `.rock`
-// (static) and `.grass-clump` (the small grass blades at the base) --
-// separated by hue during extraction (grass = green hue, high saturation;
-// rock = the grey-teal low-saturation remainder).
-//
-// Wind: only the grass clump sways (rocks don't move) -- `.grass-clump-sway`
-// pivots at the clump's own bounding-box base (transform-box:fill-box,
-// origin 50% 100%), which lines up with where the blades actually root
-// since that's the same point used to compute the clump's own bbox.
-//
-// Season: recolored via a single CSS filter on each group rather than
-// recoloring 20+ individual blade-shading paths by hand -- grass shifts
-// green -> gold/brown (fall) -> heavily frosted (winter) -> fresh green
-// (spring), rock gets only a light frost in winter and is otherwise
-// untouched, since real rock doesn't change color with the seasons the way
-// foliage does.
+// Per-variant files (assets/boulder-grass-<id>.svg) split from a 12-variant sprite sheet and
+// fetched on demand (inlining all would add ~1.6MB). Each file has `.rock` (static) and
+// `.grass-clump` (separated by hue during extraction).
+// Wind: only the grass sways -- `.grass-clump-sway` pivots at the clump's own bbox base
+// (transform-box:fill-box, origin 50% 100%), which is where the blades root.
+// Season: one CSS filter per group instead of recoloring 20+ blade paths. Grass goes
+// gold/brown (fall), frosted (winter); rock only gets a light winter frost (rock doesn't change
+// color with seasons).
 const BOULDER_GRASS_SEASON_FILTER = {
   winter: 'saturate(.15) brightness(1.3)',
   spring: 'saturate(1.1) brightness(1.05)',
@@ -825,16 +750,16 @@ const BOULDER_ROCK_SEASON_FILTER = {
   fall: 'saturate(1) brightness(1)',
 };
 
+// `wrap` is a native nested <svg> (scene.js placeSvg), not a foreignObject/HTML div (Safari):
+// content is fetched synchronously and appended as children, not set via innerHTML.
 function buildBoulderGrass(wrap, src, season) {
-  wrap.innerHTML = '';
-  fetch(src).then(r => r.text()).then(text => {
-    wrap.innerHTML = text;
-    const svg = wrap.querySelector('svg');
-    if (!svg) return;
-    svg.setAttribute('preserveAspectRatio', 'xMidYMax meet');
-    Object.assign(svg.style, { width: '100%', height: '100%', display: 'block' });
-    const grass = svg.querySelector('.grass-clump');
-    const rock = svg.querySelector('.rock');
+  try {
+    const text = window.__fetchSyncText(src);
+    window.__injectFetchedSvg(wrap, text);
+    wrap.setAttribute('preserveAspectRatio', 'xMidYMax meet');
+    addPainterlyOverlay(wrap);
+    const grass = wrap.querySelector('.grass-clump');
+    const rock = wrap.querySelector('.rock');
     if (grass) {
       grass.classList.add('grass-clump-sway');
       grass.style.setProperty('--dur', (1.1 + Math.random() * 0.6).toFixed(2) + 's');
@@ -844,136 +769,21 @@ function buildBoulderGrass(wrap, src, season) {
     wrap._rock = rock;
     wrap._grass = grass;
     wrap.setSeason = function (s) {
-      if (wrap._grass) wrap._grass.style.filter = BOULDER_GRASS_SEASON_FILTER[s] || '';
-      if (wrap._rock) wrap._rock.style.filter = BOULDER_ROCK_SEASON_FILTER[s] || '';
+      if (wrap._grass) window.__applySeasonFilterTweened(wrap._grass, BOULDER_GRASS_SEASON_FILTER[s] || '', 700);
+      if (wrap._rock) window.__applySeasonFilterTweened(wrap._rock, BOULDER_ROCK_SEASON_FILTER[s] || '', 700);
     };
     wrap.setSeason(season || 'summer');
-  }).catch(() => {
-    wrap.innerHTML = '';
+  } catch (e) {
     window.attachImgFallback(wrap, src, { left: '0', top: '0', width: '100%', height: '100%' });
-  });
-}
-
-// ---------- BIRDS (flocking, canvas) ----------
-// A second, separate bird variant from the wing-rig above -- built
-// specifically to answer "can these birds flock?" for the wing-rig design:
-// no, not without breaking its asymmetric head/body calibration (see that
-// entry's note). This shape is different on purpose: a single rigid
-// silhouette (nose at one tip, swept wings, forked tail streamers) that
-// looks correct rotating to face ANY heading, which is exactly what real
-// boids flocking needs every frame. Shape supplied directly (not traced or
-// measured by me) -- a clean, already rotation-safe design.
-//
-// Rendered on canvas rather than as SVG/DOM elements: a real boids flock
-// needs an O(n^2) neighbor check every frame (each boid compares itself to
-// every other boid for separation/alignment/cohesion) PLUS a per-boid
-// transform update -- fine for canvas's immediate-mode redraw, but doing
-// the same through 25+ live SVG DOM elements would mean that many style/
-// attribute writes every frame, the exact pattern the lessons-learned doc
-// already warns off ("setting properties on many elements every frame is
-// expensive"). Canvas sidesteps that entirely by not keeping any of it in
-// the DOM.
-const FLOCK_BIRD_PATH_D = "M493,714.45c21.43-67.32,38.48-117.16,49.56-148.84,16.57-47.42,29.68-82.55,22.29-130A200.16,200.16,0,0,0,549.74,385l-25.75.1c7.75-.76,24.82-2.87,40.26-9a82.78,82.78,0,0,0,13.66-6.71A95.93,95.93,0,0,0,591,359.3l36.52-12.67-34.89-6.09a123.15,123.15,0,0,0-17.18-9.29,126.73,126.73,0,0,0-25.29-8.14l-1.08-.57v-.05a17.6,17.6,0,0,1,1.37-2.77c.67-1.11,12.1-44.77,10.25-67.57C558.48,224,528,129.31,466.79,6.5c.36,8.6,5.92,141.44,6.58,172.06.16,7.29.21,10.93.2,11.93,0,13.56-.18,27.11-.08,40.67,0,1.5,1.7,3,2,4.57.43,2.48,1.31,5.47.28,7.46-3.16,6.06-2,11.49,1.48,17.21a8.69,8.69,0,0,1,1.28,6.4c-.46,4.61-4.08,5.65-5.14,9.7-.55,2.11-.49,5.33,2.59,10-8.88,3.77-11.06,7.49-11.36,10.23-.39,3.61,2.48,5.42,1.48,9.74-.78,3.36-2.85,3.76-4.66,8.08a20.7,20.7,0,0,0-1.5,7.91c-.28,4.48-8,11.37-39.52,22.15q-28.89.9-58.64,2.55c-65.1,3.63-126.93,9.73-185.29,17.55,101.06,9.46,167.58,14.64,194.45,14.62,3.63,0,14.47-.11,16.33,4.08,3,6.68-18.9,19.94-31.33,27.39-24.17,14.48-60.87,36-110.92,64,93.52-43,163-73.74,179.94-79.74a57.74,57.74,0,0,1,17.24-3.43c12.87-.54,23.66,3.37,30.55,6.63a28.71,28.71,0,0,0-4.41,4.6c-2.53,3.33-5.24,6.91-4.2,10.09,1.45,4.46,9.22,4.95,9.2,7.86,0,2.25-4.67,2.4-4.91,4.9-.33,3.51,8.64,5.72,8.87,11.82a1.05,1.05,0,0,1,0,.79c-3.71,7.8-2.76,15.34,2.19,22.78.4.59-.93,1.92-.93,2.93,0,6,.1,12.1.2,18.15.06,2.81.23,5.64.27,8.45.09,5,.06,10.09.18,15.13.11,4.35.14,5.38.54,6.93a22.26,22.26,0,0,0,4.29,8.43C487.22,525.21,490.43,574.55,493,714.45Z";
-const FLOCK_BIRD_PIVOT = { x: 402, y: 357 }; // centroid of the raw (untranslated) path coordinates, used as the rotate/scale pivot since Path2D ignores the source SVG's own transform attribute
-
-function buildBirdFlockCanvas(wrap, w, h, opts) {
-  const count = (opts && opts.count) || 26;
-  const canvas = document.createElement('canvas');
-  canvas.width = w; canvas.height = h;
-  Object.assign(canvas.style, { width: '100%', height: '100%', display: 'block' });
-  wrap.appendChild(canvas);
-  const ctx = canvas.getContext('2d');
-  const birdPath = new Path2D(FLOCK_BIRD_PATH_D);
-
-  const visualRange = w * 0.09, protectedRange = w * 0.028;
-  const centeringFactor = 0.0008, avoidFactor = 0.05, matchingFactor = 0.05;
-  const maxSpeed = w * 0.006, minSpeed = w * 0.0024, turnFactor = 0.3;
-  const scaleFactor = w / 12500; // tuned so a bird reads clearly at this card's size
-
-  const boids = [];
-  for (let i = 0; i < count; i++) {
-    boids.push({
-      x: rand(0, w), y: rand(0, h),
-      vx: rand(-2, 2), vy: rand(-2, 2),
-      flapSpeed: 0.006 + Math.random() * 0.003,
-      flapOffset: rand(0, Math.PI * 2),
-    });
   }
-
-  function step() {
-    for (let i = 0; i < boids.length; i++) {
-      const b = boids[i];
-      let closeDx = 0, closeDy = 0, xPos = 0, yPos = 0, xVel = 0, yVel = 0, n = 0;
-      for (let j = 0; j < boids.length; j++) {
-        if (i === j) continue;
-        const o = boids[j];
-        const dx = b.x - o.x, dy = b.y - o.y;
-        const d2 = dx * dx + dy * dy;
-        if (d2 < visualRange * visualRange) {
-          if (d2 < protectedRange * protectedRange) { closeDx += dx; closeDy += dy; }
-          xPos += o.x; yPos += o.y; xVel += o.vx; yVel += o.vy; n++;
-        }
-      }
-      b.vx += closeDx * avoidFactor;
-      b.vy += closeDy * avoidFactor;
-      if (n > 0) {
-        b.vx += (xPos / n - b.x) * centeringFactor;
-        b.vy += (yPos / n - b.y) * centeringFactor;
-        b.vx += (xVel / n - b.vx) * matchingFactor;
-        b.vy += (yVel / n - b.vy) * matchingFactor;
-      }
-      const margin = w * 0.08;
-      if (b.x < margin) b.vx += turnFactor;
-      if (b.x > w - margin) b.vx -= turnFactor;
-      if (b.y < margin) b.vy += turnFactor;
-      if (b.y > h - margin) b.vy -= turnFactor;
-      const speed = Math.hypot(b.vx, b.vy);
-      if (speed > maxSpeed) { b.vx = b.vx / speed * maxSpeed; b.vy = b.vy / speed * maxSpeed; }
-      else if (speed < minSpeed && speed > 0) { b.vx = b.vx / speed * minSpeed; b.vy = b.vy / speed * minSpeed; }
-      b.x += b.vx; b.y += b.vy;
-    }
-  }
-
-  function draw(time) {
-    ctx.clearRect(0, 0, w, h);
-    for (const b of boids) {
-      const angle = Math.atan2(b.vy, b.vx);
-      const flap = Math.sin(time * b.flapSpeed + b.flapOffset);
-      const verticalScale = 1 + flap * 0.12;
-      ctx.save();
-      ctx.translate(b.x, b.y);
-      ctx.rotate(angle);
-      ctx.scale(scaleFactor, scaleFactor);
-      ctx.translate(FLOCK_BIRD_PIVOT.x, FLOCK_BIRD_PIVOT.y);
-      ctx.scale(1, verticalScale);
-      ctx.translate(-FLOCK_BIRD_PIVOT.x, -FLOCK_BIRD_PIVOT.y);
-      ctx.fillStyle = '#1a1a1a';
-      ctx.fill(birdPath);
-      ctx.restore();
-    }
-  }
-
-  let raf = null, stopped = false;
-  const loop = (t) => {
-    if (stopped) return;
-    step();
-    draw(t);
-    raf = requestAnimationFrame(loop);
-  };
-  raf = requestAnimationFrame(loop);
-  return { canvas, stop: () => { stopped = true; if (raf) cancelAnimationFrame(raf); } };
 }
 
 // ---------- WATER SHIMMER (turbulence + wind + rain/snow ripple-on-impact) ----------
-// Ported directly from a working interactive prototype (built and refined
-// through several rounds before this went anywhere near the catalog).
-// Deliberately built as an OVERLAY, not a replacement for painted water art:
-// V1's own precedent for this exact system is "one motion source (the GPU
-// wobble) and the artist's own highlights -- that's the lake" (lessons-
-// learned doc) -- more effects piled on read as junk. This gives a scene a
-// water surface with real wind-reactive turbulence and rain/snow that
-// actually lands and ripples, positioned over wherever a scene's own lake
-// art sits, rather than trying to extract or recolor that art directly.
+// Ported from a working prototype. Deliberately an OVERLAY positioned over a scene's own lake
+// art, not a replacement or recolor of it ("one motion source plus the artist's highlights";
+// piling on more effects reads as junk).
+// Box is w x h: the top skyFrac of h is sky where precip falls, water fills below waterY.
+// opts: skyFrac (default 0.35), waterXRange [x0,x1] (limits drop/ripple x to visible water).
 const WATER_WIND_CFG = [
   { scale: 2,  dur: '18s',  freq: '0.01 0.03;0.016 0.045;0.01 0.03' },
   { scale: 6,  dur: '9s',   freq: '0.01 0.03;0.028 0.075;0.01 0.03' },
@@ -981,16 +791,34 @@ const WATER_WIND_CFG = [
   { scale: 14, dur: '3s',   freq: '0.01 0.03;0.045 0.1;0.01 0.03' },
 ];
 
+// Visibility for an SVG part: IntersectionObserver on the nearest HTML ancestor. Safari never
+// reports a nested <svg> (or anything inside one) as intersecting, so observing the svg itself
+// froze the lake shimmer there. Waits a frame if the part isn't in the document yet.
+function watchVisible(node, cb) {
+  if (!('IntersectionObserver' in window)) return;
+  const go = () => {
+    let host = node;
+    while (host && host.namespaceURI === 'http://www.w3.org/2000/svg') host = host.parentNode;
+    if (!host || !host.isConnected || host.nodeType !== 1) { requestAnimationFrame(go); return; }
+    new IntersectionObserver((es) => cb(es[es.length - 1].isIntersecting)).observe(host);
+  };
+  go();
+}
+
 function buildWaterShimmer(wrap, w, h, opts) {
   wrap.innerHTML = '';
-  const skyFrac = (opts && opts.skyFrac) || 0.35; // fraction of h reserved above the waterline for falling precip
+  const skyFrac = (opts && opts.skyFrac != null) ? opts.skyFrac : 0.35; // fraction of h reserved above the waterline for falling precip
+  const waterXRange = (opts && opts.waterXRange) || [0, w]; // constrains drop/ripple spawn x to where water is actually visible, not grass banks
   const waterY = h * skyFrac;
   const uid = 'ws' + Math.floor(Math.random() * 1e6);
-  const svg = el('svg', { viewBox: `0 0 ${w} ${h}`, preserveAspectRatio: 'xMidYMax meet' });
-  // Highlight streak paths scaled proportionally to whatever w/h this scene
-  // passes in -- the original demo hardcoded these for a 400x200 canvas;
-  // this generates an equivalent spread of gentle curves at any size rather
-  // than assuming that fixed canvas.
+  // Rule: this <svg> must be pinned with position:absolute;inset:0 like every other world-space
+  // wrapper. With only a viewBox, height is derived from the viewBox aspect instead of the
+  // container, and with bottom-anchored xMidYMax the content lands below the visible water.
+  const svg = el('svg', {
+    viewBox: `0 0 ${w} ${h}`, preserveAspectRatio: 'xMidYMax meet',
+    style: 'position:absolute;inset:0;width:100%;height:100%',
+  });
+  // Highlight streaks generated proportionally for any w/h (the prototype hardcoded 400x200).
   const streakCount = Math.max(3, Math.round(h / 55));
   let streaks = '';
   for (let i = 0; i < streakCount; i++) {
@@ -999,210 +827,237 @@ function buildWaterShimmer(wrap, w, h, opts) {
     const x0 = rand(-w * 0.05, w * 0.1), x1 = w * rand(0.35, 0.55), x2 = w * rand(0.9, 1.05);
     streaks += `<path d="M${x0},${sy} Q${x1},${midY} ${x2},${sy - rand(-6,6)}" stroke-width="${rand(1.5,3)}"/>`;
   }
+  // Keep the water rect's top edge flat: a curved edge was tried and made the panel read as a
+  // floating box (the "hard line" issue was a different element, lagoonForegroundBand2).
   svg.innerHTML = `
     <defs>
       <linearGradient id="${uid}-grad" x1="0" y1="0" x2="0" y2="1">
         <stop offset="0" stop-color="#5b8fb0"/><stop offset="1" stop-color="#3d6d8f"/>
       </linearGradient>
       <filter id="${uid}-turb" x="-30%" y="-30%" width="160%" height="160%">
-        <feTurbulence id="${uid}-tb" type="fractalNoise" baseFrequency="0.01 0.04" numOctaves="2" seed="7">
-          <animate id="${uid}-tbAnim" attributeName="baseFrequency" values="0.01 0.04;0.03 0.09;0.01 0.04" dur="9s" repeatCount="indefinite"/>
-        </feTurbulence>
+        <feTurbulence id="${uid}-tb" type="fractalNoise" baseFrequency="0.01 0.04" numOctaves="2" seed="7"/>
         <feDisplacementMap in="SourceGraphic" in2="${uid}-tb" id="${uid}-dmap" scale="2"/>
       </filter>
     </defs>
     <rect x="0" y="${waterY}" width="${w}" height="${h - waterY}" fill="url(#${uid}-grad)"/>
     <g id="${uid}-highlights" filter="url(#${uid}-turb)" opacity="0.85" stroke="#eaf4fb" fill="none" stroke-linecap="round">${streaks}</g>
-    <g id="${uid}-ripples"></g>
-    <g id="${uid}-drops"></g>
   `;
   wrap.appendChild(svg);
   const dmap = svg.querySelector(`#${uid}-dmap`);
-  const tbAnim = svg.querySelector(`#${uid}-tbAnim`);
-  const ripples = svg.querySelector(`#${uid}-ripples`);
-  const drops = svg.querySelector(`#${uid}-drops`);
+  const tb = svg.querySelector(`#${uid}-tb`);
 
-  let windInited = false;
-  let lastWindBucket = -1;
+  // PERF: the noise drift used to be a SMIL <animate> on baseFrequency, which re-rendered the
+  // turbulence filter every display frame (~95% of the scene's raster work). It's now stepped
+  // from JS at ~12fps (same values/durations, same triangle wave) and paused when the lake is
+  // off-screen or the tab is hidden. The drift is slow enough that the stepping doesn't show.
+  let cfg = WATER_WIND_CFG[0], phase0 = performance.now(), lastWindBucket = -1;
+  let scaleStr = '', freqStr = '', lastTick = 0, visible = true;
+  const parseFreq = (v) => v.split(';').map(p => p.trim().split(/\s+/).map(Number));
+  let freqs = parseFreq(cfg.freq), durMs = parseFloat(cfg.dur) * 1000;
+  function setAttr(node, name, v, cur) { if (v !== cur) node.setAttribute(name, v); return v; }
   function setWind(level) {
-    // level is now a continuous 0-3 float (the render loop passes its
-    // smoothed lakeAmp-derived value directly every frame, not a rounded
-    // integer) -- scale interpolates continuously between the two nearest
-    // config entries, which is what actually reads as "smooth" since it's
-    // the dominant visual cue for wind intensity. dur/values are SMIL
-    // animation strings, which can't be numerically interpolated, so they
-    // still switch at integer boundaries -- a much less noticeable snap
-    // now that the main parameter (scale) never jumps.
+    // level is a continuous 0-3 float passed on each render. scale (the dominant wind cue) is
+    // interpolated between the two nearest configs so it never jumps; the drift speed/range
+    // switch only at integer buckets (restarting the cycle, as the SMIL version did).
     const clamped = Math.max(0, Math.min(3, level));
     const i0 = Math.floor(clamped), i1 = Math.min(3, i0 + 1), t = clamped - i0;
     const c0 = WATER_WIND_CFG[i0], c1 = WATER_WIND_CFG[i1];
-    const scale = c0.scale + (c1.scale - c0.scale) * t;
-    dmap.setAttribute('scale', scale.toFixed(2));
+    scaleStr = setAttr(dmap, 'scale', (c0.scale + (c1.scale - c0.scale) * t).toFixed(2), scaleStr);
     const bucket = Math.round(clamped);
     if (bucket !== lastWindBucket) {
-      const c = WATER_WIND_CFG[bucket];
-      tbAnim.setAttribute('dur', c.dur);
-      tbAnim.setAttribute('values', c.freq);
-      // Only force-restart on a CHANGE, not on initial setup -- the <animate>
-      // element already starts on its own once connected to the document, so
-      // calling beginElement() here too was both redundant and, on Firefox,
-      // a real crash: it throws NS_ERROR_FAILURE if called before the SVG's
-      // SMIL timeline is fully initialized, which the very first setWind()
-      // call (made synchronously right after building the SVG) can race.
-      // A failure here is a cosmetic miss (the old frequency range keeps
-      // playing until its current cycle ends) -- never worth crashing the
-      // whole card grid's render loop over, so it's caught, not left to
-      // propagate the way it did before.
-      if (windInited && tbAnim.beginElement) {
-        try { tbAnim.beginElement(); } catch (e) { /* SMIL restart unsupported/not ready -- non-fatal */ }
-      }
-      windInited = true;
-      lastWindBucket = bucket;
+      cfg = WATER_WIND_CFG[bucket]; freqs = parseFreq(cfg.freq); durMs = parseFloat(cfg.dur) * 1000;
+      phase0 = performance.now(); lastWindBucket = bucket;
     }
   }
+  function tick(now) {
+    requestAnimationFrame(tick);
+    if (!visible || now - lastTick < 83) return;
+    lastTick = now;
+    // values "a;b;a" over dur, linear: a triangle wave between the first two keyframes.
+    const u = (((now - phase0) % durMs) + durMs) % durMs / durMs;
+    const k = u < 0.5 ? u * 2 : (1 - u) * 2, A = freqs[0], B = freqs[1];
+    const v = (A[0] + (B[0] - A[0]) * k).toFixed(4) + ' ' + (A[1] + (B[1] - A[1]) * k).toFixed(4);
+    freqStr = setAttr(tb, 'baseFrequency', v, freqStr);
+  }
+  requestAnimationFrame(tick);
+  watchVisible(svg, (on) => { visible = on; });
 
+  // PERF: drops and ripples used to be SVG elements with CSS keyframes (dozens alive at once in
+  // rain), which Safari repainted on the CPU every frame. They are now particles drawn on a
+  // canvas (attachCanvas, wired in scene.js) with the same sizes, timings and keyframe curves
+  // as the old CSS (waterRippleGrow*, waterFall* in scene.css). Units stay this panel's local w x h.
+  const parts = [];
+  const bez = (x1, y1, x2, y2) => (t) => {           // CSS cubic-bezier timing function
+    if (t <= 0 || t >= 1) return t;
+    let u = t;
+    for (let i = 0; i < 8; i++) {
+      const x = 3 * x1 * u * (1 - u) * (1 - u) + 3 * x2 * u * u * (1 - u) + u * u * u - t;
+      const dx = 3 * x1 * (1 - u) * (1 - 3 * u) + 3 * x2 * u * (2 - 3 * u) + 3 * u * u;
+      if (Math.abs(x) < 1e-5 || !dx) break;
+      u = Math.min(1, Math.max(0, u - x / dx));
+    }
+    return 3 * y1 * u * (1 - u) * (1 - u) + 3 * y2 * u * u * (1 - u) + u * u * u;
+  };
+  const E_RAIN_RIP = bez(.15, .6, .35, 1), E_SNOW_RIP = bez(.2, .5, .4, 1), E_INOUT = bez(.42, 0, .58, 1);
+  const LIN = t => t;
+  // CSS keyframes: each property eases between the keyframes that set it.
+  function kfv(frames, prop, t, ease) {
+    let a = null, b = null;
+    for (const f of frames) { if (!(prop in f)) continue; if (f.at <= t) a = f; if (f.at >= t) { b = f; break; } }
+    if (!a) return b[prop]; if (!b || b === a) return a[prop];
+    return a[prop] + (b[prop] - a[prop]) * ease((t - a.at) / (b.at - a.at));
+  }
+  const KF = {
+    ripRain: [{ at: 0, o: 1, sw: 4.5, s: .08 }, { at: .6, o: .85, sw: 1.8 }, { at: 1, o: 0, sw: .6, s: 1 }],
+    ripSnow: [{ at: 0, o: 1, sw: 3, s: .08 }, { at: .55, o: .75, sw: 1.6 }, { at: 1, o: 0, sw: .4, s: 1 }],
+    dropRain: [{ at: 0, y: 0, o: 0 }, { at: .12, o: 1 }, { at: .85, o: 1 }, { at: 1, y: 1, o: 0 }],
+    dropSnow: [{ at: 0, x: 0, y: 0, o: 0 }, { at: .1, o: 1 }, { at: .5, x: -1, y: .5, o: 1 }, { at: .85, o: 1 }, { at: 1, x: 0, y: 1, o: 0 }],
+  };
   function spawnRipple(x, isSnow) {
-    const e = el('ellipse', {});
-    // Scaled ~3x from the original size -- this water panel now stretches
-    // across almost the full scene width (world-space VW, ~5000 units)
-    // instead of the small catalog-card width (1600) these values were
-    // originally sized for, so anything at the old scale renders far too
-    // small to see once stretched that much wider.
-    const rx = (isSnow ? 42 : 30) + Math.random() * 18, ry = rx * 0.38;
-    const dur = isSnow ? (3.4 + Math.random() * 1.6) : (0.9 + Math.random() * 0.5);
+    // Sizes are ~3x the prototype's because the panel spans ~5000 world units, not 1600.
+    const rx = 42 + Math.random() * 20, ry = rx * 0.38;
+    const dur = isSnow ? (3.4 + Math.random() * 1.6) : (1.3 + Math.random() * 0.6);
     const y = waterY + Math.random() * (h - waterY) * 0.85;
-    e.setAttribute('cx', x); e.setAttribute('cy', y);
-    e.setAttribute('rx', rx); e.setAttribute('ry', ry);
-    e.setAttribute('fill', 'none'); e.setAttribute('stroke', '#eaf4fb');
-    e.classList.add('water-ripple', isSnow ? 'water-ripple-snow' : 'water-ripple-rain');
-    e.style.setProperty('--dur', dur + 's');
-    ripples.appendChild(e);
-    setTimeout(() => e.remove(), dur * 1000 + 50);
+    parts.push({ k: isSnow ? 'ripSnow' : 'ripRain', x, y, rx, ry, t0: performance.now(), dur: dur * 1000 });
+    wake();
   }
 
+  const durScale = h / 550; // preserves original fall speed regardless of panel height
   let precip = 'none', spawnTimer = null;
   function spawnDrop() {
     const isSnow = precip === 'snow';
-    const x = 15 + Math.random() * (w - 30);
-    const landY = waterY + Math.random() * (h - waterY) * 0.15;
+    const x = waterXRange[0] + Math.random() * (waterXRange[1] - waterXRange[0]);
+    const landY = waterY + Math.random() * (h - waterY) * 0.75;
+    const t0 = performance.now();
     if (isSnow) {
-      const c = el('circle', {});
       const startY = -5 - Math.random() * 20;
-      const dur = 1.8 + Math.random() * 1.2;
-      c.setAttribute('cx', x); c.setAttribute('cy', startY); c.setAttribute('r', 4.8 + Math.random() * 4.2);
-      c.setAttribute('fill', '#ffffff');
-      c.classList.add('water-drop-snow');
-      c.style.setProperty('--dist', (landY - startY) + 'px');
-      c.style.setProperty('--sway', (8 + Math.random() * 10) + 'px');
-      c.style.setProperty('--dur', dur + 's');
-      drops.appendChild(c);
-      setTimeout(() => { c.remove(); spawnRipple(x, true); }, dur * 1000);
+      const dur = (1.8 + Math.random() * 1.2) * durScale * 1000;
+      parts.push({ k: 'dropSnow', x, y: startY, r: 4.8 + Math.random() * 4.2, dist: landY - startY,
+        sway: 8 + Math.random() * 10, t0, dur, land: () => spawnRipple(x, true) });
     } else {
-      const l = el('line', {});
       const startY = -15 - Math.random() * 20;
-      const dur = 0.32 + Math.random() * 0.12;
-      l.setAttribute('x1', x); l.setAttribute('y1', startY); l.setAttribute('x2', x + 12); l.setAttribute('y2', startY + 39);
-      l.setAttribute('stroke', '#ffffff'); l.setAttribute('stroke-width', '4.8'); l.setAttribute('stroke-linecap', 'round'); l.setAttribute('opacity', '0.95');
-      l.classList.add('water-drop-rain');
-      l.style.setProperty('--dist', (landY - startY) + 'px');
-      l.style.setProperty('--dur', dur + 's');
-      drops.appendChild(l);
-      setTimeout(() => { l.remove(); spawnRipple(x + 2, false); }, dur * 1000);
+      const dur = (0.32 + Math.random() * 0.12) * durScale * 1000;
+      parts.push({ k: 'dropRain', x, y: startY, dist: landY - startY, t0, dur, land: () => spawnRipple(x + 2, false) });
     }
+    wake();
   }
+  // Canvas output. map = { x0, y0, s }: panel-local (lx, ly) sits at canvas CSS px
+  // (x0 + lx * s, y0 + ly * s); scene.js supplies it and keeps it current on resize.
+  let cvs = null, ctx = null, map = null, raf = 0;
+  function wake() { if (!raf && cvs) raf = requestAnimationFrame(draw); }
+  function draw(now) {
+    raf = 0;
+    if (!cvs || !map) return;
+    const dpr = window.devicePixelRatio || 1;
+    const W = Math.round(cvs.clientWidth * dpr), H = Math.round(cvs.clientHeight * dpr);
+    if (cvs.width !== W || cvs.height !== H) { cvs.width = W; cvs.height = H; }
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    ctx.setTransform(dpr * map.s, 0, 0, dpr * map.s, dpr * map.x0, dpr * map.y0);
+    ctx.lineCap = 'round';
+    for (let i = parts.length - 1; i >= 0; i--) {
+      const q = parts[i];
+      const t = (now - q.t0) / q.dur;
+      if (t >= 1) { parts.splice(i, 1); if (q.land) q.land(); continue; }
+      if (t < 0) continue;
+      const f = KF[q.k];
+      if (q.k === 'ripRain' || q.k === 'ripSnow') {
+        const e = q.k === 'ripRain' ? E_RAIN_RIP : E_SNOW_RIP;
+        const sc = kfv(f, 's', t, e), o = kfv(f, 'o', t, e), sw = kfv(f, 'sw', t, e);
+        ctx.globalAlpha = Math.max(0, o);
+        ctx.strokeStyle = q.k === 'ripSnow' ? '#ffffff' : '#eaf4fb';
+        ctx.lineWidth = sw * sc;                      // the old CSS scale() scaled the stroke too
+        ctx.beginPath(); ctx.ellipse(q.x, q.y, q.rx * sc, q.ry * sc, 0, 0, Math.PI * 2); ctx.stroke();
+      } else if (q.k === 'dropRain') {
+        const dy = kfv(f, 'y', t, LIN) * q.dist;
+        ctx.globalAlpha = 0.95 * kfv(f, 'o', t, LIN);
+        ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 4.8;
+        ctx.beginPath(); ctx.moveTo(q.x, q.y + dy); ctx.lineTo(q.x + 12, q.y + 39 + dy); ctx.stroke();
+      } else {
+        const dx = kfv(f, 'x', t, E_INOUT) * q.sway, dy = kfv(f, 'y', t, E_INOUT) * q.dist;
+        ctx.globalAlpha = kfv(f, 'o', t, E_INOUT);
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath(); ctx.arc(q.x + dx, q.y + dy, q.r, 0, Math.PI * 2); ctx.fill();
+      }
+    }
+    ctx.globalAlpha = 1;
+    if (parts.length && !raf) raf = requestAnimationFrame(draw);   // land() may already have woken it
+  }
+  function attachCanvas(canvas, m) { cvs = canvas; ctx = canvas.getContext('2d'); map = m; wake(); }
+  function setCanvasMap(m) { map = m; wake(); }
+
+  // Spawn intervals (rain 35ms, snow 140ms) are tuned to scene.js's wide waterXRange (~1420
+  // units): slower reads sparse over that width, much faster reads as a rainstorm.
   function setPrecip(p) {
     precip = p;
     if (spawnTimer) clearInterval(spawnTimer);
-    if (p !== 'none') spawnTimer = setInterval(spawnDrop, p === 'rain' ? 55 : 220);
+    if (p !== 'none') spawnTimer = setInterval(spawnDrop, p === 'rain' ? 35 : 140);
   }
 
   setWind(0);
   return {
-    svg, setWind, setPrecip,
+    svg, setWind, setPrecip, attachCanvas, setCanvasMap,
     stop: () => { if (spawnTimer) clearInterval(spawnTimer); },
   };
 }
 
 // ---------- DISTANT TREELINE (dense silhouette band) ----------
-// A depth layer that was flagged as entirely missing when the catalog was
-// compared against a reference scene: a dark, dense forest silhouette
-// sitting at the base of the mountains, before the lake starts. Built from
-// existing catalog conventions rather than new source art -- individual
-// tree detail (needles, branch structure) would never actually be visible
-// at this distance/scale, so the shape is deliberately simple (small
-// triangular silhouettes, no needle-level detail) and the real work is in
-// density and jitter, not per-tree fidelity. Static, not wind-reactive --
-// a real distant treeline at this scale doesn't show individual tree sway,
-// only a whole hillside would move together, which isn't attempted here.
+// Dark, dense forest silhouette at the base of the mountains, before the lake. Individual tree
+// detail isn't visible at this distance, so shapes are simple domes and the work is in density
+// and jitter. Static, not wind-reactive (a distant treeline doesn't show per-tree sway).
+// Season: plain filter over the fixed #2c4530/#152a19 fills. Fall needs real sepia plus a big
+// saturation push to move dark green to a visible autumn brown; a mild hue-rotate barely shows.
 const TREELINE_SEASON_FILTER = {
   winter: 'saturate(.5) brightness(1.25)',
   spring: 'hue-rotate(4deg) saturate(1.05) brightness(1.02)',
   summer: 'saturate(1) brightness(1)',
-  fall: 'hue-rotate(-18deg) saturate(1.1) brightness(.95)',
+  fall: 'sepia(.5) saturate(2.2) hue-rotate(-12deg) brightness(1.0)',
 };
 
 function buildDistantTreeline(vbw, vbh, opts) {
-  const baseY = (opts && opts.baseY) || vbh * 0.62;
-  const bandH = (opts && opts.bandH) || vbh * 0.1;
-  const col = (opts && opts.color) || '#1c2b1e';
+  // Clumps are elliptical-arc half-domes (`A rx ry 0 0 1`), which reach exactly h at the apex.
+  // Don't swap to quadratic curves: `M base Q control peak` only reaches about half of h, which
+  // renders as a shallow scalloped ribbon. Needs a tall container, see scene.js buildMidground.
+  const baseY = (opts && opts.baseY) || vbh * 0.96;
+  const bandH = (opts && opts.bandH) || vbh * 0.7;
+  const backCol = (opts && opts.backColor) || '#2c4530';
+  const frontCol = (opts && opts.color) || '#152a19';
   const g = el('g', { class: 'obj distant-treeline' });
-  let x = -8;
-  while (x < vbw + 8) {
-    const w = rand(6, 13);
-    const h = bandH * rand(0.65, 1.15);
-    const topY = baseY - h;
-    const lean = rand(-1.5, 1.5);
-    el('path', {
-      d: `M${x} ${baseY} L${x + w / 2 + lean} ${topY} L${x + w} ${baseY} Z`,
-      fill: col,
-    }, g);
-    x += w * rand(0.42, 0.62); // dense overlap, no gaps in the band
+  // Half-ellipse dome: apex height is exactly h above baseY, guaranteed.
+  function domePath(x, w, h) {
+    return `M${x} ${baseY} A${w / 2} ${h} 0 0 1 ${x + w} ${baseY} Z`;
   }
-  // A second, slightly shorter/lighter back row peeking over the first,
-  // so the band reads as a mass of trees rather than one flat cut-out row.
-  const backCol = (opts && opts.backColor) || '#28402b';
-  x = -8;
-  while (x < vbw + 8) {
-    const w = rand(7, 14);
-    const h = bandH * rand(0.4, 0.7);
-    const topY = baseY - bandH * 0.35 - h;
-    el('path', {
-      d: `M${x} ${baseY - bandH * 0.3} L${x + w / 2} ${topY} L${x + w} ${baseY - bandH * 0.3} Z`,
-      fill: backCol,
-    }, g);
-    x += w * rand(0.5, 0.75);
+  // Back row: smaller, lighter clumps, drawn first (behind).
+  let x = -20;
+  while (x < vbw + 20) {
+    const w = bandH * rand(0.33, 0.6);
+    const h = bandH * rand(0.33, 0.55);
+    el('path', { d: domePath(x, w, h), fill: backCol }, g);
+    x += w * rand(0.55, 0.72); // dense overlap, no gaps in the band
+  }
+  // Front row: bigger, darker clumps peeking in front, with real height
+  // variance so the canopy line reads as irregular forest, not a uniform
+  // scallop trim.
+  x = -20;
+  while (x < vbw + 20) {
+    const w = bandH * rand(0.44, 0.82);
+    const h = bandH * rand(0.55, 0.93);
+    el('path', { d: domePath(x, w, h), fill: frontCol }, g);
+    x += w * rand(0.48, 0.62);
   }
   g.style.transition = 'filter 0.7s linear';
-  g.setSeason = function (season) { g.style.filter = TREELINE_SEASON_FILTER[season] || ''; };
+  g.setSeason = function (season) { window.__applySeasonFilterTweened(g, TREELINE_SEASON_FILTER[season] || '', 700); };
   return g;
 }
 
 // ---------- FOREGROUND PLANTS (real traced art, fetched per-variant) ----------
-// Source: two sprite sheets (Foreground-plants-sprite-1.svg, 14 plants;
-// -sprite-2.svg, 12 plants) -- directly filling the "foreground plant
-// variety" gap flagged when the catalog was compared against a reference
-// scene (only one generic flower/grass-clump existed before this). Split
-// apart the same way the boulder sheet was: neither sheet uses <g> grouping
-// at all, so individual plants were separated by clustering each path's
-// bounding box by PROXIMITY (union-find on box-to-box distance) rather than
-// an assumed grid -- unlike the boulder sheet, plant bounding boxes vary
-// too much in size for a fixed grid split to land cleanly (a fern's fronds
-// spread far wider than a small vine's leaves do). Getting from raw path
-// data to a correct bounding box also needed a real SVG path parser
-// (svgpathtools, not a regex): both sheets use H/V/S/T/A commands with
-// non-alternating parameter counts, which a naive "every number is x,y in
-// sequence" reader silently corrupts.
-//
-// Only 5 of the 26 total plants are in the catalog so far (fern,
-// yellow-flower-stem, agave, spiky-yucca, rounded-bush) -- picked for
-// variety (frond, flowering stem, two spiky/succulent forms, a rounded
-// shrub), not because the rest are harder. The other 21 use the identical
-// extraction technique.
-//
-// Whole plant sways as one unit from its own base -- reuses the exact same
-// grass-clump-sway CSS class the boulder grass uses (same physical
-// behavior: a small foliage mass rooted at one point), rather than
-// inventing a parallel class for what is mechanically the same motion.
+// Split from Foreground-plants-sprite-1.svg (14 plants) and -sprite-2.svg (12). Neither sheet
+// uses <g> grouping, so plants were separated by clustering path bboxes by proximity
+// (union-find), not a grid, and bboxes needed a real path parser (svgpathtools): the sheets use
+// H/V/S/T/A commands that a naive "numbers are x,y pairs" reader corrupts.
+// Catalog has 5 of the 26 so far (fern, yellow-flower-stem, agave, spiky-yucca, rounded-bush);
+// the rest use the same extraction.
+// Whole plant sways from its base, reusing the boulder grass-clump-sway class (same motion).
 const FG_PLANT_SEASON_FILTER = {
   winter: 'saturate(.2) brightness(1.3)',
   spring: 'saturate(1.1) brightness(1.05)',
@@ -1210,15 +1065,14 @@ const FG_PLANT_SEASON_FILTER = {
   fall: 'hue-rotate(-45deg) saturate(.95) brightness(.97)',
 };
 
+// `wrap` is a native nested <svg>, fetched synchronously -- see buildBoulderGrass.
 function buildForegroundPlant(wrap, src, season) {
-  wrap.innerHTML = '';
-  fetch(src).then(r => r.text()).then(text => {
-    wrap.innerHTML = text;
-    const svg = wrap.querySelector('svg');
-    if (!svg) return;
-    svg.setAttribute('preserveAspectRatio', 'xMidYMax meet');
-    Object.assign(svg.style, { width: '100%', height: '100%', display: 'block' });
-    const plant = svg.querySelector('.plant-sway');
+  try {
+    const text = window.__fetchSyncText(src);
+    window.__injectFetchedSvg(wrap, text);
+    wrap.setAttribute('preserveAspectRatio', 'xMidYMax meet');
+    addPainterlyOverlay(wrap, { highlightOpacity: 0.16, shadowOpacity: 0.13 });
+    const plant = wrap.querySelector('.plant-sway');
     if (plant) {
       plant.classList.add('grass-clump-sway');
       plant.style.setProperty('--dur', (1.3 + Math.random() * 0.7) + 's');
@@ -1226,77 +1080,102 @@ function buildForegroundPlant(wrap, src, season) {
     }
     wrap._plant = plant;
     wrap.setSeason = function (s) {
-      if (wrap._plant) wrap._plant.style.filter = FG_PLANT_SEASON_FILTER[s] || '';
+      if (wrap._plant) window.__applySeasonFilterTweened(wrap._plant, FG_PLANT_SEASON_FILTER[s] || '', 700);
     };
     wrap.setSeason(season || 'summer');
-  }).catch(() => {
-    wrap.innerHTML = '';
+  } catch (e) {
     window.attachImgFallback(wrap, src, { left: '0', top: '0', width: '100%', height: '100%' });
-  });
+  }
 }
 
 // ---------- FOOTHILLS RANGE (long, croppable strip) ----------
-// Source: Mountain_Range_Long.svg -- a real 4-layer depth-graded rolling
-// hills illustration, deliberately built ~3x wider than any single scene
-// needs (native 11998.88 x 891.49) specifically so a scene can crop
-// whatever width window it needs from it rather than stretching a normal-
-// width image and distorting it. This function crops a window into the
-// strip (via viewBox + preserveAspectRatio="...slice") instead of showing
-// the whole elongated strip squashed into a card.
+// Source: Mountain_Range_Long.svg, a 4-layer depth-graded hills strip built ~3x wider than any
+// scene (native 11998.88 x 891.49) so a scene crops a window (viewBox + "...slice") instead of
+// stretching it. Its nearest layer has a traced treeline edge, so it likely supersedes the
+// procedural distant treeline (flagged, not decided).
+// No season table of its own: it's graded per frame by scene.js render() (see
+// buildFoothillsRange). Intent: restrained distant tint matching the treeline.
 //
-// Four real depth layers (by class, sorted by luminance): farthest/lightest
-// teal ridge, a mid ridge, a darker ridge, nearest/darkest layer (which has
-// a real jagged treeline silhouette traced into its own top edge -- this
-// asset already does the "distant treeline" job on its nearest layer, so
-// it likely supersedes the earlier procedural distant-treeline object
-// rather than stacking with it; flagged, not decided here).
-//
-// Season is a single whole-image filter, same principle and same values as
-// distant-treeline: distance flattens color without erasing it, so this
-// gets the same restrained tint distant elements get rather than close-up
-// foliage treatment.
-const FOOTHILLS_SEASON_FILTER = {
-  winter: 'saturate(.5) brightness(1.25)',
-  spring: 'hue-rotate(4deg) saturate(1.05) brightness(1.02)',
-  summer: 'saturate(1) brightness(1)',
-  fall: 'hue-rotate(-18deg) saturate(1.1) brightness(.95)',
-};
+// buildCroppedSvgAsset: generic helper -- fetch an external SVG, override its viewBox to show a
+// crop window, and inject it into `wrap`. Reusable for any wide multi-crop source; used for the
+// lagoon banks (grassy-hills-1.svg), which get season color from scene.js's standard
+// layerFilter('foliage') pass, not their own table.
+// opts: preserveAspectRatio (default 'xMidYMid slice' = fill the box, crop overflow),
+// flip (mirror horizontally), painterly (default true).
+// `wrap` is a native nested <svg>, fetched synchronously -- see buildBoulderGrass.
+function buildCroppedSvgAsset(wrap, src, viewBox, opts) {
+  const preserveAspectRatio = (opts && opts.preserveAspectRatio) || 'xMidYMid slice';
+  const flip = !!(opts && opts.flip);
+  try {
+    const text = window.__fetchSyncText(src);
+    // Uniquify every id AND class before inserting: these Illustrator exports are loaded many
+    // times into one document and reuse generic ids (SVGID_7_) and classes (st0, st3...).
+    // Duplicate ids make url(#id) bind to the wrong element; colliding <style> classes let one
+    // file's .st3 (e.g. opacity:0.09) override another's, rendering a hill at 9% opacity.
+    // The <style> block's class selectors are rewritten to match.
+    const uid = 'cropped' + Math.floor(Math.random() * 1e9);
+    const rewritten = text.replace(/\bid="([^"]+)"/g, (m, id) => `id="${id}-${uid}"`)
+      .replace(/url\(#([^)]+)\)/g, (m, id) => `url(#${id}-${uid})`)
+      .replace(/(xlink:href|href)="#([^"]+)"/g, (m, attr, id) => `${attr}="#${id}-${uid}"`)
+      .replace(/\bclass="([^"]+)"/g, (m, cls) => `class="${cls.split(/\s+/).map(c => c + '-' + uid).join(' ')}"`)
+      .replace(/\.([\w-]+)(\s*\{)/g, (m, cls, brace) => `.${cls}-${uid}${brace}`);
+    window.__injectFetchedSvg(wrap, rewritten);
+    wrap.setAttribute('viewBox', viewBox);
+    wrap.setAttribute('preserveAspectRatio', preserveAspectRatio);
+    // Mirror in SVG space, NOT with a CSS transform (scaleX(-1)) on `wrap`: wrap is a nested
+    // <svg> with overflow:visible and a slice crop that paints outside its declared box, so the
+    // CSS mirror axis comes from painted geometry and lands far off-center (transform-box:
+    // border-box doesn't fix it inside the scaled scene svg). A <g translate(vbW,0)
+    // scale(-1,1)> uses the element's own viewBox width, so there's no ambiguity.
+    if (flip) {
+      const vb = viewBox.trim().split(/\s+/).map(Number);
+      const vbW = vb.length === 4 && isFinite(vb[2]) ? vb[2] : 0;
+      const gNS = 'http://www.w3.org/2000/svg';
+      const flipG = document.createElementNS(gNS, 'g');
+      flipG.setAttribute('transform', `translate(${vbW},0) scale(-1,1)`);
+      while (wrap.firstChild) flipG.appendChild(wrap.firstChild);
+      wrap.appendChild(flipG);
+    }
+    // Painterly pass on by default ({ painterly: false } opts out). Stronger than the default
+    // opacities because these large, mostly flat green crops barely show the subtle version.
+    if (!opts || opts.painterly !== false) addPainterlyOverlay(wrap, { highlightOpacity: 0.30, shadowOpacity: 0.26, radius: 1.1 });
+    wrap._svg = wrap;
+  } catch (e) {
+    window.attachImgFallback(wrap, src, { left: '0', top: '0', width: '100%', height: '100%' });
+  }
+}
+
 const FOOTHILLS_NATIVE_W = 11998.88, FOOTHILLS_NATIVE_H = 891.49;
 
+// `wrap` is a native nested <svg>, fetched synchronously -- see buildBoulderGrass.
 function buildFoothillsRange(wrap, src, season, opts) {
-  wrap.innerHTML = '';
-  // cropWidth: how much of the native strip's width to show, in native
-  // units -- smaller = more zoomed in on a slice, larger = wider view
-  // (up to the full strip). cropX: left edge of that window (native units).
+  // cropWidth: native-unit width of the window (smaller = more zoomed in). cropX: its left edge.
   const cropWidth = (opts && opts.cropWidth) || FOOTHILLS_NATIVE_W / 4;
   const cropX = (opts && opts.cropX) != null ? opts.cropX : (FOOTHILLS_NATIVE_W - cropWidth) / 2;
-  fetch(src).then(r => r.text()).then(text => {
-    wrap.innerHTML = text;
-    const svg = wrap.querySelector('svg');
-    if (!svg) return;
-    svg.setAttribute('viewBox', `${cropX} 0 ${cropWidth} ${FOOTHILLS_NATIVE_H}`);
-    svg.setAttribute('preserveAspectRatio', 'xMidYMax slice');
-    Object.assign(svg.style, { width: '100%', height: '100%', display: 'block' });
-    svg.style.transition = 'filter 0.7s linear';
-    wrap._svg = svg;
-    wrap.setSeason = function (s) { svg.style.filter = FOOTHILLS_SEASON_FILTER[s] || ''; };
-    wrap.setSeason(season || 'summer');
-  }).catch(() => {
-    wrap.innerHTML = '';
+  try {
+    const text = window.__fetchSyncText(src);
+    window.__injectFetchedSvg(wrap, text);
+    wrap.setAttribute('viewBox', `${cropX} 0 ${cropWidth} ${FOOTHILLS_NATIVE_H}`);
+    wrap.setAttribute('preserveAspectRatio', 'xMidYMax slice');
+    // Rule: no setSeason here. `wrap._svg = wrap` makes this the element scene.js render()
+    // grades every frame via applySeasonFilter(foothillsSvg, layerFilter('mtn')), which is
+    // already smooth; a separate discrete filter got overwritten within a frame and fought
+    // over the same el.__filterRec cache.
+    wrap._svg = wrap;
+  } catch (e) {
     window.attachImgFallback(wrap, src, { left: '0', top: '0', width: '100%', height: '100%' });
-  });
+  }
 }
 
 window.SceneComponents = {
-  makePine, makeDetailedPine, makeGrass, makeFlower, makeDeciduous,
-  buildCloudFamily, CLOUD_GATES, CLOUD_SEASON_IDX, CLOUD_VIEWBOX,
-  makeSnowfall, makeRainfall, addPineSnowDust,
+  makeDetailedPine, makeFlower,
+  buildCloudFamily, buildCloudFamilyLayers, CLOUD_GATES, CLOUD_SEASON_IDX, CLOUD_VIEWBOX,
+  addPineSnowDust,
   makeMountainIsolated,
   buildRealBirdFlock,
   buildBoulderGrass,
-  buildBirdFlockCanvas,
   buildWaterShimmer,
   buildDistantTreeline,
   buildForegroundPlant,
-  buildFoothillsRange,
+  buildFoothillsRange, buildCroppedSvgAsset,
 };

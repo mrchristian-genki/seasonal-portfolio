@@ -3,61 +3,62 @@ html,body{margin:0;background:#0b1020;font-family:system-ui,-apple-system,sans-s
 .hero{position:relative;width:100%;overflow:hidden;background:#4f8fd0}
 .plate-sky{background:linear-gradient(180deg,#4f8fd0 0%,#93c3e4 52%,#d6ecf2 100%)}
 
-/* ============================================================
-   PLATE SYSTEM -- traditional multiplane-camera layering (sky, celestial, aurora,
-   clouds, background, midground, foreground, fx, ui), rebuilt from ad hoc z-index
-   after repeated stacking bugs. Every plate is position:absolute;inset:0 with NO
-   z-index property at all -- depth comes purely from DOM order (declared once in
-   index.html, later plates paint on top of earlier ones). This is the ENTIRE
-   layering mechanism now: to put something behind or in front of something else,
-   put it in the right plate. No z-index arithmetic, no insertBefore/nextSibling
-   ordering tricks, nothing to compute or get wrong.
-   pointer-events:none on every plate except plate-ui, so clicks pass through the
-   scene to whatever's actually interactive (tabs, buttons) in the UI plate.
-   ============================================================ */
+/* PLATE SYSTEM -- multiplane-camera layering. Every plate is absolute/inset:0
+   with no z-index: depth is DOM order in index.html, later plates paint on top.
+   To move something in depth, put it in a different plate. Plates ignore the
+   pointer so clicks reach the UI plate's tabs and buttons. */
 .plate{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+/* Grade layer: an HTML wrapper for one world svg, carrying that layer's season/time-of-day CSS
+   filter (see gradeLayer in scene.js). Same box as its plate. */
+.grade-layer{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+/* overflow:hidden (the plate clips here anyway): keeps each colour-grade filter's working
+   area to the visible plate instead of the full width of oversized art (the foothills svg is
+   ~2.4x the world's width), which matters for memory on iPhone. */
+/* No will-change layer hints anywhere. ?bench on real Safari (MBP, iMac, iPhone, Sept 23)
+   measured every hint set as slower, some by 3-4x, and the iPhone reloaded the page under
+   the extra layer memory. Animated transforms still get GPU layers from the browser itself. */
 .plate-ui{pointer-events:none;z-index:6} /* children (buttons, tabs) opt back in via their own rules */
 
-.art-layer{position:relative;width:100%}
-/* no landscape.svg -- scene is entirely procedural */
+/* PAGE-LOAD REVEAL -- each plate rises into place once on first load, in three
+   waves: near layers (0ms), the rest of the illustration (260ms), then the hero
+   text (620ms). Near plates travel further, like a multiplane camera. scene.js
+   adds .scene-loaded after every plate is built (double rAF so this hidden
+   state paints first); these rules only define the hidden state. */
+.scene-core .plate{
+  transition-property: transform, opacity;
+  transition-duration: 820ms;
+  transition-timing-function: cubic-bezier(.19,.85,.34,1);
+}
+.scene-core .plate-foreground,
+.scene-core .plate-fx,
+.scene-core .plate-midground,
+.scene-core .plate-birds{transition-delay:0ms}
+.scene-core .plate-background,
+.scene-core .plate-clouds,
+.scene-core .plate-aurora,
+.scene-core .plate-celestial,
+.scene-core .plate-sky{transition-delay:260ms}
+.scene-core .plate-ui{transition-delay:620ms}
+
+.scene-core:not(.scene-loaded) .plate-foreground{transform:translateY(10%);opacity:0}
+.scene-core:not(.scene-loaded) .plate-fx{transform:translateY(8%);opacity:0}
+.scene-core:not(.scene-loaded) .plate-midground{transform:translateY(7%);opacity:0}
+.scene-core:not(.scene-loaded) .plate-birds{transform:translateY(6%);opacity:0}
+.scene-core:not(.scene-loaded) .plate-background{transform:translateY(5%);opacity:0}
+.scene-core:not(.scene-loaded) .plate-clouds{transform:translateY(4%);opacity:0}
+.scene-core:not(.scene-loaded) .plate-aurora{transform:translateY(2%);opacity:0}
+.scene-core:not(.scene-loaded) .plate-celestial{transform:translateY(2%);opacity:0}
+.scene-core:not(.scene-loaded) .plate-sky{transform:translateY(1%);opacity:0}
+.scene-core:not(.scene-loaded) .plate-ui{transform:translateY(6%);opacity:0}
+
+/* Accessibility: skip the motion for anyone who's asked for less of it --
+   the scene still appears, just instantly rather than sliding in. */
+@media (prefers-reduced-motion: reduce){
+  .scene-core .plate{transition:none}
+}
+
 #skyGradient{position:absolute;inset:0;transition:background .8s linear}
-.motion{position:absolute;inset:0;pointer-events:none}
-.belowfold{height:60vh;background:#fff}
-/* Deciduous tree seasonal fills -- override the catalog's baked-in fall colors */
-.deciduous.spring [data-r="canopy-hi"]  { fill: #90d850 }
-.deciduous.spring [data-r="canopy-mid"] { fill: #60b830 }
-.deciduous.spring [data-r="canopy-dk"]  { fill: #408820 }
-.deciduous.summer [data-r="canopy-hi"]  { fill: #58c030 }
-.deciduous.summer [data-r="canopy-mid"] { fill: #3a9820 }
-.deciduous.summer [data-r="canopy-dk"]  { fill: #287018 }
-.deciduous.fall   [data-r="canopy-hi"]  { fill: #FBDD18 }
-.deciduous.fall   [data-r="canopy-mid"] { fill: #BE9800 }
-.deciduous.fall   [data-r="canopy-dk"]  { fill: #9B4800 }
-.deciduous.winter [data-r="canopy-hi"]  { fill: #8a7860; opacity: .15 }
-.deciduous.winter [data-r="canopy-mid"] { fill: #6a5a48; opacity: .12 }
-.deciduous.winter [data-r="canopy-dk"]  { fill: #4a3a28; opacity: .10 }
-.deciduous.winter [data-r="snow"]       { display: block }
-.deciduous:not(.winter) [data-r="snow"] { display: none }
-.deciduous [data-r] { transition: fill 0.7s linear, opacity 0.7s linear; }
 .pine-detailed [data-bucket] { transition: fill 0.7s linear; }
-
-
-/* ===== seasonal color grading overlays (ported from the old site's render()) =====
-   Full-bleed, pointer-events:none, sit above the art but below .motion. Colors/opacity
-   are set every frame by scene.js via kfc()/kf() against the continuous season clock.
-   transition on background/opacity gives the same .8s crossfade the rest of the scene's
-   day/night and layer-filter changes already use, so a season handoff feels consistent.
-   NOT currently placed in a plate or added to index.html (still disabled per the earlier
-   sepia-wash investigation) -- kept here for whenever that system is revisited. */
-.grade,.wash{position:absolute;inset:0;pointer-events:none}
-.grade-mul{mix-blend-mode:multiply;transition:background .8s linear}
-.grade-scr{mix-blend-mode:screen;transition:background .8s linear,opacity .8s linear}
-.grade-sat{background:#808080;mix-blend-mode:saturation;transition:opacity .8s linear}
-.wash{mix-blend-mode:soft-light;transition:opacity .8s linear}
-
-.wash-summer{background:#ffdf9e}
-.wash-fall{background:#e8823a}
-.wash-spring{background:#bdf2a0}
 
 
 /* ===== chrome (ported from old site) ===== */
@@ -102,8 +103,8 @@ html,body{margin:0;background:#0b1020;font-family:system-ui,-apple-system,sans-s
 .tab:focus-visible{outline:3px solid rgb(var(--accent));outline-offset:2px}
 .hero-copy{position:absolute;z-index:2;left:clamp(20px,7vw,110px);top:44%;transform:translateY(-50%);width:min(520px,80%);color:#fff}
 .hero-copy::before{content:"";position:absolute;inset:-60px -80px;background:radial-gradient(closest-side,rgba(10,25,40,.34),rgba(10,25,40,0));z-index:-1;pointer-events:none}
-.hero-copy h1{font-family:var(--font-display);font-weight:800;font-size:clamp(36px,4.6vw,60px);line-height:1.05;letter-spacing:-.01em;margin:0 0 18px;text-shadow:0 2px 0 rgba(0,0,0,.12)}
-.hero-copy p{font-size:17px;line-height:1.55;margin:0 0 26px;text-shadow:0 1px 0 rgba(0,0,0,.18);max-width:44ch}
+.hero-copy h1{font-family:var(--font-display);font-weight:800;font-size:clamp(22px,4.6vw,60px);line-height:1.05;letter-spacing:-.01em;margin:0 0 14px;text-shadow:0 2px 0 rgba(0,0,0,.12)}
+.hero-copy p{font-size:clamp(13px,2.4vw,17px);line-height:1.5;margin:0 0 20px;text-shadow:0 1px 0 rgba(0,0,0,.18);max-width:44ch}
 .btn{
     display:inline-block;font-family:var(--font-display);font-weight:700;font-size:15px;text-decoration:none;
     padding:13px 26px;border-radius:12px;color:#fff;background:#1c4f8f;
@@ -114,6 +115,8 @@ html,body{margin:0;background:#0b1020;font-family:system-ui,-apple-system,sans-s
 .btn:active{transform:scale(.96);transition-duration:80ms}
 .btn.solid{background:rgb(var(--accent))}
 .btn:focus-visible{outline:3px solid rgb(var(--accent));outline-offset:3px}
+.btn + .btn{margin-left:10px}
+@media (max-width:520px){.btn + .btn{margin:10px 0 0 0}}
 .view{display:none}
 .view.on{display:block;animation:rise var(--spring-soft-time) var(--spring-soft) both}
 .view.on .works li{animation:rowIn 320ms ease-out both}
@@ -152,31 +155,38 @@ html,body{margin:0;background:#0b1020;font-family:system-ui,-apple-system,sans-s
 .clock #modeBtn{background:#243b46}
 .clock button:focus-visible{outline:3px solid rgb(var(--accent));outline-offset:2px}
 .clock button[disabled]{opacity:.5;cursor:default}
-:root{--spring-soft:ease-out;--spring-soft-time:200ms;--spring-pop:ease-out;--spring-pop-time:150ms}
-.view.on{animation-duration:200ms}
-.view.on .works li,.view.on .foot{animation:none}
-.hiding .view.on{animation:none}
-.tab:not([aria-selected="true"]){transform:none}
-.site-head{padding:14px 16px 6px}
-.tab{padding:8px 10px 10px;font-size:15px}
-.tab::after{left:10px;right:10px}
-.hero-copy{left:20px;width:calc(100% - 40px);top:46%}
-.works{grid-template-columns:1fr;gap:18px}
-.about{padding-bottom:70px}
+/* These two blocks came over from the original site inside media queries;
+   the wrappers were lost in the port, so until Sept 23 they applied at every
+   width (no spring motion, small tabs, one-column works list on desktop). */
+@media (prefers-reduced-motion:reduce){
+  :root{--spring-soft:ease-out;--spring-soft-time:200ms;--spring-pop:ease-out;--spring-pop-time:150ms}
+  .view.on{animation-duration:200ms}
+  .view.on .works li{animation:none}
+  .hiding .view.on{animation:none}
+  .tab:not([aria-selected="true"]){transform:none}
+}
+@media (max-width:760px){
+  .site-head{padding:14px 16px 6px}
+  .tab{padding:8px 10px 10px;font-size:15px}
+  .tab::after{left:10px;right:10px}
+  .works{grid-template-columns:1fr;gap:18px}
+  .about{padding-bottom:70px}
+}
 
-.hero{position:relative;width:100%;overflow:hidden}
 .aurora-fill{position:absolute;inset:0;z-index:0;background:linear-gradient(180deg,#1a2f52 0%,#2d4a7a 30%,#3d6299 55%,#5a85b8 100%)}
 .aurora-fill::before{content:"";position:absolute;inset:0;background:
   radial-gradient(ellipse 60% 40% at 20% 15%,rgba(120,220,190,.22),transparent 70%),
   radial-gradient(ellipse 50% 35% at 80% 10%,rgba(150,140,220,.18),transparent 70%);
   mix-blend-mode:screen}
-.scene-core{position:relative;z-index:1;width:min(100%,1800px);margin:0 auto;aspect-ratio:5003.8931/3333.3333;overflow:hidden}
+/* Shorter than the world's full 5003.8931/3333.3333: every world svg is
+   bottom-anchored (bottom:0) and .plate's overflow:hidden crops the extra off
+   the TOP, trimming empty sky. 2955 leaves ~220 units above the tallest peak
+   (world y=600) and keeps the whole shore/foreground stack. */
+.scene-core{position:relative;z-index:1;width:min(100%,1800px);margin:0 auto;aspect-ratio:5003.8931/2955;overflow:hidden}
 
-/* ── Bottom wave — blends hero scene into the white page below ──────────────
-   Uses mask-image with an inline SVG data URI for a single smooth cubic
-   bezier wave. The SVG is 1200×200 so it scales naturally with the hero width.
-   The hero is fully opaque above the wave, then fades to transparent at the
-   very bottom so the white page shows through cleanly.                      */
+/* Bottom wave: masks the hero into the white page below with one smooth
+   cubic wave. It eats roughly the bottom 18% of the hero, so nothing that
+   must stay visible belongs below world y≈2735. */
 .hero::after {
   content: '';
   position: absolute;
@@ -191,57 +201,16 @@ html,body{margin:0;background:#0b1020;font-family:system-ui,-apple-system,sans-s
   z-index: 5;
 }
 .hero-copy{position:absolute;z-index:10;left:6%;top:8%;max-width:34%;pointer-events:none}
-.hero-copy .view{pointer-events:auto}
+/* Only the links/buttons take taps; the rest of the text lets taps through to the scene's
+   hidden spots (on phones the copy covers most of the scene). */
+.hero-copy .view{pointer-events:none}.hero-copy .view a,.hero-copy .view button{pointer-events:auto}
 .hero-copy .view:not(.on){display:none}
 .about .view:not(.on){display:none}
 
-/* ============================================================
-   WIND RUFFLE VOCABULARY
-   Each material expresses the shared --wind field in its own way.
-   Layer-level ruffle is gentle (artwork foliage isn't split into parts);
-   true per-part weighted ruffle comes with our generated trees.
-   ============================================================ */
-
-/* ambient foliage ruffle: a small, weighted skew that eases (inertia).
-   transform-origin bottom = the mass pivots subtly from where it's rooted,
-   so tops move a touch more than bottoms — reads as wind through the canopy. */
-
-
-
-/* --- per-material classes for OUR generated objects (used in Stage 5 proper) --- */
-
-/* pine TIER: ruffles at the tip, settles with weight. Low amplitude, eased. */
-.pine-tier{
-  transform-box: fill-box; transform-origin: 50% 100%;
-  animation: pineTier var(--dur, 3.2s) cubic-bezier(.37,0,.63,1) infinite alternate;
-  animation-delay: var(--delay, 0s);
-}
-@keyframes pineTier{
-  from{ transform: rotate(-1deg); }
-  to  { transform: rotate(1.6deg); }
-}
-
-/* LEAF clump (aspen/broadleaf): fast, light flutter — low weight = quick + jittery. */
-.leaf-flutter{
-  transform-box: fill-box; transform-origin: 50% 100%;
-  animation: leafFlutter var(--dur, 0.9s) ease-in-out infinite alternate;
-  animation-delay: var(--delay, 0s);
-}
-@keyframes leafFlutter{
-  from{ transform: rotate(-5deg); }
-  to  { transform: rotate(5deg); }
-}
-
-/* GRASS/reed blade: bends from base, springy recovery (strong ease-back). */
-.grass-bend{
-  transform-box: fill-box; transform-origin: 50% 100%;
-  animation: grassBend var(--dur, 2.4s) cubic-bezier(.5,0,.3,1.4) infinite alternate;
-  animation-delay: var(--delay, 0s);
-}
-@keyframes grassBend{ from{ transform: rotate(-2deg) skewX(-1deg); } to  { transform: rotate(4deg) skewX(1.5deg); } }
-
-/* FLOWER: whole bloom nods on its stem — medium weight, slow, low amplitude.
-   NOT petal-level (petals are stiff; petal motion is invisible + costly). */
+/* WIND RUFFLE -- each material expresses the shared --wind field its own way.
+   (The early pine-tier / leaf-flutter / grass-bend classes live only in the
+   catalog now, with the builders that use them.)
+   FLOWER: whole bloom nods on its stem; slow, low amplitude, not per petal. */
 .flower-nod{
   transform-box: fill-box; transform-origin: 50% 100%;
   animation: flowerNod var(--dur, 3.6s) ease-in-out infinite alternate;
@@ -250,7 +219,7 @@ html,body{margin:0;background:#0b1020;font-family:system-ui,-apple-system,sans-s
 @keyframes flowerNod{ from{ transform: rotate(-1.5deg); } to  { transform: rotate(2.5deg); } }
 
 /* ============================================================
-   DEVICE-TIER visibility — deliberate subset per width (blueprint ch.11)
+   DEVICE-TIER visibility -- deliberate subset per width (blueprint ch.11)
    data-tier: d = desktop-only, md = tablet+up, (untagged/mobile = always)
    ============================================================ */
 /* tablet and below: hide desktop-only richness */
@@ -266,64 +235,50 @@ html,body{margin:0;background:#0b1020;font-family:system-ui,-apple-system,sans-s
 .hero{padding-top:0}
 .hero-copy{top:7%;transform:none;}
 .hero-copy h1{margin-top:0;line-height:1.05;}
-@media (max-width:1024px){ .hero-copy{max-width:48%;top:6%;} }
+@media (max-width:1024px){ .hero-copy{max-width:60%;top:6%;} }
 @media (max-width:640px){ .hero-copy{max-width:82%;left:6%;top:5%;} }
 
+/* The pine clusters used to be nudged inward and scaled up below 1024px. That lifted trunks
+   off the sloping banks (Sept 24 screenshots), so the pines now keep their world positions at
+   every width, like the rest of the scene. */
 
-/* Artist's real foliage: gentle per-shape ruffle. transform-box:fill-box means
-   each path rotates around ITS OWN box, so it can't distort neighbours/mountains.
-   Small amplitude, eased, weight via per-shape --dur.
-   TEMP DEBUG: amplitude and speed cranked way up (was ±0.9-1.1deg, ~3-9s) so the
-   motion is obviously visible while confirming the animation actually runs at all.
-   Dial back down once confirmed -- see the values commented out below. */
-.foliage-sway{
-  transform-box: fill-box;
-  transform-origin: 50% 90%;
-  animation: foliageSway var(--dur, 3.5s) ease-in-out infinite alternate;
-  animation-delay: var(--delay, 0s);
-  will-change: transform;
-}
-@keyframes foliageSway{ from{ transform: rotate(-1.2deg); } to  { transform: rotate(1.4deg); } }
-
-/* Detailed pine (real traced art, whole-tree sway): a heavier, slower rock than the
-   single-tier pine-tier/leaf-flutter/grass-bend units above, since the whole tree mass
-   moves together rather than just a lightweight lobe. Pivot is set inline per-instance
-   (transform-origin at the art's own measured base point) since it depends on the tree's
-   own coordinate space, not a generic 50%/bottom percentage. */
+/* Detailed pine: the whole traced tree rocks slowly as one mass. Pivot is set
+   inline per instance at the art's own measured base point. */
 .pine-detailed-sway{
   animation: pineDetailedSway var(--dur, 5.5s) ease-in-out infinite alternate;
   animation-delay: var(--delay, 0s);
-  will-change: transform;
 }
+/* Pines sway as HTML layers (scene.js buildTrees) so the rotation stays on the GPU. */
+.fg-layer{ position:absolute; }
+.fg-layer > svg{ pointer-events:none; }
+.cloud-layer{ position:absolute; }
+.cloud-layer > svg{ position:absolute; inset:0; width:100%; height:100%; overflow:visible; }
 @keyframes pineDetailedSway{ from{ transform: rotate(-0.6deg); } to  { transform: rotate(0.9deg); } }
 
-/* Isolated hero tree (real <img>, not inline SVG): the whole big mostly-
-   transparent image rotates a tiny amount around a transform-origin placed
-   at the tree's own base point (set inline per-instance in scene.js, since
-   it depends on that image's own coordinate frame). Default transform-box
-   for <img> is border-box, which is exactly what we want here -- no
-   fill-box override needed like the inline-SVG classes above. */
+/* Hero tree (<image>): a tiny rotation about the tree's own base point,
+   set inline in scene.js. */
 .tree-isolated-sway{
   animation: treeIsolatedSway var(--dur, 6s) ease-in-out infinite alternate;
   animation-delay: var(--delay, 0s);
-  will-change: transform;
 }
 @keyframes treeIsolatedSway{ from{ transform: rotate(-0.4deg); } to  { transform: rotate(0.5deg); } }
 
-/* ============================================================
-   NEW MATERIAL CLASSES -- added for water shimmer, boulder grass,
-   and foreground plants (ported from the catalog build). Same
-   --wind-driven vocabulary as the rest of this file.
-   ============================================================ */
-
-/* Grass clump sway (boulder-side grass, foreground plants): same
-   physical motion as grass-bend above, reused as its own class
-   since these are fetched external SVGs, not inline-generated art. */
+/* Grass clump sway: boulder-side grass and foreground plants (fetched SVGs). */
 .grass-clump-sway{
   transform-box: fill-box; transform-origin: 50% 100%;
   animation: grassClumpSway 1.4s cubic-bezier(.65,0,.35,1) infinite alternate;
-  animation-duration: calc(var(--dur, 1.4s) * 1);
+  animation-duration: var(--dur, 1.4s);
 }
+/* Reeds: each fan of blades rocks a little on its own inside the clump's sway, so it shimmers. */
+.reed-fan{
+  transform-box: fill-box; transform-origin: 50% 100%;
+  animation: reedFan var(--rdur, 2.6s) ease-in-out var(--rdel, 0s) infinite alternate;
+}
+@keyframes reedFan{ from{ transform: rotate(-1.2deg); } to{ transform: rotate(1.6deg); } }
+.sway-grass{ animation: grassClumpSway var(--dur, 1.4s) cubic-bezier(.65,0,.35,1) infinite alternate; }
+.sway-grass-mirror{ animation: grassClumpSwayMirror var(--dur, 1.4s) cubic-bezier(.65,0,.35,1) infinite alternate; }
+@keyframes grassClumpSwayMirror{ from{ transform: rotate(3deg); } to{ transform: rotate(-4deg); } }
+.sway-flower{ animation: flowerNod var(--dur, 3.6s) ease-in-out infinite alternate; animation-delay: var(--delay, 0s); }
 @keyframes grassClumpSway{
   from{ transform: rotate(-3deg); }
   to  { transform: rotate(4deg); }
@@ -334,9 +289,12 @@ html,body{margin:0;background:#0b1020;font-family:system-ui,-apple-system,sans-s
 .water-ripple{ transform-box: fill-box; transform-origin: 50% 50%; }
 .water-ripple-rain{ animation: waterRippleGrow var(--dur) cubic-bezier(.15,.6,.35,1) forwards; }
 .water-ripple-snow{ stroke: #ffffff !important; animation: waterRippleGrowSnow var(--dur) cubic-bezier(.2,.5,.4,1) forwards; }
+/* The mid keyframe holds a strong, thick ring for ~60% of its life so rain
+   rings read clearly instead of fading the instant they land. */
 @keyframes waterRippleGrow{
-  0%{ opacity:.95; stroke-width:3; transform:scale(.08); }
-  100%{ opacity:0; stroke-width:.4; transform:scale(1); }
+  0%{ opacity:1; stroke-width:4.5; transform:scale(.08); }
+  60%{ opacity:.85; stroke-width:1.8; }
+  100%{ opacity:0; stroke-width:.6; transform:scale(1); }
 }
 @keyframes waterRippleGrowSnow{
   0%{ opacity:1; stroke-width:3; transform:scale(.08); }
@@ -345,9 +303,101 @@ html,body{margin:0;background:#0b1020;font-family:system-ui,-apple-system,sans-s
 }
 .water-drop-rain{ animation: waterFallRain var(--dur) linear forwards; }
 .water-drop-snow{ animation: waterFallSnow var(--dur) ease-in-out forwards; }
-@keyframes waterFallRain{ from{ transform:translateY(0); } to{ transform:translateY(var(--dist)); } }
-@keyframes waterFallSnow{
-  0%{ transform:translate(0,0); }
-  50%{ transform:translate(calc(var(--sway) * -1), calc(var(--dist) * .5)); }
-  100%{ transform:translate(0,var(--dist)); }
+@keyframes waterFallRain{
+  0%{ transform:translateY(0); opacity:0; }
+  12%{ opacity:1; }
+  85%{ opacity:1; }
+  100%{ transform:translateY(var(--dist)); opacity:0; }
 }
+@keyframes waterFallSnow{
+  0%{ transform:translate(0,0); opacity:0; }
+  10%{ opacity:1; }
+  50%{ transform:translate(calc(var(--sway) * -1), calc(var(--dist) * .5)); opacity:1; }
+  85%{ opacity:1; }
+  100%{ transform:translate(0,var(--dist)); opacity:0; }
+}
+
+/* Aurora + stars (winter/fall night sky). Each star twinkles on its own
+   timing (--dur/--delay set per-instance in scene.js) so the field reads as
+   alive rather than a static dusting of dots. Aurora ribbons drift gently
+   side to side and breathe in height, slow enough to feel atmospheric
+   rather than like a UI animation. */
+.star-twinkle{ animation: starTwinkle var(--dur) ease-in-out var(--delay) infinite alternate; }
+@keyframes starTwinkle{ 0%{ opacity:.25; } 100%{ opacity:1; } }
+.aurora-drift{
+  animation: auroraDrift var(--dur) ease-in-out infinite alternate;
+}
+.star{ position:absolute; border-radius:50%; background:#fff; }
+@keyframes auroraDrift{
+  0%{ transform: translateX(-2%) scaleY(1); }
+  100%{ transform: translateX(2%) scaleY(1.1); }
+}
+/* Shooting stars are animated from JS (spawnShootingStar in scene.js), not
+   @keyframes: custom properties read inside keyframes raced the class-add and
+   froze streaks at their invisible first frame. */
+
+/* ── Trigger guide (footer link + modal) ── */
+.tg-open{appearance:none;background:none;border:0;padding:0;margin-left:6px;font:inherit;color:#0f4d47;text-decoration:underline;text-underline-offset:2px;cursor:pointer}
+.tg-open:hover{color:rgb(var(--accent))}
+.tg-open:focus-visible{outline:2px solid rgb(var(--accent));outline-offset:2px;border-radius:3px}
+.tg{width:min(860px,calc(100vw - 32px));max-height:calc(100vh - 48px);padding:0;border:0;border-radius:14px;
+  box-shadow:0 20px 60px rgba(8,20,24,.35);color:#1d2b24;background:#f7f9f6;text-align:left;font:16px/1.55 system-ui,-apple-system,sans-serif;overflow:hidden}
+.tg[open]{display:flex;flex-direction:column}
+.tg::backdrop{background:rgba(10,24,28,.55);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+.tg-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 20px;border-bottom:1px solid #dbe4dc;background:#fff}
+.tg-head h2{margin:0;font-family:var(--font-display);font-weight:700;font-size:20px;color:#0f4d47}
+.tg-x{appearance:none;border:0;background:#eef3ef;color:#0f4d47;width:34px;height:34px;border-radius:50%;font-size:22px;line-height:1;cursor:pointer}
+.tg-x:hover{background:#e0eae3}
+.tg-x:focus-visible{outline:2px solid rgb(var(--accent));outline-offset:2px}
+.tg-body{overflow:auto;padding:18px 20px 24px}
+.tg-body h3{font-family:var(--font-display);font-weight:700;font-size:16px;color:#0f4d47;margin:22px 0 8px}
+.tg-body p{margin:0 0 8px;max-width:68ch}
+.tg-lede{color:#4d5e55}
+.tg figure{margin:14px 0 0}
+.tg figure img{display:block;width:100%;height:auto;border-radius:10px;border:1px solid #dbe4dc;background:#dde9ef}
+.tg-rocks{list-style:none;counter-reset:r;margin:0;padding:0;display:grid;gap:8px}
+.tg-rocks li{counter-increment:r;position:relative;padding:10px 12px 10px 52px;background:#fff;border:1px solid #dbe4dc;border-radius:10px}
+.tg-rocks li::before{content:counter(r);position:absolute;left:12px;top:10px;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;
+  font:700 14px var(--font-display),sans-serif;color:#fff;background:#1b2622;border:3px solid var(--c)}
+.tg-rocks b{color:#1d2b24}
+.tg-rocks span{color:#6a7a70;font-size:14px;margin-left:6px}
+.tg-rocks p{margin:4px 0 0;font-size:15px}
+.tg table{border-collapse:collapse;width:100%;font-size:15px}
+.tg th,.tg td{text-align:left;padding:7px 8px;border-bottom:1px solid #dbe4dc;vertical-align:top}
+.tg th{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:#6a7a70}
+.tg code{font-family:ui-monospace,Menlo,monospace;font-size:.9em;background:#fff;border:1px solid #dbe4dc;padding:1px 5px;border-radius:4px}
+.tg-note{color:#6a7a70;font-size:14px;margin-top:12px}
+@media (max-width:560px){.tg-rocks span{display:block;margin:2px 0 0}.tg-head{padding:12px 14px}.tg-body{padding:14px}}
+
+/* Marley & Me tent (scene.js "THE TENT"). The image fills its world box; the night light is a
+   separate ungraded frame. The canvas glow is masked by the tent art itself, so only the fabric
+   lights up. Only the small lantern halo animates (opacity/transform: compositor only). */
+.scene-tent img{position:absolute;inset:0;width:100%;height:100%;display:block;-webkit-user-drag:none;user-select:none}
+.tent-night{opacity:0}
+.tent-glow{position:absolute;inset:0;
+  -webkit-mask-image:url(../assets/tent-scene.svg);mask-image:url(../assets/tent-scene.svg);
+  -webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+  background:radial-gradient(ellipse 34% 58% at var(--gx) var(--gy),rgba(255,214,140,.95),rgba(255,170,80,.55) 45%,rgba(255,150,60,.18) 75%,rgba(255,150,60,0) 100%)}
+.tent-lamp{position:absolute;width:16%;aspect-ratio:1;margin:-8% 0 0 -8%;border-radius:50%;
+  background:radial-gradient(closest-side,#fff6d8,rgba(255,206,110,.9) 18%,rgba(255,170,70,.35) 48%,rgba(255,170,70,0));
+  animation:tentLamp 2.6s ease-in-out infinite alternate}
+@keyframes tentLamp{0%{opacity:.85;transform:scale(.92)}35%{opacity:1;transform:scale(1.04)}60%{opacity:.9;transform:scale(.97)}100%{opacity:1;transform:scale(1.07)}}
+.tent-spill{position:absolute;width:62%;height:14%;margin:-7% 0 0 -31%;border-radius:50%;
+  background:radial-gradient(closest-side,rgba(255,196,110,.42),rgba(255,180,90,0))}
+@media (prefers-reduced-motion:reduce){.tent-lamp{animation:none}}
+
+.tg .tg-cast .tg-sec td{padding-top:12px;font-weight:700;color:#0f4d47;border-bottom:1px solid rgba(15,77,71,.15)}
+.tg .tg-cast code{white-space:nowrap}
+
+/* PHONES: the scene is only ~200-250px tall here, and the bottom wave eats its lowest ~15%, so
+   the hero copy is compacted to keep its button clear of the wave (measured at 320-640px wide,
+   all four tabs). Below 360px there is no room for the paragraph; the section under the scene
+   says the same thing. */
+@media (max-width:480px){
+  .hero-copy{max-width:90%;left:5%;top:3.5%}
+  .hero-copy::before{inset:-30px -40px;background:radial-gradient(closest-side,rgba(10,25,40,.46),rgba(10,25,40,0))}
+  .hero-copy h1{font-size:clamp(17px,5.4vw,22px);margin:0 0 6px}
+  .hero-copy p{font-size:12px;line-height:1.38;margin:0 0 9px;max-width:none}
+  .hero-copy .btn{font-size:13px;padding:8px 16px;border-radius:10px}
+}
+@media (max-width:359px){ .hero-copy p{display:none} }

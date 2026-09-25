@@ -4,7 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Christian Gehrke — four seasons of work</title>
-<link rel="stylesheet" href="css/scene.css?v=1789290000">
+<link rel="stylesheet" href="css/scene.css?v=1790660000">
+<!-- (Preload hints for the sync-XHR assets were removed Sept 24: Safari and Chrome never reuse a
+     preload for a synchronous request, so each file downloaded twice, with console warnings.
+     The server's 30-day cache is what makes repeat visits fast.) -->
+<link rel="preload" href="assets/landscape-hills-scenic-green-isolated-tree.svg" as="image">
 </head>
 <body>
 <header class="site-head">
@@ -19,33 +23,17 @@
 <section class="hero" id="hero">
   <div class="aurora-fill" id="auroraFill"></div>
   <div class="scene-core" id="sceneCore">
-  <!-- ============================================================
-       PLATE SYSTEM (traditional multiplane-camera layering, like a cel animation
-       stack) -- rebuilt from ad hoc z-index/insertBefore ordering per explicit
-       request, after repeated bugs trying to get "sun behind mountains" working
-       via computed stacking contexts. Each plate below is a real, always-present,
-       unambiguous container in a FIXED DOM order. Depth is simply which plate
-       something lives in -- never a z-index number to compute or fight with.
-       Order here (first = furthest back, last = furthest front):
-         1. plate-sky        - the animated sky gradient (#skyGradient)
-         2. plate-celestial  - sun + moon (#celestial)
-         3. plate-aurora     - aurora effect (empty for now -- future work)
-         4. plate-clouds     - the 4 cloud families (empty for now -- future work)
-         5. plate-background - mountains + distant treeline (from landscape.svg)
-         6. plate-midground  - lake + mid-distance foliage + our generated trees
-         7. plate-foreground - near foliage/rocks + the big foreground tree
-         8. plate-fx         - wind-driven motion, water shimmer, weather (#motion)
-         9. plate-ui         - hero text/tabs (#heroCopy), unchanged
-       scene.js populates plate-background/midground/foreground by re-parenting
-       the artwork's existing .layer-mountains/.layer-lake/.layer-foreground/
-       .layer-treeline groups into the right plate once landscape.svg loads --
-       the art itself isn't redrawn, just sorted into the correct plate.
-       ============================================================ -->
+  <!-- PLATE SYSTEM: multiplane-camera layers, back to front. DOM order is the
+       only depth control (no z-index). scene.js builds each plate's content:
+       sky gradient, sun/moon, aurora + stars, clouds, mountains + foothills,
+       birds, lake/shores/pines, boulders/plants/hero tree, rain/snow canvas,
+       and the hero text on top. -->
   <div class="plate plate-sky" id="plateSky"></div>
   <div class="plate plate-celestial" id="plateCelestial"></div>
   <div class="plate plate-aurora" id="plateAurora"></div>
   <div class="plate plate-clouds" id="plateClouds"></div>
   <div class="plate plate-background" id="plateBackground"></div>
+  <div class="plate plate-birds" id="plateBirds"></div>
   <div class="plate plate-midground" id="plateMidground"></div>
   <div class="plate plate-foreground" id="plateForeground"></div>
   <div class="plate plate-fx" id="plateFx"></div>
@@ -63,7 +51,7 @@
     </div>
     <div class="view" data-view="workshop">
       <h1>Tools that make more books</h1>
-      <p>The ProPre Engine runs the whole publishing pipeline, from prompt to print-ready cover. This page is a workshop project too: one illustration, four seasons, no images.</p>
+      <p>The ProPre Engine runs the whole publishing pipeline, from prompt to print-ready cover. This page is a workshop project too: one lake, four seasons, every part on the bench.</p>
       <a class="btn" href="#about">Open the workshop</a>
     </div>
     <div class="view" data-view="lab">
@@ -109,9 +97,10 @@
       <ul class="works">
         <li><b>ProPre Engine</b><i>tool</i><p>The production pipeline: edition selectors, metadata, prompt generation, and print-ready PDFs.</p></li>
         <li><b>Catalog site</b><i>web</i><p>Every book, filterable by series, with covers that reveal the colored art on hover.</p></li>
-        <li><b>This page</b><i>2026</i><p>One illustration, four seasons, weather, a day and a night mode. All SVG and code; no images.</p></li>
+        <li><b>This lake, in parts</b><i>2026</i><p>Seasons, weather, wildlife, day and night, all SVG and code. The parts catalog shows every piece running live on its own.</p></li>
       </ul>
       <a class="btn solid" href="https://everthecynic.com/propre/" target="_blank" rel="noopener">Visit the ProPre Engine</a>
+      <a class="btn" href="../catalog/" target="_blank" rel="noopener">Open the parts catalog</a>
     </div>
     <div class="view" data-view="lab">
       <p class="season-line">Winter, the quiet work underneath</p>
@@ -120,19 +109,148 @@
       <ul class="works">
         <li><b>Prompt systems</b><i>ongoing</i><p>Catalog builders for books and shirts, with content-policy-safe phrasing built in.</p></li>
         <li><b>Image pipelines</b><i>ongoing</i><p>Batch generation, review, and cleanup so a forty-page book looks like one hand drew it.</p></li>
-        <li><b>Scene engines</b><i>2026</i><p>Illustrations taken apart and put back together with seasons, weather, and wind.</p></li>
+        <li><b>Origami puppets</b><i>2026</i><p>Animals made as flat papercraft art, traced into hinged vector parts, and rigged in code to walk, graze and look around.</p></li>
       </ul>
       <a class="btn solid" href="https://www.linkedin.com/in/christiangehrke/" target="_blank" rel="noopener">Get in touch</a>
+      <a class="btn" href="../catalog/?animals" target="_blank" rel="noopener">Meet the puppets</a>
     </div>
   </div>
-  <p class="credit">Illustration adapted from a Vecteezy vector. Seasons, weather, and motion built on top of it.</p>
+  <p class="credit">Illustration adapted from a Vecteezy vector. Seasons, weather, and motion built on top of it.
+    <button type="button" class="tg-open" id="tgOpen">Trigger guide</button> · <a class="tg-open" href="../catalog/" target="_blank" rel="noopener">Parts catalog</a></p>
+  <dialog class="tg" id="tgDialog" aria-labelledby="tgTitle">
+    <div class="tg-head"><h2 id="tgTitle">Lake scene trigger guide</h2><button type="button" class="tg-x" id="tgClose" aria-label="Close">&times;</button></div>
+    <div class="tg-body">
+      <p class="tg-lede">Five rocks in the scene are secret triggers. Tap one and it glows, and an animal appears in the part of the scene that rock controls. Tap the same rock again to send the animal away. Press and hold any of them to open the test panel.</p>
+      <figure><img id="tgImg" data-src="assets/trigger-guide.jpg?v=1790660000" alt="The lake scene with the five trigger rocks outlined and numbered" width="1600" height="913"></figure>
+      <h3>What each rock does</h3>
+      <ol class="tg-rocks">
+        <li style="--c:#ffbe3c"><b>Big rock, far left</b> <span>Far shore under the mountains</span>
+          <p>Deer walking out of the trees and back in; doe drinking (spring to fall); elk (fall, winter); bear walking the shoreline (spring to fall, daytime); wolf running (fall, winter); wolf howling (fall and winter nights).</p></li>
+        <li style="--c:#78c8ff"><b>Rock next to it</b> <span>Right bank with the three pines</span>
+          <p>Deer stepping out from behind a pine trunk (a buck in winter); hawk on a pine top (spring to fall, daytime); owl on a pine top at night, and a white snowy owl in winter, day or night.</p></li>
+        <li style="--c:#8ce678"><b>Small rock beside the green bush</b> <span>Right bank</span>
+          <p>Hare hopping along the right bank in front of the pines, white in winter.</p></li>
+        <li style="--c:#ff82aa"><b>Big rock under the tree</b> <span>The lake</span>
+          <p>Fisherman drifting across the lake and out of sight behind the right bank (spring to fall), with a lantern at night.</p></li>
+        <li style="--c:#f0e060"><b>Small rock above it</b> <span>Fox and chipmunk</span>
+          <p>Fox trotting out from behind the big tree (or a right-bank pine) to look about and sniff, or a chipmunk popping up behind the small rock (chipmunk daytime, not in winter).</p></li>
+      </ol>
+      <h3>Every animal, and the word to test it</h3>
+      <p>Add the word to the address to bring that animal in straight away, whatever the season: <code>/cg/new/?foreelk</code>. Combine it with a season and time to see it in its own light: <code>?winter+night+foreelk</code>, <code>?summer+closebear</code>.</p>
+      <table class="tg-cast">
+        <tr><th>Animal</th><th>When</th><th>Word</th></tr>
+        <tr class="tg-sec"><td colspan="3">Far shore, under the mountains (small, with reflections)</td></tr>
+        <tr><td>Buck walking out of the trees</td><td>All year</td><td><code>deer</code> or <code>buck</code></td></tr>
+        <tr><td>Doe drinking</td><td>Spring to fall</td><td><code>doe</code></td></tr>
+        <tr><td>Elk</td><td>Fall, winter</td><td><code>elk</code></td></tr>
+        <tr><td>Bear walking the shore</td><td>Spring to fall, day</td><td><code>bear</code></td></tr>
+        <tr><td>Wolf trotting along</td><td>Fall, winter</td><td><code>wolfrun</code> (or <code>wolf</code> by day)</td></tr>
+        <tr><td>Wolf howling</td><td>Fall and winter nights</td><td><code>wolfhowl</code> (or <code>wolf</code> at night)</td></tr>
+        <tr class="tg-sec"><td colspan="3">Right bank, the three pines and the tent</td></tr>
+        <tr><td>Doe or buck from behind a pine</td><td>All year (buck in winter)</td><td><code>bankdeer</code></td></tr>
+        <tr><td>Hare hopping along the bank</td><td>All year (white in winter)</td><td><code>hare</code></td></tr>
+        <tr><td>Marley, out of the tent</td><td>All year (glow collar at night)</td><td><code>marley</code> or <code>dog</code></td></tr>
+        <tr><td>Hawk on a pine top</td><td>Spring to fall, day</td><td><code>hawk</code></td></tr>
+        <tr><td>Owl on a pine top</td><td>Night (snowy owl in winter)</td><td><code>owl</code></td></tr>
+        <tr class="tg-sec"><td colspan="3">Foreground, by the big tree (large; they back away behind it)</td></tr>
+        <tr><td>Doe or buck, grazing</td><td>All year (buck in winter)</td><td><code>foredeer</code></td></tr>
+        <tr><td>Elk</td><td>Fall, winter</td><td><code>foreelk</code></td></tr>
+        <tr><td>Bear, foraging</td><td>Spring to fall, day</td><td><code>forebear</code></td></tr>
+        <tr><td>Wolf, walking</td><td>Fall, winter</td><td><code>forewolf</code></td></tr>
+        <tr><td>Fox</td><td>All year</td><td><code>fox</code></td></tr>
+        <tr><td>Hare hopping across the front, then sitting up</td><td>All year (white in winter)</td><td><code>snowhare</code></td></tr>
+        <tr class="tg-sec"><td colspan="3">Close-up, in front of the big tree (rare; peeks in from the right)</td></tr>
+        <tr><td>Grizzly</td><td>Spring to fall, day</td><td><code>closebear</code></td></tr>
+        <tr><td>Bull elk</td><td>Fall, winter</td><td><code>closeelk</code></td></tr>
+        <tr class="tg-sec"><td colspan="3">Rocks, tree, lake and sky</td></tr>
+        <tr><td>Squirrel on the big tree</td><td>Spring to fall, day</td><td><code>squirrel</code></td></tr>
+        <tr><td>Chipmunk behind the small rock</td><td>Spring to fall, day</td><td><code>chipmunk</code></td></tr>
+        <tr><td>Fisherman in his paper boat</td><td>Spring to fall (lantern at night)</td><td><code>fisherman</code></td></tr>
+        <tr><td>Eagle diving</td><td>All year, day</td><td><code>eagle</code></td></tr>
+        <tr><td>Fish jumping</td><td>Spring, summer</td><td>Tap or hold the lake</td></tr>
+        <tr><td>Eagle catching a fish</td><td>Spring, summer, fall (day)</td><td>Hold the lake about 2.5 s, or the test panel's “Eagle catches a fish”</td></tr>
+      </table>
+      <p>Scene effects that come on by themselves: fireflies at night (a different colour each season), Marley&rsquo;s glowing collar at night, the lamp inside the tent at night, and wind gusts that start 5 seconds after a season settles.</p>
+      <h3>Test panel</h3>
+      <p>Press and hold any trigger rock for about a second, or add <code>?wildlife</code> to the address. A small panel opens in the bottom-right corner listing every animal (use &#8644; to move it to the other side and &ndash; to fold it away): click one to play it, click again to send it away. &ldquo;Any season / time of day&rdquo; plays everything regardless of season; &ldquo;Send everyone away&rdquo; clears the scene.</p>
+      <h3>Other hidden spots</h3>
+      <table>
+        <tr><th>Tap</th><th>What happens</th></tr>
+        <tr><td>Open lake</td><td>A fish jumps where you tapped (a ripple in winter)</td></tr>
+        <tr><td>Far shore</td><td>One of the far-shore animals</td></tr>
+        <tr><td>Right-bank pines</td><td>Hawk, owl, or the deer from behind a pine</td></tr>
+        <tr><td>The big tree&rsquo;s leaves</td><td>Squirrel on the branch</td></tr>
+        <tr><td>Left bank grass</td><td>Hare (on the right bank)</td></tr>
+        <tr><td>Foreground grass</td><td>A hare hops across, sits up and sniffs (white in winter)</td></tr>
+        <tr><td>The sun</td><td>An eagle high over the mountains</td></tr>
+        <tr><td>The moon</td><td>A howling wolf or an owl</td></tr>
+      </table>
+      <h3>On their own</h3>
+      <p>About every 30 to 60 seconds one visitor arrives by itself, chosen to suit the season and whether it is day or night. The fisherman crosses the lake every two to three minutes in spring, summer and fall. Nothing plays while the scene is scrolled away, the tab is hidden, or a season change is running.</p>
+      <h3>Testing addresses</h3>
+      <table>
+        <tr><th>Add to the address</th><th>Does</th></tr>
+        <tr><td><code>?summer+night</code></td><td>Opens on a season and time of day: spring, summer, fall, winter (or books, web, workshop, lab) with day or night. Combine with +</td></tr>
+        <tr><td><code>?fall+fox</code></td><td>Also brings in an animal. Every animal&rsquo;s word is in the list above</td></tr>
+        <tr><td>Tap the tent</td><td>Marley comes out to sniff about</td></tr>
+        <tr><td>Tap the hero tree trunk</td><td>A close-up: a grizzly or a bull elk peeks in from the right, looks about and backs away</td></tr>
+        <tr><td>Tap the grass by the hero tree</td><td>A big animal visits up close: doe or buck, elk, bear, wolf or fox</td></tr>
+        <tr><td><code>?play</code></td><td>Plays the whole year</td></tr>
+        <tr><td>Hold on the lake, then let go</td><td>The longer you hold (up to about 2.5 s), the higher the fish jumps</td></tr>
+        <tr><td>Hold on the lake until an eagle appears, then let go at full charge</td><td>Daytime, not winter: the eagle circles overhead while you hold, then swoops in and catches the fish at the top of its leap. Let go early and it glides off</td></tr>
+        <tr><td><code>?wildlife</code></td><td>Opens the test panel on load</td></tr>
+        <tr><td><code>?fps</code></td><td>Frame-rate counter</td></tr>
+        <tr><td><code>?bench</code></td><td>Full speed benchmark (about 7 minutes)</td></tr>
+        <tr><td><code>?diag</code></td><td>Shows any Safari crashes recorded in this browser</td></tr>
+      </table>
+      <p class="tg-note">On phones the hero button sits over rocks 1 and 2, so those two work on tablets and computers.</p>
+    </div>
+  </dialog>
+  <script>
+  (function(){var d=document.getElementById('tgDialog'),o=document.getElementById('tgOpen'),x=document.getElementById('tgClose'),im=document.getElementById('tgImg');
+    if(!d||!o||typeof d.showModal!=='function'){if(o)o.hidden=true;return;}
+    o.addEventListener('click',function(){if(!im.src)im.src=im.dataset.src;d.showModal();});
+    x.addEventListener('click',function(){d.close();});
+    d.addEventListener('click',function(e){if(e.target===d)d.close();});  // click the backdrop to close
+  })();
+  </script>
   <div class="clock">
     <span id="clockLabel">Spring</span>
     <button id="playYear" type="button">Play the whole year</button>
     <button id="modeBtn" type="button" aria-pressed="false">Night mode</button>
   </div>
 </section>
-<script src="js/components.js?v=1789290000"></script>
-<script src="js/scene.js?v=1789290000"></script>
+<!-- New: data for the multi-mountain background (makeMountainIsolated), the
+     8 real isolated mountain files' <style>+paths embedded directly so no
+     runtime fetch()/CORS dependency -- must load before scene.js, which
+     consumes window.MOUNTAIN_SHAPES when it builds the background. -->
+<script src="js/mountain-shapes.js?v=1790660000"></script>
+<script src="js/components.js?v=1790660000"></script>
+<script src="js/scene.js?v=1790660000"></script>
+<!-- Wildlife (animals + hidden tap spots): loaded after the page has finished loading, so it
+     never delays the first paint. -->
+<script>addEventListener('load',function(){setTimeout(function(){['creature-shapes','origami-art','creatures','wildlife'].reduce(function(p,n){return p.then(function(){return new Promise(function(r){var s=document.createElement('script');s.src='js/'+n+'.js?v=1790660000';s.onload=s.onerror=r;document.body.appendChild(s)})})},Promise.resolve())},1500)})</script>
+<script>
+/* Crash breadcrumbs. Safari's "This webpage was reloaded because a problem occurred" gives no
+   details, so every 5 s the page notes what it is doing (season, night, animals, uptime). A clean
+   exit clears the note; if the same tab reloads and finds its note still open, it crashed and the note
+   is kept (last 5). Open the page with ?diag to see them. Nothing leaves the browser. */
+(function(){try{var ss=sessionStorage,id=ss.getItem('lakeTab')||Math.random().toString(36).slice(2);ss.setItem('lakeTab',id);
+var K='lakeCrumb:'+id,L='lakeCrashes',ls=localStorage,prev=ls.getItem(K);
+if(prev){var p=JSON.parse(prev);if(Date.now()-p.t<6e5){var a=JSON.parse(ls.getItem(L)||'[]');a.unshift(p);ls.setItem(L,JSON.stringify(a.slice(0,5)))}}
+ls.removeItem(K);var t0=Date.now();
+function note(){try{var tab=document.querySelector('.tab[aria-selected="true"]'),m=document.getElementById('modeBtn'),W=window.__wildlife;
+ls.setItem(K,JSON.stringify({t:Date.now(),up:Math.round((Date.now()-t0)/1e3),season:tab?tab.textContent.trim():'?',
+night:!!(m&&m.getAttribute('aria-pressed')==='true'),animals:W?Array.from(W.live).filter(function(v){return!v.done}).map(function(v){return v.key||v.def&&v.def.name||'?'}).join(','):'',
+y:Math.round(scrollY),size:innerWidth+'x'+innerHeight+'@'+devicePixelRatio,v:'1790660000'}))}catch(e){}}
+setInterval(note,5000);note();
+addEventListener('pagehide',function(){try{ls.removeItem(K)}catch(e){}});
+addEventListener('pageshow',function(e){if(e.persisted)note()});
+if(/[?&]diag\b/.test(location.search))addEventListener('load',function(){var a=JSON.parse(ls.getItem(L)||'[]'),d=document.createElement('pre');
+d.style.cssText='position:fixed;left:8px;right:8px;top:8px;z-index:10001;max-height:70vh;overflow:auto;background:rgba(0,0,0,.85);color:#9f9;font:12px/1.4 monospace;padding:10px;border-radius:6px;white-space:pre-wrap';
+d.textContent=a.length?'Crashes seen on this browser (newest first):\n\n'+a.map(function(c){return new Date(c.t).toLocaleString()+'  up '+c.up+'s  '+c.season+(c.night?' night':' day')+'  animals: '+(c.animals||'none')+'  scroll '+c.y+'  '+c.size+'  build '+c.v}).join('\n'):'No crashes recorded on this browser.';
+d.onclick=function(){d.remove()};document.body.appendChild(d)})}catch(e){}})();
+</script>
+<script>if(/[?&]bench\b/.test(location.search)){var b=document.createElement("script");b.src="js/bench.js?v=1790660000";document.body.appendChild(b)}</script>
 </body>
 </html>
