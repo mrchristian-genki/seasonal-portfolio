@@ -401,3 +401,49 @@ html,body{margin:0;background:#0b1020;font-family:system-ui,-apple-system,sans-s
   .hero-copy .btn{font-size:13px;padding:8px 16px;border-radius:10px}
 }
 @media (max-width:359px){ .hero-copy p{display:none} }
+
+/* ============================================================
+   SPYGLASS -- phones held upright (js/camera.js is the camera)
+   Instead of shrinking the whole 5000-unit world to a 390px strip, the core (every plate)
+   becomes about twice the phone's width and most of the screen tall, and the camera slides it
+   sideways under the hero like a spyglass: shots per season, swipe to look around, tilt
+   parallax. The world svgs size themselves from the core, so nothing inside changes.
+   Height: 80% of the small viewport (toolbars showing). Width: the world's own aspect at 80% of
+   that height (so ~20% of extra sky sits above the peaks for the hero text), but never less than
+   1.85 screens, which is the zoom.
+   ============================================================ */
+@media (max-width:820px) and (orientation:portrait){
+  .scene-core{
+    width:max(185vw, calc(clamp(480px, 80vh, 800px) * .8 * 1.50117));
+    width:max(185vw, calc(clamp(480px, 80svh, 800px) * .8 * 1.50117));
+    height:clamp(480px, 80vh, 800px);
+    height:clamp(480px, 80svh, 800px);
+    max-width:none;aspect-ratio:auto;margin:0;
+  }
+  .hero::after{height:44px}
+}
+.hero.spyglass{touch-action:pan-y;-webkit-user-select:none;user-select:none}
+/* The hero text: camera.js sets its left so it holds still over the panning world. */
+.hero.spyglass .hero-copy{top:20px;width:calc(100vw - 36px);max-width:none}
+.hero.spyglass .hero-copy h1{font-size:clamp(24px,7.2vw,34px);margin-bottom:10px}
+.hero.spyglass .hero-copy p{font-size:15px;margin-bottom:16px}
+/* Lens: a soft vignette, deeper while the glass swings. */
+.spy-lens{position:absolute;inset:0;z-index:4;pointer-events:none;
+  background:radial-gradient(ellipse 95% 75% at 50% 48%,rgba(8,16,30,0) 62%,rgba(8,16,30,.28) 100%);
+  transition:opacity 900ms ease;opacity:.7}
+.spy-lens.sweep,.hero.panning .spy-lens{opacity:1}
+/* Where the glass is pointing: the world as a pill, the view as the bright window in it. Tap to jump. */
+.spy-track{position:absolute;z-index:6;left:50%;bottom:58px;width:84px;height:18px;margin-left:-42px;cursor:pointer}
+.spy-track::before{content:"";position:absolute;left:0;right:0;top:6px;height:6px;border-radius:6px;background:rgba(255,255,255,.35);box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.spy-track i{position:absolute;top:5px;height:8px;border-radius:8px;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.35)}
+.spy-tilt{position:absolute;z-index:6;right:14px;bottom:50px;width:34px;height:34px;padding:6px;border:0;border-radius:50%;
+  background:rgba(10,25,40,.35);color:#fff;opacity:.75;cursor:pointer;transition:opacity .2s,background .2s}
+.spy-tilt svg{width:100%;height:100%;display:block}
+.spy-tilt[aria-pressed="true"]{background:rgb(var(--accent));opacity:1}
+.spy-tilt:focus-visible{outline:3px solid #fff;outline-offset:2px}
+/* Iris shutter: six solid blades (no radius, border or shadow, so they stay bitmap-free layers). */
+.spy-iris{position:absolute;inset:0;z-index:7;overflow:hidden;pointer-events:none}
+.spy-iris[hidden]{display:none}
+.spy-iris b{position:absolute;left:50%;top:50%;transform-origin:50% 100%;background:#0e1628}
+.spy-iris b:nth-child(even){background:#172238}
+@media (prefers-reduced-motion:reduce){ .spy-tilt{display:none} }
