@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Christian Gehrke — four seasons of work</title>
-<link rel="stylesheet" href="css/scene.css?v=1790760000">
+<link rel="stylesheet" href="css/scene.css?v=1790770000">
 <!-- (Preload hints for the sync-XHR assets were removed Sept 24: Safari and Chrome never reuse a
      preload for a synchronous request, so each file downloaded twice, with console warnings.
      The server's 30-day cache is what makes repeat visits fast.) -->
@@ -121,7 +121,7 @@
     <div class="tg-head"><h2 id="tgTitle">Lake scene trigger guide</h2><button type="button" class="tg-x" id="tgClose" aria-label="Close">&times;</button></div>
     <div class="tg-body">
       <p class="tg-lede">Five rocks in the scene are secret triggers. Tap one and it glows, and an animal appears in the part of the scene that rock controls. Tap the same rock again to send the animal away. Press and hold any of them to open the test panel.</p>
-      <figure><img id="tgImg" data-src="assets/trigger-guide.jpg?v=1790760000" alt="The lake scene with the five trigger rocks outlined and numbered" width="1600" height="913"></figure>
+      <figure><img id="tgImg" data-src="assets/trigger-guide.jpg?v=1790770000" alt="The lake scene with the five trigger rocks outlined and numbered" width="1600" height="913"></figure>
       <h3>What each rock does</h3>
       <ol class="tg-rocks">
         <li style="--c:#ffbe3c"><b>Big rock, far left</b> <span>Far shore under the mountains</span>
@@ -224,14 +224,14 @@
      8 real isolated mountain files' <style>+paths embedded directly so no
      runtime fetch()/CORS dependency -- must load before scene.js, which
      consumes window.MOUNTAIN_SHAPES when it builds the background. -->
-<script src="js/mountain-shapes.js?v=1790760000"></script>
-<script src="js/components.js?v=1790760000"></script>
-<script src="js/scene.js?v=1790760000"></script>
+<script src="js/mountain-shapes.js?v=1790770000"></script>
+<script src="js/components.js?v=1790770000"></script>
+<script src="js/scene.js?v=1790770000"></script>
 <!-- Spyglass camera for phones held upright: shots per season, swipe to look around, tilt parallax. -->
-<script src="js/camera.js?v=1790760000"></script>
+<script src="js/camera.js?v=1790770000"></script>
 <!-- Wildlife (animals + hidden tap spots): loaded after the page has finished loading, so it
      never delays the first paint. -->
-<script>addEventListener('load',function(){setTimeout(function(){['creature-shapes','origami-art','creatures','wildlife'].reduce(function(p,n){return p.then(function(){return new Promise(function(r){var s=document.createElement('script');s.src='js/'+n+'.js?v=1790760000';s.onload=s.onerror=r;document.body.appendChild(s)})})},Promise.resolve())},1500)})</script>
+<script>addEventListener('load',function(){setTimeout(function(){['creature-shapes','origami-art','creatures','wildlife'].reduce(function(p,n){return p.then(function(){return new Promise(function(r){var s=document.createElement('script');s.src='js/'+n+'.js?v=1790770000';s.onload=s.onerror=r;document.body.appendChild(s)})})},Promise.resolve())},1500)})</script>
 <script>
 /* Crash breadcrumbs. Safari's "This webpage was reloaded because a problem occurred" gives no
    details, so every 5 s the page notes what it is doing (season, night, animals, uptime). A clean
@@ -244,7 +244,7 @@ ls.removeItem(K);var t0=Date.now();
 function note(){try{var tab=document.querySelector('.tab[aria-selected="true"]'),m=document.getElementById('modeBtn'),W=window.__wildlife;
 ls.setItem(K,JSON.stringify({t:Date.now(),up:Math.round((Date.now()-t0)/1e3),season:tab?tab.textContent.trim():'?',
 night:!!(m&&m.getAttribute('aria-pressed')==='true'),animals:W?Array.from(W.live).filter(function(v){return!v.done}).map(function(v){return v.key||v.def&&v.def.name||'?'}).join(','):'',
-y:Math.round(scrollY),size:innerWidth+'x'+innerHeight+'@'+devicePixelRatio,v:'1790760000'}))}catch(e){}}
+y:Math.round(scrollY),size:innerWidth+'x'+innerHeight+'@'+devicePixelRatio,v:'1790770000'}))}catch(e){}}
 setInterval(note,5000);note();
 addEventListener('pagehide',function(){try{ls.removeItem(K)}catch(e){}});
 addEventListener('pageshow',function(e){if(e.persisted)note()});
@@ -253,6 +253,6 @@ d.style.cssText='position:fixed;left:8px;right:8px;top:8px;z-index:10001;max-hei
 d.textContent=a.length?'Crashes seen on this browser (newest first):\n\n'+a.map(function(c){return new Date(c.t).toLocaleString()+'  up '+c.up+'s  '+c.season+(c.night?' night':' day')+'  animals: '+(c.animals||'none')+'  scroll '+c.y+'  '+c.size+'  build '+c.v}).join('\n'):'No crashes recorded on this browser.';
 d.onclick=function(){d.remove()};document.body.appendChild(d)})}catch(e){}})();
 </script>
-<script>if(/[?&]bench\b/.test(location.search)){var b=document.createElement("script");b.src="js/bench.js?v=1790760000";document.body.appendChild(b)}</script>
+<script>if(/[?&]bench\b/.test(location.search)){var b=document.createElement("script");b.src="js/bench.js?v=1790770000";document.body.appendChild(b)}</script>
 </body>
 </html>

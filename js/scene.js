@@ -1436,14 +1436,20 @@ function _bootInner() {
         }
       });
       if (opts.flipped) mirrorNested(nested);
+      // opts.dur [min, max] s: a slower sway for stiff plants on land. The default 1.3-2 s rock
+      // suits the reeds out in the water but makes a succulent look like it's bobbing.
+      const sway = opts.dur && nested.querySelector('.plant-sway');
+      if (sway) sway.style.setProperty('--dur', (opts.dur[0] + Math.random() * (opts.dur[1] - opts.dur[0])).toFixed(2) + 's');
       return nested;
     }
     // Placement rules: the fern and agave (aloe) are not rock plants, so they stay on grass (the
     // left shore or the hero tree's foreground); only the reeds and spiky yucca sit by the rocks.
     // plant2 sits right of the hero-copy text column; further left it hides behind the text panel.
     const plantInstances = [
-      // On leftShore's own grass, above the boulder/water tier.
-      placePlant('plant2', 1350, 1550, 320, 320, 'assets/fg-plant-agave.svg'),
+      // On the left bank's grass in front of the pines (base at world y 1840, well above the
+      // waterline). It used to sit at the bank's thin tip (x 1350-1670, base 1870), right on the
+      // water, where it read as floating in the lake.
+      placePlant('plant2', 770, 1580, 260, 260, 'assets/fg-plant-agave.svg', { dur: [3.2, 4.2] }),
       // Foreground, tucked beside the hero tree's flower cluster.
       placePlant('plant1', 3300, 3050, 220, 220, 'assets/fg-plant-fern.svg'),
       placePlant('plant6', 4250, 3040, 140, 140, 'assets/fg-plant-agave.svg', { flipped: true }),
