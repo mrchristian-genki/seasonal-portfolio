@@ -16,10 +16,11 @@ marked **OBSOLETE** rather than left dangling.
   in `css/scene.css`). Below 820px in portrait the core is ~1.85 screens wide and 80svh tall, and
   a camera pans it: the page opens behind a six-blade iris shutter on the opening season's shot;
   swipe sideways (or tap the position track) to look around; sun/moon, aurora and clouds pan
-  slower (parallax). Tried and removed Sept 25-26: gyroscope tilt parallax (swiping was enough),
-  and every automatic camera move (a cut to a new shot per season, idle glances, swinging to
-  animals): on a real phone the view moving on its own was disorienting, so after load it only
-  moves when the visitor swipes.
+  slower (parallax); the glass swings to an animal that appears out of view, at once if the
+  visitor's own tap started it (rock -> fisherman), otherwise only once the scene is calm (held
+  through season/day-night changes plus 2 s, and 14 s after a swipe). Tried and removed Sept 25-26:
+  gyroscope tilt parallax (swiping was enough), a cut to a new shot per season, and idle glances:
+  on a real phone the view moving during transitions was disorienting.
   Verified in headless Chromium at 390x700 (swipe, steady through season/night changes,
   rotation to landscape and back; desktop and landscape unchanged), and confirmed live by
   Christian. **Still to check on a real iPhone:** frame rate during swipes (`?fps`), memory

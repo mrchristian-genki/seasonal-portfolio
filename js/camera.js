@@ -7,8 +7,10 @@
 //   - After that the view stays where the visitor left it: season and day/night changes happen in
 //     place, with no cut and no drift (moving on its own was disorienting on a real phone).
 //   - Swipe sideways on the scene to look around (vertical swipes still scroll the page), or tap
-//     the position track. Those are the only things that move it after load (an automatic swing
-//     to animals walking in out of view was removed for the same reason).
+//     the position track.
+//   - The glass swings to an animal that turns up out of view: straight away when the visitor's
+//     own tap started it (rock -> fisherman), otherwise only once the scene is calm (never during
+//     a season or day/night change, nor just after a swipe).
 //   - Parallax: sun/moon, aurora and clouds are further away, so they slide less than the ground.
 //
 // At rest the camera is plain layout (`left`, see place()); a glide is a CSS transition the browser
@@ -28,6 +30,7 @@
   const PARALLAX = { plateCelestial: 0.45, plateAurora: 0.3, plateClouds: 0.7 };
 
   let on = false, viewW = 0, coreW = 0, camX = 0;
+  let userUntil = 0, settleUntil = 0, lastTap = -1e9, subject = null, followT = 0;
   const parEls = Object.keys(PARALLAX).map((id) => [$(id), PARALLAX[id]]).filter((p) => p[0]);
   let lens = null, track = null, win = null;
 
@@ -135,6 +138,7 @@
       win = document.createElement('i'); track.appendChild(win);
       track.addEventListener('click', (e) => {
         const r = track.getBoundingClientRect();
+        userUntil = performance.now() + 12000;
         glide((e.clientX - r.left) / r.width * coreW - viewW / 2, 1400);
       });
     }
@@ -198,11 +202,12 @@
     if (!drag || e.pointerId !== drag.id) return;
     if (drag.live) {
       hero.classList.remove('panning');
+      userUntil = performance.now() + 14000; subject = null;
       // Fling: carry the finger's speed on for a moment, then settle.
       const coast = Math.max(-viewW, Math.min(viewW, -drag.v * 200));
       setCam(visualX() + coast, 700, 'cubic-bezier(.2,.7,.3,1)');
       hero.__dragged = performance.now();
-    }
+    } else lastTap = performance.now();   // a plain tap: it may be starting a visitor
     drag = null;
   };
   addEventListener('pointerup', endDrag);
@@ -211,6 +216,46 @@
   hero.addEventListener('click', (e) => {
     if (hero.__dragged && performance.now() - hero.__dragged < 350) { e.preventDefault(); e.stopPropagation(); }
   }, true);
+
+  // ── visitors: swing the glass to an animal that turns up out of view, and keep it framed ──
+  // Transitions stay still: a season change (travel() dims the scene for ~7 s, flagged by
+  // .hiding on the hero) or a day/night change (3 s) holds the camera for its length plus 2 s.
+  // A visitor that turned up meanwhile is followed once that has passed.
+  const TAP_WINDOW = 2500;   // an actor this soon after a plain tap came from that tap
+  const calm = () => !hero.classList.contains('hiding') && performance.now() > settleUntil;
+  const settleFor = (ms) => { settleUntil = Math.max(settleUntil, performance.now() + ms); };
+  const tabs = document.querySelector('.tabs');
+  if (tabs) new MutationObserver(() => settleFor(9000))
+    .observe(tabs, { attributes: true, subtree: true, attributeFilter: ['aria-selected'] });
+  const modeBtn = $('modeBtn');
+  if (modeBtn) new MutationObserver(() => settleFor(5000))
+    .observe(modeBtn, { attributes: true, attributeFilter: ['aria-pressed'] });
+  if (!reduced) {
+    new MutationObserver((recs) => {
+      if (!on) return;
+      for (const r of recs) for (const n of r.addedNodes) {
+        if (n.nodeType === 1 && n.classList.contains('wl-actor')) {
+          subject = n; subject.__tapped = performance.now() - lastTap < TAP_WINDOW;
+          followSoon(400); return;
+        }
+      }
+    }).observe(core, { childList: true, subtree: true });
+  }
+  function followSoon(ms) { clearTimeout(followT); followT = setTimeout(follow, ms); }
+  function follow() {
+    if (!on || !subject) return;
+    if (!subject.isConnected || subject.classList.contains('out')) { subject = null; return; }
+    const now = performance.now();
+    if (!drag && now > userUntil && (subject.__tapped || calm())) {
+      const r = subject.getBoundingClientRect(), c = core.getBoundingClientRect();
+      if (r.width) {
+        const x = r.left + r.width / 2 - c.left;           // in core px
+        const vx = x - camX;                               // in view px
+        if (vx < viewW * 0.22 || vx > viewW * 0.78) glide(x - viewW / 2, 1800);
+      }
+    }
+    followSoon(1500);
+  }
 
   window.__camera = { glide: (f, ms) => on && glide(xForFrac(f), ms), get x() { return camX; }, get on() { return on; } };
 })();
