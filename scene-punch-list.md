@@ -12,6 +12,21 @@ marked **OBSOLETE** rather than left dangling.
 
 ## STILL OPEN
 
+- 🔎 **Spyglass camera for phones held upright** (Sept 25, `js/camera.js` + the SPYGLASS block
+  in `css/scene.css`). Below 820px in portrait the core is ~1.85 screens wide and 80svh tall, and
+  a camera pans it: the page opens behind a six-blade iris shutter on the opening season's shot;
+  swipe sideways (or tap the position track) to look around; sun/moon, aurora and clouds pan
+  slower (parallax); the glass swings to an animal that appears out of view, at once if the
+  visitor's own tap started it (rock -> fisherman), otherwise only once the scene is calm (held
+  through season/day-night changes plus 2 s, and 14 s after a swipe). Tried and removed Sept 25-26:
+  gyroscope tilt parallax (swiping was enough), a cut to a new shot per season, and idle glances:
+  on a real phone the view moving during transitions was disorienting.
+  Verified in headless Chromium at 390x700 (swipe, steady through season/night changes,
+  rotation to landscape and back; desktop and landscape unchanged), and confirmed live by
+  Christian. **Still to check on a real iPhone:** frame rate during swipes (`?fps`), memory
+  (`?diag` after a long session), and whether the far-left trigger rocks are now reachable. The
+  `SHOTS` opening framings in camera.js are first guesses; tune by eye.
+
 - ✅ **Leaf-fall sprites 404 on the live site** (Sept 23): `assets/leaves/` uploaded;
   all 5 PNGs load and leaves fall in autumn. Sept 23 cleanup verified live (all
   files match, no console errors).
