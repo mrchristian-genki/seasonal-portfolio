@@ -14,15 +14,17 @@ marked **OBSOLETE** rather than left dangling.
 
 - 🔎 **Spyglass camera for phones held upright** (Sept 25, `js/camera.js` + the SPYGLASS block
   in `css/scene.css`). Below 820px in portrait the core is ~1.85 screens wide and 80svh tall, and
-  a camera pans it: a shot per tab, reached through a six-blade iris shutter (closes, cuts,
-  reopens) that also opens the page on load; swipe sideways to look around; idle glances; the
-  glass swings to any animal that turns up out of view; and sun/moon, aurora and clouds pan slower
-  (parallax). A gyroscope tilt parallax was tried and removed Sept 25: swiping was enough.
-  Verified in headless Chromium at 390x700 (all four shots, swipe, follow, rotation to landscape
-  and back; desktop and landscape unchanged), and confirmed live by Christian.
-  **Still to check on a real iPhone:** frame rate during glides (`?fps`), memory (`?diag` after a
-  long session), and whether the far-left trigger rocks are now reachable (the hero button no longer sits on them in most shots). The `SHOTS`
-  framings in camera.js are first guesses; tune by eye.
+  a camera pans it: the page opens behind a six-blade iris shutter on the opening season's shot;
+  swipe sideways (or tap the position track) to look around; sun/moon, aurora and clouds pan
+  slower (parallax). Tried and removed Sept 25-26: gyroscope tilt parallax (swiping was enough),
+  and every automatic camera move (a cut to a new shot per season, idle glances, swinging to
+  animals): on a real phone the view moving on its own was disorienting, so after load it only
+  moves when the visitor swipes.
+  Verified in headless Chromium at 390x700 (swipe, steady through season/night changes,
+  rotation to landscape and back; desktop and landscape unchanged), and confirmed live by
+  Christian. **Still to check on a real iPhone:** frame rate during swipes (`?fps`), memory
+  (`?diag` after a long session), and whether the far-left trigger rocks are now reachable. The
+  `SHOTS` opening framings in camera.js are first guesses; tune by eye.
 
 - ✅ **Leaf-fall sprites 404 on the live site** (Sept 23): `assets/leaves/` uploaded;
   all 5 PNGs load and leaves fall in autumn. Sept 23 cleanup verified live (all

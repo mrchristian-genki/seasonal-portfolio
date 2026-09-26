@@ -3,11 +3,12 @@
 // twice as wide as the phone and much taller. Every world layer is sized from the core, so nothing
 // inside it changes. This file is the camera: it slides the core sideways under the hero's window.
 //
-//   - Shots: each tab (season) has its own framing. A season change closes the iris shutter,
-//     cuts to the new shot and opens again; the page also loads behind the closed iris.
-//   - Swipe sideways on the scene to look around (vertical swipes still scroll the page).
-//   - Left alone, the glass drifts to a nearby spot now and then, and swings to any animal that
-//     walks in out of view.
+//   - The page loads behind a closed iris shutter, framed on the opening season's shot.
+//   - After that the view stays where the visitor left it: season and day/night changes happen in
+//     place, with no cut and no drift (moving on its own was disorienting on a real phone).
+//   - Swipe sideways on the scene to look around (vertical swipes still scroll the page), or tap
+//     the position track. Those are the only things that move it after load (an automatic swing
+//     to animals walking in out of view was removed for the same reason).
 //   - Parallax: sun/moon, aurora and clouds are further away, so they slide less than the ground.
 //
 // At rest the camera is plain layout (`left`, see place()); a glide is a CSS transition the browser
@@ -20,16 +21,13 @@
   const mq = matchMedia('(max-width: 820px) and (orientation: portrait)');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Where each tab points the glass, as the world-x fraction at the centre of the view.
-  // data-season: 1 Books/spring, 2 Web/summer, 3 Workshop/fall, 0 Lab/winter.
+  // Where the glass points on load, by the opening season, as the world-x fraction at the centre
+  // of the view. data-season: 1 Books/spring, 2 Web/summer, 3 Workshop/fall, 0 Lab/winter.
   const SHOTS = { 1: 0.30, 2: 0.62, 3: 0.78, 0: 0.47 };
-  // Spots the idle glass drifts between: left pines, boulders, the peaks, lake, sun and pines, tent, tree.
-  const GLANCES = [0.18, 0.3, 0.44, 0.55, 0.66, 0.78, 0.86];
   // How far each plate slides when the camera pans (1 = with the ground). Sky has no features.
   const PARALLAX = { plateCelestial: 0.45, plateAurora: 0.3, plateClouds: 0.7 };
 
   let on = false, viewW = 0, coreW = 0, camX = 0;
-  let userUntil = 0, subject = null, glanceT = 0, followT = 0;
   const parEls = Object.keys(PARALLAX).map((id) => [$(id), PARALLAX[id]]).filter((p) => p[0]);
   let lens = null, track = null, win = null;
 
@@ -88,8 +86,7 @@
   const glide = (x, ms) => setCam(x, ms == null ? 2600 : ms);
 
   // ── iris shutter ──
-  // Six blades, like an old lens aperture. It opens on load and closes over every season cut, so
-  // the camera can jump (no huge promoted layers for a long glide) and the scene repaints unseen.
+  // Six blades, like an old lens aperture, open once on load so the scene paints unseen.
   // Each blade is a plain solid-colour box: browsers composite those without a bitmap, so the
   // blades cost next to nothing to move, even full-screen on a phone.
   // Blade i covers the half-plane beyond a line r px from the centre, turned i*60deg; at r = 0 the
@@ -118,22 +115,10 @@
       iris.pose(open, ms);
       return new Promise((res) => { iris.t = setTimeout(() => { if (open) iris.el.hidden = true; res(); }, ms + 30); });
     },
-    close: (ms) => iris.run(false, ms),
     open: (ms) => iris.run(true, ms),
   };
   const frames = (n) => new Promise((res) => { const f = () => (--n > 0 ? requestAnimationFrame(f) : res()); requestAnimationFrame(f); });
   const wait = (ms) => new Promise((res) => setTimeout(res, ms));
-  // Season change: shutter down, cut to the new shot, give it a moment to paint, shutter up.
-  let cutting = 0;
-  async function cut(x) {
-    if (reduced || !iris.el) { setCam(x, 0); return; }
-    const my = ++cutting;
-    await iris.close(360);
-    if (my !== cutting || !on) return;
-    setCam(x, 0);
-    await frames(2); await wait(180);
-    if (my === cutting && on) iris.open(620);
-  }
 
   function measure() {
     viewW = hero.clientWidth;
@@ -150,7 +135,6 @@
       win = document.createElement('i'); track.appendChild(win);
       track.addEventListener('click', (e) => {
         const r = track.getBoundingClientRect();
-        userUntil = performance.now() + 12000;
         glide((e.clientX - r.left) / r.width * coreW - viewW / 2, 1400);
       });
     }
@@ -190,15 +174,6 @@
   let rz = 0;
   addEventListener('resize', () => { cancelAnimationFrame(rz); rz = requestAnimationFrame(relayout); });
 
-  // ── tabs: every season has its shot. The camera leaves as the dark dip starts. ──
-  let lastSeason = selectedSeason();
-  new MutationObserver(() => {
-    const s = selectedSeason();
-    if (s === lastSeason) return;
-    lastSeason = s; subject = null;
-    if (on) { userUntil = performance.now() + 9000; cut(xForFrac(SHOTS[s] ?? 0.5)); }
-  }).observe(document.querySelector('.tabs') || document.body, { attributes: true, subtree: true, attributeFilter: ['aria-selected'] });
-
   // ── swipe to look around ──
   let drag = null;
   hero.addEventListener('pointerdown', (e) => {
@@ -223,7 +198,6 @@
     if (!drag || e.pointerId !== drag.id) return;
     if (drag.live) {
       hero.classList.remove('panning');
-      userUntil = performance.now() + 14000; subject = null;
       // Fling: carry the finger's speed on for a moment, then settle.
       const coast = Math.max(-viewW, Math.min(viewW, -drag.v * 200));
       setCam(visualX() + coast, 700, 'cubic-bezier(.2,.7,.3,1)');
@@ -237,41 +211,6 @@
   hero.addEventListener('click', (e) => {
     if (hero.__dragged && performance.now() - hero.__dragged < 350) { e.preventDefault(); e.stopPropagation(); }
   }, true);
-
-  // ── visitors: swing the glass to an animal that turns up out of view, and keep it framed ──
-  if (!reduced) {
-    new MutationObserver((recs) => {
-      if (!on) return;
-      for (const r of recs) for (const n of r.addedNodes) {
-        if (n.nodeType === 1 && n.classList.contains('wl-actor')) { subject = n; followSoon(400); return; }
-      }
-    }).observe(core, { childList: true, subtree: true });
-  }
-  function followSoon(ms) { clearTimeout(followT); followT = setTimeout(follow, ms); }
-  function follow() {
-    if (!on || !subject) return;
-    if (!subject.isConnected || subject.classList.contains('out')) { subject = null; return; }
-    if (performance.now() > userUntil && !drag) {
-      const r = subject.getBoundingClientRect(), c = core.getBoundingClientRect();
-      if (r.width) {
-        const x = r.left + r.width / 2 - c.left;           // in core px
-        const vx = x - camX;                               // in view px
-        if (vx < viewW * 0.22 || vx > viewW * 0.78) glide(x - viewW / 2, 1800);
-      }
-    }
-    followSoon(1500);
-  }
-
-  // ── idle: the glass wanders to a neighbouring spot now and then ──
-  function glance() {
-    glanceT = setTimeout(glance, 11000 + Math.random() * 9000);
-    if (!on || reduced || drag || subject || document.hidden || performance.now() < userUntil) return;
-    if (hero.getBoundingClientRect().bottom < 0) return;
-    const here = (camX + viewW / 2) / coreW;
-    const near = GLANCES.filter((g) => Math.abs(g - here) > 0.05 && Math.abs(g - here) < 0.2);
-    if (near.length) glide(xForFrac(near[Math.floor(Math.random() * near.length)]), 4200);
-  }
-  glanceT = setTimeout(glance, 16000);
 
   window.__camera = { glide: (f, ms) => on && glide(xForFrac(f), ms), get x() { return camX; }, get on() { return on; } };
 })();
