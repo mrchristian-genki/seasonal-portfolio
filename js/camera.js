@@ -15,7 +15,7 @@
 // Wide screens and landscape phones never see any of this.
 (function spyglass() {
   const $ = (id) => document.getElementById(id);
-  const hero = $('hero'), core = $('sceneCore'), copy = $('heroCopy');
+  const hero = $('hero'), core = $('sceneCore'), copy = $('heroCopy'), copyHome = copy && copy.parentNode;
   if (!hero || !core || !copy || !window.matchMedia) return;
   const mq = matchMedia('(max-width: 820px) and (orientation: portrait)');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -46,9 +46,6 @@
   function place(x) {
     core.style.left = `${-x}px`;
     parEls.forEach(([el, f]) => { const o = (x * (1 - f)).toFixed(1); el.style.left = `${o}px`; el.style.right = `${-o}px`; });
-    // The hero text stays in the UI plate (lifting it out above the plates cost ~2 s of first
-    // paint in headless Chromium: extra overlap layers), counter-placed so it holds still.
-    copy.style.left = `${x + 18}px`;
     if (win) win.style.left = (x / coreW * 100).toFixed(2) + '%';
   }
   // Where the view is right now, mid-glide or mid-drag included.
@@ -60,13 +57,11 @@
     const d = camX - from;
     core.style.transition = tr; core.style.translate = d ? `${d}px 0` : '';
     parEls.forEach(([el, f]) => { el.style.transition = tr; el.style.transform = d ? `translateX(${(-d * (1 - f)).toFixed(1)}px)` : ''; });
-    copy.style.transition = tr; copy.style.translate = d ? `${-d}px 0` : '';
   }
   function settle() {
     clearTimeout(animT);
     core.style.transition = core.style.translate = '';
     parEls.forEach(([el]) => { el.style.transition = el.style.transform = ''; });
-    copy.style.transition = copy.style.translate = '';
   }
   // ms 0 = jump. Eased like a hand swinging the glass: slow off, slow in.
   function setCam(x, ms, ease) {
@@ -160,6 +155,10 @@
       });
     }
     hero.insertBefore(lens, core.nextSibling);
+    // The hero text leaves the moving plate stack while the glass is up, so the scenery pans and
+    // the text holds still. (Counter-moving it inside the stack kept it still in Chromium, but on
+    // iPhone the two opposite animations drift apart and the text visibly slid.)
+    hero.insertBefore(copy, lens.nextSibling);
     hero.appendChild(track);
     if (!reduced && !iris.el) {
       // First time only: the page loads behind a closed iris, which opens once the scene has
@@ -176,7 +175,7 @@
   function exit() {
     on = false;
     hero.classList.remove('spyglass');
-    copy.style.left = '';
+    if (copyHome) copyHome.appendChild(copy);
     [lens, track, iris.el].forEach((el) => el && el.remove());
     settle(); core.style.left = '';
     parEls.forEach(([el]) => { el.style.left = el.style.right = ''; });

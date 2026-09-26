@@ -423,8 +423,9 @@ html,body{margin:0;background:#0b1020;font-family:system-ui,-apple-system,sans-s
   .hero::after{height:44px}
 }
 .hero.spyglass{touch-action:pan-y;-webkit-user-select:none;user-select:none}
-/* The hero text: camera.js sets its left so it holds still over the panning world. */
-.hero.spyglass .hero-copy{top:20px;width:calc(100vw - 36px);max-width:none}
+/* The hero text: camera.js lifts it out of the plate stack into the hero, so it stays put while
+   the world pans under it (above the lens vignette, below the position track and iris). */
+.hero.spyglass .hero-copy{left:18px;right:18px;top:20px;width:auto;max-width:none;z-index:5}
 .hero.spyglass .hero-copy h1{font-size:clamp(24px,7.2vw,34px);margin-bottom:10px}
 .hero.spyglass .hero-copy p{font-size:15px;margin-bottom:16px}
 /* Lens: a soft vignette, deeper while the glass swings. */
