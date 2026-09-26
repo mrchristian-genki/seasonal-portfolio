@@ -413,11 +413,18 @@ html,body{margin:0;background:#0b1020;font-family:system-ui,-apple-system,sans-s
    1.85 screens, which is the zoom.
    ============================================================ */
 @media (max-width:820px) and (orientation:portrait){
+  .hero{
+    --spy-h:clamp(480px, 80vh, 800px);
+    --spy-h:clamp(480px, 80svh, 800px);
+    --spy-w:max(185vw, calc(var(--spy-h) * .8 * 1.50117));
+    height:var(--spy-h);
+  }
+  /* The core is 3% of its width taller than the hero, which clips it: that hides the bottom strip
+     of the world (y 3200-3333, 2.7% of the width) where the foreground grass band stops and the
+     lake shows through. Desktop's 18% wave covers it; the phone's 44px wave doesn't. */
   .scene-core{
-    width:max(185vw, calc(clamp(480px, 80vh, 800px) * .8 * 1.50117));
-    width:max(185vw, calc(clamp(480px, 80svh, 800px) * .8 * 1.50117));
-    height:clamp(480px, 80vh, 800px);
-    height:clamp(480px, 80svh, 800px);
+    width:var(--spy-w);
+    height:calc(var(--spy-h) + var(--spy-w) * .03);
     max-width:none;aspect-ratio:auto;margin:0;
   }
   .hero::after{height:44px}
