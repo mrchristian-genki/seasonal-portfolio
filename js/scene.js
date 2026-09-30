@@ -2615,18 +2615,7 @@ function _bootInner() {
     if (!fx) return st;
     const shade = document.createElement('div'); shade.className = 'storm-shade';
     const flash = document.createElement('div'); flash.className = 'storm-flash';
-    // Winter: the glass fogs up in the corners, slowly, with a faint frost pattern. Four small
-    // corner panels, each blurring the scene behind it under a light white haze (a frosted-glass
-    // backdrop, kept to the corners so it stays cheap), masked to grow from its corner as the
-    // frost builds (--fr). The pattern is a mottled ice texture drawn once as an image.
-    const frost = document.createElement('div'); frost.className = 'storm-frost'; frost.style.display = 'none';
-    const frostTex = `url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='320' height='320'><filter id='f' x='0' y='0'><feTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' seed='7' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1.6 -.95'/></filter><filter id='m' x='0' y='0'><feTurbulence type='fractalNoise' baseFrequency='.025' numOctaves='4' seed='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1.4 -.55'/></filter><rect width='320' height='320' filter='url(%23m)'/><rect width='320' height='320' filter='url(%23f)'/></svg>`).replace(/%2523/g, '%23')}")`;
-    ['tl', 'tr', 'bl', 'br'].forEach(c => {
-      const k = document.createElement('i'); k.className = 'frost-' + c;
-      k.style.setProperty('--tex', frostTex);
-      frost.appendChild(k);
-    });
-    fx.append(shade, flash, frost);
+    fx.append(shade, flash);
 
     // Weather on the page copy: while a storm blows, rain beads sit on the headline's letters
     // and drip off their bottom edges, and on the button; in winter snow builds up along the
@@ -2756,20 +2745,13 @@ function _bootInner() {
       if (key !== copyWx.key) { copyWx.key = key; buildCopyWx(view, snow); }
       copyWx.el.style.opacity = Math.min(1, level * 1.3).toFixed(2);
     }
-    let raf = 0, last = 0, splashT = 0, boltT = 0, frostLv = 0, frostT = 0, since = 0;
+    let raf = 0, last = 0, splashT = 0, boltT = 0;
     function tick(now) {
       const dt = Math.min(0.1, (now - (last || now)) / 1000); last = now;
       st.level += ((st.on ? 1 : 0) - st.level) * Math.min(1, dt * 0.45);
       const op = st.level.toFixed(3);
       const winter = SEASON === 0;
-      // Frost builds slowly the longer a winter storm lasts: nothing for the first 6 s, then it
-      // creeps in from the edges over ~45 s; it thaws over ~15 s once the storm passes.
-      const realDt = Math.min(1, dt === 0.1 ? 0.1 : dt);
-      frostLv = winter && st.on ? Math.max(frostLv, Math.min(1, (now - since - 6000) / 45000))   // by the clock, any frame rate
-        : Math.max(0, frostLv - realDt / 15);
       shade.style.opacity = op;
-      if (now - frostT > 250) { frostT = now; frost.style.opacity = Math.min(1, frostLv * 1.5).toFixed(3); frost.style.setProperty('--fr', frostLv.toFixed(3));
-        frost.style.display = frostLv > 0 ? '' : 'none'; }   // no backdrop blur at all until it frosts
       if (now - (copyWx.t || 0) > 250) { copyWx.t = now; copyWeather(st.level); }
       if (st.level > 0.3 && !winter && now > splashT) {          // fat drops into the lake
         splashT = now + 180 + Math.random() * 420;
@@ -2780,12 +2762,10 @@ function _bootInner() {
         flash.classList.remove('on'); void flash.offsetWidth; flash.classList.add('on');
       }
       if (st.on || st.level > 0.004) raf = requestAnimationFrame(tick);
-      else if (frostLv <= 0) { st.level = 0; shade.style.opacity = frost.style.opacity = '0'; copyWeather(0); raf = 0; last = 0; }
-      else raf = requestAnimationFrame(tick);
+      else { st.level = 0; shade.style.opacity = '0'; copyWeather(0); raf = 0; last = 0; }
     }
     function set(on) {
       st.on = !!on;
-      if (st.on) since = performance.now();
       boltT = performance.now() + (SEASON === 0 ? 30000 : 4000);
       if (st.on && window.__windShow) window.__windShow.gustNow();
       if (!raf) raf = requestAnimationFrame(tick);
