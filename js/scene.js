@@ -477,6 +477,11 @@ function _bootInner() {
       x: Math.random()*VW, y: Math.random()*VH,
       len: 24+Math.random()*30, speed: 18+Math.random()*14, opacity: 0.45+Math.random()*0.45
     }));
+    // Storm: a second, heavier pool (longer, brighter streaks) drawn on top while a storm blows.
+    const stormDrops = Array.from({length:260}, () => ({
+      x: Math.random()*VW, y: Math.random()*VH,
+      len: 46+Math.random()*44, speed: 30+Math.random()*16, opacity: 0.35+Math.random()*0.4
+    }));
     // Snow: separate pool and motion (slow fall + side drift), winter only.
     const flakes = Array.from({length:140}, () => ({
       x: Math.random()*VW, y: Math.random()*VH,
@@ -524,8 +529,11 @@ function _bootInner() {
         }
       }
       // Rain (fall), snow (winter) and leaves (fall) ease independently.
-      const targetRain = kf(s, [0.0, 0.0, 0.0, 0.45]);
-      const targetSnow = kf(s, [0.55, 0.0, 0.0, 0.0]);
+      // A storm (window.__storm, eased 0..1) brings heavy rain in any season but winter, where
+      // it thickens the snow instead.
+      const storm = window.__storm ? window.__storm.level : 0, wintry = kf(s, [1, 0, 0, 0]);
+      const targetRain = Math.max(kf(s, [0.0, 0.0, 0.0, 0.45]), storm * (1 - wintry));
+      const targetSnow = Math.max(kf(s, [0.55, 0.0, 0.0, 0.0]), storm * wintry * 0.9);
       const targetLeaf = kf(s, [0.0, 0.0, 0.0, 0.85]);
       if (targetLeaf > 0) loadLeafSprites();
       rainOpacity += (targetRain - rainOpacity) * dt * 0.8;
@@ -558,13 +566,17 @@ function _bootInner() {
         ctx.clearRect(0, 0, rainCanvas.width, rainCanvas.height);
         const sx = rainCanvas.width/VW, sy = rainCanvas.height/VH;
         if (rainOpacity > 0.02) {
-          drops.forEach(d => {
-            d.y += d.speed * dt * 60;
-            if (d.y > VH) { d.y = -d.len; d.x = Math.random()*VW; }
-            ctx.strokeStyle = `rgba(180,210,240,${d.opacity})`;
-            ctx.lineWidth = 2.8; ctx.beginPath();
-            ctx.moveTo(d.x*sx, d.y*sy); ctx.lineTo((d.x+2)*sx, (d.y+d.len)*sy); ctx.stroke();
-          });
+          // Rain leans with the wind: a steady lean in a storm plus each gust (#9 random rain).
+          const slant = 0.04 + storm * 0.3 + WIND.gust * 0.35;
+          const fall = (d, w) => {
+            d.y += d.speed * dt * 60; d.x += d.speed * slant * dt * 60;
+            if (d.y > VH) { d.y = -d.len; d.x = Math.random()*VW*1.2 - VW*0.2; }
+            if (d.x > VW) d.x -= VW;
+            ctx.lineWidth = w; ctx.beginPath();
+            ctx.moveTo(d.x*sx, d.y*sy); ctx.lineTo((d.x+d.len*slant)*sx, (d.y+d.len)*sy); ctx.stroke();
+          };
+          drops.forEach(d => { ctx.strokeStyle = `rgba(180,210,240,${d.opacity})`; fall(d, 2.8); });
+          if (storm > 0.02) stormDrops.forEach(d => { ctx.strokeStyle = `rgba(200,220,240,${(d.opacity * storm).toFixed(3)})`; fall(d, 3.4); });
         }
         if (snowOpacity > 0.02) {
           flakes.forEach(f => {
@@ -1349,6 +1361,18 @@ function _bootInner() {
           scheduleNext();
         }, delay);
       })();
+      // A fat raindrop falling into the lake, then two rings (the 'Drip Drop' pen): storms only.
+      function dripDrop(x, y) {
+        const drop = mk('path', { d: 'M0 -9 Q4 -1 3.2 2.2 A3.4 3.4 0 1 1 -3.2 2.2 Q-4 -1 0 -9 Z', fill: '#e8f4fb', opacity: 0.85 }, fishGroup);
+        const t0 = performance.now(), fallMs = 260, from = y - 90;
+        (function tick(now) {
+          const t = Math.min(1, (now - t0) / fallMs);
+          drop.setAttribute('transform', `translate(${x.toFixed(1)},${(from + (y - from) * t * t).toFixed(1)}) scale(2.2)`);
+          if (t < 1) requestAnimationFrame(tick);
+          else { drop.remove(); ripple(x, y, 0.8); setTimeout(() => ripple(x, y, 0.45), 200); }
+        })(t0);
+      }
+      window.__dripDrop = dripDrop;
       window.__fishJumpGroup = fishGroup;
       window.__spawnFishJump = spawnFishJump;
       window.__lakeRipple = ripple;
@@ -2479,11 +2503,12 @@ function _bootInner() {
       const dt = Math.min(0.1, (now - last) / 1000); last = now;
       const t = now / 1000;
       if (now >= nextAt && target === 0) {                          // a new gust
-        target = (0.55 + Math.random() * 0.45) * (SEASON_GUST[SEASON] || 0.8);
+        const stormy = window.__storm ? window.__storm.level : 0;
+        target = (0.55 + Math.random() * 0.45) * (SEASON_GUST[SEASON] || 0.8) * (1 + stormy * 0.9);
         holdTo = now + 1500 + 1000 + Math.random() * 2500;
         WIND.target = WIND.base + target * 0.6;
       }
-      if (target > 0 && now > holdTo) { target = 0; WIND.target = WIND.base; nextAt = now + 6000 + Math.random() * 8000; }
+      if (target > 0 && now > holdTo) { target = 0; WIND.target = WIND.base; nextAt = now + (6000 + Math.random() * 8000) * (window.__storm && window.__storm.on ? 0.35 : 1); }
       const rateUp = target > gust ? 0.9 : 0.55;                   // builds a bit faster than it dies
       gust += (target - gust) * Math.min(1, dt * rateUp * 1.6);
       if (gust < 0.004 && target === 0) { if (gust) { gust = 0; write(0, t); } return; }
@@ -2505,6 +2530,67 @@ function _bootInner() {
     else setTimeout(waitLoaded, 250);
   })();
 
+  // ── STORM: heavy rain and strong wind ────────────────────────────────────
+  // After the rain pens (#4, #9, #12, #17): heavier rain that leans with the wind (the rain loop
+  // above reads window.__storm.level), fat drops splashing into the lake, beads of water sliding
+  // down the 'camera glass', a darker sky, the odd lightning flash, and stronger, more frequent
+  // gusts. Starts from ?storm, the test panel (window.__storm.set(true)), or now and then on its
+  // own in spring to fall. All CSS/DOM on transform and opacity except the rain canvas it reuses.
+  window.__storm = (function () {
+    const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const fx = $('plateFx');
+    const st = { on: false, level: 0, set, toggle: () => set(!st.on) };
+    if (!fx) return st;
+    const shade = document.createElement('div'); shade.className = 'storm-shade';
+    const flash = document.createElement('div'); flash.className = 'storm-flash';
+    const glass = document.createElement('div'); glass.className = 'storm-glass';
+    for (let i = 0; i < 12; i++) {
+      const b = document.createElement('i');
+      const r = 1.1 + Math.random() * 1.5;           // bead size, in % of the scene's width
+      Object.assign(b.style, { left: (Math.random() * 96).toFixed(1) + '%', top: (Math.random() * 55).toFixed(1) + '%',
+        width: r.toFixed(2) + '%', animationDuration: (5 + Math.random() * 7).toFixed(1) + 's',
+        animationDelay: (-Math.random() * 10).toFixed(1) + 's' });
+      glass.appendChild(b);
+    }
+    fx.append(shade, flash, glass);
+    let raf = 0, last = 0, splashT = 0, boltT = 0;
+    function tick(now) {
+      const dt = Math.min(0.1, (now - (last || now)) / 1000); last = now;
+      st.level += ((st.on ? 1 : 0) - st.level) * Math.min(1, dt * 0.45);
+      const op = st.level.toFixed(3);
+      shade.style.opacity = op; glass.style.opacity = op;
+      const winter = SEASON === 0;
+      if (st.level > 0.3 && !winter && now > splashT) {          // fat drops into the lake
+        splashT = now + 180 + Math.random() * 420;
+        if (window.__dripDrop) window.__dripDrop(700 + Math.random() * 3200, 1900 + Math.random() * 520);
+      }
+      if (st.level > 0.6 && !reduced && now > boltT) {             // lightning, now and then
+        boltT = now + 7000 + Math.random() * 12000;
+        flash.classList.remove('on'); void flash.offsetWidth; flash.classList.add('on');
+      }
+      if (st.on || st.level > 0.004) raf = requestAnimationFrame(tick);
+      else { st.level = 0; shade.style.opacity = glass.style.opacity = '0'; raf = 0; last = 0; }
+    }
+    function set(on) {
+      st.on = !!on;
+      glass.classList.toggle('run', st.on && !reduced);
+      boltT = performance.now() + 4000;
+      if (st.on && window.__windShow) window.__windShow.gustNow();
+      if (!raf) raf = requestAnimationFrame(tick);
+    }
+    // Now and then a storm blows through by itself (spring to fall): after the first two minutes,
+    // a 1 in 5 chance every three minutes, lasting 35-55 s.
+    (function natural() {
+      setTimeout(() => {
+        if (!st.on && SEASON !== 0 && !document.hidden && Math.random() < 0.2) {
+          set(true); setTimeout(() => set(false), 35000 + Math.random() * 20000);
+        }
+        natural();
+      }, 180000);
+    })();
+    return st;
+  })();
+
   // ── SHAREABLE LINKS ──────────────────────────────────────────────────────
   // The address can set the scene: ?summer+night, ?winter, ?fall+day, ?night. Words combine with
   // + (or & , or spaces) in any order. Seasons: spring summer fall/autumn winter, or the tab
@@ -2514,7 +2600,7 @@ function _bootInner() {
   // season/night change after that, so the current view can always be copied and shared.
   // Other flags (?bench ?fps ?wildlife ?diag) are left as they are.
   const LINK_SEASON = { spring: 1, summer: 2, fall: 3, autumn: 3, winter: 0, books: 2, web: 3, workshop: 0, lab: 1 };
-  const LINK_KEEP = ['bench', 'fps', 'wildlife', 'diag'];
+  const LINK_KEEP = ['bench', 'fps', 'wildlife', 'diag', 'storm'];
   const linkWords = decodeURIComponent(location.search.slice(1)).toLowerCase()
     .split(/[+&,;\s]+/).map(w => w.split('=')[0]).filter(Boolean);
   window.__linkWords = linkWords;
@@ -2523,6 +2609,7 @@ function _bootInner() {
     if (w in LINK_SEASON) linkSeason = LINK_SEASON[w];
     if (w === 'night' || w === 'nightmode' || w === 'darkmode' || w === 'dark') linkNight = true;
     if (w === 'day' || w === 'daymode' || w === 'lightmode' || w === 'light') linkNight = false;
+    if (w === 'storm' || w === 'thunder' || w === 'heavyrain') setTimeout(() => window.__storm.set(true), 1200);
   });
   if (linkSeason == null) linkSeason = BOOT_SEASON;
   if (linkSeason != null) {  // always runs: the HTML's selected tab is Books (summer), so even ?spring must set the tabs

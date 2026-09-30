@@ -986,7 +986,7 @@
   const FISH_CHARGE_MS = 2500;
   // Full charge (daytime, not winter) also calls in the eagle (eagleCatch above).
   const CATCH = { v: null, fish: null };
-  hotspot([1500, 1680, 3700, 2700], (x, y, held) => {
+  const lakeSpot = hotspot([1500, 1680, 3700, 2700], (x, y, held) => {
     if (season() === 'winter') { if (window.__lakeRipple) window.__lakeRipple(x, y); return; }
     const power = Math.min(1, (held || 0) / FISH_CHARGE_MS);
     const h = window.__spawnFishJump ? window.__spawnFishJump(x, y, power) : null;
@@ -998,6 +998,22 @@
       CATCH.fish = null; CATCH.v = start('eagleCatch', { force: true, at: { x, y } });
     }
   } });
+  // Rings follow the mouse over the lake (after the 'Mouse hover water effect' pen), a hint that
+  // it can be tapped. Mouse only, throttled, and only over open water (not the right bank).
+  if (lakeSpot) {
+    let lastT = 0, lx = -1e9, ly = 0;
+    lakeSpot.addEventListener('pointermove', (e) => {
+      if (e.pointerType !== 'mouse' || !window.__lakeRipple) return;
+      const now = performance.now();
+      if (now - lastT < 180 || Math.hypot(e.clientX - lx, e.clientY - ly) < 22) return;
+      const fr = hotFrame.getBoundingClientRect();
+      const wx = (e.clientX - fr.left) / fr.width * VW, wy = (e.clientY - fr.top) / fr.height * VH;
+      if (wx > 2750 && wy < 1860) return;                    // the right bank, pines and tent
+      lastT = now; lx = e.clientX; ly = e.clientY;
+      window.__lakeRipple(wx, wy, 1.8);
+      setTimeout(() => window.__lakeRipple(wx, wy, 0.9), 140);
+    });
+  }
   hotspot([1450, 1470, 2760, 1640], () => invite(['wolfHowl', 'deer', 'doe', 'elk', 'bear', 'wolfRun'])); // far shore
   hotspot([2800, 985, 3700, 1825], () => invite(['owl', 'hawk', 'bankDeer']));    // right-bank pines
   hotspot([3780 + HERO_DX, 1120, 5000, 1900], () => invite(['squirrel']));        // hero tree canopy
@@ -1021,7 +1037,7 @@
     ['Close-up (in front of the tree)', [['closeBear', 'Grizzly, close-up'], ['closeElk', 'Bull elk, close-up'], ['closeMarley', 'Marley, close-up'], ['closeDoe', 'Doe, close-up'], ['closeDeer', 'Buck, close-up'], ['closeWolf', 'Wolf, close-up']]],
     ['Close-up (on the left rocks)', [['closeFox', 'Fox'], ['closeHare', 'Hare'], ['closeChipmunk', 'Chipmunk'], ['closeSquirrel', 'Squirrel']]],
     ['Rocks & tree', [['chipmunk', 'Chipmunk'], ['squirrel', 'Squirrel (hero tree)']]],
-    ['Lake & sky', [['fisherman', 'Fisherman'], ['eagle', 'Eagle'], ['@fish', 'Fish jump'], ['@bigfish', 'Big fish jump (full charge)'], ['@catch', 'Eagle catches a fish']]],
+    ['Lake & sky', [['fisherman', 'Fisherman'], ['eagle', 'Eagle'], ['@fish', 'Fish jump'], ['@bigfish', 'Big fish jump (full charge)'], ['@catch', 'Eagle catches a fish'], ['@storm', 'Storm (on / off)']]],
     ['Scene effects', [['@gust', 'Wind gust now'], ['@calm', 'Stop the wind'], ['@night', 'Day / night (fireflies, collar, tent light)']]],
   ];
   let panel = null;
@@ -1057,6 +1073,7 @@
         setTimeout(() => { const h = window.__spawnFishJump && window.__spawnFishJump(x, y, 1); if (CATCH.v) CATCH.fish = h || 'miss'; }, 3200);
         note.textContent = 'Eagle circling… big jump in 3 s.'; return;
       }
+      if (k === '@storm') { if (window.__storm) { window.__storm.toggle(); note.textContent = window.__storm.on ? 'Storm rolling in' : 'Storm passing'; } return; }
       if (k === '@bigfish') { if (window.__spawnFishJump) window.__spawnFishJump(rand(2000, 2900), rand(1900, 2300), 1); note.textContent = 'Big jump!'; return; }
       if (k === '@fish') {
         if (window.__spawnFishJump) window.__spawnFishJump(rand(1900, 3000), rand(1800, 2300));

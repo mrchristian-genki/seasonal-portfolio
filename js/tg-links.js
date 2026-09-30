@@ -12,6 +12,8 @@
     'Shows',
     ['Play the whole year', '', 'play'], ['Play the whole year at night', '', 'play+night'],
     ['Dark mode', 'night scene, dark page', 'darkmode'],
+    ['A storm blows through', 'heavy slanting rain, wind, lightning', 'fall+storm'], ['Storm at night', 'lightning over the moonlit lake', 'summer+night+storm'],
+    ['Winter storm', 'a blizzard instead of rain', 'winter+storm'],
     'Far shore, under the mountains',
     ['Buck walking out of the trees', 'all year', 'fall+deer'], ['Doe drinking', 'spring to fall', 'summer+doe'],
     ['Elk', 'fall, winter', 'fall+elk'], ['Bear walking the shore', 'spring to fall, day', 'summer+bear'],
