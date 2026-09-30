@@ -1151,7 +1151,16 @@ function buildFoothillsRange(wrap, src, season, opts) {
   const cropWidth = (opts && opts.cropWidth) || FOOTHILLS_NATIVE_W / 4;
   const cropX = (opts && opts.cropX) != null ? opts.cropX : (FOOTHILLS_NATIVE_W - cropWidth) / 2;
   try {
-    const text = window.__fetchSyncText(src);
+    // Distant, so hazy: each fill is mixed toward a pale sky blue (atmospheric perspective), as
+    // a SOLID colour, never transparency, so nothing behind (the moon, the sun) shows through.
+    // The class names are made unique too, so another file's .cls-N can't restyle these.
+    const HAZE = [150, 182, 200], HAZE_MIX = 0.38, uid = 'fh' + Math.floor(Math.random() * 1e9);
+    const hazy = (hex) => { const n = parseInt(hex.slice(1), 16), c = [n >> 16, (n >> 8) & 255, n & 255];
+      return '#' + c.map((v, i) => Math.round(v + (HAZE[i] - v) * HAZE_MIX).toString(16).padStart(2, '0')).join(''); };
+    const text = window.__fetchSyncText(src)
+      .replace(/fill:\s*(#[0-9a-fA-F]{6})/g, (m, hex) => `fill:${hazy(hex)};fill-opacity:1;opacity:1`)
+      .replace(/\bclass="([^"]+)"/g, (m, cls) => `class="${cls}-${uid}"`)
+      .replace(/\.(cls-\d+)(\s*\{)/g, (m, cls, brace) => `.${cls}-${uid}${brace}`);
     window.__injectFetchedSvg(wrap, text);
     wrap.setAttribute('viewBox', `${cropX} 0 ${cropWidth} ${FOOTHILLS_NATIVE_H}`);
     wrap.setAttribute('preserveAspectRatio', 'xMidYMax slice');

@@ -615,3 +615,6 @@ html.night-page .hero-swell{ background: linear-gradient(rgba(12,18,32,.35), rgb
 .wl-flake{ position:absolute; display:block; border-radius:50%; transform-origin:50% 100%; opacity:0;
   background: radial-gradient(circle at 45% 40%, #fff 0 30%, #e9f1fb 52%, rgba(233,241,251,.5) 64%, rgba(233,241,251,0) 74%);
   filter: drop-shadow(0 1px 1px rgba(25,45,75,.45)); }
+
+/* The distant foothills are always fully opaque (their haze is a colour, not transparency). */
+#bgFoothills, #foothillsWrap, #foothillsWrap *{ opacity:1 !important; fill-opacity:1 !important; }
