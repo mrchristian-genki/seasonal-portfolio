@@ -266,6 +266,70 @@
   }
   const live = new Set();
 
+  // ── snow on the animals: in a winter storm, flakes drift down and stick to the top of any animal
+  // that's big enough to see it (backs, heads, ears), then melt away, the same way they land on
+  // the headline. The outline's top edges come from a one-off snapshot of the animal's drawing
+  // in a canvas; the flakes live inside the animal's own box, so they travel with it. Redone if
+  // it turns round; cleared when the storm passes.
+  function snowOnActor(a) {
+    const W = a.el.offsetWidth, H = a.el.offsetHeight;
+    if (H < 70 || !a.el.classList.contains('on')) return;
+    const svg = a.c.svg.cloneNode(true);
+    svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg'); svg.setAttribute('width', W); svg.setAttribute('height', H);
+    svg.removeAttribute('style');
+    const flip = /scaleX\(-1\)/.test(a.c.svg.style.transform || '');
+    const img = new Image(), d = a.d;
+    a.snow = { pending: true, d };
+    img.onload = () => {
+      if (!a.snow || a.snow.d !== d) return;
+      const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+      const ctx = cv.getContext('2d');
+      if (flip) { ctx.translate(W, 0); ctx.scale(-1, 1); }
+      ctx.drawImage(img, 0, 0, W, H);
+      let px; try { px = ctx.getImageData(0, 0, W, H).data; } catch (e) { return; }
+      const ink = (x, y) => y >= 0 && px[(y * W + x) * 4 + 3] > 140, clear = Math.max(4, Math.round(H * 0.06));
+      const tops = [];
+      for (let x = 2; x < W - 2; x += 2) for (let y = 1; y < H * 0.8; y++) {
+        if (!ink(x, y) || ink(x, y - 1)) continue;
+        let ok = true; for (let k = 2; k <= clear && ok; k++) if (ink(x, y - k)) ok = false;
+        if (ok) tops.push([x, y]);
+      }
+      if (!tops.length) return;
+      const box = document.createElement('div'); box.className = 'wl-snowfall';
+      const n = Math.max(8, Math.min(30, Math.round(H / 22))), fw = Math.min(10, 4 + H / 140);
+      for (let i = 0; i < n; i++) {
+        const [x, y] = tops[Math.floor(Math.random() * tops.length)];
+        const f = document.createElement('i'); f.className = 'wl-flake';
+        const w = fw * (0.7 + Math.random() * 0.6);
+        Object.assign(f.style, { left: (x / W * 100).toFixed(2) + '%', top: (y / H * 100).toFixed(2) + '%', width: w.toFixed(1) + 'px', height: w.toFixed(1) + 'px' });
+        box.appendChild(f);
+        const drop = 40 + Math.random() * 110, drift = (Math.random() - 0.5) * 40;
+        const fallMs = drop / (22 + Math.random() * 18) * 1000, sitMs = 2500 + Math.random() * 4000, meltMs = 5000 + Math.random() * 5000, T = fallMs + sitMs + meltMs + 1000 + Math.random() * 5000;
+        const pos = (dx, dy, sx, sy) => `translate(${(dx - w / 2).toFixed(1)}px, ${(dy - w * 0.8).toFixed(1)}px) scale(${sx}, ${sy})`;
+        const kf = [];
+        for (let k = 0; k <= 5; k++) { const u = k / 5; kf.push({ offset: u * fallMs / T, opacity: k ? 0.95 : 0, transform: pos(-drift * (1 - u) + Math.sin(u * 9.4) * 5 * (1 - u), -drop * (1 - u), 1, 1) }); }
+        kf.push({ offset: (fallMs + 250) / T, opacity: 0.95, transform: pos(0, 0.5, 1.2, 0.8) });
+        kf.push({ offset: (fallMs + sitMs) / T, opacity: 0.95, transform: pos(0, 0.5, 1.2, 0.8) });
+        kf.push({ offset: (fallMs + sitMs + meltMs) / T, opacity: 0, transform: pos(0, 1, 1.05, 0.55) });
+        kf.push({ offset: 1, opacity: 0, transform: pos(0, 1, 1.05, 0.55) });
+        f.animate(kf, { duration: T, iterations: Infinity, delay: -Math.random() * T });
+      }
+      a.el.appendChild(box);
+      a.snow = { el: box, d };
+    };
+    img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(new XMLSerializer().serializeToString(svg));
+  }
+  const dropSnow = (a) => { if (a.snow && a.snow.el) a.snow.el.remove(); a.snow = null; };
+  setInterval(() => {
+    const st = window.__storm, snowing = !!(st && st.on && st.level > 0.4 && season() === 'winter')
+      && !(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+    live.forEach((v) => v.actors.forEach((a) => {
+      if (!snowing) { if (a.snow) dropSnow(a); return; }
+      if (a.snow && a.snow.d !== a.d) dropSnow(a);        // turned round: the outline changed
+      if (!a.snow) snowOnActor(a);
+    }));
+  }, 1500);
+
   // ── the cast ──
   // when: 'day' | 'night' | 'any'. seasons: list. stage: which layer (for the one-per-stage rule).
   // Positions are world units, tuned against the art (see the zoomed grids in the Sept 24 notes).

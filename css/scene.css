@@ -612,3 +612,9 @@ html.night-page .hero-swell{ background: linear-gradient(rgba(12,18,32,.35), rgb
 @keyframes lsFall{ from{ transform: translateY(0); } to{ transform: translateY(var(--tile)); } }
 @keyframes lsSway{ from{ transform: translateX(-1.2%); } to{ transform: translateX(1.2%); } }
 @media (prefers-reduced-motion:reduce){ .ls-sway, .ls-layer{ animation:none; } }
+
+/* Snow on the animals in a winter storm (wildlife.js snowOnActor): flakes inside the animal's box. */
+.wl-snowfall{ position:absolute; inset:0; pointer-events:none; }
+.wl-flake{ position:absolute; display:block; border-radius:50%; transform-origin:50% 100%; opacity:0;
+  background: radial-gradient(circle at 45% 40%, #fff 0 30%, #e9f1fb 52%, rgba(233,241,251,.5) 64%, rgba(233,241,251,0) 74%);
+  filter: drop-shadow(0 1px 1px rgba(25,45,75,.45)); }
