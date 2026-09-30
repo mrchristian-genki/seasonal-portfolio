@@ -591,6 +591,9 @@ html.night-page .hero-swell{ background: linear-gradient(rgba(12,18,32,.35), rgb
 @keyframes wxBead{ 0%{ opacity:0; transform:scale(.3); } 20%{ opacity:.95; transform:scale(1); } 75%{ opacity:.95; transform:scale(1); } 100%{ opacity:0; transform:scale(.8); } }
 .wx-drip{ animation: wxDrip 6s linear infinite; transform-origin:50% 0; }
 .wx-run{ left:0; top:0; transform-origin:50% 100%; }
+.wx-flake{ left:0; top:0; border-radius:50%; transform-origin:50% 100%; opacity:0;
+  background: radial-gradient(circle at 45% 40%, #fff 0 30%, #e9f1fb 52%, rgba(233,241,251,.5) 64%, rgba(233,241,251,0) 74%);
+  filter: drop-shadow(0 1px 1px rgba(25,45,75,.55)); }
 @keyframes wxDrip{
   0%   { opacity:0;   transform: translateY(0) scale(.2); animation-timing-function: ease-out; }
   50%  { opacity:.95; transform: translateY(0) scale(1); }
@@ -599,11 +602,6 @@ html.night-page .hero-swell{ background: linear-gradient(rgba(12,18,32,.35), rgb
   80%, 100% { opacity:0; transform: translateY(calc(var(--fall, 90px) + 14px)) scale(.6, 2); }
 }
 }
-.wx-snow{ border-radius: 50% 50% 35% 35% / 90% 90% 25% 25%; background: linear-gradient(#fff, #e8f0fa);
-  box-shadow: 0 1px 1px rgba(40,60,90,.18); transform-origin:50% 100%; opacity:0; animation: wxSnow 20s ease-in-out infinite; }
-@keyframes wxSnow{ 0%{ opacity:0; transform:scaleY(0); } 30%{ opacity:1; transform:scaleY(1); } 72%{ opacity:1; transform:scaleY(1); } 100%{ opacity:0; transform:scaleY(.4) translateY(1px); } }
-.wx-snowcap{ height:16px; background-size:100% 100%; background-repeat:no-repeat;
-  filter: drop-shadow(0 1px 0 rgba(40,60,90,.2)); transform-origin:50% 100%; opacity:0; animation: wxSnow 22s ease-in-out infinite; }
 @media (prefers-reduced-motion:reduce){ .copy-wx{ display:none; } }
 
 /* Light snow (scene.js): three depths of soft flakes, one element each, sliding down one tile a

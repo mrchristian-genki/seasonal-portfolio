@@ -2642,11 +2642,14 @@ function _bootInner() {
         }
       }
       const a = ctx.getImageData(0, 0, W, H).data, ink = (x, y) => y >= 0 && y < H && a[(y * W + x) * 4 + 3] > 120;
-      const top = [], bottom = [], face = [];
+      const top = [], bottom = [], face = [], clearUp = Math.round(parseFloat(cs.fontSize) * 0.45);
       const ox = r.left - box.left, oy = r.top - box.top;
       for (let x = 1; x < W - 1; x += 2) for (let y = 1; y < H - 1; y++) {
         if (!ink(x, y)) continue;
-        if (!ink(x, y - 1)) top.push([ox + x, oy + y]);
+        if (!ink(x, y - 1)) {                       // a top edge with open air above it (not inside a loop)
+          let clear = true; for (let k = 2; k <= clearUp && clear; k++) if (ink(x, y - k)) clear = false;
+          if (clear) top.push([ox + x, oy + y]);
+        }
         if (!ink(x, y + 1) && !ink(x, y + 4)) bottom.push([ox + x, oy + y]);
         else if (y % 5 === 0 && x % 6 === 1) face.push([ox + x, oy + y]);
       }
@@ -2704,33 +2707,48 @@ function _bootInner() {
           { duration: t, iterations: Infinity, delay: -Math.random() * t });
       }
     }
+    // One flake: falls with a gentle sway from above its landing spot, settles onto the edge,
+    // sits a while, then melts away; pauses, and falls again. A Web Animation on transform and
+    // opacity, looping on its own random timing.
+    function stickFlake(wx, x, y) {
+      const w = 5 + Math.random() * 5, drop = 70 + Math.random() * 150, drift = (Math.random() - 0.5) * 50;
+      const fallMs = drop / (22 + Math.random() * 18) * 1000, sitMs = 2500 + Math.random() * 4000;
+      const meltMs = 5000 + Math.random() * 5000, restMs = 1000 + Math.random() * 6000;
+      const T = fallMs + sitMs + meltMs + restMs, kf = [];
+      const pos = (px, py, sx, sy) => `translate(${(px - w / 2).toFixed(1)}px, ${(py - w * 0.8).toFixed(1)}px) scale(${sx}, ${sy})`;
+      for (let i = 0; i <= 6; i++) {                          // the fall, swaying side to side
+        const u = i / 6, px = x - drift * (1 - u) + Math.sin(u * Math.PI * 3) * 6 * (1 - u);
+        kf.push({ offset: u * fallMs / T, opacity: i === 0 ? 0 : 0.95, transform: pos(px, y - drop * (1 - u), 1, 1) });
+      }
+      kf.push({ offset: (fallMs + 250) / T, opacity: 0.95, transform: pos(x, y + 0.5, 1.2, 0.8) });   // settles
+      kf.push({ offset: (fallMs + sitMs) / T, opacity: 0.95, transform: pos(x, y + 0.5, 1.2, 0.8) });
+      kf.push({ offset: (fallMs + sitMs + meltMs) / T, opacity: 0, transform: pos(x, y + 1, 1.05, 0.55) });   // melts
+      kf.push({ offset: 1, opacity: 0, transform: pos(x, y + 1, 1.05, 0.55) });
+      const f = document.createElement('i'); f.className = 'wx-flake';
+      Object.assign(f.style, { width: w.toFixed(1) + 'px', height: w.toFixed(1) + 'px' });
+      wx.appendChild(f);
+      f.animate(kf, { duration: T, iterations: Infinity, delay: -Math.random() * T, easing: 'linear' });
+    }
     function buildCopyWx(view, snow) {
       if (copyWx.el) copyWx.el.remove();
       const wx = document.createElement('div'); wx.className = 'copy-wx'; wx.setAttribute('aria-hidden', 'true');
       view.appendChild(wx);
       const box = view.getBoundingClientRect(), h1 = view.querySelector('h1'), btn = view.querySelector('.btn');
       const e = h1 && inkEdges(h1, box);
-      if (e && snow) {
-        // snow caps along the letters' top edges: short soft mounds, clustered a little
-        pick(e.top, 70).forEach(([x, y]) => { const w = 4 + Math.random() * 7; dot(wx, 'wx-snow', x, y + 1.5, w, w * (0.45 + Math.random() * 0.3), 16 + Math.random() * 10); });
+      if (snow) {
+        // Flakes drift down through the copy and stick where they land: on a letter's top edge
+        // or the top of the button, then melt away slowly.
+        const spots = e ? pick(e.top, 40) : [];
+        if (btn) { const b = btn.getBoundingClientRect();
+          for (let i = 0; i < 10; i++) spots.push([b.left - box.left + 10 + Math.random() * (b.width - 20), b.top - box.top + 1]); }
+        spots.forEach(([x, y]) => stickFlake(wx, x, y));
       } else if (e) {
         pick(e.face, 18).forEach(([x, y]) => { const w = 5 + Math.random() * 5; dot(wx, 'wx-bead', x, y + w / 2, w, w, 6 + Math.random() * 6); });
       }
       if (!snow) runDrops(wx, view, box, h1, btn);
       if (btn) {
         const b = btn.getBoundingClientRect(), bx = b.left - box.left, by = b.top - box.top;
-        if (snow) {
-          const cap = document.createElement('b'); cap.className = 'wx-snowcap';
-          // a lumpy drift along the top edge: a few soft mounds, thickest in the middle
-          let d = 'M0 16 L0 12', x = 0;
-          while (x < 100) { const w = 8 + Math.random() * 14, h = 3 + Math.random() * 5 + 4 * Math.sin(Math.min(1, (x + w / 2) / 100) * Math.PI);
-            d += ` Q${(x + w / 2).toFixed(1)} ${(12 - h * 1.6).toFixed(1)} ${Math.min(100, x + w).toFixed(1)} 12`; x += w; }
-          d += ' L100 16 Z';
-          cap.style.backgroundImage = `url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 16' preserveAspectRatio='none'><path d='${d}' fill='white'/></svg>`)}")`;
-          Object.assign(cap.style, { left: (bx + 4).toFixed(1) + 'px', top: (by - 12).toFixed(1) + 'px', width: (b.width - 8).toFixed(1) + 'px',
-            animationDelay: (-Math.random() * 6).toFixed(1) + 's' });
-          wx.appendChild(cap);
-        } else {
+        if (!snow) {
           for (let i = 0; i < 6; i++) { const w = 5 + Math.random() * 4; dot(wx, 'wx-bead', bx + 8 + Math.random() * (b.width - 16), by + 6 + Math.random() * (b.height - 12), w, w, 6 + Math.random() * 6); }
 
         }
