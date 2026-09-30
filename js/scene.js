@@ -2560,7 +2560,7 @@ function _bootInner() {
       const t = now / 1000;
       if (now >= nextAt && target === 0) {                          // a new gust
         const stormy = window.__storm ? window.__storm.level : 0;
-        if (SEASON === 0 && stormy > 0.3) {
+        if (SEASON === 0 && stormy > 0.45) {
           // Blizzard gusts: random spurts. Mostly moderate, sometimes a big one; short or long.
           target = (0.35 + Math.pow(Math.random(), 1.8) * 1.1) * (SEASON_GUST[SEASON] || 0.8) * (1 + stormy);
           holdTo = now + 500 + Math.random() * (Math.random() < 0.3 ? 3500 : 1400);
@@ -2574,7 +2574,7 @@ function _bootInner() {
           ? (SEASON === 0 ? (Math.random() < 0.55 ? 600 + Math.random() * 2400 : 5000 + Math.random() * 8000)   // bursts, then lulls
             : (6000 + Math.random() * 8000) * 0.35)
           : 6000 + Math.random() * 8000); }
-      const blizzard = SEASON === 0 && window.__storm && window.__storm.on;
+      const blizzard = SEASON === 0 && window.__storm && window.__storm.on && window.__storm.max > 0.55;
       const rateUp = target > gust ? (blizzard ? 2.2 : 0.9) : (blizzard ? 0.45 : 0.55);   // builds faster than it dies; a blizzard gust hits hard
       gust += (target - gust) * Math.min(1, dt * rateUp * 1.6);
       if (gust < 0.004 && target === 0) { if (gust) { gust = 0; write(0, t); } return; }
@@ -2605,7 +2605,7 @@ function _bootInner() {
   window.__storm = (function () {
     const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const fx = $('plateFx');
-    const st = { on: false, level: 0, set, toggle: () => set(!st.on) };
+    const st = { on: false, level: 0, max: 1, set, toggle: () => set(!st.on) };
     if (!fx) return st;
     const shade = document.createElement('div'); shade.className = 'storm-shade';
     const flash = document.createElement('div'); flash.className = 'storm-flash';
@@ -2672,12 +2672,12 @@ function _bootInner() {
       // the ink sits inside the line box: trim to roughly cap height and baseline
       return lines.sort((a, b) => a.t - b.t).map(b => { const h = b.b - b.t; return { t: b.t + h * 0.2, b: b.t + h * 0.86, l: b.l, r: b.r }; });
     }
-    function runDrops(wx, view, box, h1, btn) {
+    function runDrops(wx, view, box, h1, btn, light) {
       const bands = h1 ? lineBands(h1, box) : [];
       if (btn) { const b = btn.getBoundingClientRect(); bands.push({ t: b.top - box.top + 4, b: b.bottom - box.top - 2, l: b.left - box.left + 8, r: b.right - box.left - 8, btn: true }); }
       if (!bands.length) return;
       const SLOW = [14, 26], FAST = 320, FALL = 520;
-      for (let n = 0, N = window.__smallScreen ? 7 : 12; n < N; n++) {
+      for (let n = 0, N = light ? 4 : window.__smallScreen ? 7 : 12; n < N; n++) {
         const i0 = Math.floor(Math.pow(Math.random(), 1.6) * bands.length);   // most start near the top
         const s0 = bands[i0], x = s0.l + 6 + Math.random() * Math.max(1, s0.r - s0.l - 12);
         const path = bands.slice(i0).filter(b => x >= b.l && x <= b.r);
@@ -2692,7 +2692,7 @@ function _bootInner() {
         });
         const fall = 90 + Math.random() * 90;                                            // then away
         at(y, t, 0.95, 0.9, 1.3, 'cubic-bezier(.55,0,1,.45)'); t += fall / FALL * 1000; y += fall; at(y, t, 0, 0.6, 2);
-        const rest = 800 + Math.random() * 3500; t += rest; at(y, t, 0, 0.6, 2);          // a pause before it runs again
+        const rest = light ? 8000 + Math.random() * 16000 : 800 + Math.random() * 3500; t += rest; at(y, t, 0, 0.6, 2);          // a pause before it runs again
         const d = document.createElement('i'); d.className = 'wx-run';
         Object.assign(d.style, { width: w.toFixed(1) + 'px', height: h.toFixed(1) + 'px' });
         wx.appendChild(d);
@@ -2704,10 +2704,10 @@ function _bootInner() {
     // One flake: falls with a gentle sway from above its landing spot, settles onto the edge,
     // sits a while, then melts away; pauses, and falls again. A Web Animation on transform and
     // opacity, looping on its own random timing.
-    function stickFlake(wx, x, y) {
+    function stickFlake(wx, x, y, light) {
       const w = 5 + Math.random() * 5, drop = 70 + Math.random() * 150, drift = (Math.random() - 0.5) * 50;
       const fallMs = drop / (22 + Math.random() * 18) * 1000, sitMs = 2500 + Math.random() * 4000;
-      const meltMs = 5000 + Math.random() * 5000, restMs = 1000 + Math.random() * 6000;
+      const meltMs = 5000 + Math.random() * 5000, restMs = light ? 12000 + Math.random() * 26000 : 1000 + Math.random() * 6000;   // light snow: long gaps
       const T = fallMs + sitMs + meltMs + restMs, kf = [];
       const pos = (px, py, sx, sy) => `translate(${(px - w / 2).toFixed(1)}px, ${(py - w * 0.8).toFixed(1)}px) scale(${sx}, ${sy})`;
       for (let i = 0; i <= 6; i++) {                          // the fall, swaying side to side
@@ -2723,7 +2723,7 @@ function _bootInner() {
       wx.appendChild(f);
       f.animate(kf, { duration: T, iterations: Infinity, delay: -Math.random() * T, easing: 'linear' });
     }
-    function buildCopyWx(view, snow) {
+    function buildCopyWx(view, snow, light) {
       if (copyWx.el) copyWx.el.remove();
       const wx = document.createElement('div'); wx.className = 'copy-wx'; wx.setAttribute('aria-hidden', 'true');
       view.appendChild(wx);
@@ -2732,62 +2732,74 @@ function _bootInner() {
       if (snow) {
         // Flakes drift down through the copy and stick where they land: on a letter's top edge
         // or the top of the button, then melt away slowly.
-        const spots = e ? pick(e.top, window.__smallScreen ? 22 : 40) : [];
+        // Ordinary snow days (light): just a few, with long gaps, so it collects slowly.
+        const spots = e ? pick(e.top, light ? (window.__smallScreen ? 6 : 12) : (window.__smallScreen ? 22 : 40)) : [];
         if (btn) { const b = btn.getBoundingClientRect();
-          for (let i = 0, m = window.__smallScreen ? 6 : 10; i < m; i++) spots.push([b.left - box.left + 10 + Math.random() * (b.width - 20), b.top - box.top + 1]); }
-        spots.forEach(([x, y]) => stickFlake(wx, x, y));
+          for (let i = 0, m = light ? 3 : (window.__smallScreen ? 6 : 10); i < m; i++) spots.push([b.left - box.left + 10 + Math.random() * (b.width - 20), b.top - box.top + 1]); }
+        spots.forEach(([x, y]) => stickFlake(wx, x, y, light));
       } else if (e) {
-        pick(e.face, window.__smallScreen ? 10 : 18).forEach(([x, y]) => { const w = 5 + Math.random() * 5; dot(wx, 'wx-bead', x, y + w / 2, w, w, 6 + Math.random() * 6); });
+        pick(e.face, light ? 5 : window.__smallScreen ? 10 : 18).forEach(([x, y]) => { const w = 5 + Math.random() * 5; dot(wx, 'wx-bead', x, y + w / 2, w, w, 6 + Math.random() * 6); });
       }
-      if (!snow) runDrops(wx, view, box, h1, btn);
+      if (!snow) runDrops(wx, view, box, h1, btn, light);
       if (btn) {
         const b = btn.getBoundingClientRect(), bx = b.left - box.left, by = b.top - box.top;
         if (!snow) {
-          for (let i = 0; i < 6; i++) { const w = 5 + Math.random() * 4; dot(wx, 'wx-bead', bx + 8 + Math.random() * (b.width - 16), by + 6 + Math.random() * (b.height - 12), w, w, 6 + Math.random() * 6); }
+          for (let i = 0, m = light ? 2 : 6; i < m; i++) { const w = 5 + Math.random() * 4; dot(wx, 'wx-bead', bx + 8 + Math.random() * (b.width - 16), by + 6 + Math.random() * (b.height - 12), w, w, 6 + Math.random() * 6); }
 
         }
       }
       copyWx.el = wx;
     }
-    function copyWeather(level) {
+    function copyWeather(level, light) {
       if (reduced) return;
       const view = document.querySelector('#heroCopy .view.on');
       if (level < 0.05 || !view) { if (copyWx.el) { copyWx.el.remove(); copyWx.el = null; copyWx.key = ''; } return; }
-      const snow = SEASON === 0, key = view.dataset.view + (snow ? 's' : 'r') + Math.round(view.getBoundingClientRect().width);
-      if (key !== copyWx.key) { copyWx.key = key; buildCopyWx(view, snow); }
+      const snow = SEASON === 0, key = view.dataset.view + (snow ? 's' : 'r') + (light ? 'l' : '') + Math.round(view.getBoundingClientRect().width);
+      if (key !== copyWx.key) { copyWx.key = key; buildCopyWx(view, snow, light); }
       copyWx.el.style.opacity = Math.min(1, level * 1.3).toFixed(2);
     }
     let raf = 0, last = 0, splashT = 0, boltT = 0;
     function tick(now) {
       const dt = Math.min(0.1, (now - (last || now)) / 1000); last = now;
-      st.level += ((st.on ? 1 : 0) - st.level) * Math.min(1, dt * 0.45);
+      st.level += ((st.on ? st.max : 0) - st.level) * Math.min(1, dt * 0.45);
       const op = st.level.toFixed(3);
       const winter = SEASON === 0;
       if (shade.__o !== op) { shade.__o = op; shade.style.opacity = op; }
-      if (now - (copyWx.t || 0) > 250) { copyWx.t = now; copyWeather(st.level); }
-      if (st.level > 0.3 && !winter && now > splashT) {          // fat drops into the lake
-        splashT = now + 350 + Math.random() * 650;
+      if (now - (copyWx.t || 0) > 250) { copyWx.t = now; copyWeather(Math.max(st.level, 0.3), st.max < 0.55); }
+      if (st.level > 0.3 && !winter && now > splashT) {          // fat drops into the lake, more the harder it rains
+        splashT = now + (350 + Math.random() * 650) / st.level;
         if (window.__dripDrop) window.__dripDrop(700 + Math.random() * 3200, 1900 + Math.random() * 520);
       }
-      if (st.level > 0.6 && !reduced && now > boltT) {             // lightning, now and then
+      if (st.level > 0.85 && !reduced && now > boltT) {            // lightning: only at the top level
         boltT = now + (winter ? 40000 + Math.random() * 40000 : 7000 + Math.random() * 12000);   // thundersnow is rare
         flash.classList.remove('on'); void flash.offsetWidth; flash.classList.add('on');
       }
       if (st.on || st.level > 0.004) raf = requestAnimationFrame(tick);
       else { st.level = 0; shade.style.opacity = '0'; copyWeather(0); raf = 0; last = 0; }
     }
-    function set(on) {
+    // set(on, level): level 0..1, the weather's strength (see STORM_LEVELS: drizzle/flurries 0.4,
+    // rain/snowfall 0.7, downpour/blizzard 1). Everything scales with it.
+    function set(on, level) {
       st.on = !!on;
+      if (on) st.max = level == null ? 1 : Math.max(0.2, Math.min(1, level));
       boltT = performance.now() + (SEASON === 0 ? 30000 : 4000);
       if (st.on && window.__windShow) window.__windShow.gustNow();
       if (!raf) raf = requestAnimationFrame(tick);
     }
+    // Ordinary winter snow (no storm): a few flakes collect on the copy too, slowly. The storm
+    // loop takes over while a storm blows; this only runs between storms.
+    // Fall's everyday rain does the same with a few beads and slow running drops.
+    setInterval(() => {
+      if (st.on || raf || document.hidden) return;
+      const sn = window.__snowOpacity || 0, rn = window.__rainOpacity || 0;
+      copyWeather(SEASON === 0 ? (sn > 0.25 ? sn : 0) : (rn > 0.2 ? Math.min(1, rn * 1.6) : 0), true);
+    }, 1000);
     // Now and then a storm blows through by itself (spring to fall): after the first two minutes,
     // a 1 in 5 chance every three minutes, lasting 35-55 s.
     (function natural() {
       setTimeout(() => {
         if (!st.on && SEASON !== 0 && !document.hidden && Math.random() < 0.2) {
-          set(true); setTimeout(() => set(false), 35000 + Math.random() * 20000);
+          set(true, [0.4, 0.7, 0.7, 1][Math.floor(Math.random() * 4)]);   // drizzle, rain, or now and then a downpour setTimeout(() => set(false), 35000 + Math.random() * 20000);
         }
         natural();
       }, 180000);
@@ -2804,7 +2816,10 @@ function _bootInner() {
   // season/night change after that, so the current view can always be copied and shared.
   // Other flags (?bench ?fps ?wildlife ?diag) are left as they are.
   const LINK_SEASON = { spring: 1, summer: 2, fall: 3, autumn: 3, winter: 0, books: 2, web: 3, workshop: 0, lab: 1 };
-  const LINK_KEEP = ['bench', 'fps', 'wildlife', 'diag', 'storm'];
+  // Weather levels: each word sets how hard it rains (or snows, in winter). Light, medium, full.
+  const STORM_LEVELS = { drizzle: 0.4, flurries: 0.4, rain: 0.7, snowfall: 0.7, snowstorm: 0.7,
+    downpour: 1, blizzard: 1, storm: 1, thunder: 1, heavyrain: 1 };
+  const LINK_KEEP = ['bench', 'fps', 'wildlife', 'diag'].concat(Object.keys(STORM_LEVELS));
   const linkWords = decodeURIComponent(location.search.slice(1)).toLowerCase()
     .split(/[+&,;\s]+/).map(w => w.split('=')[0]).filter(Boolean);
   window.__linkWords = linkWords;
@@ -2813,7 +2828,7 @@ function _bootInner() {
     if (w in LINK_SEASON) linkSeason = LINK_SEASON[w];
     if (w === 'night' || w === 'nightmode' || w === 'darkmode' || w === 'dark') linkNight = true;
     if (w === 'day' || w === 'daymode' || w === 'lightmode' || w === 'light') linkNight = false;
-    if (w === 'storm' || w === 'thunder' || w === 'heavyrain') setTimeout(() => window.__storm.set(true), 1200);
+    if (w in STORM_LEVELS) setTimeout(() => window.__storm.set(true, STORM_LEVELS[w]), 1200);
   });
   if (linkSeason == null) linkSeason = BOOT_SEASON;
   if (linkSeason != null) {  // always runs: the HTML's selected tab is Books (summer), so even ?spring must set the tabs

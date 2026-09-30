@@ -272,9 +272,10 @@
   // hang, and drip off. Only animals big enough to see it. The outline comes from a one-off
   // snapshot of the animal's drawing in a canvas; everything lives inside the animal's own box,
   // so it travels with it. Redone if it turns round or the weather changes; cleared after.
+  const WX_GAP = { v: 0 };                                  // extra pause between flakes on light days
   const WX_FLAKE = (w, drop, drift) => {
     const fallMs = drop / (22 + Math.random() * 18) * 1000, sitMs = 2500 + Math.random() * 4000, meltMs = 5000 + Math.random() * 5000;
-    const T = fallMs + sitMs + meltMs + 1000 + Math.random() * 5000;
+    const T = fallMs + sitMs + meltMs + 1000 + Math.random() * 5000 + (WX_GAP.v || 0);
     const pos = (dx, dy, sx, sy) => `translate(${(dx - w / 2).toFixed(1)}px, ${(dy - w * 0.8).toFixed(1)}px) scale(${sx}, ${sy})`;
     const kf = [];
     for (let k = 0; k <= 5; k++) { const u = k / 5; kf.push({ offset: u * fallMs / T, opacity: k ? 0.95 : 0, transform: pos(-drift * (1 - u) + Math.sin(u * 9.4) * 5 * (1 - u), -drop * (1 - u), 1, 1) }); }
@@ -299,7 +300,7 @@
       { offset: 0.76, opacity: 0.8, transform: pos(fall, 0.7, 1.9) }, { offset: 0.8, opacity: 0, transform: pos(fall + 10, 0.6, 2) },
       { offset: 1, opacity: 0, transform: pos(fall + 10, 0.6, 2) }], T];
   };
-  function weatherOnActor(a, kind) {
+  function weatherOnActor(a, kind, amt) {
     const W = a.el.offsetWidth, H = a.el.offsetHeight;
     if (H < 70 || !a.el.classList.contains('on')) return;
     const svg = a.c.svg.cloneNode(true);
@@ -307,9 +308,9 @@
     svg.removeAttribute('style');
     const flip = /scaleX\(-1\)/.test(a.c.svg.style.transform || '');
     const img = new Image(), d = a.d;
-    a.wx = { kind, d };
+    a.wx = { kind, d, amt };
     img.onload = () => {
-      if (!a.wx || a.wx.d !== d || a.wx.kind !== kind) return;
+      if (!a.wx || a.wx.d !== d || a.wx.kind !== kind || a.wx.amt !== amt) return;
       const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
       const ctx = cv.getContext('2d');
       if (flip) { ctx.translate(W, 0); ctx.scale(-1, 1); }
@@ -331,7 +332,8 @@
         box.appendChild(f);
         f.animate(kf, { duration: T, iterations: Infinity, delay: -Math.random() * T });
       };
-      const n = Math.round(Math.max(8, Math.min(30, H / 22)) * (window.__smallScreen ? 0.5 : 1)), sz = Math.min(10, 4 + H / 140);
+      WX_GAP.v = amt < 0.5 ? 10000 + Math.random() * 15000 : 0;
+      const n = Math.max(3, Math.round(Math.max(8, Math.min(30, H / 22)) * (window.__smallScreen ? 0.5 : 1) * amt)), sz = Math.min(10, 4 + H / 140);
       if (kind === 'snow' && tops.length) {
         for (let i = 0; i < n; i++) { const [x, y] = any(tops), w = sz * (0.7 + Math.random() * 0.6);
           add('wl-flake', x, y, w, w, WX_FLAKE(w, 40 + Math.random() * 110, (Math.random() - 0.5) * 40)); }
@@ -342,19 +344,22 @@
       }
       if (!box.children.length) return;
       a.el.appendChild(box);
-      a.wx = { kind, d, el: box };
+      a.wx = { kind, d, amt, el: box };
     };
     img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(new XMLSerializer().serializeToString(svg));
   }
   const dropWeather = (a) => { if (a.wx && a.wx.el) a.wx.el.remove(); a.wx = null; };
   setInterval(() => {
-    const st = window.__storm, stormy = !!(st && st.on && st.level > 0.4)
-      && !(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
-    const kind = stormy ? (season() === 'winter' ? 'snow' : 'rain') : null;
+    // A storm at any level, or the season's own weather (winter snow, fall rain) at a light level.
+    const st = window.__storm, reducedM = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const winter = season() === 'winter', stormy = !!(st && st.on && st.level > 0.25);
+    const everyday = winter ? (window.__snowOpacity || 0) > 0.25 : season() === 'fall' && (window.__rainOpacity || 0) > 0.2;
+    const kind = reducedM || !(stormy || everyday) ? null : winter ? 'snow' : 'rain';
+    const amt = stormy ? Math.max(0.35, st.max) : 0.3;       // how much weather sits on the animal
     live.forEach((v) => v.actors.forEach((a) => {
       if (!kind) { if (a.wx) dropWeather(a); return; }
-      if (a.wx && (a.wx.d !== a.d || a.wx.kind !== kind)) dropWeather(a);   // turned round, or the weather changed
-      if (!a.wx) weatherOnActor(a, kind);
+      if (a.wx && (a.wx.d !== a.d || a.wx.kind !== kind || a.wx.amt !== amt)) dropWeather(a);   // turned, or the weather changed
+      if (!a.wx) weatherOnActor(a, kind, amt);
     }));
   }, 1500);
 
@@ -1129,7 +1134,7 @@
     ['Close-up (in front of the tree)', [['closeBear', 'Grizzly, close-up'], ['closeElk', 'Bull elk, close-up'], ['closeMarley', 'Marley, close-up'], ['closeDoe', 'Doe, close-up'], ['closeDeer', 'Buck, close-up'], ['closeWolf', 'Wolf, close-up']]],
     ['Close-up (on the left rocks)', [['closeFox', 'Fox'], ['closeHare', 'Hare'], ['closeChipmunk', 'Chipmunk'], ['closeSquirrel', 'Squirrel']]],
     ['Rocks & tree', [['chipmunk', 'Chipmunk'], ['squirrel', 'Squirrel (hero tree)']]],
-    ['Lake & sky', [['fisherman', 'Fisherman'], ['eagle', 'Eagle'], ['@fish', 'Fish jump'], ['@bigfish', 'Big fish jump (full charge)'], ['@catch', 'Eagle catches a fish'], ['@storm', 'Storm (on / off)']]],
+    ['Lake & sky', [['fisherman', 'Fisherman'], ['eagle', 'Eagle'], ['@fish', 'Fish jump'], ['@bigfish', 'Big fish jump (full charge)'], ['@catch', 'Eagle catches a fish'], ['@storm', 'Storm (on / off)'], ['@drizzle', 'Drizzle / flurries'], ['@rain', 'Rain / snowfall'], ['@downpour', 'Downpour / blizzard']]],
     ['Scene effects', [['@gust', 'Wind gust now'], ['@calm', 'Stop the wind'], ['@night', 'Day / night (fireflies, collar, tent light)']]],
   ];
   let panel = null;
@@ -1165,6 +1170,8 @@
         setTimeout(() => { const h = window.__spawnFishJump && window.__spawnFishJump(x, y, 1); if (CATCH.v) CATCH.fish = h || 'miss'; }, 3200);
         note.textContent = 'Eagle circling… big jump in 3 s.'; return;
       }
+      const LV = { '@drizzle': 0.4, '@rain': 0.7, '@downpour': 1 };
+      if (k in LV) { if (window.__storm) window.__storm.set(true, LV[k]); note.textContent = 'Weather set'; return; }
       if (k === '@storm') { if (window.__storm) { window.__storm.toggle(); note.textContent = window.__storm.on ? 'Storm rolling in' : 'Storm passing'; } return; }
       if (k === '@bigfish') { if (window.__spawnFishJump) window.__spawnFishJump(rand(2000, 2900), rand(1900, 2300), 1); note.textContent = 'Big jump!'; return; }
       if (k === '@fish') {
