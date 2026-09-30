@@ -223,6 +223,12 @@ marked **OBSOLETE** rather than left dangling.
   on the shooting stars (see below) -- no reason to risk the same bug
   twice. Verified in both Chromium and WebKit.
 
+## New this pass (Sept 30 — the fish-catching eagle flies in front of the banks)
+
+- **Before:** the eagle that stoops for a jumping fish (`eagleCatch`) flew in the lake stage, which sits behind both banks. On a fish jumping low in the scene, it dived behind the pines, the shores and the tent.
+- **Now:** it has its own stage, `STAGE.top`, the last child of `#plateMidground`. That is above both banks, the pines and the tent, but still under the foreground plate: the hero tree, boulders and front plants still pass in front of it.
+- The fish and its ripples stay on the lake.
+
 ## New this pass (Sept 30 — share links in the trigger guide)
 
 - **The trigger guide has a Share links section:** 37 links, each with a Copy button, grouped as:

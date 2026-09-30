@@ -87,6 +87,10 @@
   const lakeFrame = worldFrame(mg, $('mgShores'));      // on the water, behind both banks
   const frontFrame = worldFrame(mg, $('mgTrees') && $('mgTrees').nextSibling);   // on the banks, IN FRONT of the pines
   const skyFrame = birds ? worldFrame(birds) : null;    // with the bird flock
+  // Top of the midground: over both banks, the pines and the tent, still under the foreground
+  // plate. The fish-catching eagle flies here, so a stoop to a fish low on the lake never passes
+  // behind the shore trees.
+  const topFrame = worldFrame(mg);
   const iso = $('isoTree');
   const treeBox = document.createElement('div');       // in front of the hero tree, before the flowers
   treeBox.className = 'wl-box';
@@ -109,11 +113,11 @@
   fgItems.insertBefore(rockClip, fgItems.firstChild);
   const STAGE = {
     far: box(farFrame, FULL), front: box(frontFrame, FULL), lake: box(lakeFrame, FULL), sky: skyFrame ? box(skyFrame, FULL) : null,
-    tree: treeBox, rock: rockClip, behindTree,
+    tree: treeBox, rock: rockClip, behindTree, top: box(topFrame, FULL),
   };
   // Aliases: same layer, but separate "one visitor at a time" slots, so the right bank, the
   // pine tops and the left bank don't block each other (and the fisherman doesn't block the shore).
-  STAGE.boat = STAGE.lake; STAGE.bank = STAGE.far; STAGE.pines = STAGE.far; STAGE.left = STAGE.far; STAGE.rockR = STAGE.lake; STAGE.fore = STAGE.behindTree; STAGE.catch = STAGE.lake;
+  STAGE.boat = STAGE.lake; STAGE.bank = STAGE.far; STAGE.pines = STAGE.far; STAGE.left = STAGE.far; STAGE.rockR = STAGE.lake; STAGE.fore = STAGE.behindTree; STAGE.catch = STAGE.top;
   // Foreground stages sit inside the foreground plate, which already carries the scene's
   // season/night colour grade, so animals there use their day palette.
   const GRADED = new Set(['tree', 'rock', 'behindTree']);
