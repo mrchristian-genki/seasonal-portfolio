@@ -388,7 +388,9 @@
   // chipmunk and squirrel pop up onto the rock.
   // As big as the right-side close-ups: feet far below the frame, so mostly the head and
   // shoulders rise up out of the bottom-left corner, nose toward the button.
-  const LEFT = { x0: -1300, spot: [300, 520], y: 3380, rise: 700,
+  // Shy: they stop close to the left edge, part of the body still off-frame, flinch back toward
+  // it now and then, and dart away left when they go.
+  const LEFT = { x0: -1300, spot: [70, 230], y: 3380, rise: 700,
     size: { fox: 1250, hare: 1100, chipmunk: 1150, squirrel: 1200 },
     feet: { chipmunk: 3120, squirrel: 3180 },            // squat bodies: stand higher so the face clears the wave
     move: { fox: 'walk', hare: 'hop', chipmunk: 'pop', squirrel: 'pop' } };
@@ -404,18 +406,28 @@
       if (how === 'walk') walking(a, true);
       await v.move(a, x, y, how === 'hop' ? a.c.travelSpeed() * a.w : 160, how === 'walk' ? (t, now) => -3 * Math.abs(Math.sin(now / 300)) : null);
     }
-    for (const [b, t] of steps) { if (a.c.behaviors.includes(b)) { a.c.setBehavior(b); await v.wait(t * 1000 * rand(0.85, 1.15)); } }
+    const flinchAt = Math.floor(rand(1, steps.length));   // a nervous start between two of the steps
+    for (let i = 0; i < steps.length; i++) {
+      const [b, t] = steps[i];
+      if (i === flinchAt && Math.random() < 0.7) {
+        await v.move(a, a.x - 110, a.y, 900);                   // jerk back toward the edge...
+        await v.wait(rand(500, 1100));
+        await v.move(a, a.x + rand(40, 110), a.y, 140);         // ...then ease out again, a little less far
+      }
+      if (a.c.behaviors.includes(b)) { a.c.setBehavior(b); await v.wait(t * 1000 * rand(0.85, 1.15)); }
+    }
   }
   async function leftExit(v) {
     const a = v.actors[0]; if (!a) return;
-    a.el.style.setProperty('--fade', a.home.pop ? '0.7s' : '1.8s');
+    // Pop away: turn and dart off the left edge, fast.
+    a.el.style.setProperty('--fade', '0.9s');
     a.el.style.transitionTimingFunction = 'ease-in';
-    if (a.home.pop) { a.show(false); await v.move(a, a.x, a.home.y + LEFT.rise, 450); return; }
     a.face(-1);
     if (a.c.behaviors.includes('walk')) { a.c.setBehavior('walk'); walking(a, true); }
     else if (a.c.behaviors.includes('hop')) a.c.setBehavior('hop');
+    await v.wait(120);
     a.show(false);
-    await v.move(a, a.home.x0, a.home.y, 180);
+    await v.move(a, a.home.x0, a.y + (a.home.pop ? 120 : 0), 1100);
   }
 
   const CAST = {
