@@ -1180,6 +1180,36 @@ function _bootInner() {
     // The box covers the open water between the raised shores and the foreground band (from y2500).
     // The wrap spans the full lake width; waterXRange only limits where drops/ripples spawn, in the
     // shimmer's 1600-unit local space. Small margins keep drops off the banks/rocks at the edges.
+    // Sun and moon glitter path (after the 'Sunrise over still lake' pen): a column of short light
+    // bars on the water under the sun or moon, each flashing wide, drifting a little and shrinking
+    // away in turn, over a soft glow. HTML bars in their own frame, animated with transform and
+    // opacity only (compositor work, no repaint). It sits under the right bank, whose shore hides
+    // its top; render() fades it with the sun or moon and tints it warm by day, cool by night.
+    window.__glitter = (function buildGlitter() {
+      const plate = $('plateMidground');
+      if (!plate) return null;
+      const f = document.createElement('div');
+      f.className = 'glitter'; f.id = 'mgGlitter';
+      f.style.paddingTop = (VH / VW * 100).toFixed(4) + '%';
+      plate.insertBefore(f, $('mgShores') || null);
+      const X = VW * 0.72, TOP = 1880, BOT = 2470, N = 26;
+      const at = (el, x, y, w, h) => Object.assign(el.style, { left: (x / VW * 100).toFixed(3) + '%', top: (y / VH * 100).toFixed(3) + '%',
+        width: (w / VW * 100).toFixed(3) + '%', height: (h / VH * 100).toFixed(3) + '%' });
+      const glow = document.createElement('b');
+      at(glow, X - 260, TOP - 20, 520, BOT - TOP + 80);
+      f.appendChild(glow);
+      for (let i = 0; i < N; i++) {
+        const t = i / (N - 1), bar = document.createElement('i');
+        const w = 130 + 320 * t + (Math.random() - 0.5) * 90, h = 8 + 10 * t;
+        at(bar, X - w / 2 + (Math.random() - 0.5) * 60 * t, TOP + (BOT - TOP) * Math.pow(t, 1.15), w, h);
+        const period = 3.2 + Math.random() * 2.6;
+        bar.style.animationDuration = period.toFixed(2) + 's';
+        bar.style.animationDelay = (-Math.random() * period).toFixed(2) + 's';
+        f.appendChild(bar);
+      }
+      return f;
+    })();
+
     svg = worldSvg(gradeLayer('plateMidground', 'mgFx'));
     if (window.SceneComponents && window.SceneComponents.buildWaterShimmer) {
       const { svg: nested } = placeSvg(svg, 'waterShimmerWrap', 0, 1550, VW, 900, () => {});
@@ -1462,7 +1492,9 @@ function _bootInner() {
       // Second left cluster, around boulder6/7 out in the open water: a clump of reeds at the
       // rock's foot (it replaced the rounded bush, which didn't read as a lake plant).
       placePlant('plant3', 690,  2250, 360, 336, 'assets/fg-plant-reeds.svg', { env: 'water' }),
-      placePlant('plant5', 1150, 2420, 130, 130, 'assets/fg-plant-spiky-yucca.svg', { flipped: true, env: 'rock' }),
+      // In the open water just right of boulder7, clear of the rock's own grass clump (it used to
+      // sit on that clump, the two tangled together).
+      placePlant('plant5', 1400, 2440, 130, 130, 'assets/fg-plant-spiky-yucca.svg', { flipped: true, env: 'water' }),
     ];
     window.__plantInstances = plantInstances;
 
@@ -1828,6 +1860,16 @@ function _bootInner() {
       moonBody.setAttribute('opacity', (Math.max(0, Math.min(1, moonArc*1.5)) * moonGate * moonDip).toFixed(2));
     } else {
       moonBody.setAttribute('opacity', '0');
+    }
+    if (window.__glitter) {
+      const mo = parseFloat(moonBody.getAttribute('opacity')) || 0;
+      const g = Math.max(sunOp * 0.85, mo);
+      const key = g.toFixed(2) + (mo > sunOp ? 'm' : 's');
+      if (window.__glitter.__k !== key) {
+        window.__glitter.__k = key;
+        window.__glitter.style.opacity = g.toFixed(2);
+        window.__glitter.style.setProperty('--glint', mo > sunOp ? '226, 236, 255' : '255, 243, 204');
+      }
     }
 
     // ── aurora + stars: night mode only (aurora bands winter/fall only) ────
