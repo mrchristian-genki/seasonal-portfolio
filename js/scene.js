@@ -587,6 +587,8 @@ function _bootInner() {
           // Batched: drops are bucketed by brightness and each bucket is one path, one stroke.
           const slant = 0.04 + storm * 0.3 + WIND.gust * 0.35;
           const buckets = [[], [], [], []];
+          // Drizzle: fine, short, misty drops (a storm at the lowest level thins every streak).
+          const fine = window.__storm && window.__storm.on && window.__storm.max < 0.55 ? 0.5 : 1;
           const fall = (d, o) => {
             d.y += d.speed * dt * 60; d.x += d.speed * slant * dt * 60;
             if (d.y > VH) { d.y = -d.len; d.x = Math.random()*VW*1.2 - VW*0.2; }
@@ -595,12 +597,12 @@ function _bootInner() {
           };
           drops.forEach(d => fall(d, d.opacity));
           if (storm > 0.02) for (let i = 0, m = SMALL ? 130 : stormDrops.length; i < m; i++) fall(stormDrops[i], stormDrops[i].opacity * storm);
-          ctx.lineWidth = 3; ctx.strokeStyle = 'rgb(185,212,240)';
+          ctx.lineWidth = fine < 1 ? 1.8 : 3; ctx.strokeStyle = 'rgb(185,212,240)';
           buckets.forEach((list, k) => {
             if (!list.length) return;
             ctx.globalAlpha = (k + 0.5) / 4;
             ctx.beginPath();
-            list.forEach(d => { ctx.moveTo(d.x*sx, d.y*sy); ctx.lineTo((d.x+d.len*slant)*sx, (d.y+d.len)*sy); });
+            list.forEach(d => { const l = d.len * fine; ctx.moveTo(d.x*sx, d.y*sy); ctx.lineTo((d.x+l*slant)*sx, (d.y+l)*sy); });
             ctx.stroke();
           });
           ctx.globalAlpha = 1;
@@ -609,7 +611,7 @@ function _bootInner() {
           // One snowfall. Gusts blow it sideways (only the gust above the steady breeze counts):
           // gently in ordinary snow, in hard random bursts in a storm, which also thickens it.
           const gx = Math.max(0, (WIND.gust - WIND.base) / 0.6);
-          const blow = storm * 0.3 + gx * (0.9 + storm * 2.1);
+          const blow = storm * (storm > 0.85 ? 0.75 : 0.3) + gx * (0.9 + storm * 2.1);   // a blizzard also howls steadily under its gusts
           const n = Math.round(LIGHT_SNOW + ((SMALL ? 480 : flakes.length) - LIGHT_SNOW) * Math.min(1, storm * Math.min(1, 0.7 + gx * 0.6)));
           const k = Math.min(sx, sy);
           for (let i = 0; i < n; i++) {
@@ -2706,8 +2708,9 @@ function _bootInner() {
     // opacity, looping on its own random timing.
     function stickFlake(wx, x, y, light) {
       const w = 5 + Math.random() * 5, drop = 70 + Math.random() * 150, drift = (Math.random() - 0.5) * 50;
-      const fallMs = drop / (22 + Math.random() * 18) * 1000, sitMs = 2500 + Math.random() * 4000;
-      const meltMs = 5000 + Math.random() * 5000, restMs = light ? 12000 + Math.random() * 26000 : 1000 + Math.random() * 6000;   // light snow: long gaps
+      const fallMs = drop / (22 + Math.random() * 18) * 1000, sitMs = (window.__storm && window.__storm.on && window.__storm.max < 0.55) ? 200 + Math.random() * 500 : 2500 + Math.random() * 4000;
+      const flurry = window.__storm && window.__storm.on && window.__storm.max < 0.55;   // flurries melt as they land
+      const meltMs = flurry ? 900 + Math.random() * 1200 : 5000 + Math.random() * 5000, restMs = light ? 12000 + Math.random() * 26000 : 1000 + Math.random() * 6000;   // light snow: long gaps
       const T = fallMs + sitMs + meltMs + restMs, kf = [];
       const pos = (px, py, sx, sy) => `translate(${(px - w / 2).toFixed(1)}px, ${(py - w * 0.8).toFixed(1)}px) scale(${sx}, ${sy})`;
       for (let i = 0; i <= 6; i++) {                          // the fall, swaying side to side
@@ -2817,8 +2820,9 @@ function _bootInner() {
   // Other flags (?bench ?fps ?wildlife ?diag) are left as they are.
   const LINK_SEASON = { spring: 1, summer: 2, fall: 3, autumn: 3, winter: 0, books: 2, web: 3, workshop: 0, lab: 1 };
   // Weather levels: each word sets how hard it rains (or snows, in winter). Light, medium, full.
-  const STORM_LEVELS = { drizzle: 0.4, flurries: 0.4, rain: 0.7, snowfall: 0.7, snowstorm: 0.7,
-    downpour: 1, blizzard: 1, storm: 1, thunder: 1, heavyrain: 1 };
+  // Rain: drizzle, shower, tempest. Snow: flurries, snow, blizzard. (Older words kept as aliases.)
+  const STORM_LEVELS = { drizzle: 0.4, shower: 0.7, tempest: 1, flurries: 0.4, snow: 0.7, blizzard: 1,
+    rain: 0.7, downpour: 1, snowfall: 0.7, snowstorm: 0.7, storm: 1, thunder: 1, heavyrain: 1 };
   const LINK_KEEP = ['bench', 'fps', 'wildlife', 'diag'].concat(Object.keys(STORM_LEVELS));
   const linkWords = decodeURIComponent(location.search.slice(1)).toLowerCase()
     .split(/[+&,;\s]+/).map(w => w.split('=')[0]).filter(Boolean);
