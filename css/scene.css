@@ -449,3 +449,32 @@ html,body{margin:0;background:#0b1020;font-family:system-ui,-apple-system,sans-s
 .spy-iris[hidden]{display:none}
 .spy-iris b{position:absolute;left:50%;top:50%;transform-origin:50% 100%;background:#0e1628}
 .spy-iris b:nth-child(even){background:#172238}
+
+/* ── Night mode page (html.night-page, set by the Night mode button or ?night / ?darkmode) ──
+   The header, the white section under the scene, the wave that masks the scene into it and the
+   trigger guide all turn dark with the sky. Tab changes never set this: their dip to dark is
+   only the scene's. Timed to the 3 s sky fade in toggleNightMode(). */
+.site-head,.about,.clock,.lede,.works b,.works p,.credit,.brand,.tab,.tg-open{transition:background-color 2.4s ease,color 2.4s ease}
+.hero::after{transition:background-color 2.4s ease}
+html.night-page{--night-bg:#0e1823;--night-card:#16232f;--night-line:#27384a;--night-text:#dde8e6;--night-soft:#a6b8bf;--night-dim:#7d909a}
+html.night-page .site-head,html.night-page .about,html.night-page .hero::after{background:var(--night-bg)}
+html.night-page .brand,html.night-page .tab{color:var(--night-text)}
+html.night-page .tab[aria-selected="true"]{color:rgb(var(--accent))}
+html.night-page .tab:hover{background:rgba(255,255,255,.07)}
+html.night-page .lede{color:var(--night-soft)}
+html.night-page .works b{color:var(--night-text)}
+html.night-page .works p{color:var(--night-soft)}
+html.night-page .credit{color:var(--night-dim)}
+html.night-page .tg-open{color:#8fd3c6}
+html.night-page .decor .puff .lit{fill:var(--night-line);opacity:.9}
+html.night-page .clock{background:var(--night-card);color:var(--night-soft)}
+html.night-page .clock #modeBtn{background:#f2d27b;color:#1b2733}
+html.night-page .tg{background:var(--night-bg);color:var(--night-text)}
+html.night-page .tg-head{background:var(--night-card);border-color:var(--night-line)}
+html.night-page .tg-head h2,html.night-page .tg-body h3,html.night-page .tg-rocks b{color:var(--night-text)}
+html.night-page .tg-x{background:var(--night-line);color:var(--night-text)}
+html.night-page .tg-lede,html.night-page .tg-rocks span,html.night-page .tg th,html.night-page .tg-note{color:var(--night-soft)}
+html.night-page .tg-rocks li,html.night-page .tg code{background:var(--night-card);border-color:var(--night-line)}
+html.night-page .tg th,html.night-page .tg td,html.night-page .tg figure img{border-color:var(--night-line)}
+html.night-page{color-scheme:dark}
+@media (prefers-reduced-motion:reduce){.site-head,.about,.clock,.lede,.works b,.works p,.credit,.brand,.tab,.tg-open,.hero::after{transition:none}}

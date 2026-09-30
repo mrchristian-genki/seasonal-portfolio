@@ -223,6 +223,14 @@ marked **OBSOLETE** rather than left dangling.
   on the shooting stars (see below) -- no reason to risk the same bug
   twice. Verified in both Chromium and WebKit.
 
+## New this pass (Sept 30 — night mode darkens the page)
+
+- **Night mode now darkens the whole page.** The header, the white section under the scene, the wave that masks the scene into it, the season clock and the trigger guide all turn dark. It's a 2.4 s fade, timed to the sky's 3 s fade into night.
+  - The class is `html.night-page`, set in `toggleNightMode()`.
+  - Tab changes never set it: their dip to dark stays in the scene, and the page stays light.
+- **Night links open already dark,** with no white flash. They are `?night`, plus the new aliases `?nightmode`, `?darkmode` and `?dark`. A small inline script in `<head>` sets the class before the first paint. `?day`, `?daymode` and `?lightmode` force day.
+- **Night colours:** the page is #0e1823, with pale text. The "Day mode" button turns sun-yellow.
+
 ## New this pass (Sept 30 — the year starts in summer)
 
 - **Tab order is now summer → fall → winter → spring.** Books is summer, Web is fall, Workshop is winter, Lab is spring. Each view's season line moved with its season.

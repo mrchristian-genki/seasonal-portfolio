@@ -2215,6 +2215,9 @@ function _bootInner() {
   let _nightRaf = null;
   function toggleNightMode() {
     NIGHT_MODE = !NIGHT_MODE;
+    // The page around the scene follows night mode only (dark header and notes, css html.night-page).
+    // Season changes dim the sky too but never touch this, so the page stays light while tabs change.
+    document.documentElement.classList.toggle('night-page', NIGHT_MODE);
     const modeBtn = $('modeBtn');
     if (modeBtn) {
       modeBtn.setAttribute('aria-pressed', String(NIGHT_MODE));
@@ -2367,7 +2370,7 @@ function _bootInner() {
   // ── SHAREABLE LINKS ──────────────────────────────────────────────────────
   // The address can set the scene: ?summer+night, ?winter, ?fall+day, ?night. Words combine with
   // + (or & , or spaces) in any order. Seasons: spring summer fall/autumn winter, or the tab
-  // names books web workshop lab (summer, fall, winter, spring). With no season the page opens on BOOT_SEASON. Also: day, night, play (plays the whole year). Animal names
+  // names books web workshop lab (summer, fall, winter, spring). With no season the page opens on BOOT_SEASON. Also: day, night (or nightmode, darkmode, dark: the page around the scene goes dark too), play (plays the whole year). Animal names
   // (?fox, ?summer+night+owl) bring that animal in once the wildlife loads (wildlife.js).
   // The page opens straight on that look (no crossfade), and the address bar follows every
   // season/night change after that, so the current view can always be copied and shared.
@@ -2380,8 +2383,8 @@ function _bootInner() {
   let linkSeason = null, linkNight = null;
   linkWords.forEach(w => {
     if (w in LINK_SEASON) linkSeason = LINK_SEASON[w];
-    if (w === 'night') linkNight = true;
-    if (w === 'day') linkNight = false;
+    if (w === 'night' || w === 'nightmode' || w === 'darkmode' || w === 'dark') linkNight = true;
+    if (w === 'day' || w === 'daymode' || w === 'lightmode' || w === 'light') linkNight = false;
   });
   if (linkSeason == null) linkSeason = BOOT_SEASON;
   if (linkSeason != null) {  // always runs: the HTML's selected tab is Books (summer), so even ?spring must set the tabs
@@ -2404,6 +2407,7 @@ function _bootInner() {
   if (linkNight) {
     NIGHT_MODE = true;
     LIGHT.tod = 0; window.__moonEligible = 1; window.__moonDip = 1;
+    document.documentElement.classList.add('night-page');
     if (modeBtn) { modeBtn.setAttribute('aria-pressed', 'true'); modeBtn.textContent = 'Day mode'; }
   }
   function writeLink() {
