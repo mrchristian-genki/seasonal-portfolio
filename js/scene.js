@@ -1613,14 +1613,42 @@ function _bootInner() {
         layer.after(d2);
         let last = d2;
         if (water) {
-          // Rings spreading from the stems where they meet the water (the Outline ripple).
+          // Standing in the lake (after the 'Outline Pure CSS' pen): the waterline is a wave that
+          // slides sideways. A still wrapper masks the clump below that wave, so its base goes
+          // into the real water, whatever the season's colour, and a light outline of the same
+          // wave, moving in step, is drawn along it. Thin rings spread out from the stems.
+          const N = 9;                                  // wave periods across the layer
+          const L = oy - 2.2, A = 0.9;                  // waterline and wave height, % of the layer
+          const wave = (y0, a) => { let d = `M0 ${y0}`; for (let i = 0; i < 2 * (N + 1); i++) d += ` Q${i * 20 + 10} ${y0 + (i % 2 ? a : -a)} ${(i + 1) * 20} ${y0}`; return d; };
+          const tile = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 100' preserveAspectRatio='none'><path d='M0 0H40V${L}Q30 ${L + A} 20 ${L}Q10 ${L - A} 0 ${L}Z'/></svg>`;
+          const wrap = mkLayer();
+          wrap.classList.add('waterline');
+          wrap.style.setProperty('--wl-mask', `url("data:image/svg+xml,${encodeURIComponent(tile)}")`);
+          wrap.style.setProperty('--wl-size', `${(100 / N).toFixed(4)}% 100%`);
+          wrap.style.setProperty('--wl-to', `${(-100 / (N - 1)).toFixed(4)}%`);   // one wave to the left
+          d2.before(wrap);
+          wrap.appendChild(d2);
+          Object.assign(d2.style, { left: '0', top: '0', width: '100%', height: '100%' });
+          const line = mkLayer();
+          line.classList.add('waterline-line');
+          const lw = w0 * 1.25 / dw * 100;              // the outline runs a little past the clump
+          Object.assign(line.style, { left: `calc(${line.style.left} + ${(ox - lw / 2) * parseFloat(line.style.width) / 100}%)`,
+            width: `${lw * parseFloat(line.style.width) / 100}%` });
+          // The line's strip is laid out in the wrapper's own wave units so it keeps step with the mask.
+          const band = 4 * A;
+          line.style.top = `calc(${line.style.top} + ${(L - band / 2) * parseFloat(line.style.height) / 100}%)`;
+          line.style.height = `${band * parseFloat(line.style.height) / 100}%`;
+          const vbW = (N + 1) * 40, off = (ox - lw / 2) / 100 * N * 40;
+          line.innerHTML = `<div class="wl-strip" style="--wl-to:${(-100 / (N + 1)).toFixed(4)}%;width:${(N + 1) / N * 100 / lw * 100}%;left:${-off / (N * 40) * 100 / lw * 100}%">`
+            + `<svg viewBox="0 ${L - band / 2} ${vbW} ${band}" preserveAspectRatio="none"><path d="${wave(L, A)}"/></svg></div>`;
+          wrap.after(line);
           const rings = mkLayer();
           rings.classList.add('water-rings');
           rings.innerHTML = '<i></i><i></i><i></i>';
           rings.style.setProperty('--rx', ox.toFixed(3) + '%');
-          rings.style.setProperty('--ry', (oy - 1.5).toFixed(3) + '%');
+          rings.style.setProperty('--ry', L.toFixed(3) + '%');
           rings.style.setProperty('--rw', (w0 * 0.6 / dw * 100).toFixed(3) + '%');
-          d2.after(rings);
+          line.after(rings);
           last = rings;
         }
         if (moved) last.after(d3);

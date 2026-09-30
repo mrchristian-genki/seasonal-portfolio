@@ -386,20 +386,23 @@
   // and sniff up at the headline and button above them, big and close to the camera. They sit in
   // the fx stage, in front of the rocks and plants; their heads stay below the button. The fox walks and the hare hops in from the left edge; the
   // chipmunk and squirrel pop up onto the rock.
-  const LEFT = { x0: -520, spot: [380, 640], y: 2715,   // feet on the nearest ground, just above the bottom wave
-    size: { fox: 640, hare: 560, chipmunk: 380, squirrel: 440 },
+  // As big as the right-side close-ups: feet far below the frame, so mostly the head and
+  // shoulders rise up out of the bottom-left corner, nose toward the button.
+  const LEFT = { x0: -1300, spot: [300, 520], y: 3380, rise: 700,
+    size: { fox: 1250, hare: 1100, chipmunk: 1150, squirrel: 1200 },
+    feet: { chipmunk: 3120, squirrel: 3180 },            // squat bodies: stand higher so the face clears the wave
     move: { fox: 'walk', hare: 'hop', chipmunk: 'pop', squirrel: 'pop' } };
   async function leftVisit(v, id, steps) {
-    const how = LEFT.move[id], x = rand(LEFT.spot[0], LEFT.spot[1]);
+    const how = LEFT.move[id], x = rand(LEFT.spot[0], LEFT.spot[1]), y = LEFT.feet[id] || LEFT.y;
     const pop = how === 'pop';
-    const a = v.actor('fx', id, { x: pop ? x : LEFT.x0, y: pop ? LEFT.y + 70 : LEFT.y, h: 100, hReal: LEFT.size[id], dir: 1,
+    const a = v.actor('fx', id, { x: pop ? x : LEFT.x0, y: pop ? y + LEFT.rise : y, h: 100, hReal: LEFT.size[id], dir: 1,
       behavior: pop ? steps[0][0] : how, fade: pop ? 0.6 : 1.6 });
-    a.home = { x0: LEFT.x0, y: LEFT.y, pop };
+    a.home = { x0: LEFT.x0, y, pop };
     await v.wait(60); a.show();
-    if (pop) await v.move(a, x, LEFT.y, 120);
+    if (pop) await v.move(a, x, y, 500);
     else {
       if (how === 'walk') walking(a, true);
-      await v.move(a, x, LEFT.y, how === 'hop' ? a.c.travelSpeed() * a.w : 90, how === 'walk' ? (t, now) => -3 * Math.abs(Math.sin(now / 300)) : null);
+      await v.move(a, x, y, how === 'hop' ? a.c.travelSpeed() * a.w : 160, how === 'walk' ? (t, now) => -3 * Math.abs(Math.sin(now / 300)) : null);
     }
     for (const [b, t] of steps) { if (a.c.behaviors.includes(b)) { a.c.setBehavior(b); await v.wait(t * 1000 * rand(0.85, 1.15)); } }
   }
@@ -407,12 +410,12 @@
     const a = v.actors[0]; if (!a) return;
     a.el.style.setProperty('--fade', a.home.pop ? '0.7s' : '1.8s');
     a.el.style.transitionTimingFunction = 'ease-in';
-    if (a.home.pop) { a.show(false); await v.move(a, a.x, a.home.y + 70, 110); return; }
+    if (a.home.pop) { a.show(false); await v.move(a, a.x, a.home.y + LEFT.rise, 450); return; }
     a.face(-1);
     if (a.c.behaviors.includes('walk')) { a.c.setBehavior('walk'); walking(a, true); }
     else if (a.c.behaviors.includes('hop')) a.c.setBehavior('hop');
     a.show(false);
-    await v.move(a, a.home.x0, a.home.y, 110);
+    await v.move(a, a.home.x0, a.home.y, 180);
   }
 
   const CAST = {
