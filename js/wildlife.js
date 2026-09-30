@@ -980,6 +980,9 @@
         a.el.appendChild(lamp); a.el.appendChild(streak);
         a.onNight = (n) => { lamp.classList.toggle('on', n); streak.classList.toggle('on', n); };
         a.onNight(night());
+        // The getaway: tap the boat and it sails off to the beach (js/getaway.js).
+        const tap = boatTap(v, a);
+        try {
         await v.wait(60); a.show();
         await v.move(a, 2700, 1796, 14);
         const out = (3050 - 2700) / 14;                       // seconds left to the fade point
@@ -987,9 +990,27 @@
         a.el.style.transitionTimingFunction = 'ease-in';
         a.show(false);
         await v.move(a, 3050, 1794, 14);
+        } finally { tap.remove(); }
       },
     },
   };
+  // A tap target that rides along with the fisherman's boat. Tapping it sails the boat off
+  // to the right, fast, while the wave carries the view to the getaway.
+  function boatTap(v, a) {
+    const h = document.createElement('div');
+    h.className = 'wl-box wl-hot'; h.style.cursor = 'pointer';
+    const place = () => { const w = 230, ht = 230;
+      Object.assign(h.style, { left: ((a.x - w / 2) / VW * 100).toFixed(3) + '%', top: ((a.y - ht) / VH * 100).toFixed(3) + '%', width: (w / VW * 100).toFixed(3) + '%', height: (ht / VH * 100).toFixed(3) + '%' }); };
+    place(); const t = setInterval(place, 250);
+    h.addEventListener('click', () => {
+      if (!window.__getaway) return;
+      a.el.animate([{ transform: a.el.style.transform }, { transform: a.el.style.transform + ' translateX(260%)', opacity: 0 }], { duration: 1100, easing: 'ease-in', fill: 'forwards' });
+      window.__getaway.go();
+      v.leave();
+    });
+    if (hotFrame) hotFrame.appendChild(h);
+    return { remove() { clearInterval(t); h.remove(); } };
+  }
 
   const eligible = (key) => {
     const d = CAST[key];
@@ -1161,7 +1182,7 @@
     ['Close-up (in front of the tree)', [['closeBear', 'Grizzly, close-up'], ['closeElk', 'Bull elk, close-up'], ['closeMarley', 'Marley, close-up'], ['closeDoe', 'Doe, close-up'], ['closeDeer', 'Buck, close-up'], ['closeWolf', 'Wolf, close-up']]],
     ['Close-up (on the left rocks)', [['closeFox', 'Fox'], ['closeHare', 'Hare'], ['closeChipmunk', 'Chipmunk'], ['closeSquirrel', 'Squirrel']]],
     ['Rocks & tree', [['chipmunk', 'Chipmunk'], ['squirrel', 'Squirrel (hero tree)']]],
-    ['Lake & sky', [['fisherman', 'Fisherman'], ['eagle', 'Eagle'], ['@fish', 'Fish jump'], ['@bigfish', 'Big fish jump (full charge)'], ['@catch', 'Eagle catches a fish'], ['@storm', 'Storm (on / off)'], ['@drizzle', 'Drizzle / flurries'], ['@rain', 'Shower / snow'], ['@downpour', 'Tempest / blizzard']]],
+    ['Lake & sky', [['fisherman', 'Fisherman'], ['eagle', 'Eagle'], ['@fish', 'Fish jump'], ['@bigfish', 'Big fish jump (full charge)'], ['@catch', 'Eagle catches a fish'], ['@getaway', 'The getaway (beach)'], ['@storm', 'Storm (on / off)'], ['@drizzle', 'Drizzle / flurries'], ['@rain', 'Shower / snow'], ['@downpour', 'Tempest / blizzard']]],
     ['Scene effects', [['@gust', 'Wind gust now'], ['@calm', 'Stop the wind'], ['@night', 'Day / night (fireflies, collar, tent light)']]],
   ];
   let panel = null;
@@ -1199,6 +1220,7 @@
       }
       const LV = { '@drizzle': 0.4, '@rain': 0.7, '@downpour': 1 };
       if (k in LV) { if (window.__storm) window.__storm.set(true, LV[k]); note.textContent = 'Weather set'; return; }
+      if (k === '@getaway') { if (window.__getaway) (window.__getaway.active ? window.__getaway.home() : window.__getaway.go()); note.textContent = 'Setting sail'; return; }
       if (k === '@storm') { if (window.__storm) { window.__storm.toggle(); note.textContent = window.__storm.on ? 'Storm rolling in' : 'Storm passing'; } return; }
       if (k === '@bigfish') { if (window.__spawnFishJump) window.__spawnFishJump(rand(2000, 2900), rand(1900, 2300), 1); note.textContent = 'Big jump!'; return; }
       if (k === '@fish') {

@@ -12,6 +12,7 @@
     'Shows',
     ['Play the whole year', '', 'play'], ['Play the whole year at night', '', 'play+night'],
     ['Dark mode', 'night scene, dark page', 'darkmode'],
+    ['The getaway', 'a hidden tropical beach: tap the fisherman\'s boat to sail there', 'summer+beach'], ['The getaway at sunset', 'the beach in the evening', 'summer+beach+sunset'],
     'Weather, light to full',
     ['Drizzle', 'level 1: steady, tiny drops, misty and damp', 'summer+drizzle'], ['Shower', 'level 2: standard rain, distinct and steady', 'spring+shower'],
     ['Tempest', 'level 3, max: blinding rain, roaring wind, thunder and lightning', 'fall+tempest'], ['Tempest at night', 'lightning over the moonlit lake', 'summer+night+tempest'],
