@@ -274,14 +274,33 @@ html,body{margin:0;background:#0b1020;font-family:system-ui,-apple-system,sans-s
   transform-box: fill-box; transform-origin: 50% 100%;
   animation: reedFan var(--rdur, 2.6s) ease-in-out var(--rdel, 0s) infinite alternate;
 }
-@keyframes reedFan{ from{ transform: rotate(-1.2deg); } to{ transform: rotate(1.6deg); } }
+@keyframes reedFan{ from{ transform: skewX(1.2deg); } to{ transform: skewX(-1.6deg); } }
 .sway-grass{ animation: grassClumpSway var(--dur, 1.4s) cubic-bezier(.65,0,.35,1) infinite alternate; }
 .sway-grass-mirror{ animation: grassClumpSwayMirror var(--dur, 1.4s) cubic-bezier(.65,0,.35,1) infinite alternate; }
-@keyframes grassClumpSwayMirror{ from{ transform: rotate(3deg); } to{ transform: rotate(-4deg); } }
+@keyframes grassClumpSwayMirror{ from{ transform: skewX(-3deg); } to{ transform: skewX(4deg); } }
 .sway-flower{ animation: flowerNod var(--dur, 3.6s) ease-in-out infinite alternate; animation-delay: var(--delay, 0s); }
+/* Plants standing in the lake: thin rings spread from the stems at the waterline. */
+.water-rings{ pointer-events:none; }
+.water-rings i{
+  position:absolute; left:var(--rx); top:var(--ry); width:var(--rw); aspect-ratio:5/1;
+  border:1.5px solid rgba(255,255,255,.6); border-radius:50%; opacity:0;
+  transform:translate(-50%,-50%) scale(.35);
+  animation:waterRing 4.2s cubic-bezier(.2,.6,.4,1) infinite;
+}
+.water-rings i:nth-child(2){ animation-delay:-1.4s; }
+.water-rings i:nth-child(3){ animation-delay:-2.8s; }
+@keyframes waterRing{
+  0%  { transform:translate(-50%,-50%) scale(.35); opacity:0; }
+  12% { opacity:.85; }
+  100%{ transform:translate(-50%,-50%) scale(1.6); opacity:0; border-width:.5px; }
+}
+@media (prefers-reduced-motion:reduce){ .water-rings{ display:none; } }
+/* Grass and plants bend with a shear pinned at the base, not a rotation: the base line stays
+   level and still (as if held by water or roots) while the tips sway. A rotation tilted the
+   base, one corner dipping as the other lifted. */
 @keyframes grassClumpSway{
-  from{ transform: rotate(-3deg); }
-  to  { transform: rotate(4deg); }
+  from{ transform: skewX(3deg); }
+  to  { transform: skewX(-4deg); }
 }
 
 /* Water ripple: expands outward from impact, heavy at first, thinning

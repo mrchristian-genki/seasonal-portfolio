@@ -753,7 +753,7 @@
       stage: 'pines', seasons: ['spring', 'summer', 'fall'], when: 'day', weight: 2,
       async run(v) {
         const [x, y] = pick(PINE_TOPS);
-        const a = v.actor('pines', 'hawk', { x, y: y + 8, h: 46, dir: pick([1, -1]), behavior: 'perch' });
+        const a = v.actor('pines', 'hawk', { x, y: y + 8, h: 54, dir: pick([1, -1]), behavior: 'perch' });
         await v.wait(60); a.show();
         await v.wait(rand(10000, 15000));
       },
@@ -764,7 +764,7 @@
       ok: () => night() || season() === 'winter',
       async run(v) {
         const [x, y] = pick(PINE_TOPS);
-        const a = v.actor('pines', 'owl', { x, y: y + 10, h: 44, behavior: 'perch' });
+        const a = v.actor('pines', 'owl', { x, y: y + 10, h: 52, behavior: 'perch' });
         await v.wait(60); a.show();
         await v.wait(rand(12000, 18000));
       },

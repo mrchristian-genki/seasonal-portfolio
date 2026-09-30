@@ -1436,6 +1436,7 @@ function _bootInner() {
         }
       });
       if (opts.flipped) mirrorNested(nested);
+      if (opts.water) nested.setAttribute('data-water', '');   // stands in the lake: rings at its foot
       // opts.dur [min, max] s: a slower sway for stiff plants on land. The default 1.3-2 s rock
       // suits the reeds out in the water but makes a succulent look like it's bobbing.
       const sway = opts.dur && nested.querySelector('.plant-sway');
@@ -1457,7 +1458,7 @@ function _bootInner() {
       placePlant('plant4', 350,  2030, 110, 116, 'assets/fg-plant-yellow-flower-stem.svg'),
       // Second left cluster, around boulder6/7 out in the open water: a clump of reeds at the
       // rock's foot (it replaced the rounded bush, which didn't read as a lake plant).
-      placePlant('plant3', 690,  2250, 360, 336, 'assets/fg-plant-reeds.svg'),
+      placePlant('plant3', 690,  2250, 360, 336, 'assets/fg-plant-reeds.svg', { water: true }),
       placePlant('plant5', 1150, 2420, 130, 130, 'assets/fg-plant-spiky-yucca.svg', { flipped: true }),
     ];
     window.__plantInstances = plantInstances;
@@ -1577,10 +1578,11 @@ function _bootInner() {
           if (/scale\(\s*-1/.test(a.getAttribute && a.getAttribute('transform') || '')) flipped = !flipped;
         }
         return { e, k: kinds[i], flipped, ok: r.width > 0 && d.width > 0 && d.height > 0,
+          w0: r.width, dw: d.width, water: kinds[i] !== 'flower-nod' && !!e.closest('[data-water]'),
           ox: (r.left + r.width / 2 - d.left) / d.width * 100, oy: (r.bottom - d.top) / d.height * 100 };
       });
       const shallow = n => { const c = n.cloneNode(false); if (c.removeAttribute) c.removeAttribute('id'); return c; };
-      jobs.forEach(({ e: swayEl, k, flipped, ok, ox, oy }) => {
+      jobs.forEach(({ e: swayEl, k, flipped, ok, ox, oy, w0, dw, water }) => {
         if (!ok) { swayEl.classList.add(k); return; }   // not laid out (hidden): keep the SVG sway
         // A flower moves as its whole <g class="flower"> (its setColor/opacity hooks live there).
         const e = k === 'flower-nod' ? (swayEl.closest('.flower') || swayEl) : swayEl;
@@ -1609,7 +1611,19 @@ function _bootInner() {
         d2.style.transformOrigin = `${ox.toFixed(3)}% ${oy.toFixed(3)}%`;
         ['--dur', '--delay'].forEach(v => { const x = swayEl.style.getPropertyValue(v); if (x) d2.style.setProperty(v, x); });
         layer.after(d2);
-        if (moved) d2.after(d3);
+        let last = d2;
+        if (water) {
+          // Rings spreading from the stems where they meet the water (the Outline ripple).
+          const rings = mkLayer();
+          rings.classList.add('water-rings');
+          rings.innerHTML = '<i></i><i></i><i></i>';
+          rings.style.setProperty('--rx', ox.toFixed(3) + '%');
+          rings.style.setProperty('--ry', (oy - 1.5).toFixed(3) + '%');
+          rings.style.setProperty('--rw', (w0 * 0.6 / dw * 100).toFixed(3) + '%');
+          d2.after(rings);
+          last = rings;
+        }
+        if (moved) last.after(d3);
       });
     });
   })();
@@ -2320,7 +2334,11 @@ function _bootInner() {
       KINDS.forEach(([sel, amp, rate]) => document.querySelectorAll(sel).forEach((e) => {
         if (!(e instanceof HTMLElement)) return;
         const r = e.getBoundingClientRect();
-        els.push({ e, amp: amp * (0.8 + Math.random() * 0.4), rate, ph: Math.random() * 6, lag: Math.max(0, r.left) / Math.max(1, innerWidth) * 0.6, anims: null, last: '' });
+        // Grass and plants lean by a shear on their <svg>, pinned at the same base pivot, so the
+        // base line stays level in a gust too (a rotate would tilt it).
+        const lean = sel.startsWith('.sway-grass') && e.firstElementChild;
+        if (lean) lean.style.transformOrigin = e.style.transformOrigin;
+        els.push({ e, lean, amp: amp * (0.8 + Math.random() * 0.4), rate, ph: Math.random() * 6, lag: Math.max(0, r.left) / Math.max(1, innerWidth) * 0.6, anims: null, last: '' });
       }));
     }
     function write(g, t) {
@@ -2329,7 +2347,11 @@ function _bootInner() {
         const flutter = gl * 0.35 * Math.sin(t * (2.2 + o.rate) + o.ph);
         const deg = gl * o.amp + flutter * o.amp * 0.4;
         const v = Math.abs(deg) < 0.02 ? '' : deg.toFixed(2) + 'deg';
-        if (v !== o.last) { o.e.style.rotate = v; o.last = v; }
+        if (v !== o.last) {
+          if (o.lean) o.lean.style.transform = v && `skewX(${(-deg).toFixed(2)}deg)`;
+          else o.e.style.rotate = v;
+          o.last = v;
+        }
         if (!o.anims) o.anims = o.e.getAnimations ? o.e.getAnimations() : [];
         const pr = 1 + gl * 1.3 * o.rate;
         o.anims.forEach((a) => { if (Math.abs(a.playbackRate - pr) > 0.03) a.playbackRate = pr; });
