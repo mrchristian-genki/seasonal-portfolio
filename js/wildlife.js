@@ -453,6 +453,7 @@
     await v.move(a, a.x + sx * Math.min(dist, Math.abs(a.home.x0 - a.x)), a.home.y, speed, (t, now) => -1 * Math.abs(Math.sin(now / 420)));
   }
   const foreExit = (v) => backOut(v, 38, '4.5s');
+  const HOWL_SPOT = [4180, 4320];                        // under the hero tree's canopy, left of the trunk
 
   // ── close-up beasts: a rare big moment IN FRONT of the hero tree ──
   // A bear or a bull elk walks in from beyond the right edge, much closer than the foreground
@@ -675,6 +676,32 @@
       stage: 'fore', seasons: ['fall', 'winter'], when: 'any', weight: 2,
       async run(v) { await foreVisit(v, 'wolf-run', { speed: 90, steps: [['walk', 0.01]] }); await v.wait(rand(3000, 5000)); },
       exit: foreExit,
+    },
+    foreHowl: {
+      // Fall and winter nights: a wolf trots out from behind the hero tree, stops under its
+      // canopy (the trunk on one side, the branches arching over), and settles into a howl,
+      // muzzle up toward the moon. The trot and howl poses are two rigs, crossfaded in place.
+      stage: 'fore', seasons: ['fall', 'winter'], when: 'night', weight: 2,
+      async run(v) {
+        const a = v.actor('fore', 'wolf-run', { x: FORE.x0, y: FORE.y, h: 100, hReal: FORE_SIZE['wolf-run'], dir: -1, behavior: 'walk', fade: 2 });
+        a.home = { x0: FORE.x0, y: FORE.y };
+        await v.wait(60); a.show();
+        walking(a, true);
+        const x = rand(HOWL_SPOT[0], HOWL_SPOT[1]);
+        await v.move(a, x, FORE.y, 90, bob);
+        walking(a, false);
+        if (a.c.behaviors.includes('look')) a.c.setBehavior('look');
+        await v.wait(rand(1800, 2600));
+        const hw = v.actor('fore', 'wolf-howl', { x: x - 20, y: FORE.y, h: 100, hReal: FORE_SIZE['wolf-howl'], dir: -1, behavior: 'howl', fade: 0.45 });
+        await v.wait(60); hw.show(); a.el.style.setProperty('--fade', '0.45s'); a.show(false);
+        await v.wait(rand(11000, 15000));
+      },
+      // Back to the standing wolf (if it was howling), then it backs away behind the tree.
+      async exit(v) {
+        const [a, hw] = v.actors;
+        if (hw && hw.el.classList.contains('on')) { a.show(true); hw.show(false); await new Promise((r) => setTimeout(r, 500)); }
+        return foreExit(v);
+      },
     },
     closeBear: {
       stage: 'tree', seasons: ['spring', 'summer', 'fall'], when: 'day', weight: 1,
@@ -1117,7 +1144,7 @@
   hotspot([0, 1560, 1250, 1860], () => invite(['hare']));                         // left bank
   hotspot([0, 2780, VW, VH], () => invite(['snowHare']));                          // front grass: the hare
   hotspot([3790, 1590, 4190, 1780], () => invite(['marley']));                     // the tent: Marley
-  hotspot([3500, 2440, 4400, 2780], () => invite(['foreDeer', 'foreElk', 'foreBear', 'foreWolf', 'fox']));
+  hotspot([3500, 2440, 4400, 2780], () => invite(['foreDeer', 'foreElk', 'foreBear', 'foreWolf', 'foreHowl', 'fox']));
   hotspot([660, 2300, 1040, 2600], () => invite(['closeFox', 'closeHare', 'closeChipmunk', 'closeSquirrel']));  // grass beside the left rocks: a small close-up
   hotspot([4500 + HERO_DX, 1900, 4850 + HERO_DX, 2700], () => invite(['closeBear', 'closeElk', 'closeDoe', 'closeDeer', 'closeWolf', 'closeMarley']));                // hero tree trunk: a close-up beast // foreground grass by the hero tree
   // Sun by day, moon by night (same spot): an eagle, or at night a wolf answers the moon.
@@ -1130,7 +1157,7 @@
   const PANEL_ITEMS = [
     ['Far shore', [['deer', 'Deer (buck)'], ['doe', 'Doe, drinking'], ['elk', 'Elk'], ['bear', 'Bear'], ['wolfRun', 'Wolf, running'], ['wolfHowl', 'Wolf, howling']]],
     ['Right bank', [['bankDeer', 'Deer from behind a pine'], ['hare', 'Hare'], ['marley', 'Marley (from the tent)'], ['hawk', 'Hawk on a pine top'], ['owl', 'Owl on a pine top']]],
-    ['Foreground (by the hero tree)', [['foreDeer', 'Doe or buck, grazing'], ['foreElk', 'Elk'], ['foreBear', 'Bear, foraging'], ['foreWolf', 'Wolf, walking'], ['fox', 'Fox'], ['snowHare', 'Hare across the front (white in winter)']]],
+    ['Foreground (by the hero tree)', [['foreDeer', 'Doe or buck, grazing'], ['foreElk', 'Elk'], ['foreBear', 'Bear, foraging'], ['foreWolf', 'Wolf, walking'], ['foreHowl', 'Wolf howling under the tree (fall/winter nights)'], ['fox', 'Fox'], ['snowHare', 'Hare across the front (white in winter)']]],
     ['Close-up (in front of the tree)', [['closeBear', 'Grizzly, close-up'], ['closeElk', 'Bull elk, close-up'], ['closeMarley', 'Marley, close-up'], ['closeDoe', 'Doe, close-up'], ['closeDeer', 'Buck, close-up'], ['closeWolf', 'Wolf, close-up']]],
     ['Close-up (on the left rocks)', [['closeFox', 'Fox'], ['closeHare', 'Hare'], ['closeChipmunk', 'Chipmunk'], ['closeSquirrel', 'Squirrel']]],
     ['Rocks & tree', [['chipmunk', 'Chipmunk'], ['squirrel', 'Squirrel (hero tree)']]],
