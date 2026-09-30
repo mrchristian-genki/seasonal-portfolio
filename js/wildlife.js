@@ -266,12 +266,40 @@
   }
   const live = new Set();
 
-  // ── snow on the animals: in a winter storm, flakes drift down and stick to the top of any animal
-  // that's big enough to see it (backs, heads, ears), then melt away, the same way they land on
-  // the headline. The outline's top edges come from a one-off snapshot of the animal's drawing
-  // in a canvas; the flakes live inside the animal's own box, so they travel with it. Redone if
-  // it turns round; cleared when the storm passes.
-  function snowOnActor(a) {
+  // ── weather on the animals in a storm. Winter: flakes drift down and stick to the top of the
+  // animal (backs, heads, ears), then melt, the same way they land on the headline. Spring to
+  // fall: rain beads sit on its coat and drops gather along its lower edges (belly, chin, tail),
+  // hang, and drip off. Only animals big enough to see it. The outline comes from a one-off
+  // snapshot of the animal's drawing in a canvas; everything lives inside the animal's own box,
+  // so it travels with it. Redone if it turns round or the weather changes; cleared after.
+  const WX_FLAKE = (w, drop, drift) => {
+    const fallMs = drop / (22 + Math.random() * 18) * 1000, sitMs = 2500 + Math.random() * 4000, meltMs = 5000 + Math.random() * 5000;
+    const T = fallMs + sitMs + meltMs + 1000 + Math.random() * 5000;
+    const pos = (dx, dy, sx, sy) => `translate(${(dx - w / 2).toFixed(1)}px, ${(dy - w * 0.8).toFixed(1)}px) scale(${sx}, ${sy})`;
+    const kf = [];
+    for (let k = 0; k <= 5; k++) { const u = k / 5; kf.push({ offset: u * fallMs / T, opacity: k ? 0.95 : 0, transform: pos(-drift * (1 - u) + Math.sin(u * 9.4) * 5 * (1 - u), -drop * (1 - u), 1, 1) }); }
+    kf.push({ offset: (fallMs + 250) / T, opacity: 0.95, transform: pos(0, 0.5, 1.2, 0.8) });
+    kf.push({ offset: (fallMs + sitMs) / T, opacity: 0.95, transform: pos(0, 0.5, 1.2, 0.8) });
+    kf.push({ offset: (fallMs + sitMs + meltMs) / T, opacity: 0, transform: pos(0, 1, 1.05, 0.55) });
+    kf.push({ offset: 1, opacity: 0, transform: pos(0, 1, 1.05, 0.55) });
+    return [kf, T];
+  };
+  const WX_BEAD = (w) => {                                   // appears, sits, slips a little, fades
+    const T = 5000 + Math.random() * 7000, slip = 2 + Math.random() * 6;
+    const pos = (dy, s) => `translate(${(-w / 2).toFixed(1)}px, ${(dy - w / 2).toFixed(1)}px) scale(${s})`;
+    return [[{ offset: 0, opacity: 0, transform: pos(0, 0.3) }, { offset: 0.15, opacity: 0.9, transform: pos(0, 1) },
+      { offset: 0.7, opacity: 0.9, transform: pos(slip, 1) }, { offset: 0.85, opacity: 0, transform: pos(slip + 1, 0.8) },
+      { offset: 1, opacity: 0, transform: pos(slip + 1, 0.8) }], T];
+  };
+  const WX_DRIP = (w, fall) => {                             // gathers, hangs, stretches, lets go
+    const T = 3500 + Math.random() * 4500;
+    const pos = (dy, sx, sy) => `translate(${(-w / 2).toFixed(1)}px, ${dy.toFixed(1)}px) scale(${sx}, ${sy})`;
+    return [[{ offset: 0, opacity: 0, transform: pos(0, 0.2, 0.2) }, { offset: 0.5, opacity: 0.95, transform: pos(0, 1, 1) },
+      { offset: 0.66, opacity: 0.95, transform: pos(2, 0.92, 1.4), easing: 'cubic-bezier(.55,0,1,.45)' },
+      { offset: 0.76, opacity: 0.8, transform: pos(fall, 0.7, 1.9) }, { offset: 0.8, opacity: 0, transform: pos(fall + 10, 0.6, 2) },
+      { offset: 1, opacity: 0, transform: pos(fall + 10, 0.6, 2) }], T];
+  };
+  function weatherOnActor(a, kind) {
     const W = a.el.offsetWidth, H = a.el.offsetHeight;
     if (H < 70 || !a.el.classList.contains('on')) return;
     const svg = a.c.svg.cloneNode(true);
@@ -279,54 +307,54 @@
     svg.removeAttribute('style');
     const flip = /scaleX\(-1\)/.test(a.c.svg.style.transform || '');
     const img = new Image(), d = a.d;
-    a.snow = { pending: true, d };
+    a.wx = { kind, d };
     img.onload = () => {
-      if (!a.snow || a.snow.d !== d) return;
+      if (!a.wx || a.wx.d !== d || a.wx.kind !== kind) return;
       const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
       const ctx = cv.getContext('2d');
       if (flip) { ctx.translate(W, 0); ctx.scale(-1, 1); }
       ctx.drawImage(img, 0, 0, W, H);
       let px; try { px = ctx.getImageData(0, 0, W, H).data; } catch (e) { return; }
-      const ink = (x, y) => y >= 0 && px[(y * W + x) * 4 + 3] > 140, clear = Math.max(4, Math.round(H * 0.06));
-      const tops = [];
-      for (let x = 2; x < W - 2; x += 2) for (let y = 1; y < H * 0.8; y++) {
-        if (!ink(x, y) || ink(x, y - 1)) continue;
-        let ok = true; for (let k = 2; k <= clear && ok; k++) if (ink(x, y - k)) ok = false;
-        if (ok) tops.push([x, y]);
+      const ink = (x, y) => y >= 0 && y < H && px[(y * W + x) * 4 + 3] > 140, clear = Math.max(4, Math.round(H * 0.06));
+      const tops = [], bottoms = [], coat = [];
+      for (let x = 2; x < W - 2; x += 2) for (let y = 1; y < H - 1; y++) {
+        if (!ink(x, y)) continue;
+        if (!ink(x, y - 1) && y < H * 0.8) { let ok = true; for (let k = 2; k <= clear && ok; k++) if (ink(x, y - k)) ok = false; if (ok) tops.push([x, y]); }
+        if (!ink(x, y + 1) && y < H * 0.97) { let ok = true; for (let k = 2; k <= clear && ok; k++) if (ink(x, y + k)) ok = false; if (ok) bottoms.push([x, y]); }
+        else if (y % 7 === 0 && x % 8 === 2 && ink(x, y - 4) && ink(x, y + 4)) coat.push([x, y]);
       }
-      if (!tops.length) return;
-      const box = document.createElement('div'); box.className = 'wl-snowfall';
-      const n = Math.max(8, Math.min(30, Math.round(H / 22))), fw = Math.min(10, 4 + H / 140);
-      for (let i = 0; i < n; i++) {
-        const [x, y] = tops[Math.floor(Math.random() * tops.length)];
-        const f = document.createElement('i'); f.className = 'wl-flake';
-        const w = fw * (0.7 + Math.random() * 0.6);
-        Object.assign(f.style, { left: (x / W * 100).toFixed(2) + '%', top: (y / H * 100).toFixed(2) + '%', width: w.toFixed(1) + 'px', height: w.toFixed(1) + 'px' });
+      const any = (arr) => arr[Math.floor(Math.random() * arr.length)];
+      const box = document.createElement('div'); box.className = 'wl-weather';
+      const add = (cls, x, y, w, h, [kf, T]) => {
+        const f = document.createElement('i'); f.className = cls;
+        Object.assign(f.style, { left: (x / W * 100).toFixed(2) + '%', top: (y / H * 100).toFixed(2) + '%', width: w.toFixed(1) + 'px', height: h.toFixed(1) + 'px' });
         box.appendChild(f);
-        const drop = 40 + Math.random() * 110, drift = (Math.random() - 0.5) * 40;
-        const fallMs = drop / (22 + Math.random() * 18) * 1000, sitMs = 2500 + Math.random() * 4000, meltMs = 5000 + Math.random() * 5000, T = fallMs + sitMs + meltMs + 1000 + Math.random() * 5000;
-        const pos = (dx, dy, sx, sy) => `translate(${(dx - w / 2).toFixed(1)}px, ${(dy - w * 0.8).toFixed(1)}px) scale(${sx}, ${sy})`;
-        const kf = [];
-        for (let k = 0; k <= 5; k++) { const u = k / 5; kf.push({ offset: u * fallMs / T, opacity: k ? 0.95 : 0, transform: pos(-drift * (1 - u) + Math.sin(u * 9.4) * 5 * (1 - u), -drop * (1 - u), 1, 1) }); }
-        kf.push({ offset: (fallMs + 250) / T, opacity: 0.95, transform: pos(0, 0.5, 1.2, 0.8) });
-        kf.push({ offset: (fallMs + sitMs) / T, opacity: 0.95, transform: pos(0, 0.5, 1.2, 0.8) });
-        kf.push({ offset: (fallMs + sitMs + meltMs) / T, opacity: 0, transform: pos(0, 1, 1.05, 0.55) });
-        kf.push({ offset: 1, opacity: 0, transform: pos(0, 1, 1.05, 0.55) });
         f.animate(kf, { duration: T, iterations: Infinity, delay: -Math.random() * T });
+      };
+      const n = Math.max(8, Math.min(30, Math.round(H / 22))), sz = Math.min(10, 4 + H / 140);
+      if (kind === 'snow' && tops.length) {
+        for (let i = 0; i < n; i++) { const [x, y] = any(tops), w = sz * (0.7 + Math.random() * 0.6);
+          add('wl-flake', x, y, w, w, WX_FLAKE(w, 40 + Math.random() * 110, (Math.random() - 0.5) * 40)); }
+      } else if (kind === 'rain') {
+        if (coat.length) for (let i = 0; i < n; i++) { const [x, y] = any(coat), w = sz * (0.6 + Math.random() * 0.5); add('wl-drop', x, y, w, w, WX_BEAD(w)); }
+        if (bottoms.length) for (let i = 0; i < Math.ceil(n * 0.6); i++) { const [x, y] = any(bottoms), w = sz * (0.6 + Math.random() * 0.4);
+          add('wl-drop', x, y, w, w * 1.15, WX_DRIP(w, 30 + Math.random() * 60)); }
       }
+      if (!box.children.length) return;
       a.el.appendChild(box);
-      a.snow = { el: box, d };
+      a.wx = { kind, d, el: box };
     };
     img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(new XMLSerializer().serializeToString(svg));
   }
-  const dropSnow = (a) => { if (a.snow && a.snow.el) a.snow.el.remove(); a.snow = null; };
+  const dropWeather = (a) => { if (a.wx && a.wx.el) a.wx.el.remove(); a.wx = null; };
   setInterval(() => {
-    const st = window.__storm, snowing = !!(st && st.on && st.level > 0.4 && season() === 'winter')
+    const st = window.__storm, stormy = !!(st && st.on && st.level > 0.4)
       && !(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+    const kind = stormy ? (season() === 'winter' ? 'snow' : 'rain') : null;
     live.forEach((v) => v.actors.forEach((a) => {
-      if (!snowing) { if (a.snow) dropSnow(a); return; }
-      if (a.snow && a.snow.d !== a.d) dropSnow(a);        // turned round: the outline changed
-      if (!a.snow) snowOnActor(a);
+      if (!kind) { if (a.wx) dropWeather(a); return; }
+      if (a.wx && (a.wx.d !== a.d || a.wx.kind !== kind)) dropWeather(a);   // turned round, or the weather changed
+      if (!a.wx) weatherOnActor(a, kind);
     }));
   }, 1500);
 
