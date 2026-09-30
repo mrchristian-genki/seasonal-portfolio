@@ -223,6 +223,16 @@ marked **OBSOLETE** rather than left dangling.
   on the shooting stars (see below) -- no reason to risk the same bug
   twice. Verified in both Chromium and WebKit.
 
+## New this pass (Sept 30 — share links in the trigger guide)
+
+- **The trigger guide has a Share links section:** 37 links, each with a Copy button, grouped as:
+  - seasons × day/night;
+  - the year show and dark mode;
+  - every animal, each in a season and time that suits it.
+- **Same rows as the Lake Scene Links cheat sheet.** They live in `js/tg-links.js` and are built the first time the guide opens.
+- **Domain-independent:** links use the page's own address (`location.origin + pathname`).
+- **Dims with night mode** and stacks on phones.
+
 ## New this pass (Sept 30 — night mode darkens the page)
 
 - **Night mode now darkens the whole page.** The header, the white section under the scene, the wave that masks the scene into it, the season clock and the trigger guide all turn dark. It's a 2.4 s fade, timed to the sky's 3 s fade into night.
