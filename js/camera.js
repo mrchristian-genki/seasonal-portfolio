@@ -24,7 +24,7 @@
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // Where the glass points on load, by the opening season, as the world-x fraction at the centre
-  // of the view. data-season: 1 Books/spring, 2 Web/summer, 3 Workshop/fall, 0 Lab/winter.
+  // of the view. data-season: 2 Books/summer, 3 Web/fall, 0 Workshop/winter, 1 Lab/spring.
   const SHOTS = { 1: 0.30, 2: 0.62, 3: 0.78, 0: 0.47 };
   // How far each plate slides when the camera pans (1 = with the ground). Sky has no features.
   const PARALLAX = { plateCelestial: 0.45, plateAurora: 0.3, plateClouds: 0.7 };
@@ -35,7 +35,7 @@
   let lens = null, track = null, win = null;
 
   const clampX = (x) => Math.max(0, Math.min(coreW - viewW, x));
-  const selectedSeason = () => { const t = document.querySelector('.tab[aria-selected="true"]'); return t ? +t.dataset.season : 1; };
+  const selectedSeason = () => { const t = document.querySelector('.tab[aria-selected="true"]'); return t ? +t.dataset.season : 2; };
   const xForFrac = (f) => clampX(f * coreW - viewW / 2);
 
   // Placement at rest is plain layout (`left`), so a resting camera adds no composited layers:

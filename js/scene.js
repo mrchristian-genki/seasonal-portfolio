@@ -2044,7 +2044,9 @@ function _bootInner() {
   })();
 
   // ── 9. SEASON TABS + TRAVEL() ─────────────────────────────────────────────
-  const SEASON_VIEW = { 1:'studio', 2:'signal', 3:'workshop', 0:'lab' };
+  // The tabs run through the year from summer: Books summer, Web fall, Workshop winter, Lab spring.
+  const SEASON_VIEW = { 2:'studio', 3:'signal', 0:'workshop', 1:'lab' };
+  const BOOT_SEASON = 2; // the page opens on summer (Books)
   // tod target per season (currently all 0.50, midday).
   const SEASON_TOD  = { 0:0.50, 1:0.50, 2:0.50, 3:0.50 };
   // kf(s, [winter, spring, summer, fall]): 0=winter 1=spring 2=summer 3=fall
@@ -2241,7 +2243,7 @@ function _bootInner() {
 
   // "Play the whole year": loops all four seasons, one travel() crossfade at a time, with a
   // dwell on each. Works in night mode unchanged, since setSeason()/travel() read NIGHT_MODE.
-  const YEAR_ORDER = [0, 1, 2, 3]; // winter -> spring -> summer -> fall -> winter…
+  const YEAR_ORDER = [2, 3, 0, 1]; // summer -> fall -> winter -> spring -> summer…, the tab order
   const YEAR_DWELL_MS = 3500; // pause on each season after its crossfade settles
   const TRAVEL_DURATION_MS = 7000; // must match travel()'s own DURATION above
   let _playingYear = false;
@@ -2285,7 +2287,8 @@ function _bootInner() {
     t.addEventListener('click', stopPlayYear);
   });
 
-  // Boot on spring
+  // The scene is built on spring; the link jump below moves it to BOOT_SEASON (summer) before
+  // the first frame unless the address asks for another season.
   s = 1;
   showViews(1);
   // Flowers are built with summer colours; give them spring's on first load too.
@@ -2364,12 +2367,12 @@ function _bootInner() {
   // ── SHAREABLE LINKS ──────────────────────────────────────────────────────
   // The address can set the scene: ?summer+night, ?winter, ?fall+day, ?night. Words combine with
   // + (or & , or spaces) in any order. Seasons: spring summer fall/autumn winter, or the tab
-  // names books web workshop lab. Also: day, night, play (plays the whole year). Animal names
+  // names books web workshop lab (summer, fall, winter, spring). With no season the page opens on BOOT_SEASON. Also: day, night, play (plays the whole year). Animal names
   // (?fox, ?summer+night+owl) bring that animal in once the wildlife loads (wildlife.js).
   // The page opens straight on that look (no crossfade), and the address bar follows every
   // season/night change after that, so the current view can always be copied and shared.
   // Other flags (?bench ?fps ?wildlife ?diag) are left as they are.
-  const LINK_SEASON = { spring: 1, summer: 2, fall: 3, autumn: 3, winter: 0, books: 1, web: 2, workshop: 3, lab: 0 };
+  const LINK_SEASON = { spring: 1, summer: 2, fall: 3, autumn: 3, winter: 0, books: 2, web: 3, workshop: 0, lab: 1 };
   const LINK_KEEP = ['bench', 'fps', 'wildlife', 'diag'];
   const linkWords = decodeURIComponent(location.search.slice(1)).toLowerCase()
     .split(/[+&,;\s]+/).map(w => w.split('=')[0]).filter(Boolean);
@@ -2380,7 +2383,8 @@ function _bootInner() {
     if (w === 'night') linkNight = true;
     if (w === 'day') linkNight = false;
   });
-  if (linkSeason != null && linkSeason !== SEASON) {
+  if (linkSeason == null) linkSeason = BOOT_SEASON;
+  if (linkSeason != null) {  // always runs: the HTML's selected tab is Books (summer), so even ?spring must set the tabs
     // Jump straight there: everything travel()/setSeason() would set, without the animation.
     SEASON = linkSeason; s = SEASON_S[linkSeason]; window.__currentSeason = linkSeason;
     const sName = seasonNames[linkSeason];

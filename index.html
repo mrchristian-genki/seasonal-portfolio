@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Christian Gehrke — four seasons of work</title>
-<link rel="stylesheet" href="css/scene.css?v=1790810000">
+<link rel="stylesheet" href="css/scene.css?v=1790900000">
 <!-- (Preload hints for the sync-XHR assets were removed Sept 24: Safari and Chrome never reuse a
      preload for a synchronous request, so each file downloaded twice, with console warnings.
      The server's 30-day cache is what makes repeat visits fast.) -->
@@ -14,10 +14,10 @@
 <header class="site-head">
   <a class="brand" href="#"><span class="mark" aria-hidden="true"></span>Christian Gehrke</a>
   <ul class="tabs" role="tablist" aria-label="Sections">
-    <li><button class="tab" role="tab" data-season="1" aria-selected="true" id="t-studio">Books</button></li>
-    <li><button class="tab" role="tab" data-season="2" aria-selected="false" id="t-signal">Web</button></li>
-    <li><button class="tab" role="tab" data-season="3" aria-selected="false" id="t-workshop">Workshop</button></li>
-    <li><button class="tab" role="tab" data-season="0" aria-selected="false" id="t-lab">Lab</button></li>
+    <li><button class="tab" role="tab" data-season="2" aria-selected="true" id="t-studio">Books</button></li>
+    <li><button class="tab" role="tab" data-season="3" aria-selected="false" id="t-signal">Web</button></li>
+    <li><button class="tab" role="tab" data-season="0" aria-selected="false" id="t-workshop">Workshop</button></li>
+    <li><button class="tab" role="tab" data-season="1" aria-selected="false" id="t-lab">Lab</button></li>
   </ul>
 </header>
 <section class="hero" id="hero">
@@ -69,7 +69,7 @@
   <svg class="decor right" viewBox="0 0 320 140" aria-hidden="true"><g class="puff"><ellipse cx="40" cy="108" rx="50" ry="24"/><ellipse cx="120" cy="88" rx="66" ry="38"/><ellipse cx="200" cy="72" rx="74" ry="46"/><ellipse cx="275" cy="100" rx="56" ry="28"/><ellipse cx="205" cy="40" rx="36" ry="16" class="lit"/></g></svg>
   <div class="about-inner" id="aboutInner">
     <div class="view on" data-view="studio">
-      <p class="season-line">Spring, when everything is starting</p>
+      <p class="season-line">Summer, long days and full sun</p>
       <h2>everthecynic</h2>
       <p class="lede">An independent imprint of adult coloring books, sixty-eight titles across many series, from "Color in a Cup" to hikes, kitchens, wine, and the American West. Every interior is clean black-and-white line art; every cover follows one house template.</p>
       <ul class="works">
@@ -80,7 +80,7 @@
       <a class="btn solid" href="https://everthecynic.com" target="_blank" rel="noopener">See all sixty-eight</a>
     </div>
     <div class="view" data-view="signal">
-      <p class="season-line">Summer, long days and full sun</p>
+      <p class="season-line">Fall, time to harvest what grew</p>
       <h2>123 ADAPT</h2>
       <p class="lede">Over twenty-five years of web development and internet strategy for a wide range of businesses. I think quickly, adapt to new environments, and can do just about anything that involves the internet.</p>
       <ul class="works">
@@ -91,7 +91,7 @@
       <a class="btn solid" href="https://www.linkedin.com/in/christiangehrke/" target="_blank" rel="noopener">Recommendations on LinkedIn</a>
     </div>
     <div class="view" data-view="workshop">
-      <p class="season-line">Fall, time to harvest what grew</p>
+      <p class="season-line">Winter, the quiet work underneath</p>
       <h2>The workshop</h2>
       <p class="lede">Where the books get made. Custom tools that turn ideas into print-ready files, in batches, and a few side projects that exist because they were fun to build.</p>
       <ul class="works">
@@ -103,7 +103,7 @@
       <a class="btn" href="../catalog/" target="_blank" rel="noopener">Open the parts catalog</a>
     </div>
     <div class="view" data-view="lab">
-      <p class="season-line">Winter, the quiet work underneath</p>
+      <p class="season-line">Spring, when everything is starting</p>
       <h2>The lab</h2>
       <p class="lede">Generative AI as a working hobby, pointed at real production. Image models, prompt systems, and the fixes that keep a pipeline usable at scale.</p>
       <ul class="works">
@@ -121,7 +121,7 @@
     <div class="tg-head"><h2 id="tgTitle">Lake scene trigger guide</h2><button type="button" class="tg-x" id="tgClose" aria-label="Close">&times;</button></div>
     <div class="tg-body">
       <p class="tg-lede">Five rocks in the scene are secret triggers. Tap one and it glows, and an animal appears in the part of the scene that rock controls. Tap the same rock again to send the animal away. Press and hold any of them to open the test panel.</p>
-      <figure><img id="tgImg" data-src="assets/trigger-guide.jpg?v=1790810000" alt="The lake scene with the five trigger rocks outlined and numbered" width="1600" height="913"></figure>
+      <figure><img id="tgImg" data-src="assets/trigger-guide.jpg?v=1790900000" alt="The lake scene with the five trigger rocks outlined and numbered" width="1600" height="913"></figure>
       <h3>What each rock does</h3>
       <ol class="tg-rocks">
         <li style="--c:#ffbe3c"><b>Big rock, far left</b> <span>Far shore under the mountains</span>
@@ -190,7 +190,7 @@
       <h3>Testing addresses</h3>
       <table>
         <tr><th>Add to the address</th><th>Does</th></tr>
-        <tr><td><code>?summer+night</code></td><td>Opens on a season and time of day: spring, summer, fall, winter (or books, web, workshop, lab) with day or night. Combine with +</td></tr>
+        <tr><td><code>?summer+night</code></td><td>Opens on a season and time of day: summer, fall, winter, spring (or books, web, workshop, lab) with day or night. Combine with +</td></tr>
         <tr><td><code>?fall+fox</code></td><td>Also brings in an animal. Every animal&rsquo;s word is in the list above</td></tr>
         <tr><td>Tap the tent</td><td>Marley comes out to sniff about</td></tr>
         <tr><td>Tap the hero tree trunk</td><td>A close-up: a grizzly or a bull elk peeks in from the right, looks about and backs away</td></tr>
@@ -224,14 +224,14 @@
      8 real isolated mountain files' <style>+paths embedded directly so no
      runtime fetch()/CORS dependency -- must load before scene.js, which
      consumes window.MOUNTAIN_SHAPES when it builds the background. -->
-<script src="js/mountain-shapes.js?v=1790810000"></script>
-<script src="js/components.js?v=1790810000"></script>
-<script src="js/scene.js?v=1790810000"></script>
+<script src="js/mountain-shapes.js?v=1790900000"></script>
+<script src="js/components.js?v=1790900000"></script>
+<script src="js/scene.js?v=1790900000"></script>
 <!-- Spyglass camera for phones held upright: shots per season, swipe to look around, tilt parallax. -->
-<script src="js/camera.js?v=1790810000"></script>
+<script src="js/camera.js?v=1790900000"></script>
 <!-- Wildlife (animals + hidden tap spots): loaded after the page has finished loading, so it
      never delays the first paint. -->
-<script>addEventListener('load',function(){setTimeout(function(){['creature-shapes','origami-art','creatures','wildlife'].reduce(function(p,n){return p.then(function(){return new Promise(function(r){var s=document.createElement('script');s.src='js/'+n+'.js?v=1790810000';s.onload=s.onerror=r;document.body.appendChild(s)})})},Promise.resolve())},1500)})</script>
+<script>addEventListener('load',function(){setTimeout(function(){['creature-shapes','origami-art','creatures','wildlife'].reduce(function(p,n){return p.then(function(){return new Promise(function(r){var s=document.createElement('script');s.src='js/'+n+'.js?v=1790900000';s.onload=s.onerror=r;document.body.appendChild(s)})})},Promise.resolve())},1500)})</script>
 <script>
 /* Crash breadcrumbs. Safari's "This webpage was reloaded because a problem occurred" gives no
    details, so every 5 s the page notes what it is doing (season, night, animals, uptime). A clean
@@ -253,6 +253,6 @@ d.style.cssText='position:fixed;left:8px;right:8px;top:8px;z-index:10001;max-hei
 d.textContent=a.length?'Crashes seen on this browser (newest first):\n\n'+a.map(function(c){return new Date(c.t).toLocaleString()+'  up '+c.up+'s  '+c.season+(c.night?' night':' day')+'  animals: '+(c.animals||'none')+'  scroll '+c.y+'  '+c.size+'  build '+c.v}).join('\n'):'No crashes recorded on this browser.';
 d.onclick=function(){d.remove()};document.body.appendChild(d)})}catch(e){}})();
 </script>
-<script>if(/[?&]bench\b/.test(location.search)){var b=document.createElement("script");b.src="js/bench.js?v=1790810000";document.body.appendChild(b)}</script>
+<script>if(/[?&]bench\b/.test(location.search)){var b=document.createElement("script");b.src="js/bench.js?v=1790900000";document.body.appendChild(b)}</script>
 </body>
 </html>

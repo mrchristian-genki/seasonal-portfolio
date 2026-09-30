@@ -223,6 +223,14 @@ marked **OBSOLETE** rather than left dangling.
   on the shooting stars (see below) -- no reason to risk the same bug
   twice. Verified in both Chromium and WebKit.
 
+## New this pass (Sept 30 — the year starts in summer)
+
+- **Tab order is now summer → fall → winter → spring.** Books is summer, Web is fall, Workshop is winter, Lab is spring. Each view's season line moved with its season.
+- Spring and summer looked alike, so the old first step (Books spring → Web summer) barely changed the scene. Now every step changes the scene: green, then autumn colours, then snow, then fresh spring green.
+- **The page opens on summer** (`BOOT_SEASON` in scene.js). The scene is still built on spring and jumps to summer through the shareable-link path before the first frame. That path now always runs, so `?spring` also selects the right tab.
+- **"Play the whole year"** follows the tab order (`YEAR_ORDER` = summer, fall, winter, spring).
+- **Tab-name links follow the new seasons:** `?books` opens summer, `?lab` opens spring. Season-name links are unchanged.
+
 ## New this pass (Sept 23 — housekeeping + performance)
 
 Scope: cleanup and speed, no intended look changes except the bug fixes marked 🐞.
