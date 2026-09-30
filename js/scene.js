@@ -1413,8 +1413,10 @@ function _bootInner() {
       });
       if (opts.flipped) mirrorNested(nested);
       nested.setAttribute('data-env', 'rock');   // its grass grows from a crevice (liftSways)
+      ROCKS.push({ x, y: yTop, w, h, in: opts.in || 'water' });   // what the rock stands in, for plant bases
       return nested;
     }
+    const ROCKS = [];
     const boulderInstances = [
       // Two rock outcrops framing open water, not one wall of rocks. y values match the measured
       // top edge of the real terrain / foreground band. Shore-side left cluster:
@@ -1567,18 +1569,31 @@ function _bootInner() {
     // Runs after the painterly pass (queued earlier), so the glow's clip copies still match.
     // Plant bases (liftSways): the mask tile for each surrounding, in a 40-wide, 100-high tile
     // (100 = the plant layer's height), opaque above the edge. n tiles span the layer.
-    const PLANT_EDGES = {
-      // U-shaped scallops, cusps up, like the waves over the pen's boat hull.
-      water: { n: 9, depth: 3.4, amp: 2.8,
-        shape: (L) => `M0 0H40V${L - 2.8}Q40 ${L + 2.8} 20 ${L + 2.8}Q0 ${L + 2.8} 0 ${L - 2.8}Z` },
-      // Blades of the ground's grass rise in front of the base; in winter a soft drift of snow.
-      ground: { n: 14, depth: 1.5,
+    // Plant bases (liftSways): the mask tile for each surrounding, a 40-wide, 100-high tile
+    // (100 = the plant layer's height), opaque above the edge; n tiles span the layer. Water is
+    // measured in world units so every clump gets the same size of wave, whatever its box.
+    function plantEdge(env, lwW, lwH) {
+      if (env === 'water') {
+        // U-shaped scallops, cusps up, like the waves over the pen's boat hull: 40 units a wave.
+        const A = 9.5 / lwH * 100;
+        return { n: Math.max(3, Math.round(lwW / 40)), depth: 11.5 / lwH * 100, amp: A,
+          shape: (L) => `M0 0H40V${L - A}Q40 ${L + A} 20 ${L + A}Q0 ${L + A} 0 ${L - A}Z` };
+      }
+      if (env === 'ground') return { n: 14, depth: 1.5,
+        // Blades of the ground's grass rise in front of the base; in winter a soft drift of snow.
         shape: (L) => `M0 0H40V${L}L37 ${L - 3.6}L35 ${L}L30 ${L - 2.2}L27 ${L}L22 ${L - 4}L19 ${L}L13 ${L - 2.8}L10 ${L}L5 ${L - 3.4}L2 ${L}L0 ${L}Z`,
-        winter: (L) => `M0 0H40V${L}Q30 ${L - 2.6} 20 ${L - 1.6}Q10 ${L - 0.6} 0 ${L}Z` },
-      // An uneven crevice line in the rock.
-      rock: { n: 6, depth: 1.5,
-        shape: (L) => `M0 0H40V${L}Q34 ${L - 2} 26 ${L - 1}Q18 ${L} 12 ${L - 1.6}Q5 ${L - 2.4} 0 ${L}Z` },
-    };
+        winter: (L) => `M0 0H40V${L}Q30 ${L - 2.6} 20 ${L - 1.6}Q10 ${L - 0.6} 0 ${L}Z` };
+      // rock: an uneven crevice line.
+      return { n: 6, depth: 1.5,
+        shape: (L) => `M0 0H40V${L}Q34 ${L - 2} 26 ${L - 1}Q18 ${L} 12 ${L - 1.6}Q5 ${L - 2.4} 0 ${L}Z` };
+    }
+    // Content-aware: a clump whose base sits down at the foot of a rock standing in the lake is in
+    // the water, whatever it was placed as; higher up the rock it grows from a crevice.
+    function surroundings(env, bx, by) {
+      const r = ROCKS.find(r => bx >= r.x && bx <= r.x + r.w && by >= r.y && by <= r.y + r.h + 25);
+      if (!r) return env;
+      return by > r.y + r.h * 0.78 ? (r.in === 'water' ? 'water' : 'ground') : 'rock';
+    }
     queueMicrotask(function liftSways() {
       const items = Array.from(fgFrame.querySelectorAll('.grass-clump-sway, .flower-nod'));
       if (!items.length) return;
@@ -1594,10 +1609,13 @@ function _bootInner() {
         }
         return { e, k: kinds[i], flipped, ok: r.width > 0 && d.width > 0 && d.height > 0,
           w0: r.width, dw: d.width, env: kinds[i] !== 'flower-nod' && (e.closest('[data-env]') || {}).dataset?.env,
+          ...(() => { const ls = e.closest('.fg-layer').style, lx = parseFloat(ls.left) / 100 * VW, ly = parseFloat(ls.top) / 100 * VH;
+            const lwW = parseFloat(ls.width) / 100 * VW, lwH = parseFloat(ls.height) / 100 * VH;
+            return { lwW, lwH, bx: lx + (r.left + r.width / 2 - d.left) / d.width * lwW, by: ly + (r.bottom - d.top) / d.height * lwH }; })(),
           ox: (r.left + r.width / 2 - d.left) / d.width * 100, oy: (r.bottom - d.top) / d.height * 100 };
       });
       const shallow = n => { const c = n.cloneNode(false); if (c.removeAttribute) c.removeAttribute('id'); return c; };
-      jobs.forEach(({ e: swayEl, k, flipped, ok, ox, oy, w0, dw, env }) => {
+      jobs.forEach(({ e: swayEl, k, flipped, ok, ox, oy, w0, dw, env: env0, lwW, lwH, bx, by }) => {
         if (!ok) { swayEl.classList.add(k); return; }   // not laid out (hidden): keep the SVG sway
         // A flower moves as its whole <g class="flower"> (its setColor/opacity hooks live there).
         const e = k === 'flower-nod' ? (swayEl.closest('.flower') || swayEl) : swayEl;
@@ -1627,6 +1645,7 @@ function _bootInner() {
         ['--dur', '--delay'].forEach(v => { const x = swayEl.style.getPropertyValue(v); if (x) d2.style.setProperty(v, x); });
         layer.after(d2);
         let last = d2;
+        const env = env0 && surroundings(env0, bx, by);
         if (env) {
           // Plant it in its surroundings. A still wrapper masks the clump below an edge shaped for
           // where it stands; whatever is behind (water, grass, snow, rock) shows through the cut,
@@ -1635,7 +1654,7 @@ function _bootInner() {
           //          (after the 'Outline Pure CSS' pen's boat), and rings spreading behind the stems.
           //   ground: blades of grass in front of the base; in winter a soft drift of snow.
           //   rock: an uneven crevice line.
-          const E = PLANT_EDGES[env];
+          const E = plantEdge(env, lwW, lwH);
           const L = oy - E.depth;                       // the edge line, % of the layer's height
           const tileUrl = (shape) => `url("data:image/svg+xml,${encodeURIComponent(
             `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 100' preserveAspectRatio='none'><path d='${shape(L)}'/></svg>`)}")`;
@@ -1673,6 +1692,7 @@ function _bootInner() {
             rings.style.setProperty('--rx', ox.toFixed(3) + '%');
             rings.style.setProperty('--ry', L.toFixed(3) + '%');
             rings.style.setProperty('--rw', (w0 * 0.6 / dw * 100).toFixed(3) + '%');
+            rings.style.clipPath = `inset(${L.toFixed(3)}% -50% -50% -50%)`;   // near half only: never drawn over a rock
             wrap.before(rings);
           }
         }
