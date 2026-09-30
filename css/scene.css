@@ -572,24 +572,30 @@ html.night-page .hero-swell{ background: linear-gradient(rgba(12,18,32,.35), rgb
 /* Storm (scene.js window.__storm): a darker sky, a lightning flash now and then, and beads of
    water sliding down the 'camera glass' (after the 'Water droplets on window' pen). Opacity is
    the storm's eased level, written by its loop. */
-.storm-shade, .storm-flash, .storm-glass{ position:absolute; inset:0; pointer-events:none; opacity:0; }
+.storm-shade, .storm-flash, .storm-glass, .storm-frost{ position:absolute; inset:0; pointer-events:none; opacity:0; }
 .storm-shade{ background: linear-gradient(rgba(28,36,52,.55), rgba(28,36,52,.2) 60%, rgba(28,36,52,.1)); }
 .storm-flash{ background: rgba(235,242,255,.85); }
 .storm-flash.on{ animation: bolt 1.1s ease-out; }
 @keyframes bolt{ 0%{opacity:0} 4%{opacity:.8} 9%{opacity:.1} 14%{opacity:.6} 100%{opacity:0} }
 .storm-glass i{ position:absolute; aspect-ratio:1; border-radius:50% 50% 50% 50% / 55% 55% 45% 45%;
-  background: radial-gradient(circle at 36% 30%, rgba(255,255,255,.95) 0 9%, rgba(255,255,255,0) 17%),
-              radial-gradient(circle at 50% 50%, rgba(220,235,255,.14) 0 56%, rgba(12,22,38,.5) 66%, rgba(255,255,255,.65) 75%, rgba(255,255,255,0) 80%);
-  box-shadow: 0 2px 3px rgba(0,0,0,.18); opacity:.95; }
+  background: radial-gradient(circle at 36% 30%, rgba(255,255,255,.7) 0 9%, rgba(255,255,255,0) 17%),
+              radial-gradient(circle at 50% 50%, rgba(220,235,255,.06) 0 56%, rgba(12,22,38,.22) 66%, rgba(255,255,255,.38) 75%, rgba(255,255,255,0) 80%);
+  box-shadow: 0 1px 2px rgba(0,0,0,.08); opacity:.7; }
 /* the wet streak a bead leaves behind as it runs */
 .storm-glass i::after{ content:''; position:absolute; left:38%; width:24%; bottom:90%; height:0; border-radius:40%;
-  background: linear-gradient(rgba(220,235,255,0), rgba(220,235,255,.35)); }
+  background: linear-gradient(rgba(220,235,255,0), rgba(220,235,255,.22)); }
 .storm-glass.run i::after{ animation: streak 8s ease-in infinite; animation-duration: inherit; animation-delay: inherit; }
 @keyframes streak{ 0%, 60%{ height:0; } 100%{ height:900%; } }
 .storm-glass.run i{ animation: bead 8s ease-in infinite; }
 @keyframes bead{
   0%     { transform: translateY(0) scale(.6); opacity:0; }
-  8%     { transform: translateY(0) scale(1); opacity:.95; }
-  60%    { transform: translateY(30%); opacity:.95; }
+  8%     { transform: translateY(0) scale(1); opacity:.7; }
+  60%    { transform: translateY(30%); opacity:.7; }
   100%   { transform: translateY(900%); opacity:0; }
 }
+/* Winter storm: frost over the corners and edges of the glass (ice ferns + a white haze),
+   clear in the middle so the scene still reads. */
+.storm-frost{ background-size:100% 100%;
+  box-shadow: inset 0 0 6vw rgba(235,244,255,.55), inset 0 0 1.5vw rgba(255,255,255,.35);
+  -webkit-mask-image: radial-gradient(ellipse 75% 70% at 50% 45%, transparent 45%, #000 95%);
+  mask-image: radial-gradient(ellipse 75% 70% at 50% 45%, transparent 45%, #000 95%); }

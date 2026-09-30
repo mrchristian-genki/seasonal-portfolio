@@ -482,6 +482,18 @@ function _bootInner() {
       x: Math.random()*VW, y: Math.random()*VH,
       len: 46+Math.random()*44, speed: 30+Math.random()*16, opacity: 0.35+Math.random()*0.4
     }));
+    // Winter storm: a second, denser pool of flakes (a blizzard), drawn on top while it blows.
+    const stormFlakes = Array.from({length:320}, () => ({
+      x: Math.random()*VW, y: Math.random()*VH,
+      r: 7+Math.random()*10, speed: 7+Math.random()*7, opacity: 0.5+Math.random()*0.45,
+      driftPhase: Math.random()*Math.PI*2, driftSpeed: 1+Math.random()*1.2, driftAmp: 20+Math.random()*30,
+    }));
+    // Winter storm: snow blown low across the ground in the gusts (drifting snow), as fast, short
+    // streaks near the bottom of the scene.
+    const spindrift = Array.from({length:220}, () => ({
+      x: Math.random()*VW, y: 2150 + Math.random()*650, len: 60+Math.random()*140,
+      speed: 0.7+Math.random()*0.6, opacity: 0.2+Math.random()*0.35, r: 6+Math.random()*12,
+    }));
     // Snow: separate pool and motion (slow fall + side drift), winter only.
     const flakes = Array.from({length:140}, () => ({
       x: Math.random()*VW, y: Math.random()*VH,
@@ -533,7 +545,7 @@ function _bootInner() {
       // it thickens the snow instead.
       const storm = window.__storm ? window.__storm.level : 0, wintry = kf(s, [1, 0, 0, 0]);
       const targetRain = Math.max(kf(s, [0.0, 0.0, 0.0, 0.45]), storm * (1 - wintry));
-      const targetSnow = Math.max(kf(s, [0.55, 0.0, 0.0, 0.0]), storm * wintry * 0.9);
+      const targetSnow = Math.max(kf(s, [0.55, 0.0, 0.0, 0.0]), storm * wintry);
       const targetLeaf = kf(s, [0.0, 0.0, 0.0, 0.85]);
       if (targetLeaf > 0) loadLeafSprites();
       rainOpacity += (targetRain - rainOpacity) * dt * 0.8;
@@ -579,16 +591,33 @@ function _bootInner() {
           if (storm > 0.02) stormDrops.forEach(d => { ctx.strokeStyle = `rgba(200,220,240,${(d.opacity * storm).toFixed(3)})`; fall(d, 3.4); });
         }
         if (snowOpacity > 0.02) {
-          flakes.forEach(f => {
-            f.y += f.speed * dt * 60;
+          // In a storm the snow blows sideways with the wind and each gust, like the storm rain.
+          const blow = storm * 1.6 + WIND.gust * (2.2 + storm * 2.5);
+          const drift = (f, a) => {
+            f.y += f.speed * dt * 60; f.x += f.speed * blow * dt * 60;
             f.driftPhase += f.driftSpeed * dt;
-            if (f.y > VH) { f.y = -f.r * 2; f.x = Math.random()*VW; }
+            if (f.y > VH) { f.y = -f.r * 2; f.x = Math.random()*VW*1.4 - VW*0.4; }
+            if (f.x > VW + 60) f.x -= VW + 120;
             const dx = Math.sin(f.driftPhase) * f.driftAmp;
-            ctx.fillStyle = `rgba(255,255,255,${f.opacity})`;
+            ctx.fillStyle = `rgba(255,255,255,${(f.opacity * a).toFixed(3)})`;
             ctx.beginPath();
             ctx.arc((f.x+dx)*sx, f.y*sy, f.r*Math.min(sx,sy), 0, Math.PI*2);
             ctx.fill();
-          });
+          };
+          flakes.forEach(f => drift(f, 1));
+          if (storm > 0.02 && wintry > 0.5) {
+            stormFlakes.forEach(f => drift(f, storm));
+            // Drifting snow: streams low over the ground, strongest in a gust.
+            const g = storm * (0.25 + WIND.gust * 1.6);
+            if (g > 0.03) spindrift.forEach(p => {
+              p.x += p.speed * (18 + WIND.gust * 60) * dt * 60;
+              if (p.x > VW + p.len) { p.x = -p.len; p.y = 2150 + Math.random()*650; }
+              const l = p.len * (0.4 + WIND.gust * 1.4);
+              ctx.strokeStyle = `rgba(255,255,255,${Math.min(0.85, p.opacity * g).toFixed(3)})`;
+              ctx.lineWidth = p.r * Math.min(sx, sy); ctx.lineCap = 'round';
+              ctx.beginPath(); ctx.moveTo((p.x - l)*sx, p.y*sy); ctx.lineTo(p.x*sx, (p.y - l*0.05)*sy); ctx.stroke();
+            });
+          }
         }
         if (leafOpacity > 0.02) {
           const leafScale = Math.min(sx, sy);
@@ -2504,11 +2533,11 @@ function _bootInner() {
       const t = now / 1000;
       if (now >= nextAt && target === 0) {                          // a new gust
         const stormy = window.__storm ? window.__storm.level : 0;
-        target = (0.55 + Math.random() * 0.45) * (SEASON_GUST[SEASON] || 0.8) * (1 + stormy * 0.9);
+        target = (0.55 + Math.random() * 0.45) * (SEASON_GUST[SEASON] || 0.8) * (1 + stormy * (SEASON === 0 ? 1.4 : 0.9));
         holdTo = now + 1500 + 1000 + Math.random() * 2500;
         WIND.target = WIND.base + target * 0.6;
       }
-      if (target > 0 && now > holdTo) { target = 0; WIND.target = WIND.base; nextAt = now + (6000 + Math.random() * 8000) * (window.__storm && window.__storm.on ? 0.35 : 1); }
+      if (target > 0 && now > holdTo) { target = 0; WIND.target = WIND.base; nextAt = now + (6000 + Math.random() * 8000) * (window.__storm && window.__storm.on ? (SEASON === 0 ? 0.2 : 0.35) : 1); }
       const rateUp = target > gust ? 0.9 : 0.55;                   // builds a bit faster than it dies
       gust += (target - gust) * Math.min(1, dt * rateUp * 1.6);
       if (gust < 0.004 && target === 0) { if (gust) { gust = 0; write(0, t); } return; }
@@ -2546,35 +2575,58 @@ function _bootInner() {
     const glass = document.createElement('div'); glass.className = 'storm-glass';
     for (let i = 0; i < 12; i++) {
       const b = document.createElement('i');
-      const r = 1.1 + Math.random() * 1.5;           // bead size, in % of the scene's width
+      const r = 0.55 + Math.random() * 0.75;         // bead size, in % of the scene's width
       Object.assign(b.style, { left: (Math.random() * 96).toFixed(1) + '%', top: (Math.random() * 55).toFixed(1) + '%',
         width: r.toFixed(2) + '%', animationDuration: (5 + Math.random() * 7).toFixed(1) + 's',
         animationDelay: (-Math.random() * 10).toFixed(1) + 's' });
       glass.appendChild(b);
     }
-    fx.append(shade, flash, glass);
+    // Winter: frost creeps in over the corners and edges of the glass instead of beads. Fern-like
+    // ice crystals drawn once into an SVG background, masked to the edges, faded by the storm.
+    const frost = document.createElement('div'); frost.className = 'storm-frost';
+    frost.style.backgroundImage = `url("data:image/svg+xml,${encodeURIComponent(frostSvg())}")`;
+    function frostSvg() {
+      let d = '';
+      const branch = (x, y, a, len, depth) => {
+        const x2 = x + Math.cos(a) * len, y2 = y + Math.sin(a) * len;
+        d += `M${x.toFixed(0)} ${y.toFixed(0)}L${x2.toFixed(0)} ${y2.toFixed(0)}`;
+        if (depth > 0) for (let k = 1; k <= 3; k++) {
+          const t = k / 4, bx = x + (x2 - x) * t, by = y + (y2 - y) * t;
+          branch(bx, by, a + 0.9, len * 0.35, depth - 1); branch(bx, by, a - 0.9, len * 0.35, depth - 1);
+        }
+      };
+      // seeds along the four edges, growing inward
+      for (let i = 0; i < 46; i++) {
+        const e = i % 4, u = Math.random();
+        const [x, y, a] = e === 0 ? [u * 1600, 0, Math.PI / 2] : e === 1 ? [u * 1600, 900, -Math.PI / 2]
+          : e === 2 ? [0, u * 900, 0] : [1600, u * 900, Math.PI];
+        branch(x, y, a + (Math.random() - 0.5) * 1.2, 60 + Math.random() * 140, 2);
+      }
+      return `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900' preserveAspectRatio='none'><path d='${d}' stroke='white' stroke-opacity='.55' stroke-width='1.6' fill='none' stroke-linecap='round'/></svg>`;
+    }
+    fx.append(shade, flash, glass, frost);
     let raf = 0, last = 0, splashT = 0, boltT = 0;
     function tick(now) {
       const dt = Math.min(0.1, (now - (last || now)) / 1000); last = now;
       st.level += ((st.on ? 1 : 0) - st.level) * Math.min(1, dt * 0.45);
       const op = st.level.toFixed(3);
-      shade.style.opacity = op; glass.style.opacity = op;
       const winter = SEASON === 0;
+      shade.style.opacity = op; glass.style.opacity = winter ? '0' : op; frost.style.opacity = winter ? op : '0';
       if (st.level > 0.3 && !winter && now > splashT) {          // fat drops into the lake
         splashT = now + 180 + Math.random() * 420;
         if (window.__dripDrop) window.__dripDrop(700 + Math.random() * 3200, 1900 + Math.random() * 520);
       }
       if (st.level > 0.6 && !reduced && now > boltT) {             // lightning, now and then
-        boltT = now + 7000 + Math.random() * 12000;
+        boltT = now + (winter ? 40000 + Math.random() * 40000 : 7000 + Math.random() * 12000);   // thundersnow is rare
         flash.classList.remove('on'); void flash.offsetWidth; flash.classList.add('on');
       }
       if (st.on || st.level > 0.004) raf = requestAnimationFrame(tick);
-      else { st.level = 0; shade.style.opacity = glass.style.opacity = '0'; raf = 0; last = 0; }
+      else { st.level = 0; shade.style.opacity = glass.style.opacity = frost.style.opacity = '0'; raf = 0; last = 0; }
     }
     function set(on) {
       st.on = !!on;
       glass.classList.toggle('run', st.on && !reduced);
-      boltT = performance.now() + 4000;
+      boltT = performance.now() + (SEASON === 0 ? 30000 : 4000);
       if (st.on && window.__windShow) window.__windShow.gustNow();
       if (!raf) raf = requestAnimationFrame(tick);
     }
