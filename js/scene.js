@@ -2562,7 +2562,7 @@ function _bootInner() {
   // ── STORM: heavy rain and strong wind ────────────────────────────────────
   // After the rain pens (#4, #9, #12, #17): heavier rain that leans with the wind (the rain loop
   // above reads window.__storm.level), fat drops splashing into the lake, beads of water sliding
-  // down the 'camera glass', a darker sky, the odd lightning flash, and stronger, more frequent
+  // on the headline and button (snow building on them in winter), a darker sky, the odd lightning flash, and stronger, more frequent
   // gusts. Starts from ?storm, the test panel (window.__storm.set(true)), or now and then on its
   // own in spring to fall. All CSS/DOM on transform and opacity except the rain canvas it reuses.
   window.__storm = (function () {
@@ -2572,16 +2572,7 @@ function _bootInner() {
     if (!fx) return st;
     const shade = document.createElement('div'); shade.className = 'storm-shade';
     const flash = document.createElement('div'); flash.className = 'storm-flash';
-    const glass = document.createElement('div'); glass.className = 'storm-glass';
-    for (let i = 0; i < 12; i++) {
-      const b = document.createElement('i');
-      const r = 0.55 + Math.random() * 0.75;         // bead size, in % of the scene's width
-      Object.assign(b.style, { left: (Math.random() * 96).toFixed(1) + '%', top: (Math.random() * 55).toFixed(1) + '%',
-        width: r.toFixed(2) + '%', animationDuration: (5 + Math.random() * 7).toFixed(1) + 's',
-        animationDelay: (-Math.random() * 10).toFixed(1) + 's' });
-      glass.appendChild(b);
-    }
-    // Winter: frost creeps in over the corners and edges of the glass instead of beads. Fern-like
+    // Winter: frost creeps in over the corners and edges of the glass. Fern-like
     // ice crystals drawn once into an SVG background, masked to the edges, faded by the storm.
     const frost = document.createElement('div'); frost.className = 'storm-frost';
     frost.style.backgroundImage = `url("data:image/svg+xml,${encodeURIComponent(frostSvg())}")`;
@@ -2604,14 +2595,101 @@ function _bootInner() {
       }
       return `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900' preserveAspectRatio='none'><path d='${d}' stroke='white' stroke-opacity='.55' stroke-width='1.6' fill='none' stroke-linecap='round'/></svg>`;
     }
-    fx.append(shade, flash, glass, frost);
+    fx.append(shade, flash, frost);
+
+    // Weather on the page copy: while a storm blows, rain beads sit on the headline's letters
+    // and drip off their bottom edges, and on the button; in winter snow builds up along the
+    // letters' top edges and on top of the button, then melts away. The letter shapes are read
+    // once from a canvas (each character drawn where the page draws it), so the drops and snow
+    // land on the real ink. Rebuilt when the tab, season or width changes.
+    const copyWx = { el: null, key: '' };
+    function inkEdges(h1, box) {
+      const r = h1.getBoundingClientRect(), W = Math.ceil(r.width), H = Math.ceil(r.height);
+      if (!W || !H) return null;
+      const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+      const ctx = cv.getContext('2d'), cs = getComputedStyle(h1);
+      ctx.font = `${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+      ctx.fillStyle = '#000'; ctx.textBaseline = 'alphabetic';
+      const asc = ctx.measureText('Hg').fontBoundingBoxAscent || parseFloat(cs.fontSize) * 0.9;
+      const walker = document.createTreeWalker(h1, NodeFilter.SHOW_TEXT);
+      const rg = document.createRange();
+      for (let n = walker.nextNode(); n; n = walker.nextNode()) {
+        for (let i = 0; i < n.data.length; i++) {
+          if (/\s/.test(n.data[i])) continue;
+          rg.setStart(n, i); rg.setEnd(n, i + 1);
+          const c = rg.getBoundingClientRect();
+          ctx.fillText(n.data[i], c.left - r.left, c.top - r.top + asc);
+        }
+      }
+      const a = ctx.getImageData(0, 0, W, H).data, ink = (x, y) => y >= 0 && y < H && a[(y * W + x) * 4 + 3] > 120;
+      const top = [], bottom = [], face = [];
+      const ox = r.left - box.left, oy = r.top - box.top;
+      for (let x = 1; x < W - 1; x += 2) for (let y = 1; y < H - 1; y++) {
+        if (!ink(x, y)) continue;
+        if (!ink(x, y - 1)) top.push([ox + x, oy + y]);
+        if (!ink(x, y + 1) && !ink(x, y + 4)) bottom.push([ox + x, oy + y]);
+        else if (y % 5 === 0 && x % 6 === 1) face.push([ox + x, oy + y]);
+      }
+      return { top, bottom, face };
+    }
+    const pick = (arr, n) => { const o = []; for (let i = 0; i < n && arr.length; i++) o.push(arr[Math.floor(Math.random() * arr.length)]); return o; };
+    function dot(wx, cls, x, y, w, h, per, extra) {
+      const d = document.createElement('i'); d.className = cls;
+      Object.assign(d.style, { left: (x - w / 2).toFixed(1) + 'px', top: (y - h).toFixed(1) + 'px', width: w.toFixed(1) + 'px', height: h.toFixed(1) + 'px',
+        animationDuration: per.toFixed(1) + 's', animationDelay: (-Math.random() * per).toFixed(1) + 's' }, extra || {});
+      wx.appendChild(d);
+    }
+    function buildCopyWx(view, snow) {
+      if (copyWx.el) copyWx.el.remove();
+      const wx = document.createElement('div'); wx.className = 'copy-wx'; wx.setAttribute('aria-hidden', 'true');
+      view.appendChild(wx);
+      const box = view.getBoundingClientRect(), h1 = view.querySelector('h1'), btn = view.querySelector('.btn');
+      const e = h1 && inkEdges(h1, box);
+      if (e && snow) {
+        // snow caps along the letters' top edges: short soft mounds, clustered a little
+        pick(e.top, 70).forEach(([x, y]) => { const w = 4 + Math.random() * 7; dot(wx, 'wx-snow', x, y + 1.5, w, w * (0.45 + Math.random() * 0.3), 16 + Math.random() * 10); });
+      } else if (e) {
+        pick(e.face, 18).forEach(([x, y]) => { const w = 5 + Math.random() * 5; dot(wx, 'wx-bead', x, y + w / 2, w, w, 6 + Math.random() * 6); });
+        pick(e.bottom, 14).forEach(([x, y]) => { const w = 4.5 + Math.random() * 3.5;
+          dot(wx, 'wx-drip', x, y + w * 0.9, w, w * 1.15, 4 + Math.random() * 5, { '--fall': (14 + Math.random() * 26).toFixed(0) + 'px' }); });
+      }
+      if (btn) {
+        const b = btn.getBoundingClientRect(), bx = b.left - box.left, by = b.top - box.top;
+        if (snow) {
+          const cap = document.createElement('b'); cap.className = 'wx-snowcap';
+          // a lumpy drift along the top edge: a few soft mounds, thickest in the middle
+          let d = 'M0 16 L0 12', x = 0;
+          while (x < 100) { const w = 8 + Math.random() * 14, h = 3 + Math.random() * 5 + 4 * Math.sin(Math.min(1, (x + w / 2) / 100) * Math.PI);
+            d += ` Q${(x + w / 2).toFixed(1)} ${(12 - h * 1.6).toFixed(1)} ${Math.min(100, x + w).toFixed(1)} 12`; x += w; }
+          d += ' L100 16 Z';
+          cap.style.backgroundImage = `url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 16' preserveAspectRatio='none'><path d='${d}' fill='white'/></svg>`)}")`;
+          Object.assign(cap.style, { left: (bx + 4).toFixed(1) + 'px', top: (by - 12).toFixed(1) + 'px', width: (b.width - 8).toFixed(1) + 'px',
+            animationDelay: (-Math.random() * 6).toFixed(1) + 's' });
+          wx.appendChild(cap);
+        } else {
+          for (let i = 0; i < 6; i++) { const w = 5 + Math.random() * 4; dot(wx, 'wx-bead', bx + 8 + Math.random() * (b.width - 16), by + 6 + Math.random() * (b.height - 12), w, w, 6 + Math.random() * 6); }
+          for (let i = 0; i < 4; i++) { const w = 5 + Math.random() * 3;
+            dot(wx, 'wx-drip', bx + 10 + Math.random() * (b.width - 20), by + b.height + w * 0.4, w, w * 1.15, 4 + Math.random() * 5, { '--fall': (16 + Math.random() * 24).toFixed(0) + 'px' }); }
+        }
+      }
+      copyWx.el = wx;
+    }
+    function copyWeather(level) {
+      if (reduced) return;
+      const view = document.querySelector('#heroCopy .view.on');
+      if (level < 0.05 || !view) { if (copyWx.el) { copyWx.el.remove(); copyWx.el = null; copyWx.key = ''; } return; }
+      const snow = SEASON === 0, key = view.dataset.view + (snow ? 's' : 'r') + Math.round(view.getBoundingClientRect().width);
+      if (key !== copyWx.key) { copyWx.key = key; buildCopyWx(view, snow); }
+      copyWx.el.style.opacity = Math.min(1, level * 1.3).toFixed(2);
+    }
     let raf = 0, last = 0, splashT = 0, boltT = 0;
     function tick(now) {
       const dt = Math.min(0.1, (now - (last || now)) / 1000); last = now;
       st.level += ((st.on ? 1 : 0) - st.level) * Math.min(1, dt * 0.45);
       const op = st.level.toFixed(3);
       const winter = SEASON === 0;
-      shade.style.opacity = op; glass.style.opacity = winter ? '0' : op; frost.style.opacity = winter ? op : '0';
+      shade.style.opacity = op; frost.style.opacity = winter ? op : '0';
+      if (now - (copyWx.t || 0) > 250) { copyWx.t = now; copyWeather(st.level); }
       if (st.level > 0.3 && !winter && now > splashT) {          // fat drops into the lake
         splashT = now + 180 + Math.random() * 420;
         if (window.__dripDrop) window.__dripDrop(700 + Math.random() * 3200, 1900 + Math.random() * 520);
@@ -2621,11 +2699,10 @@ function _bootInner() {
         flash.classList.remove('on'); void flash.offsetWidth; flash.classList.add('on');
       }
       if (st.on || st.level > 0.004) raf = requestAnimationFrame(tick);
-      else { st.level = 0; shade.style.opacity = glass.style.opacity = frost.style.opacity = '0'; raf = 0; last = 0; }
+      else { st.level = 0; shade.style.opacity = frost.style.opacity = '0'; copyWeather(0); raf = 0; last = 0; }
     }
     function set(on) {
       st.on = !!on;
-      glass.classList.toggle('run', st.on && !reduced);
       boltT = performance.now() + (SEASON === 0 ? 30000 : 4000);
       if (st.on && window.__windShow) window.__windShow.gustNow();
       if (!raf) raf = requestAnimationFrame(tick);
