@@ -91,6 +91,10 @@
   // plate. The fish-catching eagle flies here, so a stoop to a fish low on the lake never passes
   // behind the shore trees.
   const topFrame = worldFrame(mg);
+  // Top of everything but the UI: the fx plate, under its rain. Not colour-graded, so a close-up
+  // Marley at night keeps the bright glowing collar (the graded foreground would dim it).
+  const fxPlate = $('plateFx');
+  const fxFrame = fxPlate ? worldFrame(fxPlate, fxPlate.firstChild) : null;
   const iso = $('isoTree');
   const treeBox = document.createElement('div');       // in front of the hero tree, before the flowers
   treeBox.className = 'wl-box';
@@ -113,11 +117,11 @@
   fgItems.insertBefore(rockClip, fgItems.firstChild);
   const STAGE = {
     far: box(farFrame, FULL), front: box(frontFrame, FULL), lake: box(lakeFrame, FULL), sky: skyFrame ? box(skyFrame, FULL) : null,
-    tree: treeBox, rock: rockClip, behindTree, top: box(topFrame, FULL),
+    tree: treeBox, rock: rockClip, behindTree, top: box(topFrame, FULL), fx: fxFrame ? box(fxFrame, FULL) : treeBox,
   };
   // Aliases: same layer, but separate "one visitor at a time" slots, so the right bank, the
   // pine tops and the left bank don't block each other (and the fisherman doesn't block the shore).
-  STAGE.boat = STAGE.lake; STAGE.bank = STAGE.far; STAGE.pines = STAGE.far; STAGE.left = STAGE.far; STAGE.rockR = STAGE.lake; STAGE.fore = STAGE.behindTree; STAGE.catch = STAGE.top;
+  STAGE.boat = STAGE.lake; STAGE.bank = STAGE.far; STAGE.pines = STAGE.far; STAGE.left = STAGE.far; STAGE.rockR = STAGE.lake; STAGE.fore = STAGE.behindTree; STAGE.catch = STAGE.top; STAGE.leftRock = STAGE.fx;
   // Foreground stages sit inside the foreground plate, which already carries the scene's
   // season/night colour grade, so animals there use their day palette.
   const GRADED = new Set(['tree', 'rock', 'behindTree']);
@@ -137,7 +141,7 @@
     o.phase = rand(0, 5);
     const c = window.Creatures.build(id, {
       season: season(), night: GRADED.has(stageName) ? false : night(),
-      behavior: o.behavior, rate: o.rate, phase: o.phase, paint: painter(id, GRADED.has(stageName)),
+      behavior: o.behavior, rate: o.rate, phase: o.phase, paint: painter(id, GRADED.has(stageName)), glow: o.glow,
     });
     // Size: o.h was tuned against the silhouette art. An origami animal keeps the silhouette's
     // on-screen WIDTH (its body length), so a standing fox takes the sitting fox's footprint.
@@ -363,9 +367,12 @@
   // Sept 24: shy, not bold. They only half emerge from beyond the right edge (hind end stays off
   // screen), feet below the bottom of the view, so what you see is a massive body and head
   // looking about, then backing away. xStop = where the body centre stops.
-  const CLOSE = { x0: VW + 1400, xStop: { bear: [4560, 4700], elk: [4520, 4660] }, y: 3420, size: { bear: 1350, elk: 2000 } };
-  async function closeVisit(v, id, steps) {
-    const a = v.actor('tree', id, { x: CLOSE.x0, y: CLOSE.y, h: 100, hReal: CLOSE.size[id], dir: -1, behavior: 'walk', fade: 2.5 });
+  // Close-up sizes are about 3 to 4 times the foreground ones; each stops in front of the tree.
+  const CLOSE = { x0: VW + 1400, y: 3420,
+    xStop: { bear: [4560, 4700], elk: [4520, 4660], doe: [4480, 4640], deer: [4480, 4620], 'wolf-run': [4460, 4620], marley: [4420, 4600] },
+    size: { bear: 1350, elk: 2000, doe: 1450, deer: 1600, 'wolf-run': 980, marley: 720 } };
+  async function closeVisit(v, id, steps, stageName = 'tree', extra = {}) {
+    const a = v.actor(stageName, id, Object.assign({ x: CLOSE.x0, y: CLOSE.y, h: 100, hReal: CLOSE.size[id], dir: -1, behavior: 'walk', fade: 2.5 }, extra));
     a.home = { x0: CLOSE.x0, y: CLOSE.y };
     await v.wait(60); a.show();
     walking(a, true);
@@ -373,6 +380,40 @@
     for (const [b, t] of steps) { if (a.c.behaviors.includes(b)) { a.c.setBehavior(b); await v.wait(t * 1000 * rand(0.85, 1.15)); } }
   }
   const closeExit = (v) => backOut(v, 70, '4s');
+
+  // ── small close-ups at the bottom left, under the page copy ──
+  // Fox, hare, chipmunk and squirrel come up on the nearest ground in front of the big left rocks
+  // and sniff up at the headline and button above them, big and close to the camera. They sit in
+  // the fx stage, in front of the rocks and plants; their heads stay below the button. The fox walks and the hare hops in from the left edge; the
+  // chipmunk and squirrel pop up onto the rock.
+  const LEFT = { x0: -520, spot: [380, 640], y: 2715,   // feet on the nearest ground, just above the bottom wave
+    size: { fox: 640, hare: 560, chipmunk: 380, squirrel: 440 },
+    move: { fox: 'walk', hare: 'hop', chipmunk: 'pop', squirrel: 'pop' } };
+  async function leftVisit(v, id, steps) {
+    const how = LEFT.move[id], x = rand(LEFT.spot[0], LEFT.spot[1]);
+    const pop = how === 'pop';
+    const a = v.actor('fx', id, { x: pop ? x : LEFT.x0, y: pop ? LEFT.y + 70 : LEFT.y, h: 100, hReal: LEFT.size[id], dir: 1,
+      behavior: pop ? steps[0][0] : how, fade: pop ? 0.6 : 1.6 });
+    a.home = { x0: LEFT.x0, y: LEFT.y, pop };
+    await v.wait(60); a.show();
+    if (pop) await v.move(a, x, LEFT.y, 120);
+    else {
+      if (how === 'walk') walking(a, true);
+      await v.move(a, x, LEFT.y, how === 'hop' ? a.c.travelSpeed() * a.w : 90, how === 'walk' ? (t, now) => -3 * Math.abs(Math.sin(now / 300)) : null);
+    }
+    for (const [b, t] of steps) { if (a.c.behaviors.includes(b)) { a.c.setBehavior(b); await v.wait(t * 1000 * rand(0.85, 1.15)); } }
+  }
+  async function leftExit(v) {
+    const a = v.actors[0]; if (!a) return;
+    a.el.style.setProperty('--fade', a.home.pop ? '0.7s' : '1.8s');
+    a.el.style.transitionTimingFunction = 'ease-in';
+    if (a.home.pop) { a.show(false); await v.move(a, a.x, a.home.y + 70, 110); return; }
+    a.face(-1);
+    if (a.c.behaviors.includes('walk')) { a.c.setBehavior('walk'); walking(a, true); }
+    else if (a.c.behaviors.includes('hop')) a.c.setBehavior('hop');
+    a.show(false);
+    await v.move(a, a.home.x0, a.home.y, 110);
+  }
 
   const CAST = {
     deer: {
@@ -479,7 +520,7 @@
     hare: {
       // Hops out of the water's-edge grass at the tip of the right bank and along it, left to
       // right, behind the pines (white in winter: the rig's snowshoe palette).
-      stage: 'left', seasons: ['spring', 'summer', 'fall', 'winter'], when: 'any', weight: 2,
+      stage: 'leftRock', seasons: ['spring', 'summer', 'fall', 'winter'], when: 'any', weight: 2,
       async run(v) {
         // In front of the pines (it used to hop behind the trunks and looked like it was inside them),
         // a little lower on the grass, nearer the water.
@@ -525,6 +566,54 @@
     closeElk: {
       stage: 'tree', seasons: ['fall', 'winter'], when: 'any', weight: 1,
       async run(v) { await closeVisit(v, 'elk', [['look', 5], ['alert', 2.5], ['look', 3]]); },
+      exit: closeExit,
+    },
+    // More close-ups, all walking in from the right to stop in front of the hero tree.
+    closeDoe: {
+      stage: 'tree', seasons: ['spring', 'summer', 'fall'], when: 'any', weight: 1,
+      async run(v) { await closeVisit(v, 'doe', [['idle', 3.5], ['graze', 5], ['alert', 3], ['idle', 2.5]]); },
+      exit: closeExit,
+    },
+    closeDeer: {
+      // The buck (doe's body with antlers), all year; winter coat in winter.
+      stage: 'tree', seasons: ['spring', 'summer', 'fall', 'winter'], when: 'any', weight: 1,
+      async run(v) { await closeVisit(v, 'deer', [['alert', 3.5], ['graze', 4.5], ['idle', 3], ['alert', 2.5]]); },
+      exit: closeExit,
+    },
+    closeFox: {
+      stage: 'leftRock', seasons: ['spring', 'summer', 'fall', 'winter'], when: 'any', weight: 1,
+      async run(v) { await leftVisit(v, 'fox', [['sit', 2.5], ['sniffUp', 5], ['sit', 2], ['sniffUp', 3.5]]); },
+      exit: leftExit,
+    },
+    closeHare: {
+      // Brown most of the year, white in winter.
+      stage: 'leftRock', seasons: ['spring', 'summer', 'fall', 'winter'], when: 'any', weight: 1,
+      async run(v) { await leftVisit(v, 'hare', [['sit', 2.5], ['sniffUp', 5], ['sit', 2.5]]); },
+      exit: leftExit,
+    },
+    closeChipmunk: {
+      stage: 'leftRock', seasons: ['spring', 'summer', 'fall'], when: 'day', weight: 1,
+      async run(v) { await leftVisit(v, 'chipmunk', [['alert', 2], ['sniffUp', 4.5], ['alert', 2.5]]); },
+      exit: leftExit,
+    },
+    closeSquirrel: {
+      stage: 'leftRock', seasons: ['spring', 'summer', 'fall'], when: 'day', weight: 1,
+      async run(v) { await leftVisit(v, 'squirrel', [['nibble', 3], ['sniffUp', 4.5], ['nibble', 3]]); },
+      exit: leftExit,
+    },
+    closeWolf: {
+      stage: 'tree', seasons: ['fall', 'winter'], when: 'any', weight: 1,
+      async run(v) { await closeVisit(v, 'wolf-run', [['look', 5], ['sniff', 3.5], ['look', 3]]); },
+      exit: closeExit,
+    },
+    closeMarley: {
+      // Marley up close: a plain red collar by day, the glowing one at night. At night she walks
+      // in the ungraded fx stage so the glow stays bright (the graded foreground would dim it).
+      stage: 'tree', seasons: ['spring', 'summer', 'fall', 'winter'], when: 'any', weight: 1,
+      async run(v) {
+        const n = night();
+        await closeVisit(v, 'marley', [['idle', 4], ['sniff', 4], ['idle', 3.5]], n ? 'fx' : 'tree', { glow: n });
+      },
       exit: closeExit,
     },
     marley: {
@@ -895,7 +984,8 @@
   hotspot([0, 2780, VW, VH], () => invite(['snowHare']));                          // front grass: the hare
   hotspot([3790, 1590, 4190, 1780], () => invite(['marley']));                     // the tent: Marley
   hotspot([3500, 2440, 4400, 2780], () => invite(['foreDeer', 'foreElk', 'foreBear', 'foreWolf', 'fox']));
-  hotspot([4500 + HERO_DX, 1900, 4850 + HERO_DX, 2700], () => invite(['closeBear', 'closeElk']));                // hero tree trunk: a close-up beast // foreground grass by the hero tree
+  hotspot([660, 2300, 1040, 2600], () => invite(['closeFox', 'closeHare', 'closeChipmunk', 'closeSquirrel']));  // grass beside the left rocks: a small close-up
+  hotspot([4500 + HERO_DX, 1900, 4850 + HERO_DX, 2700], () => invite(['closeBear', 'closeElk', 'closeDoe', 'closeDeer', 'closeWolf', 'closeMarley']));                // hero tree trunk: a close-up beast // foreground grass by the hero tree
   // Sun by day, moon by night (same spot): an eagle, or at night a wolf answers the moon.
   hotspot([3380, 900, 3830, 1370], () => invite(night() ? ['wolfHowl', 'owl'] : ['eagle']));
 
@@ -907,7 +997,8 @@
     ['Far shore', [['deer', 'Deer (buck)'], ['doe', 'Doe, drinking'], ['elk', 'Elk'], ['bear', 'Bear'], ['wolfRun', 'Wolf, running'], ['wolfHowl', 'Wolf, howling']]],
     ['Right bank', [['bankDeer', 'Deer from behind a pine'], ['hare', 'Hare'], ['marley', 'Marley (from the tent)'], ['hawk', 'Hawk on a pine top'], ['owl', 'Owl on a pine top']]],
     ['Foreground (by the hero tree)', [['foreDeer', 'Doe or buck, grazing'], ['foreElk', 'Elk'], ['foreBear', 'Bear, foraging'], ['foreWolf', 'Wolf, walking'], ['fox', 'Fox'], ['snowHare', 'Hare across the front (white in winter)']]],
-    ['Close-up (in front of the tree)', [['closeBear', 'Grizzly, close-up'], ['closeElk', 'Bull elk, close-up']]],
+    ['Close-up (in front of the tree)', [['closeBear', 'Grizzly, close-up'], ['closeElk', 'Bull elk, close-up'], ['closeMarley', 'Marley, close-up'], ['closeDoe', 'Doe, close-up'], ['closeDeer', 'Buck, close-up'], ['closeWolf', 'Wolf, close-up']]],
+    ['Close-up (on the left rocks)', [['closeFox', 'Fox'], ['closeHare', 'Hare'], ['closeChipmunk', 'Chipmunk'], ['closeSquirrel', 'Squirrel']]],
     ['Rocks & tree', [['chipmunk', 'Chipmunk'], ['squirrel', 'Squirrel (hero tree)']]],
     ['Lake & sky', [['fisherman', 'Fisherman'], ['eagle', 'Eagle'], ['@fish', 'Fish jump'], ['@bigfish', 'Big fish jump (full charge)'], ['@catch', 'Eagle catches a fish']]],
     ['Scene effects', [['@gust', 'Wind gust now'], ['@calm', 'Stop the wind'], ['@night', 'Day / night (fireflies, collar, tent light)']]],
@@ -983,7 +1074,7 @@
   if (/[?&]wildlife\b/.test(location.search)) openPanel();
   // Links: ?fox, ?summer+night+owl ... bring that animal in once (scene.js parses the words).
   // A few friendly names map to their visit: wolf (howl at night, run by day), deer = the buck.
-  const LINK_ALIAS = { dog: 'marley', tent: 'marley', wolf: () => (night() ? 'wolfHowl' : 'wolfRun'), howl: 'wolfHowl', buck: 'deer', rabbit: 'hare', snowhare: 'snowHare', bankdeer: 'bankDeer' };
+  const LINK_ALIAS = { closebuck: 'closeDeer', closedog: 'closeMarley', closerabbit: 'closeHare', dog: 'marley', tent: 'marley', wolf: () => (night() ? 'wolfHowl' : 'wolfRun'), howl: 'wolfHowl', buck: 'deer', rabbit: 'hare', snowhare: 'snowHare', bankdeer: 'bankDeer' };
   // Any visit's own name works too, in any case and with or without dashes: ?foreelk, ?fore-elk,
   // ?closebear, ?bankdeer, ?wolfhowl ... (the list is in the footer trigger guide).
   const CAST_BY_LC = {}; Object.keys(CAST).forEach((k) => { CAST_BY_LC[k.toLowerCase()] = k; });
