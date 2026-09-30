@@ -678,10 +678,10 @@
       exit: foreExit,
     },
     foreHowl: {
-      // Fall and winter nights: a wolf trots out from behind the hero tree, stops under its
+      // Every night, all year: a wolf trots out from behind the hero tree, stops under its
       // canopy (the trunk on one side, the branches arching over), and settles into a howl,
       // muzzle up toward the moon. The trot and howl poses are two rigs, crossfaded in place.
-      stage: 'fore', seasons: ['fall', 'winter'], when: 'night', weight: 2,
+      stage: 'fore', seasons: ['spring', 'summer', 'fall', 'winter'], when: 'night', weight: 2,
       async run(v) {
         const a = v.actor('fore', 'wolf-run', { x: FORE.x0, y: FORE.y, h: 100, hReal: FORE_SIZE['wolf-run'], dir: -1, behavior: 'walk', fade: 2 });
         a.home = { x0: FORE.x0, y: FORE.y };
@@ -1157,7 +1157,7 @@
   const PANEL_ITEMS = [
     ['Far shore', [['deer', 'Deer (buck)'], ['doe', 'Doe, drinking'], ['elk', 'Elk'], ['bear', 'Bear'], ['wolfRun', 'Wolf, running'], ['wolfHowl', 'Wolf, howling']]],
     ['Right bank', [['bankDeer', 'Deer from behind a pine'], ['hare', 'Hare'], ['marley', 'Marley (from the tent)'], ['hawk', 'Hawk on a pine top'], ['owl', 'Owl on a pine top']]],
-    ['Foreground (by the hero tree)', [['foreDeer', 'Doe or buck, grazing'], ['foreElk', 'Elk'], ['foreBear', 'Bear, foraging'], ['foreWolf', 'Wolf, walking'], ['foreHowl', 'Wolf howling under the tree (fall/winter nights)'], ['fox', 'Fox'], ['snowHare', 'Hare across the front (white in winter)']]],
+    ['Foreground (by the hero tree)', [['foreDeer', 'Doe or buck, grazing'], ['foreElk', 'Elk'], ['foreBear', 'Bear, foraging'], ['foreWolf', 'Wolf, walking'], ['foreHowl', 'Wolf howling under the tree (every night)'], ['fox', 'Fox'], ['snowHare', 'Hare across the front (white in winter)']]],
     ['Close-up (in front of the tree)', [['closeBear', 'Grizzly, close-up'], ['closeElk', 'Bull elk, close-up'], ['closeMarley', 'Marley, close-up'], ['closeDoe', 'Doe, close-up'], ['closeDeer', 'Buck, close-up'], ['closeWolf', 'Wolf, close-up']]],
     ['Close-up (on the left rocks)', [['closeFox', 'Fox'], ['closeHare', 'Hare'], ['closeChipmunk', 'Chipmunk'], ['closeSquirrel', 'Squirrel']]],
     ['Rocks & tree', [['chipmunk', 'Chipmunk'], ['squirrel', 'Squirrel (hero tree)']]],

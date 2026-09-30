@@ -28,7 +28,7 @@
     ['Snowy owl', 'winter, day or night', 'winter+night+owl'],
     'Foreground, by the big tree',
     ['Doe or buck, grazing', 'all year, buck in winter', 'spring+foredeer'], ['Elk', 'fall, winter', 'winter+foreelk'],
-    ['Bear, foraging', 'spring to fall, day', 'summer+forebear'], ['Wolf, walking', 'fall, winter', 'fall+forewolf'], ['Wolf howling under the big tree', 'fall and winter nights', 'winter+night+forehowl'],
+    ['Bear, foraging', 'spring to fall, day', 'summer+forebear'], ['Wolf, walking', 'fall, winter', 'fall+forewolf'], ['Wolf howling under the big tree', 'every night, all year', 'summer+night+forehowl'],
     ['Fox', 'all year', 'fall+fox'], ['Hare across the front', 'white in winter', 'winter+snowhare'],
     'Close-ups, peeking in by the big tree (rare)',
     ['Grizzly', 'spring to fall, day', 'summer+closebear'], ['Bull elk', 'fall, winter', 'fall+closeelk'],
