@@ -589,13 +589,14 @@ html.night-page .hero-swell{ background: linear-gradient(rgba(12,18,32,.35), rgb
 .hero-copy .view{ position:relative; }
 .copy-wx{ position:absolute; inset:0; pointer-events:none; overflow:visible; transition: opacity .6s; }
 .copy-wx i, .copy-wx b{ position:absolute; display:block; }
-.wx-bead, .wx-drip{ border-radius:50% 50% 50% 50% / 45% 45% 55% 55%;
+.wx-bead, .wx-drip, .wx-run{ border-radius:50% 50% 50% 50% / 45% 45% 55% 55%;
   background: radial-gradient(circle at 34% 28%, rgba(255,255,255,1) 0 14%, rgba(255,255,255,0) 24%),
               radial-gradient(circle at 50% 62%, rgba(170,205,240,.55) 0 45%, rgba(25,50,85,.7) 68%, rgba(255,255,255,.6) 80%, rgba(255,255,255,0) 86%);
   box-shadow: 0 1px 1.5px rgba(10,25,45,.35); opacity:0; }
 .wx-bead{ animation: wxBead 8s ease-in-out infinite; transform-origin:50% 100%; }
 @keyframes wxBead{ 0%{ opacity:0; transform:scale(.3); } 20%{ opacity:.95; transform:scale(1); } 75%{ opacity:.95; transform:scale(1); } 100%{ opacity:0; transform:scale(.8); } }
 .wx-drip{ animation: wxDrip 6s linear infinite; transform-origin:50% 0; }
+.wx-run{ left:0; top:0; transform-origin:50% 100%; }
 @keyframes wxDrip{
   0%   { opacity:0;   transform: translateY(0) scale(.2); animation-timing-function: ease-out; }
   50%  { opacity:.95; transform: translateY(0) scale(1); }

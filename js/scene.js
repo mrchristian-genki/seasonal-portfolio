@@ -2670,6 +2670,51 @@ function _bootInner() {
         animationDuration: per.toFixed(1) + 's', animationDelay: (-Math.random() * per).toFixed(1) + 's' }, extra || {});
       wx.appendChild(d);
     }
+    // Running drops: each one crawls slowly down a line of the headline, runs quickly across the
+    // gap to the next line, crawls again, and so on down (over the button too, if it's above it),
+    // then falls away fast and fades. The path comes from the headline's real line boxes; the
+    // motion is a Web Animation on transform/opacity, so the compositor runs it.
+    function lineBands(h1, box) {
+      const rg = document.createRange(); rg.selectNodeContents(h1);
+      const lines = [];
+      [...rg.getClientRects()].forEach(r => {
+        if (r.width < 4) return;
+        const l = lines.find(b => Math.abs(b.t - (r.top - box.top)) < r.height * 0.5);
+        if (l) { l.l = Math.min(l.l, r.left - box.left); l.r = Math.max(l.r, r.right - box.left); }
+        else lines.push({ t: r.top - box.top, b: r.bottom - box.top, l: r.left - box.left, r: r.right - box.left });
+      });
+      // the ink sits inside the line box: trim to roughly cap height and baseline
+      return lines.sort((a, b) => a.t - b.t).map(b => { const h = b.b - b.t; return { t: b.t + h * 0.2, b: b.t + h * 0.86, l: b.l, r: b.r }; });
+    }
+    function runDrops(wx, view, box, h1, btn) {
+      const bands = h1 ? lineBands(h1, box) : [];
+      if (btn) { const b = btn.getBoundingClientRect(); bands.push({ t: b.top - box.top + 4, b: b.bottom - box.top - 2, l: b.left - box.left + 8, r: b.right - box.left - 8, btn: true }); }
+      if (!bands.length) return;
+      const SLOW = [14, 26], FAST = 320, FALL = 520;
+      for (let n = 0; n < 12; n++) {
+        const i0 = Math.floor(Math.pow(Math.random(), 1.6) * bands.length);   // most start near the top
+        const s0 = bands[i0], x = s0.l + 6 + Math.random() * Math.max(1, s0.r - s0.l - 12);
+        const path = bands.slice(i0).filter(b => x >= b.l && x <= b.r);
+        const w = 5 + Math.random() * 4, h = w * 1.15, slow = SLOW[0] + Math.random() * (SLOW[1] - SLOW[0]);
+        const kf = [], at = (y, tMs, o, sx, sy, easing) => kf.push({ t: tMs, y, o, sx, sy, easing });
+        let t = 0, y = path[0].t + Math.random() * (path[0].b - path[0].t) * 0.35;
+        at(y, t, 0, 0.3, 0.3); t += 500; at(y, t, 0.95, 1, 1);
+        path.forEach((b, k) => {
+          t += (b.b - y) / slow * 1000; y = b.b; at(y, t, 0.95, 0.95, 1.1);              // crawl down the line
+          const next = path[k + 1];
+          if (next && next.t > y) { t += (next.t - y) / FAST * 1000; y = next.t; at(y, t, 0.9, 0.85, 1.35); t += 120; at(y, t, 0.95, 1, 1); }
+        });
+        const fall = 90 + Math.random() * 90;                                            // then away
+        at(y, t, 0.95, 0.9, 1.3, 'cubic-bezier(.55,0,1,.45)'); t += fall / FALL * 1000; y += fall; at(y, t, 0, 0.6, 2);
+        const rest = 800 + Math.random() * 3500; t += rest; at(y, t, 0, 0.6, 2);          // a pause before it runs again
+        const d = document.createElement('i'); d.className = 'wx-run';
+        Object.assign(d.style, { width: w.toFixed(1) + 'px', height: h.toFixed(1) + 'px' });
+        wx.appendChild(d);
+        d.animate(kf.map(k => ({ offset: k.t / t, opacity: k.o, easing: k.easing || 'linear',
+          transform: `translate(${(x - w / 2).toFixed(1)}px, ${(k.y - h).toFixed(1)}px) scale(${k.sx}, ${k.sy})` })),
+          { duration: t, iterations: Infinity, delay: -Math.random() * t });
+      }
+    }
     function buildCopyWx(view, snow) {
       if (copyWx.el) copyWx.el.remove();
       const wx = document.createElement('div'); wx.className = 'copy-wx'; wx.setAttribute('aria-hidden', 'true');
@@ -2681,9 +2726,8 @@ function _bootInner() {
         pick(e.top, 70).forEach(([x, y]) => { const w = 4 + Math.random() * 7; dot(wx, 'wx-snow', x, y + 1.5, w, w * (0.45 + Math.random() * 0.3), 16 + Math.random() * 10); });
       } else if (e) {
         pick(e.face, 18).forEach(([x, y]) => { const w = 5 + Math.random() * 5; dot(wx, 'wx-bead', x, y + w / 2, w, w, 6 + Math.random() * 6); });
-        pick(e.bottom, 14).forEach(([x, y]) => { const w = 4.5 + Math.random() * 3.5;
-          dot(wx, 'wx-drip', x, y + w * 0.9, w, w * 1.15, 4 + Math.random() * 5, { '--fall': (70 + Math.random() * 90).toFixed(0) + 'px' }); });
       }
+      if (!snow) runDrops(wx, view, box, h1, btn);
       if (btn) {
         const b = btn.getBoundingClientRect(), bx = b.left - box.left, by = b.top - box.top;
         if (snow) {
@@ -2699,8 +2743,7 @@ function _bootInner() {
           wx.appendChild(cap);
         } else {
           for (let i = 0; i < 6; i++) { const w = 5 + Math.random() * 4; dot(wx, 'wx-bead', bx + 8 + Math.random() * (b.width - 16), by + 6 + Math.random() * (b.height - 12), w, w, 6 + Math.random() * 6); }
-          for (let i = 0; i < 4; i++) { const w = 5 + Math.random() * 3;
-            dot(wx, 'wx-drip', bx + 10 + Math.random() * (b.width - 20), by + b.height + w * 0.4, w, w * 1.15, 4 + Math.random() * 5, { '--fall': (80 + Math.random() * 100).toFixed(0) + 'px' }); }
+
         }
       }
       copyWx.el = wx;
