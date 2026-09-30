@@ -913,11 +913,15 @@ function buildWaterShimmer(wrap, w, h, opts) {
     dropRain: [{ at: 0, y: 0, o: 0 }, { at: .12, o: 1 }, { at: .85, o: 1 }, { at: 1, y: 1, o: 0 }],
     dropSnow: [{ at: 0, x: 0, y: 0, o: 0 }, { at: .1, o: 1 }, { at: .5, x: -1, y: .5, o: 1 }, { at: .85, o: 1 }, { at: 1, x: 0, y: 1, o: 0 }],
   };
-  function spawnRipple(x, isSnow) {
+  // spawnAt (optional, set by the scene): () => [x, y, size] anywhere on the open water, in this
+  // panel's local units (may lie outside 0..w), size scaling rings smaller further away.
+  let spawnAt = null;
+  function spawnRipple(x, isSnow, yAt, size) {
     // Sizes are ~3x the prototype's because the panel spans ~5000 world units, not 1600.
-    const rx = 42 + Math.random() * 20, ry = rx * 0.38;
+    const k = size || 1;
+    const rx = (42 + Math.random() * 20) * k, ry = rx * 0.38;
     const dur = isSnow ? (3.4 + Math.random() * 1.6) : (1.3 + Math.random() * 0.6);
-    const y = waterY + Math.random() * (h - waterY) * 0.85;
+    const y = yAt != null ? yAt : waterY + Math.random() * (h - waterY) * 0.85;
     parts.push({ k: isSnow ? 'ripSnow' : 'ripRain', x, y, rx, ry, t0: performance.now(), dur: dur * 1000 });
     wake();
   }
@@ -930,6 +934,7 @@ function buildWaterShimmer(wrap, w, h, opts) {
   function spawnDrop() {
     if (document.hidden) return;                  // a hidden tab draws nothing: don't pile up rings for later
     const isSnow = precip === 'snow';
+    if (spawnAt) { const p = spawnAt(); if (p) spawnRipple(p[0], isSnow, p[1], p[2]); return; }
     const rx = waterXRange[0] + Math.random() * (waterXRange[1] - waterXRange[0]);
     spawnRipple(isSnow ? rx : rx + 2, isSnow);
   }
@@ -983,12 +988,13 @@ function buildWaterShimmer(wrap, w, h, opts) {
   function setPrecip(p) {
     precip = p;
     if (spawnTimer) clearInterval(spawnTimer);
-    if (p !== 'none') spawnTimer = setInterval(spawnDrop, p === 'rain' ? 70 : 280);
+    // Spread over the whole lake (spawnAt) it takes more rings to read as the same rain.
+    if (p !== 'none') spawnTimer = setInterval(spawnDrop, (p === 'rain' ? 70 : 280) * (spawnAt ? 0.55 : 1));
   }
 
   setWind(0);
   return {
-    svg, setWind, setPrecip, attachCanvas, setCanvasMap,
+    svg, setWind, setPrecip, attachCanvas, setCanvasMap, setSpawnArea: (fn) => { spawnAt = fn; if (precip !== 'none') setPrecip(precip); },
     stop: () => { if (spawnTimer) clearInterval(spawnTimer); },
   };
 }

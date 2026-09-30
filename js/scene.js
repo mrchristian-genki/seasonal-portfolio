@@ -1288,11 +1288,32 @@ function _bootInner() {
         const pw = VW * k, ph = 900 * k, px = F.left - L.left, py = F.top - L.top + 1550 * k;
         const sc = Math.min(pw / vb[2], ph / vb[3]);
         const x0 = px + (pw - vb[2] * sc) / 2, y0 = py + (ph - vb[3] * sc);
-        const cx = x0 - 30 * sc, cy = y0 - 60 * sc, cw = (vb[2] + 60) * sc, ch = (vb[3] + 60) * sc;
+        // The canvas spans the whole lake panel (rings land anywhere on the open water, see
+        // setSpawnArea below), not just the shimmer's 1600-unit strip in the middle.
+        const cx = px, cy = y0 - 60 * sc, cw = pw, ch = (vb[3] + 60) * sc;
         Object.assign(fxCanvas.style, { left: cx + 'px', top: cy + 'px', width: cw + 'px', height: ch + 'px' });
         return { x0: x0 - cx, y0: y0 - cy, s: sc };
       };
       const api = window.__waterAPI;
+      // Where rain and snow rings may land: the whole open lake, in world units. The water starts
+      // below each bank (the banks draw under this layer, so rings must stay off them) and runs
+      // down to the near shore, which draws over it. Lake rocks are left out. Rings further up
+      // the lake are smaller. Converted to the shimmer's local units (its 1600-wide box sits
+      // centred in the world at scale 1).
+      if (api && api.setSpawnArea) {
+        const LX = (VW - 1600) / 2, farEdge = (x) => x < 1740 ? 1860 : x < 2745 ? 1600 : 1840;
+        const ROCKS = [[3440, 1860, 3980, 2240]];
+        api.setSpawnArea(() => {
+          for (let tries = 0; tries < 6; tries++) {
+            const x = 60 + Math.random() * (VW - 120), top = farEdge(x);
+            const y = top + 10 + Math.pow(Math.random(), 0.8) * (2680 - top - 10);
+            if (ROCKS.some(r => x > r[0] && x < r[2] && y > r[1] && y < r[3])) continue;
+            const k = Math.max(0.35, Math.min(1.15, (y - 1560) / 900));
+            return [x - LX, y - 1550, k];
+          }
+          return null;
+        });
+      }
       if (api && api.attachCanvas) {
         api.attachCanvas(fxCanvas, placeFxCanvas());
         let rz = 0;
