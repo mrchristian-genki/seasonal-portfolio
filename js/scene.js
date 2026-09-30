@@ -1412,6 +1412,7 @@ function _bootInner() {
         }
       });
       if (opts.flipped) mirrorNested(nested);
+      nested.setAttribute('data-env', 'rock');   // its grass grows from a crevice (liftSways)
       return nested;
     }
     const boulderInstances = [
@@ -1436,7 +1437,7 @@ function _bootInner() {
         }
       });
       if (opts.flipped) mirrorNested(nested);
-      if (opts.water) nested.setAttribute('data-water', '');   // stands in the lake: rings at its foot
+      nested.setAttribute('data-env', opts.env || 'ground');   // where it stands: its base is masked to match (liftSways)
       // opts.dur [min, max] s: a slower sway for stiff plants on land. The default 1.3-2 s rock
       // suits the reeds out in the water but makes a succulent look like it's bobbing.
       const sway = opts.dur && nested.querySelector('.plant-sway');
@@ -1455,11 +1456,11 @@ function _bootInner() {
       placePlant('plant1', 3300, 3050, 220, 220, 'assets/fg-plant-fern.svg'),
       placePlant('plant6', 4250, 3040, 140, 140, 'assets/fg-plant-agave.svg', { flipped: true }),
       // Left cluster, near lagoonBankLeft / boulder1-2 (shore-side, shallow).
-      placePlant('plant4', 350,  2030, 110, 116, 'assets/fg-plant-yellow-flower-stem.svg'),
+      placePlant('plant4', 350,  2030, 110, 116, 'assets/fg-plant-yellow-flower-stem.svg', { env: 'rock' }),
       // Second left cluster, around boulder6/7 out in the open water: a clump of reeds at the
       // rock's foot (it replaced the rounded bush, which didn't read as a lake plant).
-      placePlant('plant3', 690,  2250, 360, 336, 'assets/fg-plant-reeds.svg', { water: true }),
-      placePlant('plant5', 1150, 2420, 130, 130, 'assets/fg-plant-spiky-yucca.svg', { flipped: true }),
+      placePlant('plant3', 690,  2250, 360, 336, 'assets/fg-plant-reeds.svg', { env: 'water' }),
+      placePlant('plant5', 1150, 2420, 130, 130, 'assets/fg-plant-spiky-yucca.svg', { flipped: true, env: 'rock' }),
     ];
     window.__plantInstances = plantInstances;
 
@@ -1564,6 +1565,20 @@ function _bootInner() {
     // which the GPU does for free. Content drawn after the group (the painterly glow, later
     // flowers) moves to a third layer above it, so stacking order is unchanged.
     // Runs after the painterly pass (queued earlier), so the glow's clip copies still match.
+    // Plant bases (liftSways): the mask tile for each surrounding, in a 40-wide, 100-high tile
+    // (100 = the plant layer's height), opaque above the edge. n tiles span the layer.
+    const PLANT_EDGES = {
+      // U-shaped scallops, cusps up, like the waves over the pen's boat hull.
+      water: { n: 9, depth: 3.4, amp: 2.8,
+        shape: (L) => `M0 0H40V${L - 2.8}Q40 ${L + 2.8} 20 ${L + 2.8}Q0 ${L + 2.8} 0 ${L - 2.8}Z` },
+      // Blades of the ground's grass rise in front of the base; in winter a soft drift of snow.
+      ground: { n: 14, depth: 1.5,
+        shape: (L) => `M0 0H40V${L}L37 ${L - 3.6}L35 ${L}L30 ${L - 2.2}L27 ${L}L22 ${L - 4}L19 ${L}L13 ${L - 2.8}L10 ${L}L5 ${L - 3.4}L2 ${L}L0 ${L}Z`,
+        winter: (L) => `M0 0H40V${L}Q30 ${L - 2.6} 20 ${L - 1.6}Q10 ${L - 0.6} 0 ${L}Z` },
+      // An uneven crevice line in the rock.
+      rock: { n: 6, depth: 1.5,
+        shape: (L) => `M0 0H40V${L}Q34 ${L - 2} 26 ${L - 1}Q18 ${L} 12 ${L - 1.6}Q5 ${L - 2.4} 0 ${L}Z` },
+    };
     queueMicrotask(function liftSways() {
       const items = Array.from(fgFrame.querySelectorAll('.grass-clump-sway, .flower-nod'));
       if (!items.length) return;
@@ -1578,11 +1593,11 @@ function _bootInner() {
           if (/scale\(\s*-1/.test(a.getAttribute && a.getAttribute('transform') || '')) flipped = !flipped;
         }
         return { e, k: kinds[i], flipped, ok: r.width > 0 && d.width > 0 && d.height > 0,
-          w0: r.width, dw: d.width, water: kinds[i] !== 'flower-nod' && !!e.closest('[data-water]'),
+          w0: r.width, dw: d.width, env: kinds[i] !== 'flower-nod' && (e.closest('[data-env]') || {}).dataset?.env,
           ox: (r.left + r.width / 2 - d.left) / d.width * 100, oy: (r.bottom - d.top) / d.height * 100 };
       });
       const shallow = n => { const c = n.cloneNode(false); if (c.removeAttribute) c.removeAttribute('id'); return c; };
-      jobs.forEach(({ e: swayEl, k, flipped, ok, ox, oy, w0, dw, water }) => {
+      jobs.forEach(({ e: swayEl, k, flipped, ok, ox, oy, w0, dw, env }) => {
         if (!ok) { swayEl.classList.add(k); return; }   // not laid out (hidden): keep the SVG sway
         // A flower moves as its whole <g class="flower"> (its setColor/opacity hooks live there).
         const e = k === 'flower-nod' ? (swayEl.closest('.flower') || swayEl) : swayEl;
@@ -1612,44 +1627,54 @@ function _bootInner() {
         ['--dur', '--delay'].forEach(v => { const x = swayEl.style.getPropertyValue(v); if (x) d2.style.setProperty(v, x); });
         layer.after(d2);
         let last = d2;
-        if (water) {
-          // Standing in the lake (after the 'Outline Pure CSS' pen): the waterline is a wave that
-          // slides sideways. A still wrapper masks the clump below that wave, so its base goes
-          // into the real water, whatever the season's colour, and a light outline of the same
-          // wave, moving in step, is drawn along it. Thin rings spread out from the stems.
-          const N = 9;                                  // wave periods across the layer
-          const L = oy - 2.2, A = 0.9;                  // waterline and wave height, % of the layer
-          const wave = (y0, a) => { let d = `M0 ${y0}`; for (let i = 0; i < 2 * (N + 1); i++) d += ` Q${i * 20 + 10} ${y0 + (i % 2 ? a : -a)} ${(i + 1) * 20} ${y0}`; return d; };
-          const tile = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 100' preserveAspectRatio='none'><path d='M0 0H40V${L}Q30 ${L + A} 20 ${L}Q10 ${L - A} 0 ${L}Z'/></svg>`;
+        if (env) {
+          // Plant it in its surroundings. A still wrapper masks the clump below an edge shaped for
+          // where it stands; whatever is behind (water, grass, snow, rock) shows through the cut,
+          // so the edge always matches in colour through seasons and night.
+          //   water: U-shaped scallops that slide sideways, with their outline drawn along them
+          //          (after the 'Outline Pure CSS' pen's boat), and rings spreading behind the stems.
+          //   ground: blades of grass in front of the base; in winter a soft drift of snow.
+          //   rock: an uneven crevice line.
+          const E = PLANT_EDGES[env];
+          const L = oy - E.depth;                       // the edge line, % of the layer's height
+          const tileUrl = (shape) => `url("data:image/svg+xml,${encodeURIComponent(
+            `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 100' preserveAspectRatio='none'><path d='${shape(L)}'/></svg>`)}")`;
           const wrap = mkLayer();
-          wrap.classList.add('waterline');
-          wrap.style.setProperty('--wl-mask', `url("data:image/svg+xml,${encodeURIComponent(tile)}")`);
-          wrap.style.setProperty('--wl-size', `${(100 / N).toFixed(4)}% 100%`);
-          wrap.style.setProperty('--wl-to', `${(-100 / (N - 1)).toFixed(4)}%`);   // one wave to the left
+          wrap.classList.add('plant-edge', 'edge-' + env);
+          wrap.style.setProperty('--edge', tileUrl(E.shape));
+          if (E.winter) wrap.style.setProperty('--edge-winter', tileUrl(E.winter));
+          wrap.style.setProperty('--edge-size', `${(100 / E.n).toFixed(4)}% 100%`);
+          wrap.style.setProperty('--edge-to', `${(-100 / (E.n - 1)).toFixed(4)}%`);   // one tile to the left
           d2.before(wrap);
           wrap.appendChild(d2);
           Object.assign(d2.style, { left: '0', top: '0', width: '100%', height: '100%' });
-          const line = mkLayer();
-          line.classList.add('waterline-line');
-          const lw = w0 * 1.25 / dw * 100;              // the outline runs a little past the clump
-          Object.assign(line.style, { left: `calc(${line.style.left} + ${(ox - lw / 2) * parseFloat(line.style.width) / 100}%)`,
-            width: `${lw * parseFloat(line.style.width) / 100}%` });
-          // The line's strip is laid out in the wrapper's own wave units so it keeps step with the mask.
-          const band = 4 * A;
-          line.style.top = `calc(${line.style.top} + ${(L - band / 2) * parseFloat(line.style.height) / 100}%)`;
-          line.style.height = `${band * parseFloat(line.style.height) / 100}%`;
-          const vbW = (N + 1) * 40, off = (ox - lw / 2) / 100 * N * 40;
-          line.innerHTML = `<div class="wl-strip" style="--wl-to:${(-100 / (N + 1)).toFixed(4)}%;width:${(N + 1) / N * 100 / lw * 100}%;left:${-off / (N * 40) * 100 / lw * 100}%">`
-            + `<svg viewBox="0 ${L - band / 2} ${vbW} ${band}" preserveAspectRatio="none"><path d="${wave(L, A)}"/></svg></div>`;
-          wrap.after(line);
-          const rings = mkLayer();
-          rings.classList.add('water-rings');
-          rings.innerHTML = '<i></i><i></i><i></i>';
-          rings.style.setProperty('--rx', ox.toFixed(3) + '%');
-          rings.style.setProperty('--ry', L.toFixed(3) + '%');
-          rings.style.setProperty('--rw', (w0 * 0.6 / dw * 100).toFixed(3) + '%');
-          line.after(rings);
-          last = rings;
+          last = wrap;
+          if (env === 'water') {
+            const N = E.n, A = E.amp;
+            const lw = w0 * 1.3 / dw * 100;             // the outline runs a little past the clump
+            const lx = parseFloat(wrap.style.left), lwd = parseFloat(wrap.style.width);
+            const ly = parseFloat(wrap.style.top), lh = parseFloat(wrap.style.height);
+            const band = 2 * A + 1;
+            const line = mkLayer();
+            line.classList.add('waterline-line');
+            Object.assign(line.style, { left: `${lx + (ox - lw / 2) * lwd / 100}%`, width: `${lw * lwd / 100}%`,
+              top: `${ly + (L - A - 0.5) * lh / 100}%`, height: `${band * lh / 100}%` });
+            // The strip is laid out in the wrapper's own tile units so it keeps step with the mask.
+            let d = `M0 ${L - A}`;
+            for (let i = 0, x = 0; i <= N; i++, x += 40) d += `Q${x} ${L + A} ${x + 20} ${L + A}Q${x + 40} ${L + A} ${x + 40} ${L - A}`;
+            line.innerHTML = `<div class="wl-strip" style="--edge-to:${(-100 / (N + 1)).toFixed(4)}%;width:${(N + 1) / N * 100 / lw * 100}%;left:${-(ox - lw / 2) / lw * 100}%">`
+              + `<svg viewBox="0 ${L - A - 0.5} ${(N + 1) * 40} ${band}" preserveAspectRatio="none"><path d="${d}"/></svg></div>`;
+            wrap.after(line);
+            last = line;
+            // Rings go BEHIND the clump: the stems hide their far half, the near half lies on the water.
+            const rings = mkLayer();
+            rings.classList.add('water-rings');
+            rings.innerHTML = '<i></i><i></i><i></i>';
+            rings.style.setProperty('--rx', ox.toFixed(3) + '%');
+            rings.style.setProperty('--ry', L.toFixed(3) + '%');
+            rings.style.setProperty('--rw', (w0 * 0.6 / dw * 100).toFixed(3) + '%');
+            wrap.before(rings);
+          }
         }
         if (moved) last.after(d3);
       });
@@ -2209,6 +2234,7 @@ function _bootInner() {
     const prevSeason = SEASON;
     SEASON = season;
     window.__currentSeason = season;
+    document.documentElement.dataset.season = seasonNames[season] || 'spring';   // CSS: winter plant bases
 
     document.querySelectorAll('.tab').forEach(t =>
       t.setAttribute('aria-selected', String(+t.dataset.season === season)));
@@ -2441,6 +2467,7 @@ function _bootInner() {
     // Jump straight there: everything travel()/setSeason() would set, without the animation.
     SEASON = linkSeason; s = SEASON_S[linkSeason]; window.__currentSeason = linkSeason;
     const sName = seasonNames[linkSeason];
+    document.documentElement.dataset.season = sName;
     document.querySelectorAll('.tab').forEach(t => t.setAttribute('aria-selected', String(+t.dataset.season === linkSeason)));
     updateClockLabel(linkSeason);
     showViews(linkSeason);

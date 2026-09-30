@@ -279,21 +279,23 @@ html,body{margin:0;background:#0b1020;font-family:system-ui,-apple-system,sans-s
 .sway-grass-mirror{ animation: grassClumpSwayMirror var(--dur, 1.4s) cubic-bezier(.65,0,.35,1) infinite alternate; }
 @keyframes grassClumpSwayMirror{ from{ transform: skewX(-3deg); } to{ transform: skewX(4deg); } }
 .sway-flower{ animation: flowerNod var(--dur, 3.6s) ease-in-out infinite alternate; animation-delay: var(--delay, 0s); }
-/* Plants standing in the lake (scene.js liftSways): a wavy waterline, after the 'Outline Pure
-   CSS' pen. The wrapper masks the clump below a sliding wave; .waterline-line draws that wave's
-   outline, sliding in step (same period, same duration). */
-.waterline{ pointer-events:none;
-  -webkit-mask: var(--wl-mask) 0 0 / var(--wl-size) repeat-x; mask: var(--wl-mask) 0 0 / var(--wl-size) repeat-x;
-  animation: wlMask 2.6s linear infinite; }
-@keyframes wlMask{ to{ -webkit-mask-position: var(--wl-to) 0; mask-position: var(--wl-to) 0; } }
+/* Plant bases (scene.js liftSways): a still wrapper masks each swaying clump below an edge made
+   for where it stands, so whatever is behind (water, grass, snow, rock) shows through the cut.
+   Water: U scallops sliding sideways, after the 'Outline Pure CSS' pen, with .waterline-line
+   drawing their outline over the stems, in step (same period, same duration). */
+.plant-edge{ pointer-events:none;
+  -webkit-mask: var(--edge) 0 0 / var(--edge-size) repeat-x; mask: var(--edge) 0 0 / var(--edge-size) repeat-x; }
+.edge-water{ animation: edgeSlide 2.6s linear infinite; }
+@keyframes edgeSlide{ to{ -webkit-mask-position: var(--edge-to) 0; mask-position: var(--edge-to) 0; } }
+html[data-season="winter"] .edge-ground{ -webkit-mask-image: var(--edge-winter); mask-image: var(--edge-winter); }
 .waterline-line{ pointer-events:none; overflow:hidden;
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 22%, #000 78%, transparent);
   mask-image: linear-gradient(90deg, transparent, #000 22%, #000 78%, transparent); }
 .wl-strip{ position:absolute; top:0; height:100%; animation: wlSlide 2.6s linear infinite; }
 .wl-strip svg{ display:block; width:100%; height:100%; overflow:visible; }
 .wl-strip path{ fill:none; stroke:rgba(255,255,255,.75); stroke-width:1.6px; vector-effect:non-scaling-stroke; stroke-linecap:round; }
-@keyframes wlSlide{ to{ transform: translateX(var(--wl-to)); } }
-@media (prefers-reduced-motion:reduce){ .waterline, .wl-strip{ animation:none; } }
+@keyframes wlSlide{ to{ transform: translateX(var(--edge-to)); } }
+@media (prefers-reduced-motion:reduce){ .edge-water, .wl-strip{ animation:none; } }
 /* Plants standing in the lake: thin rings spread from the stems at the waterline. */
 .water-rings{ pointer-events:none; }
 .water-rings i{
