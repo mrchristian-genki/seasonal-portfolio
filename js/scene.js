@@ -623,7 +623,9 @@ function _bootInner() {
         }
         if (snowOpacity > 0.02) {
           // In a storm the snow blows sideways with the wind and each gust, like the storm rain.
-          const blow = storm * 1.6 + WIND.gust * (2.2 + storm * 2.5);
+          // A blizzard comes in spurts: a light steady drift, and the real push only in the gusts.
+          const gx = Math.max(0, (WIND.gust - WIND.base) / 0.6);   // the gust alone, over the steady breeze
+          const blow = storm * 0.3 + gx * (0.6 + storm * 2.4);
           const drift = (f, a) => {
             f.y += f.speed * dt * 60; f.x += f.speed * blow * dt * 60;
             f.driftPhase += f.driftSpeed * dt;
@@ -637,13 +639,13 @@ function _bootInner() {
           };
           if (storm > 0.02) flakes.forEach(f => drift(f, storm));
           if (storm > 0.02 && wintry > 0.5) {
-            stormFlakes.forEach(f => drift(f, storm));
+            stormFlakes.forEach(f => drift(f, storm * Math.min(1, 0.4 + gx * 0.9)));   // thickens in a gust
             // Drifting snow: streams low over the ground, strongest in a gust.
-            const g = storm * (0.25 + WIND.gust * 1.6);
+            const g = storm * (0.03 + gx * 1.5);
             if (g > 0.03) spindrift.forEach(p => {
-              p.x += p.speed * (18 + WIND.gust * 60) * dt * 60;
+              p.x += p.speed * (18 + gx * 60) * dt * 60;
               if (p.x > VW + p.len) { p.x = -p.len; p.y = 2150 + Math.random()*650; }
-              const l = p.len * (0.4 + WIND.gust * 1.4);
+              const l = p.len * (0.4 + gx * 1.4);
               ctx.strokeStyle = `rgba(255,255,255,${Math.min(0.85, p.opacity * g).toFixed(3)})`;
               ctx.lineWidth = p.r * Math.min(sx, sy); ctx.lineCap = 'round';
               ctx.beginPath(); ctx.moveTo((p.x - l)*sx, p.y*sy); ctx.lineTo(p.x*sx, (p.y - l*0.05)*sy); ctx.stroke();
@@ -2564,12 +2566,22 @@ function _bootInner() {
       const t = now / 1000;
       if (now >= nextAt && target === 0) {                          // a new gust
         const stormy = window.__storm ? window.__storm.level : 0;
-        target = (0.55 + Math.random() * 0.45) * (SEASON_GUST[SEASON] || 0.8) * (1 + stormy * (SEASON === 0 ? 1.4 : 0.9));
-        holdTo = now + 1500 + 1000 + Math.random() * 2500;
+        if (SEASON === 0 && stormy > 0.3) {
+          // Blizzard gusts: random spurts. Mostly moderate, sometimes a big one; short or long.
+          target = (0.35 + Math.pow(Math.random(), 1.8) * 1.1) * (SEASON_GUST[SEASON] || 0.8) * (1 + stormy);
+          holdTo = now + 500 + Math.random() * (Math.random() < 0.3 ? 3500 : 1400);
+        } else {
+          target = (0.55 + Math.random() * 0.45) * (SEASON_GUST[SEASON] || 0.8) * (1 + stormy * 0.9);
+          holdTo = now + 1500 + 1000 + Math.random() * 2500;
+        }
         WIND.target = WIND.base + target * 0.6;
       }
-      if (target > 0 && now > holdTo) { target = 0; WIND.target = WIND.base; nextAt = now + (6000 + Math.random() * 8000) * (window.__storm && window.__storm.on ? (SEASON === 0 ? 0.2 : 0.35) : 1); }
-      const rateUp = target > gust ? 0.9 : 0.55;                   // builds a bit faster than it dies
+      if (target > 0 && now > holdTo) { target = 0; WIND.target = WIND.base; nextAt = now + (window.__storm && window.__storm.on
+          ? (SEASON === 0 ? (Math.random() < 0.55 ? 600 + Math.random() * 2400 : 5000 + Math.random() * 8000)   // bursts, then lulls
+            : (6000 + Math.random() * 8000) * 0.35)
+          : 6000 + Math.random() * 8000); }
+      const blizzard = SEASON === 0 && window.__storm && window.__storm.on;
+      const rateUp = target > gust ? (blizzard ? 2.2 : 0.9) : (blizzard ? 0.45 : 0.55);   // builds faster than it dies; a blizzard gust hits hard
       gust += (target - gust) * Math.min(1, dt * rateUp * 1.6);
       if (gust < 0.004 && target === 0) { if (gust) { gust = 0; write(0, t); } return; }
       write(gust, t);
