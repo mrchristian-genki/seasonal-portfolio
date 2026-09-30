@@ -924,22 +924,14 @@ function buildWaterShimmer(wrap, w, h, opts) {
 
   const durScale = h / 550; // preserves original fall speed regardless of panel height
   let precip = 'none', spawnTimer = null;
+  // PERF: the scene's own rain and snow canvas already draws the falling drops and flakes, so
+  // the lake draws only where they land: the rings. (It used to draw a second falling streak or
+  // flake for each one.)
   function spawnDrop() {
+    if (document.hidden) return;                  // a hidden tab draws nothing: don't pile up rings for later
     const isSnow = precip === 'snow';
-    const x = waterXRange[0] + Math.random() * (waterXRange[1] - waterXRange[0]);
-    const landY = waterY + Math.random() * (h - waterY) * 0.75;
-    const t0 = performance.now();
-    if (isSnow) {
-      const startY = -5 - Math.random() * 20;
-      const dur = (1.8 + Math.random() * 1.2) * durScale * 1000;
-      parts.push({ k: 'dropSnow', x, y: startY, r: 4.8 + Math.random() * 4.2, dist: landY - startY,
-        sway: 8 + Math.random() * 10, t0, dur, land: () => spawnRipple(x, true) });
-    } else {
-      const startY = -15 - Math.random() * 20;
-      const dur = (0.32 + Math.random() * 0.12) * durScale * 1000;
-      parts.push({ k: 'dropRain', x, y: startY, dist: landY - startY, t0, dur, land: () => spawnRipple(x + 2, false) });
-    }
-    wake();
+    const rx = waterXRange[0] + Math.random() * (waterXRange[1] - waterXRange[0]);
+    spawnRipple(isSnow ? rx : rx + 2, isSnow);
   }
   // Canvas output. map = { x0, y0, s }: panel-local (lx, ly) sits at canvas CSS px
   // (x0 + lx * s, y0 + ly * s); scene.js supplies it and keeps it current on resize.
@@ -948,7 +940,7 @@ function buildWaterShimmer(wrap, w, h, opts) {
   function draw(now) {
     raf = 0;
     if (!cvs || !map) return;
-    const dpr = window.devicePixelRatio || 1;
+    const dpr = Math.min(1.5, window.devicePixelRatio || 1);   // thin rings: 1.5x is plenty
     const W = Math.round(cvs.clientWidth * dpr), H = Math.round(cvs.clientHeight * dpr);
     if (cvs.width !== W || cvs.height !== H) { cvs.width = W; cvs.height = H; }
     ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -986,12 +978,12 @@ function buildWaterShimmer(wrap, w, h, opts) {
   function attachCanvas(canvas, m) { cvs = canvas; ctx = canvas.getContext('2d'); map = m; wake(); }
   function setCanvasMap(m) { map = m; wake(); }
 
-  // Spawn intervals (rain 35ms, snow 140ms) are tuned to scene.js's wide waterXRange (~1420
+  // Spawn intervals (rain 70ms, snow 280ms; were 35/140 when each also drew its own falling drop) are tuned to scene.js's wide waterXRange (~1420
   // units): slower reads sparse over that width, much faster reads as a rainstorm.
   function setPrecip(p) {
     precip = p;
     if (spawnTimer) clearInterval(spawnTimer);
-    if (p !== 'none') spawnTimer = setInterval(spawnDrop, p === 'rain' ? 35 : 140);
+    if (p !== 'none') spawnTimer = setInterval(spawnDrop, p === 'rain' ? 70 : 280);
   }
 
   setWind(0);

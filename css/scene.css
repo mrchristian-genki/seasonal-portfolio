@@ -604,14 +604,6 @@ html.night-page .hero-swell{ background: linear-gradient(rgba(12,18,32,.35), rgb
 }
 @media (prefers-reduced-motion:reduce){ .copy-wx{ display:none; } }
 
-/* Light snow (scene.js): three depths of soft flakes, one element each, sliding down one tile a
-   loop inside a slowly swaying wrapper. Opacity is the season's snow level, lowered in a storm. */
-.light-snow{ position:absolute; inset:0; overflow:hidden; pointer-events:none; }
-.ls-sway{ position:absolute; inset:0 -4%; animation: lsSway 9s ease-in-out infinite alternate; }
-.ls-layer{ position:absolute; left:0; right:0; background-repeat:repeat; animation: lsFall 30s linear infinite; }
-@keyframes lsFall{ from{ transform: translateY(0); } to{ transform: translateY(var(--tile)); } }
-@keyframes lsSway{ from{ transform: translateX(-1.2%); } to{ transform: translateX(1.2%); } }
-@media (prefers-reduced-motion:reduce){ .ls-sway, .ls-layer{ animation:none; } }
 
 /* Weather on the animals in a storm (wildlife.js weatherOnActor): flakes in winter, rain beads
    and drips otherwise, inside the animal's box so they travel with it. */

@@ -331,7 +331,7 @@
         box.appendChild(f);
         f.animate(kf, { duration: T, iterations: Infinity, delay: -Math.random() * T });
       };
-      const n = Math.max(8, Math.min(30, Math.round(H / 22))), sz = Math.min(10, 4 + H / 140);
+      const n = Math.round(Math.max(8, Math.min(30, H / 22)) * (window.__smallScreen ? 0.5 : 1)), sz = Math.min(10, 4 + H / 140);
       if (kind === 'snow' && tops.length) {
         for (let i = 0; i < n; i++) { const [x, y] = any(tops), w = sz * (0.7 + Math.random() * 0.6);
           add('wl-flake', x, y, w, w, WX_FLAKE(w, 40 + Math.random() * 110, (Math.random() - 0.5) * 40)); }
@@ -1247,8 +1247,9 @@
   // the top effects plate (ungraded, so night doesn't dim them), drawn at ~30 fps and only while
   // the night gate is open (window.__moonEligible); by day it's hidden and its buffer released.
   // Each light is a pre-drawn glow sprite blitted with drawImage (no shadowBlur, cheap in Safari).
-  // Real fireflies are a spring/summer thing; fall gets a few late amber ones and winter a handful
-  // of icy "snow sparks" so every season has a little magic at night.
+  // Fireflies only come out on calm, dry nights: spring and summer, and never in a storm (fall
+  // rains and winter snows, so they stay away then). They fade out as a storm rolls in and back
+  // once it passes; while they're away the canvas is released and nothing is drawn.
   (function fireflies() {
     const host = $('rainCanvas') ? $('rainCanvas').parentNode : $('plateFx');
     if (!host || reduced) return;
@@ -1282,10 +1283,14 @@
         z, x: rand(z[0], z[2]), y: rand(z[1], z[3]), vx: rand(-14, 14), vy: rand(-6, 6),
         ph: rand(0, 20), per: rand(2.2, 4.5), on: rand(0.35, 0.6), size: rand(0.8, 1.25) }; });
     }
-    let last = 0, raf = 0;
+    let last = 0, raf = 0, calm = 0;
     function draw(now) {
       raf = requestAnimationFrame(draw);
-      const gate = window.__moonEligible || 0;
+      const st = window.__storm, sn0 = season();
+      const calmTarget = (sn0 === 'spring' || sn0 === 'summer') && !(st && (st.on || st.level > 0.05)) ? 1 : 0;
+      calm += (calmTarget - calm) * 0.03;
+      if (calm < 0.01 && !calmTarget) calm = 0;
+      const gate = (window.__moonEligible || 0) * calm;
       if (gate < 0.02 || document.hidden) { if (cv.width > 1) { cv.width = cv.height = 1; } return; }
       if (now - last < 33) return;
       const dt = Math.min(0.1, (now - last) / 1000); last = now;

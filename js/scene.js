@@ -448,33 +448,6 @@ function _bootInner() {
     const fxPlateForRain = $('plateFx') || plate;
     fxPlateForRain.appendChild(rainCanvas);
 
-    // LIGHT SNOW (winter, when it isn't storming): soft, glowing flakes drifting down at three
-    // depths, after the 'Snow (pure CSS)' pen's look. That pen uses 200 flake divs, each with its
-    // own @keyframes, and a drop-shadow filter on the whole page (a full repaint every frame), so
-    // here each depth is ONE element: a tile of flakes (glow drawn into the image, no filter)
-    // repeated down the plate and slid by one tile height on a loop, inside a wrapper that sways.
-    // 3 elements, transform-only animation, no per-frame JS. The canvas flakes are now storm-only.
-    const lightSnow = document.createElement('div');
-    lightSnow.className = 'light-snow';
-    lightSnow.style.opacity = '0';
-    [[300, 30, 0.7, 1.5, 44], [440, 18, 1.4, 2.6, 30], [620, 10, 2.4, 4.2, 20]].forEach(([T, n, r0, r1, dur], k) => {
-      let g = '';
-      for (let i = 0; i < n; i++) {
-        const r = r0 + Math.random() * (r1 - r0), m = r * 4;
-        const x = m + Math.random() * (T - 2 * m), y = m + Math.random() * (T - 2 * m), o = 0.45 + Math.random() * 0.55;
-        g += `<circle cx='${x.toFixed(1)}' cy='${y.toFixed(1)}' r='${(r * 3).toFixed(1)}' fill='url(%23g)' opacity='${(o * 0.6).toFixed(2)}'/>`
-          + `<circle cx='${x.toFixed(1)}' cy='${y.toFixed(1)}' r='${r.toFixed(1)}' fill='white' opacity='${o.toFixed(2)}'/>`;
-      }
-      const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='${T}' height='${T}'><defs><radialGradient id='g'><stop offset='0' stop-color='white' stop-opacity='.9'/><stop offset='1' stop-color='white' stop-opacity='0'/></radialGradient></defs>${g}</svg>`;
-      const sway = document.createElement('div'); sway.className = 'ls-sway';
-      sway.style.animationDuration = (7 + k * 3) + 's';
-      const layer = document.createElement('div'); layer.className = 'ls-layer';
-      Object.assign(layer.style, { backgroundImage: `url("data:image/svg+xml,${svg.replace(/#/g, '%23').replace(/"/g, "'")}")`,
-        backgroundSize: `${T}px ${T}px`, top: `-${T}px`, height: `calc(100% + ${T}px)`, animationDuration: dur + 's' });
-      layer.style.setProperty('--tile', T + 'px');
-      sway.appendChild(layer); lightSnow.appendChild(sway);
-    });
-    fxPlateForRain.insertBefore(lightSnow, rainCanvas);
 
     // ── CLOUD FAMILIES (cumulus/cirrus/altocumulus/cumulonimbus) ───────────
     // Sole cloud system (old generic makeCloud() clouds removed). Per-season mix comes from
@@ -510,24 +483,28 @@ function _bootInner() {
       x: Math.random()*VW, y: Math.random()*VH,
       len: 46+Math.random()*44, speed: 30+Math.random()*16, opacity: 0.35+Math.random()*0.4
     }));
-    // Winter storm: a second, denser pool of flakes (a blizzard), drawn on top while it blows.
-    const stormFlakes = Array.from({length:320}, () => ({
-      x: Math.random()*VW, y: Math.random()*VH,
-      r: 7+Math.random()*10, speed: 7+Math.random()*7, opacity: 0.5+Math.random()*0.45,
-      driftPhase: Math.random()*Math.PI*2, driftSpeed: 1+Math.random()*1.2, driftAmp: 20+Math.random()*30,
-    }));
-    // Winter storm: snow blown low across the ground in the gusts (drifting snow), as fast, short
-    // streaks near the bottom of the scene.
-    const spindrift = Array.from({length:220}, () => ({
-      x: Math.random()*VW, y: 2150 + Math.random()*650, len: 60+Math.random()*140,
-      speed: 0.7+Math.random()*0.6, opacity: 0.2+Math.random()*0.35, r: 6+Math.random()*12,
-    }));
-    // Snow: separate pool and motion (slow fall + side drift), winter only.
-    const flakes = Array.from({length:140}, () => ({
-      x: Math.random()*VW, y: Math.random()*VH,
-      r: 5+Math.random()*7, speed: 4+Math.random()*5, opacity: 0.55+Math.random()*0.4,
-      driftPhase: Math.random()*Math.PI*2, driftSpeed: 0.6+Math.random()*0.8, driftAmp: 15+Math.random()*25,
-    }));
+    // Snow: ONE pool at three depths (far: small, slow, faint; near: bigger, faster), drawn
+    // from a pre-made soft glow sprite (the look of the 'Snow (pure CSS)' pen, without its 200
+    // divs). Everyday winter snow uses the first part of the pool; a storm fades in the rest.
+    // Gusts blow all of it sideways: gently in ordinary snow, in hard bursts in a storm.
+    const SNOW_DEPTH = [{ r: [3, 5], v: [2.6, 3.6], o: [0.45, 0.7] }, { r: [5, 8], v: [4, 5.5], o: [0.6, 0.85] }, { r: [8, 12], v: [5.5, 7.5], o: [0.75, 0.95] }];
+    const flakes = Array.from({length:1000}, (_, i) => {
+      const dep = i % 10 < 5 ? 0 : i % 10 < 8 ? 1 : 2;   // half far, 30% middle, 20% near
+      const d = SNOW_DEPTH[dep], rr = (a) => a[0] + Math.random() * (a[1] - a[0]);
+      return { x: Math.random()*VW, y: Math.random()*VH, r: rr(d.r), speed: rr(d.v), opacity: rr(d.o), depth: dep,
+        driftPhase: Math.random()*Math.PI*2, driftSpeed: 0.5+Math.random()*0.8, driftAmp: 12+Math.random()*22 };
+    });
+    let LIGHT_SNOW = 520;                                     // flakes in everyday snow; a storm uses up to 1000
+    // Phones: storms use about half the extra drops and flakes (plenty at that size, and it keeps
+    // the compositor light). Read once; a phone doesn't become a desktop.
+    const SMALL = Math.min(innerWidth, innerHeight) < 600 || innerWidth < 700;
+    window.__smallScreen = SMALL;
+    if (SMALL) LIGHT_SNOW = 280;
+    const flakeSprite = (() => { const c = document.createElement('canvas'); c.width = c.height = 32;
+      const x = c.getContext('2d'), g = x.createRadialGradient(16, 16, 0, 16, 16, 16);
+      g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(0.35, 'rgba(255,255,255,.9)');
+      g.addColorStop(0.6, 'rgba(255,255,255,.35)'); g.addColorStop(1, 'rgba(255,255,255,0)');
+      x.fillStyle = g; x.fillRect(0, 0, 32, 32); return c; })();
     // Leaf-fall (fall only): pre-rasterized PNG sprites (assets/leaves/) drawn on the rain/snow
     // canvas, rotating + swaying. No SVG filters (rule: no runtime SVG filters in steady state).
     const LEAF_SPRITE_NAMES = ['leaf-aspen-green','leaf-aspen-chartreuse','leaf-aspen-gold','leaf-aspen-orange','leaf-maple-red'];
@@ -592,10 +569,7 @@ function _bootInner() {
           window.__waterPrecipState = target;
         }
       }
-      // Light snow is the CSS layers; the canvas draws snow only in a storm.
-      const ls = (snowOpacity * (1 - storm * 0.7)).toFixed(2);
-      if (lightSnow.__o !== ls) { lightSnow.__o = ls; lightSnow.style.opacity = ls; }
-      const active = Math.max(rainOpacity, snowOpacity * Math.min(1, storm * 3), leafOpacity);
+      const active = Math.max(rainOpacity, snowOpacity, leafOpacity);
       rainCanvas.style.opacity = active;
       if (active > 0.05) {
         const rect = plate.getBoundingClientRect();
@@ -610,47 +584,46 @@ function _bootInner() {
         const sx = rainCanvas.width/VW, sy = rainCanvas.height/VH;
         if (rainOpacity > 0.02) {
           // Rain leans with the wind: a steady lean in a storm plus each gust (#9 random rain).
+          // Batched: drops are bucketed by brightness and each bucket is one path, one stroke.
           const slant = 0.04 + storm * 0.3 + WIND.gust * 0.35;
-          const fall = (d, w) => {
+          const buckets = [[], [], [], []];
+          const fall = (d, o) => {
             d.y += d.speed * dt * 60; d.x += d.speed * slant * dt * 60;
             if (d.y > VH) { d.y = -d.len; d.x = Math.random()*VW*1.2 - VW*0.2; }
             if (d.x > VW) d.x -= VW;
-            ctx.lineWidth = w; ctx.beginPath();
-            ctx.moveTo(d.x*sx, d.y*sy); ctx.lineTo((d.x+d.len*slant)*sx, (d.y+d.len)*sy); ctx.stroke();
+            buckets[Math.min(3, Math.floor(o * 4))].push(d);
           };
-          drops.forEach(d => { ctx.strokeStyle = `rgba(180,210,240,${d.opacity})`; fall(d, 2.8); });
-          if (storm > 0.02) stormDrops.forEach(d => { ctx.strokeStyle = `rgba(200,220,240,${(d.opacity * storm).toFixed(3)})`; fall(d, 3.4); });
+          drops.forEach(d => fall(d, d.opacity));
+          if (storm > 0.02) for (let i = 0, m = SMALL ? 130 : stormDrops.length; i < m; i++) fall(stormDrops[i], stormDrops[i].opacity * storm);
+          ctx.lineWidth = 3; ctx.strokeStyle = 'rgb(185,212,240)';
+          buckets.forEach((list, k) => {
+            if (!list.length) return;
+            ctx.globalAlpha = (k + 0.5) / 4;
+            ctx.beginPath();
+            list.forEach(d => { ctx.moveTo(d.x*sx, d.y*sy); ctx.lineTo((d.x+d.len*slant)*sx, (d.y+d.len)*sy); });
+            ctx.stroke();
+          });
+          ctx.globalAlpha = 1;
         }
         if (snowOpacity > 0.02) {
-          // In a storm the snow blows sideways with the wind and each gust, like the storm rain.
-          // A blizzard comes in spurts: a light steady drift, and the real push only in the gusts.
-          const gx = Math.max(0, (WIND.gust - WIND.base) / 0.6);   // the gust alone, over the steady breeze
-          const blow = storm * 0.3 + gx * (0.6 + storm * 2.4);
-          const drift = (f, a) => {
+          // One snowfall. Gusts blow it sideways (only the gust above the steady breeze counts):
+          // gently in ordinary snow, in hard random bursts in a storm, which also thickens it.
+          const gx = Math.max(0, (WIND.gust - WIND.base) / 0.6);
+          const blow = storm * 0.3 + gx * (0.9 + storm * 2.1);
+          const n = Math.round(LIGHT_SNOW + ((SMALL ? 480 : flakes.length) - LIGHT_SNOW) * Math.min(1, storm * Math.min(1, 0.7 + gx * 0.6)));
+          const k = Math.min(sx, sy);
+          for (let i = 0; i < n; i++) {
+            const f = flakes[i];
             f.y += f.speed * dt * 60; f.x += f.speed * blow * dt * 60;
             f.driftPhase += f.driftSpeed * dt;
-            if (f.y > VH) { f.y = -f.r * 2; f.x = Math.random()*VW*1.4 - VW*0.4; }
+            // Back in at the top; upwind only as far as the wind will carry it into view.
+            if (f.y > VH) { const up = Math.min(0.5, blow * 0.25); f.y = -f.r * 2; f.x = Math.random()*VW*(1 + up) - VW*up; }
             if (f.x > VW + 60) f.x -= VW + 120;
-            const dx = Math.sin(f.driftPhase) * f.driftAmp;
-            ctx.fillStyle = `rgba(255,255,255,${(f.opacity * a).toFixed(3)})`;
-            ctx.beginPath();
-            ctx.arc((f.x+dx)*sx, f.y*sy, f.r*Math.min(sx,sy), 0, Math.PI*2);
-            ctx.fill();
-          };
-          if (storm > 0.02) flakes.forEach(f => drift(f, storm));
-          if (storm > 0.02 && wintry > 0.5) {
-            stormFlakes.forEach(f => drift(f, storm * Math.min(1, 0.4 + gx * 0.9)));   // thickens in a gust
-            // Drifting snow: streams low over the ground, strongest in a gust.
-            const g = storm * (0.03 + gx * 1.5);
-            if (g > 0.03) spindrift.forEach(p => {
-              p.x += p.speed * (18 + gx * 60) * dt * 60;
-              if (p.x > VW + p.len) { p.x = -p.len; p.y = 2150 + Math.random()*650; }
-              const l = p.len * (0.4 + gx * 1.4);
-              ctx.strokeStyle = `rgba(255,255,255,${Math.min(0.85, p.opacity * g).toFixed(3)})`;
-              ctx.lineWidth = p.r * Math.min(sx, sy); ctx.lineCap = 'round';
-              ctx.beginPath(); ctx.moveTo((p.x - l)*sx, p.y*sy); ctx.lineTo(p.x*sx, (p.y - l*0.05)*sy); ctx.stroke();
-            });
+            const sz = f.r * 3.4 * k, px = (f.x + Math.sin(f.driftPhase) * f.driftAmp) * sx, py = f.y * sy;
+            ctx.globalAlpha = Math.min(1, f.opacity * 1.25) * (i < LIGHT_SNOW ? 1 : storm);
+            ctx.drawImage(flakeSprite, px - sz / 2, py - sz / 2, sz, sz);
           }
+          ctx.globalAlpha = 1;
         }
         if (leafOpacity > 0.02) {
           const leafScale = Math.min(sx, sy);
@@ -2683,7 +2656,7 @@ function _bootInner() {
       if (btn) { const b = btn.getBoundingClientRect(); bands.push({ t: b.top - box.top + 4, b: b.bottom - box.top - 2, l: b.left - box.left + 8, r: b.right - box.left - 8, btn: true }); }
       if (!bands.length) return;
       const SLOW = [14, 26], FAST = 320, FALL = 520;
-      for (let n = 0; n < 12; n++) {
+      for (let n = 0, N = window.__smallScreen ? 7 : 12; n < N; n++) {
         const i0 = Math.floor(Math.pow(Math.random(), 1.6) * bands.length);   // most start near the top
         const s0 = bands[i0], x = s0.l + 6 + Math.random() * Math.max(1, s0.r - s0.l - 12);
         const path = bands.slice(i0).filter(b => x >= b.l && x <= b.r);
@@ -2738,12 +2711,12 @@ function _bootInner() {
       if (snow) {
         // Flakes drift down through the copy and stick where they land: on a letter's top edge
         // or the top of the button, then melt away slowly.
-        const spots = e ? pick(e.top, 40) : [];
+        const spots = e ? pick(e.top, window.__smallScreen ? 22 : 40) : [];
         if (btn) { const b = btn.getBoundingClientRect();
-          for (let i = 0; i < 10; i++) spots.push([b.left - box.left + 10 + Math.random() * (b.width - 20), b.top - box.top + 1]); }
+          for (let i = 0, m = window.__smallScreen ? 6 : 10; i < m; i++) spots.push([b.left - box.left + 10 + Math.random() * (b.width - 20), b.top - box.top + 1]); }
         spots.forEach(([x, y]) => stickFlake(wx, x, y));
       } else if (e) {
-        pick(e.face, 18).forEach(([x, y]) => { const w = 5 + Math.random() * 5; dot(wx, 'wx-bead', x, y + w / 2, w, w, 6 + Math.random() * 6); });
+        pick(e.face, window.__smallScreen ? 10 : 18).forEach(([x, y]) => { const w = 5 + Math.random() * 5; dot(wx, 'wx-bead', x, y + w / 2, w, w, 6 + Math.random() * 6); });
       }
       if (!snow) runDrops(wx, view, box, h1, btn);
       if (btn) {
@@ -2769,10 +2742,10 @@ function _bootInner() {
       st.level += ((st.on ? 1 : 0) - st.level) * Math.min(1, dt * 0.45);
       const op = st.level.toFixed(3);
       const winter = SEASON === 0;
-      shade.style.opacity = op;
+      if (shade.__o !== op) { shade.__o = op; shade.style.opacity = op; }
       if (now - (copyWx.t || 0) > 250) { copyWx.t = now; copyWeather(st.level); }
       if (st.level > 0.3 && !winter && now > splashT) {          // fat drops into the lake
-        splashT = now + 180 + Math.random() * 420;
+        splashT = now + 350 + Math.random() * 650;
         if (window.__dripDrop) window.__dripDrop(700 + Math.random() * 3200, 1900 + Math.random() * 520);
       }
       if (st.level > 0.6 && !reduced && now > boltT) {             // lightning, now and then
