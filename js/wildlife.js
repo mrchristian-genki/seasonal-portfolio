@@ -390,9 +390,11 @@
   // shoulders rise up out of the bottom-left corner, nose toward the button.
   // Shy: they stop close to the left edge, part of the body still off-frame, flinch back toward
   // it now and then, and dart away left when they go.
-  const LEFT = { x0: -1300, spot: [70, 230], y: 3380, rise: 700,
-    size: { fox: 1250, hare: 1100, chipmunk: 1150, squirrel: 1200 },
-    feet: { chipmunk: 3120, squirrel: 3180 },            // squat bodies: stand higher so the face clears the wave
+  // Low on the near shore and zoomed in: feet well below the frame, so the head and neck fill
+  // the bottom-left corner, looking up at the button.
+  const LEFT = { x0: -1900, spot: [60, 220], y: 3900, rise: 1000,
+    size: { fox: 1750, hare: 1550, chipmunk: 1600, squirrel: 1650 },
+    feet: { chipmunk: 3520, squirrel: 3580 },            // squat bodies: stand higher so the face clears the wave
     move: { fox: 'walk', hare: 'hop', chipmunk: 'pop', squirrel: 'pop' } };
   async function leftVisit(v, id, steps) {
     const how = LEFT.move[id], x = rand(LEFT.spot[0], LEFT.spot[1]), y = LEFT.feet[id] || LEFT.y;
@@ -406,6 +408,9 @@
       if (how === 'walk') walking(a, true);
       await v.move(a, x, y, how === 'hop' ? a.c.travelSpeed() * a.w : 160, how === 'walk' ? (t, now) => -3 * Math.abs(Math.sin(now / 300)) : null);
     }
+    // Look up at the button: tip the head and shoulders up a little (nose up, toward the right).
+    a.c.svg.style.transition = 'transform 1.2s ease-in-out';
+    a.tilt(-rand(6, 10));
     const flinchAt = Math.floor(rand(1, steps.length));   // a nervous start between two of the steps
     for (let i = 0; i < steps.length; i++) {
       const [b, t] = steps[i];
@@ -419,6 +424,7 @@
   }
   async function leftExit(v) {
     const a = v.actors[0]; if (!a) return;
+    a.tilt(0);
     // Pop away: turn and dart off the left edge, fast.
     a.el.style.setProperty('--fade', '0.9s');
     a.el.style.transitionTimingFunction = 'ease-in';
