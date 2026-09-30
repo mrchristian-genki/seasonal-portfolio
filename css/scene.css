@@ -576,12 +576,25 @@ html.night-page .hero-swell{ background: linear-gradient(rgba(12,18,32,.35), rgb
 .storm-flash{ background: rgba(235,242,255,.85); }
 .storm-flash.on{ animation: bolt 1.1s ease-out; }
 @keyframes bolt{ 0%{opacity:0} 4%{opacity:.8} 9%{opacity:.1} 14%{opacity:.6} 100%{opacity:0} }
-/* Winter storm: frost over the corners and edges of the glass, building slowly (--fr, 0..1,
-   written by the storm loop) and clear in the middle so the scene still reads. */
-.storm-frost{ background-size:100% 100%; --fr:0;
-  box-shadow: inset 0 0 5vw rgba(235,244,255,.42);
-  -webkit-mask-image: radial-gradient(ellipse 80% 75% at 50% 45%, transparent calc(78% - 30% * var(--fr)), #000 calc(100% - 6% * var(--fr)));
-  mask-image: radial-gradient(ellipse 80% 75% at 50% 45%, transparent calc(78% - 30% * var(--fr)), #000 calc(100% - 6% * var(--fr))); }
+/* Winter storm: the glass fogs up in the corners (scene.js). Each corner panel blurs the scene
+   behind it under a light haze and a faint mottled frost texture, masked to grow from its corner
+   as --fr (0..1, written by the storm loop) rises. */
+.storm-frost{ --fr:0; }
+.storm-frost i{ position:absolute; width:36%; height:46%; display:block;
+  -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px);
+  background: var(--tex) 0 0 / 320px 320px, rgba(236,243,252,.16); }
+.frost-tl{ left:0; top:0; }
+.frost-tr{ right:0; top:0; }
+.frost-bl{ left:0; bottom:0; }
+.frost-br{ right:0; bottom:0; }
+.frost-tl{ -webkit-mask-image: radial-gradient(farthest-corner at 0 0, #000 calc(5% * var(--fr)), transparent calc(58% * var(--fr) + .1%));
+                   mask-image: radial-gradient(farthest-corner at 0 0, #000 calc(5% * var(--fr)), transparent calc(58% * var(--fr) + .1%)); }
+.frost-tr{ -webkit-mask-image: radial-gradient(farthest-corner at 100% 0, #000 calc(5% * var(--fr)), transparent calc(58% * var(--fr) + .1%));
+                   mask-image: radial-gradient(farthest-corner at 100% 0, #000 calc(5% * var(--fr)), transparent calc(58% * var(--fr) + .1%)); }
+.frost-bl{ -webkit-mask-image: radial-gradient(farthest-corner at 0 100%, #000 calc(5% * var(--fr)), transparent calc(58% * var(--fr) + .1%));
+                   mask-image: radial-gradient(farthest-corner at 0 100%, #000 calc(5% * var(--fr)), transparent calc(58% * var(--fr) + .1%)); }
+.frost-br{ -webkit-mask-image: radial-gradient(farthest-corner at 100% 100%, #000 calc(5% * var(--fr)), transparent calc(58% * var(--fr) + .1%));
+                   mask-image: radial-gradient(farthest-corner at 100% 100%, #000 calc(5% * var(--fr)), transparent calc(58% * var(--fr) + .1%)); }
 
 /* Storm weather on the page copy (scene.js copyWeather): rain beads on the headline and button
    that drip off the bottom edges; in winter, snow building up on the letters and the button top,

@@ -2615,29 +2615,17 @@ function _bootInner() {
     if (!fx) return st;
     const shade = document.createElement('div'); shade.className = 'storm-shade';
     const flash = document.createElement('div'); flash.className = 'storm-flash';
-    // Winter: frost creeps in over the corners and edges of the glass. Fern-like
-    // ice crystals drawn once into an SVG background, masked to the edges, faded by the storm.
-    const frost = document.createElement('div'); frost.className = 'storm-frost';
-    frost.style.backgroundImage = `url("data:image/svg+xml,${encodeURIComponent(frostSvg())}")`;
-    function frostSvg() {
-      // Many small, feathery crystals in a band along the edges (not long lines across), faint.
-      let d = '';
-      const branch = (x, y, a, len, depth) => {
-        const x2 = x + Math.cos(a) * len, y2 = y + Math.sin(a) * len;
-        d += `M${x.toFixed(0)} ${y.toFixed(0)}L${x2.toFixed(0)} ${y2.toFixed(0)}`;
-        if (depth > 0) for (let k = 1; k <= 2; k++) {
-          const t = k / 3, bx = x + (x2 - x) * t, by = y + (y2 - y) * t;
-          branch(bx, by, a + 0.6, len * 0.4, depth - 1); branch(bx, by, a - 0.6, len * 0.4, depth - 1);
-        }
-      };
-      for (let i = 0; i < 170; i++) {
-        const e = i % 4, u = Math.random(), inset = Math.pow(Math.random(), 2) * 110;
-        const [x, y, a] = e === 0 ? [u * 1600, inset, Math.PI / 2] : e === 1 ? [u * 1600, 900 - inset, -Math.PI / 2]
-          : e === 2 ? [inset, u * 900, 0] : [1600 - inset, u * 900, Math.PI];
-        branch(x, y, a + (Math.random() - 0.5) * 2.4, 14 + Math.random() * 30, 2);
-      }
-      return `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900' preserveAspectRatio='none'><path d='${d}' stroke='white' stroke-opacity='.45' stroke-width='1.8' fill='none' stroke-linecap='round'/></svg>`;
-    }
+    // Winter: the glass fogs up in the corners, slowly, with a faint frost pattern. Four small
+    // corner panels, each blurring the scene behind it under a light white haze (a frosted-glass
+    // backdrop, kept to the corners so it stays cheap), masked to grow from its corner as the
+    // frost builds (--fr). The pattern is a mottled ice texture drawn once as an image.
+    const frost = document.createElement('div'); frost.className = 'storm-frost'; frost.style.display = 'none';
+    const frostTex = `url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='320' height='320'><filter id='f' x='0' y='0'><feTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' seed='7' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1.6 -.95'/></filter><filter id='m' x='0' y='0'><feTurbulence type='fractalNoise' baseFrequency='.025' numOctaves='4' seed='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1.4 -.55'/></filter><rect width='320' height='320' filter='url(%23m)'/><rect width='320' height='320' filter='url(%23f)'/></svg>`).replace(/%2523/g, '%23')}")`;
+    ['tl', 'tr', 'bl', 'br'].forEach(c => {
+      const k = document.createElement('i'); k.className = 'frost-' + c;
+      k.style.setProperty('--tex', frostTex);
+      frost.appendChild(k);
+    });
     fx.append(shade, flash, frost);
 
     // Weather on the page copy: while a storm blows, rain beads sit on the headline's letters
@@ -2780,7 +2768,8 @@ function _bootInner() {
       frostLv = winter && st.on ? Math.max(frostLv, Math.min(1, (now - since - 6000) / 45000))   // by the clock, any frame rate
         : Math.max(0, frostLv - realDt / 15);
       shade.style.opacity = op;
-      if (now - frostT > 250) { frostT = now; frost.style.opacity = (frostLv * 0.9).toFixed(3); frost.style.setProperty('--fr', frostLv.toFixed(3)); }
+      if (now - frostT > 250) { frostT = now; frost.style.opacity = Math.min(1, frostLv * 1.5).toFixed(3); frost.style.setProperty('--fr', frostLv.toFixed(3));
+        frost.style.display = frostLv > 0 ? '' : 'none'; }   // no backdrop blur at all until it frosts
       if (now - (copyWx.t || 0) > 250) { copyWx.t = now; copyWeather(st.level); }
       if (st.level > 0.3 && !winter && now > splashT) {          // fat drops into the lake
         splashT = now + 180 + Math.random() * 420;
