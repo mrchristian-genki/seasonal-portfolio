@@ -570,19 +570,18 @@ html.night-page .hero-swell{ background: linear-gradient(rgba(12,18,32,.35), rgb
 @media (prefers-reduced-motion:reduce){ .hero::after, .hero-swell{ animation:none; } }
 
 /* Storm (scene.js window.__storm): a darker sky, a lightning flash now and then, and frost on
-   the 'camera glass' in winter. Opacity is
-   the storm's eased level, written by its loop. */
+   the 'camera glass' in winter. Opacity is the storm's eased level, written by its loop. */
 .storm-shade, .storm-flash, .storm-frost{ position:absolute; inset:0; pointer-events:none; opacity:0; }
 .storm-shade{ background: linear-gradient(rgba(28,36,52,.55), rgba(28,36,52,.2) 60%, rgba(28,36,52,.1)); }
 .storm-flash{ background: rgba(235,242,255,.85); }
 .storm-flash.on{ animation: bolt 1.1s ease-out; }
 @keyframes bolt{ 0%{opacity:0} 4%{opacity:.8} 9%{opacity:.1} 14%{opacity:.6} 100%{opacity:0} }
-/* Winter storm: frost over the corners and edges of the glass (ice ferns + a white haze),
-   clear in the middle so the scene still reads. */
-.storm-frost{ background-size:100% 100%;
-  box-shadow: inset 0 0 6vw rgba(235,244,255,.55), inset 0 0 1.5vw rgba(255,255,255,.35);
-  -webkit-mask-image: radial-gradient(ellipse 75% 70% at 50% 45%, transparent 45%, #000 95%);
-  mask-image: radial-gradient(ellipse 75% 70% at 50% 45%, transparent 45%, #000 95%); }
+/* Winter storm: frost over the corners and edges of the glass, building slowly (--fr, 0..1,
+   written by the storm loop) and clear in the middle so the scene still reads. */
+.storm-frost{ background-size:100% 100%; --fr:0;
+  box-shadow: inset 0 0 5vw rgba(235,244,255,.42);
+  -webkit-mask-image: radial-gradient(ellipse 80% 75% at 50% 45%, transparent calc(78% - 30% * var(--fr)), #000 calc(100% - 6% * var(--fr)));
+  mask-image: radial-gradient(ellipse 80% 75% at 50% 45%, transparent calc(78% - 30% * var(--fr)), #000 calc(100% - 6% * var(--fr))); }
 
 /* Storm weather on the page copy (scene.js copyWeather): rain beads on the headline and button
    that drip off the bottom edges; in winter, snow building up on the letters and the button top,
@@ -596,13 +595,14 @@ html.night-page .hero-swell{ background: linear-gradient(rgba(12,18,32,.35), rgb
   box-shadow: 0 1px 1.5px rgba(10,25,45,.35); opacity:0; }
 .wx-bead{ animation: wxBead 8s ease-in-out infinite; transform-origin:50% 100%; }
 @keyframes wxBead{ 0%{ opacity:0; transform:scale(.3); } 20%{ opacity:.95; transform:scale(1); } 75%{ opacity:.95; transform:scale(1); } 100%{ opacity:0; transform:scale(.8); } }
-.wx-drip{ animation: wxDrip 6s ease-in infinite; transform-origin:50% 0; }
+.wx-drip{ animation: wxDrip 6s linear infinite; transform-origin:50% 0; }
 @keyframes wxDrip{
-  0%   { opacity:0;   transform: translateY(0) scale(.2); }
-  45%  { opacity:.95; transform: translateY(0) scale(1); }
-  58%  { opacity:.95; transform: translateY(2px) scale(.95, 1.35); }
-  85%  { opacity:.7;  transform: translateY(var(--fall, 24px)) scale(.8, 1.5); }
-  100% { opacity:0;   transform: translateY(calc(var(--fall, 24px) + 8px)) scale(.6, 1.6); }
+  0%   { opacity:0;   transform: translateY(0) scale(.2); animation-timing-function: ease-out; }
+  50%  { opacity:.95; transform: translateY(0) scale(1); }
+  66%  { opacity:.95; transform: translateY(2px) scale(.92, 1.4); animation-timing-function: cubic-bezier(.55, 0, 1, .45); }
+  76%  { opacity:.85; transform: translateY(var(--fall, 90px)) scale(.7, 1.9); }
+  80%, 100% { opacity:0; transform: translateY(calc(var(--fall, 90px) + 14px)) scale(.6, 2); }
+}
 }
 .wx-snow{ border-radius: 50% 50% 35% 35% / 90% 90% 25% 25%; background: linear-gradient(#fff, #e8f0fa);
   box-shadow: 0 1px 1px rgba(40,60,90,.18); transform-origin:50% 100%; opacity:0; animation: wxSnow 20s ease-in-out infinite; }
@@ -610,3 +610,12 @@ html.night-page .hero-swell{ background: linear-gradient(rgba(12,18,32,.35), rgb
 .wx-snowcap{ height:16px; background-size:100% 100%; background-repeat:no-repeat;
   filter: drop-shadow(0 1px 0 rgba(40,60,90,.2)); transform-origin:50% 100%; opacity:0; animation: wxSnow 22s ease-in-out infinite; }
 @media (prefers-reduced-motion:reduce){ .copy-wx{ display:none; } }
+
+/* Light snow (scene.js): three depths of soft flakes, one element each, sliding down one tile a
+   loop inside a slowly swaying wrapper. Opacity is the season's snow level, lowered in a storm. */
+.light-snow{ position:absolute; inset:0; overflow:hidden; pointer-events:none; }
+.ls-sway{ position:absolute; inset:0 -4%; animation: lsSway 9s ease-in-out infinite alternate; }
+.ls-layer{ position:absolute; left:0; right:0; background-repeat:repeat; animation: lsFall 30s linear infinite; }
+@keyframes lsFall{ from{ transform: translateY(0); } to{ transform: translateY(var(--tile)); } }
+@keyframes lsSway{ from{ transform: translateX(-1.2%); } to{ transform: translateX(1.2%); } }
+@media (prefers-reduced-motion:reduce){ .ls-sway, .ls-layer{ animation:none; } }
