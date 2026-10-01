@@ -1,0 +1,66 @@
+/* FOOTER (js/footer.js): trail log, a little bank of the lake with two chipmunks, and the links.
+   Day/night colours fade with the page (2.4 s, like the header and the notes section). */
+.site-foot{--ft-bg:#fff;--ft-ink:#0f4d47;--ft-ink2:#4a6470;--ft-ink3:#7d929b;--ft-line:#dde7e8;
+  --ft-display:"Nunito","Poppins","Arial Rounded MT Bold","Avenir Next Rounded","Avenir Next","Segoe UI",Arial,sans-serif;
+  position:relative;background:var(--ft-bg);color:var(--ft-ink);padding:10px 0 0;overflow:hidden;
+  transition:background-color 2.4s ease,color 2.4s ease}
+html.night-page .site-foot{--ft-bg:#0e1823;--ft-ink:#dde8e6;--ft-ink2:#a6b8bf;--ft-ink3:#7d909a;--ft-line:#27384a}
+
+/* Trail log */
+.ft-log{list-style:none;margin:0 auto;padding:0 20px;max-width:1100px;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px 10px;text-align:center}
+.ft-log li{display:flex;flex-direction:column;gap:2px}
+.ft-log b{font:800 clamp(26px,3.6vw,38px)/1 var(--ft-display);color:var(--ft-ink);font-variant-numeric:tabular-nums;transition:color 2.4s ease}
+.ft-log span{font-size:13px;color:var(--ft-ink3);transition:color 2.4s ease}
+
+/* The bank */
+.ft-stage{position:relative;max-width:1200px;margin:6px auto 0;height:clamp(150px,23vw,300px)}
+.ft-ground{position:absolute;left:-10%;right:-10%;bottom:0;height:24%;border-radius:50% 50% 0 0/40% 40% 0 0;
+  background:linear-gradient(#7fae5a,#5f8f42);transition:background 2.4s ease,filter 2.4s ease}
+.site-foot[data-season="spring"] .ft-ground{background:linear-gradient(#8cc06a,#679a4a)}
+.site-foot[data-season="fall"] .ft-ground{background:linear-gradient(#b99a52,#8f7438)}
+.site-foot[data-season="winter"] .ft-ground{background:linear-gradient(#f4f8fb,#dfe8ef)}
+.ft-scene{position:absolute;inset:0;transition:filter 2.4s ease}
+.ft-piece{position:absolute;bottom:17%;height:auto;overflow:visible;pointer-events:none}
+.ft-rock{z-index:1}.ft-plant{z-index:2}
+html.night-page .ft-scene,html.night-page .ft-ground{filter:brightness(.42) saturate(.7) hue-rotate(10deg)}
+.ft-kid{position:absolute;left:0;bottom:0;z-index:3;pointer-events:none;transition:opacity .9s ease}
+.ft-kid svg{display:block;width:100%;height:100%;overflow:visible}
+.ft-asleep .ft-kid{opacity:0}
+/* Asleep: a burrow under the middle rock, z's drifting up */
+.ft-burrow{position:absolute;left:52%;bottom:15%;width:46px;height:20px;margin-left:-23px;border-radius:50% 50% 40% 40%;background:#3b2c22;
+  box-shadow:inset 0 5px 6px rgba(0,0,0,.55);z-index:2;opacity:0;transition:opacity 1.2s ease}
+.ft-asleep .ft-burrow{opacity:1}
+.ft-burrow i{position:absolute;left:60%;bottom:14px;font:800 15px var(--ft-display);font-style:normal;color:var(--ft-ink2);opacity:0}
+.ft-asleep .ft-burrow i{animation:ftZ 3.6s ease-in infinite}
+.ft-burrow i:nth-child(2){animation-delay:1.2s!important;font-size:12px}
+.ft-burrow i:nth-child(3){animation-delay:2.4s!important;font-size:10px}
+@keyframes ftZ{0%{opacity:0;transform:translate(0,0)}20%{opacity:.9}100%{opacity:0;transform:translate(22px,-46px)}}
+
+/* What's in the air */
+.ft-fx{position:absolute;inset:0;pointer-events:none;z-index:4;overflow:hidden}
+.ft-snow{position:absolute;top:-6px;width:5px;height:5px;border-radius:50%;background:#fff;box-shadow:0 0 2px rgba(120,150,170,.6);animation:ftFall linear infinite}
+.ft-leaf{position:absolute;top:-12px;width:10px;height:7px;border-radius:0 80% 0 80%;background:hsl(var(--hue,30) 70% 45%);animation:ftLeaf linear infinite}
+.ft-fly{position:absolute;width:5px;height:5px;border-radius:50%;background:#f6ff9e;box-shadow:0 0 8px 3px rgba(222,255,120,.65);animation:ftFly ease-in-out infinite alternate}
+.ft-fly-day{position:absolute;top:30%;width:14px;height:10px;animation:ftFlutter ease-in-out infinite alternate}
+.ft-fly-day::before,.ft-fly-day::after{content:"";position:absolute;top:0;width:7px;height:9px;border-radius:60% 60% 50% 50%;background:#f2a33b;animation:ftWing .22s ease-in-out infinite alternate}
+.ft-fly-day::before{left:0;transform-origin:right center}.ft-fly-day::after{right:0;transform-origin:left center;background:#e98a2a}
+.site-foot[data-season="spring"] .ft-fly-day::before{background:#f6d6ef}.site-foot[data-season="spring"] .ft-fly-day::after{background:#e8b7de}
+.ft-star{position:absolute;width:3px;height:3px;border-radius:50%;background:#fff;animation:ftTwinkle 3s ease-in-out infinite}
+@keyframes ftFall{to{transform:translate(30px,calc(clamp(150px,23vw,300px) + 12px))}}
+@keyframes ftLeaf{0%{transform:translate(0,0) rotate(0)}50%{transform:translate(-30px,120px) rotate(200deg)}100%{transform:translate(20px,calc(clamp(150px,23vw,300px) + 20px)) rotate(400deg)}}
+@keyframes ftFly{0%{transform:translate(0,0);opacity:.2}50%{opacity:1}100%{transform:translate(40px,-30px);opacity:.3}}
+@keyframes ftFlutter{0%{transform:translate(0,0)}33%{transform:translate(60px,-25px)}66%{transform:translate(120px,10px)}100%{transform:translate(180px,-15px)}}
+@keyframes ftWing{to{transform:scaleX(.25)}}
+@keyframes ftTwinkle{50%{opacity:.25}}
+
+/* The way out */
+.ft-bottom{position:relative;z-index:5;background:#3d6b3a;color:#e8f1e3;padding:18px 20px 22px;text-align:center;transition:background-color 2.4s ease}
+.site-foot[data-season="fall"] .ft-bottom{background:#6e5a2c}
+.site-foot[data-season="winter"] .ft-bottom{background:#5d7383}
+.site-foot[data-season="spring"] .ft-bottom{background:#4f7d45}
+html.night-page .ft-bottom{background:#0a121a}
+.ft-links{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 18px;margin:0 0 10px;padding:0;list-style:none;font:800 15px var(--ft-display)}
+.ft-links a{color:inherit;text-decoration:none;opacity:.92}
+.ft-links a:hover{opacity:1;text-decoration:underline}
+.ft-small{margin:0;font-size:13px;opacity:.75}
+@media (prefers-reduced-motion:reduce){.site-foot,.ft-ground,.ft-scene,.ft-bottom,.ft-log b,.ft-log span{transition:none}}

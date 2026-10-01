@@ -247,7 +247,11 @@ ${ddHTML}
 // hub.json: everything in Play for the homepage's Play tab, which shows it in place (paths from the site root).
 const R = (f) => 'play/' + f;
 const gItem = (g, cap) => ({ src: R('gallery/' + g.file), poster: g.poster ? R('gallery/' + g.poster) : null, w: g.w, h: g.h, video: g.video, caption: cap != null ? cap : (g.caption || '') });
+const totalKm = pages.reduce((a, { e }) => a + (e.track && e.track.stats ? e.track.stats.distanceKm : 0), 0);
+const totalM = pages.reduce((a, { e }) => a + (e.track && e.track.stats ? e.track.stats.gainM : 0), 0);
 fs.writeFileSync(path.join(OUT, 'hub.json'), JSON.stringify({
+  totals: { miles: Math.round(totalKm * 0.621371), feet: Math.round(totalM * 3.28084), episodes: pages.filter((p) => p.audio).length,
+    photos: MAN ? MAN.above.length : 0, daydreams: series.length },
   episodes: pages.map(({ e, cover, audio }) => ({ id: e.id, url: R(e.id + '/'), title: e.post && e.post.title || e.title, kind: KIND[e.kind] || e.kind, date: day(e.date),
     place: e.place || '', summary: e.summary || '', cover: cover ? { src: R(cover.src.replace('../', '')), w: cover.w, h: cover.h } : null,
     audio: audio ? { src: R(audio.src.replace('../', '')), time: mmss(audio.sec) } : null,
