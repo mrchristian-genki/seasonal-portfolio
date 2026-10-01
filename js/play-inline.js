@@ -120,7 +120,7 @@
       mdlg = document.createElement('dialog'); mdlg.className = 'pi-story pi-modal';
       mdlg.innerHTML = '<div class="pi-story-bar"><span class="pi-modal-kick"></span><button type="button" class="pi-close" aria-label="Close">×</button></div><div class="pi-story-body"></div>';
       mdlg.querySelector('.pi-close').onclick = function () { mdlg.close(); };
-      mdlg.addEventListener('click', function (e) { if (e.target === mdlg) mdlg.close(); });
+      backdropClose(mdlg, function () { mdlg.close(); });
       mdlg.addEventListener('close', function () { var b = mdlg.querySelector('.pi-story-body'); b.innerHTML = ''; if (mdlg._onClose) mdlg._onClose(); });
       mdlg.querySelector('.pi-story-body').addEventListener('click', onModalClick);
       document.body.appendChild(mdlg);
@@ -203,7 +203,7 @@
       sdlg = document.createElement('dialog'); sdlg.className = 'pi-story';
       sdlg.innerHTML = '<div class="pi-story-bar"><a class="pi-story-link" href="#" target="_blank" rel="noopener">Open as a page</a><button type="button" class="pi-close" aria-label="Close">×</button></div><div class="pi-story-body"></div>';
       sdlg.querySelector('.pi-close').onclick = function () { sdlg.close(); };
-      sdlg.addEventListener('click', function (e) { if (e.target === sdlg) sdlg.close(); });
+      backdropClose(sdlg, function () { sdlg.close(); });
       sdlg.addEventListener('close', function () { var a = sdlg.querySelector('audio'); if (a) a.pause(); if (window.RouteView) RouteView.clearMaps(); });
       sdlg.querySelector('.pi-story-body').addEventListener('click', function (e) { var a = e.target.closest('[data-lightbox]'); if (a) { e.preventDefault(); focusIn(sdlg, a); } });
       document.body.appendChild(sdlg);
@@ -239,10 +239,17 @@
     // The item's shape (from the tile), so photos and clips size the same way.
     var r = m && m.getAttribute('width') ? ' style="--r:' + (+m.getAttribute('width') / +m.getAttribute('height')).toFixed(4) + '"' : '';
     return (a.hasAttribute('data-video')
-      ? '<video src="' + esc(src) + '"' + (tv ? ' poster="' + esc(tv.getAttribute('poster') || '') + '" width="' + tv.getAttribute('width') + '" height="' + tv.getAttribute('height') + '"' : '') + ' autoplay muted loop playsinline controls' + r + '></video>'
+      ? '<video src="' + esc(src) + '"' + (tv ? ' poster="' + esc(tv.getAttribute('poster') || '') + '" width="' + tv.getAttribute('width') + '" height="' + tv.getAttribute('height') + '"' : '') + ' autoplay muted loop playsinline' + r + '></video>'
       : '<img src="' + esc(src) + '" alt="' + esc(alt) + '"' + r + '>') + (cap && cap.textContent ? '<p>' + esc(cap.textContent) + '</p>' : '');
   }
   var FADE_OUT = reduce ? 0 : 220;
+  // Close a dialog on a backdrop click only when the press also started on the backdrop, so dragging
+  // an audio slider and letting go outside it never closes anything.
+  function backdropClose(d, close) {
+    var down = null;
+    d.addEventListener('pointerdown', function (e) { down = e.target; });
+    d.addEventListener('click', function (e) { if (e.target === d && down === d) close(); down = null; });
+  }
   function start(root) { var v = root.querySelector('video'); if (v) { v.muted = true; var p = v.play(); if (p && p.catch) p.catch(function () {}); } }
 
   // Inside a modal (a Daydreams series, a story): the card itself fills with the picture or clip.

@@ -19,7 +19,8 @@
       dlg = document.createElement('dialog'); dlg.className = 'pi-story ab-modal';
       dlg.innerHTML = '<div class="pi-story-bar"><a class="pi-story-link" href="about/" target="_blank" rel="noopener">Open as a page</a><button type="button" class="pi-close" aria-label="Close">×</button></div><div class="pi-story-body"></div>';
       dlg.querySelector('.pi-close').onclick = function () { dlg.close(); };
-      dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+      var down = null; dlg.addEventListener('pointerdown', function (e) { down = e.target; });
+      dlg.addEventListener('click', function (e) { if (e.target === dlg && down === dlg) dlg.close(); down = null; });
       dlg.addEventListener('close', function () { setURL(false); });
       document.body.appendChild(dlg);
     }
