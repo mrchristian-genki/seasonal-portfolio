@@ -947,3 +947,4 @@ and verified live before this pass.
 - Oct 1 (field v6): local date from Cyclemeter (GPX times are UTC, so evening rides read as tomorrow), ingest keeps every existing event field on re-run, and events can carry open questions for Christian (shown above the photos; drafts never guess at them).
 - Oct 1: first real adventure, 2026-09-12-evening-ride (Clear Creek Trail, Spooner Summit to James Lee Park), draft with Christian's answers; trailheads spooner-summit + james-lee-park; route sketch becomes a corner inset over cover photos; sample flag restored.
 - Oct 1: Clear Creek audio attached (data/audio/2026-09-12-evening-ride.mp3, 1:50, -16.0 LUFS / -1.2 dBTP, 96 kbps mono). tools/master.py: compression + true-peak limiting, loudness judged on the decoded MP3. Status: Audio done.
+- Oct 1: Clear Creek after dark marked Published (first episode).

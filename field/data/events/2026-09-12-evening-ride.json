@@ -4,7 +4,7 @@
  "date": "2026-09-12",
  "kind": "ride",
  "place": "Clear Creek Trail, Spooner Summit to James Lee Park",
- "status": "audio",
+ "status": "published",
  "summary": "Spooner Summit to James Lee Park on the Clear Creek Trail with his brother and nephew, visiting from Buffalo, New York, on their first ride in years. The last stretch was by bike light.",
  "trailhead": "spooner-summit",
  "links": [],
@@ -4290,5 +4290,6 @@
   }
  },
  "questions": [],
- "consent": "Wife, brother and nephew OK with appearing on the site (Christian, Oct 1). Not named."
+ "consent": "Wife, brother and nephew OK with appearing on the site (Christian, Oct 1). Not named.",
+ "publishedAt": "2026-10-01"
 }
