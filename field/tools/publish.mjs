@@ -96,10 +96,16 @@ for (const e of events) {
   fs.mkdirSync(dir, { recursive: true }); fs.rmSync(media, { recursive: true, force: true }); fs.mkdirSync(media, { recursive: true });
   const photos = (e.photos || []).filter((p) => p.use !== 'skip').map((p, i) => {
     const name = String(i + 1).padStart(2, '0') + '.jpg';
+    if (p.video) {   // a short clip (with its poster frame)
+      const base = String(i + 1).padStart(2, '0');
+      fs.copyFileSync(path.join(FIELD, p.src), path.join(media, base + '.mp4'));
+      fs.copyFileSync(path.join(FIELD, p.poster), path.join(media, base + '.jpg'));
+      return { src: `../media/${e.id}/${base}.mp4`, poster: `../media/${e.id}/${base}.jpg`, abs: `${show.siteUrl}media/${e.id}/${base}.jpg`, caption: p.caption || '', w: p.w, h: p.h, cover: false, video: true, ai: !!p.ai };
+    }
     fs.copyFileSync(path.join(FIELD, p.src), path.join(media, name));
     return { src: `../media/${e.id}/${name}`, abs: `${show.siteUrl}media/${e.id}/${name}`, caption: p.caption || '', w: p.w, h: p.h, cover: !!p.cover };
   });
-  const cover = photos.find((p) => p.cover) || photos[0] || null;
+  const cover = photos.find((p) => p.cover) || photos.find((p) => !p.video) || null;
   let audio = null;
   if (e.episode && e.episode.audio && fs.existsSync(path.join(FIELD, e.episode.audio))) {
     fs.copyFileSync(path.join(FIELD, e.episode.audio), path.join(media, 'episode.mp3'));
@@ -111,7 +117,9 @@ for (const e of events) {
   // Photos sit between the post's paragraphs (the cover heads the page), spread evenly.
   const ps = paras(e.post && e.post.body), inline = photos.filter((p) => p !== cover);
   const slots = inline.map((_, i) => Math.min(ps.length - 1, Math.round((i + 1) * ps.length / (inline.length + 1)) - 1));
-  const fig = (p, cls) => `<figure class="${cls || 'photo'}"><a href="${esc(p.src)}" data-lightbox><img src="${esc(p.src)}" alt="${esc(p.caption)}" width="${p.w}" height="${p.h}" loading="lazy"></a>${p.caption ? `<figcaption>${esc(p.caption)}</figcaption>` : ''}</figure>`;
+  const fig = (p, cls) => p.video
+    ? `<figure class="${cls || 'photo'} clip"><a href="${esc(p.src)}" data-lightbox data-video><video src="${esc(p.src)}" poster="${esc(p.poster)}" width="${p.w}" height="${p.h}" muted loop playsinline autoplay preload="metadata"></video></a>${p.caption ? `<figcaption>${p.ai ? '<span class="ai-badge">Made with AI</span> ' : ''}${esc(p.caption)}</figcaption>` : ''}</figure>`
+    : `<figure class="${cls || 'photo'}"><a href="${esc(p.src)}" data-lightbox><img src="${esc(p.src)}" alt="${esc(p.caption)}" width="${p.w}" height="${p.h}" loading="lazy"></a>${p.caption ? `<figcaption>${esc(p.caption)}</figcaption>` : ''}</figure>`;
   let body = '';
   ps.forEach((p, i) => {
     const m = /^What I learned:\s*/i.exec(p);

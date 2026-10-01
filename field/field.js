@@ -90,7 +90,7 @@
 
       html += '<section class="panel"><h2>Photos <span class="count">' + e.photos.length + ' added · ' + e.photos.filter(function (p) { return !p.caption; }).length + ' need captions</span></h2>' +
         (e.photos.length ? '<div class="photos">' + e.photos.map(function (p, i) {
-          return '<figure class="photo"><button type="button" data-ph="' + i + '"><img src="' + esc(p.src) + '" alt="' + esc(p.caption) + '" loading="lazy"></button><figcaption>' +
+          return '<figure class="photo"><button type="button" data-ph="' + i + '">' + (p.video ? '<video src="' + esc(p.src) + '" poster="' + esc(p.poster) + '" muted loop playsinline autoplay style="display:block;width:100%;aspect-ratio:3/2;object-fit:cover"></video>' : '<img src="' + esc(p.src) + '" alt="' + esc(p.caption) + '" loading="lazy">') + '</button><figcaption>' + (p.ai ? '<span class="pill" style="background:#efe9fb;color:#6b4bb8">Made with AI</span> ' : '') +
             (p.caption ? esc(p.caption) : '<i class="muted">No caption yet</i>') + '<div class="tags">' + (p.cover ? '<span class="pill s-script">Cover</span>' : '') +
             '<span class="pill">' + (p.use === 'episode' ? 'Episode art' : p.use === 'skip' ? 'Not used' : 'In post') + '</span>' + (p.takenAt ? '<span class="pill">' + esc(String(p.takenAt).slice(11, 16)) + '</span>' : '') + '</div></figcaption></figure>';
         }).join('') + '</div>' : '<div class="empty">No photos yet. Add them to the Drive inbox; location data is stripped when they come in.</div>') + '</section>';
@@ -120,7 +120,7 @@
         };
       });
       app.querySelectorAll('[data-ph]').forEach(function (b) {
-        b.onclick = function () { var p = e.photos[+b.dataset.ph], d = document.getElementById('lightbox'); d.querySelector('img').src = p.src; d.querySelector('img').alt = p.caption; d.querySelector('p').textContent = p.caption; d.showModal(); };
+        b.onclick = function () { var p = e.photos[+b.dataset.ph], d = document.getElementById('lightbox'); if (p.video) { window.open(p.src, '_blank'); return; } d.querySelector('img').src = p.src; d.querySelector('img').alt = p.caption; d.querySelector('p').textContent = p.caption; d.showModal(); };
       });
     });
   }
