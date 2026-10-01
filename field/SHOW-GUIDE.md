@@ -94,4 +94,5 @@ so callbacks stay accurate.
 | Date | Event id | Title | Threads |
 |---|---|---|---|
 | (sample) | sample-marlette | The resin at the top of the hill | tracker, lamp project |
+| 2026-03-28 | 2026-03-28-whale-beach | The whales of Whale Beach (published Oct 1, 1:19) | Marley swims; whale-shaped rocks; AI clip from a real photo; collecting left out |
 | 2026-09-12 | 2026-09-12-evening-ride | Clear Creek after dark (published Oct 1, 1:50) | brother and nephew's first ride; racing the light out of the alpine section; lights for the last stretch |

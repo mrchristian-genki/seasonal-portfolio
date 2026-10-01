@@ -963,3 +963,4 @@ and verified live before this pass.
 - Oct 1 (?v=1793420000): footer chipmunks: one to a rock. Leader claims a rock (never the other's); the challenger runs to its foot and leaps but falls short while the defender bounces; sometimes the defender hops off the far side and the challenger takes it; grass face-offs; roles swap.
 - Oct 1 (?v=1793430000): footer chipmunks: ~1 in 5 rounds a lookout: each on its own rock, both sitting up facing the same thing (a butterfly, a falling leaf, or off into the distance) for 4-6 s.
 - Oct 1: Whale Beach draft (2026-03-28): track, 4 photos (no EXIF), AI clip from Christian's real photo (labeled Made with AI), post + script from the track, photos and his voice note; 4 open questions. Field Notes events can now carry short clips (manager + publish.mjs).
+- Oct 1: Whale Beach published (episode 2, 1:19); hub totals 22 mi / 889 ft / 2 episodes.

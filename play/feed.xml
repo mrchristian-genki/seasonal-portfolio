@@ -17,5 +17,14 @@
 <enclosure url="https://www.christiangehrke.com/play/media/2026-09-12-evening-ride/episode.mp3" length="1321273" type="audio/mpeg"/>
 <itunes:duration>110</itunes:duration>
 </item>
+<item>
+<title>The whales of Whale Beach</title>
+<link>https://www.christiangehrke.com/play/2026-03-28-whale-beach/</link>
+<guid isPermaLink="true">https://www.christiangehrke.com/play/2026-03-28-whale-beach/</guid>
+<pubDate>Thu, 01 Oct 2026 16:00:00 GMT</pubDate>
+<description>A sunset ride down to Whale Beach on Lake Tahoe&#39;s east shore, with his wife and Marley walking down. An hour on the beach, polished carnelian in the sand, and Marley swimming the whole time.</description>
+<enclosure url="https://www.christiangehrke.com/play/media/2026-03-28-whale-beach/episode.mp3" length="945737" type="audio/mpeg"/>
+<itunes:duration>79</itunes:duration>
+</item>
 </channel>
 </rss>
