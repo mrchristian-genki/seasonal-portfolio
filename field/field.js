@@ -186,6 +186,9 @@
           '</section>';
       }
 
+      if (e.questions && e.questions.length) html += '<section class="panel" style="border-color:#f3c98b;background:#fffaf0"><h2>Questions for Christian <span class="count">' + e.questions.length + ' open</span></h2><ol style="margin:0;padding-left:20px">' +
+        e.questions.map(function (q) { return '<li style="margin:0 0 6px">' + esc(q) + '</li>'; }).join('') + '</ol><p class="count" style="margin:8px 0 0">The draft doesn\'t guess at these. Answer in a voice note or in chat and they go into the next pass.</p></section>';
+
       html += '<section class="panel"><h2>Photos <span class="count">' + e.photos.length + ' added · ' + e.photos.filter(function (p) { return !p.caption; }).length + ' need captions</span></h2>' +
         (e.photos.length ? '<div class="photos">' + e.photos.map(function (p, i) {
           return '<figure class="photo"><button type="button" data-ph="' + i + '"><img src="' + esc(p.src) + '" alt="' + esc(p.caption) + '" loading="lazy"></button><figcaption>' +

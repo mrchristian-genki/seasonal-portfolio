@@ -2,7 +2,7 @@
 /* Add (or refresh) an event's track from a Cyclemeter export (GPX, or the point-by-point CSV).
 
      node field/tools/ingest.mjs ride.gpx --id 2026-09-27-marlette --title "Up to Marlette Lake" \
-          [--kind ride|hike|forage (default: from the file)] [--place "Lake Tahoe Nevada State Park"] [--status notes]
+          [--kind ride|hike|forage (default: from the file)] [--place "Lake Tahoe Nevada State Park"] [--status notes] [--date YYYY-MM-DD]
 
    Trims the track (driving, trailheads, private zones; see field/track.js), then writes
    field/data/events/<id>.json and updates field/data/events.json. Re-running on an existing event
@@ -45,16 +45,19 @@ const trailheads = readJSON(path.join(FIELD, 'data/trailheads.json'), { trailhea
 const zones = readJSON(path.join(FIELD, 'private-zones.json'), { zones: [] }).zones;
 const built = Track.build(fs.readFileSync(gpx, 'utf8'), { kind: opt('kind', null), trailheads, privateZones: zones });
 const kind = built.kind;   // --kind, else what Cyclemeter recorded, else ride
-const date = (built.stats.start || new Date().toISOString()).slice(0, 10);
+const date = opt('date', built.localDate || (built.stats.start || new Date().toISOString()).slice(0, 10));   // the local date, from Cyclemeter
 const id = opt('id', date + '-' + kind);
 const file = path.join(FIELD, 'data/events', id + '.json');
 const prev = readJSON(file, {});
 const th = trailheads.find((t) => t.id === built.trim.startTrailhead);
 
+// Everything already in the event (post, script, photos, questions, anything added later) is kept;
+// only the fields below are refreshed from the export.
 const ev = {
+  ...prev,
   id,
   title: opt('title', prev.title || built.name || 'Untitled ' + kind),
-  date: prev.date || date,
+  date: opt('date', null) || built.localDate || prev.date || date,
   kind,
   place: opt('place', prev.place || (th && th.area) || ''),
   status: opt('status', prev.status || 'notes'),

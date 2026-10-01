@@ -44,7 +44,11 @@
     if (name) name = name.replace(/<!\[CDATA\[|\]\]>/g, '').trim();
     if (/^(Cycle|Ride|Hike|Walk|Run)-\d{8}|^New Route$/i.test(name || '')) name = '';   // Cyclemeter's file name or default route name, not a title
     var desc = (/<desc>([\s\S]*?)<\/desc>/.exec(text) || [])[1] || '';
-    return { name: name || '', points: pts, kind: kindFrom(desc) };
+    // The local date: Cyclemeter writes it in the description ("Sep 12, 2026 at 5:36:36 PM"); the
+    // track times are UTC, which for an evening ride is often already tomorrow.
+    var dm = /([A-Z][a-z]{2})[a-z]* (\d{1,2}), (\d{4})/.exec(desc), localDate = null;
+    if (dm) { var mo = 'JanFebMarAprMayJunJulAugSepOctNovDec'.indexOf(dm[1]) / 3 + 1; if (mo > 0) localDate = dm[3] + '-' + ('0' + mo).slice(-2) + '-' + ('0' + dm[2]).slice(-2); }
+    return { name: name || '', points: pts, kind: kindFrom(desc), localDate: localDate };
   }
 
   // Cyclemeter's point-by-point CSV export: one row every few seconds with Time, Latitude,
@@ -64,7 +68,8 @@
       var e = iE >= 0 ? parseFloat(c[iE]) : NaN, t = iT >= 0 ? Date.parse((c[iT] || '').trim().replace(' ', 'T')) : NaN;
       pts.push({ lat: lat, lon: lon, ele: isFinite(e) ? (feet ? e * 0.3048 : e) : null, t: isFinite(t) ? t : null });
     }
-    return { name: '', points: pts, kind: kindFrom(head[1] || '') };
+    var d0 = iT >= 0 && lines[1] ? /^\s*"?(\d{4}-\d{2}-\d{2})/.exec(cells(lines[1])[iT]) : null;   // CSV times are already local
+    return { name: '', points: pts, kind: kindFrom(head[1] || ''), localDate: d0 ? d0[1] : null };
   }
   // Cyclemeter says what the activity was: "Cyclemeter Hike Aug 16…" in a GPX, "Hike Time" or
   // "Ride Time" as the CSV's second column.
@@ -322,7 +327,7 @@
       });
     });
     return {
-      name: g.name, kind: kind, stats: st, line: line, profile: profile(pts),
+      name: g.name, kind: kind, localDate: g.localDate || null, stats: st, line: line, profile: profile(pts),
       trim: { notes: tr.notes, rawPoints: g.points.length, shownKm: shownKm, keptFrom: tr.from, keptTo: tr.to, startTrailhead: tr.startTrailhead, endTrailhead: tr.endTrailhead },
       raw: g.points, kept: [tr.from, tr.to], activity: tr.activity || [tr.from, tr.to]
     };
