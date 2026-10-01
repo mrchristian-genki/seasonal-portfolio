@@ -176,3 +176,14 @@ html.night-page .pi-tile a,html.night-page .pi-story-body .map{background:#1d2c3
 .pi-story[open]{animation:piPop .28s cubic-bezier(.2,.8,.3,1) both}
 .pi-story[open]::backdrop{animation:piFade .28s ease both}
 @media (prefers-reduced-motion:reduce){.pi-story[open],.pi-story[open]::backdrop{animation:none}}
+/* Photos and clips: sized from their shape (--r) to the largest that fits the space, the same way
+   for both, so a small clip shows as big as a photo and its controls sit on the picture. */
+.pi-focus{container-type:size}
+.pi-focus img,.pi-focus video{width:min(100cqw,(100cqh - 34px) * var(--r,1.5));height:auto;aspect-ratio:var(--r,1.5);max-width:none;max-height:none;object-fit:contain}
+.pi-lb-in img,.pi-lb-in video{width:min(94vw,84vh * var(--r,1.5));height:auto;aspect-ratio:var(--r,1.5);max-width:none;max-height:none;object-fit:contain}
+/* The viewer follows the page: white by day, dark at night (same palette and fade as the modals). */
+.pi-focus{background:var(--pi-bg)}
+.pi-focus p,.pi-lb-in p{color:var(--pi-ink2)}
+.pi-lightbox::backdrop{background:rgba(251,252,251,.97)}
+html.night-page .pi-lightbox::backdrop{background:rgba(14,24,35,.97)}
+.pi-focus-x,.pi-lightbox>.pi-close{background:var(--pi-card)!important;color:var(--pi-ink)!important;border:1px solid var(--pi-line)!important}

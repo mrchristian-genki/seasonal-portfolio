@@ -235,10 +235,12 @@
   // for a clip, never both. Fades in and out.
   function media(a) {
     var src = a.getAttribute('href'), cap = a.parentNode.querySelector('figcaption'), alt = (a.querySelector('img') || {}).alt || '';
-    var tv = a.querySelector('video');
+    var tv = a.querySelector('video'), ti = a.querySelector('img'), m = tv || ti;
+    // The item's shape (from the tile), so photos and clips size the same way.
+    var r = m && m.getAttribute('width') ? ' style="--r:' + (+m.getAttribute('width') / +m.getAttribute('height')).toFixed(4) + '"' : '';
     return (a.hasAttribute('data-video')
-      ? '<video src="' + esc(src) + '"' + (tv ? ' poster="' + esc(tv.getAttribute('poster') || '') + '" width="' + tv.getAttribute('width') + '" height="' + tv.getAttribute('height') + '"' : '') + ' autoplay muted loop playsinline controls></video>'
-      : '<img src="' + esc(src) + '" alt="' + esc(alt) + '">') + (cap && cap.textContent ? '<p>' + esc(cap.textContent) + '</p>' : '');
+      ? '<video src="' + esc(src) + '"' + (tv ? ' poster="' + esc(tv.getAttribute('poster') || '') + '" width="' + tv.getAttribute('width') + '" height="' + tv.getAttribute('height') + '"' : '') + ' autoplay muted loop playsinline controls' + r + '></video>'
+      : '<img src="' + esc(src) + '" alt="' + esc(alt) + '"' + r + '>') + (cap && cap.textContent ? '<p>' + esc(cap.textContent) + '</p>' : '');
   }
   var FADE_OUT = reduce ? 0 : 220;
   function start(root) { var v = root.querySelector('video'); if (v) { v.muted = true; var p = v.play(); if (p && p.catch) p.catch(function () {}); } }
