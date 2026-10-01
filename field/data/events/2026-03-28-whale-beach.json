@@ -4,7 +4,7 @@
  "date": "2026-03-28",
  "kind": "ride",
  "place": "Whale Beach, Lake Tahoe's east shore",
- "status": "draft",
+ "status": "audio",
  "summary": "A sunset ride down to Whale Beach on Lake Tahoe's east shore, with his wife and Marley walking down. An hour on the beach, polished carnelian in the sand, and Marley swimming the whole time.",
  "trailhead": null,
  "links": [],
@@ -1473,36 +1473,6 @@
    "from": "DJI_0693.MP4"
   },
   {
-   "src": "data/photos/2026-03-28-whale-beach/02.jpg",
-   "caption": "Sunset selfie above the beach, 7:08 PM.",
-   "takenAt": "2026:03:28 19:08:28",
-   "w": 1600,
-   "h": 900,
-   "use": "skip",
-   "cover": false,
-   "from": "IMG_3692.jpg"
-  },
-  {
-   "src": "data/photos/2026-03-28-whale-beach/03.jpg",
-   "caption": "Sunset over the lake, with his wife, 7:08 PM.",
-   "takenAt": "2026:03:28 19:08:29",
-   "w": 1600,
-   "h": 900,
-   "use": "post",
-   "cover": false,
-   "from": "IMG_3693.jpg"
-  },
-  {
-   "src": "data/photos/2026-03-28-whale-beach/04.jpg",
-   "caption": "His wife and Marley on the trail along the shore.",
-   "takenAt": "2026:03:28 19:08:43",
-   "w": 1600,
-   "h": 900,
-   "use": "post",
-   "cover": false,
-   "from": "IMG_3697.jpg"
-  },
-  {
    "src": "data/photos/2026-03-28-whale-beach/clip.mp4",
    "poster": "data/photos/2026-03-28-whale-beach/clip.jpg",
    "video": true,
@@ -1523,8 +1493,14 @@
  },
  "episode": {
   "title": "The whales of Whale Beach",
-  "audio": null,
-  "script": "It's ten to six on a Saturday evening in late March, up on the east shore of Lake Tahoe. Christian's wife has decided to walk down to the water with Marley. Christian has decided to ride.\n\nIt's about two miles down to the lake, and three hundred and fifty feet lower. He's there by six. They're headed for one of their favourite places: Whale Beach.\n\n***\n\nHere's the thing about Whale Beach. The name is not a joke. Out in the shallows sit great rounded boulders of granite, grey backs breaking the surface, and from the right angle you'd swear a pod of whales had come up for air.\n\nIt's warm for March. Marley swims. And swims. And keeps swimming.\n\nDown at the water's edge there's carnelian in the sand: pebbles of orange and amber, polished smooth by the lake, catching the low light.\n\n***\n\nAt seven, the drone goes up for a look from above: clear water, pale granite, the whales holding still. A few minutes later the sun is sitting low over the mountains on the far shore, and there's a selfie, because of course there is.\n\nThen the climb back to the road. Four miles, give or take, for the whole evening. Only about twenty-five minutes of it spent moving.\n\n***\n\nLater, Christian takes a photo of those rocks at sunset and asks an AI to imagine what the name suggests. In the clip the boulders roll over, blow, and swim off into the gold.\n\nThe real ones are still there. Still holding their breath. Waiting for the next visit."
+  "audio": "data/audio/2026-03-28-whale-beach.mp3",
+  "script": "It's ten to six on a Saturday evening in late March, up on the east shore of Lake Tahoe. Christian's wife has decided to walk down to the water with Marley. Christian has decided to ride.\n\nIt's about two miles down to the lake, and three hundred and fifty feet lower. He's there by six. They're headed for one of their favourite places: Whale Beach.\n\n***\n\nHere's the thing about Whale Beach. The name is not a joke. Out in the shallows sit great rounded boulders of granite, grey backs breaking the surface, and from the right angle you'd swear a pod of whales had come up for air.\n\nIt's warm for March. Marley swims. And swims. And keeps swimming.\n\nDown at the water's edge there's carnelian in the sand: pebbles of orange and amber, polished smooth by the lake, catching the low light.\n\n***\n\nAt seven, the drone goes up for a look from above: clear water, pale granite, the whales holding still. A few minutes later the sun is sitting low over the mountains on the far shore, and there's a selfie, because of course there is.\n\nThen the climb back to the road. Four miles, give or take, for the whole evening. Only about twenty-five minutes of it spent moving.\n\n***\n\nLater, Christian takes a photo of those rocks at sunset and asks an AI to imagine what the name suggests. In the clip the boulders roll over, blow, and swim off into the gold.\n\nThe real ones are still there. Still holding their breath. Waiting for the next visit.",
+  "audioInfo": {
+   "voice": "Google AI Studio (Gemini text-to-speech), rendered by Christian Oct 1, 2026",
+   "loudness": "-16.0 LUFS integrated",
+   "duration": "1:19",
+   "checked": "Transcribed and compared with the script: every line read, in order."
+  }
  },
  "consent": "Wife: OK to appear in photos, not named (Oct 1). Marley: the family dog.",
  "questions": []

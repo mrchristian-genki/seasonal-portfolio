@@ -838,7 +838,7 @@
    "date": "2026-03-28",
    "kind": "ride",
    "place": "Whale Beach, Lake Tahoe's east shore",
-   "status": "draft",
+   "status": "audio",
    "summary": "A sunset ride down to Whale Beach on Lake Tahoe's east shore, with his wife and Marley walking down. An hour on the beach, polished carnelian in the sand, and Marley swimming the whole time.",
    "sample": false,
    "stats": {
@@ -979,7 +979,7 @@
      -119.93033
     ]
    ],
-   "photos": 6,
+   "photos": 3,
    "cover": "data/photos/2026-03-28-whale-beach/01.jpg"
   }
  ]
