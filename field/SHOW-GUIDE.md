@@ -32,6 +32,19 @@ numbers come from the track, and anything taught (gear, technique, rules) is acc
    climb is still hard; the story is how it went.
 7. **The day job stays out.** Christian's employer is never named or described in the show.
 
+## Collecting on the east shore of Tahoe (notes from Christian, Oct 1, 2026)
+
+For Chimney Beach and the shore around it (Whale Beach, Secret Cove): Lake Tahoe Basin Management
+Unit, U.S. Forest Service. Not yet checked against an official source, so confirm before quoting.
+- Casual use: a few surface pebbles by hand for personal use, no permit. No tools, no digging.
+- No disturbing the shoreline, bluff, beach berm or natural breakwaters.
+- Historic remains (the 1930s chimney, bricks, masonry, artifacts) are federally protected.
+- Below the lake's ordinary high-water mark it's Nevada sovereign state land (Division of State
+  Lands): no taking material from the lakebed without authorization.
+- Keep it minimal. A few pebbles in a daypack, never quantities.
+In a story: only say something was collected when it was a few pebbles from the dry beach, by hand.
+Stones from the water's edge or the lakebed get described, not collected.
+
 ## Rides from home
 
 Rides that start or end at home aren't used as adventures at all, even trimmed: too close to home.
