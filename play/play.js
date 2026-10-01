@@ -1,4 +1,4 @@
-/* NOTES pages: the route map and elevation profile (from notes/data/<id>.json, drawn by the shared
+/* PLAY pages (Field Notes): the route map and elevation profile (from play/data/<id>.json, drawn by the shared
    js/route-view.js), the miles/km switch, and a photo lightbox. The pages read fine without it. */
 (function () {
   'use strict';

@@ -2256,7 +2256,7 @@ function _bootInner() {
   })();
 
   // ── 9. SEASON TABS + TRAVEL() ─────────────────────────────────────────────
-  // The tabs run through the year from summer: Books summer, Web fall, Workshop winter, Lab spring.
+  // The tabs run through the year from summer: Books summer, Web fall, Workshop winter, Play spring (its view is still called 'lab' inside).
   const SEASON_VIEW = { 2:'studio', 3:'signal', 0:'workshop', 1:'lab' };
   const BOOT_SEASON = 2; // the page opens on summer (Books)
   // tod target per season (currently all 0.50, midday).
@@ -2814,7 +2814,7 @@ function _bootInner() {
   // ── SHAREABLE LINKS ──────────────────────────────────────────────────────
   // The address can set the scene: ?summer+night, ?winter, ?fall+day, ?night. Words combine with
   // + (or & , or spaces) in any order. Seasons: spring summer fall/autumn winter, or the tab
-  // names books web workshop lab (summer, fall, winter, spring). With no season the page opens on BOOT_SEASON. Also: day, night (or nightmode, darkmode, dark: the page around the scene goes dark too), play (plays the whole year). Animal names
+  // names books web workshop lab (summer, fall, winter, spring; the Play tab is lab, since play already means the whole year). With no season the page opens on BOOT_SEASON. Also: day, night (or nightmode, darkmode, dark: the page around the scene goes dark too), play (plays the whole year). Animal names
   // (?fox, ?summer+night+owl) bring that animal in once the wildlife loads (wildlife.js).
   // The page opens straight on that look (no crossfade), and the address bar follows every
   // season/night change after that, so the current view can always be copied and shared.

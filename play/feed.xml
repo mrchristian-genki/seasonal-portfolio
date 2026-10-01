@@ -2,19 +2,19 @@
 <rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:atom="http://www.w3.org/2005/Atom">
 <channel>
 <title>Field Notes</title>
-<link>https://www.christiangehrke.com/notes/</link>
-<atom:link href="https://www.christiangehrke.com/notes/feed.xml" rel="self" type="application/rss+xml"/>
+<link>https://www.christiangehrke.com/play/</link>
+<atom:link href="https://www.christiangehrke.com/play/feed.xml" rel="self" type="application/rss+xml"/>
 <description>Rides, hikes and foraging walks in the high desert and the Sierra, written up by Christian Gehrke and told as short episodes by a narrator who came along. Episodes are narrated by an AI voice, reading a script written from Christian&#39;s own notes, track and photos.</description>
 <language>en-us</language>
 <itunes:author>Christian Gehrke</itunes:author>
 <itunes:explicit>false</itunes:explicit>
 <item>
 <title>Clear Creek after dark</title>
-<link>https://www.christiangehrke.com/notes/2026-09-12-evening-ride/</link>
-<guid isPermaLink="true">https://www.christiangehrke.com/notes/2026-09-12-evening-ride/</guid>
+<link>https://www.christiangehrke.com/play/2026-09-12-evening-ride/</link>
+<guid isPermaLink="true">https://www.christiangehrke.com/play/2026-09-12-evening-ride/</guid>
 <pubDate>Thu, 01 Oct 2026 16:00:00 GMT</pubDate>
 <description>Spooner Summit to James Lee Park on the Clear Creek Trail with his brother and nephew, visiting from Buffalo, New York, on their first ride in years. The last stretch was by bike light.</description>
-<enclosure url="https://www.christiangehrke.com/notes/media/2026-09-12-evening-ride/episode.mp3" length="1321273" type="audio/mpeg"/>
+<enclosure url="https://www.christiangehrke.com/play/media/2026-09-12-evening-ride/episode.mp3" length="1321273" type="audio/mpeg"/>
 <itunes:duration>110</itunes:duration>
 </item>
 </channel>

@@ -1,17 +1,17 @@
 #!/usr/bin/env node
-/* Build the public Notes pages from the adventures marked Published.
+/* Build the public Play pages (Field Notes) from the adventures marked Published.
 
      node field/tools/publish.mjs
 
-   Writes notes/ at the site root:
-     notes/index.html            every published adventure, newest first
-     notes/<id>/index.html       one adventure: episode player, route, post with photos
-     notes/data/<id>.json        the route for the map (trimmed line, profile, stats)
-     notes/media/<id>/…          the photos and the episode audio
-     notes/feed.xml              RSS with the episodes as enclosures (podcast apps can read it)
+   Writes play/ at the site root:
+     play/index.html            every published adventure, newest first
+     play/<id>/index.html       one adventure: episode player, route, post with photos
+     play/data/<id>.json        the route for the map (trimmed line, profile, stats)
+     play/media/<id>/…          the photos and the episode audio
+     play/feed.xml              RSS with the episodes as enclosures (podcast apps can read it)
    Only public fields leave field/: no field notes, questions, consent records, original file names
-   or photo times. Anything not Published is removed from notes/ on the next run.
-   notes/notes.css and notes/notes.js are hand-written and left alone. */
+   or photo times. Anything not Published is removed from play/ on the next run.
+   play/play.css and play/play.js are hand-written and left alone. */
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -19,7 +19,7 @@ import { fileURLToPath } from 'node:url';
 const here = path.dirname(fileURLToPath(import.meta.url));
 const FIELD = path.resolve(here, '..');
 const SITE = path.resolve(FIELD, '..');
-const OUT = path.join(SITE, 'notes');
+const OUT = path.join(SITE, 'play');
 const readJSON = (p) => JSON.parse(fs.readFileSync(p, 'utf8'));
 const show = readJSON(path.join(FIELD, 'data/show.json'));
 const V = Date.now().toString(36);   // cache tag for the shared css/js
@@ -50,7 +50,7 @@ const events = fs.readdirSync(path.join(FIELD, 'data/events')).filter((f) => f.e
 
 // Clear out anything from earlier runs that isn't published any more (keeps the hand-written files).
 fs.mkdirSync(OUT, { recursive: true });
-const keep = new Set(['notes.css', 'notes.js', 'index.html', 'feed.xml', 'data', 'media', ...events.map((e) => e.id)]);
+const keep = new Set(['play.css', 'play.js', 'index.html', 'feed.xml', 'data', 'media', ...events.map((e) => e.id)]);
 for (const f of fs.readdirSync(OUT)) if (!keep.has(f)) fs.rmSync(path.join(OUT, f), { recursive: true, force: true });
 for (const d of ['data', 'media']) {
   fs.mkdirSync(path.join(OUT, d), { recursive: true });
@@ -71,7 +71,7 @@ ${image ? `<meta property="og:image" content="${esc(image)}"><meta name="twitter
 <link rel="alternate" type="application/rss+xml" title="${esc(show.showTitle)}" href="${rel}feed.xml">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%23d8618f'/%3E%3Cpath d='M5 23l7-9 5 6 3-4 7 7z' fill='%230f4d47'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-<link rel="stylesheet" href="${rel}notes.css?v=${V}">
+<link rel="stylesheet" href="${rel}play.css?v=${V}">
 </head>
 <body>
 <header class="bar"><a class="brand" href="${rel}"><span class="dot" aria-hidden="true"></span>${esc(show.showTitle)}</a>
@@ -81,7 +81,7 @@ const foot = (rel) => `<footer class="foot"><p>${esc(show.narrationNote)}</p>
 <p><a href="${rel}">All field notes</a> · <a href="${rel}feed.xml">RSS</a> · <a href="${rel}../">christiangehrke.com</a></p></footer>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" defer></script>
 <script src="${rel}../js/route-view.js?v=${V}" defer></script>
-<script src="${rel}notes.js?v=${V}" defer></script>
+<script src="${rel}play.js?v=${V}" defer></script>
 </body>
 </html>
 `;
@@ -185,4 +185,4 @@ ${audio ? `<enclosure url="${esc(audio.abs)}" length="${audio.bytes}" type="audi
 </rss>
 `;
 fs.writeFileSync(path.join(OUT, 'feed.xml'), rss);
-console.log(`notes/: ${pages.length} published (${pages.map((p) => p.e.id).join(', ') || 'none'})${show.listed ? '' : ', unlisted (noindex)'}`);
+console.log(`play/: ${pages.length} published (${pages.map((p) => p.e.id).join(', ') || 'none'})${show.listed ? '' : ', unlisted (noindex)'}`);

@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Christian Gehrke — four seasons of work</title>
-<link rel="stylesheet" href="css/scene.css?v=1793250000">
+<link rel="stylesheet" href="css/scene.css?v=1793270000">
 <script>/* Night links (?night, ?nightmode, ?darkmode) open with the page already dark: no white flash, no fade. */
 (function(){var w=decodeURIComponent(location.search.slice(1)).toLowerCase().split(/[+&,;\s]+/);
 if(w.some(function(x){x=x.split('=')[0];return x==='night'||x==='nightmode'||x==='darkmode'||x==='dark';})&&!w.some(function(x){return x==='day'||x==='daymode'||x==='lightmode'||x==='light';}))
@@ -21,7 +21,7 @@ document.documentElement.classList.add('night-page');})();</script>
     <li><button class="tab" role="tab" data-season="2" aria-selected="true" id="t-studio">Books</button></li>
     <li><button class="tab" role="tab" data-season="3" aria-selected="false" id="t-signal">Web</button></li>
     <li><button class="tab" role="tab" data-season="0" aria-selected="false" id="t-workshop">Workshop</button></li>
-    <li><button class="tab" role="tab" data-season="1" aria-selected="false" id="t-lab">Lab</button></li>
+    <li><button class="tab" role="tab" data-season="1" aria-selected="false" id="t-lab">Play</button></li>
   </ul>
 </header>
 <section class="hero" id="hero">
@@ -60,9 +60,9 @@ document.documentElement.classList.add('night-page');})();</script>
       <a class="btn" href="#about">Open the workshop</a>
     </div>
     <div class="view" data-view="lab">
-      <h1>The plumbing under the art</h1>
-      <p>Generative AI as a working hobby: image models, prompt systems, and the unglamorous fixes that keep a pipeline honest at production scale.</p>
-      <a class="btn" href="#about">Read the notes</a>
+      <h1>Out on the trail, back at the bench</h1>
+      <p>Rides and hikes in the high desert and the Sierra, foraging for carnelians and pinyon resin, and the light jars I make from what I find. Told as short episodes by a narrator who came along.</p>
+      <a class="btn" href="play/">Read Field Notes</a>
     </div>
   </div>
   </div>
@@ -98,26 +98,29 @@ document.documentElement.classList.add('night-page');})();</script>
     <div class="view" data-view="workshop">
       <p class="season-line">Winter, the quiet work underneath</p>
       <h2>The workshop</h2>
-      <p class="lede">Where the books get made. Custom tools that turn ideas into print-ready files, in batches, and a few side projects that exist because they were fun to build.</p>
+      <p class="lede">Where the books get made, and the tools behind them. Custom software and generative AI that turn ideas into print-ready files in batches, plus a few side projects that exist because they were fun to build.</p>
       <ul class="works">
         <li><b>ProPre Engine</b><i>tool</i><p>The production pipeline: edition selectors, metadata, prompt generation, and print-ready PDFs.</p></li>
+        <li><b>Prompt systems</b><i>ongoing</i><p>Catalog builders for books and shirts, with content-policy-safe phrasing built in.</p></li>
+        <li><b>Image pipelines</b><i>ongoing</i><p>Batch generation, review, and cleanup so a forty-page book looks like one hand drew it.</p></li>
         <li><b>Catalog site</b><i>web</i><p>Every book, filterable by series, with covers that reveal the colored art on hover.</p></li>
         <li><b>This lake, in parts</b><i>2026</i><p>Seasons, weather, wildlife, day and night, all SVG and code. The parts catalog shows every piece running live on its own.</p></li>
+        <li><b>Origami puppets</b><i>2026</i><p>Animals made as flat papercraft art, traced into hinged vector parts, and rigged in code to walk, graze and look around.</p></li>
       </ul>
       <a class="btn solid" href="https://www.christiangehrke.com/propre/" target="_blank" rel="noopener">Visit the ProPre Engine</a>
       <a class="btn" href="catalog/" target="_blank" rel="noopener">Open the parts catalog</a>
     </div>
     <div class="view" data-view="lab">
       <p class="season-line">Spring, when everything is starting</p>
-      <h2>The lab</h2>
-      <p class="lede">Generative AI as a working hobby, pointed at real production. Image models, prompt systems, and the fixes that keep a pipeline usable at scale.</p>
+      <h2>Play</h2>
+      <p class="lede">The fun part. Mountain bike rides and hikes, foraging, and things made at the bench from what comes home, with a computer helping where it helps.</p>
       <ul class="works">
-        <li><b>Prompt systems</b><i>ongoing</i><p>Catalog builders for books and shirts, with content-policy-safe phrasing built in.</p></li>
-        <li><b>Image pipelines</b><i>ongoing</i><p>Batch generation, review, and cleanup so a forty-page book looks like one hand drew it.</p></li>
-        <li><b>Origami puppets</b><i>2026</i><p>Animals made as flat papercraft art, traced into hinged vector parts, and rigged in code to walk, graze and look around.</p></li>
+        <li><b>Field Notes</b><i>episodes</i><p>Real rides and hikes, written up and told as short episodes by a narrator who came along. First up: Clear Creek after dark.</p></li>
+        <li><b>Foraging</b><i>ongoing</i><p>Carnelians and pinyon resin, a little at a time, from places where collecting is allowed.</p></li>
+        <li><b>Light jars</b><i>ongoing</i><p>What comes home gets lit from behind with LEDs and given away as gifts.</p></li>
       </ul>
-      <a class="btn solid" href="https://www.linkedin.com/in/christiangehrke/" target="_blank" rel="noopener">Get in touch</a>
-      <a class="btn" href="catalog/?animals" target="_blank" rel="noopener">Meet the puppets</a>
+      <a class="btn solid" href="play/">Read Field Notes</a>
+      <a class="btn" href="play/2026-09-12-evening-ride/">Listen to the first episode</a>
     </div>
   </div>
   <p class="credit">Illustration adapted from a Vecteezy vector. Seasons, weather, and motion built on top of it.
@@ -126,7 +129,7 @@ document.documentElement.classList.add('night-page');})();</script>
     <div class="tg-head"><h2 id="tgTitle">Lake scene trigger guide</h2><button type="button" class="tg-x" id="tgClose" aria-label="Close">&times;</button></div>
     <div class="tg-body">
       <p class="tg-lede">Five rocks in the scene are secret triggers. Tap one and it glows, and an animal appears in the part of the scene that rock controls. Tap the same rock again to send the animal away. Press and hold any of them to open the test panel.</p>
-      <figure><img id="tgImg" data-src="assets/trigger-guide.jpg?v=1793250000" alt="The lake scene with the five trigger rocks outlined and numbered" width="1600" height="913"></figure>
+      <figure><img id="tgImg" data-src="assets/trigger-guide.jpg?v=1793270000" alt="The lake scene with the five trigger rocks outlined and numbered" width="1600" height="913"></figure>
       <h3>What each rock does</h3>
       <ol class="tg-rocks">
         <li style="--c:#ffbe3c"><b>Big rock, far left</b> <span>Far shore under the mountains</span>
@@ -163,7 +166,7 @@ document.documentElement.classList.add('night-page');})();</script>
       <h3>Testing addresses</h3>
       <table>
         <tr><th>Add to the address</th><th>Does</th></tr>
-        <tr><td><code>?summer+night</code></td><td>Opens on a season and time of day: summer, fall, winter, spring (or books, web, workshop, lab) with day or night (<code>nightmode</code> or <code>darkmode</code> also work; night turns the whole page dark). Combine with +</td></tr>
+        <tr><td><code>?summer+night</code></td><td>Opens on a season and time of day: summer, fall, winter, spring (or books, web, workshop, lab for the Play tab) with day or night (<code>nightmode</code> or <code>darkmode</code> also work; night turns the whole page dark). Combine with +</td></tr>
         <tr><td><code>?fall+fox</code></td><td>Also brings in an animal. Every animal&rsquo;s word is in the list above</td></tr>
         <tr><td>Tap the tent</td><td>Marley comes out to sniff about</td></tr>
         <tr><td>Tap the hero tree trunk</td><td>A close-up: a grizzly, bull elk, doe, buck, wolf or Marley peeks in from the right, looks about and backs away</td></tr>
@@ -198,17 +201,17 @@ document.documentElement.classList.add('night-page');})();</script>
      8 real isolated mountain files' <style>+paths embedded directly so no
      runtime fetch()/CORS dependency -- must load before scene.js, which
      consumes window.MOUNTAIN_SHAPES when it builds the background. -->
-<script src="js/mountain-shapes.js?v=1793250000"></script>
-<script src="js/components.js?v=1793250000"></script>
-<script src="js/scene.js?v=1793250000"></script>
+<script src="js/mountain-shapes.js?v=1793270000"></script>
+<script src="js/components.js?v=1793270000"></script>
+<script src="js/scene.js?v=1793270000"></script>
 <!-- Spyglass camera for phones held upright: shots per season, swipe to look around, tilt parallax. -->
-<script src="js/camera.js?v=1793250000"></script>
-<script src="js/tg-links.js?v=1793250000"></script>
+<script src="js/camera.js?v=1793270000"></script>
+<script src="js/tg-links.js?v=1793270000"></script>
 <!-- Live book count: the Books copy reads the catalog's Google Sheet, so the number always matches the catalog. -->
 <script src="js/books-count.js?v=1793260000"></script>
 <!-- Wildlife (animals + hidden tap spots): loaded after the page has finished loading, so it
      never delays the first paint. -->
-<script>addEventListener('load',function(){setTimeout(function(){['creature-shapes','origami-art','creatures','wildlife','getaway'].reduce(function(p,n){return p.then(function(){return new Promise(function(r){var s=document.createElement('script');s.src='js/'+n+'.js?v=1793250000';s.onload=s.onerror=r;document.body.appendChild(s)})})},Promise.resolve())},1500)})</script>
+<script>addEventListener('load',function(){setTimeout(function(){['creature-shapes','origami-art','creatures','wildlife','getaway'].reduce(function(p,n){return p.then(function(){return new Promise(function(r){var s=document.createElement('script');s.src='js/'+n+'.js?v=1793270000';s.onload=s.onerror=r;document.body.appendChild(s)})})},Promise.resolve())},1500)})</script>
 <script>
 /* Crash breadcrumbs. Safari's "This webpage was reloaded because a problem occurred" gives no
    details, so every 5 s the page notes what it is doing (season, night, animals, uptime). A clean
@@ -230,6 +233,6 @@ d.style.cssText='position:fixed;left:8px;right:8px;top:8px;z-index:10001;max-hei
 d.textContent=a.length?'Crashes seen on this browser (newest first):\n\n'+a.map(function(c){return new Date(c.t).toLocaleString()+'  up '+c.up+'s  '+c.season+(c.night?' night':' day')+'  animals: '+(c.animals||'none')+'  scroll '+c.y+'  '+c.size+'  build '+c.v}).join('\n'):'No crashes recorded on this browser.';
 d.onclick=function(){d.remove()};document.body.appendChild(d)})}catch(e){}})();
 </script>
-<script>if(/[?&]bench\b/.test(location.search)){var b=document.createElement("script");b.src="js/bench.js?v=1793250000";document.body.appendChild(b)}</script>
+<script>if(/[?&]bench\b/.test(location.search)){var b=document.createElement("script");b.src="js/bench.js?v=1793270000";document.body.appendChild(b)}</script>
 </body>
 </html>

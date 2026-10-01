@@ -1,5 +1,5 @@
 /* ROUTE VIEW: the map, elevation profile, stat tiles and route sketch shared by the Field Notes
-   manager (field/) and the public Notes pages (notes/). Leaflet must be loaded first for maps;
+   manager (field/) and the public Play pages (play/). Leaflet must be loaded first for maps;
    everything else works without it. Units default to miles/feet and are remembered per browser. */
 (function () {
   'use strict';
