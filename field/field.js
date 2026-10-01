@@ -201,7 +201,8 @@
         '<section class="panel"><h2>Episode <span class="btns"><button type="button" class="btn" data-copy="prompt">Copy audio prompt</button><button type="button" class="btn ghost" data-copy="script">Script only</button></span></h2>' +
         (e.episode.script ? '<h3 style="font-size:20px;margin-bottom:8px">' + esc(e.episode.title) + '</h3><p class="count">' + words(e.episode.script) + ' words · about ' + Math.max(1, Math.round(words(e.episode.script) / 150)) + ' min at 150 wpm</p><div class="text script">' + esc(e.episode.script) + '</div>' +
           '<details style="margin-top:12px"><summary>What the audio prompt looks like</summary><div class="prompt">' + esc(prompt) + '</div></details>' : '<div class="empty">No script yet.</div>') +
-        (e.episode.audio ? '<p style="margin-top:12px"><audio controls preload="none" src="' + esc(e.episode.audio) + '" style="width:100%"></audio></p>' : '<p class="count" style="margin-top:12px">No audio attached yet. Render it from the prompt, master to -16 LUFS, then send it over to attach.</p>') +
+        (e.episode.audio ? '<p style="margin-top:12px"><audio controls preload="metadata" src="' + esc(e.episode.audio) + '" style="width:100%"></audio></p>' +
+          (e.episode.audioInfo ? '<p class="count">' + esc([e.episode.audioInfo.duration, e.episode.audioInfo.loudness, e.episode.audioInfo.voice].filter(Boolean).join(' · ')) + '</p>' : '') : '<p class="count" style="margin-top:12px">No audio attached yet. Render it from the prompt, master to -16 LUFS, then send it over to attach.</p>') +
         '</section></div>';
 
       if (e.fieldNotes) html += '<section class="panel"><details><summary>Field notes as they came in</summary><div class="text" style="margin-top:10px">' + esc(e.fieldNotes) + '</div></details></section>';

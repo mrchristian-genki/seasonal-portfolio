@@ -16,8 +16,10 @@ It's unlisted, not private: put a password on the folder in the DreamHost panel
    - `python3 field/tools/photos.py <id> IMG_*.jpg --cover IMG_0412.jpg` to resize the photos and
      strip their location data,
    - then writes the post and the episode script into the event file, following `SHOW-GUIDE.md`.
-3. Christian reviews it in the manager, copies the audio prompt, renders the voice, and sends the
-   audio back to attach. Status moves Notes in → Draft → Script ready → Audio done → Published.
+3. Christian reviews it in the manager, copies the audio prompt, renders the voice, and drops the
+   audio in the Drive folder. Claude checks it against the script (speech-to-text), masters it with
+   `python3 field/tools/master.py in.wav field/data/audio/<id>.mp3` (needs `pip install numpy scipy
+   soundfile pyloudnorm lameenc`): -16 LUFS, under -1 dBTP, 96 kbps mono MP3, and attaches it. Status moves Notes in → Draft → Script ready → Audio done → Published.
 
 ## Privacy
 

@@ -4,7 +4,7 @@
  "date": "2026-09-12",
  "kind": "ride",
  "place": "Clear Creek Trail, Spooner Summit to James Lee Park",
- "status": "draft",
+ "status": "audio",
  "summary": "Spooner Summit to James Lee Park on the Clear Creek Trail with his brother and nephew, visiting from Buffalo, New York, on their first ride in years. The last stretch was by bike light.",
  "trailhead": "spooner-summit",
  "links": [],
@@ -4278,8 +4278,16 @@
  },
  "episode": {
   "title": "Clear Creek after dark",
-  "audio": null,
-  "script": "It's five thirty-six on a Saturday evening in September, at the top of Spooner Summit. Christian's wife has just driven three men and three bikes up the mountain, and she's leaning out of the truck window to see them off.\n\nThe three men are Christian, his brother, and his nephew. The brother and the nephew are from Buffalo, New York. This is their first time out here. It's also the first time either of them has been on a bike in years.\n\n***\n\nThe first mile goes up. Not far, a hundred and fifty feet or so, to seven thousand two hundred and eighty. And then the Clear Creek Trail turns downhill and keeps that promise for most of the next eighteen miles.\n\nAt eleven minutes past six they stop under the big pines. Half breather, half view. Eleven minutes after that they're up on a pile of granite, forest falling away behind them, three grins in one photo.\n\n***\n\nHere's what Christian is quietly worried about. He's done this ride a few times. He knows the top is the alpine section, and that's the part you want behind you before dark. Below it, the trail eases out into the desert. And the sun is going.\n\nThe sun goes down anyway. The lights come on for the last stretch, down to the James Lee end of the trail and across to James Lee Park, where they roll in at eleven minutes past eight.\n\n***\n\nEighteen miles. Two and a half hours. About two thousand three hundred feet lower than where they started. A few bumps, some very sore muscles, and, according to the two visitors from Buffalo, the most fun they've had in a long time.\n\nChristian has ridden Clear Creek before. He'd never ridden it with them. That was the part he loved."
+  "audio": "data/audio/2026-09-12-evening-ride.mp3",
+  "script": "It's five thirty-six on a Saturday evening in September, at the top of Spooner Summit. Christian's wife has just driven three men and three bikes up the mountain, and she's leaning out of the truck window to see them off.\n\nThe three men are Christian, his brother, and his nephew. The brother and the nephew are from Buffalo, New York. This is their first time out here. It's also the first time either of them has been on a bike in years.\n\n***\n\nThe first mile goes up. Not far, a hundred and fifty feet or so, to seven thousand two hundred and eighty. And then the Clear Creek Trail turns downhill and keeps that promise for most of the next eighteen miles.\n\nAt eleven minutes past six they stop under the big pines. Half breather, half view. Eleven minutes after that they're up on a pile of granite, forest falling away behind them, three grins in one photo.\n\n***\n\nHere's what Christian is quietly worried about. He's done this ride a few times. He knows the top is the alpine section, and that's the part you want behind you before dark. Below it, the trail eases out into the desert. And the sun is going.\n\nThe sun goes down anyway. The lights come on for the last stretch, down to the James Lee end of the trail and across to James Lee Park, where they roll in at eleven minutes past eight.\n\n***\n\nEighteen miles. Two and a half hours. About two thousand three hundred feet lower than where they started. A few bumps, some very sore muscles, and, according to the two visitors from Buffalo, the most fun they've had in a long time.\n\nChristian has ridden Clear Creek before. He'd never ridden it with them. That was the part he loved.",
+  "audioInfo": {
+   "voice": "Google AI Studio (Gemini text-to-speech), rendered by Christian Oct 1, 2026",
+   "source": "Generated Audio October 01, 2026 - 8_44AM.wav (Drive, Rides folder): 24 kHz mono, -21.2 LUFS",
+   "master": "tools/master.py: 44.1 kHz mono, 2.5:1 compression, true-peak limiter, MP3 96 kbps",
+   "loudness": "-16.0 LUFS integrated, -1.2 dBTP",
+   "duration": "1:50",
+   "checked": "Transcribed and compared with the script: every line read, in order."
+  }
  },
  "questions": [],
  "consent": "Wife, brother and nephew OK with appearing on the site (Christian, Oct 1). Not named."
