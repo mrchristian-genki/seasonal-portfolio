@@ -1,4 +1,4 @@
-/* FIELD TRACK ENGINE. Reads a Cyclemeter GPX export, trims it so nothing private is published,
+/* FIELD TRACK ENGINE. Reads a Cyclemeter export (GPX, or the point-by-point CSV), trims it so nothing private is published,
    and works out the card numbers. The same file runs in the browser (field manager preview) and
    in Node (tools/ingest.mjs), so a ride is trimmed the same way everywhere.
 
@@ -42,8 +42,35 @@
       pts.push({ lat: lat, lon: lon, ele: isFinite(ele) ? ele : null, t: time ? Date.parse(time) : null });
     }
     if (name) name = name.replace(/<!\[CDATA\[|\]\]>/g, '').trim();
-    return { name: name || '', points: pts };
+    if (/^(Cycle|Ride|Hike|Walk|Run)-\d{8}|^New Route$/i.test(name || '')) name = '';   // Cyclemeter's file name or default route name, not a title
+    var desc = (/<desc>([\s\S]*?)<\/desc>/.exec(text) || [])[1] || '';
+    return { name: name || '', points: pts, kind: kindFrom(desc) };
   }
+
+  // Cyclemeter's point-by-point CSV export: one row every few seconds with Time, Latitude,
+  // Longitude and "Elevation (feet)" or "Elevation (meters)". Times have no zone, so they're read
+  // as local time on whatever device runs this (only their differences matter).
+  function parseCSV(text) {
+    var lines = text.replace(/^\uFEFF/, '').split(/\r?\n/).filter(function (l) { return l.trim(); });
+    var cells = function (l) { var out = [], f = '', q = false; for (var i = 0; i < l.length; i++) { var c = l[i]; if (q) { if (c === '"') { if (l[i + 1] === '"') { f += '"'; i++; } else q = false; } else f += c; } else if (c === '"') q = true; else if (c === ',') { out.push(f); f = ''; } else f += c; } out.push(f); return out; };
+    var head = cells(lines[0] || '').map(function (h) { return h.trim().toLowerCase(); });
+    var col = function (re) { for (var i = 0; i < head.length; i++) if (re.test(head[i])) return i; return -1; };
+    var iT = col(/^time$/), iLa = col(/^latitude/), iLo = col(/^longitude/), iE = col(/^elevation/);
+    var feet = iE >= 0 && /feet|\(ft\)/.test(head[iE]), pts = [];
+    if (iLa < 0 || iLo < 0) return { name: '', points: [] };
+    for (var r = 1; r < lines.length; r++) {
+      var c = cells(lines[r]), lat = parseFloat(c[iLa]), lon = parseFloat(c[iLo]);
+      if (!isFinite(lat) || !isFinite(lon) || (lat === 0 && lon === 0)) continue;
+      var e = iE >= 0 ? parseFloat(c[iE]) : NaN, t = iT >= 0 ? Date.parse((c[iT] || '').trim().replace(' ', 'T')) : NaN;
+      pts.push({ lat: lat, lon: lon, ele: isFinite(e) ? (feet ? e * 0.3048 : e) : null, t: isFinite(t) ? t : null });
+    }
+    return { name: '', points: pts, kind: kindFrom(head[1] || '') };
+  }
+  // Cyclemeter says what the activity was: "Cyclemeter Hike Aug 16…" in a GPX, "Hike Time" or
+  // "Ride Time" as the CSV's second column.
+  function kindFrom(s) { return /hike|walk|run/i.test(s) ? 'hike' : /cycle|ride/i.test(s) ? 'ride' : null; }
+  // GPX or Cyclemeter CSV, whichever this is.
+  function parse(text) { return /<gpx[\s>]/i.test(text.slice(0, 2000)) ? parseGPX(text) : parseCSV(text); }
 
   // ── Activity profiles ────────────────────────────────────────────────
   // car: speed (km/h) that means "in a vehicle" when held for `hold` seconds on ground that isn't
@@ -108,6 +135,17 @@
     var kind = opts.kind || 'ride', notes = [], a = 0, b = pts.length - 1;
     if (pts.length < 2) return { points: pts.slice(), from: 0, to: b, notes: ['Too few points to trim.'] };
 
+    // 0. GPS warm-up. In the first minute a phone's first fixes can be stale and then jump to the
+    //    real spot (a few hundred metres in seconds). Points before such a jump are dropped.
+    //    Any step over 40 m at an impossible speed (over 60 km/h) counts; the last one wins, since a
+    //    warm-up can settle in a few hops.
+    var warm = -1;
+    for (var w = a + 1; w <= b && pts[w].t != null && pts[a].t != null && pts[w].t - pts[a].t <= 60000; w++) {
+      var jd = dist(pts[w - 1], pts[w]), jt = (pts[w].t - pts[w - 1].t) / 1000;
+      if (jd > 40 && jt > 0 && jd / jt * 3.6 > 60) warm = w;
+    }
+    if (warm > a) { notes.push('Dropped ' + (warm - a) + ' GPS warm-up points (the first fixes jumped around before settling).'); a = warm; }
+
     // 1. Driving at either end. A drive with more of the activity before it than after it is the
     //    drive home: the track ends where it starts. One with more after it is a drive to the start.
     //    Judged by distance, not time, so hours of the phone sitting at home don't confuse it.
@@ -122,6 +160,10 @@
         notes.push('Cut ' + km(pts, 0, r[1]) + ' at the start that looks like driving.');
       }
     });
+
+    // The activity itself (what the stats count) is everything left after the warm-up and the
+    // drive. The steps below only decide how much of it the map shows.
+    var act = [a, b];
 
     // 2. Trailheads: start at the first time the track reaches the start trailhead, end at the last
     //    time it leaves the end trailhead.
@@ -145,16 +187,21 @@
       while (a < b && inZone(pz, pts[a])) a++;
       while (b > a && inZone(pz, pts[b])) b--;
       if (a > a0 || b < b0) notes.push('Cut the stretch inside a private zone.');
-      for (var i = a; i <= b; i++) if (inZone(pz, pts[i])) { notes.push('Warning: the track passes through a private zone mid-way. Check it before publishing.'); break; }
+      for (var i = a; i <= b; i++) if (inZone(pz, pts[i])) { notes.push('Passes through a private zone mid-way: that stretch is left off the map.'); break; }
     }
 
-    // 4. Fallback trim for an end with no trailhead.
+    // 4. Fallback trim for an end with no trailhead. A loop that starts and finishes at the same
+    //    spot that isn't a trailhead is very likely home, so it gets a wider trim and a warning.
     var fb = opts.fallback == null ? 300 : opts.fallback;
+    if (!sTH && !eTH && dist(pts[a], pts[b]) < 200 && !pz.length) {
+      fb = Math.max(fb, 800);
+      notes.push('Warning: starts and ends at the same spot, and it isn\'t a known trailhead. If that\'s home, add it as a private zone before publishing.');
+    }
     if (!sTH && fb) { var a1 = walk(pts, a, b, fb, 1); if (a1 > a) { notes.push('No trailhead near the start: trimmed the first ' + fb + ' m.'); a = a1; } }
     if (!eTH && fb) { var b1 = walk(pts, b, a, fb, -1); if (b1 < b) { notes.push('No trailhead near the end: trimmed the last ' + fb + ' m.'); b = b1; } }
 
     return {
-      points: pts.slice(a, b + 1), from: a, to: b, notes: notes,
+      points: pts.slice(a, b + 1), from: a, to: b, notes: notes, activity: act,
       startTrailhead: sTH ? sTH.item.id : null, endTrailhead: eTH ? eTH.item.id : null
     };
   }
@@ -254,16 +301,30 @@
   // Everything an event's "track" field holds: trimmed, simplified, rounded, with times made
   // relative (seconds from the start) so the published file carries the date but not a timeline.
   function build(gpxText, opts) {
-    var g = parseGPX(gpxText), kind = (opts && opts.kind) || 'ride';
-    var tr = trim(g.points, opts), pts = tr.points, st = stats(pts, kind);
-    var t0 = pts[0] && pts[0].t;
-    var line = simplify(pts, (opts && opts.tolerance) || 6).map(function (p) {
-      return [+p.lat.toFixed(5), +p.lon.toFixed(5), p.ele == null ? null : Math.round(p.ele), p.t != null && t0 != null ? Math.round((p.t - t0) / 1000) : null];
+    var g = parse(gpxText), kind = (opts && opts.kind) || g.kind || 'ride';
+    opts = Object.assign({}, opts, { kind: kind });
+    var tr = trim(g.points, opts), pts = tr.points;
+    // Stats count the whole activity (riding from home to the trailhead is still riding); the line
+    // and the elevation profile show only the published part.
+    var st = tr.activity ? stats(g.points.slice(tr.activity[0], tr.activity[1] + 1), kind) : stats(pts, kind);
+    var shownKm = +(stats(pts, kind).distanceKm).toFixed(2);
+    var t0 = pts[0] && pts[0].t, pz = (opts && opts.privateZones) || [];
+    // Points inside a private zone mid-way become a break in the line (null), so the map never
+    // draws a path through one; the simplifier runs on each visible stretch separately.
+    var runs = [], cur = [];
+    pts.forEach(function (p) { if (pz.length && inZone(pz, p)) { if (cur.length) runs.push(cur); cur = []; } else cur.push(p); });
+    if (cur.length) runs.push(cur);
+    var line = [];
+    runs.forEach(function (r, k) {
+      if (k) line.push(null);
+      simplify(r, (opts && opts.tolerance) || 6).forEach(function (p) {
+        line.push([+p.lat.toFixed(5), +p.lon.toFixed(5), p.ele == null ? null : Math.round(p.ele), p.t != null && t0 != null ? Math.round((p.t - t0) / 1000) : null]);
+      });
     });
     return {
       name: g.name, kind: kind, stats: st, line: line, profile: profile(pts),
-      trim: { notes: tr.notes, rawPoints: g.points.length, keptFrom: tr.from, keptTo: tr.to, startTrailhead: tr.startTrailhead, endTrailhead: tr.endTrailhead },
-      raw: g.points, kept: [tr.from, tr.to]
+      trim: { notes: tr.notes, rawPoints: g.points.length, shownKm: shownKm, keptFrom: tr.from, keptTo: tr.to, startTrailhead: tr.startTrailhead, endTrailhead: tr.endTrailhead },
+      raw: g.points, kept: [tr.from, tr.to], activity: tr.activity || [tr.from, tr.to]
     };
   }
 
@@ -273,5 +334,5 @@
   }
   function clock(t) { var d = new Date(t); return ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2); }
 
-  return { parseGPX: parseGPX, trim: trim, stats: stats, profile: profile, simplify: simplify, build: build, dist: dist, KINDS: KINDS, drivingRuns: drivingRuns };
+  return { parse: parse, parseCSV: parseCSV, parseGPX: parseGPX, trim: trim, stats: stats, profile: profile, simplify: simplify, build: build, dist: dist, KINDS: KINDS, drivingRuns: drivingRuns };
 });

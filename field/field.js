@@ -55,6 +55,10 @@
   }
 
   // ── Map ──────────────────────────────────────────────────────────────
+  // A line may hold null breaks (a private zone mid-way). solid() drops them for the scrubber and
+  // sketches; parts() splits at them for drawing.
+  function solid(line) { return (line || []).filter(Boolean); }
+  function parts(line) { var out = [[]]; (line || []).forEach(function (p) { if (p) out[out.length - 1].push([p[0], p[1]]); else out.push([]); }); return out.filter(function (x) { return x.length > 1; }); }
   function cumKm(line) { var c = [0]; for (var i = 1; i < line.length; i++) c.push(c[i - 1] + T.dist({ lat: line[i - 1][0], lon: line[i - 1][1] }, { lat: line[i][0], lon: line[i][1] }) / 1000); return c; }
   function makeMap(el, layers) {
     if (!window.L) { el.innerHTML = '<p class="muted" style="padding:16px">Map library did not load (offline?). The numbers below still work.</p>'; return null; }
@@ -69,10 +73,10 @@
     return map;
   }
   function routeLayers(line, color) {
-    var ll = line.map(function (p) { return [p[0], p[1]]; });
+    var ps = parts(line), ll = solid(line).map(function (p) { return [p[0], p[1]]; });
     return [
-      L.polyline(ll, { color: '#fff', weight: 7, opacity: 0.9 }),
-      L.polyline(ll, { color: color || '#d8618f', weight: 4 }),
+      L.polyline(ps, { color: '#fff', weight: 7, opacity: 0.9 }),
+      L.polyline(ps, { color: color || '#d8618f', weight: 4 }),
       L.circleMarker(ll[0], { radius: 7, color: '#fff', weight: 3, fillColor: '#2f8f6b', fillOpacity: 1 }).bindTooltip('Start'),
       L.circleMarker(ll[ll.length - 1], { radius: 7, color: '#fff', weight: 3, fillColor: '#0f4d47', fillOpacity: 1 }).bindTooltip('Finish')
     ];
@@ -110,6 +114,7 @@
   function niceStep(x) { var p = Math.pow(10, Math.floor(Math.log10(x || 1))), n = x / p; return (n < 1.5 ? 1 : n < 3.5 ? 2 : n < 7.5 ? 5 : 10) * p; }
   function scrubber(map, line) {
     if (!map) return null;
+    line = solid(line);
     var c = cumKm(line), dot = L.circleMarker([line[0][0], line[0][1]], { radius: 8, color: '#fff', weight: 3, fillColor: '#0f4d47', fillOpacity: 1 });
     return function (k) {
       if (k == null) { dot.remove(); return; }
@@ -175,7 +180,7 @@
       if (tr.line && tr.line.length > 1) {
         html += '<section class="panel"><h2>The route</h2><div class="ridecard"><div class="map" id="map"></div><div class="statgrid">' + statTiles(s, e.kind) + '</div></div>' +
           '<div class="profile" id="prof"></div>' +
-          '<div class="trim"><b>Privacy trim</b> · published track starts and ends where shown, ' + tr.trim.rawPoints + ' GPS points reduced to ' + tr.line.length + '.<ul>' +
+          '<div class="trim"><b>Privacy trim</b> · the numbers count the whole ' + (KIND[e.kind] || 'outing').toLowerCase() + '; the map shows ' + (tr.trim.shownKm != null ? U.dist(tr.trim.shownKm) + ' of it' : 'the published part') + '. ' + tr.trim.rawPoints + ' GPS points reduced to ' + tr.line.length + '.<ul>' +
           tr.trim.notes.map(function (n) { return '<li>' + esc(n) + '</li>'; }).join('') + '</ul></div>' +
           (e.links && e.links.length ? '<p style="margin:10px 0 0;font-size:14px">Trail info: ' + e.links.map(function (l) { return '<a href="' + esc(l.url) + '" target="_blank" rel="noopener">' + esc(l.label) + '</a>'; }).join(' · ') + '</p>' : '') +
           '</section>';
@@ -217,20 +222,20 @@
     });
   }
 
-  // ── Check a GPX: what gets cut, before anything is published ─────────
+  // ── Check a ride: what gets cut, before anything is published ─────────
   function check() {
     return get('data/trailheads.json').then(function (thj) {
       var th = thj.trailheads || [], zones = store('fieldZones') || [];
-      app.innerHTML = '<h1>Check a GPX</h1><p class="lede">Drop a Cyclemeter export to see exactly what would be published. The file stays on this device; nothing is uploaded. ' +
+      app.innerHTML = '<h1>Check a ride</h1><p class="lede">Drop a Cyclemeter export to see exactly what would be published. The file stays on this device; nothing is uploaded. ' +
         'Private zones (home, a friend\'s place) are kept in this browser only and are never part of the site.</p>' +
-        '<section class="panel" style="margin-top:16px"><label class="drop" id="drop"><input type="file" accept=".gpx,application/gpx+xml" id="file"><b>Drop a .gpx here</b> or tap to choose one<br><span class="muted">Cyclemeter: Ride → Export → GPX</span></label>' +
-        '<div class="form" style="margin-top:12px"><label>Activity<select id="kind"><option value="ride">Ride</option><option value="hike">Hike</option><option value="forage">Foraging walk</option></select></label>' +
+        '<section class="panel" style="margin-top:16px"><label class="drop" id="drop"><input type="file" accept=".gpx,.csv,.txt,application/gpx+xml,text/csv,text/plain" id="file"><b>Drop a Cyclemeter export here</b> or tap to choose one<br><span class="muted">GPX or the point-by-point CSV</span></label>' +
+        '<div class="form" style="margin-top:12px"><label>Activity<select id="kind"><option value="">From the file</option><option value="ride">Ride</option><option value="hike">Hike</option><option value="forage">Foraging walk</option></select></label>' +
         '<label>Trailhead snap range<select id="range"><option value="1000">1 km</option><option value="2500" selected>2.5 km</option><option value="5000">5 km</option></select></label></div></section>' +
         '<section class="panel" id="result" hidden></section>' +
         '<div class="cols"><section class="panel"><h2>Private zones <span class="count">this browser only</span></h2><div id="zones"></div>' +
         '<div class="form" style="margin-top:10px"><label>Name<input id="zn" placeholder="Home"></label><label>Latitude<input id="zlat" inputmode="decimal"></label><label>Longitude<input id="zlon" inputmode="decimal"></label>' +
         '<label>Radius (m)<input id="zr" value="500" inputmode="numeric"></label><button type="button" class="btn" id="zadd">Add zone</button></div>' +
-        '<p class="count" style="margin-top:8px">Tip: after loading a ride that started at home, “Use the raw start as a private zone” fills this in for you.</p></section>' +
+        '<p class="count" style="margin-top:8px">Tip: after loading a ride that started at home, “Use the start as a private zone” fills this in for you.</p></section>' +
         '<section class="panel"><h2>Known trailheads <span class="count">' + th.length + '</span></h2><ul class="links">' +
         th.map(function (t) { return '<li><b>' + esc(t.name) + '</b>' + (t.area ? ' · ' + esc(t.area) : '') + (t.source ? ' · <a href="' + esc(t.source) + '" target="_blank" rel="noopener">info</a>' : '') + '</li>'; }).join('') +
         '</ul><p class="count" style="margin-top:8px">A track that starts or ends within the snap range of one of these is trimmed to begin and end exactly there. Ask Claude to add your regular trailheads (from AllTrails or the land agency).</p></section></div>';
@@ -258,14 +263,13 @@
 
       function run() {
         if (!gpxText) return;
-        var kind = document.getElementById('kind').value;
-        var b = T.build(gpxText, { kind: kind, trailheads: th, privateZones: zones, snapRange: +document.getElementById('range').value });
+        var b = T.build(gpxText, { kind: document.getElementById('kind').value || null, trailheads: th, privateZones: zones, snapRange: +document.getElementById('range').value });
         var res = document.getElementById('result'); res.hidden = false;
         if (b.raw.length < 2) { res.innerHTML = '<p>That file has no track points.</p>'; return; }
-        res.innerHTML = '<h2>' + esc(b.name || 'Your track') + ' <span class="btns"><button type="button" class="btn ghost" id="zstart">Use the raw start as a private zone</button><button type="button" class="btn" id="dl">Download trimmed GPX</button></span></h2>' +
-          '<div class="ridecard"><div class="map" id="cmap"></div><div class="statgrid">' + statTiles(b.stats, kind) + '</div></div>' +
+        res.innerHTML = '<h2>' + esc(b.name || (KIND[b.kind] || 'Track') + (b.stats.start ? ', ' + new Date(b.stats.start).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : '')) + ' <span class="btns"><button type="button" class="btn ghost" id="zstart">Use the start as a private zone</button><button type="button" class="btn" id="dl">Download trimmed GPX</button></span></h2>' +
+          '<div class="ridecard"><div class="map" id="cmap"></div><div class="statgrid">' + statTiles(b.stats, b.kind) + '</div></div>' +
           '<div class="legend"><span><i style="background:#d8618f"></i>Published</span><span><i style="background:#c0392b"></i>Cut</span><span><i style="background:rgba(15,77,71,.35)"></i>Private zone</span><span><i style="background:#2f8f6b"></i>Trailhead</span></div>' +
-          '<div class="profile" id="cprof"></div><div class="trim"><b>What happened</b> · ' + b.raw.length + ' points in the file, ' + (b.kept[1] - b.kept[0] + 1) + ' kept.<ul>' +
+          '<div class="profile" id="cprof"></div><div class="trim"><b>What happened</b> · ' + b.raw.length + ' points in the file, ' + (b.kept[1] - b.kept[0] + 1) + ' shown on the map (' + U.dist(b.trim.shownKm) + ' of ' + U.dist(b.stats.distanceKm) + '). The numbers count the whole activity.<ul>' +
           (b.trim.notes.length ? b.trim.notes : ['Nothing to cut.']).map(function (n) { return '<li>' + esc(n) + '</li>'; }).join('') + '</ul></div>';
         if (window.L) {
           var raw = b.raw.map(function (p) { return [p.lat, p.lon]; }), k0 = b.kept[0], k1 = b.kept[1];
@@ -281,7 +285,7 @@
           profileSVG(document.getElementById('cprof'), b.profile, scrubber(map, b.line));
         }
         document.getElementById('zstart').onclick = function () {
-          var p = b.raw[0]; document.getElementById('zlat').value = p.lat.toFixed(5); document.getElementById('zlon').value = p.lon.toFixed(5);
+          var p = b.raw[b.activity[0]]; document.getElementById('zlat').value = p.lat.toFixed(5); document.getElementById('zlon').value = p.lon.toFixed(5);
           document.getElementById('zn').value = 'Home'; document.getElementById('zn').focus(); toast('Check the name and radius, then Add zone');
         };
         document.getElementById('dl').onclick = function () {

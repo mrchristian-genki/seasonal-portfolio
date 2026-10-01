@@ -28,7 +28,7 @@ It's unlisted, not private: put a password on the folder in the DreamHost panel
   - any other end loses its first and last 300 m.
 - **Times** in the published track are seconds from the start, not clock times.
 - **Private zones** are never in the published files. The manager keeps them in the browser's own
-  storage (Check a GPX → Private zones). `ingest.mjs` reads `field/private-zones.json`, which git
+  storage (Check a ride → Private zones). `ingest.mjs` reads `field/private-zones.json`, which git
   ignores: `{"zones":[{"name":"Home","lat":0,"lon":0,"radius":500}]}`.
 - **Photos** are re-saved with no EXIF at all, so no GPS, camera serial, or original timestamps.
   Only the time taken is kept, for ordering.

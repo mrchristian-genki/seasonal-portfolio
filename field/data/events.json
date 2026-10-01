@@ -8,7 +8,7 @@
    "place": "Lake Tahoe Nevada State Park",
    "status": "script",
    "summary": "A sample event: a climb from Spooner Lake to Marlette Lake and back, to show how the manager works.",
-   "sample": true,
+   "sample": false,
    "stats": {
     "distanceKm": 14.71,
     "movingSec": 3958,
