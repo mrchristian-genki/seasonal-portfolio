@@ -51,7 +51,7 @@ const events = fs.readdirSync(path.join(FIELD, 'data/events')).filter((f) => f.e
 
 // Clear out anything from earlier runs that isn't published any more (keeps the hand-written files).
 fs.mkdirSync(OUT, { recursive: true });
-const keep = new Set(['play.css', 'play.js', 'index.html', 'feed.xml', 'data', 'media', 'gallery', 'daydreams', 'above', ...events.map((e) => e.id)]);
+const keep = new Set(['play.css', 'play.js', 'index.html', 'feed.xml', 'hub.json', 'data', 'media', 'gallery', 'daydreams', 'above', ...events.map((e) => e.id)]);
 for (const f of fs.readdirSync(OUT)) if (!keep.has(f)) fs.rmSync(path.join(OUT, f), { recursive: true, force: true });
 for (const d of ['data', 'media']) {
   fs.mkdirSync(path.join(OUT, d), { recursive: true });
@@ -241,6 +241,26 @@ ${aboveHTML}
 ${ddHTML}
 </main>
 ` + foot(''));
+
+// hub.json: everything in Play for the homepage's Play tab, which shows it in place (paths from the site root).
+const R = (f) => 'play/' + f;
+const gItem = (g, cap) => ({ src: R('gallery/' + g.file), poster: g.poster ? R('gallery/' + g.poster) : null, w: g.w, h: g.h, video: g.video, caption: cap != null ? cap : (g.caption || '') });
+fs.writeFileSync(path.join(OUT, 'hub.json'), JSON.stringify({
+  episodes: pages.map(({ e, cover, audio }) => ({ id: e.id, url: R(e.id + '/'), title: e.post && e.post.title || e.title, kind: KIND[e.kind] || e.kind, date: day(e.date),
+    place: e.place || '', summary: e.summary || '', cover: cover ? { src: R(cover.src.replace('../', '')), w: cover.w, h: cover.h } : null,
+    audio: audio ? { src: R(audio.src.replace('../', '')), time: mmss(audio.sec) } : null,
+    stats: e.track && e.track.stats ? `${mi(e.track.stats.distanceKm)} · ↑ ${ft(e.track.stats.gainM)}` : '' })),
+  fieldNotes: { title: show.showTitle, about: show.about, note: show.narrationNote },
+  daily: yt.length ? { title: G.youtube.title, about: G.youtube.about, channel: `https://www.youtube.com/${G.youtube.handle}/videos`,
+    videos: yt.map((v) => ({ id: v.id, title: v.title.replace(/^Daily Dose of Paradise\s*[:\-–]\s*/i, '') })) } : null,
+  above: MAN ? { title: G.above.title, about: G.above.about, url: R('above/'), items: MAN.above.map((g) => gItem(g)) } : null,
+  daydreams: series.length ? { tools: G.tools, series: series.map(({ s, m, cover }) => ({ key: s.key, title: s.title, about: s.about, url: R(`daydreams/${s.key}/`),
+    cover: gItem(cover), count: m.picks.length + (m.real ? m.real.length : 0),
+    groups: m.real ? [{ label: 'Real', real: true, items: m.real.map((g) => gItem(g)) }, { label: 'Imagined', ai: true, items: m.picks.map((g) => gItem(g)) }]
+      : s.original != null ? [{ label: 'The original', real: true, items: m.picks.filter((g) => g.n === s.original).map((g) => gItem(g, 'Virginia Street and Second Street, Reno, 1882.')) },
+        { label: 'What they might have seen', ai: true, items: m.picks.filter((g) => g.n !== s.original).map((g) => gItem(g)) }]
+      : [{ label: '', ai: true, items: m.picks.map((g, i) => gItem(g, s.key === 'under-the-surface' ? 'Scene ' + (i + 1) : '')) }] })) } : null
+}) + '\n');
 
 // RSS (episodes as enclosures)
 const rss = `<?xml version="1.0" encoding="UTF-8"?>
