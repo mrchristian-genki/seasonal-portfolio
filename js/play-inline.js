@@ -1,8 +1,9 @@
-/* PLAY, IN PLACE: the homepage's Play tab shows everything from play/hub.json right there, so nobody
-   has to leave the lake: Field Notes episodes (play from the card), Daily Dose of Paradise (YouTube
-   loads only when tapped), From Above and the Daydreams series, which open in a panel under the
-   cards. Each thing still has its own page under play/ to share. Nothing loads until the Play tab
-   is opened. */
+/* PLAY, IN PLACE: the homepage's Play tab shows everything from play/hub.json right there.
+   Default view: every section, each limited (Field Notes 3, Daily Dose 4, From Above 8, Daydreams 8)
+   with View all. A chip or View all isolates one section (the others fade away, the full set fades
+   in). Anything clicked opens a modal: the episode story, a Daily Dose video with its date, a
+   photo, a Daydreams series. The view and open item live in the address like the rest of the site
+   (?spring+daydreams+fake-tahoe), and back/forward work. Nothing loads until the Play tab opens. */
 (function () {
   'use strict';
   var box = document.getElementById('playInline');
@@ -12,94 +13,181 @@
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   var AI = '<span class="pi-badge ai">Made with AI</span>', REAL = '<span class="pi-badge real">Real photographs</span>';
 
+
+  // ── State: which view, and which item's modal is open. Mirrored in the address bar the same way as
+  //    the rest of the site: ?spring+daydreams, ?spring+daydreams+fake-tahoe, ?notes, ?above…
+  var SECTIONS = ['notes', 'dose', 'above', 'daydreams'];
+  var LIMIT = { notes: 3, dose: 4, above: 8, daydreams: 8 };
+  var H = null, state = { view: 'all', item: null };
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var FADE = reduce ? 0 : 260;
+
+  function words() { return (decodeURIComponent(location.search.slice(1)).toLowerCase().split(/[+&,;\s]+/)).map(function (w) { return w.split('=')[0]; }).filter(Boolean); }
+  function readURL() {
+    var ws = words(), v = 'all', item = null;
+    ws.forEach(function (w) { if (SECTIONS.indexOf(w) >= 0) v = w; });
+    if (H) ws.forEach(function (w) {
+      if (H.daydreams && H.daydreams.series.some(function (s) { return s.key === w; })) { item = w; if (v === 'all') v = 'daydreams'; }
+      if (H.episodes.some(function (e) { return e.id === w; })) { item = w; if (v === 'all') v = 'notes'; }
+    });
+    return { view: v, item: item };
+  }
+  // Words for scene.js to keep, and our own writes to the address.
+  window.__playWords = function () { var w = []; if (state.view !== 'all') w.push(state.view); if (state.item) w.push(state.item); return w; };
+  function writeURL(push) {
+    var keep = words().filter(function (w) { return SECTIONS.indexOf(w) < 0 && !isItem(w); });
+    if (!keep.some(function (w) { return /^(spring|lab)$/.test(w); })) keep.unshift('spring');
+    var q = keep.concat(window.__playWords()).join('+');
+    try { history[push ? 'pushState' : 'replaceState']({ play: true }, '', location.pathname + (q ? '?' + q : '') + location.hash); } catch (e) {}
+  }
+  function isItem(w) { return !!H && (H.episodes.some(function (e) { return e.id === w; }) || (H.daydreams && H.daydreams.series.some(function (s) { return s.key === w; }))); }
+
+  // ── Building blocks
   function tile(g) {
     var inner = g.video
       ? '<video muted loop playsinline preload="none" poster="' + esc(g.poster) + '" width="' + g.w + '" height="' + g.h + '"><source src="' + esc(g.src) + '" type="video/mp4"></video><span class="pi-loop" aria-hidden="true">▶</span>'
       : '<img src="' + esc(g.src) + '" alt="' + esc(g.caption) + '" width="' + g.w + '" height="' + g.h + '" loading="lazy">';
-    return '<figure class="pi-tile"><a href="' + esc(g.src) + '" data-pi-box' + (g.video ? ' data-video' : '') + '>' + inner + '</a>' +
+    return '<figure class="pi-tile pi-in"><a href="' + esc(g.src) + '" data-pi-box' + (g.video ? ' data-video' : '') + '>' + inner + '</a>' +
       (g.caption ? '<figcaption>' + esc(g.caption) + '</figcaption>' : '') + '</figure>';
   }
+  function episode(e) {
+    return '<article class="pi-ep pi-in">' + (e.cover ? '<img src="' + esc(e.cover.src) + '" alt="" width="' + e.cover.w + '" height="' + e.cover.h + '" loading="lazy">' : '') +
+      '<div><p class="pi-kick">' + esc(e.kind) + ' · ' + esc(e.date) + (e.stats ? ' · ' + esc(e.stats) : '') + '</p><h4>' + esc(e.title) + '</h4><p>' + esc(e.summary) + '</p>' +
+      (e.audio ? '<audio controls preload="none" src="' + esc(e.audio.src) + '"></audio>' : '') +
+      '<p class="pi-more"><a href="' + esc(e.url) + '" data-pi-story="' + esc(e.id) + '">The story, the map and the photos →</a></p></div></article>';
+  }
+  function video(v, i) {
+    return '<figure class="pi-in"><button type="button" class="pi-ytbtn" data-dose="' + i + '" aria-label="' + esc(v.title) + '"><img src="https://i.ytimg.com/vi/' + esc(v.id) +
+      '/hqdefault.jpg" alt="" loading="lazy" width="480" height="360"><span aria-hidden="true">▶</span></button><figcaption>' + esc(v.title) + (v.date ? '<small>' + esc(v.date) + '</small>' : '') + '</figcaption></figure>';
+  }
+  function serie(s, i) {
+    return '<button type="button" class="pi-serie pi-in" data-series="' + esc(s.key) + '"><img src="' + esc(s.cover.poster || s.cover.src) + '" alt="" loading="lazy" width="' + s.cover.w + '" height="' + s.cover.h + '"><span><b>' + esc(s.title) + '</b><i>' + s.count + '</i></span></button>';
+  }
+  function section(id, title, badge, sub, items, all, cls) {
+    var n = all.length, lim = state.view === id ? n : LIMIT[id];
+    return '<section class="pi-sec" data-sec="' + id + '"><h3>' + esc(title) + (badge || '') + '</h3><p class="pi-sub">' + sub + '</p>' +
+      '<div class="' + cls + '">' + items(all.slice(0, lim)) + '</div>' +
+      (state.view === 'all' && n > 0 ? '<p class="pi-more"><button type="button" data-pi-view="' + id + '">' + (n > lim ? 'View all ' + n + ' →' : 'Open ' + esc(title) + ' →') + '</button></p>'
+        : state.view === id ? '<p class="pi-more"><button type="button" data-pi-view="all">← Back to everything in Play</button></p>' : '') + '</section>';
+  }
+  function sectionHTML(id) {
+    var h = H;
+    if (id === 'notes' && h.episodes.length) return section('notes', h.fieldNotes.title, '', esc(h.fieldNotes.about), function (a) { return a.map(episode).join(''); }, h.episodes, 'pi-eps') +
+      '';
+    if (id === 'dose' && h.daily) return section('dose', h.daily.title, '', esc(h.daily.about) + ' <a href="' + esc(h.daily.channel) + '" target="_blank" rel="noopener">On YouTube</a>', function (a) { return a.map(video).join(''); }, h.daily.videos, 'pi-yt');
+    if (id === 'above' && h.above) return section('above', h.above.title, ' ' + REAL, esc(h.above.about), function (a) { return a.map(tile).join(''); }, h.above.items, 'pi-grid');
+    if (id === 'daydreams' && h.daydreams) return section('daydreams', 'Daydreams', ' ' + AI, 'Ideas that only exist as pictures, so far. ' + esc(h.daydreams.tools), function (a) { return a.map(serie).join(''); }, h.daydreams.series, 'pi-series');
+    return '';
+  }
+  var LABEL = { notes: 'Field Notes', dose: 'Daily Dose of Paradise', above: 'From Above', daydreams: 'Daydreams' };
 
-  function render(h) {
-    var out = '<nav class="pi-jump">' +
-      (h.episodes.length ? '<a href="#pi-notes">Field Notes</a>' : '') + (h.daily ? '<a href="#pi-daily">Daily Dose of Paradise</a>' : '') +
-      (h.above ? '<a href="#pi-above">From Above</a>' : '') + (h.daydreams ? '<a href="#pi-dd">Daydreams</a>' : '') + '</nav>';
-
-    if (h.episodes.length) out += '<section id="pi-notes" class="pi-sec"><h3>' + esc(h.fieldNotes.title) + '</h3><p class="pi-sub">' + esc(h.fieldNotes.about) + '</p>' +
-      h.episodes.map(function (e) {
-        return '<article class="pi-ep">' + (e.cover ? '<img src="' + esc(e.cover.src) + '" alt="" width="' + e.cover.w + '" height="' + e.cover.h + '" loading="lazy">' : '') +
-          '<div><p class="pi-kick">' + esc(e.kind) + ' · ' + esc(e.date) + (e.stats ? ' · ' + esc(e.stats) : '') + '</p><h4>' + esc(e.title) + '</h4><p>' + esc(e.summary) + '</p>' +
-          (e.audio ? '<audio controls preload="none" src="' + esc(e.audio.src) + '"></audio>' : '') +
-          '<p class="pi-more"><a href="' + esc(e.url) + '" data-pi-story>The story, the map and the photos →</a></p></div></article>';
-      }).join('') + '<p class="pi-note">' + esc(h.fieldNotes.note) + '</p></section>';
-
-    if (h.daily) out += '<section id="pi-daily" class="pi-sec"><h3>' + esc(h.daily.title) + '</h3><p class="pi-sub">' + esc(h.daily.about) + '</p><div class="pi-yt">' +
-      h.daily.videos.map(function (v) {
-        return '<figure><button type="button" class="pi-ytbtn" data-yt="' + esc(v.id) + '" aria-label="Play ' + esc(v.title) + '"><img src="https://i.ytimg.com/vi/' + esc(v.id) +
-          '/hqdefault.jpg" alt="" loading="lazy" width="480" height="360"><span aria-hidden="true">▶</span></button><figcaption>' + esc(v.title) + '</figcaption></figure>';
-      }).join('') + '</div><p class="pi-more"><a href="' + esc(h.daily.channel) + '" target="_blank" rel="noopener">All of them on YouTube →</a></p></section>';
-
-    if (h.above) out += '<section id="pi-above" class="pi-sec"><h3>' + esc(h.above.title) + ' ' + REAL + '</h3><p class="pi-sub">' + esc(h.above.about) + '</p>' +
-      '<div class="pi-grid" data-more="8">' + h.above.items.map(tile).join('') + '</div>' +
-      (h.above.items.length > 8 ? '<p class="pi-more"><button type="button" class="pi-show">Show all ' + h.above.items.length + '</button></p>' : '') + '</section>';
-
-    if (h.daydreams) out += '<section id="pi-dd" class="pi-sec"><h3>Daydreams ' + AI + '</h3><p class="pi-sub">Ideas that only exist as pictures, so far. ' + esc(h.daydreams.tools) + '</p>' +
-      '<div class="pi-series">' + h.daydreams.series.map(function (s, i) {
-        return '<button type="button" class="pi-serie" data-i="' + i + '" aria-expanded="false"><img src="' + esc(s.cover.poster || s.cover.src) + '" alt="" loading="lazy" width="' + s.cover.w + '" height="' + s.cover.h + '"><span><b>' + esc(s.title) + '</b><i>' + s.count + '</i></span></button>';
-      }).join('') + '</div><div class="pi-panel" id="piPanel" hidden></div></section>';
-
-    box.innerHTML = out;
-    wire(h);
+  // ── Render: chips + the sections for this view, with a fade between views
+  function render(first) {
+    var chips = '<nav class="pi-jump" aria-label="Play sections"><button type="button" data-pi-view="all"' + (state.view === 'all' ? ' class="on" aria-current="true"' : '') + '>All</button>' +
+      SECTIONS.filter(function (id) { return sectionHTML(id); }).map(function (id) { return '<button type="button" data-pi-view="' + id + '"' + (state.view === id ? ' class="on" aria-current="true"' : '') + '>' + LABEL[id] + '</button>'; }).join('') + '</nav>';
+    var body = (state.view === 'all' ? SECTIONS : [state.view]).map(sectionHTML).join('') + '<p class="pi-note">' + esc(H.fieldNotes.note) + '</p>';
+    var stage = box.querySelector('.pi-stage');
+    function paint() {
+      box.innerHTML = chips + '<div class="pi-stage">' + body + '</div>';
+      var items = box.querySelectorAll('.pi-in');
+      items.forEach(function (el, i) { el.style.animationDelay = Math.min(i, 16) * 35 + 'ms'; });
+      box.querySelectorAll('.pi-ytbtn img').forEach(function (im) { im.onerror = function () { im.onerror = null; im.src = im.src.replace('hqdefault', 'mqdefault'); }; });
+      watch(box);
+    }
+    if (first || !stage || !FADE) return paint();
+    stage.classList.add('pi-out');
+    setTimeout(function () {
+      paint();
+      var top = box.getBoundingClientRect().top;
+      if (top < 0 || top > innerHeight * 0.6) box.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+    }, FADE);
+  }
+  function setView(v, push) {
+    if (v === state.view) v = 'all';          // the active chip again goes back to everything
+    state.view = v; state.item = null; render(); writeURL(push !== false);
   }
 
   // Short clips loop only while on screen (never with reduced motion).
-  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var io = 'IntersectionObserver' in window && !reduce ? new IntersectionObserver(function (es) {
     es.forEach(function (e) { if (e.isIntersecting) { var p = e.target.play(); if (p && p.catch) p.catch(function () {}); } else e.target.pause(); });
   }, { threshold: 0.35 }) : null;
   function watch(root) { if (io) root.querySelectorAll('video:not([controls])').forEach(function (v) { io.observe(v); }); }
 
-  function openSeries(h, i) {
-    var s = h.daydreams.series[i], panel = document.getElementById('piPanel'), n = h.daydreams.series.length;
-    box.querySelectorAll('.pi-serie').forEach(function (b) { b.setAttribute('aria-expanded', String(+b.dataset.i === i)); b.classList.toggle('on', +b.dataset.i === i); });
-    panel.innerHTML = '<div class="pi-panel-head"><h4>' + esc(s.title) + '</h4><button type="button" class="pi-close" aria-label="Close">×</button></div><p class="pi-sub">' + esc(s.about) + '</p>' +
+  // ── One modal for Daydreams series and Daily Dose videos
+  var mdlg = null;
+  function modal(html, onClose) {
+    if (!mdlg) {
+      mdlg = document.createElement('dialog'); mdlg.className = 'pi-story pi-modal';
+      mdlg.innerHTML = '<div class="pi-story-bar"><span class="pi-modal-kick"></span><button type="button" class="pi-close" aria-label="Close">×</button></div><div class="pi-story-body"></div>';
+      mdlg.querySelector('.pi-close').onclick = function () { mdlg.close(); };
+      mdlg.addEventListener('click', function (e) { if (e.target === mdlg) mdlg.close(); });
+      mdlg.addEventListener('close', function () { var b = mdlg.querySelector('.pi-story-body'); b.innerHTML = ''; if (mdlg._onClose) mdlg._onClose(); });
+      mdlg.querySelector('.pi-story-body').addEventListener('click', onModalClick);
+      document.body.appendChild(mdlg);
+    }
+    mdlg._onClose = onClose || null;
+    var b = mdlg.querySelector('.pi-story-body'); b.innerHTML = html; b.scrollTop = 0;
+    if (!mdlg.open) mdlg.showModal();
+    watch(b);
+    return mdlg;
+  }
+  function openSeries(key) {
+    var list = H.daydreams.series, i = list.findIndex(function (s) { return s.key === key; }); if (i < 0) return;
+    var s = list[i], n = list.length, prev = list[(i - 1 + n) % n], next = list[(i + 1) % n];
+    var html = '<p class="kicker"><span class="kind">Daydreams</span> · ' + (s.groups.length > 1 ? 'Real and imagined' : 'Made with AI') + '</p><h1>' + esc(s.title) + '</h1><p class="lede">' + esc(s.about) + '</p>' +
       s.groups.map(function (g) {
-        return (g.label ? '<h5>' + esc(g.label) + ' ' + (g.real ? REAL.replace('Real photographs', s.groups.length > 1 && g.label === 'The original' ? '1882 photograph' : 'Photographs') : AI) + '</h5>' : '') +
+        return (g.label ? '<h5 class="pi-h5">' + esc(g.label) + ' ' + (g.real ? '<span class="pi-badge real">' + (g.label === 'The original' ? '1882 photograph' : 'Photographs') + '</span>' : AI) + '</h5>' : '') +
           '<div class="pi-grid">' + g.items.map(tile).join('') + '</div>';
       }).join('') +
-      '<nav class="pi-pager"><button type="button" data-go="' + ((i - 1 + n) % n) + '">← ' + esc(h.daydreams.series[(i - 1 + n) % n].title) + '</button>' +
-      '<a href="' + esc(s.url) + '">Page to share</a><button type="button" data-go="' + ((i + 1) % n) + '">' + esc(h.daydreams.series[(i + 1) % n].title) + ' →</button></nav>';
-    panel.hidden = false; watch(panel);
-    panel.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+      '<nav class="pi-pager"><button type="button" data-series="' + esc(prev.key) + '">← ' + esc(prev.title) + '</button><a href="' + esc(s.url) + '" target="_blank" rel="noopener">Page to share</a><button type="button" data-series="' + esc(next.key) + '">' + esc(next.title) + ' →</button></nav>';
+    modal(html, function () { if (state.item === key || state.item && !mdlg.open) { state.item = null; writeURL(false); } });
+    mdlg.querySelector('.pi-modal-kick').textContent = (i + 1) + ' of ' + n;
+    state.item = key; writeURL(false);
+  }
+  function openDose(i) {
+    var v = H.daily.videos[i];
+    var html = '<p class="kicker"><span class="kind">Daily Dose of Paradise</span>' + (v.date ? ' · ' + esc(v.date) : '') + '</p><h1>' + esc(v.title) + '</h1>' +
+      '<div class="pi-player"><iframe src="https://www.youtube-nocookie.com/embed/' + encodeURIComponent(v.id) + '?autoplay=1&rel=0" title="' + esc(v.title) + '" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>' +
+      (v.desc ? '<p class="lede">' + esc(v.desc).replace(/\n+/g, '<br>') + '</p>' : '') +
+      '<nav class="pi-pager">' + (i > 0 ? '<button type="button" data-dose="' + (i - 1) + '">← Newer</button>' : '<span></span>') +
+      '<a href="https://www.youtube.com/watch?v=' + encodeURIComponent(v.id) + '" target="_blank" rel="noopener">Watch on YouTube</a>' +
+      (i < H.daily.videos.length - 1 ? '<button type="button" data-dose="' + (i + 1) + '">Older →</button>' : '<span></span>') + '</nav>';
+    modal(html);
+    mdlg.querySelector('.pi-modal-kick').textContent = 'Video ' + (i + 1) + ' of ' + H.daily.videos.length;
+  }
+  function onModalClick(ev) {
+    var b = ev.target.closest('[data-series],[data-dose],[data-pi-box]');
+    if (!b) return;
+    if (b.hasAttribute('data-series')) openSeries(b.getAttribute('data-series'));
+    else if (b.hasAttribute('data-dose')) openDose(+b.getAttribute('data-dose'));
+    else { ev.preventDefault(); lightbox(b); }
+  }
+  function openEpisode(id, url) {
+    story(url); state.item = id; writeURL(false);
+    if (sdlg && !sdlg._piHooked) { sdlg._piHooked = true; sdlg.addEventListener('close', function () { if (H.episodes.some(function (e) { return e.id === state.item; })) { state.item = null; writeURL(false); } }); }
+  }
+  function openItem(item) {
+    if (!item) return;
+    var e = H.episodes.filter(function (x) { return x.id === item; })[0];
+    if (e) openEpisode(e.id, e.url); else openSeries(item);
   }
 
-  function wire(h) {
-    watch(box);
+  function wire() {
     box.addEventListener('click', function (ev) {
       var t = ev.target, b;
-      if ((b = t.closest('.pi-jump a'))) { ev.preventDefault(); var to = document.querySelector(b.getAttribute('href')); if (to) to.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' }); return; }
-      if ((b = t.closest('.pi-serie'))) { if (b.classList.contains('on')) { closePanel(); return; } openSeries(h, +b.dataset.i); return; }
-      if ((b = t.closest('[data-go]'))) { openSeries(h, +b.dataset.go); return; }
-      if (t.closest('.pi-close')) { closePanel(); return; }
-      if ((b = t.closest('.pi-show'))) { b.closest('.pi-sec').querySelector('.pi-grid').removeAttribute('data-more'); b.parentNode.remove(); return; }
-      if ((b = t.closest('[data-yt]'))) {
-        var f = document.createElement('iframe');
-        f.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(b.dataset.yt) + '?autoplay=1&rel=0';
-        f.allow = 'autoplay; encrypted-media; picture-in-picture'; f.allowFullscreen = true; f.title = b.getAttribute('aria-label');
-        b.replaceWith(f); return;
-      }
-      if ((b = t.closest('[data-pi-story]'))) { ev.preventDefault(); story(b.getAttribute('href')); return; }
-      if ((b = t.closest('[data-pi-box]'))) { ev.preventDefault(); lightbox(b); }
+      if ((b = t.closest('[data-pi-view]'))) { setView(b.getAttribute('data-pi-view')); return; }
+      if ((b = t.closest('[data-pi-story]'))) { ev.preventDefault(); openEpisode(b.getAttribute('data-pi-story'), b.getAttribute('href')); return; }
+      if ((b = t.closest('[data-series],[data-dose],[data-pi-box]'))) { onModalClick(ev); }
     });
-    box.querySelectorAll('.pi-ytbtn img').forEach(function (im) { im.onerror = function () { im.onerror = null; im.src = im.src.replace('hqdefault', 'mqdefault'); }; });
-  }
-  function closePanel() {
-    var panel = document.getElementById('piPanel'); panel.hidden = true; panel.innerHTML = '';
-    box.querySelectorAll('.pi-serie').forEach(function (b) { b.classList.remove('on'); b.setAttribute('aria-expanded', 'false'); });
-    document.getElementById('pi-dd').scrollIntoView({ block: 'start' });
+    addEventListener('popstate', function () {
+      if (!view.classList.contains('on')) return;
+      var s = readURL(); if (s.view !== state.view) { state.view = s.view; render(); }
+      state.item = s.item;
+      [mdlg, sdlg].forEach(function (d) { if (d && d.open && !s.item) d.close(); });
+      if (s.item) openItem(s.item);
+    });
   }
 
-  // The full story (post, route map, photos) in a pop-up over the homepage. It reads the episode's
   // own page and shows its article, so the two never drift apart.
   var sdlg = null, assets = null;
   function need(tag, attrs) { return new Promise(function (ok) { var el = document.createElement(tag); for (var k in attrs) el[k] = attrs[k]; el.onload = el.onerror = ok; document.head.appendChild(el); }); }
@@ -160,10 +248,14 @@
     dlg.showModal();
   }
 
+
   function load() {
     if (loaded) return; loaded = true;
-    fetch(box.getAttribute('data-hub')).then(function (r) { if (!r.ok) throw 0; return r.json(); }).then(render)
-      .catch(function () { loaded = false; box.innerHTML = '<p class="pi-sub"><a href="play/">Open Play</a></p>'; });
+    fetch(box.getAttribute('data-hub')).then(function (r) { if (!r.ok) throw 0; return r.json(); }).then(function (h) {
+      H = h; var s = readURL(); state.view = s.view;
+      render(true); wire();
+      if (s.item) openItem(s.item);
+    }).catch(function () { loaded = false; box.innerHTML = '<p class="pi-sub"><a href="play/">Open Play</a></p>'; });
   }
   // Load the first time the Play tab is showing (it can also be the tab the page opens on).
   function check() { if (view && view.classList.contains('on')) load(); }

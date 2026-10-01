@@ -1,8 +1,9 @@
 /* PLAY, IN PLACE: styles for the Play tab's live content (js/play-inline.js). Everything is scoped to
    .play-inline, which breaks out of the 760 px about column to give the grids room. */
-.play-inline{--pi-ink:#0f4d47;--pi-ink2:#3f5a64;--pi-ink3:#71878f;--pi-line:#dde7e8;--pi-accent:#d8618f;--pi-soft:#fbe7ef;
+.play-inline,.pi-story,.pi-lightbox{--pi-ink:#0f4d47;--pi-ink2:#3f5a64;--pi-ink3:#71878f;--pi-line:#dde7e8;--pi-accent:#d8618f;--pi-soft:#fbe7ef;
   --pi-display:"Nunito","Poppins","Arial Rounded MT Bold","Avenir Next Rounded","Avenir Next","Segoe UI",Arial,sans-serif;
-  position:relative;left:50%;transform:translateX(-50%);width:min(1120px,calc(100vw - 32px));text-align:left;margin:28px 0 8px;color:var(--pi-ink)}
+}
+.play-inline{position:relative;left:50%;transform:translateX(-50%);width:min(1120px,calc(100vw - 32px));text-align:left;margin:28px 0 8px;color:var(--pi-ink)}
 .play-inline .pi-loading{text-align:center;color:var(--pi-ink3)}
 .pi-jump{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:8px}
 .pi-jump a{font:700 14px var(--pi-display);text-decoration:none;color:var(--pi-ink);border:1px solid var(--pi-line);background:#fff;border-radius:999px;padding:6px 13px}
@@ -99,3 +100,32 @@
 .pi-story-body .learned{font-family:system-ui,sans-serif;font-size:16px;background:#fbe7ef;border-radius:12px;padding:12px 14px;color:#0f4d47}
 .pi-story-body .kind{font-weight:800;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#d8618f}
 .pi-story-body .lede{margin:10px 0 0;max-width:none}
+/* Views: chips are buttons now; the stage fades out, the new view's items fade up in a stagger */
+.pi-jump{position:sticky;top:8px;z-index:3;padding:6px;background:rgba(255,255,255,.88);backdrop-filter:blur(6px);border-radius:999px;width:max-content;max-width:100%;margin:0 auto 8px;overflow-x:auto;flex-wrap:nowrap;scrollbar-width:none}
+.pi-jump::-webkit-scrollbar{display:none}
+.pi-jump button{flex:none;font:700 14px var(--pi-display);color:var(--pi-ink);border:1px solid var(--pi-line);background:#fff;border-radius:999px;padding:6px 13px;cursor:pointer;transition:background .2s,color .2s,border-color .2s}
+.pi-jump button:hover{border-color:var(--pi-accent);color:var(--pi-accent)}
+.pi-jump button.on{background:var(--pi-ink);border-color:var(--pi-ink);color:#fff}
+.pi-stage{transition:opacity .26s ease,transform .26s ease}
+.pi-stage.pi-out{opacity:0;transform:translateY(8px)}
+.pi-in{animation:piIn .42s cubic-bezier(.2,.8,.3,1) both}
+@keyframes piIn{from{opacity:0;transform:translateY(12px) scale(.985)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.pi-in{animation:none}.pi-stage{transition:none}}
+.pi-eps{display:grid;gap:14px}
+.pi-yt figcaption small{display:block;font:500 12px system-ui,sans-serif;color:var(--pi-ink3);margin-top:2px}
+.pi-sub a{color:var(--pi-accent)}
+.pi-modal .pi-modal-kick{font:700 13px var(--pi-display,Arial);color:#71878f}
+.pi-modal .pi-story-body{padding-top:10px}
+.pi-modal .pi-grid{margin-top:12px}
+.pi-modal .pi-tile figcaption{margin-top:5px}
+.pi-modal .pi-tile img,.pi-modal .pi-tile video{border-radius:0;max-height:none}
+.pi-h5{font:800 18px "Nunito","Poppins",Arial,sans-serif;margin:22px 0 0;display:flex;align-items:center;gap:8px}
+.pi-player{margin:16px 0 4px;border-radius:12px;overflow:hidden;background:#000;aspect-ratio:16/9}
+.pi-player iframe{display:block;width:100%;height:100%;border:0}
+.pi-modal .pi-pager{margin-top:20px}
+.pi-modal .pi-pager span{flex:1}
+
+.pi-grid:has(> .pi-tile:only-child){grid-template-columns:minmax(0,760px)}
+.pi-grid:has(> .pi-tile:only-child) img{aspect-ratio:auto}
+.pi-modal .pi-h5{font-size:17px}
+.pi-story-body .pi-tile{margin:0}

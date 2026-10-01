@@ -2819,7 +2819,9 @@ function _bootInner() {
   // The page opens straight on that look (no crossfade), and the address bar follows every
   // season/night change after that, so the current view can always be copied and shared.
   // Other flags (?bench ?fps ?wildlife ?diag) are left as they are.
-  const LINK_SEASON = { spring: 1, summer: 2, fall: 3, autumn: 3, winter: 0, books: 2, web: 3, workshop: 0, lab: 1 };
+  const LINK_SEASON = { spring: 1, summer: 2, fall: 3, autumn: 3, winter: 0, books: 2, web: 3, workshop: 0, lab: 1,
+    // Play's sections open the Play (spring) tab on that section: ?daydreams, ?spring+above, ?notes.
+    notes: 1, dose: 1, above: 1, daydreams: 1 };
   // Weather levels: each word sets how hard it rains (or snows, in winter). Light, medium, full.
   // Rain: drizzle, shower, tempest. Snow: flurries, snow, blizzard. (Older words kept as aliases.)
   const STORM_LEVELS = { drizzle: 0.4, shower: 0.7, tempest: 1, flurries: 0.4, snow: 0.7, blizzard: 1,
@@ -2862,7 +2864,9 @@ function _bootInner() {
   }
   function writeLink() {
     const words = [seasonNames[SEASON], NIGHT_MODE ? 'night' : 'day']
-      .concat(linkWords.filter(w => LINK_KEEP.includes(w)));
+      .concat(linkWords.filter(w => LINK_KEEP.includes(w)))
+      // On the Play tab, keep its section/series words (play-inline.js owns them).
+      .concat(SEASON === 1 && window.__playWords ? window.__playWords() : []);
     try { history.replaceState(null, '', location.pathname + '?' + words.join('+') + location.hash); } catch (e) { /* file:// */ }
   }
   // Only rewrite the address once someone changes the view (a plain visit keeps a clean URL).

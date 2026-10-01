@@ -214,7 +214,9 @@ try {
   const x = execFileSync('curl', ['-sL', '-m', '30', `https://www.youtube.com/feeds/videos.xml?channel_id=${G.youtube.channel}`], { encoding: 'utf8' });
   yt = [...x.matchAll(/<entry>([\s\S]*?)<\/entry>/g)].map((m) => ({
     id: (/<yt:videoId>([^<]+)/.exec(m[1]) || [])[1], title: ((/<title>([^<]+)/.exec(m[1]) || [])[1] || '').replace(/&amp;/g, '&').replace(/&#39;/g, "'").replace(/&quot;/g, '"').trim(),
-    date: ((/<published>([^<]+)/.exec(m[1]) || [])[1] || '').slice(0, 10) })).filter((v) => v.id && /daily dose of paradise/i.test(v.title)).slice(0, G.youtube.show);
+    date: ((/<published>([^<]+)/.exec(m[1]) || [])[1] || '').slice(0, 10),
+    desc: ((/<media:description>([\s\S]*?)<\/media:description>/.exec(m[1]) || [])[1] || '').replace(/&amp;/g, '&').replace(/&#39;/g, "'").replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>').trim() }))
+    .filter((v) => v.id && /daily dose of paradise/i.test(v.title));   // the feed holds the newest 15
 } catch (err) { console.warn('YouTube feed unavailable; Daily Dose section left out this time'); }
 
 // Index
@@ -226,7 +228,7 @@ const cards = pages.map(({ e, cover, audio }) => {
 <p class="meta">${s ? `${mi(s.distanceKm)} · ↑ ${ft(s.gainM)}` : ''}${audio ? ` · <span class="pill">▶ ${mmss(audio.sec)}</span>` : ''}</p></div></a>`;
 }).join('\n');
 const ytHTML = yt.length ? `<section id="daily-dose" class="block"><h2 class="sec">${esc(G.youtube.title)}</h2><p class="sub">${esc(G.youtube.about)}</p>
-<div class="yt">${yt.map((v) => `<figure class="yt-item"><button type="button" class="yt-play" data-yt="${esc(v.id)}" aria-label="Play ${esc(v.title)}"><img src="https://i.ytimg.com/vi/${esc(v.id)}/hqdefault.jpg" alt="" loading="lazy" width="480" height="360" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/${esc(v.id)}/mqdefault.jpg'"><span class="yt-btn" aria-hidden="true">▶</span></button><figcaption>${esc(v.title.replace(/^Daily Dose of Paradise\s*[:\-–]\s*/i, ''))}</figcaption></figure>`).join('')}</div>
+<div class="yt">${yt.slice(0, G.youtube.show).map((v) => `<figure class="yt-item"><button type="button" class="yt-play" data-yt="${esc(v.id)}" aria-label="Play ${esc(v.title)}"><img src="https://i.ytimg.com/vi/${esc(v.id)}/hqdefault.jpg" alt="" loading="lazy" width="480" height="360" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/${esc(v.id)}/mqdefault.jpg'"><span class="yt-btn" aria-hidden="true">▶</span></button><figcaption>${esc(v.title.replace(/^Daily Dose of Paradise\s*[:\-–]\s*/i, ''))}</figcaption></figure>`).join('')}</div>
 <p class="more"><a href="https://www.youtube.com/${esc(G.youtube.handle)}/videos" rel="noopener">All of them on YouTube →</a></p></section>` : '';
 const aboveHTML = MAN && MAN.above.length ? `<section id="above" class="block"><h2 class="sec">${esc(G.above.title)} <span class="real-badge">Real photographs</span></h2><p class="sub">${esc(G.above.about)}</p>
 <div class="grid">${MAN.above.slice(0, 8).map((g) => tile(g, '')).join('')}</div><p class="more"><a href="above/">All ${MAN.above.length} →</a></p></section>` : '';
@@ -252,7 +254,7 @@ fs.writeFileSync(path.join(OUT, 'hub.json'), JSON.stringify({
     stats: e.track && e.track.stats ? `${mi(e.track.stats.distanceKm)} · ↑ ${ft(e.track.stats.gainM)}` : '' })),
   fieldNotes: { title: show.showTitle, about: show.about, note: show.narrationNote },
   daily: yt.length ? { title: G.youtube.title, about: G.youtube.about, channel: `https://www.youtube.com/${G.youtube.handle}/videos`,
-    videos: yt.map((v) => ({ id: v.id, title: v.title.replace(/^Daily Dose of Paradise\s*[:\-–]\s*/i, '') })) } : null,
+    videos: yt.map((v) => ({ id: v.id, title: v.title.replace(/^Daily Dose of Paradise\s*[:\-–]\s*/i, ''), date: v.date ? day(v.date, true) : '', desc: v.desc.slice(0, 600) })) } : null,
   above: MAN ? { title: G.above.title, about: G.above.about, url: R('above/'), items: MAN.above.map((g) => gItem(g)) } : null,
   daydreams: series.length ? { tools: G.tools, series: series.map(({ s, m, cover }) => ({ key: s.key, title: s.title, about: s.about, url: R(`daydreams/${s.key}/`),
     cover: gItem(cover), count: m.picks.length + (m.real ? m.real.length : 0),
