@@ -59,7 +59,9 @@ for (const d of ['data', 'media']) {
 }
 
 const robots = show.listed ? '' : '<meta name="robots" content="noindex">\n';
-const head = (title, desc, url, image, rel) => `<!doctype html>
+// Every page carries the main site's tabs (each opens that tab on the homepage) and Play's own bar.
+const PLAYBAR = [['field-notes', 'Field Notes', '#field-notes'], ['daily-dose', 'Daily Dose', '#daily-dose'], ['above', 'From Above', 'above/'], ['daydreams', 'Daydreams', '#daydreams']];
+const head = (title, desc, url, image, rel, sub = '') => `<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -75,8 +77,9 @@ ${image ? `<meta property="og:image" content="${esc(image)}"><meta name="twitter
 <link rel="stylesheet" href="${rel}play.css?v=${V}">
 </head>
 <body>
-<header class="bar"><a class="brand" href="${rel}"><span class="dot" aria-hidden="true"></span>Play</a>
-<nav><a href="${rel}../">Christian Gehrke</a><button type="button" class="chip" id="units" hidden>mi · ft</button></nav></header>
+<header class="bar"><a class="brand" href="${rel}../"><span class="dot" aria-hidden="true"></span>Christian Gehrke</a>
+<nav class="site" aria-label="Site"><a href="${rel}../?books">Books</a><a href="${rel}../?web">Web</a><a href="${rel}../?workshop">Workshop</a><a class="on" href="${rel}" aria-current="page">Play</a></nav></header>
+<nav class="playbar" aria-label="Play">${PLAYBAR.map(([id, label, href]) => `<a href="${rel}${href}"${id === sub ? ' class="on" aria-current="page"' : ''}>${label}</a>`).join('')}<button type="button" class="chip" id="units" hidden>mi · ft</button></nav>
 `;
 const foot = (rel) => `<footer class="foot"><p>${esc(show.narrationNote)}</p>
 <p><a href="${rel}">Play</a> · <a href="${rel}feed.xml">Field Notes RSS</a> · <a href="${rel}../">christiangehrke.com</a></p></footer>
@@ -118,7 +121,7 @@ for (const e of events) {
 
   const url = `${show.siteUrl}${e.id}/`, title = `${e.post && e.post.title || e.title} · ${show.showTitle}`;
   const desc = e.summary || paras(e.post && e.post.body)[0] || '';
-  const html = head(title, desc, url, cover && cover.abs, '../') + `<main class="article" data-route="../data/${esc(e.id)}.json">
+  const html = head(title, desc, url, cover && cover.abs, '../', 'field-notes') + `<main class="article" data-route="../data/${esc(e.id)}.json">
 <p class="kicker"><span class="kind ${esc(e.kind)}">${KIND[e.kind] || esc(e.kind)}</span> · <time datetime="${esc(e.date)}">${day(e.date, true)}</time>${e.place ? ` · ${esc(e.place)}` : ''}</p>
 <h1>${esc(e.post && e.post.title || e.title)}</h1>
 ${e.summary ? `<p class="lede">${esc(e.summary)}</p>` : ''}
@@ -183,15 +186,21 @@ if (MAN) {
     } else if (s.key === 'under-the-surface') body = `<div class="grid">${m.picks.map((g, i) => tile(g, '../../', 'Scene ' + (i + 1))).join('')}</div>`;
     else body = `<div class="grid">${m.picks.map((g) => tile(g, '../../')).join('')}</div>`;
     const dir = path.join(OUT, 'daydreams', s.key); fs.mkdirSync(dir, { recursive: true });
-    fs.writeFileSync(path.join(dir, 'index.html'), head(`${s.title} · Daydreams · Play`, s.about, `${show.siteUrl}daydreams/${s.key}/`, `${show.siteUrl}gallery/${cover.poster || cover.file}`, '../../') +
+    fs.writeFileSync(path.join(dir, 'index.html'), head(`${s.title} · Daydreams · Play`, s.about, `${show.siteUrl}daydreams/${s.key}/`, `${show.siteUrl}gallery/${cover.poster || cover.file}`, '../../', 'daydreams') +
       `<main class="gallery-page"><p class="kicker"><a href="../../#daydreams">Daydreams</a> · ${m.real ? 'Real and imagined' : AI}</p><h1>${esc(s.title)}</h1><p class="lede">${esc(s.about)}</p>
 ${body}
 <p class="note tools">${esc(G.tools)}</p>
-<nav class="pager"><a href="../../#daydreams"><span>← Back</span>All Daydreams</a><span></span></nav></main>
+<nav class="pager" data-series-pager="${s.key}"></nav></main>
 ` + foot('../../').replace('../../../js/', '../../../js/'));
   }
+  // Earlier / next series links, now that every series page exists.
+  series.forEach(({ s }, i) => {
+    const f = path.join(OUT, 'daydreams', s.key, 'index.html'), prev = series[i - 1], next = series[i + 1];
+    const link = (q, label, cls) => q ? `<a class="${cls}" href="../${q.s.key}/"><span>${label}</span>${esc(q.s.title)}</a>` : `<a class="${cls}" href="../../#daydreams"><span>${label}</span>All Daydreams</a>`;
+    fs.writeFileSync(f, fs.readFileSync(f, 'utf8').replace(`<nav class="pager" data-series-pager="${s.key}"></nav>`, `<nav class="pager">${link(prev, '← Previous', 'prev')}${link(next, 'Next →', 'next')}</nav>`));
+  });
   const dir = path.join(OUT, 'above'); fs.mkdirSync(dir, { recursive: true });
-  fs.writeFileSync(path.join(dir, 'index.html'), head(`${G.above.title} · Play`, G.above.about, `${show.siteUrl}above/`, `${show.siteUrl}gallery/${MAN.above[0].file}`, '../') +
+  fs.writeFileSync(path.join(dir, 'index.html'), head(`${G.above.title} · Play`, G.above.about, `${show.siteUrl}above/`, `${show.siteUrl}gallery/${MAN.above[0].file}`, '../', 'above') +
     `<main class="gallery-page"><p class="kicker"><a href="../#above">Play</a> · <span class="real-badge">Real photographs</span></p><h1>${esc(G.above.title)}</h1><p class="lede">${esc(G.above.about)}</p>
 <div class="grid">${MAN.above.map((g) => tile(g, '../')).join('')}</div>
 <nav class="pager"><a href="../#above"><span>← Back</span>Play</a><span></span></nav></main>
@@ -225,7 +234,6 @@ const ddHTML = series.length ? `<section id="daydreams" class="block"><h2 class=
 <div class="series">${series.map(({ s, m, cover }) => `<a class="serie" href="daydreams/${s.key}/"><img src="gallery/${esc(cover.poster || cover.file)}" alt="" loading="lazy" width="${cover.w}" height="${cover.h}"><span><b>${esc(s.title)}</b><i>${m.picks.length + (m.real ? m.real.length : 0)}${m.real ? ', real and imagined' : ''}</i></span></a>`).join('')}</div></section>` : '';
 fs.writeFileSync(path.join(OUT, 'index.html'), head('Play · Christian Gehrke', show.about, show.siteUrl, pages[0] && pages[0].cover && pages[0].cover.abs, '') +
   `<main class="index"><p class="season-line">Spring, when everything is starting</p><h1>Play</h1><p class="lede">The fun part. Rides, hikes and foraging, a decade of flying, and the things I make, real and imagined.</p>
-<nav class="jump"><a href="#field-notes">Field Notes</a>${yt.length ? '<a href="#daily-dose">Daily Dose of Paradise</a>' : ''}${aboveHTML ? '<a href="#above">From Above</a>' : ''}${ddHTML ? '<a href="#daydreams">Daydreams</a>' : ''}</nav>
 <section id="field-notes" class="block"><h2 class="sec">${esc(show.showTitle)}</h2><p class="sub">${esc(show.about)}</p>
 ${pages.length ? `<div class="cards">${cards}</div>` : '<p class="empty">The first one is on its way.</p>'}</section>
 ${ytHTML}
