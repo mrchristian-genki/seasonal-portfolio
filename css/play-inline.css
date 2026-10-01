@@ -187,3 +187,6 @@ html.night-page .pi-tile a,html.night-page .pi-story-body .map{background:#1d2c3
 .pi-lightbox::backdrop{background:rgba(251,252,251,.97)}
 html.night-page .pi-lightbox::backdrop{background:rgba(14,24,35,.97)}
 .pi-focus-x,.pi-lightbox>.pi-close{background:var(--pi-card)!important;color:var(--pi-ink)!important;border:1px solid var(--pi-line)!important}
+/* Clips in a story fit the column like photos */
+.pi-story-body video{display:block;max-width:100%;width:100%;height:auto;border-radius:12px;background:#000}
+.pi-story-body .post figure video{max-height:70vh;width:auto;margin:0 auto}
