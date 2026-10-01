@@ -215,8 +215,8 @@
       var art = new DOMParser().parseFromString(html, 'text/html').querySelector('main.article');
       if (!art) throw 0;
       art.querySelectorAll('.pager').forEach(function (n) { n.remove(); });
-      [art].concat([].slice.call(art.querySelectorAll('[src],[href],[data-route]'))).forEach(function (n) {
-        ['src', 'href', 'data-route'].forEach(function (k) { var v = n.getAttribute(k); if (v && !/^(https?:|#|data:|mailto:)/.test(v)) n.setAttribute(k, new URL(v, abs).href); });
+      [art].concat([].slice.call(art.querySelectorAll('[src],[href],[poster],[data-route]'))).forEach(function (n) {
+        ['src', 'href', 'poster', 'data-route'].forEach(function (k) { var v = n.getAttribute(k); if (v && !/^(https?:|#|data:|mailto:)/.test(v)) n.setAttribute(k, new URL(v, abs).href); });
       });
       body.innerHTML = ''; body.appendChild(document.importNode(art, true));
       var route = body.querySelector('[data-route]');
