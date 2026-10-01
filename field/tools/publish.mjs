@@ -15,6 +15,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { execFileSync } from 'node:child_process';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const FIELD = path.resolve(here, '..');
@@ -50,7 +51,7 @@ const events = fs.readdirSync(path.join(FIELD, 'data/events')).filter((f) => f.e
 
 // Clear out anything from earlier runs that isn't published any more (keeps the hand-written files).
 fs.mkdirSync(OUT, { recursive: true });
-const keep = new Set(['play.css', 'play.js', 'index.html', 'feed.xml', 'data', 'media', ...events.map((e) => e.id)]);
+const keep = new Set(['play.css', 'play.js', 'index.html', 'feed.xml', 'data', 'media', 'gallery', 'daydreams', 'above', ...events.map((e) => e.id)]);
 for (const f of fs.readdirSync(OUT)) if (!keep.has(f)) fs.rmSync(path.join(OUT, f), { recursive: true, force: true });
 for (const d of ['data', 'media']) {
   fs.mkdirSync(path.join(OUT, d), { recursive: true });
@@ -74,11 +75,11 @@ ${image ? `<meta property="og:image" content="${esc(image)}"><meta name="twitter
 <link rel="stylesheet" href="${rel}play.css?v=${V}">
 </head>
 <body>
-<header class="bar"><a class="brand" href="${rel}"><span class="dot" aria-hidden="true"></span>${esc(show.showTitle)}</a>
+<header class="bar"><a class="brand" href="${rel}"><span class="dot" aria-hidden="true"></span>Play</a>
 <nav><a href="${rel}../">Christian Gehrke</a><button type="button" class="chip" id="units" hidden>mi · ft</button></nav></header>
 `;
 const foot = (rel) => `<footer class="foot"><p>${esc(show.narrationNote)}</p>
-<p><a href="${rel}">All field notes</a> · <a href="${rel}feed.xml">RSS</a> · <a href="${rel}../">christiangehrke.com</a></p></footer>
+<p><a href="${rel}">Play</a> · <a href="${rel}feed.xml">Field Notes RSS</a> · <a href="${rel}../">christiangehrke.com</a></p></footer>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" defer></script>
 <script src="${rel}../js/route-view.js?v=${V}" defer></script>
 <script src="${rel}play.js?v=${V}" defer></script>
@@ -148,6 +149,65 @@ pages.forEach((p, i) => {
   fs.writeFileSync(f, fs.readFileSync(f, 'utf8').replace('<nav class="pager" id="pager"></nav>', `<nav class="pager">${link(older, '← Earlier')}${link(newer, 'Later →')}</nav>`));
 });
 
+// Galleries: Daydreams (AI series) and From Above (drone photography), from field/data/gallery.json
+// and the media fetched by tools/gallery.py.
+const G = readJSON(path.join(FIELD, 'data/gallery.json'));
+const GSRC = path.join(FIELD, 'data/gallery'), MAN = fs.existsSync(path.join(GSRC, 'manifest.json')) ? readJSON(path.join(GSRC, 'manifest.json')) : null;
+const GOUT = path.join(OUT, 'gallery');
+fs.rmSync(GOUT, { recursive: true, force: true }); fs.rmSync(path.join(OUT, 'daydreams'), { recursive: true, force: true }); fs.rmSync(path.join(OUT, 'above'), { recursive: true, force: true });
+const copyMedia = (g) => { for (const f of [g.file, g.poster].filter(Boolean)) { fs.mkdirSync(path.dirname(path.join(GOUT, f)), { recursive: true }); fs.copyFileSync(path.join(GSRC, f), path.join(GOUT, f)); } };
+// A tile: photos open in the lightbox; short clips loop silently in place (play.js starts them on screen).
+const tile = (g, rel, label) => {
+  const src = `${rel}gallery/${g.file}`, img = `${rel}gallery/${g.poster || g.file}`, cap = label || g.caption || '';
+  const inner = g.video
+    ? `<video muted loop playsinline preload="none" poster="${esc(img)}" width="${g.w}" height="${g.h}" data-autoplay><source src="${esc(src)}" type="video/mp4"></video><span class="loop" aria-hidden="true">▶</span>`
+    : `<img src="${esc(img)}" alt="${esc(cap)}" width="${g.w}" height="${g.h}" loading="lazy">`;
+  return `<figure class="tile"><a href="${esc(src)}" data-lightbox${g.video ? ' data-video' : ''}>${inner}</a>${cap ? `<figcaption>${esc(cap)}</figcaption>` : ''}</figure>`;
+};
+const AI = `<span class="ai-badge" title="${esc(G.tools)}">Made with AI</span>`;
+const series = [];
+if (MAN) {
+  MAN.above.forEach(copyMedia);
+  for (const s of G.daydreams) {
+    const m = MAN.daydreams[s.key]; if (!m) continue;
+    m.picks.forEach(copyMedia); (m.real || []).forEach(copyMedia);
+    const cover = (s.cover != null && m.picks.find((g) => g.n === s.cover)) || (m.real && m.real.find((g) => !g.video)) || m.picks.find((g) => !g.video) || m.picks[0];
+    series.push({ s, m, cover });
+    let body;
+    if (m.real) body = `<h2 class="sec">Real <span class="real-badge">Photographs</span></h2><div class="grid">${m.real.map((g) => tile(g, '../../')).join('')}</div>
+<h2 class="sec">Imagined ${AI}</h2><div class="grid">${m.picks.map((g) => tile(g, '../../')).join('')}</div>`;
+    else if (s.original != null) {
+      const orig = m.picks.find((g) => g.n === s.original), rest = m.picks.filter((g) => g !== orig);
+      body = `${orig ? `<h2 class="sec">The original <span class="real-badge">1882 photograph</span></h2><div class="grid one">${tile(orig, '../../', 'Virginia Street and Second Street, Reno, 1882.')}</div>` : ''}
+<h2 class="sec">What they might have seen ${AI}</h2><div class="grid">${rest.map((g) => tile(g, '../../')).join('')}</div>`;
+    } else if (s.key === 'under-the-surface') body = `<div class="grid">${m.picks.map((g, i) => tile(g, '../../', 'Scene ' + (i + 1))).join('')}</div>`;
+    else body = `<div class="grid">${m.picks.map((g) => tile(g, '../../')).join('')}</div>`;
+    const dir = path.join(OUT, 'daydreams', s.key); fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(path.join(dir, 'index.html'), head(`${s.title} · Daydreams · Play`, s.about, `${show.siteUrl}daydreams/${s.key}/`, `${show.siteUrl}gallery/${cover.poster || cover.file}`, '../../') +
+      `<main class="gallery-page"><p class="kicker"><a href="../../#daydreams">Daydreams</a> · ${m.real ? 'Real and imagined' : AI}</p><h1>${esc(s.title)}</h1><p class="lede">${esc(s.about)}</p>
+${body}
+<p class="note tools">${esc(G.tools)}</p>
+<nav class="pager"><a href="../../#daydreams"><span>← Back</span>All Daydreams</a><span></span></nav></main>
+` + foot('../../').replace('../../../js/', '../../../js/'));
+  }
+  const dir = path.join(OUT, 'above'); fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(path.join(dir, 'index.html'), head(`${G.above.title} · Play`, G.above.about, `${show.siteUrl}above/`, `${show.siteUrl}gallery/${MAN.above[0].file}`, '../') +
+    `<main class="gallery-page"><p class="kicker"><a href="../#above">Play</a> · <span class="real-badge">Real photographs</span></p><h1>${esc(G.above.title)}</h1><p class="lede">${esc(G.above.about)}</p>
+<div class="grid">${MAN.above.map((g) => tile(g, '../')).join('')}</div>
+<nav class="pager"><a href="../#above"><span>← Back</span>Play</a><span></span></nav></main>
+` + foot('../'));
+}
+
+// Daily Dose of Paradise: the newest videos from the YouTube channel's public feed, as thumbnails that
+// load the player only when tapped.
+let yt = [];
+try {
+  const x = execFileSync('curl', ['-sL', '-m', '30', `https://www.youtube.com/feeds/videos.xml?channel_id=${G.youtube.channel}`], { encoding: 'utf8' });
+  yt = [...x.matchAll(/<entry>([\s\S]*?)<\/entry>/g)].map((m) => ({
+    id: (/<yt:videoId>([^<]+)/.exec(m[1]) || [])[1], title: ((/<title>([^<]+)/.exec(m[1]) || [])[1] || '').replace(/&amp;/g, '&').replace(/&#39;/g, "'").replace(/&quot;/g, '"').trim(),
+    date: ((/<published>([^<]+)/.exec(m[1]) || [])[1] || '').slice(0, 10) })).filter((v) => v.id && /daily dose of paradise/i.test(v.title)).slice(0, G.youtube.show);
+} catch (err) { console.warn('YouTube feed unavailable; Daily Dose section left out this time'); }
+
 // Index
 const cards = pages.map(({ e, cover, audio }) => {
   const s = e.track && e.track.stats;
@@ -156,11 +216,23 @@ const cards = pages.map(({ e, cover, audio }) => {
 <h2>${esc(e.post && e.post.title || e.title)}</h2>${e.summary ? `<p>${esc(e.summary)}</p>` : ''}
 <p class="meta">${s ? `${mi(s.distanceKm)} · ↑ ${ft(s.gainM)}` : ''}${audio ? ` · <span class="pill">▶ ${mmss(audio.sec)}</span>` : ''}</p></div></a>`;
 }).join('\n');
-fs.writeFileSync(path.join(OUT, 'index.html'), head(show.showTitle + ' · Christian Gehrke', show.about, show.siteUrl, pages[0] && pages[0].cover && pages[0].cover.abs, '') +
-  `<main class="index"><p class="season-line">Spring, when everything is starting</p><h1>${esc(show.showTitle)}</h1><p class="lede">${esc(show.about)}</p>
-${pages.length ? `<div class="cards">${cards}</div>` : '<p class="empty">The first one is on its way.</p>'}
+const ytHTML = yt.length ? `<section id="daily-dose" class="block"><h2 class="sec">${esc(G.youtube.title)}</h2><p class="sub">${esc(G.youtube.about)}</p>
+<div class="yt">${yt.map((v) => `<figure class="yt-item"><button type="button" class="yt-play" data-yt="${esc(v.id)}" aria-label="Play ${esc(v.title)}"><img src="https://i.ytimg.com/vi/${esc(v.id)}/hqdefault.jpg" alt="" loading="lazy" width="480" height="360" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/${esc(v.id)}/mqdefault.jpg'"><span class="yt-btn" aria-hidden="true">▶</span></button><figcaption>${esc(v.title.replace(/^Daily Dose of Paradise\s*[:\-–]\s*/i, ''))}</figcaption></figure>`).join('')}</div>
+<p class="more"><a href="https://www.youtube.com/${esc(G.youtube.handle)}/videos" rel="noopener">All of them on YouTube →</a></p></section>` : '';
+const aboveHTML = MAN && MAN.above.length ? `<section id="above" class="block"><h2 class="sec">${esc(G.above.title)} <span class="real-badge">Real photographs</span></h2><p class="sub">${esc(G.above.about)}</p>
+<div class="grid">${MAN.above.slice(0, 8).map((g) => tile(g, '')).join('')}</div><p class="more"><a href="above/">All ${MAN.above.length} →</a></p></section>` : '';
+const ddHTML = series.length ? `<section id="daydreams" class="block"><h2 class="sec">Daydreams ${AI}</h2><p class="sub">Ideas that only exist as pictures, so far. ${esc(G.tools)}</p>
+<div class="series">${series.map(({ s, m, cover }) => `<a class="serie" href="daydreams/${s.key}/"><img src="gallery/${esc(cover.poster || cover.file)}" alt="" loading="lazy" width="${cover.w}" height="${cover.h}"><span><b>${esc(s.title)}</b><i>${m.picks.length + (m.real ? m.real.length : 0)}${m.real ? ', real and imagined' : ''}</i></span></a>`).join('')}</div></section>` : '';
+fs.writeFileSync(path.join(OUT, 'index.html'), head('Play · Christian Gehrke', show.about, show.siteUrl, pages[0] && pages[0].cover && pages[0].cover.abs, '') +
+  `<main class="index"><p class="season-line">Spring, when everything is starting</p><h1>Play</h1><p class="lede">The fun part. Rides, hikes and foraging, a decade of flying, and the things I make, real and imagined.</p>
+<nav class="jump"><a href="#field-notes">Field Notes</a>${yt.length ? '<a href="#daily-dose">Daily Dose of Paradise</a>' : ''}${aboveHTML ? '<a href="#above">From Above</a>' : ''}${ddHTML ? '<a href="#daydreams">Daydreams</a>' : ''}</nav>
+<section id="field-notes" class="block"><h2 class="sec">${esc(show.showTitle)}</h2><p class="sub">${esc(show.about)}</p>
+${pages.length ? `<div class="cards">${cards}</div>` : '<p class="empty">The first one is on its way.</p>'}</section>
+${ytHTML}
+${aboveHTML}
+${ddHTML}
 </main>
-` + foot('').replace(/\.\.\/js\//, '../js/'));
+` + foot(''));
 
 // RSS (episodes as enclosures)
 const rss = `<?xml version="1.0" encoding="UTF-8"?>

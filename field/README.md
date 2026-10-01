@@ -30,6 +30,16 @@ only, with public fields only. Unpublishing removes it on the next run. `data/sh
 controls whether search engines may index Play (false = live but unlisted). The map and profile
 code is shared with the manager in `js/route-view.js`. Upload `play/` and `js/route-view.js`.
 
+## Play's galleries
+
+`data/gallery.json` lists Play's other sections: **Daily Dose of Paradise** (the newest videos from
+the YouTube channel's public feed, read at publish time), **From Above** (drone photography) and
+**Daydreams** (AI series, each labeled "Made with AI"; Carnelian splits real photos from imagined).
+Each series names a shared Google Photos album and the item numbers to use. `python3
+field/tools/gallery.py` fetches only those (photos 1400 px with no EXIF; clips up to 15 s as silent
+960 px loops, longer edits as a still) into `data/gallery/`, and `publish.mjs` builds `play/above/`,
+`play/daydreams/<series>/` and the hub at `play/`. Needs `pip install imageio-ffmpeg` for clips.
+
 ## Privacy
 
 - **Tracks** are trimmed by `track.js`:
