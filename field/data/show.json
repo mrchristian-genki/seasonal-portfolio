@@ -1,13 +1,38 @@
 {
-  "showTitle": "Field Notes",
-  "byline": "Following Christian Gehrke outside",
-  "narrator": "A warm, curious narrator who follows Christian on his rides, hikes and foraging walks, and tells it from just behind his shoulder.",
-  "audioPrompt": "Read the script below as a podcast narrator.\n\nVoice: warm, relaxed, mid-pitch, American English; curious and good-humoured, never salesy.\nPace: unhurried, about 150 words a minute, with a short pause at each paragraph break and a longer one at each ***.\nDelivery: third person, like a friend who came along and is telling the story afterwards. Light smile on the funny lines; no dramatic movie-trailer voice.\nPronunciation: Gehrke = GUR-kee. Carnelian = car-NEEL-yun. Pinyon = PIN-yun. Marlette = mar-LET.\nOutput: mono, 44.1 kHz WAV or high-bitrate MP3, no music or effects. (Mastered afterwards to -16 LUFS integrated, -1 dBTP.)\n\nTITLE: {{title}}\n\n{{script}}",
-  "statuses": [
-    { "id": "notes", "label": "Notes in", "about": "Photos, voice notes and the Cyclemeter export are in." },
-    { "id": "draft", "label": "Draft", "about": "The post is written; waiting on Christian's read." },
-    { "id": "script", "label": "Script ready", "about": "Episode script approved; copy the audio prompt." },
-    { "id": "audio", "label": "Audio done", "about": "Voice rendered and mastered; audio file attached." },
-    { "id": "published", "label": "Published", "about": "Live on the site." }
-  ]
+ "showTitle": "Field Notes",
+ "byline": "Following Christian Gehrke outside",
+ "narrator": "A warm, curious narrator who follows Christian on his rides, hikes and foraging walks, and tells it from just behind his shoulder.",
+ "audioPrompt": "Read the script below as a podcast narrator.\n\nVoice: warm, relaxed, mid-pitch, American English; curious and good-humoured, never salesy.\nPace: unhurried, about 150 words a minute, with a short pause at each paragraph break and a longer one at each ***.\nDelivery: third person, like a friend who came along and is telling the story afterwards. Light smile on the funny lines; no dramatic movie-trailer voice.\nPronunciation: Gehrke = GUR-kee. Carnelian = car-NEEL-yun. Pinyon = PIN-yun. Marlette = mar-LET.\nOutput: mono, 44.1 kHz WAV or high-bitrate MP3, no music or effects. (Mastered afterwards to -16 LUFS integrated, -1 dBTP.)\n\nTITLE: {{title}}\n\n{{script}}",
+ "statuses": [
+  {
+   "id": "notes",
+   "label": "Notes in",
+   "about": "Photos, voice notes and the Cyclemeter export are in."
+  },
+  {
+   "id": "draft",
+   "label": "Draft",
+   "about": "The post is written; waiting on Christian's read."
+  },
+  {
+   "id": "script",
+   "label": "Script ready",
+   "about": "Episode script approved; copy the audio prompt."
+  },
+  {
+   "id": "audio",
+   "label": "Audio done",
+   "about": "Voice rendered and mastered; audio file attached."
+  },
+  {
+   "id": "published",
+   "label": "Published",
+   "about": "Live on the site."
+  }
+ ],
+ "siteUrl": "https://www.christiangehrke.com/notes/",
+ "listed": false,
+ "_listed": "false = the Notes pages ask search engines not to index them (live but unlisted). Set true when ready to share.",
+ "about": "Rides, hikes and foraging walks in the high desert and the Sierra, written up by Christian Gehrke and told as short episodes by a narrator who came along.",
+ "narrationNote": "Episodes are narrated by an AI voice, reading a script written from Christian's own notes, track and photos."
 }

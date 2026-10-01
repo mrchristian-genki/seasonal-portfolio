@@ -21,6 +21,15 @@ It's unlisted, not private: put a password on the folder in the DreamHost panel
    `python3 field/tools/master.py in.wav field/data/audio/<id>.mp3` (needs `pip install numpy scipy
    soundfile pyloudnorm lameenc`): -16 LUFS, under -1 dBTP, 96 kbps mono MP3, and attaches it. Status moves Notes in → Draft → Script ready → Audio done → Published.
 
+## Publishing
+
+When Christian approves an adventure, its status becomes Published and Claude runs
+`node field/tools/publish.mjs`. That rebuilds `notes/` at the site root (the public pages: an index,
+one page per adventure, the route data, photos, audio, and `feed.xml`) from Published adventures
+only, with public fields only. Unpublishing removes it on the next run. `data/show.json` → `listed`
+controls whether search engines may index Notes (false = live but unlisted). The map and profile
+code is shared with the manager in `js/route-view.js`. Upload `notes/` and `js/route-view.js`.
+
 ## Privacy
 
 - **Tracks** are trimmed by `track.js`:

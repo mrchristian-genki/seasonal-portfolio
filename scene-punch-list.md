@@ -948,3 +948,4 @@ and verified live before this pass.
 - Oct 1: first real adventure, 2026-09-12-evening-ride (Clear Creek Trail, Spooner Summit to James Lee Park), draft with Christian's answers; trailheads spooner-summit + james-lee-park; route sketch becomes a corner inset over cover photos; sample flag restored.
 - Oct 1: Clear Creek audio attached (data/audio/2026-09-12-evening-ride.mp3, 1:50, -16.0 LUFS / -1.2 dBTP, 96 kbps mono). tools/master.py: compression + true-peak limiting, loudness judged on the decoded MP3. Status: Audio done.
 - Oct 1: Clear Creek after dark marked Published (first episode).
+- Oct 1: public Notes at notes/ (static pages built by field/tools/publish.mjs from Published adventures only; index, article pages with episode player, route map/profile, photos between paragraphs, prev/next, RSS feed with enclosures; noindex until show.json listed=true). Map/profile/stat code moved to js/route-view.js, shared by field/ and notes/.
