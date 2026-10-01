@@ -82,16 +82,16 @@
       if (!best || y < best.y) best = { x: x, y: y };
     }
     var sx = ox + (best.x - vb.x) * k;
-    return { x: flip ? a.right - sx : a.left + sx, y: a.top + oy + (best.y - vb.y) * k + 3 };
+    return { x: flip ? a.right - sx : a.left + sx, y: a.top + oy + (best.y - vb.y) * k + 3, l: a.left, r: a.right };
   }
   // Where a chipmunk can sit: the top of each rock (measured from the art) and spots on the grass.
   function measure() {
     var sr = stage.getBoundingClientRect(); perches = [];
-    scene.querySelectorAll('.ft-rock').forEach(function (svg) {
+    scene.querySelectorAll('.ft-rock').forEach(function (svg, i) {
       var top = rockTop(svg);
-      if (top) perches.push({ x: top.x - sr.left, y: sr.bottom - top.y, rock: true });
+      if (top) perches.push({ id: 'r' + i, x: top.x - sr.left, y: sr.bottom - top.y, rock: true, l: top.l - sr.left, r: top.r - sr.left });
     });
-    [0.33, 0.39, 0.64, 0.69, 0.95].forEach(function (f) { perches.push({ x: sr.width * f, y: sr.height * 0.17, rock: false }); });
+    [0.33, 0.39, 0.64, 0.69, 0.95].forEach(function (f, i) { perches.push({ id: 'g' + i, x: sr.width * f, y: sr.height * 0.17, rock: false }); });
   }
 
   // ── The chipmunks ──
@@ -129,30 +129,68 @@
   }
   var wait = function (ms) { return new Promise(function (r) { setTimeout(r, ms); }); };
   var looping = false;
+  // The game: one chipmunk to a rock. The leader claims a rock (never the one the other is on); the
+  // other runs to its foot and leaps for the top but falls short, while the one on top bounces and
+  // squares up. Now and then the defender gives in and hops off the far side, and the challenger
+  // takes the rock. On the grass they can meet nose to nose. Then they swap roles.
+  function ground() { return perches.filter(function (p) { return !p.rock; })[0].y; }
+  function byId(id) { return perches.filter(function (p) { return p.id === id; })[0]; }
   function play() {
     if (looping || reduce || !onScreen || !awake() || kids.length < 2) return;
     looping = true;
     var a = kids[0], b = kids[1];
-    var pick = function (not) { var c; do { c = perches[Math.floor(Math.random() * perches.length)]; } while (c === not && perches.length > 1); return c; };
     (function round() {
       if (!onScreen || !awake()) { looping = false; return; }
-      var old = perches; measure(); 
-      if (a.at) a.at = perches[old.indexOf(a.at)] || a.at;
-      var t = pick(a.at), r = Math.random();
-      a.at = t; a.c.setBehavior('alert');
-      travel(a, t).then(function () {
-        // the other one gives chase, landing just behind
-        var behind = { x: t.x - (t.x > b.x ? 1 : -1) * (t.rock ? a.w * 0.8 : a.w * 1.15), y: t.y, rock: t.rock };
-        return wait(rand(120, 400)).then(function () { return travel(b, behind); });
-      }).then(function () {
-        if (r < 0.35) {             // a face-off: turn to each other, bounce, then bolt
-          face(a, b.x > a.x ? 1 : -1); face(b, a.x > b.x ? 1 : -1);
-          return wait(500).then(function () { return Promise.all([hop(a, a.x, a.y, 220, 16), hop(b, b.x, b.y, 220, 12)]); })
-            .then(function () { face(a, b.x > a.x ? 1 : -1); return Promise.all([hop(a, a.x, a.y, 220, 16), hop(b, b.x, b.y, 240, 18)]); });
+      measure();
+      [a, b].forEach(function (k) { if (k.at) k.at = byId(k.at.id) || null; });
+      var options = perches.filter(function (p) { return p !== a.at && !(b.at && b.at.rock && p === b.at); });
+      var t = options[Math.floor(Math.random() * options.length)];
+      a.at = t; a.c.setBehavior('alert'); b.c.setBehavior('alert');
+      travel(a, t).then(function () { return wait(rand(150, 400)); }).then(function () {
+        if (!t.rock) {
+          // grass: land beside, sometimes square up and bounce
+          var side = t.x > b.x ? -1 : 1, spot = { x: t.x + side * a.w * 1.15, y: t.y, rock: false };
+          b.at = null;
+          return travel(b, spot).then(function () {
+            if (Math.random() < 0.5) return wait(0);
+            face(a, b.x > a.x ? 1 : -1); face(b, a.x > b.x ? 1 : -1);
+            return wait(400).then(function () { return Promise.all([hop(a, a.x, a.y, 220, 16), hop(b, b.x, b.y, 220, 12)]); })
+              .then(function () { return Promise.all([hop(a, a.x, a.y, 220, 12), hop(b, b.x, b.y, 240, 18)]); });
+          });
         }
-        if (r < 0.7) { a.c.setBehavior('sniffUp'); b.c.setBehavior('sniffUp'); }
-        return wait(rand(1400, 3200));
-      }).then(function () { setTimeout(round, rand(200, 900)); });
+        // rock: the challenger goes to the foot on its own side and tries for the top
+        var fromRight = b.x > t.x, footX = fromRight ? t.r + b.w * 0.15 : t.l - b.w * 0.15, gy = ground();
+        footX = Math.max(b.w / 2, Math.min(stage.clientWidth - b.w / 2, footX));
+        b.at = null;
+        var tries = 1 + Math.floor(Math.random() * 2), took = Math.random() < 0.4;
+        return travel(b, { x: footX, y: gy, rock: false }).then(function () {
+          var p = Promise.resolve();
+          for (var i = 0; i < tries; i++) p = p.then(function () {
+            face(b, fromRight ? -1 : 1); face(a, fromRight ? 1 : -1);
+            // leap up the side, not quite to the top, and drop back to the foot; the defender bounces
+            var reach = Math.max(24, (t.y - gy) * 0.75);
+            return Promise.all([hop(b, footX + (fromRight ? -1 : 1) * b.w * 0.25, gy, 520, reach),
+              wait(180).then(function () { return hop(a, a.x, a.y, 240, 14); })])
+              .then(function () { return hop(b, footX, gy, 200, 6); }).then(function () { return wait(rand(250, 550)); });
+          });
+          if (!took) return p.then(function () { b.c.setBehavior('sniffUp'); });
+          // the defender gives in: off the far side, and the challenger takes the rock
+          return p.then(function () {
+            var away = fromRight ? t.l - a.w * 0.4 : t.r + a.w * 0.4;
+            away = Math.max(a.w / 2, Math.min(stage.clientWidth - a.w / 2, away));
+            return hop(a, away, gy, 480, 34);
+          }).then(function () {
+            a.at = null;
+            return hop(b, t.x, t.y, 520, Math.max(40, (t.y - gy) * 0.5 + 30));
+          }).then(function () { b.at = t; face(b, fromRight ? -1 : 1); var x = a; a = b; b = x; });
+        });
+      }).then(function () {
+        if (Math.random() < 0.5) { a.c.setBehavior('sniffUp'); }
+        return wait(rand(1300, 2800));
+      }).then(function () {
+        if (Math.random() < 0.5) { var x = a; a = b; b = x; }   // swap who leads next
+        setTimeout(round, rand(200, 800));
+      });
     })();
   }
 

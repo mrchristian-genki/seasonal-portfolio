@@ -237,7 +237,7 @@ document.documentElement.classList.add('night-page');})();</script>
 <!-- About: the name in the header opens the résumé (about/) as a modal. -->
 <script src="js/about.js?v=1793340000" defer></script>
 <!-- Footer: chipmunks, trail log (waits until the footer is near the screen). -->
-<script src="js/footer.js?v=1793360000" defer></script>
+<script src="js/footer.js?v=1793420000" defer></script>
 <!-- Wildlife (animals + hidden tap spots): loaded after the page has finished loading, so it
      never delays the first paint. -->
 <script>addEventListener('load',function(){setTimeout(function(){['creature-shapes','origami-art','creatures','wildlife','getaway'].reduce(function(p,n){return p.then(function(){return new Promise(function(r){var s=document.createElement('script');s.src='js/'+n+'.js?v=1793270000';s.onload=s.onerror=r;document.body.appendChild(s)})})},Promise.resolve())},1500)})</script>
