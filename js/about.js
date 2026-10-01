@@ -14,7 +14,7 @@
     try { history.replaceState(history.state, '', location.pathname + (ws.length ? '?' + ws.join('+') : '') + location.hash); } catch (e) {}
   }
   function open() {
-    if (!cssOn) { cssOn = true; var l = document.createElement('link'); l.rel = 'stylesheet'; l.href = 'about/about.css?v=1793330000'; document.head.appendChild(l); }
+    if (!cssOn) { cssOn = true; var l = document.createElement('link'); l.rel = 'stylesheet'; l.href = 'about/about.css?v=1793340000'; document.head.appendChild(l); }
     if (!dlg) {
       dlg = document.createElement('dialog'); dlg.className = 'pi-story ab-modal';
       dlg.innerHTML = '<div class="pi-story-bar"><a class="pi-story-link" href="about/" target="_blank" rel="noopener">Open as a page</a><button type="button" class="pi-close" aria-label="Close">×</button></div><div class="pi-story-body"></div>';
