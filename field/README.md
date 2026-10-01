@@ -30,6 +30,9 @@ It's unlisted, not private: put a password on the folder in the DreamHost panel
 - **Private zones** are never in the published files. The manager keeps them in the browser's own
   storage (Check a ride → Private zones). `ingest.mjs` reads `field/private-zones.json`, which git
   ignores: `{"zones":[{"name":"Home","lat":0,"lon":0,"radius":500}]}`.
+  The lasting copy is "Field Notes - private zones (do not share).json" in the root of Christian's
+  My Drive (owner-only). A new session copies it to `field/private-zones.json` before ingesting.
+- **Rides from home** (starting or ending at home) aren't used at all, even trimmed.
 - **Photos** are re-saved with no EXIF at all, so no GPS, camera serial, or original timestamps.
   Only the time taken is kept, for ordering.
 
