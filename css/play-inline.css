@@ -129,3 +129,5 @@
 .pi-grid:has(> .pi-tile:only-child) img{aspect-ratio:auto}
 .pi-modal .pi-h5{font-size:17px}
 .pi-story-body .pi-tile{margin:0}
+.ab-modal{width:min(940px,96vw)}
+.ab-modal .about-page{padding:8px 4px 30px}

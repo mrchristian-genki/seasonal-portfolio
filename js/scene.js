@@ -2826,7 +2826,7 @@ function _bootInner() {
   // Rain: drizzle, shower, tempest. Snow: flurries, snow, blizzard. (Older words kept as aliases.)
   const STORM_LEVELS = { drizzle: 0.4, shower: 0.7, tempest: 1, flurries: 0.4, snow: 0.7, blizzard: 1,
     rain: 0.7, downpour: 1, snowfall: 0.7, snowstorm: 0.7, storm: 1, thunder: 1, heavyrain: 1 };
-  const LINK_KEEP = ['bench', 'fps', 'wildlife', 'diag', 'beach', 'getaway', 'sunset'].concat(Object.keys(STORM_LEVELS));
+  const LINK_KEEP = ['bench', 'fps', 'wildlife', 'diag', 'beach', 'getaway', 'sunset', 'about'].concat(Object.keys(STORM_LEVELS));
   const linkWords = decodeURIComponent(location.search.slice(1)).toLowerCase()
     .split(/[+&,;\s]+/).map(w => w.split('=')[0]).filter(Boolean);
   window.__linkWords = linkWords;

@@ -1,0 +1,68 @@
+/* ABOUT: the résumé page. Also styles the same content inside the homepage's About modal
+   (js/about.js), so every rule is scoped to .about-page. Prints cleanly as the PDF. */
+.about-page{--ab-ink:#0f4d47;--ab-ink2:#3f5a64;--ab-ink3:#71878f;--ab-line:#dde7e8;--ab-accent:#d8618f;--ab-soft:#fbe7ef;
+  --ab-display:"Nunito","Poppins","Arial Rounded MT Bold","Avenir Next Rounded","Avenir Next","Segoe UI",Arial,sans-serif;
+  max-width:860px;margin:0 auto;padding:30px 20px 60px;color:var(--ab-ink);font:17px/1.6 system-ui,-apple-system,sans-serif;text-align:left}
+.about-page h1{font:800 clamp(34px,6vw,54px)/1.05 var(--ab-display);margin:4px 0 12px;letter-spacing:-.015em}
+.about-page h2{font:800 clamp(21px,3vw,26px)/1.2 var(--ab-display);margin:0 0 14px}
+.about-page h3{font:800 18px/1.3 var(--ab-display);margin:0}
+.ab-kick{font:800 13px var(--ab-display);letter-spacing:.08em;text-transform:uppercase;color:var(--ab-accent);margin:0}
+.ab-lede{font-size:19px;color:var(--ab-ink2);margin:0 0 10px;max-width:72ch}
+.ab-small{font-size:16px}
+.ab-actions{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 0}
+.ab-btn{display:inline-block;font:800 15px var(--ab-display);text-decoration:none;border-radius:999px;padding:9px 18px;border:2px solid var(--ab-ink);color:var(--ab-ink)}
+.ab-btn.solid{background:var(--ab-ink);color:#fff}
+.ab-sec{margin-top:44px}
+.ab-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.ab-card{border:1px solid var(--ab-line);border-top:4px solid var(--ab-accent);border-radius:12px;padding:14px 16px;background:#fff}
+.ab-card ul{margin:8px 0 0;padding-left:18px;color:var(--ab-ink2);font-size:15px;line-height:1.5}
+.ab-card li{margin-bottom:6px}
+.ab-time{list-style:none;margin:0;padding:0;border-left:3px solid var(--ab-line);margin-left:6px}
+.ab-time>li{position:relative;display:grid;grid-template-columns:120px minmax(0,1fr);gap:14px;padding:0 0 22px 20px}
+.ab-time>li::before{content:"";position:absolute;left:-9px;top:5px;width:15px;height:15px;border-radius:50%;background:#fff;border:3px solid var(--ab-accent)}
+.ab-when{font:800 14px var(--ab-display);color:var(--ab-accent);padding-top:2px;white-space:nowrap}
+.ab-org{margin:2px 0 6px;color:var(--ab-ink3);font-size:15px;font-weight:600}
+.ab-time p:last-child{margin:0;color:var(--ab-ink2);font-size:16px}
+@media (max-width:600px){.ab-time>li{grid-template-columns:1fr;gap:2px}}
+.ab-skills{margin:0;display:grid;gap:10px}
+.ab-skills>div{display:grid;grid-template-columns:190px minmax(0,1fr);gap:12px;padding-bottom:10px;border-bottom:1px solid var(--ab-line)}
+.ab-skills dt{font:800 15px var(--ab-display)}
+.ab-skills dd{margin:0;color:var(--ab-ink2);font-size:15px}
+@media (max-width:600px){.ab-skills>div{grid-template-columns:1fr;gap:2px}}
+.ab-certs{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.ab-certs li{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;color:var(--ab-ink2);font-size:16px}
+.ab-certs b{color:var(--ab-ink)}
+.ab-certs span{margin-left:auto;font:800 14px var(--ab-display);color:var(--ab-ink3)}
+.ab-links{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.ab-links a{display:flex;flex-direction:column;gap:2px;text-decoration:none;color:var(--ab-ink);border:1px solid var(--ab-line);border-radius:12px;padding:12px 14px;background:#fff}
+.ab-links a:hover{border-color:var(--ab-accent)}
+.ab-links b{font:800 16px var(--ab-display)}
+.ab-links span{font-size:14px;color:var(--ab-ink3)}
+
+/* The PDF / print: two tidy pages, no site chrome */
+@media print{
+  @page{size:letter;margin:11mm 13mm}
+  html,body{background:#fff!important}
+  .bar,.ab-actions,.ab-also,.ab-kick{display:none!important}
+  .about-page{padding:0;max-width:none;font-size:9.5pt;line-height:1.38;background:#fff}
+  .about-page h1{font-size:22pt;margin:0 0 4pt}
+  .about-page h2{font-size:12.5pt;margin:0 0 5pt}
+  .about-page h3{font-size:10.5pt}
+  .about-page::after{content:"christiangehrke.com · linkedin.com/in/christiangehrke";display:block;margin-top:10pt;font-size:8.5pt;color:#71878f}
+  .ab-lede{font-size:10pt;margin-bottom:4pt}
+  .ab-sec{margin-top:11pt}
+  .ab-cards{grid-template-columns:repeat(3,1fr);gap:6pt}
+  .ab-card{padding:6pt 8pt;border-top-width:3px;break-inside:avoid}
+  .ab-card ul{font-size:8.5pt;margin-top:3pt;padding-left:12pt}
+  .ab-card li{margin-bottom:2pt}
+  .ab-time>li{grid-template-columns:72pt 1fr;gap:8pt;padding:0 0 7pt 14pt;break-inside:avoid}
+  .ab-time>li::before{width:11px;height:11px;left:-7px;top:3px}
+  .ab-when{font-size:9pt}
+  .ab-org{font-size:9pt;margin:0 0 2pt}
+  .ab-time p:last-child,.ab-skills dd,.ab-certs li{font-size:9pt}
+  .ab-skills{gap:3pt}
+  .ab-skills>div{grid-template-columns:105pt 1fr;padding-bottom:3pt;gap:8pt}
+  .ab-skills dt{font-size:9pt}
+  .ab-certs{gap:2pt}
+  .ab-certs span{font-size:9pt}
+}
