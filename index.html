@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Christian Gehrke — four seasons of work</title>
 <link rel="stylesheet" href="css/scene.css?v=1793270000">
-<link rel="stylesheet" href="css/play-inline.css?v=1793280000">
+<link rel="stylesheet" href="css/play-inline.css?v=1793290000">
 <script>/* Night links (?night, ?nightmode, ?darkmode) open with the page already dark: no white flash, no fade. */
 (function(){var w=decodeURIComponent(location.search.slice(1)).toLowerCase().split(/[+&,;\s]+/);
 if(w.some(function(x){x=x.split('=')[0];return x==='night'||x==='nightmode'||x==='darkmode'||x==='dark';})&&!w.some(function(x){return x==='day'||x==='daymode'||x==='lightmode'||x==='light';}))
@@ -207,7 +207,7 @@ document.documentElement.classList.add('night-page');})();</script>
 <!-- Live book count: the Books copy reads the catalog's Google Sheet, so the number always matches the catalog. -->
 <script src="js/books-count.js?v=1793260000"></script>
 <!-- Play tab: loads its content only when the tab is opened. -->
-<script src="js/play-inline.js?v=1793280000" defer></script>
+<script src="js/play-inline.js?v=1793290000" defer></script>
 <!-- Wildlife (animals + hidden tap spots): loaded after the page has finished loading, so it
      never delays the first paint. -->
 <script>addEventListener('load',function(){setTimeout(function(){['creature-shapes','origami-art','creatures','wildlife','getaway'].reduce(function(p,n){return p.then(function(){return new Promise(function(r){var s=document.createElement('script');s.src='js/'+n+'.js?v=1793270000';s.onload=s.onerror=r;document.body.appendChild(s)})})},Promise.resolve())},1500)})</script>

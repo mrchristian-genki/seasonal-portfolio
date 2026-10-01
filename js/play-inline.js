@@ -30,7 +30,7 @@
         return '<article class="pi-ep">' + (e.cover ? '<img src="' + esc(e.cover.src) + '" alt="" width="' + e.cover.w + '" height="' + e.cover.h + '" loading="lazy">' : '') +
           '<div><p class="pi-kick">' + esc(e.kind) + ' · ' + esc(e.date) + (e.stats ? ' · ' + esc(e.stats) : '') + '</p><h4>' + esc(e.title) + '</h4><p>' + esc(e.summary) + '</p>' +
           (e.audio ? '<audio controls preload="none" src="' + esc(e.audio.src) + '"></audio>' : '') +
-          '<p class="pi-more"><a href="' + esc(e.url) + '">The story, the map and the photos →</a></p></div></article>';
+          '<p class="pi-more"><a href="' + esc(e.url) + '" data-pi-story>The story, the map and the photos →</a></p></div></article>';
       }).join('') + '<p class="pi-note">' + esc(h.fieldNotes.note) + '</p></section>';
 
     if (h.daily) out += '<section id="pi-daily" class="pi-sec"><h3>' + esc(h.daily.title) + '</h3><p class="pi-sub">' + esc(h.daily.about) + '</p><div class="pi-yt">' +
@@ -88,6 +88,7 @@
         f.allow = 'autoplay; encrypted-media; picture-in-picture'; f.allowFullscreen = true; f.title = b.getAttribute('aria-label');
         b.replaceWith(f); return;
       }
+      if ((b = t.closest('[data-pi-story]'))) { ev.preventDefault(); story(b.getAttribute('href')); return; }
       if ((b = t.closest('[data-pi-box]'))) { ev.preventDefault(); lightbox(b); }
     });
     box.querySelectorAll('.pi-ytbtn img').forEach(function (im) { im.onerror = function () { im.onerror = null; im.src = im.src.replace('hqdefault', 'mqdefault'); }; });
@@ -96,6 +97,48 @@
     var panel = document.getElementById('piPanel'); panel.hidden = true; panel.innerHTML = '';
     box.querySelectorAll('.pi-serie').forEach(function (b) { b.classList.remove('on'); b.setAttribute('aria-expanded', 'false'); });
     document.getElementById('pi-dd').scrollIntoView({ block: 'start' });
+  }
+
+  // The full story (post, route map, photos) in a pop-up over the homepage. It reads the episode's
+  // own page and shows its article, so the two never drift apart.
+  var sdlg = null, assets = null;
+  function need(tag, attrs) { return new Promise(function (ok) { var el = document.createElement(tag); for (var k in attrs) el[k] = attrs[k]; el.onload = el.onerror = ok; document.head.appendChild(el); }); }
+  function mapAssets() {
+    return assets || (assets = Promise.all([
+      need('link', { rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css' }),
+      window.L ? 0 : need('script', { src: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js' })
+    ]).then(function () { return window.RouteView ? 0 : need('script', { src: 'js/route-view.js?v=1793280000' }); }));
+  }
+  function story(url) {
+    if (!sdlg) {
+      sdlg = document.createElement('dialog'); sdlg.className = 'pi-story';
+      sdlg.innerHTML = '<div class="pi-story-bar"><a class="pi-story-link" href="#" target="_blank" rel="noopener">Open as a page</a><button type="button" class="pi-close" aria-label="Close">×</button></div><div class="pi-story-body"></div>';
+      sdlg.querySelector('.pi-close').onclick = function () { sdlg.close(); };
+      sdlg.addEventListener('click', function (e) { if (e.target === sdlg) sdlg.close(); });
+      sdlg.addEventListener('close', function () { var a = sdlg.querySelector('audio'); if (a) a.pause(); if (window.RouteView) RouteView.clearMaps(); });
+      sdlg.querySelector('.pi-story-body').addEventListener('click', function (e) { var a = e.target.closest('[data-lightbox]'); if (a) { e.preventDefault(); a.setAttribute('data-pi-box', ''); lightbox(a); } });
+      document.body.appendChild(sdlg);
+    }
+    var body = sdlg.querySelector('.pi-story-body'), abs = new URL(url, location.href);
+    sdlg.querySelector('.pi-story-link').href = abs.href;
+    body.innerHTML = '<p class="pi-sub">Loading…</p>'; sdlg.showModal(); body.scrollTop = 0;
+    fetch(abs.href).then(function (r) { return r.text(); }).then(function (html) {
+      var art = new DOMParser().parseFromString(html, 'text/html').querySelector('main.article');
+      if (!art) throw 0;
+      art.querySelectorAll('.pager').forEach(function (n) { n.remove(); });
+      [art].concat([].slice.call(art.querySelectorAll('[src],[href],[data-route]'))).forEach(function (n) {
+        ['src', 'href', 'data-route'].forEach(function (k) { var v = n.getAttribute(k); if (v && !/^(https?:|#|data:|mailto:)/.test(v)) n.setAttribute(k, new URL(v, abs).href); });
+      });
+      body.innerHTML = ''; body.appendChild(document.importNode(art, true));
+      var route = body.querySelector('[data-route]');
+      if (route && body.querySelector('#map')) mapAssets().then(function () { return fetch(route.getAttribute('data-route')); }).then(function (r) { return r.json(); }).then(function (d) {
+        var RV = window.RouteView; if (!RV) return;
+        body.querySelector('#stats').innerHTML = RV.statTiles(d.stats, d.kind);
+        var map = window.L ? RV.makeMap(body.querySelector('#map'), RV.routeLayers(d.line)) : null;
+        RV.profileSVG(body.querySelector('#profile'), d.profile, RV.scrubber(map, d.line));
+        if (map) setTimeout(function () { map.invalidateSize(); }, 60);
+      }).catch(function () {});
+    }).catch(function () { location.href = abs.href; });
   }
 
   var dlg = null;
@@ -110,6 +153,7 @@
       document.body.appendChild(dlg);
     }
     var vid = a.hasAttribute('data-video'), im = dlg.querySelector('img'), v = dlg.querySelector('video'), cap = a.parentNode.querySelector('figcaption');
+    if (dlg.open) dlg.close();
     im.hidden = vid; v.hidden = !vid;
     if (vid) { v.src = a.getAttribute('href'); var p = v.play(); if (p && p.catch) p.catch(function () {}); } else { im.src = a.getAttribute('href'); im.alt = (a.querySelector('img') || {}).alt || ''; }
     dlg.querySelector('p').textContent = cap ? cap.textContent : '';
