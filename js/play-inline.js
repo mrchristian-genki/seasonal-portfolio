@@ -126,6 +126,7 @@
       document.body.appendChild(mdlg);
     }
     mdlg._onClose = onClose || null;
+    focusOut(mdlg, true);
     var b = mdlg.querySelector('.pi-story-body'); b.innerHTML = html; b.scrollTop = 0;
     if (!mdlg.open) mdlg.showModal();
     watch(b);
@@ -204,7 +205,7 @@
       sdlg.querySelector('.pi-close').onclick = function () { sdlg.close(); };
       sdlg.addEventListener('click', function (e) { if (e.target === sdlg) sdlg.close(); });
       sdlg.addEventListener('close', function () { var a = sdlg.querySelector('audio'); if (a) a.pause(); if (window.RouteView) RouteView.clearMaps(); });
-      sdlg.querySelector('.pi-story-body').addEventListener('click', function (e) { var a = e.target.closest('[data-lightbox]'); if (a) { e.preventDefault(); a.setAttribute('data-pi-box', ''); lightbox(a); } });
+      sdlg.querySelector('.pi-story-body').addEventListener('click', function (e) { var a = e.target.closest('[data-lightbox]'); if (a) { e.preventDefault(); focusIn(sdlg, a); } });
       document.body.appendChild(sdlg);
     }
     var body = sdlg.querySelector('.pi-story-body'), abs = new URL(url, location.href);
@@ -230,24 +231,63 @@
   }
 
   var dlg = null;
-  function lightbox(a) {
-    if (!window.HTMLDialogElement) { window.open(a.href, '_blank'); return; }
-    if (!dlg) {
-      dlg = document.createElement('dialog'); dlg.className = 'pi-lightbox';
-      dlg.innerHTML = '<img alt=""><video controls loop playsinline muted hidden></video><p></p><button type="button" aria-label="Close">×</button>';
-      dlg.querySelector('button').onclick = function () { dlg.close(); };
-      dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
-      dlg.addEventListener('close', function () { var v = dlg.querySelector('video'); v.pause(); v.removeAttribute('src'); v.load(); });
-      document.body.appendChild(dlg);
+  // Media made big. One element per view, built fresh: an <img> for a photo, a playing <video>
+  // for a clip, never both. Fades in and out.
+  function media(a) {
+    var src = a.getAttribute('href'), cap = a.parentNode.querySelector('figcaption'), alt = (a.querySelector('img') || {}).alt || '';
+    var tv = a.querySelector('video');
+    return (a.hasAttribute('data-video')
+      ? '<video src="' + esc(src) + '"' + (tv ? ' poster="' + esc(tv.getAttribute('poster') || '') + '" width="' + tv.getAttribute('width') + '" height="' + tv.getAttribute('height') + '"' : '') + ' autoplay muted loop playsinline controls></video>'
+      : '<img src="' + esc(src) + '" alt="' + esc(alt) + '">') + (cap && cap.textContent ? '<p>' + esc(cap.textContent) + '</p>' : '');
+  }
+  var FADE_OUT = reduce ? 0 : 220;
+  function start(root) { var v = root.querySelector('video'); if (v) { v.muted = true; var p = v.play(); if (p && p.catch) p.catch(function () {}); } }
+
+  // Inside a modal (a Daydreams series, a story): the card itself fills with the picture or clip.
+  // A tap anywhere on it, × or Esc fades back to exactly where you were.
+  function focusIn(d, a) {
+    focusOut(d, true);
+    var f = document.createElement('div'); f.className = 'pi-focus';
+    f.innerHTML = media(a) + '<button type="button" class="pi-close pi-focus-x" aria-label="Back to the gallery">×</button>';
+    f.addEventListener('click', function () { focusOut(d); });
+    d.appendChild(f); d._focus = f; start(f);
+    requestAnimationFrame(function () { f.classList.add('on'); });
+    if (!d._focusHooked) {
+      d._focusHooked = true;
+      d.addEventListener('cancel', function (e) { if (d._focus) { e.preventDefault(); focusOut(d); } });
+      d.addEventListener('close', function () { focusOut(d, true); });
     }
-    var vid = a.hasAttribute('data-video'), im = dlg.querySelector('img'), v = dlg.querySelector('video'), cap = a.parentNode.querySelector('figcaption');
-    if (dlg.open) dlg.close();
-    im.hidden = vid; v.hidden = !vid;
-    if (vid) { v.src = a.getAttribute('href'); var p = v.play(); if (p && p.catch) p.catch(function () {}); } else { im.src = a.getAttribute('href'); im.alt = (a.querySelector('img') || {}).alt || ''; }
-    dlg.querySelector('p').textContent = cap ? cap.textContent : '';
-    dlg.showModal();
+  }
+  function focusOut(d, now) {
+    var f = d && d._focus; if (!f) return;
+    d._focus = null; var v = f.querySelector('video'); if (v) v.pause();
+    f.classList.remove('on');
+    setTimeout(function () { f.remove(); }, now ? 0 : FADE_OUT);
   }
 
+  // On the page (From Above): a simple viewer with just the one picture or clip.
+  var dlg = null;
+  function lightbox(a) {
+    if (!window.HTMLDialogElement) { window.open(a.href, '_blank'); return; }
+    var inModal = a.closest('dialog');
+    if (inModal) { focusIn(inModal, a); return; }
+    if (!dlg) {
+      dlg = document.createElement('dialog'); dlg.className = 'pi-lightbox';
+      dlg.addEventListener('click', function () { lbClose(); });
+      dlg.addEventListener('cancel', function (e) { e.preventDefault(); lbClose(); });
+      document.body.appendChild(dlg);
+    }
+    dlg.innerHTML = '<div class="pi-lb-in">' + media(a) + '</div><button type="button" class="pi-close" aria-label="Close">×</button>';
+    dlg.classList.remove('out');
+    if (!dlg.open) dlg.showModal();
+    start(dlg);
+  }
+  function lbClose() {
+    if (!dlg || !dlg.open) return;
+    var v = dlg.querySelector('video'); if (v) v.pause();
+    dlg.classList.add('out');
+    setTimeout(function () { dlg.close(); dlg.classList.remove('out'); dlg.innerHTML = ''; }, FADE_OUT);
+  }
 
   function load() {
     if (loaded) return; loaded = true;

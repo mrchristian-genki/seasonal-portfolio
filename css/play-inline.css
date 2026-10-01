@@ -1,6 +1,6 @@
 /* PLAY, IN PLACE: styles for the Play tab's live content (js/play-inline.js). Everything is scoped to
    .play-inline, which breaks out of the 760 px about column to give the grids room. */
-.play-inline,.pi-story,.pi-lightbox{--pi-bg:#fbfcfb;--pi-card:#fff;--pi-body:#1c3b3a;--pi-glass:rgba(255,255,255,.88);--pi-ai-bg:#efe9fb;--pi-ai:#6b4bb8;--pi-real-bg:#e2f4ec;--pi-real:#2f8f6b;--pi-ink:#0f4d47;--pi-ink2:#3f5a64;--pi-ink3:#71878f;--pi-line:var(--pi-line);--pi-accent:#d8618f;--pi-soft:#fbe7ef;
+.play-inline,.pi-story,.pi-lightbox{--pi-bg:#fbfcfb;--pi-card:#fff;--pi-body:#1c3b3a;--pi-glass:rgba(255,255,255,.88);--pi-ai-bg:#efe9fb;--pi-ai:#6b4bb8;--pi-real-bg:#e2f4ec;--pi-real:#2f8f6b;--pi-ink:#0f4d47;--pi-ink2:#3f5a64;--pi-ink3:#71878f;--pi-line:#dde7e8;--pi-accent:#d8618f;--pi-soft:#fbe7ef;
   --pi-display:"Nunito","Poppins","Arial Rounded MT Bold","Avenir Next Rounded","Avenir Next","Segoe UI",Arial,sans-serif;
 }
 .play-inline{position:relative;left:50%;transform:translateX(-50%);width:min(1120px,calc(100vw - 32px));text-align:left;margin:28px 0 8px;color:var(--pi-ink)}
@@ -60,12 +60,6 @@
 .pi-pager button,.pi-pager a{font:700 14px var(--pi-display);color:var(--pi-ink);background:var(--pi-card);border:1px solid var(--pi-line);border-radius:999px;padding:6px 13px;cursor:pointer;text-decoration:none}
 .pi-pager a{color:var(--pi-ink3)}
 @media (max-width:560px){.pi-grid,.pi-series,.pi-yt{grid-template-columns:1fr 1fr;gap:6px}.pi-serie b{font-size:14px}.pi-yt figcaption{font-size:13px}.pi-ytbtn span{width:44px;height:30px;font-size:14px}.pi-panel{padding:12px}}
-/* Lightbox */
-.pi-lightbox{border:0;padding:0;background:transparent;max-width:min(96vw,1400px)}
-.pi-lightbox::backdrop{background:rgba(5,20,18,.88)}
-.pi-lightbox img,.pi-lightbox video{display:block;max-width:100%;max-height:84vh;border-radius:10px;margin:auto}
-.pi-lightbox p{color:#fff;margin:10px 4px 0;font-size:15px;text-align:left}
-.pi-lightbox button{position:absolute;top:8px;right:8px;width:38px;height:38px;border-radius:50%;border:0;background:rgba(255,255,255,.92);font-size:22px;cursor:pointer}
 /* The story pop-up: the episode's article over the homepage */
 .pi-story{border:0;padding:0;width:min(860px,96vw);max-height:92vh;border-radius:18px;background:var(--pi-bg);color:var(--pi-ink);box-shadow:0 30px 80px rgba(0,0,0,.35);overflow:hidden}
 .pi-story[open]{display:flex;flex-direction:column}
@@ -154,3 +148,31 @@ html.night-page .play-inline,html.night-page .pi-story,html.night-page .pi-light
 html.night-page .pi-story::backdrop{background:rgba(0,0,0,.72)}
 html.night-page .pi-tile a,html.night-page .pi-story-body .map{background:#1d2c38}
 @media (prefers-reduced-motion:reduce){.play-inline,.pi-story,.pi-lightbox{transition:none}}
+
+/* BIG MEDIA. Photos: just the picture. Clips: the clip, playing, with its controls. */
+.pi-lightbox{border:0;padding:0;background:transparent;max-width:none;max-height:none;width:100vw;height:100vh;display:none;place-items:center;overflow:hidden}
+.pi-lightbox[open]{display:grid;animation:piFade .26s ease both}
+.pi-lightbox.out{animation:piFadeOut .22s ease both}
+.pi-lightbox::backdrop{background:rgba(5,14,20,.9);animation:piFade .26s ease both}
+.pi-lightbox.out::backdrop{animation:piFadeOut .22s ease both}
+.pi-lb-in{display:flex;flex-direction:column;align-items:center;max-width:min(94vw,1500px);animation:piPop .3s cubic-bezier(.2,.8,.3,1) both}
+.pi-lightbox.out .pi-lb-in{animation:piPopOut .22s ease both}
+.pi-lb-in img,.pi-lb-in video{display:block;max-width:100%;max-height:84vh;width:auto;height:auto;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.pi-lb-in p,.pi-focus p{margin:10px 4px 0;font-size:15px;color:#e8f0ef;text-align:center}
+.pi-lightbox>.pi-close{position:fixed;top:14px;right:14px;background:rgba(255,255,255,.92);color:#0f4d47;border:0}
+/* Inside a modal: the card fills with the item */
+.pi-focus{position:absolute;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:54px 18px 18px;
+  background:#0b151c;cursor:zoom-out;opacity:0;transition:opacity .25s ease}
+.pi-focus.on{opacity:1}
+.pi-focus img,.pi-focus video{display:block;max-width:100%;max-height:calc(100% - 34px);width:auto;height:auto;object-fit:contain;background:#000;border-radius:10px;transform:scale(.97);transition:transform .3s cubic-bezier(.2,.8,.3,1)}
+.pi-focus.on img,.pi-focus.on video{transform:none}
+.pi-focus video{cursor:default}
+.pi-focus-x{position:absolute;top:10px;right:12px;background:rgba(255,255,255,.92)!important;color:#0f4d47!important;border:0!important}
+@keyframes piFade{from{opacity:0}}
+@keyframes piFadeOut{to{opacity:0}}
+@keyframes piPop{from{opacity:0;transform:scale(.96)}}
+@keyframes piPopOut{to{opacity:0;transform:scale(.97)}}
+@media (prefers-reduced-motion:reduce){.pi-lightbox[open],.pi-lightbox.out,.pi-lb-in,.pi-focus,.pi-focus img,.pi-focus video{animation:none;transition:none}}
+.pi-story[open]{animation:piPop .28s cubic-bezier(.2,.8,.3,1) both}
+.pi-story[open]::backdrop{animation:piFade .28s ease both}
+@media (prefers-reduced-motion:reduce){.pi-story[open],.pi-story[open]::backdrop{animation:none}}
