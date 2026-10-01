@@ -139,10 +139,13 @@
     if (looping || reduce || !onScreen || !awake() || kids.length < 2) return;
     looping = true;
     var a = kids[0], b = kids[1];
-    (function round() {
+    round();
+    function round() {
       if (!onScreen || !awake()) { looping = false; return; }
       measure();
       [a, b].forEach(function (k) { if (k.at) k.at = byId(k.at.id) || null; });
+      var rocks = perches.filter(function (p) { return p.rock; });
+      if (rocks.length > 1 && Math.random() < 0.2) return lookout(rocks);
       var options = perches.filter(function (p) { return p !== a.at && !(b.at && b.at.rock && p === b.at); });
       var t = options[Math.floor(Math.random() * options.length)];
       a.at = t; a.c.setBehavior('alert'); b.c.setBehavior('alert');
@@ -187,11 +190,27 @@
       }).then(function () {
         if (Math.random() < 0.5) { a.c.setBehavior('sniffUp'); }
         return wait(rand(1300, 2800));
-      }).then(function () {
-        if (Math.random() < 0.5) { var x = a; a = b; b = x; }   // swap who leads next
-        setTimeout(round, rand(200, 800));
-      });
-    })();
+      }).then(next);
+    }
+    function next() {
+      if (Math.random() < 0.5) { var x = a; a = b; b = x; }   // swap who leads next
+      setTimeout(round, rand(200, 800));
+    }
+    // Now and then a truce: each takes its own rock, and both sit up and stare at the same thing
+    // (a butterfly going by, a falling leaf, or something off in the distance).
+    function lookout(rocks) {
+      var ra = rocks.filter(function (r) { return r === a.at; })[0] || rocks[Math.floor(Math.random() * rocks.length)];
+      var rb = rocks.filter(function (r) { return r !== ra; })[Math.floor(Math.random() * (rocks.length - 1))];
+      a.at = ra; b.at = rb;
+      Promise.all([a.x === ra.x && a.y === ra.y ? wait(0) : travel(a, ra), wait(rand(200, 600)).then(function () { return travel(b, rb); })])
+        .then(function () {
+          var sr = stage.getBoundingClientRect(), thing = fx.querySelector('.ft-fly-day,.ft-leaf'), tx;
+          if (thing) { var tr = thing.getBoundingClientRect(); tx = tr.left + tr.width / 2 - sr.left; }
+          else tx = Math.random() < 0.5 ? -50 : sr.width + 50;
+          [a, b].forEach(function (k) { face(k, tx < k.x ? -1 : 1); k.c.setBehavior('sniffUp'); });
+          return wait(rand(3800, 6000));
+        }).then(function () { a.c.setBehavior('alert'); b.c.setBehavior('alert'); next(); });
+    }
   }
 
   // ── Season / night: who's awake, and what's in the air ──
