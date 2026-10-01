@@ -60,6 +60,11 @@ pronunciations. Christian renders the voice with his AI voice tool, masters it t
 - **Marley:** Christian's dog (also in the lake scene). Only when Marley actually came along.
 - **The tracker:** Cyclemeter, which he forgets to stop before driving home.
 - **The lamp project:** resin and carnelian pieces lit with LEDs, made as gifts.
+- **His wife:** drives the shuttle for point-to-point rides. OK to appear in photos; not named.
+- **His brother and nephew:** from Buffalo, New York. First visit and first ride in years on Clear Creek (Sep 12, 2026). OK to appear in photos; not named.
+
+Who's OK appearing (photos) or being named is recorded in each event's `consent` field. Ask before
+anyone new appears.
 
 Add to this list as threads build up, and keep a one-line log of each published episode below
 so callbacks stay accurate.
@@ -69,3 +74,4 @@ so callbacks stay accurate.
 | Date | Event id | Title | Threads |
 |---|---|---|---|
 | (sample) | sample-marlette | The resin at the top of the hill | tracker, lamp project |
+| 2026-09-12 | 2026-09-12-evening-ride | Clear Creek after dark (draft) | brother and nephew's first ride; racing the light out of the alpine section; lights for the last stretch |

@@ -38,7 +38,8 @@ main{max-width:1180px;margin:0 auto;padding:22px 20px 80px}
 .card .art{position:relative;aspect-ratio:16/9;background:linear-gradient(160deg,#e7f1f3,#d5e7ea)}
 .card .art img{width:100%;height:100%;object-fit:cover;display:block}
 .card .art svg{position:absolute;inset:0;width:100%;height:100%}
-.card .art img+svg{background:linear-gradient(0deg,rgba(0,0,0,.35),transparent 60%)}
+/* With a cover photo the route becomes a small inset in the corner, so it never sits on faces. */
+.card .art img+svg{inset:auto 10px 10px auto;width:34%;height:auto;aspect-ratio:16/9;background:rgba(15,47,44,.55);border-radius:8px;backdrop-filter:blur(2px)}
 .card .body{padding:12px 14px 14px;display:flex;flex-direction:column;gap:6px}
 .card h3{font-size:17px;line-height:1.25}
 .meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;color:var(--ink-3)}
