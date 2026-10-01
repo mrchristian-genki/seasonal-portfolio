@@ -1,0 +1,48 @@
+# Field Notes manager
+
+`field/` is the working tool for adventures: one page per ride, hike or foraging walk, with the
+route, the photos, the post draft, the episode script, and the audio prompt ready to copy.
+Open `field/` on the site (it isn't linked from anywhere and asks search engines to stay away).
+It's unlisted, not private: put a password on the folder in the DreamHost panel
+(Websites → Manage → Protect a directory, or an `.htaccess` password) before drafts go up.
+
+## How an adventure comes in
+
+1. Christian drops the Cyclemeter export (GPX, plus the CSV if handy), photos, and a voice-note
+   transcript in the Drive "Field notes inbox", then tells Claude "new field notes".
+2. Claude runs:
+   - `node field/tools/ingest.mjs ride.gpx --id 2026-10-04-prison-hill --title "…" --kind ride`
+     to trim the track and create the event,
+   - `python3 field/tools/photos.py <id> IMG_*.jpg --cover IMG_0412.jpg` to resize the photos and
+     strip their location data,
+   - then writes the post and the episode script into the event file, following `SHOW-GUIDE.md`.
+3. Christian reviews it in the manager, copies the audio prompt, renders the voice, and sends the
+   audio back to attach. Status moves Notes in → Draft → Script ready → Audio done → Published.
+
+## Privacy
+
+- **Tracks** are trimmed by `track.js`:
+  - the drive home (or to the start) is detected by car speed and cut;
+  - ends near a known trailhead (`data/trailheads.json`) are cut to start and end there;
+  - ends inside a private zone are cut;
+  - any other end loses its first and last 300 m.
+- **Times** in the published track are seconds from the start, not clock times.
+- **Private zones** are never in the published files. The manager keeps them in the browser's own
+  storage (Check a GPX → Private zones). `ingest.mjs` reads `field/private-zones.json`, which git
+  ignores: `{"zones":[{"name":"Home","lat":0,"lon":0,"radius":500}]}`.
+- **Photos** are re-saved with no EXIF at all, so no GPS, camera serial, or original timestamps.
+  Only the time taken is kept, for ordering.
+
+## Files
+
+| Path | What it is |
+|---|---|
+| `index.html`, `field.js`, `field.css` | The manager page |
+| `track.js` | GPX parsing, trimming, stats, elevation profile (browser and Node) |
+| `data/events.json` | The card list (rebuilt by `ingest.mjs --reindex`) |
+| `data/events/<id>.json` | One adventure: track, photos, field notes, post, episode |
+| `data/photos/<id>/` | Processed photos |
+| `data/trailheads.json` | Known trailheads (add from AllTrails or the land agency) |
+| `data/show.json` | Show name, the audio prompt template, the status steps |
+| `SHOW-GUIDE.md` | The rules for writing posts and episodes |
+| `samples/sample-ride.gpx` | A made-up ride (with a drive home left on) for trying the checker |

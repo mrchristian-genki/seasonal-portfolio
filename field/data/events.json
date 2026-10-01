@@ -1,0 +1,78 @@
+{
+ "events": [
+  {
+   "id": "sample-marlette",
+   "title": "Sample: up to Marlette Lake",
+   "date": "2026-09-27",
+   "kind": "ride",
+   "place": "Lake Tahoe Nevada State Park",
+   "status": "script",
+   "summary": "A sample event: a climb from Spooner Lake to Marlette Lake and back, to show how the manager works.",
+   "sample": true,
+   "stats": {
+    "distanceKm": 14.71,
+    "movingSec": 3958,
+    "elapsedSec": 4168,
+    "gainM": 312,
+    "lossM": 312,
+    "minEleM": 2132,
+    "maxEleM": 2421,
+    "avgKmh": 13.4,
+    "maxKmh": 30.1,
+    "start": "2026-09-27T15:10:00.000Z"
+   },
+   "thumb": [
+    [
+     39.10619,
+     -119.91669
+    ],
+    [
+     39.12102,
+     -119.92251
+    ],
+    [
+     39.13051,
+     -119.92053
+    ],
+    [
+     39.13998,
+     -119.91502
+    ],
+    [
+     39.15091,
+     -119.91172
+    ],
+    [
+     39.1645,
+     -119.90602
+    ],
+    [
+     39.16904,
+     -119.90201
+    ],
+    [
+     39.16299,
+     -119.89899
+    ],
+    [
+     39.15226,
+     -119.90095
+    ],
+    [
+     39.13045,
+     -119.90886
+    ],
+    [
+     39.109,
+     -119.91448
+    ],
+    [
+     39.10628,
+     -119.91664
+    ]
+   ],
+   "photos": 3,
+   "cover": "data/photos/sample-marlette/02.jpg"
+  }
+ ]
+}
