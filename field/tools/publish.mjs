@@ -60,8 +60,8 @@ for (const d of ['data', 'media']) {
 
 // Shared with the homepage and About: the brand mark (favicon.svg at the site root) and the
 // lake-scene share card, used when a page has no photo of its own.
-const ICONS = '<link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><meta name="theme-color" content="#4f8fd0">';
-const SITE_IMAGE = 'https://www.christiangehrke.com/og-image.jpg';
+const ICONS = '<link rel="icon" href="/favicon.ico?v=2" sizes="any"><link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml"><link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2"><meta name="theme-color" content="#4f8fd0">';
+const SITE_IMAGE = 'https://www.christiangehrke.com/og-image.jpg?v=2';
 const robots = show.listed ? '' : '<meta name="robots" content="noindex">\n';
 // Every page carries the main site's tabs (each opens that tab on the homepage) and Play's own bar.
 const PLAYBAR = [['field-notes', 'Field Notes', '#field-notes'], ['daily-dose', 'Daily Dose', '#daily-dose'], ['above', 'From Above', 'above/'], ['daydreams', 'Daydreams', '#daydreams']];
