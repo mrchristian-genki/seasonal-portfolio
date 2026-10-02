@@ -58,3 +58,16 @@ html[data-season="spring"]{--lg-ring:linear-gradient(150deg,#fbe3ec 0%,#f39ab9 4
 html[data-season="fall"]{--lg-ring:linear-gradient(150deg,#f6c46a 0%,#e0772a 40%,#b2401f 75%,#6e2a1c 100%)}
 html[data-season="winter"]{--lg-ring:linear-gradient(150deg,#ffffff 0%,#d8e8f6 35%,#8fb2d6 75%,#5a7aa6 100%)}
 html.night-page{--lg-ring:linear-gradient(150deg,#d9e2f5 0%,#7d8fc4 30%,#34457a 70%,#1a2448 100%)}
+
+/* Per-logo overrides (Parts Catalog cards): data-season / data-night on the .logo itself beat the
+   page's html[data-season] / html.night-page, so one card can preview any season by day or night. */
+.logo.logo[data-season] .s,.logo.logo[data-night] .n{opacity:0;visibility:hidden}
+.logo.logo[data-season="spring"] .s-spring,.logo.logo[data-season="summer"] .s-summer,
+.logo.logo[data-season="fall"] .s-fall,.logo.logo[data-season="winter"] .s-winter,
+.logo.logo[data-night="1"] .n{opacity:1;visibility:visible;transition:opacity .8s}
+.logo.logo[data-night="1"] .s-summer{opacity:0;visibility:hidden}
+.logo[data-season="summer"]{--lg-ring:linear-gradient(150deg,#f6cf7e 0%,#e08a3c 45%,#9c4a2c 75%,#5e3a5c 100%)}
+.logo[data-season="spring"]{--lg-ring:linear-gradient(150deg,#fbe3ec 0%,#f39ab9 40%,#7bb35a 80%,#4e8a3c 100%)}
+.logo[data-season="fall"]{--lg-ring:linear-gradient(150deg,#f6c46a 0%,#e0772a 40%,#b2401f 75%,#6e2a1c 100%)}
+.logo[data-season="winter"]{--lg-ring:linear-gradient(150deg,#ffffff 0%,#d8e8f6 35%,#8fb2d6 75%,#5a7aa6 100%)}
+.logo[data-night="1"]{--lg-ring:linear-gradient(150deg,#d9e2f5 0%,#7d8fc4 30%,#34457a 70%,#1a2448 100%)}
