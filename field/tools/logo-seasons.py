@@ -28,7 +28,7 @@ BACK=('<svg class="lg-fx lg-back" viewBox="0 0 240 240" aria-hidden="true">'
 FRONT=('<svg class="lg-fx lg-front" viewBox="0 0 240 240" aria-hidden="true">'
  '<g class="s s-spring">'+flower(34,172,'#f39ab9')+flower(46,184,'#fff')+flower(28,190,'#f7c2d4')+flower(204,176,'#f39ab9')+flower(214,162,'#fff')+parts('fall drift',9,petal)+'</g>'
  '<g class="s s-summer"><g class="glide"><path d="M0 0q7-6 13 0q6-6 13 0" fill="none" stroke="#3b2a24" stroke-width="2.2" stroke-linecap="round"/></g></g>'
- '<g class="s s-fall">'+parts('fall tumble',9,leaf,sc=2.3)+'</g>'
+ '<g class="s s-fall"></g>'  # fall: the amber tint and rust ring are enough (leaves removed Oct 2)
  '<g class="s s-winter">'+parts('fall',22,flake,dur=(6,10))+'</g>'
  '<g class="n"><rect width="240" height="240" fill="#1a2a5a" opacity=".22"/></g>'
  '</svg>')
