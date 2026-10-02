@@ -56,16 +56,30 @@ def save_video(url, path):
     subprocess.run([ff, '-y', '-loglevel', 'error', '-ss', '0.5', '-i', path, '-frames:v', '1', '-q:v', '3', path[:-4] + '.jpg'], check=True)
     return Image.open(path[:-4] + '.jpg').size
 
+def save_video_still(url, path):
+    import imageio_ffmpeg
+    ff = imageio_ffmpeg.get_ffmpeg_exe(); raw = path + '.src'
+    open(raw, 'wb').write(fetch(url + '=dv', timeout=300))
+    subprocess.run([ff, '-y', '-loglevel', 'error', '-ss', '1', '-i', raw, '-frames:v', '1', '-vf', "scale='min(1400,iw)':-2", '-q:v', '3', path], check=True)
+    os.remove(raw)
+    return Image.open(path).size
+
 def run(key, code, picks, prefix=''):
     os.makedirs(os.path.join(OUT, key), exist_ok=True)
     items = album_items(code); got = []
     for n in picks:
         if n >= len(items): print(f'  {key}: item {n} not in album ({len(items)} items)'); continue
         url, w, h, vms = items[n]; name = f'{prefix}{n:03d}'
-        if vms > 15000: vms = 0   # a long edit: keep a still
+        # Clips up to a minute play as silent loops. Longer edits stay a still, taken from a frame of
+        # the clip itself: Google's own thumbnail of a video has a play icon drawn on it (Oct 2: the
+        # Terrarium newts video showed a play button that did nothing).
+        still_from_video = vms > 60000
+        if still_from_video: vms = 0
         path = os.path.join(OUT, key, name + ('.mp4' if vms else '.jpg'))
         if FORCE or not os.path.exists(path):
-            size = save_video(url, path) if vms else save_photo(url, path)
+            if vms: size = save_video(url, path)
+            elif still_from_video: size = save_video_still(url, path)
+            else: size = save_photo(url, path)
         else:
             size = Image.open(path[:-4] + '.jpg').size
         got.append({'n': n, 'file': f'{key}/{name}' + ('.mp4' if vms else '.jpg'), 'poster': f'{key}/{name}.jpg' if vms else None,

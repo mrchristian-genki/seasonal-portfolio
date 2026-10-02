@@ -888,11 +888,11 @@
    "picks": [
     {
      "n": 0,
-     "file": "terrarium-newts/000.jpg",
-     "poster": null,
-     "w": 1280,
-     "h": 720,
-     "video": false
+     "file": "terrarium-newts/000.mp4",
+     "poster": "terrarium-newts/000.jpg",
+     "w": 960,
+     "h": 540,
+     "video": true
     },
     {
      "n": 1,
@@ -1248,11 +1248,11 @@
     },
     {
      "n": 7,
-     "file": "mega-vw/007.jpg",
-     "poster": null,
-     "w": 1280,
-     "h": 720,
-     "video": false
+     "file": "mega-vw/007.mp4",
+     "poster": "mega-vw/007.jpg",
+     "w": 960,
+     "h": 540,
+     "video": true
     },
     {
      "n": 10,
@@ -1340,11 +1340,11 @@
     },
     {
      "n": 14,
-     "file": "wave-riders/014.jpg",
-     "poster": null,
-     "w": 1280,
-     "h": 720,
-     "video": false
+     "file": "wave-riders/014.mp4",
+     "poster": "wave-riders/014.jpg",
+     "w": 960,
+     "h": 540,
+     "video": true
     },
     {
      "n": 16,
@@ -1548,11 +1548,11 @@
     },
     {
      "n": 35,
-     "file": "taco-time/035.jpg",
-     "poster": null,
-     "w": 1280,
-     "h": 720,
-     "video": false
+     "file": "taco-time/035.mp4",
+     "poster": "taco-time/035.jpg",
+     "w": 960,
+     "h": 540,
+     "video": true
     },
     {
      "n": 43,
