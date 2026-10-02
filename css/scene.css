@@ -87,20 +87,6 @@ html,body{margin:0;background:#0b1020;font-family:system-ui,-apple-system,sans-s
   }
 .brand{display:flex;align-items:center;gap:12px;font-family:var(--font-display);font-weight:800;font-size:24px;line-height:1;letter-spacing:-.01em;text-decoration:none;color:#0f4d47}
 .brand .mark{width:44px;height:44px;border-radius:50%;background:rgb(var(--accent));box-shadow:inset -8px -10px 0 rgba(0,0,0,.15);transition:background .8s}
-/* Logo: Marley holding Christian by the hood at the canyon edge. Five stacked layers in a 240px
-   stage scaled into the ring; he slips down (eyes go wide), she eases him back up (he relaxes). */
-.brand .mark.logo{position:relative;width:56px;height:56px;padding:3px;box-sizing:border-box;flex:none;
-  background:linear-gradient(150deg,#f6cf7e 0%,#e08a3c 45%,#9c4a2c 75%,#5e3a5c 100%);box-shadow:0 2px 6px rgba(60,30,20,.28)}
-.logo .lg-stage{position:relative;display:block;width:240px;height:240px;border-radius:50%;overflow:hidden;
-  transform:scale(calc(50 / 240));transform-origin:0 0}
-.logo .lg-stage img,.logo .lg-man{position:absolute;left:0;top:0;width:240px;height:240px;display:block}
-.logo .lg-man{animation:lg-slip 6s ease-in-out infinite}
-.logo .lg-head{transform-origin:116px -27px;animation:lg-hold 6s ease-in-out infinite}
-.logo .lg-lids{animation:lg-calm 6s ease-in-out infinite}
-@keyframes lg-slip{0%,100%{transform:translateY(0)}45%{transform:translateY(9px)}55%{transform:translateY(8.5px)}}
-@keyframes lg-hold{0%,100%{transform:scaleY(1)}45%{transform:scaleY(1.035)}55%{transform:scaleY(1.033)}}
-@keyframes lg-calm{0%,8%{opacity:1}30%,62%{opacity:0}88%,100%{opacity:1}}
-@media (prefers-reduced-motion:reduce){.logo .lg-man,.logo .lg-head,.logo .lg-lids{animation:none}}
 .tabs{display:flex;gap:6px;padding:0;margin:0;list-style:none}
 .tab{
     appearance:none;border:0;background:none;cursor:pointer;font:inherit;
