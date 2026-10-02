@@ -102,3 +102,10 @@ html.night-page{--lg-ring:linear-gradient(150deg,#d9e2f5 0%,#7d8fc4 30%,#34457a 
 .logo-diver .dv-bub{animation:dv-rise 5s linear infinite}
 @keyframes dv-rise{0%{transform:translateY(0);opacity:0}15%{opacity:.9}100%{transform:translateY(-150px);opacity:0}}
 @media (prefers-reduced-motion:reduce){.logo-diver .dv-face,.logo-diver .dv-glow,.logo-diver .dv-bub{animation:none}.logo-diver .dv-glow{opacity:.6}}
+
+/* Maker logo (Workshop): Christian in his goggles, in a copper ring; the goggle rims glow cyan. */
+.logo-maker{--lg-ring:linear-gradient(150deg,#ffe0a8 0%,#d99550 35%,#9a5428 70%,#4a2614 100%);box-shadow:0 3px 14px rgba(40,20,8,.5),0 0 18px rgba(255,170,80,.2)}
+.logo-maker .mk-face{transform:scale(1.04)}
+.logo-maker .mk-goggle{position:absolute;left:22%;top:34%;width:56%;height:22%;border-radius:50%;
+  background:radial-gradient(ellipse,rgba(110,240,255,.5),rgba(60,200,240,.12) 55%,rgba(0,0,0,0) 72%);mix-blend-mode:screen;animation:dp-pulse 3.2s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){.logo-maker .mk-goggle{animation:none;opacity:.6}}
