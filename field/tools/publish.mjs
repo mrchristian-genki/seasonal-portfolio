@@ -58,6 +58,10 @@ for (const d of ['data', 'media']) {
   for (const f of fs.readdirSync(path.join(OUT, d))) if (!events.some((e) => f === e.id || f === e.id + '.json')) fs.rmSync(path.join(OUT, d, f), { recursive: true, force: true });
 }
 
+// Shared with the homepage and About: the brand mark (favicon.svg at the site root) and the
+// lake-scene share card, used when a page has no photo of its own.
+const ICONS = '<link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><meta name="theme-color" content="#4f8fd0">';
+const SITE_IMAGE = 'https://www.christiangehrke.com/og-image.jpg';
 const robots = show.listed ? '' : '<meta name="robots" content="noindex">\n';
 // Every page carries the main site's tabs (each opens that tab on the homepage) and Play's own bar.
 const PLAYBAR = [['field-notes', 'Field Notes', '#field-notes'], ['daily-dose', 'Daily Dose', '#daily-dose'], ['above', 'From Above', 'above/'], ['daydreams', 'Daydreams', '#daydreams']];
@@ -70,9 +74,9 @@ ${robots}<title>${esc(title)}</title>
 <meta name="description" content="${esc(desc)}">
 <link rel="canonical" href="${esc(url)}">
 <meta property="og:type" content="article"><meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(desc)}"><meta property="og:url" content="${esc(url)}">
-${image ? `<meta property="og:image" content="${esc(image)}"><meta name="twitter:card" content="summary_large_image">` : ''}
+<meta property="og:image" content="${esc(image || SITE_IMAGE)}"><meta name="twitter:card" content="summary_large_image">
 <link rel="alternate" type="application/rss+xml" title="${esc(show.showTitle)}" href="${rel}feed.xml">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%23d8618f'/%3E%3Cpath d='M5 23l7-9 5 6 3-4 7 7z' fill='%230f4d47'/%3E%3C/svg%3E">
+${ICONS}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <link rel="stylesheet" href="${rel}play.css?v=${V}">
 </head>
