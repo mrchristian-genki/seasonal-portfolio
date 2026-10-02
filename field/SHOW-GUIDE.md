@@ -96,3 +96,4 @@ so callbacks stay accurate.
 | (sample) | sample-marlette | The resin at the top of the hill | tracker, lamp project |
 | 2026-03-28 | 2026-03-28-whale-beach | The whales of Whale Beach (published Oct 1, 1:19) | Marley swims; whale-shaped rocks; AI clip from a real photo; collecting left out |
 | 2026-09-12 | 2026-09-12-evening-ride | Clear Creek after dark (published Oct 1, 1:50) | brother and nephew's first ride; racing the light out of the alpine section; lights for the last stretch |
+| 2026-10-02 | 2026-10-02-three-scenes | Three scenes and a sleeping dog (Mini-Cast, published Oct 2, 3:50) | first indoor making-of; canyon logo, deep sea, workshop; giant squid; Marley asleep |

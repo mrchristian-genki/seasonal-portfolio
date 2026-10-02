@@ -133,7 +133,7 @@ for (const e of events) {
 
   const url = `${show.siteUrl}${e.id}/`, title = `${e.post && e.post.title || e.title} · ${show.showTitle}`;
   const desc = e.summary || paras(e.post && e.post.body)[0] || '';
-  const html = head(title, desc, url, cover && cover.abs, '../', 'field-notes') + `<main class="article" data-route="../data/${esc(e.id)}.json">
+  const html = head(title, desc, url, cover && cover.abs, '../', 'field-notes') + `<main class="article"${t ? ` data-route="../data/${esc(e.id)}.json"` : ''}>
 <p class="kicker"><span class="kind ${esc(e.kind)}">${KIND[e.kind] || esc(e.kind)}</span> · <time datetime="${esc(e.date)}">${day(e.date, true)}</time>${e.place ? ` · ${esc(e.place)}` : ''}</p>
 <h1>${esc(e.post && e.post.title || e.title)}</h1>
 ${e.summary ? `<p class="lede">${esc(e.summary)}</p>` : ''}

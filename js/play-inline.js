@@ -54,7 +54,7 @@
     return '<article class="pi-ep pi-in">' + (e.cover ? '<img src="' + esc(e.cover.src) + '" alt="" width="' + e.cover.w + '" height="' + e.cover.h + '" loading="lazy">' : '') +
       '<div><p class="pi-kick">' + esc(e.kind) + ' · ' + esc(e.date) + (e.stats ? ' · ' + esc(e.stats) : '') + '</p><h4>' + esc(e.title) + '</h4><p>' + esc(e.summary) + '</p>' +
       (e.audio ? '<audio controls preload="none" src="' + esc(e.audio.src) + '"></audio>' : '') +
-      '<p class="pi-more"><a href="' + esc(e.url) + '" data-pi-story="' + esc(e.id) + '">The story, the map and the photos →</a></p></div></article>';
+      '<p class="pi-more"><a href="' + esc(e.url) + '" data-pi-story="' + esc(e.id) + '">' + (e.stats ? 'The story, the map and the photos' : 'The story and the pictures') + ' →</a></p></div></article>';
   }
   function video(v, i) {
     return '<figure class="pi-in"><button type="button" class="pi-ytbtn" data-dose="' + i + '" aria-label="' + esc(v.title) + '"><img src="https://i.ytimg.com/vi/' + esc(v.id) +
