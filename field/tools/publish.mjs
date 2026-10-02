@@ -26,7 +26,7 @@ const show = readJSON(path.join(FIELD, 'data/show.json'));
 const V = Date.now().toString(36);   // cache tag for the shared css/js
 
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
-const KIND = { ride: 'Ride', hike: 'Hike', forage: 'Foraging walk' };
+const KIND = { ride: 'Ride', hike: 'Hike', forage: 'Foraging walk', make: 'Mini-Cast' };
 const day = (d, long) => new Date(d + 'T12:00:00Z').toLocaleDateString('en-US', { timeZone: 'UTC', weekday: long ? 'long' : 'short', month: long ? 'long' : 'short', day: 'numeric', year: 'numeric' });
 const mi = (km) => (km * 0.621371).toFixed(km * 0.621371 < 10 ? 1 : 0) + ' mi';
 const ft = (m) => Math.round(m * 3.28084).toLocaleString('en-US') + ' ft';

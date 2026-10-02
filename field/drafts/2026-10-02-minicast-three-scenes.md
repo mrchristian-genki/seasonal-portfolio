@@ -38,6 +38,8 @@ This time the pieces came separately. The diver. The dog. The jellyfish. The wat
 
 The title got a little water in it too. Two shades of blue, taken from inside the jellyfish.
 
+And far below, every so often, something very large passes. A giant paper squid, low in the dark water, mostly in shadow. Just its eye glows.
+
 ***
 
 Then the workshop. A page for building new parts deserved a place where things get built.
