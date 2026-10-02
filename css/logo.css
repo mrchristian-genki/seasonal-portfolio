@@ -71,3 +71,22 @@ html.night-page{--lg-ring:linear-gradient(150deg,#d9e2f5 0%,#7d8fc4 30%,#34457a 
 .logo[data-season="fall"]{--lg-ring:linear-gradient(150deg,#f6c46a 0%,#e0772a 40%,#b2401f 75%,#6e2a1c 100%)}
 .logo[data-season="winter"]{--lg-ring:linear-gradient(150deg,#ffffff 0%,#d8e8f6 35%,#8fb2d6 75%,#5a7aa6 100%)}
 .logo[data-night="1"]{--lg-ring:linear-gradient(150deg,#d9e2f5 0%,#7d8fc4 30%,#34457a 70%,#1a2448 100%)}
+
+/* Deep-sea logo (Parts Catalog): a diver hands Marley's jellyfish a glowing box of parts. The
+   jellyfish layer is light on black and screens onto the water; the jellyfish and dog float together,
+   headlamps / cube / jellyfish glow on slow, out-of-step pulses, bubbles rise from the helmet. */
+.logo-deep{--lg-ring:linear-gradient(150deg,#9ff3ff 0%,#2fb6d8 35%,#2a4fb8 70%,#3a1f78 100%);box-shadow:0 3px 14px rgba(10,40,90,.45)}
+.logo-deep .dp-jelly{mix-blend-mode:screen}
+.logo-deep .dp-float{animation:dp-float 7s ease-in-out infinite}
+.logo-deep .dp-glow{mix-blend-mode:screen;animation:dp-pulse 4.2s ease-in-out infinite}
+.logo-deep .dp-g-lamp{animation-duration:3.4s}
+.logo-deep .dp-g-lamp2{animation-duration:3.4s;animation-delay:-1.7s}
+.logo-deep .dp-g-cube{animation-duration:5s;animation-delay:-1s}
+.logo-deep .dp-g-jelly{animation-duration:7s}
+.logo-deep .dp-fx{mix-blend-mode:normal}
+.logo-deep .dp-bub{animation:dp-rise 5s linear infinite}
+@keyframes dp-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-2.2%)}}
+@keyframes dp-pulse{0%,100%{opacity:.35}50%{opacity:.95}}
+@keyframes dp-rise{0%{transform:translate(0,8px);opacity:0}12%{opacity:.9}50%{transform:translate(var(--sw),-30px)}100%{transform:translate(0,-72px);opacity:0}}
+@media (prefers-reduced-motion:reduce){.logo-deep .dp-float,.logo-deep .dp-glow,.logo-deep .dp-bub{animation:none}.logo-deep .dp-glow{opacity:.6}.logo-deep .dp-bub{opacity:.6}}
+.logo-deep .lg-stage>img,.logo-deep .lg-stage>svg{scale:1.12}
