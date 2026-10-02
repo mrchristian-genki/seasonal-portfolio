@@ -1,6 +1,20 @@
 {
  "events": [
   {
+   "id": "2026-10-02-three-scenes",
+   "title": "Three scenes and a sleeping dog",
+   "date": "2026-10-02",
+   "kind": "make",
+   "place": "The workshop",
+   "status": "published",
+   "summary": "A Mini-Cast about one day of building animated scenes for the site: a canyon rescue, a deep sea and a workshop at night, and how each idea led to the next.",
+   "sample": false,
+   "stats": null,
+   "thumb": [],
+   "photos": 3,
+   "cover": "data/photos/2026-10-02-three-scenes/03.jpg"
+  },
+  {
    "id": "sample-marlette",
    "title": "Sample: up to Marlette Lake",
    "date": "2026-09-27",

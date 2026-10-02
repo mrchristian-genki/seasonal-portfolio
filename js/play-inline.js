@@ -211,7 +211,7 @@
     var body = sdlg.querySelector('.pi-story-body'), abs = new URL(url, location.href);
     sdlg.querySelector('.pi-story-link').href = abs.href;
     body.innerHTML = '<p class="pi-sub">Loading…</p>'; sdlg.showModal(); body.scrollTop = 0;
-    fetch(abs.href).then(function (r) { return r.text(); }).then(function (html) {
+    fetch(abs.href, { cache: 'no-cache' }).then(function (r) { return r.text(); }).then(function (html) {
       var art = new DOMParser().parseFromString(html, 'text/html').querySelector('main.article');
       if (!art) throw 0;
       art.querySelectorAll('.pager').forEach(function (n) { n.remove(); });
@@ -300,7 +300,7 @@
 
   function load() {
     if (loaded) return; loaded = true;
-    fetch(box.getAttribute('data-hub')).then(function (r) { if (!r.ok) throw 0; return r.json(); }).then(function (h) {
+    fetch(box.getAttribute('data-hub'), { cache: 'no-cache' }).then(function (r) { if (!r.ok) throw 0; return r.json(); }).then(function (h) {
       H = h; var s = readURL(); state.view = s.view;
       render(true); wire();
       if (s.item) openItem(s.item);
