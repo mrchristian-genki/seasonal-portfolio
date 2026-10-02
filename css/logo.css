@@ -3,7 +3,7 @@
    he slips down and his eyes go wide; she eases him back up and he relaxes. Size it with --lg. */
 .logo,.brand .mark.logo{--lg:56px;--ring:calc(var(--lg) * .055);position:relative;display:block;flex:none;box-sizing:border-box;
   width:var(--lg);height:var(--lg);padding:var(--ring);border-radius:50%;
-  background:linear-gradient(150deg,#f6cf7e 0%,#e08a3c 45%,#9c4a2c 75%,#5e3a5c 100%);
+  background:var(--lg-ring,linear-gradient(150deg,#f6cf7e 0%,#e08a3c 45%,#9c4a2c 75%,#5e3a5c 100%));
   box-shadow:0 3px 10px rgba(60,30,20,.3)}
 .logo .lg-stage{position:relative;display:block;width:100%;height:100%;border-radius:50%;overflow:hidden}
 .logo .lg-stage img,.logo .lg-man{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
@@ -32,3 +32,29 @@
 .about-page .ab-sec{clear:both}
 @media (max-width:560px){.ab-logo{--lg:120px;margin-right:18px}}
 @media print{.ab-logo{display:none}}
+
+/* Seasons and night. The page sets html[data-season] (winter/spring/summer/fall) and html.night-page;
+   two SVG overlays carry each season's touch: a tint or sun glow behind the pair, and petals, leaves,
+   snow or a gliding bird in front. Night dims the canyon, adds stars and a moon. The ring follows. */
+.logo .lg-fx{position:absolute;left:0;top:0;width:100%;height:100%;display:block;pointer-events:none;overflow:hidden}
+.logo .s,.logo .n{opacity:0;visibility:hidden;transition:opacity .8s,visibility 0s .8s}
+html[data-season="spring"] .logo .s-spring,html[data-season="summer"] .logo .s-summer,
+html[data-season="fall"] .logo .s-fall,html[data-season="winter"] .logo .s-winter{opacity:1;visibility:visible;transition:opacity .8s}
+.logo .n{transition:opacity 2.4s,visibility 0s 2.4s}
+html.night-page .logo .n{opacity:1;visibility:visible;transition:opacity 2.4s}
+html.night-page .logo .s-summer{opacity:0;visibility:hidden}                /* no sun at night */
+.logo .fall{animation:lg-fall 9s linear infinite}
+.logo .spin{animation:lg-spin 2.6s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:center}
+@keyframes lg-fall{0%{transform:translate(0,-130px)}50%{transform:translate(var(--sway),0)}100%{transform:translate(0,130px)}}
+@keyframes lg-spin{from{transform:rotate(-70deg)}to{transform:rotate(90deg)}}
+.logo .glide{animation:lg-glide 14s linear infinite}
+@keyframes lg-glide{0%{transform:translate(250px,40px)}100%{transform:translate(-30px,18px)}}
+.logo .tw{animation:lg-tw 3.2s ease-in-out infinite}
+@keyframes lg-tw{50%{opacity:.25}}
+@media (prefers-reduced-motion:reduce){.logo .fall,.logo .spin,.logo .glide,.logo .tw{animation:none}}
+
+/* Ring colours */
+html[data-season="spring"]{--lg-ring:linear-gradient(150deg,#fbe3ec 0%,#f39ab9 40%,#7bb35a 80%,#4e8a3c 100%)}
+html[data-season="fall"]{--lg-ring:linear-gradient(150deg,#f6c46a 0%,#e0772a 40%,#b2401f 75%,#6e2a1c 100%)}
+html[data-season="winter"]{--lg-ring:linear-gradient(150deg,#ffffff 0%,#d8e8f6 35%,#8fb2d6 75%,#5a7aa6 100%)}
+html.night-page{--lg-ring:linear-gradient(150deg,#d9e2f5 0%,#7d8fc4 30%,#34457a 70%,#1a2448 100%)}
