@@ -90,3 +90,15 @@ html.night-page{--lg-ring:linear-gradient(150deg,#d9e2f5 0%,#7d8fc4 30%,#34457a 
 @keyframes dp-rise{0%{transform:translate(0,8px);opacity:0}12%{opacity:.9}50%{transform:translate(var(--sw),-30px)}100%{transform:translate(0,-72px);opacity:0}}
 @media (prefers-reduced-motion:reduce){.logo-deep .dp-float,.logo-deep .dp-glow,.logo-deep .dp-bub{animation:none}.logo-deep .dp-glow{opacity:.6}.logo-deep .dp-bub{opacity:.6}}
 .logo-deep .lg-stage>img,.logo-deep .lg-stage>svg{scale:1.12}
+
+/* Diver logo (Parts Catalog): Christian in the helmet. The portrait drifts a hair inside the ring;
+   the shoulder lamps pulse out of step, a violet glow breathes under the visor, bubbles rise. */
+.logo-diver{--lg-ring:linear-gradient(150deg,#9ff3ff 0%,#2fb6d8 35%,#2a4fb8 70%,#3a1f78 100%);box-shadow:0 3px 14px rgba(10,40,90,.45),0 0 18px rgba(79,216,232,.25)}
+.logo-diver .dv-face{transform:scale(1.05);animation:dv-drift 8s ease-in-out infinite}
+@keyframes dv-drift{0%,100%{transform:scale(1.05) translateY(0)}50%{transform:scale(1.05) translateY(-1.6%)}}
+.logo-diver .dv-glow{mix-blend-mode:screen;animation:dp-pulse 3.6s ease-in-out infinite}
+.logo-diver .dv-lamp2{animation-delay:-1.8s}
+.logo-diver .dv-violet{animation-duration:5.5s}
+.logo-diver .dv-bub{animation:dv-rise 5s linear infinite}
+@keyframes dv-rise{0%{transform:translateY(0);opacity:0}15%{opacity:.9}100%{transform:translateY(-150px);opacity:0}}
+@media (prefers-reduced-motion:reduce){.logo-diver .dv-face,.logo-diver .dv-glow,.logo-diver .dv-bub{animation:none}.logo-diver .dv-glow{opacity:.6}}
