@@ -36,6 +36,10 @@ Log in, then:
   as waiting for the video step and stay on the server.
 - **Add N new** (on an updated folder): opens the note and brings in just the files that came later.
 
+- **The loader**: while the Studio works, the reactor panel (`assets/loader/reactor.mp4`, a WebM copy as a
+  fallback) is moved to the frame matching the progress, so the fuel rises with the real work and is full
+  when it is done. The scale, status tag and plaque are drawn over the video in CSS.
+
 Not in the Studio yet: episode audio (render it, then hand it to a Claude Code session to master and
 attach), animated clips and the prints-on-a-table layout.
 
