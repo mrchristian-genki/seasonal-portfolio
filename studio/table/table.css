@@ -1,0 +1,64 @@
+/* STUDIO TABLE: the top-down work table. Everything sits in table units (the photo is 2000 x 1116),
+   placed in percent so it scales from a phone to a wide monitor. */
+:root{--ink:#f3e6d2;--bg:#1b130c}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,sans-serif}
+main{max-width:1600px;margin:0 auto;padding:16px}
+.table{position:relative;aspect-ratio:2000/1116;overflow:hidden;border-radius:10px;background:#7a5230;box-shadow:0 20px 50px rgba(0,0,0,.45);container-type:inline-size}
+.wood{position:absolute;inset:0;width:100%;height:100%;display:block;transition:opacity 2.4s ease}
+.wood.night{opacity:0}
+.night .wood.night{opacity:1}
+.lamp-pool{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity 2.4s ease;
+  background:radial-gradient(ellipse 45% 55% at 50% 42%,rgba(255,190,110,.18),transparent 70%)}
+.night .lamp-pool{opacity:1}
+.layer{position:absolute;inset:0}
+
+/* a prop: positioned by JS in percent; the shadow is drawn from its own outline */
+.prop{position:absolute;transform-origin:50% 50%;will-change:transform;pointer-events:none}
+.prop img{display:block;width:100%;height:auto;filter:drop-shadow(var(--sx,.45cqi) var(--sy,.6cqi) var(--sb,.5cqi) rgba(36,18,4,var(--so,.42)));transition:filter 2.4s ease}
+.night .prop:not(.glows) img{filter:drop-shadow(var(--sx,.45cqi) var(--sy,.6cqi) var(--sb,.5cqi) rgba(10,4,0,.6)) brightness(.8) saturate(.85) sepia(.1)}
+.night .print .photo{filter:brightness(.85)}
+/* night: everything outside the lamp pool falls into shadow; the lamp jar and the green lens stay lit above it */
+.shade{position:absolute;inset:0;pointer-events:none;z-index:30;opacity:0;transition:opacity 2.4s ease;mix-blend-mode:multiply;
+  background:radial-gradient(ellipse 52% 62% at 50% 40%,rgba(255,255,255,1) 25%,rgba(120,90,70,1) 75%,rgba(60,40,30,1) 100%)}
+.night .shade{opacity:1}
+.night .jar.lit,.night .panel{z-index:31}
+.prop.stack{display:grid}
+.prop.stack > img{grid-area:1/1}
+
+/* lamp jar: off and on images cross-fade; the glow spills onto the wood */
+.jar .on{opacity:0;transition:opacity 1.6s ease}
+.jar.lit .on{opacity:1;animation:breathe 5.5s ease-in-out infinite}
+.jar .glow{position:absolute;left:50%;top:50%;width:260%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,rgba(255,170,70,.35),rgba(255,140,40,.12) 35%,transparent 65%);mix-blend-mode:screen;opacity:0;transition:opacity 1.6s ease}
+.jar.lit .glow{opacity:.45;animation:breathe 5.5s ease-in-out infinite}
+.night .jar.lit .glow{opacity:1}
+.night .jar img{filter:drop-shadow(.4cqi .5cqi .5cqi rgba(10,4,0,.6)) brightness(.8)}
+.night .jar.lit .on{filter:drop-shadow(.4cqi .5cqi .5cqi rgba(10,4,0,.5)) brightness(1.05)}
+@keyframes breathe{0%,100%{opacity:.85}50%{opacity:1}}
+
+/* panel lamp: the green lens fades on, with light on the brass */
+.panel .on{opacity:0;transition:opacity 1.2s ease}
+.panel.lit .on{opacity:1}
+.panel .glow{position:absolute;left:28%;top:47%;width:120%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,rgba(90,255,110,.5),rgba(60,220,90,.15) 35%,transparent 62%);mix-blend-mode:screen;opacity:0;transition:opacity 1.2s ease}
+.panel.lit .glow{opacity:.8}
+
+/* a print: one of your photos inside the blank print, with the print's own light and curl over it */
+.print{display:grid}
+.print > *{grid-area:1/1}
+.print .photo{width:89%;height:86%;margin:4.3% 0 0 5.6%;object-fit:cover;align-self:start;justify-self:start;filter:none}
+.print .paper{pointer-events:none}
+.print .sheen{mix-blend-mode:multiply;opacity:.55;filter:none}
+
+/* hands */
+.hand{z-index:20}
+.marley{z-index:15}
+
+.controls{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 6px}
+.controls button{font:700 14px "Nunito",system-ui,sans-serif;color:var(--ink);background:#2c2017;border:1px solid #5a4430;border-radius:999px;padding:8px 16px;cursor:pointer}
+.controls button:hover{border-color:#c9a06a}
+.controls button.primary{background:#3d6b4a;border-color:#5a9a6a}
+.controls button[aria-pressed=true]{background:#5a4430}
+.note{color:#bfa98a;font-size:14px;max-width:70ch}
+@media (prefers-reduced-motion:reduce){.jar.lit .on,.jar.lit .glow{animation:none}}

@@ -25,6 +25,9 @@ numbers come from the track, and anything taught (gear, technique, rules) is acc
    Photos are stripped of GPS before they're added; tracks are trimmed (field/track.js).
 4. **Other people stay anonymous** unless Christian says they're happy to be named. "Two other
    riders", "a man with a husky".
+   At concerts and events (Christian, Oct 3, 2026): people in a crowd may appear in photos when no one
+   is the subject. Anyone who is the subject of a photo still needs their OK, or the photo is cropped,
+   blurred or left out.
 5. **Collecting is done right, and said so.** Rockhounding and resin: small amounts, personal use
    and gifts, from places it's allowed. Mention the rule when it comes up naturally; never imply
    selling what was collected.
