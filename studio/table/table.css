@@ -122,3 +122,17 @@
   background:radial-gradient(ellipse 40% 90% at 50% 50%,rgba(0,0,0,0) 30%,rgba(10,5,2,.55) 100%),rgba(10,5,2,.25)}
 .st-foot.night::after{opacity:1}
 .st-foot .st-switch{z-index:2}
+
+/* the day/night dial beside the switch: the painted disc turns half a circle under the brass face, the
+   sun setting out of the window as the moon comes up (and back by morning) */
+.st-dial{position:absolute;z-index:2;top:50%;left:calc(50% - clamp(150px,16vw,210px) / 2 - 34px);translate:-100% -50%;width:clamp(118px,12.8vw,165px);aspect-ratio:1;
+  filter:drop-shadow(6px 9px 9px rgba(20,10,2,.5));transition:filter 2.4s ease}
+.st-foot.night .st-dial{filter:drop-shadow(8px 11px 10px rgba(10,4,0,.6)) brightness(.88)}
+.st-dial img{position:absolute;display:block}
+.dial-disc{width:54%;left:23%;top:22.18%;rotate:var(--turn,0deg);transition:rotate 2.6s cubic-bezier(.45,.05,.3,1)}
+.dial-face{inset:0;width:100%;height:100%;filter:drop-shadow(1px 3px 2px rgba(20,10,2,.45))}
+@media (max-width:640px){
+  .st-foot .st-switch{left:calc(50% + 68px)}
+  .st-dial{left:calc(50% - 68px);translate:-50% -50%;width:112px}
+}
+@media (prefers-reduced-motion:reduce){.dial-disc{transition:none}}
