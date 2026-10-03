@@ -237,7 +237,12 @@ try {
     date: ((/<published>([^<]+)/.exec(m[1]) || [])[1] || '').slice(0, 10),
     desc: ((/<media:description>([\s\S]*?)<\/media:description>/.exec(m[1]) || [])[1] || '').replace(/&amp;/g, '&').replace(/&#39;/g, "'").replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>').trim() }))
     .filter((v) => v.id && /daily dose of paradise/i.test(v.title));   // the feed holds the newest 15
-} catch (err) { console.warn('YouTube feed unavailable; Daily Dose section left out this time'); }
+} catch (err) { /* handled below */ }
+// The feed is fetched on every build (here and in the deploy). If it can't be reached, keep the last
+// good list rather than dropping the section.
+const ytFile = path.join(FIELD, 'data', 'youtube-cache.json');
+if (yt.length) fs.writeFileSync(ytFile, JSON.stringify(yt) + '\n');
+else { try { yt = JSON.parse(fs.readFileSync(ytFile, 'utf8')); console.warn('YouTube feed unavailable; using the last good Daily Dose list'); } catch { console.warn('YouTube feed unavailable; Daily Dose section left out this time'); } }
 
 // Index
 const cards = pages.map(({ e, cover, audio }) => {

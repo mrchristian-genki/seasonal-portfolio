@@ -1,0 +1,20 @@
+{
+  "name": "christiangehrke/studio",
+  "description": "The Field Notes Studio: private admin for christiangehrke.com",
+  "type": "project",
+  "require": {
+    "php": ">=8.1",
+    "anthropic-ai/sdk": "^0.54",
+    "guzzlehttp/guzzle": "^7.9"
+  },
+  "config": {
+    "platform": {
+      "php": "8.1.99"
+    },
+    "optimize-autoloader": true,
+    "sort-packages": true,
+    "allow-plugins": {
+      "php-http/discovery": false
+    }
+  }
+}
