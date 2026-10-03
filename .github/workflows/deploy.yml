@@ -3,7 +3,8 @@
 # Runs on every push to main, or by hand from the Actions tab ("Run workflow"), where "dry run"
 # lists what would change without touching the server. Only adds and updates files: nothing on the
 # server is ever deleted, so files that live only there are safe. field/ (the private Field Notes
-# manager, drafts and notes) is never uploaded; the public pages are built into play/.
+# manager, drafts and notes) is never uploaded; the public pages are built into play/. The Studio's
+# private settings live outside the web folder (~/studio-private) and are never touched.
 #
 # Repository secrets (Settings -> Secrets and variables -> Actions):
 #   DH_HOST     the server, e.g. iad1-shared-b8-12.dreamhost.com (DreamHost panel -> SFTP/SSH users)
@@ -30,6 +31,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Play is rebuilt from field/data on every deploy, so an entry saved or published from the
+      # Studio goes live without anyone running publish.mjs by hand.
+      - name: Build Play
+        run: node field/tools/publish.mjs
+
+      # The Studio: its copy of the track engine, and the Anthropic PHP SDK (composer.lock pins it).
+      - name: Prepare the Studio
+        run: |
+          cp field/track.js studio/assets/track.js
+          composer install --working-dir=studio --no-dev --no-interaction --prefer-dist --optimize-autoloader
+          printf 'Require all denied\n' > studio/vendor/.htaccess
+
       - name: Set up SSH
         env:
           DH_HOST: ${{ secrets.DH_HOST }}
@@ -54,4 +67,5 @@ jobs:
             --exclude='*.md' \
             --exclude='upload-*.zip' \
             --exclude='field/' \
+            --exclude='studio/composer.*' \
             ./ "$DH_USER@$DH_HOST:$DH_PATH/"
