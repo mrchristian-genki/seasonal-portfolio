@@ -35,6 +35,7 @@ $in = studio_logged_in();
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&display=swap">
 <link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>">
+<link rel="stylesheet" href="table/table.css?v=7">
 </head>
 <?php if (!$in): ?>
 <body class="login">
@@ -56,10 +57,24 @@ $in = studio_logged_in();
     <form method="post"><input type="hidden" name="act" value="logout"><input type="hidden" name="csrf" value="<?= h(studio_csrf()) ?>"><button type="submit" class="link">Log out</button></form>
   </nav>
 </header>
+<section class="st-hero" aria-label="Studio">
+  <div class="table" id="table" data-set="header" data-base="table/">
+    <img class="wood day" src="table/a/table-day.webp" alt="">
+    <img class="wood night" src="table/a/table-night.webp" alt="">
+    <div class="lamp-pool" aria-hidden="true"></div>
+    <div class="layer" id="layer"></div>
+    <div class="shade" aria-hidden="true"></div>
+  </div>
+  <div class="st-label">
+    <img class="st-logo" src="/icon-512.png?v=2" alt="">
+    <div class="st-card"><h1>Studio</h1><p>Field Notes, behind the scenes</p></div>
+  </div>
+</section>
 <main id="app"><p class="muted">Loading…</p></main>
 <div id="toast" role="status" aria-live="polite"></div>
 <script src="assets/track.js?v=<?= STUDIO_VERSION ?>"></script>
 <script src="assets/studio.js?v=<?= STUDIO_VERSION ?>"></script>
+<script src="table/table.js?v=6"></script>
 </body>
 <?php endif; ?>
 </html>

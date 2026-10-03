@@ -4,8 +4,14 @@
 (function () {
   'use strict';
   var T = document.getElementById('table'), L = document.getElementById('layer');
+  if (!T || !L) return;
   var W = 2000, H = 1116, calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var night = /[?&]night\b/.test(location.search);
+  var BASE = T.getAttribute('data-base') || '', HEADER = T.getAttribute('data-set') === 'header';
+  var hour = new Date().getHours();
+  var night = /[?&]night\b/.test(location.search) || (HEADER && (hour >= 19 || hour < 6));
+  // the header plays the arrivals once per visit; after that the table is simply set
+  var settle = false;
+  try { if (HEADER && sessionStorage.getItem('st-table')) settle = true; sessionStorage.setItem('st-table', '1'); } catch (e) {}
   if (night) T.classList.add('night');
 
   // x, y = centre; w = width; rot in degrees; how = roll | slide | drop | gentle; from = the edge it comes in over
@@ -22,6 +28,14 @@
     { id: 'fox', src: 'fox', x: 1770, y: 1000, w: 300, rot: -7, how: 'slide', from: 'right' },
     { id: 'deer', src: 'deer', x: 150, y: 895, w: 95, rot: 20, how: 'drop' }
   ];
+  // the header is the top strip of the table (y 0 to about 360): fewer things, kept to that band
+  if (HEADER) PROPS = [
+    { id: 'panel', src: ['panel-off', 'panel-on'], x: 1585, y: 300, w: 86, rot: 0, how: 'drop', fixed: true },
+    { id: 'contact', src: 'contact', x: 1800, y: 135, w: 300, rot: 7, how: 'slide', from: 'top' },
+    { id: 'carnelians', src: 'carnelians', x: 800, y: 300, w: 95, rot: 12, how: 'drop' },
+    { id: 'cone', src: 'cone', x: 960, y: 270, w: 112, rot: 0, how: 'roll', from: 'top' },
+    { id: 'jar', src: ['jar-off', 'jar-on'], x: 1175, y: 265, w: 132, rot: 0, how: 'gentle', from: 'top' }
+  ];
   var PHOTOS = ['01', '02', '03'].map(function (n) { return '../../play/media/2024-09-05-marlette/' + n + '.jpg'; });
   var els = {}, prints = [], busy = false;
 
@@ -31,7 +45,7 @@
     el.style.top = ((p.y) / H * 100) + '%';
     el.style.width = (w / W * 100) + '%';
   }
-  function img(src, cls) { var i = new Image(); i.src = 'a/' + src + '.webp'; i.alt = ''; i.decoding = 'async'; if (cls) i.className = cls; return i; }
+  function img(src, cls) { var i = new Image(); i.src = BASE + 'a/' + src + '.webp'; i.alt = ''; i.decoding = 'async'; if (cls) i.className = cls; return i; }
   function wait(ms) { return new Promise(function (ok) { setTimeout(ok, calm ? 0 : ms); }); }
   function anim(el, frames, opt) {
     if (calm) { var last = frames[frames.length - 1]; Object.keys(last).forEach(function (k) { if (k !== 'offset' && k !== 'easing') el.style[k] = last[k]; }); return Promise.resolve(); }
@@ -47,7 +61,7 @@
 
   function makeProp(p) {
     var el = document.createElement('div');
-    el.className = 'prop ' + p.id + (Array.isArray(p.src) ? ' stack' : '');
+    el.className = 'prop p-' + p.id + (Array.isArray(p.src) ? ' stack' : '');
     if (Array.isArray(p.src)) {
       el.appendChild(img(p.src[0], 'off')); el.appendChild(img(p.src[1], 'on'));
       var g = document.createElement('span'); g.className = 'glow'; el.appendChild(g);
@@ -80,7 +94,7 @@
   // the hand reaches in from the edge nearest the item, its sleeve running off that edge so the end of
   // the arm is never seen, takes the item and slides back out the same way
   function makeHand(p, paper) {
-    var art = paper ? 'hand-pinch' : 'hand-hold', ratio = paper ? 219 / 560 : 257 / 560, hw = 380, hh = hw * ratio;
+    var art = 'hand-pinch', ratio = 219 / 560, hw = 380, hh = hw * ratio;
     var edges = [['right', W - p.x], ['left', p.x], ['top', p.y], ['bottom', H - p.y]].sort(function (a, b) { return a[1] - b[1]; });
     var edge = edges[0][0], len = Math.max(hw, edges[0][1] + 140);   // fingertips to beyond the edge
     var turn = { right: '', left: 'scaleX(-1)', top: 'rotate(-90deg)', bottom: 'rotate(90deg)' }[edge];
@@ -93,13 +107,13 @@
     hand.style.transformOrigin = '0 50%';
     var pic = img(art, 'palm'); pic.style.width = (hw / len * 100) + '%';
     var sleeve = document.createElement('span'); sleeve.className = 'sleeve';
-    sleeve.style.backgroundImage = 'url(a/' + art + '-sleeve.webp)';
+    sleeve.style.backgroundImage = 'url(' + BASE + 'a/' + art + '-sleeve.webp)';
     hand.appendChild(pic); hand.appendChild(sleeve);
     L.appendChild(hand);
     var out = px(len + 60), dir = { right: [1, 0], left: [-1, 0], top: [0, -1], bottom: [0, 1] }[edge];
     return { el: hand, at: turn + ' translateX(0)', gone: turn + ' translateX(' + out + 'px)', move: 'translate(' + dir[0] * out + 'px,' + dir[1] * out + 'px) ' };
   }
-  var PAPER = /contact|map|notebook|fox|print/;
+  var PAPER = /./;   // the pinch reads as picking anything up; the closed hold looked like a fist
 
   // take: the hand comes from the edge nearest the item, its sleeve running off that edge so the end of
   // the arm is never seen, takes the item and slides back out the same way
@@ -137,7 +151,7 @@
     PHOTOS.forEach(function (src, i) {
       chain = chain.then(function () {
         var p = { id: 'print', x: spots[i].x, y: spots[i].y, w: 280, rot: spots[i].rot, how: 'slide', from: 'bottom' };
-        var el = document.createElement('div'); el.className = 'prop print';
+        var el = document.createElement('div'); el.className = 'prop p-print';
         var photo = new Image(); photo.className = 'photo'; photo.alt = ''; photo.src = src;
         el.appendChild(img('print', 'paper')); el.appendChild(photo); el.appendChild(img('print', 'sheen'));
         el.classList.add('undeveloped'); photo.style.opacity = '.08';
@@ -175,8 +189,9 @@
     marleyOut = true;
     var isNight = T.classList.contains('night');
     // (the resting pose comes back once its clean cut-out is in)
-    var pose = isNight ? { src: 'marley-sleep', w: 560, ratio: 357 / 640, show: 1 }
-      : { src: 'marley-look', w: 390, ratio: 635 / 640, show: .62 };
+    var k = HEADER ? .72 : 1;
+    var pose = isNight ? { src: 'marley-sleep', w: 560 * k, ratio: 357 / 640, show: 1 }
+      : { src: 'marley-look', w: 390 * k, ratio: 635 / 640, show: .62 };
     var el = document.createElement('div'); el.className = 'prop marley';
     el.appendChild(img(pose.src));
     var h = pose.w * pose.ratio, x = 1330;
@@ -200,16 +215,19 @@
     L.innerHTML = ''; els = {}; prints = [];
     var chain = Promise.resolve();
     PROPS.forEach(function (p, i) {
-      if (p.fixed || calm) { makeProp(p); return; }
+      if (p.fixed || calm || settle) { makeProp(p); return; }
       chain = chain.then(function () { arrive(p); return wait(i < 3 ? 420 : 340); });
     });
     return chain.then(function () { return wait(1600); }).then(setLamps);
   }
 
   var timer = null;
-  function visits() { clearTimeout(timer); timer = setTimeout(function () { marley().then(visits); }, (calm ? 0 : 1) * (28000 + Math.random() * 22000)); }
+  function visits() { clearTimeout(timer); if (calm) return; timer = setTimeout(function () { marley().then(visits); }, 28000 + Math.random() * 22000); }
 
-  document.querySelector('.controls').addEventListener('click', function (e) {
+  window.StudioTable = { process: process, drop: dropPrints, marley: marley,
+    night: function (on) { T.classList.toggle('night', on); setLamps(); } };
+  var C = document.querySelector('.controls');
+  if (C) C.addEventListener('click', function (e) {
     var b = e.target.closest('button'); if (!b || busy) return;
     var act = b.getAttribute('data-act'), job;
     if (act === 'night') {
@@ -233,7 +251,7 @@
     }
     (job || Promise.resolve()).then(function () { busy = false; });
   });
-  if (night) document.querySelector('[data-act=night]').textContent = 'Day';
+  if (night && C) C.querySelector('[data-act=night]').textContent = 'Day';
 
-  start().then(function () { return wait(1500); }).then(marley).then(visits);
+  start().then(function () { return calm ? null : wait(settle ? 4000 : 1500).then(marley); }).then(visits);
 })();
