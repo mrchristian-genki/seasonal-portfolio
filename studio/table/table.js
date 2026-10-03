@@ -9,6 +9,8 @@
   var BASE = T.getAttribute('data-base') || '', HEADER = T.getAttribute('data-set') === 'header';
   var hour = new Date().getHours();
   var night = /[?&]night\b/.test(location.search) || (HEADER && (hour >= 19 || hour < 6));
+  // a choice made on the switch wins over the clock
+  try { var pick = localStorage.getItem('st-night'); if (HEADER && pick !== null) night = pick === '1'; } catch (e) {}
   // the header plays the arrivals once per visit; after that the table is simply set
   var settle = false;
   if (night) T.classList.add('night');

@@ -86,3 +86,31 @@
 .st-card p{margin:4px 0 0;font:600 13px/1.3 "Nunito",system-ui,sans-serif;color:#6b5743}
 .st-hero:has(.table.night) .st-card{background:#d9cbb0;filter:brightness(.82)}
 @media (max-width:640px){.st-hero{--h:190px}.st-card{padding:10px 16px}.st-card p{display:none}}
+
+/* THE FOOTER: the bottom strip of the table, with the day/night switch plate on it */
+.st-foot{--h:200px;position:relative;height:var(--h);overflow:hidden;margin-top:40px;background:#6b4526;box-shadow:inset 0 14px 18px -10px rgba(20,10,2,.55)}
+.st-foot-wood span{position:absolute;inset:0;background:center bottom/max(100%,calc(var(--h) * 2000 / 360)) auto no-repeat;transition:opacity 2.4s ease}
+.st-foot-wood .day{background-image:url(a/table-day.webp)}
+.st-foot-wood .night{background-image:url(a/table-night.webp);opacity:0}
+.st-foot.night .st-foot-wood .night{opacity:1}
+.st-switch{position:absolute;left:50%;top:50%;translate:-50% -50%;width:clamp(150px,16vw,210px);aspect-ratio:560/448;padding:0;border:0;background:none;cursor:pointer;
+  filter:drop-shadow(8px 11px 9px rgba(36,18,4,.45))}
+.st-foot.night .st-switch{filter:drop-shadow(8px 11px 10px rgba(10,4,0,.6)) brightness(.9)}
+.st-switch img{position:absolute;inset:0;width:100%;height:100%;transition:opacity .22s ease}
+.st-switch .sw-night{opacity:0}
+.st-switch.is-night .sw-night{opacity:1}
+.st-switch.is-night .sw-day{opacity:0}
+.st-switch:focus-visible{outline:3px solid #f6d58a;outline-offset:6px;border-radius:8px}
+.sw-label{position:absolute;left:19.95%;width:27.45%;height:11.6%;display:flex;align-items:center;justify-content:center;
+  font:700 clamp(8px,.85vw,11px)/1 "Courier New",Courier,monospace;letter-spacing:.14em;color:#3d3022;opacity:.82;pointer-events:none}
+.sw-top{top:10.95%} .sw-bottom{top:64.44%}
+.sw-glow{position:absolute;left:70.8%;top:43.6%;width:120%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;pointer-events:none;mix-blend-mode:screen;
+  background:radial-gradient(circle,rgba(255,180,80,.45),rgba(255,150,50,.12) 30%,transparent 60%);transition:background .4s ease}
+.st-switch.is-night .sw-glow{background:radial-gradient(circle,rgba(130,190,255,.5),rgba(110,170,255,.14) 30%,transparent 60%)}
+.st-switch.turning .sw-glow{animation:sw-blink .45s ease}
+@keyframes sw-blink{0%{opacity:1}35%{opacity:0}100%{opacity:1}}
+@media (max-width:640px){.st-foot{--h:170px}}
+.st-foot::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity 2.4s ease;
+  background:radial-gradient(ellipse 40% 90% at 50% 50%,rgba(0,0,0,0) 30%,rgba(10,5,2,.55) 100%),rgba(10,5,2,.25)}
+.st-foot.night::after{opacity:1}
+.st-foot .st-switch{z-index:2}
