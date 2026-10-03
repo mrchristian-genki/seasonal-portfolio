@@ -77,29 +77,57 @@
       { transform: r }], { duration: p.how === 'gentle' ? 1500 : 1100, easing: 'cubic-bezier(.2,.7,.25,1)' });
   }
 
-  // the hand reaches in from the right, takes the prop, and slides out with it
-  function takeAway(el, p) {
-    var paper = /contact|map|notebook|fox|print/.test(el.className);
-    var hand = document.createElement('div'), hw = 380;
+  // the hand reaches in from the edge nearest the item, its sleeve running off that edge so the end of
+  // the arm is never seen, takes the item and slides back out the same way
+  function makeHand(p, paper) {
+    var art = paper ? 'hand-pinch' : 'hand-hold', ratio = paper ? 219 / 560 : 257 / 560, hw = 380, hh = hw * ratio;
+    var edges = [['right', W - p.x], ['left', p.x], ['top', p.y], ['bottom', H - p.y]].sort(function (a, b) { return a[1] - b[1]; });
+    var edge = edges[0][0], len = Math.max(hw, edges[0][1] + 140);   // fingertips to beyond the edge
+    var turn = { right: '', left: 'scaleX(-1)', top: 'rotate(-90deg)', bottom: 'rotate(90deg)' }[edge];
+    var hand = document.createElement('div');
     hand.className = 'prop hand';
-    hand.appendChild(img(paper ? 'hand-pinch' : 'hand-hold'));
-    var fx = (p.x || 0) - 20;
-    hand.style.left = (fx / W * 100) + '%';
-    hand.style.top = (p.y / H * 100) + '%';
-    hand.style.width = (hw / W * 100) + '%';
+    hand.style.left = (p.x / W * 100) + '%';
+    hand.style.top = ((p.y - hh / 2) / H * 100) + '%';
+    hand.style.width = (len / W * 100) + '%';
+    hand.style.height = (hh / H * 100) + '%';
+    hand.style.transformOrigin = '0 50%';
+    var pic = img(art, 'palm'); pic.style.width = (hw / len * 100) + '%';
+    var sleeve = document.createElement('span'); sleeve.className = 'sleeve';
+    sleeve.style.backgroundImage = 'url(a/' + art + '-sleeve.webp)';
+    hand.appendChild(pic); hand.appendChild(sleeve);
     L.appendChild(hand);
-    var away = px(W - fx + 200), base = 'translateY(-50%)';
-    hand.style.transform = 'translateX(' + away + 'px) ' + base;
-    return anim(hand, [{ transform: 'translateX(' + away + 'px) ' + base }, { transform: base }], { duration: 1100, easing: 'cubic-bezier(.25,.7,.3,1)' })
+    var out = px(len + 60), dir = { right: [1, 0], left: [-1, 0], top: [0, -1], bottom: [0, 1] }[edge];
+    return { el: hand, at: turn + ' translateX(0)', gone: turn + ' translateX(' + out + 'px)', move: 'translate(' + dir[0] * out + 'px,' + dir[1] * out + 'px) ' };
+  }
+  var PAPER = /contact|map|notebook|fox|print/;
+
+  // take: the hand comes from the edge nearest the item, its sleeve running off that edge so the end of
+  // the arm is never seen, takes the item and slides back out the same way
+  function takeAway(el, p) {
+    var h = makeHand(p, PAPER.test(el.className)), IN = 'cubic-bezier(.25,.7,.3,1)', OUT = 'cubic-bezier(.5,0,.75,.4)';
+    h.el.style.transform = h.gone;
+    return anim(h.el, [{ transform: h.gone }, { transform: h.at }], { duration: 1100, easing: IN })
       .then(function () { return wait(250); })
       .then(function () {
-        var from = getComputedStyle(el).transform;
+        var from = getComputedStyle(el).transform; from = from === 'none' ? '' : from;
         return Promise.all([
-          anim(hand, [{ transform: base }, { transform: 'translateX(' + away + 'px) ' + base }], { duration: 1150, easing: 'cubic-bezier(.5,0,.75,.4)' }),
-          anim(el, [{ transform: from }, { transform: 'translateX(' + away + 'px) ' + from.replace('none', '') }], { duration: 1150, easing: 'cubic-bezier(.5,0,.75,.4)' })
+          anim(h.el, [{ transform: h.at }, { transform: h.gone }], { duration: 1150, easing: OUT }),
+          anim(el, [{ transform: 'translate(0,0) ' + from }, { transform: h.move + from }], { duration: 1150, easing: OUT })
         ]);
       })
-      .then(function () { hand.remove(); el.remove(); });
+      .then(function () { h.el.remove(); el.remove(); });
+  }
+
+  // hand in: the hand carries a missing item in from the nearest edge, sets it down and leaves
+  function handIn(p) {
+    var el = makeProp(p), h = makeHand(p, PAPER.test(el.className)), r = rest(p);
+    h.el.style.transform = h.gone; el.style.transform = h.move + r;
+    return Promise.all([
+      anim(h.el, [{ transform: h.gone }, { transform: h.at }], { duration: 1300, easing: 'cubic-bezier(.25,.7,.3,1)' }),
+      anim(el, [{ transform: h.move + r }, { transform: 'translate(0,0) ' + r }], { duration: 1300, easing: 'cubic-bezier(.25,.7,.3,1)' })
+    ]).then(function () { return wait(300); })
+      .then(function () { return anim(h.el, [{ transform: h.at }, { transform: h.gone }], { duration: 1000, easing: 'cubic-bezier(.5,0,.75,.4)' }); })
+      .then(function () { h.el.remove(); });
   }
 
   // prints: your photos, pushed onto the table one by one
@@ -192,6 +220,11 @@
     else if (act === 'process') job = process();
     else if (act === 'marley') job = marley();
     else if (act === 'reset') job = start();
+    else if (act === 'handin') {
+      var gone = PROPS.filter(function (p) { return !p.fixed && !(els[p.id] && els[p.id].isConnected); });
+      var back = gone[Math.floor(Math.random() * gone.length)];
+      job = back ? handIn(back) : Promise.resolve();
+    }
     else if (act === 'take') {
       var pool = prints.filter(function (pr) { return pr.el.isConnected; }).map(function (pr) { return { el: pr.el, p: pr.p }; })
         .concat(PROPS.filter(function (p) { return !p.fixed && els[p.id] && els[p.id].isConnected; }).map(function (p) { return { el: els[p.id], p: p }; }));

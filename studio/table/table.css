@@ -51,8 +51,12 @@ main{max-width:1600px;margin:0 auto;padding:16px}
 .print .paper{pointer-events:none}
 .print .sheen{mix-blend-mode:multiply;opacity:.55;filter:none}
 
-/* hands */
-.hand{z-index:20}
+/* hands: the palm, then the sleeve repeated to the table's edge; one shadow for the whole arm */
+.hand{z-index:20;display:flex;align-items:stretch;filter:drop-shadow(.6cqi .8cqi .6cqi rgba(36,18,4,.4))}
+.hand .palm{flex:none;height:100%;width:auto;filter:none}
+.hand .sleeve{flex:1;margin-left:-1px;background-repeat:repeat-x;background-size:auto 100%;background-position:left center}
+.night .prop.hand img.palm,.prop.hand img.palm{filter:none}
+.night .hand{filter:drop-shadow(.6cqi .8cqi .6cqi rgba(10,4,0,.6)) brightness(.8)}
 .marley{z-index:15}
 
 .controls{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 6px}
