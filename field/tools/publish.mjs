@@ -104,7 +104,8 @@ for (const e of events) {
       const base = String(i + 1).padStart(2, '0');
       fs.copyFileSync(path.join(FIELD, p.src), path.join(media, base + '.mp4'));
       fs.copyFileSync(path.join(FIELD, p.poster), path.join(media, base + '.jpg'));
-      return { src: `../media/${e.id}/${base}.mp4`, poster: `../media/${e.id}/${base}.jpg`, abs: `${show.siteUrl}media/${e.id}/${base}.jpg`, caption: p.caption || '', w: p.w, h: p.h, cover: false, video: true, ai: !!p.ai, table: p.table || null, after: p.after };
+      const tag = '?v=' + fs.statSync(path.join(FIELD, p.src)).size.toString(36);   // same name, new clip: let caches go
+      return { src: `../media/${e.id}/${base}.mp4${tag}`, poster: `../media/${e.id}/${base}.jpg${tag}`, abs: `${show.siteUrl}media/${e.id}/${base}.jpg`, caption: p.caption || '', w: p.w, h: p.h, cover: false, video: true, ai: !!p.ai, table: p.table || null, after: p.after };
     }
     fs.copyFileSync(path.join(FIELD, p.src), path.join(media, name));
     return { src: `../media/${e.id}/${name}`, abs: `${show.siteUrl}media/${e.id}/${name}`, caption: p.caption || '', w: p.w, h: p.h, cover: !!p.cover };
