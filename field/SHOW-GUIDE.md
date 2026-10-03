@@ -48,6 +48,7 @@ Stones from the water's edge or the lakebed get described, not collected.
 ## Rides from home
 
 Rides that start or end at home aren't used as adventures at all, even trimmed: too close to home.
+Exception (Christian, Oct 3, 2026): a ride from home can be told when nothing places it: no track, map, route, distances, street, shop or restaurant names, and only photos of sky and distant views (crop out signs, intersections and nearby houses). Its file says so in fieldNotes.
 A ride that only finishes near home (like Clear Creek ending at James Lee Park) is fine; its map
 stops at the edge of the home zone. The home zone itself lives only in Christian's private Drive
 file and `field/private-zones.json` (gitignored), never in the site.
