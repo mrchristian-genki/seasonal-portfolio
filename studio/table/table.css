@@ -1,9 +1,8 @@
 /* STUDIO TABLE: the top-down work table. Everything sits in table units (the photo is 2000 x 1116),
    placed in percent so it scales from a phone to a wide monitor. */
-:root{--ink:#f3e6d2;--bg:#1b130c}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,sans-serif}
-main{max-width:1600px;margin:0 auto;padding:16px}
+.table-page{--ink:#f3e6d2;--bg:#1b130c;margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,sans-serif}
+.table-page *{box-sizing:border-box}
+.table-page main{max-width:1600px;margin:0 auto;padding:16px}
 .table{position:relative;aspect-ratio:2000/1116;overflow:hidden;border-radius:10px;background:#7a5230;box-shadow:0 20px 50px rgba(0,0,0,.45);container-type:inline-size}
 .wood{position:absolute;inset:0;width:100%;height:100%;display:block;transition:opacity 2.4s ease}
 .wood.night{opacity:0}
@@ -17,48 +16,70 @@ main{max-width:1600px;margin:0 auto;padding:16px}
 .prop{position:absolute;transform-origin:50% 50%;will-change:transform;pointer-events:none}
 .prop img{display:block;width:100%;height:auto;filter:drop-shadow(var(--sx,.45cqi) var(--sy,.6cqi) var(--sb,.5cqi) rgba(36,18,4,var(--so,.42)));transition:filter 2.4s ease}
 .night .prop:not(.glows) img{filter:drop-shadow(var(--sx,.45cqi) var(--sy,.6cqi) var(--sb,.5cqi) rgba(10,4,0,.6)) brightness(.8) saturate(.85) sepia(.1)}
-.night .print .photo{filter:brightness(.85)}
+.night .p-print .photo{filter:brightness(.85)}
 /* night: everything outside the lamp pool falls into shadow; the lamp jar and the green lens stay lit above it */
 .shade{position:absolute;inset:0;pointer-events:none;z-index:30;opacity:0;transition:opacity 2.4s ease;mix-blend-mode:multiply;
   background:radial-gradient(ellipse 52% 62% at 50% 40%,rgba(255,255,255,1) 25%,rgba(120,90,70,1) 75%,rgba(60,40,30,1) 100%)}
 .night .shade{opacity:1}
-.night .jar.lit,.night .panel{z-index:31}
+.night .p-jar.lit,.night .p-panel{z-index:31}
 .prop.stack{display:grid}
 .prop.stack > img{grid-area:1/1}
 
 /* lamp jar: off and on images cross-fade; the glow spills onto the wood */
-.jar .on{opacity:0;transition:opacity 1.6s ease}
-.jar.lit .on{opacity:1;animation:breathe 5.5s ease-in-out infinite}
-.jar .glow{position:absolute;left:50%;top:50%;width:260%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;pointer-events:none;
+.p-jar .on{opacity:0;transition:opacity 1.6s ease}
+.p-jar.lit .on{opacity:1;animation:breathe 5.5s ease-in-out infinite}
+.p-jar .glow{position:absolute;left:50%;top:50%;width:260%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;pointer-events:none;
   background:radial-gradient(circle,rgba(255,170,70,.35),rgba(255,140,40,.12) 35%,transparent 65%);mix-blend-mode:screen;opacity:0;transition:opacity 1.6s ease}
-.jar.lit .glow{opacity:.45;animation:breathe 5.5s ease-in-out infinite}
-.night .jar.lit .glow{opacity:1}
-.night .jar img{filter:drop-shadow(.4cqi .5cqi .5cqi rgba(10,4,0,.6)) brightness(.8)}
-.night .jar.lit .on{filter:drop-shadow(.4cqi .5cqi .5cqi rgba(10,4,0,.5)) brightness(1.05)}
+.p-jar.lit .glow{opacity:.45;animation:breathe 5.5s ease-in-out infinite}
+.night .p-jar.lit .glow{opacity:1}
+.night .p-jar img{filter:drop-shadow(.4cqi .5cqi .5cqi rgba(10,4,0,.6)) brightness(.8)}
+.night .p-jar.lit .on{filter:drop-shadow(.4cqi .5cqi .5cqi rgba(10,4,0,.5)) brightness(1.05)}
 @keyframes breathe{0%,100%{opacity:.85}50%{opacity:1}}
 
 /* panel lamp: the green lens fades on, with light on the brass */
-.panel .on{opacity:0;transition:opacity 1.2s ease}
-.panel.lit .on{opacity:1}
-.panel .glow{position:absolute;left:28%;top:47%;width:120%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;pointer-events:none;
+.p-panel .on{opacity:0;transition:opacity 1.2s ease}
+.p-panel.lit .on{opacity:1}
+.p-panel .glow{position:absolute;left:28%;top:47%;width:120%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;pointer-events:none;
   background:radial-gradient(circle,rgba(90,255,110,.5),rgba(60,220,90,.15) 35%,transparent 62%);mix-blend-mode:screen;opacity:0;transition:opacity 1.2s ease}
-.panel.lit .glow{opacity:.8}
+.p-panel.lit .glow{opacity:.8}
 
 /* a print: one of your photos inside the blank print, with the print's own light and curl over it */
-.print{display:grid}
-.print > *{grid-area:1/1}
-.print .photo{width:89%;height:86%;margin:4.3% 0 0 5.6%;object-fit:cover;align-self:start;justify-self:start;filter:none}
-.print .paper{pointer-events:none}
-.print .sheen{mix-blend-mode:multiply;opacity:.55;filter:none}
+.p-print{display:grid}
+.p-print > *{grid-area:1/1}
+.p-print .photo{width:89%;height:86%;margin:4.3% 0 0 5.6%;object-fit:cover;align-self:start;justify-self:start;filter:none}
+.p-print .paper{pointer-events:none}
+.p-print .sheen{mix-blend-mode:multiply;opacity:.55;filter:none}
 
-/* hands */
-.hand{z-index:20}
+/* hands: the palm, then the sleeve repeated to the table's edge; one shadow for the whole arm */
+.hand{z-index:20;display:flex;align-items:stretch;filter:drop-shadow(.6cqi .8cqi .6cqi rgba(36,18,4,.4))}
+.hand .palm{flex:none;height:100%;width:auto;filter:none}
+.hand .sleeve{flex:1;margin-left:-1px;background-repeat:repeat-x;background-size:auto 100%;background-position:left center}
+.night .prop.hand img.palm,.prop.hand img.palm{filter:none}
+.night .hand{filter:drop-shadow(.6cqi .8cqi .6cqi rgba(10,4,0,.6)) brightness(.8)}
 .marley{z-index:15}
 
-.controls{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 6px}
-.controls button{font:700 14px "Nunito",system-ui,sans-serif;color:var(--ink);background:#2c2017;border:1px solid #5a4430;border-radius:999px;padding:8px 16px;cursor:pointer}
-.controls button:hover{border-color:#c9a06a}
-.controls button.primary{background:#3d6b4a;border-color:#5a9a6a}
-.controls button[aria-pressed=true]{background:#5a4430}
-.note{color:#bfa98a;font-size:14px;max-width:70ch}
-@media (prefers-reduced-motion:reduce){.jar.lit .on,.jar.lit .glow{animation:none}}
+.table-page .controls{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 6px}
+.table-page .controls button{font:700 14px "Nunito",system-ui,sans-serif;color:var(--ink);background:#2c2017;border:1px solid #5a4430;border-radius:999px;padding:8px 16px;cursor:pointer}
+.table-page .controls button:hover{border-color:#c9a06a}
+.table-page .controls button.primary{background:#3d6b4a;border-color:#5a9a6a}
+.table-page .controls button[aria-pressed=true]{background:#5a4430}
+.table-page .note{color:#bfa98a;font-size:14px;max-width:70ch}
+@media (prefers-reduced-motion:reduce){.p-jar.lit .on,.p-jar.lit .glow{animation:none}}
+
+/* THE STUDIO HEADER: the top strip of the table, as tall as the other headers. The table keeps its
+   proportions and fills the width; on narrow screens it's cropped to the middle. */
+.st-hero{--h:255px;position:relative;height:var(--h);overflow:hidden;background:#6b4526;isolation:isolate}
+.st-hero .table{position:absolute;left:50%;top:0;translate:-50% 0;width:max(100%,calc(var(--h) * 2000 / 360));aspect-ratio:2000/1116;border-radius:0;box-shadow:none}
+.st-hero .table::after{content:"";position:absolute;left:0;right:0;top:calc(var(--h) - 40px);height:40px;background:linear-gradient(transparent,rgba(30,18,8,.35));pointer-events:none;z-index:40}
+.st-hero .shade{display:none}
+.st-hero .night .shade,.st-hero .table.night .shade{display:block}
+.st-label{position:absolute;z-index:50;left:clamp(14px,3vw,48px);top:50%;translate:0 -50%;display:flex;align-items:center;gap:18px;pointer-events:none}
+.st-logo{width:clamp(84px,9vw,120px);aspect-ratio:1;border-radius:50%;border:5px solid #f6efe2;box-shadow:0 6px 14px rgba(30,14,2,.45);rotate:-4deg;object-fit:cover;background:#f6efe2}
+.st-card{position:relative;background:#f4ead6;color:#2b2118;padding:12px 22px 14px;border-radius:2px;rotate:1.5deg;box-shadow:0 8px 16px rgba(30,14,2,.4),inset 0 0 30px rgba(170,130,80,.18)}
+.st-card::before,.st-card::after{content:"";position:absolute;top:-10px;width:62px;height:22px;background:rgba(236,224,196,.82);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.st-card::before{left:-14px;rotate:-24deg}
+.st-card::after{right:-14px;rotate:20deg}
+.st-card h1{margin:0;font:800 clamp(26px,3.4vw,40px)/1 "Nunito",system-ui,sans-serif;letter-spacing:.01em}
+.st-card p{margin:4px 0 0;font:600 13px/1.3 "Nunito",system-ui,sans-serif;color:#6b5743}
+.st-hero:has(.table.night) .st-card{background:#d9cbb0;filter:brightness(.82)}
+@media (max-width:640px){.st-hero{--h:190px}.st-card{padding:10px 16px}.st-card p{display:none}}
