@@ -156,7 +156,7 @@ ${t.trim && t.trim.shownKm != null && t.trim.shownKm < s.distanceKm - 0.2 ? `<p 
 </section>` : ''}
 <article class="post">
 ${body}</article>
-${(e.links || []).length ? `<p class="links">Trail info: ${e.links.map((l) => `<a href="${esc(l.url)}" rel="noopener">${esc(l.label)}</a>`).join(' · ')}</p>` : ''}
+${(e.links || []).length ? `<p class="links"><span>More</span> ${e.links.map((l) => `<a href="${esc(l.url)}" rel="noopener" target="_blank">${esc(l.label)}</a>`).join('')}</p>` : ''}
 <nav class="pager" id="pager"></nav>
 </main>
 ` + foot('../');

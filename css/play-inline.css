@@ -199,3 +199,44 @@ html.night-page .pi-lightbox::backdrop{background:rgba(14,24,35,.97)}
 .pi-more a[data-pi-story]:focus-visible{outline:3px solid var(--pi-accent);outline-offset:3px}
 html.night-page .pi-more a[data-pi-story]{color:#16232f;box-shadow:0 2px 10px rgba(0,0,0,.35)}
 @media (prefers-reduced-motion:reduce){.pi-more a[data-pi-story]{transition:none}.pi-more a[data-pi-story]:hover{transform:none}}
+
+/* The Field Notes table of old prints, inside the story pop-up (same as play/play.css): mounted prints on warm wood, each turned a little and drifting
+   on its own slow rhythm. Phones: the prints stack with a small overlap. */
+.pi-story-body .post figure.table{margin:36px auto;max-width:min(100%,900px)}
+.pi-story-body .table-top{position:relative;display:grid;grid-template-columns:1.12fr 1fr 1fr;align-items:center;gap:0;padding:44px 34px 52px;border-radius:14px;
+  background:
+    radial-gradient(ellipse at 30% 20%,rgba(255,220,170,.22),transparent 60%),
+    repeating-linear-gradient(90deg,rgba(60,30,10,.0) 0 22px,rgba(60,30,10,.10) 22px 23px,rgba(60,30,10,0) 23px 61px,rgba(255,230,190,.06) 61px 63px),
+    repeating-linear-gradient(90deg,#7a4a26 0 140px,#734524 140px 141px,#7d4d28 141px 290px),
+    #7a4a26;
+  box-shadow:inset 0 0 60px rgba(30,12,2,.55),0 10px 30px rgba(20,30,40,.18)}
+.pi-story-body .table-top .print{position:relative;display:block;background:#f4eee2;padding:10px 10px 30px;border-radius:2px;
+  box-shadow:0 2px 3px rgba(0,0,0,.35),0 14px 26px rgba(20,8,0,.45);text-decoration:none;
+  animation:print-drift 11s ease-in-out infinite;transform-origin:50% 60%}
+.pi-story-body .table-top .print video{display:block;width:100%;height:auto;border-radius:0;background:#222;filter:sepia(.12)}
+.pi-story-body .table-top .print-cap{position:absolute;left:10px;right:10px;bottom:7px;font:italic 12px/1.2 Georgia,serif;color:#5b4a36;text-align:center;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pi-story-body .table-top .p1{--r:-4deg;z-index:2;margin-right:-6%;animation-duration:13s}
+.pi-story-body .table-top .p2{--r:2.5deg;z-index:3;margin-top:-26px;animation-duration:11s;animation-delay:-4s}
+.pi-story-body .table-top .p3{--r:-1.5deg;z-index:1;margin-left:-5%;margin-top:30px;animation-duration:17s;animation-delay:-9s}
+.pi-story-body .post figure.table figcaption{text-align:center}
+@media (max-width:640px){
+  .pi-story-body .table-top{grid-template-columns:1fr;padding:26px 22px 34px;gap:0}
+  .pi-story-body .table-top .print{width:86%}
+  .pi-story-body .table-top .p1{margin:0 auto 0 0}
+  .pi-story-body .table-top .p2{margin:-14px 0 0 auto}
+  .pi-story-body .table-top .p3{margin:-14px auto 0 4%}
+}
+@media (prefers-reduced-motion:reduce){.pi-story-body .table-top .print{animation:none;transform:rotate(var(--r))}}
+@keyframes print-drift{0%,100%{transform:rotate(var(--r)) translate(0,0)}50%{transform:rotate(calc(var(--r) + .6deg)) translate(2px,-3px)}}
+.pi-story-body .table-top .print-cap{font-size:12px}
+.pi-story-body .table-top .print video{max-height:none}
+.pi-story-body .ai-badge,.pi-story-body .real-badge{font:800 11px "Nunito",Arial,sans-serif;letter-spacing:.06em;text-transform:uppercase;border-radius:999px;padding:3px 9px;white-space:nowrap}
+.pi-story-body .ai-badge{background:#efe9fb;color:#6b4bb8}
+
+/* "More" links under a post: small quiet pills instead of a run of underlined text */
+.pi-story-body .links{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:14px;color:var(--pi-ink3)}
+.pi-story-body .links a{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid var(--pi-line);border-radius:999px;background:var(--pi-card);
+  color:var(--pi-ink);text-decoration:none;font-weight:600;transition:border-color .15s,background .15s}
+.pi-story-body .links a::after{content:"↗";font-size:12px;color:var(--pi-ink3)}
+.pi-story-body .links a:hover{border-color:#d8618f;background:var(--pi-soft)}

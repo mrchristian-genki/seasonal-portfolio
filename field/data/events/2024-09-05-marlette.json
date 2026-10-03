@@ -9,16 +9,12 @@
  "trailhead": "spooner-lake",
  "links": [
   {
-   "label": "Nevada State Parks: Spooner Lake & Backcountry",
+   "label": "Spooner Lake & Backcountry",
    "url": "https://parks.nv.gov/parks/spooner-lake"
   },
   {
-   "label": "Tahoe Quarterly: Marlette Lake Takes a Break",
+   "label": "The dam project",
    "url": "https://tahoequarterly.com/summer-2025/marlette-lake-takes-a-break"
-  },
-  {
-   "label": "Nevada Appeal: an up-close look at the Marlette Lake Dam project (photos)",
-   "url": "https://www.nevadaappeal.com/news/2025/jul/05/an-up-close-look-at-the-states-marlette-lake-dam-project/"
   }
  ],
  "track": {
@@ -1922,7 +1918,7 @@
    "takenAt": "2024:09:05 09:19:17",
    "w": 1600,
    "h": 900,
-   "use": "post",
+   "use": "skip",
    "cover": false,
    "from": "IMG_6820.JPG"
   },
