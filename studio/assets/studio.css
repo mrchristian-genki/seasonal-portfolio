@@ -119,3 +119,36 @@ button.primary:hover{background:#d8b47c}
 .st-updated{background:#e6d3a6;color:#5a3d12}
 .panel.from ul.later{margin:4px 0 0;padding-left:18px}
 .inbox small{opacity:.7}
+
+/* open questions: each one answered on its own */
+.qs li{display:block}
+.qs .q{margin:0 0 6px;font-weight:600}
+.qs .ans{width:100%;margin:0 0 6px}
+.qs .row{display:flex;gap:12px;align-items:center}
+button.small{padding:5px 12px;font-size:.9rem}
+.panel.more{border-top:3px dashed rgba(43,33,24,.18)}
+.panel.more h3{margin:14px 0 8px;font-size:1rem}
+
+/* the loader: a film reel turns while each step ticks off */
+.loader{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:16px;background:rgba(20,12,6,.62);backdrop-filter:blur(2px);opacity:0;transition:opacity .25s ease}
+.loader.on{opacity:1}
+.ld-card{width:min(440px,100%);background:var(--paper,#f4ead6);color:var(--ink,#2b2118);border-radius:4px;padding:22px 24px 18px;box-shadow:8px 12px 24px rgba(0,0,0,.45);rotate:-.6deg}
+.ld-card h2{margin:10px 0 12px;font-size:1.15rem;text-align:center}
+.ld-reel{width:58px;height:58px;margin:0 auto;border-radius:50%;background:
+  radial-gradient(circle,#2b2118 0 5px,transparent 6px),
+  radial-gradient(circle at 50% 22%,#f4ead6 0 7px,transparent 8px),radial-gradient(circle at 78% 62%,#f4ead6 0 7px,transparent 8px),radial-gradient(circle at 22% 62%,#f4ead6 0 7px,transparent 8px),
+  #3a2a1c;box-shadow:0 0 0 4px #c9a36a inset,2px 3px 6px rgba(0,0,0,.35);animation:ld-spin 1.6s linear infinite}
+@keyframes ld-spin{to{rotate:360deg}}
+.ld-steps{list-style:none;margin:0;padding:0;display:grid;gap:7px}
+.ld-steps li{display:grid;grid-template-columns:18px 1fr;column-gap:10px;align-items:center;opacity:.5;transition:opacity .3s}
+.ld-steps li small{grid-column:2;font-size:.82rem;opacity:.75;min-height:0}
+.ld-steps li.now,.ld-steps li.done,.ld-steps li.bad{opacity:1}
+.ld-steps li.skipped{opacity:.3;text-decoration:line-through}
+.ld-dot{width:14px;height:14px;border-radius:50%;border:2px solid #b08a52;box-sizing:border-box}
+.ld-steps li.now .ld-dot{border-color:#c9a36a;border-top-color:transparent;animation:ld-spin .8s linear infinite}
+.ld-steps li.now .ld-name{font-weight:700}
+.ld-steps li.done .ld-dot{background:#6f8f3a;border-color:#6f8f3a}
+.ld-steps li.bad .ld-dot{background:#a8402a;border-color:#a8402a}
+.ld-hold{text-align:center;margin:14px 0 0;font-size:.85rem}
+body.busy{overflow:hidden}
+@media (prefers-reduced-motion:reduce){.ld-reel,.ld-steps li.now .ld-dot{animation:none}}

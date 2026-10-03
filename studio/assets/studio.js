@@ -147,6 +147,37 @@
       '<b>' + label + '</b><small>' + what + ' · ' + size(f.bytes) + '</small><div class="in-act">' + act + '</div></li>';
   }
 
+  // ---------- the loader: a step-by-step overlay while the Studio works (the IN USE sign glows too) ----------
+  // var L = loader('Processing', ['Read the folder', 'Bring in photos', 'Draft with Claude']);
+  // L.at(1, '3 of 12') marks a step under way (earlier ones done); L.done() / L.fail(message) close it.
+  function loader(title, steps) {
+    var el = document.createElement('div'); el.className = 'loader'; el.setAttribute('role', 'alertdialog'); el.setAttribute('aria-live', 'polite');
+    el.innerHTML = '<div class="ld-card"><div class="ld-reel" aria-hidden="true"><span></span></div><h2>' + esc(title) + '</h2>' +
+      '<ol class="ld-steps">' + steps.map(function (s) { return '<li><span class="ld-dot"></span><span class="ld-name">' + esc(s) + '</span><small></small></li>'; }).join('') + '</ol>' +
+      '<p class="ld-hold muted">Hold on a moment, this page is working.</p></div>';
+    document.body.appendChild(el); document.body.classList.add('busy');
+    if (window.StudioTable) StudioTable.inUse(true);
+    requestAnimationFrame(function () { el.classList.add('on'); });
+    var items = $$('.ld-steps li', el), cur = -1;
+    function close(ms) {
+      setTimeout(function () { el.classList.remove('on'); setTimeout(function () { el.remove(); }, 300); }, ms);
+      document.body.classList.remove('busy');
+      if (window.StudioTable) StudioTable.inUse(lastDrive ? lastDrive.running : false);
+    }
+    return {
+      at: function (i, detail) {
+        for (var k = 0; k < items.length; k++) {
+          items[k].classList.toggle('done', k < i); items[k].classList.toggle('now', k === i);
+          if (k < i && cur < k) $('small', items[k]).textContent = '';
+        }
+        cur = i; if (detail != null && items[i]) $('small', items[i]).textContent = detail;
+      },
+      skip: function (i) { if (items[i]) items[i].classList.add('skipped'); },
+      done: function () { items.forEach(function (li) { if (!li.classList.contains('skipped')) { li.classList.remove('now'); li.classList.add('done'); } }); close(450); },
+      fail: function (msg) { if (items[cur]) { items[cur].classList.remove('now'); items[cur].classList.add('bad'); $('small', items[cur]).textContent = msg; } close(2600); }
+    };
+  }
+
   // ---------- Process Content: an inbox folder becomes a new draft note ----------
   var MONTHS = 'jan feb mar apr may jun jul aug sep oct nov dec'.split(' ');
   function pad(n) { return String(n).padStart(2, '0'); }
@@ -181,8 +212,26 @@
       return r.blob();
     }).then(function (b) { return new File([b], f.name.split('/').pop(), { type: b.type, lastModified: f.changed * 1000 }); });
   }
+  // photos and the track from an inbox item, a few at a time, telling the loader how far along it is
+  function bringIn(src, photos, track, L, stepTrack, stepPhotos) {
+    var chain = Promise.resolve();
+    if (track) chain = chain.then(function () { L.at(stepTrack, track.name.split('/').pop()); return fromInbox(src, track).then(addTrack); });
+    else L.skip(stepTrack);
+    var n = 0;
+    for (var i = 0; i < photos.length; i += 6) (function (batch) {
+      chain = chain.then(function () {
+        L.at(stepPhotos, (n + 1) + '–' + (n + batch.length) + ' of ' + photos.length);
+        return Promise.all(batch.map(function (f) { return fromInbox(src, f); })).then(addPhotos).then(function () { n += batch.length; });
+      });
+    })(photos.slice(i, i + 6));
+    if (!photos.length) L.skip(stepPhotos);
+    return chain;
+  }
   function processFolder(src) {
     if (dirty && !confirm('Leave without saving?')) return;
+    var label = src.split('/').slice(1).join('/').replace(/^#/, '');
+    var L = loader('Processing “' + label + '”', ['Read the folder', 'Bring in the track', 'Bring in the photos', 'Claude drafts the note', 'Ready for you to read']);
+    L.at(0);
     api('inbox', null, '&f=' + encodeURIComponent(src)).then(function (j) {
       INBOX = j; dirty = false; fresh = {}; removed = [];
       var name = src.split('/').slice(1).join('/').replace(/^#/, ''), when = guessDate(name);
@@ -191,38 +240,30 @@
       render();
       var photos = j.files.filter(function (f) { return f.kind === 'photo'; }).slice(0, 40);
       var track = j.files.filter(function (f) { return f.kind === 'track'; })[0];
-      toast('Bringing in ' + photos.length + ' photo' + (photos.length === 1 ? '' : 's') + (track ? ' and the track' : '') + ' from ' + name + '…');
-      var chain = Promise.resolve();
-      if (track) chain = chain.then(function () { return fromInbox(src, track).then(addTrack); });
-      for (var i = 0; i < photos.length; i += 6) (function (batch) {
-        chain = chain.then(function () { return Promise.all(batch.map(function (f) { return fromInbox(src, f); })).then(addPhotos); });
-      })(photos.slice(i, i + 6));
-      return chain.then(function () {
+      return bringIn(src, photos, track, L, 1, 2).then(function () {
         if (!when && !E.track) {   // no date in the name or a track: the earliest photo's day
           var t = E.photos.map(function (p) { return p.takenAt; }).filter(Boolean).sort()[0];
           if (t) { E.date = String(t).slice(0, 10); var di = $('#date'); if (di) di.value = E.date; }
         }
-        if (E.fieldNotes.trim() || E.track || E.photos.length) draft();
-      });
-    }).catch(function (err) { toast(err.message, true); });
+        if (!(E.fieldNotes.trim() || E.track || E.photos.length)) { L.skip(3); return; }
+        L.at(3, 'up to a minute');
+        return draft({ loader: L });
+      }).then(function () { L.at(4); L.done(); });
+    }).catch(function (err) { L.fail(err.message); toast(err.message, true); });
   }
   // files that reached an inbox item after its note was made: open the note and bring just those in
   function addNew(src, id, since) {
+    var L = loader('Adding new files', ['Open the note', 'Bring in the track', 'Bring in the new photos', 'Ready for you to read']);
+    L.at(0);
     Promise.all([api('inbox', null, '&f=' + encodeURIComponent(src)), edit(id)]).then(function (r) {
       var j = r[0]; if (!E || E.id !== id) return;
       INBOX = j; E.source = src;
       var later = j.files.filter(function (f) { return f.arrived > since; });
       var photos = later.filter(function (f) { return f.kind === 'photo'; }), track = !E.track && later.filter(function (f) { return f.kind === 'track'; })[0];
       render();
-      if (!photos.length && !track) { toast('Nothing new to bring in here: the new files are ' + later.map(function (f) { return f.kind; }).join(', ') + '.'); markDirty(); return; }
-      toast('Bringing in ' + photos.length + ' new photo' + (photos.length === 1 ? '' : 's') + (track ? ' and the track' : '') + '…');
-      var chain = Promise.resolve();
-      if (track) chain = chain.then(function () { return fromInbox(src, track).then(addTrack); });
-      for (var i = 0; i < photos.length; i += 6) (function (batch) {
-        chain = chain.then(function () { return Promise.all(batch.map(function (f) { return fromInbox(src, f); })).then(addPhotos); });
-      })(photos.slice(i, i + 6));
-      return chain.then(function () { toast('Added. Draft again if you like, then Save.'); });
-    }).catch(function (err) { toast(err.message, true); });
+      if (!photos.length && !track) { L.done(); toast('Nothing new to bring in here: the new files are ' + later.map(function (f) { return f.kind; }).join(', ') + '.'); markDirty(); return; }
+      return bringIn(src, photos, track, L, 1, 2).then(function () { L.at(3); L.done(); toast('Added. Draft again if you like, then Save.'); });
+    }).catch(function (err) { L.fail(err.message); toast(err.message, true); });
   }
   function inboxPanel() {
     if (!E.source || !INBOX || INBOX.source !== E.source) return E.source ? '<section class="panel from"><p class="muted">Made from the Drive folder <b>' + esc(E.source) + '</b>.</p></section>' : '';
@@ -253,6 +294,9 @@
 
   function field(label, html, hint) { return '<label class="f"><span>' + label + '</span>' + html + (hint ? '<small>' + hint + '</small>' : '') + '</label>'; }
   function render() {
+    // a note made from a Drive folder, or already saved, has its content: the drop zones wait at the bottom
+    var later = !!(E.id || E.source), trackTop = !later || !!E.track;
+    var dropPhotos = '<div id="drop-photos" class="drop">Drop photos here, or <label class="pick">choose<input type="file" accept="image/*" multiple hidden id="pickPhotos"></label>. They\'re resized and their location data removed before upload.</div>';
     var sOpts = (CFG.statuses || []).map(function (s) { return '<option value="' + s.id + '"' + (E.status === s.id ? ' selected' : '') + '>' + esc(s.label) + '</option>'; }).join('');
     var kOpts = ['ride', 'hike', 'forage', 'make'].map(function (k) { return '<option' + (E.kind === k ? ' selected' : '') + '>' + k + '</option>'; }).join('');
     app.innerHTML =
@@ -265,8 +309,8 @@
         field('Status', '<select id="status">' + sOpts + '</select>', 'Published goes live on the next save') +
         field('Who appears', '<input id="consent" value="' + esc(E.consent || '') + '" placeholder="e.g. Christian and Marley only">') +
       '</section>' +
-      '<section class="panel"><h2>Track</h2><div id="track"></div></section>' +
-      '<section class="panel"><h2>Photos</h2><div id="drop-photos" class="drop">Drop photos here, or <label class="pick">choose<input type="file" accept="image/*" multiple hidden id="pickPhotos"></label>. They\'re resized and their location data removed before upload.</div><div id="photos" class="photos"></div></section>' +
+      (trackTop ? '<section class="panel"><h2>Track</h2><div id="track"></div></section>' : '') +
+      '<section class="panel"><h2>Photos</h2>' + (later ? '' : dropPhotos) + '<div id="photos" class="photos"></div>' + (later && !E.photos.length ? '<p class="muted">No photos yet. Add some at the bottom of the page.</p>' : '') + '</section>' +
       '<section class="panel"><h2>Your notes</h2>' + field('', '<textarea id="fieldNotes" rows="8" placeholder="What happened, in your words: who came, what you saw, what to leave out.">' + esc(E.fieldNotes) + '</textarea>') + '</section>' +
       '<section class="panel draft"><h2>Draft with Claude</h2><div class="row"><input id="instr" placeholder="Optional: e.g. shorter, or add the bit about the hammock"><button id="draft" class="primary">Draft with Claude</button></div>' +
         '<div id="questions"></div></section>' +
@@ -274,6 +318,7 @@
       '<section class="panel"><h2>Post</h2>' + field('Title', '<input id="postTitle" value="' + esc(E.post.title) + '">') + field('Text', '<textarea id="postBody" rows="14">' + esc(E.post.body) + '</textarea>', 'First person. A blank line between paragraphs. End with "What I learned: …" when there is something real.') + '</section>' +
       '<section class="panel"><h2>Episode</h2>' + field('Title', '<input id="epTitle" value="' + esc(E.episode.title) + '">') + field('Script', '<textarea id="epScript" rows="16">' + esc(E.episode.script) + '</textarea>', '<span id="epCount"></span>') +
         '<div class="row"><button id="copyPrompt">Copy the audio prompt</button><span class="muted">' + (E.episode.audio ? 'Audio attached.' : 'Audio: render it with your voice tool, then hand the file to Claude Code to master and attach (Studio upload comes next).') + '</span></div></section>' +
+      (later ? '<section class="panel more"><h2>Add more</h2><p class="muted">Only if you want to add to what\'s here.</p>' + (trackTop ? '' : '<h3>Track</h3><div id="track"></div>') + '<h3>Photos</h3>' + dropPhotos + '</section>' : '') +
       '<footer class="savebar"><span id="saveState" class="muted">' + (E.id ? 'Saved' : 'Not saved yet') + '</span><button id="save" class="primary">Save</button></footer>';
 
     $('#back').onclick = showList;
@@ -286,7 +331,7 @@
     dp.addEventListener('dragleave', function () { dp.classList.remove('on'); });
     dp.addEventListener('drop', function (ev) { ev.preventDefault(); dp.classList.remove('on'); addPhotos(ev.dataTransfer.files); });
     $('#pickPhotos').onchange = function () { addPhotos(this.files); this.value = ''; };
-    $('#draft').onclick = draft;
+    $('#draft').onclick = function () { draft(); };
     $('#save').onclick = save;
     $('#copyPrompt').onclick = function () {
       collect();
@@ -416,8 +461,24 @@
   // ---------- questions ----------
   function renderQuestions() {
     var q = E.questions || [];
-    $('#questions').innerHTML = q.length ? '<h3>Open questions</h3><ul class="qs">' + q.map(function (s, i) { return '<li><span>' + esc(s) + '</span><button class="link" data-i="' + i + '">Done</button></li>'; }).join('') + '</ul><small class="muted">Answer them in your notes, then draft again. Mark one done once it\'s settled.</small>' : '';
-    $$('#questions button').forEach(function (b) { b.onclick = function () { E.questions.splice(+b.getAttribute('data-i'), 1); markDirty(); renderQuestions(); }; });
+    $('#questions').innerHTML = q.length ? '<h3>Open questions</h3><ul class="qs">' + q.map(function (s, i) {
+      return '<li data-i="' + i + '"><p class="q">' + esc(s) + '</p><textarea class="ans" rows="2" placeholder="Your answer, in a few words"></textarea>' +
+        '<div class="row"><button class="primary small answer">Submit answer</button><button class="link skip">Skip this one</button></div></li>';
+    }).join('') + '</ul><small class="muted">Each answer is added to your notes, and Claude works it into the draft.</small>' : '';
+    $$('#questions li').forEach(function (li) {
+      var i = +li.getAttribute('data-i');
+      $('.skip', li).onclick = function () { E.questions.splice(i, 1); markDirty(); renderQuestions(); };
+      $('.answer', li).onclick = function () { answer(i, $('.ans', li).value.trim()); };
+    });
+  }
+  function answer(i, text) {
+    if (!text) { toast('Write an answer first, or skip the question.', true); return; }
+    collect();
+    var q = E.questions[i];
+    E.fieldNotes = (E.fieldNotes.trim() ? E.fieldNotes.trim() + '\n\n' : '') + q + '\n' + text;
+    $('#fieldNotes').value = E.fieldNotes;
+    E.questions.splice(i, 1); markDirty(); renderQuestions();
+    draft({ title: 'Working in your answer', instruction: 'I answered one of your questions. Question: "' + q + '" My answer: "' + text + '". Work it into the draft and change nothing else.' });
   }
 
   // ---------- draft ----------
@@ -437,15 +498,19 @@
         .then(function (b64) { return { name: n, takenAt: p.takenAt ? String(p.takenAt).slice(11, 16) : null, b64: b64 }; });
     }));
   }
-  function draft() {
+  function draft(opts) {
+    opts = opts || {};
     collect();
-    if (!E.fieldNotes.trim() && !E.track && !E.photos.length) { toast('Add some notes, a track or photos first.', true); return; }
+    if (!E.fieldNotes.trim() && !E.track && !E.photos.length) { toast('Add some notes, a track or photos first.', true); return Promise.resolve(); }
+    var own = !opts.loader, L = opts.loader || loader(opts.title || 'Drafting with Claude', ['Gather your notes, track and photos', 'Claude writes the draft', 'Ready for you to read']);
+    if (own) L.at(0);
     var btn = $('#draft'); btn.disabled = true; btn.textContent = 'Drafting… (up to a minute)';
-    thumbsForClaude().then(function (thumbs) {
+    return thumbsForClaude().then(function (thumbs) {
+      if (own) L.at(1, 'up to a minute');
       var facts = { title: E.title, date: E.date, kind: E.kind, place: E.place, whoAppears: E.consent, notes: E.fieldNotes, figures: figures(),
         photos: E.photos.filter(function (p) { return p.use !== 'skip'; }).map(function (p) { return { file: photoName(p), takenAt: p.takenAt || null, video: !!p.video, caption: p.caption || '' }; }),
         currentDraft: (E.post.body || E.episode.script) ? { summary: E.summary, post: E.post, episode: { title: E.episode.title, script: E.episode.script } } : null,
-        instruction: $('#instr').value.trim() };
+        instruction: opts.instruction || $('#instr').value.trim() };
       return api('draft', { facts: facts, thumbs: thumbs });
     }).then(function (j) {
       var d = j.draft;
@@ -457,8 +522,9 @@
       E.questions = d.questions || [];
       if (!E.title && d.post_title) { E.title = d.post_title; $('#title').value = d.post_title; }
       markDirty(); renderPhotos(); renderQuestions(); toast('Draft ready. Read it through, then Save.');
-    }).catch(function (err) { toast(err.message, true); })
-      .then(function () { btn.disabled = false; btn.textContent = 'Draft with Claude'; });
+      if (own) { L.at(2); L.done(); }
+    }).catch(function (err) { if (own) L.fail(err.message); toast(err.message, true); if (!own) throw err; })
+      .then(function () { var b = $('#draft'); if (b) { b.disabled = false; b.textContent = 'Draft with Claude'; } });
   }
 
   // ---------- save ----------
@@ -476,22 +542,26 @@
     }
     var btn = $('#save'); btn.disabled = true; btn.textContent = 'Saving…';
     var names = Object.keys(fresh), uploaded = [];
+    var L = loader(E.status === 'published' ? 'Saving and publishing' : 'Saving', ['Upload the photos', 'Save the note', E.status === 'published' ? 'Publishing starts (live in about a minute)' : 'Saved']);
+    if (!names.length) L.skip(0);
     var chain = Promise.resolve();
     names.forEach(function (n, i) {
       chain = chain.then(function () {
-        btn.textContent = 'Uploading photo ' + (i + 1) + ' of ' + names.length + '…';
+        btn.textContent = 'Uploading photo ' + (i + 1) + ' of ' + names.length + '…'; L.at(0, (i + 1) + ' of ' + names.length);
         return blobToB64(fresh[n].blob).then(function (b64) { return api('blob', { b64: b64 }); }).then(function (r) { uploaded.push({ name: n, sha: r.sha }); });
       });
     });
     chain.then(function () {
-      btn.textContent = 'Saving…';
+      btn.textContent = 'Saving…'; L.at(1);
       return api('save', { entry: E, newPhotos: uploaded, removePhotos: removed });
     }).then(function () {
       fresh = {}; removed = []; dirty = false;
       $('#saveState').textContent = E.status === 'published' ? 'Saved and publishing: live in about a minute' : 'Saved';
       if (first) { history.replaceState(null, '', '?e=' + encodeURIComponent(E.id)); render(); }
       toast(E.status === 'published' ? 'Saved. The site updates in about a minute.' : 'Saved.');
+      L.at(2); L.done();
     }).catch(function (err) {
+      L.fail(err.message);
       if (first) { E.id = ''; }
       toast('Not saved: ' + err.message, true);
     }).then(function () { var b = $('#save'); if (b) { b.disabled = false; b.textContent = 'Save'; } });
