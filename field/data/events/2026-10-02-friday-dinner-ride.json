@@ -16,7 +16,7 @@
    "w": 1600,
    "h": 1081,
    "use": "post",
-   "cover": true
+   "cover": false
   },
   {
    "src": "data/photos/2026-10-02-friday-dinner-ride/02.jpg",
@@ -32,7 +32,7 @@
    "w": 1600,
    "h": 900,
    "use": "post",
-   "cover": false
+   "cover": true
   }
  ],
  "fieldNotes": "From Christian's voice memo (Oct 2): took the bikes through the neighbourhood, crossed the main road, took a bumpy back road with helmets on, realised they had no lights, ordered food to go and came home on well-lit roads; enjoying the meal. Christian (Oct 3): a Friday night ride for dinner; the track does not matter, the views do.\nPrivacy: the ride starts and ends at home, so by Christian's decision (Oct 3) it is used with NO track, map, route, distances, restaurant, shopping centre or street names. Photos: only sky and distant views; the intersection photos are cropped to sky and ridge (the sign, lights and streets removed), the selfie at the intersection and the photo with nearby houses are left out; EXIF stripped. Videos (IMG_7370/7372/7377) not used yet: too large for the Drive connector.\nFrom the photos: iridescent cloud at 6:14 PM; sunset over the sagebrush at 6:51 to 6:54 PM.",
@@ -51,5 +51,6 @@
    "checked": "Transcribed and compared with the script: every paragraph read, in order (269 of 270 words)."
   }
  },
- "consent": "Wife: OK to appear in photos, not named (Oct 1). Not in the photos used."
+ "consent": "Wife: OK to appear in photos, not named (Oct 1). Not in the photos used.",
+ "questions": []
 }
