@@ -74,8 +74,11 @@
 .st-hero .shade{display:none}
 .st-hero .night .shade,.st-hero .table.night .shade{display:block}
 .st-label{position:absolute;z-index:50;left:clamp(14px,3vw,48px);top:50%;translate:0 -50%;display:flex;align-items:center;gap:18px;pointer-events:none}
-.st-logo{width:clamp(84px,9vw,120px);aspect-ratio:1;border-radius:50%;border:5px solid #f6efe2;box-shadow:0 6px 14px rgba(30,14,2,.45);rotate:-4deg;object-fit:cover;background:#f6efe2}
-.st-card{position:relative;background:#f4ead6;color:#2b2118;padding:12px 22px 14px;border-radius:2px;rotate:1.5deg;box-shadow:0 8px 16px rgba(30,14,2,.4),inset 0 0 30px rgba(170,130,80,.18)}
+.st-logo{width:clamp(84px,9vw,120px);aspect-ratio:1;border-radius:50%;border:5px solid #f6efe2;object-fit:cover;background:#f6efe2;
+  /* lit like everything on the table: light from the top left, shadow to the bottom right */
+  box-shadow:7px 10px 9px rgba(36,18,4,.42),inset 0 0 0 1px rgba(120,90,60,.25)}
+.st-hero:has(.table.night) .st-logo{filter:brightness(.82);box-shadow:7px 10px 10px rgba(10,4,0,.6)}
+.st-card{position:relative;background:#f4ead6;color:#2b2118;padding:12px 22px 14px;border-radius:2px;rotate:1.5deg;box-shadow:7px 10px 12px rgba(36,18,4,.38),inset 0 0 30px rgba(170,130,80,.18)}
 .st-card::before,.st-card::after{content:"";position:absolute;top:-10px;width:62px;height:22px;background:rgba(236,224,196,.82);box-shadow:0 1px 2px rgba(0,0,0,.12)}
 .st-card::before{left:-14px;rotate:-24deg}
 .st-card::after{right:-14px;rotate:20deg}

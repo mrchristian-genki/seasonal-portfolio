@@ -35,7 +35,7 @@ $in = studio_logged_in();
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&display=swap">
 <link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>">
-<link rel="stylesheet" href="table/table.css?v=8">
+<link rel="stylesheet" href="table/table.css?v=9">
 </head>
 <?php if (!$in): ?>
 <body class="login">
@@ -74,7 +74,7 @@ $in = studio_logged_in();
 <div id="toast" role="status" aria-live="polite"></div>
 <script src="assets/track.js?v=<?= STUDIO_VERSION ?>"></script>
 <script src="assets/studio.js?v=<?= STUDIO_VERSION ?>"></script>
-<script src="table/table.js?v=8"></script>
+<script src="table/table.js?v=10"></script>
 </body>
 <?php endif; ?>
 </html>

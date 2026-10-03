@@ -30,13 +30,14 @@
     { id: 'notebook', src: 'notebook', x: 340, y: 1010, w: 430, rot: -6, how: 'slide', from: 'bottom' },
     { id: 'map', src: 'map', x: 790, y: 1065, w: 440, rot: -3, how: 'slide', from: 'bottom' },
     { id: 'mug', src: 'mug', x: 1562, y: 812, w: 160, rot: 0, how: 'gentle', from: 'right' },
-    { id: 'fox', src: 'fox', x: 1770, y: 1000, w: 300, rot: -7, how: 'slide', from: 'right' },
+    { id: 'fox', src: 'fox', x: 1700, y: 1010, w: 400, rot: -5, how: 'slide', from: 'right' },
+    { id: 'foxsit', src: 'fox-sitting', x: 1330, y: 640, w: 230, rot: 8, how: 'slide', from: 'right' },
     { id: 'deer', src: 'deer', x: 150, y: 895, w: 95, rot: 20, how: 'drop' }
   ];
   // the header is the top strip of the table (y 0 to about 360): fewer things, kept to that band
   if (HEADER) PROPS = [
     { id: 'pencils', src: 'pencils', x: 279, y: 223, w: 444, rot: 0, how: 'slide', from: 'left' },
-    { id: 'ruler', src: 'ruler', x: 819, y: 97, w: 557, rot: 0, how: 'slide', from: 'top' },
+    { id: 'ruler', src: 'ruler', x: 1010, y: 90, w: 557, rot: 0, how: 'slide', from: 'top' },
     { id: 'panel', src: ['panel-off', 'panel-on'], x: 1585, y: 300, w: 86, rot: 0, how: 'slide' },
     { id: 'contact', src: 'contact', x: 1800, y: 135, w: 300, rot: 7, how: 'slide', from: 'top' },
     { id: 'carnelians', src: 'carnelians', x: 800, y: 300, w: 95, rot: 12, how: 'drop' },
@@ -208,6 +209,7 @@
     el.style.top = ((-h * (1 - pose.show)) / H * 100) + '%';
     el.style.width = (pose.w / W * 100) + '%';
     L.appendChild(el);
+    if (touchesKeep(el)) { el.remove(); marleyOut = false; return Promise.resolve(); }
     var up = 'translateY(' + px(-h * pose.show - 40) + 'px)';
     return anim(el, [{ transform: up }, { transform: 'none' }], { duration: 1600, easing: 'cubic-bezier(.2,.7,.3,1)' })
       .then(function () { // a sniff: a small lean in and back
@@ -220,12 +222,34 @@
 
   function setLamps() { if (els.jar) els.jar.classList.toggle('lit', T.classList.contains('night')); }
 
+  // the header's logo and label sit on the table like a mug: any prop that would touch them (on this
+  // screen size) is left off, with a margin around them
+  var KEEP = document.querySelector('.st-label');
+  function touchesKeep(el) {
+    if (!KEEP) return false;
+    var a = KEEP.getBoundingClientRect(), b = el.getBoundingClientRect(), m = 24;
+    return !(b.right < a.left - m || b.left > a.right + m || b.bottom < a.top - m || b.top > a.bottom + m);
+  }
+  function fits(p) {
+    if (!KEEP) return Promise.resolve(true);
+    var el = makeProp(p); el.style.visibility = 'hidden';
+    var pics = [].slice.call(el.querySelectorAll('img'));
+    return Promise.all(pics.map(function (i) { return i.decode ? i.decode().catch(function () {}) : null; }))
+      .then(function () { var ok = !touchesKeep(el); el.remove(); delete els[p.id]; return ok; });
+  }
+
   function start() {
     L.innerHTML = ''; els = {}; prints = [];
     var chain = Promise.resolve();
     PROPS.forEach(function (p, i) {
-      if (p.fixed || calm || settle) { makeProp(p); return; }
-      chain = chain.then(function () { arrive(p); return wait(i < 3 ? 420 : 340); });
+      chain = chain.then(function () { return fits(p); }).then(function (ok) { p.off = !ok; });
+    });
+    PROPS.forEach(function (p, i) {
+      chain = chain.then(function () {
+        if (p.off) return;
+        if (p.fixed || calm || settle) { makeProp(p); return; }
+        arrive(p); return wait(340);
+      });
     });
     return chain.then(function () { return wait(1600); }).then(setLamps);
   }
@@ -248,7 +272,7 @@
     else if (act === 'marley') job = marley();
     else if (act === 'reset') job = start();
     else if (act === 'handin') {
-      var gone = PROPS.filter(function (p) { return !p.fixed && !(els[p.id] && els[p.id].isConnected); });
+      var gone = PROPS.filter(function (p) { return !p.fixed && !p.off && !(els[p.id] && els[p.id].isConnected); });
       var back = gone[Math.floor(Math.random() * gone.length)];
       job = back ? handIn(back) : Promise.resolve();
     }
