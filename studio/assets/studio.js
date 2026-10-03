@@ -97,6 +97,7 @@
     api('drive').then(renderDrive).catch(function (err) { var d = $('#drive'); if (d) d.innerHTML = '<p class="err">' + esc(err.message) + '</p>'; });
   }
   function renderDrive(j) {
+    if (window.StudioTable) StudioTable.inUse(j.running);
     var d = $('#drive'); if (!d) return;
     var names = j.folders.map(function (f) { return '“' + esc(f) + '”'; }).join(', ');
     var line;

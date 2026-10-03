@@ -43,6 +43,14 @@
   background:radial-gradient(circle,rgba(255,158,30,.7) 15%,rgba(255,158,30,.3) 23%,rgba(255,158,30,.1) 38%,transparent 58%);transition:left 1.2s ease,background 1.2s ease}
 .night .p-panel .glow{left:72.3%;opacity:.95;background:radial-gradient(circle,rgba(70,150,255,.75) 15%,rgba(70,150,255,.32) 23%,rgba(70,150,255,.1) 38%,transparent 58%)}
 
+/* IN USE sign: frosted uranium glass, lit green while something's running, with a soft neon halo on the wood */
+.p-inuse .on{opacity:0;transition:opacity 1.4s ease}
+.p-inuse.lit .on{opacity:1;animation:breathe 4.5s ease-in-out infinite}
+.p-inuse .glow{position:absolute;left:50%;top:50%;width:150%;aspect-ratio:1.45;translate:-50% -50%;border-radius:50%;pointer-events:none;mix-blend-mode:screen;opacity:0;transition:opacity 1.4s ease;
+  background:radial-gradient(ellipse,rgba(90,255,50,.5) 28%,rgba(80,240,40,.2) 42%,rgba(70,220,40,.07) 56%,transparent 70%)}
+.p-inuse.lit .glow{opacity:.8;animation:breathe 4.5s ease-in-out infinite}
+.night .p-inuse.lit .glow{opacity:1}
+
 /* a print: one of your photos inside the blank print, with the print's own light and curl over it */
 .p-print{display:grid}
 .p-print > *{grid-area:1/1}
@@ -64,7 +72,7 @@
 .table-page .controls button.primary{background:#3d6b4a;border-color:#5a9a6a}
 .table-page .controls button[aria-pressed=true]{background:#5a4430}
 .table-page .note{color:#bfa98a;font-size:14px;max-width:70ch}
-@media (prefers-reduced-motion:reduce){.p-jar.lit .on,.p-jar.lit .glow{animation:none}}
+@media (prefers-reduced-motion:reduce){.p-jar.lit .on,.p-jar.lit .glow,.p-inuse.lit .on,.p-inuse.lit .glow{animation:none}}
 
 /* THE STUDIO HEADER: the top strip of the table, as tall as the other headers. The table keeps its
    proportions and fills the width; on narrow screens it's cropped to the middle. */
