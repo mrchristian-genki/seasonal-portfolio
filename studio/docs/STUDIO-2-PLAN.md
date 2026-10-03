@@ -42,10 +42,15 @@ its prompt, it's linked to its source and shows a green light, and becomes a car
 4. More cards and designs: event cards, timelines, layouts, exact preview.
 
 ## Decided (Oct 3, 2026)
-Studio drop zone or Drive folder; animations and narration made outside and brought back at their
-prompt with a green light; large files on DreamHost, not GitHub; browser video compiling only if needed.
+- Files come in through the Studio drop zone or a Google Drive folder.
+- Processing runs on a button (working name "Develop"): it checks the Studio uploads and the Drive inbox
+  for anything new, then runs privacy prep, the brief and the link search. Nothing runs on its own.
+- Drive inbox: one folder per Note named with date and time, e.g. `2026-10-03 1730 Short name`.
+- Animations and narration are made outside and brought back at their prompt, with a green light.
+- Crowds at concerts and events may appear when no one is the subject (also in SHOW-GUIDE.md).
+- Originals are removed from DreamHost once cleaned copies exist; Christian keeps them elsewhere.
+- Event types are added as they come up.
+- Large files on DreamHost, not GitHub; browser video compiling only if needed.
 
 ## Open
-Crowd faces at concerts/events (blur by default, leave out, or allow when no one is the subject);
-first event types; web search on every draft or on request; keep originals after cleaning; Drive
-inbox shape (folder per Note or one dated drop folder).
+- The process button's name ("Develop", or another).
