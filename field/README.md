@@ -57,6 +57,23 @@ field/tools/gallery.py` fetches only those (photos 1400 px with no EXIF; clips u
 - **Photos** are re-saved with no EXIF at all, so no GPS, camera serial, or original timestamps.
   Only the time taken is kept, for ordering.
 
+## Old photos on a table (animated prints)
+
+For historic or archive photos brought to life with AI (Christian makes the clips; first used on
+Marlette, Oct 3, 2026). Two to four short clips sit together as mounted prints on a wooden table,
+each turned a little and drifting on its own slow rhythm; phones stack them. Styles live in
+`play/play.css` and, for the homepage pop-up, `css/play-inline.css`.
+
+1. Prepare each clip as a silent, seamless 24 fps loop about 480 px tall (crossfade the last 0.6 s
+   into the start; see the ffmpeg line in the Oct 3 commits) plus a poster `.jpg`, saved as
+   `field/data/photos/<id>/hist-N.mp4` / `.jpg`.
+2. Add each to the event's `photos` with `"video": true, "ai": true, "table": "history"`,
+   `"after": <paragraph index, 0-based>`, a short `caption` (it's written on the print, so keep it
+   to a few words), `w`/`h`, and on the first one a `tableCaption` that credits the photographers.
+3. The figure is labeled "Animated with AI". Animate only what's in the photo (water, wind, a wave
+   from someone already there); never add people, and leave out images that look AI-made.
+4. Replacing a clip under the same name is fine: clip links carry a size-based `?v=` tag.
+
 ## Files
 
 | Path | What it is |

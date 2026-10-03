@@ -53,6 +53,11 @@ A ride that only finishes near home (like Clear Creek ending at James Lee Park) 
 stops at the edge of the home zone. The home zone itself lives only in Christian's private Drive
 file and `field/private-zones.json` (gitignored), never in the site.
 
+## Old photos
+
+Historic photos go in the post as animated prints on a table (see README, "Old photos on a table"):
+always labeled Animated with AI, credited, and animated only with what the photo already holds.
+
 ## Episode shape (2 to 5 minutes, about 300 to 750 words)
 
 - **Cold open:** one line that puts us there (time, place, weather).

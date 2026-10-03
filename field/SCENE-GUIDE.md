@@ -114,6 +114,11 @@ Not ginger: his hair is sandy strawberry blond.
 - A sleeping animal needs a sign it's asleep (breath, z's).
 - Don't overwrite a node's whole inline style after a library sets CSS variables on it.
 
+## Small template: old prints on a table
+For animated historic photos inside a post: mounted prints on warm wood, each a few degrees off
+square, drifting 2-3 px over 11-17 s, out of step. Same rules as the big scenes: subtle, slow, real
+things only. How-to in `field/README.md`.
+
 ## Next scenes
 Ideas on the list: the Books page (a reading nook), Play (trail at golden hour), each with its own
 ring logo. Same recipe.
