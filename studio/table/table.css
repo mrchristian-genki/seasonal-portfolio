@@ -129,7 +129,7 @@
   filter:drop-shadow(6px 9px 9px rgba(20,10,2,.5));transition:filter 2.4s ease}
 .st-foot.night .st-dial{filter:drop-shadow(8px 11px 10px rgba(10,4,0,.6)) brightness(.88)}
 .st-dial img{position:absolute;display:block}
-.dial-disc{width:54%;left:23%;top:22.18%;rotate:var(--turn,0deg);transition:rotate 2.6s cubic-bezier(.45,.05,.3,1)}
+.dial-disc{width:75.92%;left:12.04%;top:10.92%;rotate:var(--turn,0deg);transition:rotate 2.6s cubic-bezier(.45,.05,.3,1)}
 .dial-face{inset:0;width:100%;height:100%;filter:drop-shadow(1px 3px 2px rgba(20,10,2,.45))}
 @media (max-width:640px){
   .st-foot .st-switch{left:calc(50% + 68px)}

@@ -35,7 +35,7 @@ $in = studio_logged_in();
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&display=swap">
 <link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>-3">
-<link rel="stylesheet" href="table/table.css?v=15">
+<link rel="stylesheet" href="table/table.css?v=16">
 </head>
 <?php if (!$in): ?>
 <body class="login">
@@ -72,8 +72,8 @@ $in = studio_logged_in();
 <footer class="st-foot" aria-label="Studio">
   <div class="st-foot-wood" aria-hidden="true"><span class="day"></span><span class="night"></span></div>
   <div class="st-dial" aria-hidden="true">
-    <img class="dial-disc" id="dialDisc" src="table/a/dial-disc.webp" alt="">
-    <img class="dial-face" src="table/a/dial-face.webp" alt="">
+    <img class="dial-disc" id="dialDisc" src="table/a/dial-disc.webp?v=2" alt="">
+    <img class="dial-face" src="table/a/dial-face.webp?v=2" alt="">
   </div>
   <button type="button" class="st-switch" id="dayNight" role="switch" aria-checked="false" aria-label="Day. Switch to night">
     <img class="sw-day" src="table/a/switch-day.webp" alt="">
