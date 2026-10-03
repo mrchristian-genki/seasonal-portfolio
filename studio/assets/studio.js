@@ -147,34 +147,52 @@
       '<b>' + label + '</b><small>' + what + ' · ' + size(f.bytes) + '</small><div class="in-act">' + act + '</div></li>';
   }
 
-  // ---------- the loader: a step-by-step overlay while the Studio works (the IN USE sign glows too) ----------
+  // ---------- the loader: a little radio panel while the Studio works (the IN USE sign glows too) ----------
+  // A magic-eye tuning tube closes its shadow as the work goes on, nixie tubes count the percent, and the
+  // steps tick off in green phosphor.
   // var L = loader('Processing', ['Read the folder', 'Bring in photos', 'Draft with Claude']);
-  // L.at(1, '3 of 12') marks a step under way (earlier ones done); L.done() / L.fail(message) close it.
-  function loader(title, steps) {
+  // L.at(1, '4–6 of 12') marks a step under way (earlier ones done); L.done() / L.fail(message) close it.
+  function loader(title, steps, sub) {
     var el = document.createElement('div'); el.className = 'loader'; el.setAttribute('role', 'alertdialog'); el.setAttribute('aria-live', 'polite');
-    el.innerHTML = '<div class="ld-card"><div class="ld-reel" aria-hidden="true"><span></span></div><h2>' + esc(title) + '</h2>' +
+    el.innerHTML = '<div class="ld-card"><div class="ld-dials">' +
+        '<div class="eye" aria-hidden="true"><div class="eye-glass"><div class="eye-fan"></div><div class="eye-cap"></div><div class="eye-shine"></div></div></div>' +
+        '<div class="nixie" aria-hidden="true"><span><i>8</i><b>0</b></span><span><i>8</i><b>0</b></span><span><i>8</i><b>0</b></span><em>%</em></div>' +
+      '</div><h2>' + esc(title) + '</h2>' + (sub ? '<p class="ld-sub">' + esc(sub) + '</p>' : '') +
       '<ol class="ld-steps">' + steps.map(function (s) { return '<li><span class="ld-dot"></span><span class="ld-name">' + esc(s) + '</span><small></small></li>'; }).join('') + '</ol>' +
-      '<p class="ld-hold muted">Hold on a moment, this page is working.</p></div>';
+      '<p class="ld-hold">Hold on a moment, this page is working.</p></div>';
     document.body.appendChild(el); document.body.classList.add('busy');
     if (window.StudioTable) StudioTable.inUse(true);
     requestAnimationFrame(function () { el.classList.add('on'); });
-    var items = $$('.ld-steps li', el), cur = -1;
+    var items = $$('.ld-steps li', el), cur = -1, eye = $('.eye', el), digits = $$('.nixie b', el), shown = 0;
+    // how far along: whole steps done, plus the part of this one ("4–6 of 12" counts as 6 of 12)
+    function show(frac) {
+      frac = Math.max(shown, Math.min(1, frac)); shown = frac;
+      eye.style.setProperty('--gap', (110 * (1 - frac)).toFixed(1) + 'deg');
+      var pct = String(Math.round(frac * 100)).padStart(3, '0');
+      digits.forEach(function (d, k) { d.textContent = pct[k]; d.parentNode.classList.toggle('off', k === 0 && pct[0] === '0'); });
+    }
+    function live() { return items.filter(function (li) { return !li.classList.contains('skipped'); }).length || 1; }
     function close(ms) {
       setTimeout(function () { el.classList.remove('on'); setTimeout(function () { el.remove(); }, 300); }, ms);
       document.body.classList.remove('busy');
       if (window.StudioTable) StudioTable.inUse(lastDrive ? lastDrive.running : false);
     }
+    show(0);
     return {
       at: function (i, detail) {
-        for (var k = 0; k < items.length; k++) {
-          items[k].classList.toggle('done', k < i); items[k].classList.toggle('now', k === i);
-          if (k < i && cur < k) $('small', items[k]).textContent = '';
-        }
+        for (var k = 0; k < items.length; k++) { items[k].classList.toggle('done', k < i); items[k].classList.toggle('now', k === i); }
         cur = i; if (detail != null && items[i]) $('small', items[i]).textContent = detail;
+        var before = items.slice(0, i).filter(function (li) { return !li.classList.contains('skipped'); }).length;
+        var m = /(\d+)\s*of\s*(\d+)/.exec(detail || ''), part = m ? +m[1] / +m[2] : 0;
+        show((before + part) / live());
+        eye.classList.toggle('waiting', !m);   // nothing to count (Claude drafting): the eye breathes
       },
       skip: function (i) { if (items[i]) items[i].classList.add('skipped'); },
-      done: function () { items.forEach(function (li) { if (!li.classList.contains('skipped')) { li.classList.remove('now'); li.classList.add('done'); } }); close(450); },
-      fail: function (msg) { if (items[cur]) { items[cur].classList.remove('now'); items[cur].classList.add('bad'); $('small', items[cur]).textContent = msg; } close(2600); }
+      done: function () {
+        items.forEach(function (li) { if (!li.classList.contains('skipped')) { li.classList.remove('now'); li.classList.add('done'); } });
+        eye.classList.remove('waiting'); show(1); close(650);
+      },
+      fail: function (msg) { el.classList.add('failed'); if (items[cur]) { items[cur].classList.remove('now'); items[cur].classList.add('bad'); $('small', items[cur]).textContent = msg; } close(2800); }
     };
   }
 
@@ -230,7 +248,7 @@
   function processFolder(src) {
     if (dirty && !confirm('Leave without saving?')) return;
     var label = src.split('/').slice(1).join('/').replace(/^#/, '');
-    var L = loader('Processing “' + label + '”', ['Read the folder', 'Bring in the track', 'Bring in the photos', 'Claude drafts the note', 'Ready for you to read']);
+    var L = loader('Processing', ['Read the folder', 'Bring in the track', 'Bring in the photos', 'Claude drafts the note', 'Ready for you to read'], label);
     L.at(0);
     api('inbox', null, '&f=' + encodeURIComponent(src)).then(function (j) {
       INBOX = j; dirty = false; fresh = {}; removed = [];
