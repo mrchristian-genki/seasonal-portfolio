@@ -1,0 +1,57 @@
+# Deploy the site to DreamHost over SSH (rsync), so nothing has to be zipped and uploaded by hand.
+#
+# Runs on every push to main, or by hand from the Actions tab ("Run workflow"), where "dry run"
+# lists what would change without touching the server. Only adds and updates files: nothing on the
+# server is ever deleted, so files that live only there are safe. field/ (the private Field Notes
+# manager, drafts and notes) is never uploaded; the public pages are built into play/.
+#
+# Repository secrets (Settings -> Secrets and variables -> Actions):
+#   DH_HOST     the server, e.g. iad1-shared-b8-12.dreamhost.com (DreamHost panel -> SFTP/SSH users)
+#   DH_USER     the SSH user for the site
+#   DH_PATH     the folder to deploy into, e.g. /home/<user>/christiangehrke.com
+#   DH_SSH_KEY  the private deploy key (its public half is in ~/.ssh/authorized_keys on DreamHost)
+name: Deploy to DreamHost
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run: list what would change, upload nothing"
+        type: boolean
+        default: true
+
+concurrency: deploy
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up SSH
+        env:
+          DH_HOST: ${{ secrets.DH_HOST }}
+          DH_SSH_KEY: ${{ secrets.DH_SSH_KEY }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$DH_SSH_KEY" > ~/.ssh/deploy_key && chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H "$DH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: Upload changed files
+        env:
+          DH_HOST: ${{ secrets.DH_HOST }}
+          DH_USER: ${{ secrets.DH_USER }}
+          DH_PATH: ${{ secrets.DH_PATH }}
+          DRY: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run && '--dry-run' || '' }}
+        run: |
+          for v in DH_HOST DH_USER DH_PATH; do [ -n "${!v}" ] || { echo "Missing secret $v"; exit 1; }; done
+          rsync -rlvz --checksum --chmod=D755,F644 $DRY --itemize-changes \
+            -e "ssh -i ~/.ssh/deploy_key" \
+            --exclude='.git*' \
+            --exclude='.github/' \
+            --exclude='*.md' \
+            --exclude='upload-*.zip' \
+            --exclude='field/' \
+            ./ "$DH_USER@$DH_HOST:$DH_PATH/"
