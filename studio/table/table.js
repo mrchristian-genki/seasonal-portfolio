@@ -11,7 +11,6 @@
   var night = /[?&]night\b/.test(location.search) || (HEADER && (hour >= 19 || hour < 6));
   // the header plays the arrivals once per visit; after that the table is simply set
   var settle = false;
-  try { if (HEADER && sessionStorage.getItem('st-table')) settle = true; sessionStorage.setItem('st-table', '1'); } catch (e) {}
   if (night) T.classList.add('night');
 
   // x, y = centre; w = width; rot in degrees; how = roll | slide | drop | gentle; from = the edge it comes in over
@@ -22,7 +21,7 @@
     { id: 'canister', src: 'canister', x: 1881, y: 681, w: 154, rot: 0, how: 'roll', from: 'right' },
     { id: 'mat', src: 'mat', x: 1641, y: 980, w: 717, rot: 0, how: 'slide', from: 'right' },
     { id: 'pins', src: 'pins', x: 1118, y: 1039, w: 152, rot: 0, how: 'drop' },
-    { id: 'panel', src: ['panel-off', 'panel-on'], x: 1700, y: 610, w: 112, rot: 0, how: 'drop', fixed: true },
+    { id: 'panel', src: ['panel-off', 'panel-on'], x: 1700, y: 610, w: 112, rot: 0, how: 'slide' },
     { id: 'contact', src: 'contact', x: 1800, y: 175, w: 330, rot: 7, how: 'slide', from: 'top' },
     { id: 'resin', src: 'resin', x: 215, y: 445, w: 175, rot: -8, how: 'slide', from: 'left' },
     { id: 'cone', src: 'cone', x: 1205, y: 330, w: 140, rot: 0, how: 'roll', from: 'top' },
@@ -38,7 +37,7 @@
   if (HEADER) PROPS = [
     { id: 'pencils', src: 'pencils', x: 279, y: 223, w: 444, rot: 0, how: 'slide', from: 'left' },
     { id: 'ruler', src: 'ruler', x: 819, y: 97, w: 557, rot: 0, how: 'slide', from: 'top' },
-    { id: 'panel', src: ['panel-off', 'panel-on'], x: 1585, y: 300, w: 86, rot: 0, how: 'drop', fixed: true },
+    { id: 'panel', src: ['panel-off', 'panel-on'], x: 1585, y: 300, w: 86, rot: 0, how: 'slide' },
     { id: 'contact', src: 'contact', x: 1800, y: 135, w: 300, rot: 7, how: 'slide', from: 'top' },
     { id: 'carnelians', src: 'carnelians', x: 800, y: 300, w: 95, rot: 12, how: 'drop' },
     { id: 'cone', src: 'cone', x: 960, y: 270, w: 112, rot: 0, how: 'roll', from: 'top' },
@@ -63,7 +62,8 @@
   // the resting transform: centred on its y, turned by rot
   function rest(p) { return 'translateY(-50%) rotate(' + p.rot + 'deg)'; }
   function offEdge(p) {
-    var from = p.from || (p.x < W / 2 ? 'left' : 'right'), d = p.w + 260;
+    var from = p.from || [['left', p.x], ['right', W - p.x], ['top', p.y], ['bottom', H - p.y]].sort(function (a, b) { return a[1] - b[1]; })[0][0];
+    var d = p.w + 260;
     return from === 'left' ? [-(p.x + d), 0] : from === 'right' ? [W - p.x + d, 0] : from === 'top' ? [0, -(p.y + d)] : [0, H - p.y + d];
   }
 
@@ -83,7 +83,8 @@
 
   function arrive(p) {
     var el = makeProp(p), r = rest(p);
-    if (p.how === 'drop') return anim(el, [
+    if (p.how === 'drop') p = Object.assign({}, p, { how: 'slide' });
+    if (false) return anim(el, [
       { transform: r + ' scale(1.35)', opacity: 0 },
       { transform: r + ' scale(.96)', opacity: 1, offset: .7 },
       { transform: r + ' scale(1)', opacity: 1 }], { duration: 650, easing: 'cubic-bezier(.5,0,.75,0)' });
