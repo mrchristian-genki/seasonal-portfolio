@@ -1945,9 +1945,49 @@
    "use": "post",
    "cover": true,
    "from": "IMG_6832.JPG"
+  },
+  {
+   "src": "data/photos/2024-09-05-marlette/hist-1.mp4",
+   "poster": "data/photos/2024-09-05-marlette/hist-1.jpg",
+   "video": true,
+   "ai": true,
+   "table": "history",
+   "after": 4,
+   "caption": "Marlette Lake, R. J. Waters.",
+   "w": 736,
+   "h": 480,
+   "use": "post",
+   "cover": false,
+   "tableCaption": "Three historic photographs from the days of the Marlette Lake water system. Marlette Lake by R. J. Waters, from his Lake Tahoe Series; the flume and the plank walk, photographers unknown (via waterworkshistory.us)."
+  },
+  {
+   "src": "data/photos/2024-09-05-marlette/hist-2.mp4",
+   "poster": "data/photos/2024-09-05-marlette/hist-2.jpg",
+   "video": true,
+   "ai": true,
+   "table": "history",
+   "after": 4,
+   "caption": "The flume, along the cliffs.",
+   "w": 608,
+   "h": 480,
+   "use": "post",
+   "cover": false
+  },
+  {
+   "src": "data/photos/2024-09-05-marlette/hist-3.mp4",
+   "poster": "data/photos/2024-09-05-marlette/hist-3.jpg",
+   "video": true,
+   "ai": true,
+   "table": "history",
+   "after": 4,
+   "caption": "The plank walk.",
+   "w": 608,
+   "h": 480,
+   "use": "post",
+   "cover": false
   }
  ],
- "fieldNotes": "From the track: start 7:56 AM near Spooner Lake at about 6,970 ft; high point 8,100 ft on North Canyon at 8:44; down to the lake (northmost point 9:02); back over the top, photos at 9:18 to 9:20 at about 8,030 ft; finished at Spooner Lake Trailhead at 9:50. 9.2 miles, 1 h 54 m total, 1 h 9 m moving, about 2,160 ft of climbing, top speed 26 mph.\nFrom Christian's voice memo (Oct 3, 2026): Marlette is a wonderful little ride by Spooner on the other side of the lake. Start at almost 7,000 ft, up a double-track road, up and up, through a couple of meadows with the leaves changing. The last bit is quite steep, then down maybe 100 or 200 feet to a beautiful lake with trails all around it. They go up there quite often; it has been closed for the last two years, so this is one of the last times he went up. Normally he goes with Marley in the morning, early. Asked for some news on why Marlette closed.\nFrom the photos: Marley came along (pink harness). All six photos at one overlook, 9:18 to 9:20 AM; four used (near-duplicates left out). EXIF stripped.\nClosure facts (sources in links): Marlette Dam, an earthen dam built in 1873 by the Carson Tahoe Lumber and Fluming Company and raised in 1876 to send water to Virginia City and the Comstock mines. Rated a high hazard dam: a high probability of failure in a magnitude 6.5 or larger earthquake, with seepage beneath it. Trails closed March 31, 2025; lake drawn down about 20 feet; new concrete spillway and outlet pipes, dam widened downstream; FEMA grant plus state money. NDOW held a fish-out in September 2024. Refilling is expected to take years (about 3 ft a year). A Nevada Globe report (Sep 21, 2026) says the Spooner backcountry, North Canyon Road and the Marlette shoreline reopened Sat Sep 26, 2026; only one source found so far.\nNot used: IMG_6874.MOV (230 MB, too large for the Drive connector).\nFrom Christian (Oct 3): at the lake he set up a hammock, Marley swam and he threw the ball for her. The pink harness is fine to mention (she has a new one now). Reopening: say we read that it reopened. Video: Christian will send a trimmed copy under 10 MB.",
+ "fieldNotes": "From the track: start 7:56 AM near Spooner Lake at about 6,970 ft; high point 8,100 ft on North Canyon at 8:44; down to the lake (northmost point 9:02); back over the top, photos at 9:18 to 9:20 at about 8,030 ft; finished at Spooner Lake Trailhead at 9:50. 9.2 miles, 1 h 54 m total, 1 h 9 m moving, about 2,160 ft of climbing, top speed 26 mph.\nFrom Christian's voice memo (Oct 3, 2026): Marlette is a wonderful little ride by Spooner on the other side of the lake. Start at almost 7,000 ft, up a double-track road, up and up, through a couple of meadows with the leaves changing. The last bit is quite steep, then down maybe 100 or 200 feet to a beautiful lake with trails all around it. They go up there quite often; it has been closed for the last two years, so this is one of the last times he went up. Normally he goes with Marley in the morning, early. Asked for some news on why Marlette closed.\nFrom the photos: Marley came along (pink harness). All six photos at one overlook, 9:18 to 9:20 AM; four used (near-duplicates left out). EXIF stripped.\nClosure facts (sources in links): Marlette Dam, an earthen dam built in 1873 by the Carson Tahoe Lumber and Fluming Company and raised in 1876 to send water to Virginia City and the Comstock mines. Rated a high hazard dam: a high probability of failure in a magnitude 6.5 or larger earthquake, with seepage beneath it. Trails closed March 31, 2025; lake drawn down about 20 feet; new concrete spillway and outlet pipes, dam widened downstream; FEMA grant plus state money. NDOW held a fish-out in September 2024. Refilling is expected to take years (about 3 ft a year). A Nevada Globe report (Sep 21, 2026) says the Spooner backcountry, North Canyon Road and the Marlette shoreline reopened Sat Sep 26, 2026; only one source found so far.\nNot used: IMG_6874.MOV (230 MB, too large for the Drive connector).\nFrom Christian (Oct 3): at the lake he set up a hammock, Marley swam and he threw the ball for her. The pink harness is fine to mention (she has a new one now). Reopening: say we read that it reopened. Video: Christian will send a trimmed copy under 10 MB.\nHistoric photos (Oct 3): three animated clips Christian made from historic photographs (Marlette Lake by R. J. Waters; a flume; a plank walk), shown together as prints on a table after the dam paragraph, labeled Animated with AI. A fourth image (logs in a flume with men waving) was left out: it looks AI-made, not historic.",
  "post": {
   "title": "Up to Marlette",
   "body": "Marlette is one of my favourite rides on the Nevada side of Tahoe. Marley and I go up often, usually early. On this one, September 5, 2024, we started near Spooner Lake just before eight, at almost 7,000 feet.\n\nThe ride is North Canyon Road: a wide double track that goes up, and up, and up, through a couple of meadows with the leaves starting to turn. The last bit is steep. We topped out at about 8,100 feet a little before quarter to nine, then dropped down the other side to the lake. Marlette sits up there on its own, with trails all the way around it. I strung up the hammock, Marley went swimming, and I threw the ball for her until it was time to head back.\n\nOn the way back over the top we stopped at an overlook. Marley climbed onto an old log and kept an eye on the water while I took pictures.\n\nAbout 9 miles, 2,100 feet of climbing, and back at Spooner by ten to ten.\n\nAs it turned out, it was one of the last times for a while. In spring 2025 the trails closed for two years so the state could rebuild Marlette Dam. It's an earthen dam from 1873, raised a few years later to send water to Virginia City and the Comstock mines, and it had been rated high hazard: a big enough earthquake could bring it down. They drew the lake down twenty feet and put in a new spillway and new outlet pipes. The lake will take years to fill back up. The latest I've read is that the backcountry reopened at the end of September 2026.\n\nWhat I learned: ride your favourite places while they're open."

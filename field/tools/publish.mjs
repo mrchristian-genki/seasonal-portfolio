@@ -104,7 +104,7 @@ for (const e of events) {
       const base = String(i + 1).padStart(2, '0');
       fs.copyFileSync(path.join(FIELD, p.src), path.join(media, base + '.mp4'));
       fs.copyFileSync(path.join(FIELD, p.poster), path.join(media, base + '.jpg'));
-      return { src: `../media/${e.id}/${base}.mp4`, poster: `../media/${e.id}/${base}.jpg`, abs: `${show.siteUrl}media/${e.id}/${base}.jpg`, caption: p.caption || '', w: p.w, h: p.h, cover: false, video: true, ai: !!p.ai };
+      return { src: `../media/${e.id}/${base}.mp4`, poster: `../media/${e.id}/${base}.jpg`, abs: `${show.siteUrl}media/${e.id}/${base}.jpg`, caption: p.caption || '', w: p.w, h: p.h, cover: false, video: true, ai: !!p.ai, table: p.table || null, after: p.after };
     }
     fs.copyFileSync(path.join(FIELD, p.src), path.join(media, name));
     return { src: `../media/${e.id}/${name}`, abs: `${show.siteUrl}media/${e.id}/${name}`, caption: p.caption || '', w: p.w, h: p.h, cover: !!p.cover };
@@ -119,8 +119,14 @@ for (const e of events) {
   if (t) fs.writeFileSync(path.join(OUT, 'data', e.id + '.json'), JSON.stringify({ kind: e.kind, stats: s, line: t.line, profile: t.profile, shownKm: t.trim && t.trim.shownKm }) + '\n');
 
   // Photos sit between the post's paragraphs (the cover heads the page), spread evenly.
-  const ps = paras(e.post && e.post.body), inline = photos.filter((p) => p !== cover);
+  // Clips marked "table" (old photos laid out on a table) gather into one figure, after paragraph
+  // "after" (0-based); its caption is the first clip's tableCaption. Others spread evenly.
+  const ps = paras(e.post && e.post.body), table = photos.filter((p) => p.table), inline = photos.filter((p) => p !== cover && !p.table);
   const slots = inline.map((_, i) => Math.min(ps.length - 1, Math.round((i + 1) * ps.length / (inline.length + 1)) - 1));
+  const tableSlot = table.length ? Math.min(ps.length - 1, table[0].after != null ? table[0].after : ps.length - 2) : -1;
+  const tableCap = (e.photos || []).find((p) => p.tableCaption);
+  const tableFig = () => `<figure class="table"><div class="table-top">${table.map((p, k) =>
+    `<a class="print p${k + 1}" href="${esc(p.src)}" data-lightbox data-video title="${esc(p.caption)}"><video src="${esc(p.src)}" poster="${esc(p.poster)}" width="${p.w}" height="${p.h}" muted loop playsinline autoplay preload="metadata" aria-label="${esc(p.caption)}"></video><span class="print-cap">${esc(p.caption)}</span></a>`).join('')}</div>${tableCap ? `<figcaption><span class="ai-badge">Animated with AI</span> ${esc(tableCap.tableCaption)}</figcaption>` : ''}</figure>`;
   const fig = (p, cls) => p.video
     ? `<figure class="${cls || 'photo'} clip"><a href="${esc(p.src)}" data-lightbox data-video><video src="${esc(p.src)}" poster="${esc(p.poster)}" width="${p.w}" height="${p.h}" muted loop playsinline autoplay preload="metadata"></video></a>${p.caption ? `<figcaption>${p.ai ? '<span class="ai-badge">Made with AI</span> ' : ''}${esc(p.caption)}</figcaption>` : ''}</figure>`
     : `<figure class="${cls || 'photo'}"><a href="${esc(p.src)}" data-lightbox><img src="${esc(p.src)}" alt="${esc(p.caption)}" width="${p.w}" height="${p.h}" loading="lazy"></a>${p.caption ? `<figcaption>${esc(p.caption)}</figcaption>` : ''}</figure>`;
@@ -129,6 +135,7 @@ for (const e of events) {
     const m = /^What I learned:\s*/i.exec(p);
     body += m ? `<p class="learned"><b>What I learned:</b> ${esc(p.slice(m[0].length))}</p>\n` : `<p>${esc(p)}</p>\n`;
     inline.forEach((ph, k) => { if (slots[k] === i) body += fig(ph) + '\n'; });
+    if (i === tableSlot) body += tableFig() + '\n';
   });
 
   const url = `${show.siteUrl}${e.id}/`, title = `${e.post && e.post.title || e.title} · ${show.showTitle}`;

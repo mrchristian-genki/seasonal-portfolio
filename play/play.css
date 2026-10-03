@@ -166,3 +166,33 @@ h2.sec{font-size:clamp(22px,3.4vw,30px);display:flex;align-items:center;gap:10px
 video{max-width:100%;height:auto}
 figure video{display:block;width:100%;border-radius:12px;background:#000}
 .post figure video{max-height:min(78vh,760px);width:auto;margin:0 auto}
+
+/* Old photos laid out on a table: mounted prints on warm wood, each turned a little and drifting
+   on its own slow rhythm. Phones: the prints stack with a small overlap. */
+.post figure.table{margin:36px auto;max-width:min(100%,900px)}
+.table-top{position:relative;display:grid;grid-template-columns:1.12fr 1fr 1fr;align-items:center;gap:0;padding:44px 34px 52px;border-radius:14px;
+  background:
+    radial-gradient(ellipse at 30% 20%,rgba(255,220,170,.22),transparent 60%),
+    repeating-linear-gradient(90deg,rgba(60,30,10,.0) 0 22px,rgba(60,30,10,.10) 22px 23px,rgba(60,30,10,0) 23px 61px,rgba(255,230,190,.06) 61px 63px),
+    repeating-linear-gradient(90deg,#7a4a26 0 140px,#734524 140px 141px,#7d4d28 141px 290px),
+    #7a4a26;
+  box-shadow:inset 0 0 60px rgba(30,12,2,.55),0 10px 30px rgba(20,30,40,.18)}
+.table-top .print{position:relative;display:block;background:#f4eee2;padding:10px 10px 30px;border-radius:2px;
+  box-shadow:0 2px 3px rgba(0,0,0,.35),0 14px 26px rgba(20,8,0,.45);text-decoration:none;
+  animation:print-drift 11s ease-in-out infinite;transform-origin:50% 60%}
+.table-top .print video{display:block;width:100%;height:auto;border-radius:0;background:#222;filter:sepia(.12)}
+.table-top .print-cap{position:absolute;left:10px;right:10px;bottom:7px;font:italic 12px/1.2 Georgia,serif;color:#5b4a36;text-align:center;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.table-top .p1{--r:-4deg;z-index:2;margin-right:-6%;animation-duration:13s}
+.table-top .p2{--r:2.5deg;z-index:3;margin-top:-26px;animation-duration:11s;animation-delay:-4s}
+.table-top .p3{--r:-1.5deg;z-index:1;margin-left:-5%;margin-top:30px;animation-duration:17s;animation-delay:-9s}
+@keyframes print-drift{0%,100%{transform:rotate(var(--r)) translate(0,0)}50%{transform:rotate(calc(var(--r) + .6deg)) translate(2px,-3px)}}
+.post figure.table figcaption{text-align:center}
+@media (max-width:640px){
+  .table-top{grid-template-columns:1fr;padding:26px 22px 34px;gap:0}
+  .table-top .print{width:86%}
+  .table-top .p1{margin:0 auto 0 0}
+  .table-top .p2{margin:-14px 0 0 auto}
+  .table-top .p3{margin:-14px auto 0 4%}
+}
+@media (prefers-reduced-motion:reduce){.table-top .print{animation:none;transform:rotate(var(--r))}}
