@@ -913,33 +913,30 @@ function buildWaterShimmer(wrap, w, h, opts) {
     dropRain: [{ at: 0, y: 0, o: 0 }, { at: .12, o: 1 }, { at: .85, o: 1 }, { at: 1, y: 1, o: 0 }],
     dropSnow: [{ at: 0, x: 0, y: 0, o: 0 }, { at: .1, o: 1 }, { at: .5, x: -1, y: .5, o: 1 }, { at: .85, o: 1 }, { at: 1, x: 0, y: 1, o: 0 }],
   };
-  function spawnRipple(x, isSnow) {
+  // spawnAt (optional, set by the scene): () => [x, y, size] anywhere on the open water, in this
+  // panel's local units (may lie outside 0..w), size scaling rings smaller further away.
+  let spawnAt = null;
+  function spawnRipple(x, isSnow, yAt, size) {
     // Sizes are ~3x the prototype's because the panel spans ~5000 world units, not 1600.
-    const rx = 42 + Math.random() * 20, ry = rx * 0.38;
+    const k = size || 1;
+    const rx = (42 + Math.random() * 20) * k, ry = rx * 0.38;
     const dur = isSnow ? (3.4 + Math.random() * 1.6) : (1.3 + Math.random() * 0.6);
-    const y = waterY + Math.random() * (h - waterY) * 0.85;
+    const y = yAt != null ? yAt : waterY + Math.random() * (h - waterY) * 0.85;
     parts.push({ k: isSnow ? 'ripSnow' : 'ripRain', x, y, rx, ry, t0: performance.now(), dur: dur * 1000 });
     wake();
   }
 
   const durScale = h / 550; // preserves original fall speed regardless of panel height
   let precip = 'none', spawnTimer = null;
+  // PERF: the scene's own rain and snow canvas already draws the falling drops and flakes, so
+  // the lake draws only where they land: the rings. (It used to draw a second falling streak or
+  // flake for each one.)
   function spawnDrop() {
+    if (document.hidden) return;                  // a hidden tab draws nothing: don't pile up rings for later
     const isSnow = precip === 'snow';
-    const x = waterXRange[0] + Math.random() * (waterXRange[1] - waterXRange[0]);
-    const landY = waterY + Math.random() * (h - waterY) * 0.75;
-    const t0 = performance.now();
-    if (isSnow) {
-      const startY = -5 - Math.random() * 20;
-      const dur = (1.8 + Math.random() * 1.2) * durScale * 1000;
-      parts.push({ k: 'dropSnow', x, y: startY, r: 4.8 + Math.random() * 4.2, dist: landY - startY,
-        sway: 8 + Math.random() * 10, t0, dur, land: () => spawnRipple(x, true) });
-    } else {
-      const startY = -15 - Math.random() * 20;
-      const dur = (0.32 + Math.random() * 0.12) * durScale * 1000;
-      parts.push({ k: 'dropRain', x, y: startY, dist: landY - startY, t0, dur, land: () => spawnRipple(x + 2, false) });
-    }
-    wake();
+    if (spawnAt) { const p = spawnAt(); if (p) spawnRipple(p[0], isSnow, p[1], p[2]); return; }
+    const rx = waterXRange[0] + Math.random() * (waterXRange[1] - waterXRange[0]);
+    spawnRipple(isSnow ? rx : rx + 2, isSnow);
   }
   // Canvas output. map = { x0, y0, s }: panel-local (lx, ly) sits at canvas CSS px
   // (x0 + lx * s, y0 + ly * s); scene.js supplies it and keeps it current on resize.
@@ -948,7 +945,7 @@ function buildWaterShimmer(wrap, w, h, opts) {
   function draw(now) {
     raf = 0;
     if (!cvs || !map) return;
-    const dpr = window.devicePixelRatio || 1;
+    const dpr = Math.min(1.5, window.devicePixelRatio || 1);   // thin rings: 1.5x is plenty
     const W = Math.round(cvs.clientWidth * dpr), H = Math.round(cvs.clientHeight * dpr);
     if (cvs.width !== W || cvs.height !== H) { cvs.width = W; cvs.height = H; }
     ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -986,17 +983,18 @@ function buildWaterShimmer(wrap, w, h, opts) {
   function attachCanvas(canvas, m) { cvs = canvas; ctx = canvas.getContext('2d'); map = m; wake(); }
   function setCanvasMap(m) { map = m; wake(); }
 
-  // Spawn intervals (rain 35ms, snow 140ms) are tuned to scene.js's wide waterXRange (~1420
+  // Spawn intervals (rain 70ms, snow 280ms; were 35/140 when each also drew its own falling drop) are tuned to scene.js's wide waterXRange (~1420
   // units): slower reads sparse over that width, much faster reads as a rainstorm.
   function setPrecip(p) {
     precip = p;
     if (spawnTimer) clearInterval(spawnTimer);
-    if (p !== 'none') spawnTimer = setInterval(spawnDrop, p === 'rain' ? 35 : 140);
+    // Spread over the whole lake (spawnAt) it takes more rings to read as the same rain.
+    if (p !== 'none') spawnTimer = setInterval(spawnDrop, (p === 'rain' ? 70 : 280) * (spawnAt ? 0.55 : 1));
   }
 
   setWind(0);
   return {
-    svg, setWind, setPrecip, attachCanvas, setCanvasMap,
+    svg, setWind, setPrecip, attachCanvas, setCanvasMap, setSpawnArea: (fn) => { spawnAt = fn; if (precip !== 'none') setPrecip(precip); },
     stop: () => { if (spawnTimer) clearInterval(spawnTimer); },
   };
 }
@@ -1153,7 +1151,16 @@ function buildFoothillsRange(wrap, src, season, opts) {
   const cropWidth = (opts && opts.cropWidth) || FOOTHILLS_NATIVE_W / 4;
   const cropX = (opts && opts.cropX) != null ? opts.cropX : (FOOTHILLS_NATIVE_W - cropWidth) / 2;
   try {
-    const text = window.__fetchSyncText(src);
+    // Distant, so hazy: each fill is mixed toward a pale sky blue (atmospheric perspective), as
+    // a SOLID colour, never transparency, so nothing behind (the moon, the sun) shows through.
+    // The class names are made unique too, so another file's .cls-N can't restyle these.
+    const HAZE = [150, 182, 200], HAZE_MIX = 0.38, uid = 'fh' + Math.floor(Math.random() * 1e9);
+    const hazy = (hex) => { const n = parseInt(hex.slice(1), 16), c = [n >> 16, (n >> 8) & 255, n & 255];
+      return '#' + c.map((v, i) => Math.round(v + (HAZE[i] - v) * HAZE_MIX).toString(16).padStart(2, '0')).join(''); };
+    const text = window.__fetchSyncText(src)
+      .replace(/fill:\s*(#[0-9a-fA-F]{6})/g, (m, hex) => `fill:${hazy(hex)};fill-opacity:1;opacity:1`)
+      .replace(/\bclass="([^"]+)"/g, (m, cls) => `class="${cls}-${uid}"`)
+      .replace(/\.(cls-\d+)(\s*\{)/g, (m, cls, brace) => `.${cls}-${uid}${brace}`);
     window.__injectFetchedSvg(wrap, text);
     wrap.setAttribute('viewBox', `${cropX} 0 ${cropWidth} ${FOOTHILLS_NATIVE_H}`);
     wrap.setAttribute('preserveAspectRatio', 'xMidYMax slice');

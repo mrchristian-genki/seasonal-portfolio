@@ -448,6 +448,7 @@ function _bootInner() {
     const fxPlateForRain = $('plateFx') || plate;
     fxPlateForRain.appendChild(rainCanvas);
 
+
     // ── CLOUD FAMILIES (cumulus/cirrus/altocumulus/cumulonimbus) ───────────
     // Sole cloud system (old generic makeCloud() clouds removed). Per-season mix comes from
     // CLOUD_GATES: cirrus in fall, altocumulus in spring, rare summer cumulonimbus, etc.
@@ -477,12 +478,33 @@ function _bootInner() {
       x: Math.random()*VW, y: Math.random()*VH,
       len: 24+Math.random()*30, speed: 18+Math.random()*14, opacity: 0.45+Math.random()*0.45
     }));
-    // Snow: separate pool and motion (slow fall + side drift), winter only.
-    const flakes = Array.from({length:140}, () => ({
+    // Storm: a second, heavier pool (longer, brighter streaks) drawn on top while a storm blows.
+    const stormDrops = Array.from({length:260}, () => ({
       x: Math.random()*VW, y: Math.random()*VH,
-      r: 5+Math.random()*7, speed: 4+Math.random()*5, opacity: 0.55+Math.random()*0.4,
-      driftPhase: Math.random()*Math.PI*2, driftSpeed: 0.6+Math.random()*0.8, driftAmp: 15+Math.random()*25,
+      len: 46+Math.random()*44, speed: 30+Math.random()*16, opacity: 0.35+Math.random()*0.4
     }));
+    // Snow: ONE pool at three depths (far: small, slow, faint; near: bigger, faster), drawn
+    // from a pre-made soft glow sprite (the look of the 'Snow (pure CSS)' pen, without its 200
+    // divs). Everyday winter snow uses the first part of the pool; a storm fades in the rest.
+    // Gusts blow all of it sideways: gently in ordinary snow, in hard bursts in a storm.
+    const SNOW_DEPTH = [{ r: [3, 5], v: [2.6, 3.6], o: [0.45, 0.7] }, { r: [5, 8], v: [4, 5.5], o: [0.6, 0.85] }, { r: [8, 12], v: [5.5, 7.5], o: [0.75, 0.95] }];
+    const flakes = Array.from({length:1000}, (_, i) => {
+      const dep = i % 10 < 5 ? 0 : i % 10 < 8 ? 1 : 2;   // half far, 30% middle, 20% near
+      const d = SNOW_DEPTH[dep], rr = (a) => a[0] + Math.random() * (a[1] - a[0]);
+      return { x: Math.random()*VW, y: Math.random()*VH, r: rr(d.r), speed: rr(d.v), opacity: rr(d.o), depth: dep,
+        driftPhase: Math.random()*Math.PI*2, driftSpeed: 0.5+Math.random()*0.8, driftAmp: 12+Math.random()*22 };
+    });
+    let LIGHT_SNOW = 520;                                     // flakes in everyday snow; a storm uses up to 1000
+    // Phones: storms use about half the extra drops and flakes (plenty at that size, and it keeps
+    // the compositor light). Read once; a phone doesn't become a desktop.
+    const SMALL = Math.min(innerWidth, innerHeight) < 600 || innerWidth < 700;
+    window.__smallScreen = SMALL;
+    if (SMALL) LIGHT_SNOW = 280;
+    const flakeSprite = (() => { const c = document.createElement('canvas'); c.width = c.height = 32;
+      const x = c.getContext('2d'), g = x.createRadialGradient(16, 16, 0, 16, 16, 16);
+      g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(0.35, 'rgba(255,255,255,.9)');
+      g.addColorStop(0.6, 'rgba(255,255,255,.35)'); g.addColorStop(1, 'rgba(255,255,255,0)');
+      x.fillStyle = g; x.fillRect(0, 0, 32, 32); return c; })();
     // Leaf-fall (fall only): pre-rasterized PNG sprites (assets/leaves/) drawn on the rain/snow
     // canvas, rotating + swaying. No SVG filters (rule: no runtime SVG filters in steady state).
     const LEAF_SPRITE_NAMES = ['leaf-aspen-green','leaf-aspen-chartreuse','leaf-aspen-gold','leaf-aspen-orange','leaf-maple-red'];
@@ -524,8 +546,11 @@ function _bootInner() {
         }
       }
       // Rain (fall), snow (winter) and leaves (fall) ease independently.
-      const targetRain = kf(s, [0.0, 0.0, 0.0, 0.45]);
-      const targetSnow = kf(s, [0.55, 0.0, 0.0, 0.0]);
+      // A storm (window.__storm, eased 0..1) brings heavy rain in any season but winter, where
+      // it thickens the snow instead.
+      const storm = window.__storm ? window.__storm.level : 0, wintry = kf(s, [1, 0, 0, 0]);
+      const targetRain = Math.max(kf(s, [0.0, 0.0, 0.0, 0.45]), storm * (1 - wintry));
+      const targetSnow = Math.max(kf(s, [0.55, 0.0, 0.0, 0.0]), storm * wintry);
       const targetLeaf = kf(s, [0.0, 0.0, 0.0, 0.85]);
       if (targetLeaf > 0) loadLeafSprites();
       rainOpacity += (targetRain - rainOpacity) * dt * 0.8;
@@ -558,25 +583,49 @@ function _bootInner() {
         ctx.clearRect(0, 0, rainCanvas.width, rainCanvas.height);
         const sx = rainCanvas.width/VW, sy = rainCanvas.height/VH;
         if (rainOpacity > 0.02) {
-          drops.forEach(d => {
-            d.y += d.speed * dt * 60;
-            if (d.y > VH) { d.y = -d.len; d.x = Math.random()*VW; }
-            ctx.strokeStyle = `rgba(180,210,240,${d.opacity})`;
-            ctx.lineWidth = 2.8; ctx.beginPath();
-            ctx.moveTo(d.x*sx, d.y*sy); ctx.lineTo((d.x+2)*sx, (d.y+d.len)*sy); ctx.stroke();
+          // Rain leans with the wind: a steady lean in a storm plus each gust (#9 random rain).
+          // Batched: drops are bucketed by brightness and each bucket is one path, one stroke.
+          const slant = 0.04 + storm * 0.3 + WIND.gust * 0.35;
+          const buckets = [[], [], [], []];
+          // Drizzle: fine, short, misty drops (a storm at the lowest level thins every streak).
+          const fine = window.__storm && window.__storm.on && window.__storm.max < 0.55 ? 0.5 : 1;
+          const fall = (d, o) => {
+            d.y += d.speed * dt * 60; d.x += d.speed * slant * dt * 60;
+            if (d.y > VH) { d.y = -d.len; d.x = Math.random()*VW*1.2 - VW*0.2; }
+            if (d.x > VW) d.x -= VW;
+            buckets[Math.min(3, Math.floor(o * 4))].push(d);
+          };
+          drops.forEach(d => fall(d, d.opacity));
+          if (storm > 0.02) for (let i = 0, m = SMALL ? 130 : stormDrops.length; i < m; i++) fall(stormDrops[i], stormDrops[i].opacity * storm);
+          ctx.lineWidth = fine < 1 ? 1.8 : 3; ctx.strokeStyle = 'rgb(185,212,240)';
+          buckets.forEach((list, k) => {
+            if (!list.length) return;
+            ctx.globalAlpha = (k + 0.5) / 4;
+            ctx.beginPath();
+            list.forEach(d => { const l = d.len * fine; ctx.moveTo(d.x*sx, d.y*sy); ctx.lineTo((d.x+l*slant)*sx, (d.y+l)*sy); });
+            ctx.stroke();
           });
+          ctx.globalAlpha = 1;
         }
         if (snowOpacity > 0.02) {
-          flakes.forEach(f => {
-            f.y += f.speed * dt * 60;
+          // One snowfall. Gusts blow it sideways (only the gust above the steady breeze counts):
+          // gently in ordinary snow, in hard random bursts in a storm, which also thickens it.
+          const gx = Math.max(0, (WIND.gust - WIND.base) / 0.6);
+          const blow = storm * (storm > 0.85 ? 0.75 : 0.3) + gx * (0.9 + storm * 2.1);   // a blizzard also howls steadily under its gusts
+          const n = Math.round(LIGHT_SNOW + ((SMALL ? 480 : flakes.length) - LIGHT_SNOW) * Math.min(1, storm * Math.min(1, 0.7 + gx * 0.6)));
+          const k = Math.min(sx, sy);
+          for (let i = 0; i < n; i++) {
+            const f = flakes[i];
+            f.y += f.speed * dt * 60; f.x += f.speed * blow * dt * 60;
             f.driftPhase += f.driftSpeed * dt;
-            if (f.y > VH) { f.y = -f.r * 2; f.x = Math.random()*VW; }
-            const dx = Math.sin(f.driftPhase) * f.driftAmp;
-            ctx.fillStyle = `rgba(255,255,255,${f.opacity})`;
-            ctx.beginPath();
-            ctx.arc((f.x+dx)*sx, f.y*sy, f.r*Math.min(sx,sy), 0, Math.PI*2);
-            ctx.fill();
-          });
+            // Back in at the top; upwind only as far as the wind will carry it into view.
+            if (f.y > VH) { const up = Math.min(0.5, blow * 0.25); f.y = -f.r * 2; f.x = Math.random()*VW*(1 + up) - VW*up; }
+            if (f.x > VW + 60) f.x -= VW + 120;
+            const sz = f.r * 3.4 * k, px = (f.x + Math.sin(f.driftPhase) * f.driftAmp) * sx, py = f.y * sy;
+            ctx.globalAlpha = Math.min(1, f.opacity * 1.25) * (i < LIGHT_SNOW ? 1 : storm);
+            ctx.drawImage(flakeSprite, px - sz / 2, py - sz / 2, sz, sz);
+          }
+          ctx.globalAlpha = 1;
         }
         if (leafOpacity > 0.02) {
           const leafScale = Math.min(sx, sy);
@@ -1180,6 +1229,36 @@ function _bootInner() {
     // The box covers the open water between the raised shores and the foreground band (from y2500).
     // The wrap spans the full lake width; waterXRange only limits where drops/ripples spawn, in the
     // shimmer's 1600-unit local space. Small margins keep drops off the banks/rocks at the edges.
+    // Sun and moon glitter path (after the 'Sunrise over still lake' pen): a column of short light
+    // bars on the water under the sun or moon, each flashing wide, drifting a little and shrinking
+    // away in turn, over a soft glow. HTML bars in their own frame, animated with transform and
+    // opacity only (compositor work, no repaint). It sits under the right bank, whose shore hides
+    // its top; render() fades it with the sun or moon and tints it warm by day, cool by night.
+    window.__glitter = (function buildGlitter() {
+      const plate = $('plateMidground');
+      if (!plate) return null;
+      const f = document.createElement('div');
+      f.className = 'glitter'; f.id = 'mgGlitter';
+      f.style.paddingTop = (VH / VW * 100).toFixed(4) + '%';
+      plate.insertBefore(f, $('mgShores') || null);
+      const X = VW * 0.72, TOP = 1880, BOT = 2470, N = 26;
+      const at = (el, x, y, w, h) => Object.assign(el.style, { left: (x / VW * 100).toFixed(3) + '%', top: (y / VH * 100).toFixed(3) + '%',
+        width: (w / VW * 100).toFixed(3) + '%', height: (h / VH * 100).toFixed(3) + '%' });
+      const glow = document.createElement('b');
+      at(glow, X - 260, TOP - 20, 520, BOT - TOP + 80);
+      f.appendChild(glow);
+      for (let i = 0; i < N; i++) {
+        const t = i / (N - 1), bar = document.createElement('i');
+        const w = 130 + 320 * t + (Math.random() - 0.5) * 90, h = 8 + 10 * t;
+        at(bar, X - w / 2 + (Math.random() - 0.5) * 60 * t, TOP + (BOT - TOP) * Math.pow(t, 1.15), w, h);
+        const period = 3.2 + Math.random() * 2.6;
+        bar.style.animationDuration = period.toFixed(2) + 's';
+        bar.style.animationDelay = (-Math.random() * period).toFixed(2) + 's';
+        f.appendChild(bar);
+      }
+      return f;
+    })();
+
     svg = worldSvg(gradeLayer('plateMidground', 'mgFx'));
     if (window.SceneComponents && window.SceneComponents.buildWaterShimmer) {
       const { svg: nested } = placeSvg(svg, 'waterShimmerWrap', 0, 1550, VW, 900, () => {});
@@ -1211,11 +1290,32 @@ function _bootInner() {
         const pw = VW * k, ph = 900 * k, px = F.left - L.left, py = F.top - L.top + 1550 * k;
         const sc = Math.min(pw / vb[2], ph / vb[3]);
         const x0 = px + (pw - vb[2] * sc) / 2, y0 = py + (ph - vb[3] * sc);
-        const cx = x0 - 30 * sc, cy = y0 - 60 * sc, cw = (vb[2] + 60) * sc, ch = (vb[3] + 60) * sc;
+        // The canvas spans the whole lake panel (rings land anywhere on the open water, see
+        // setSpawnArea below), not just the shimmer's 1600-unit strip in the middle.
+        const cx = px, cy = y0 - 60 * sc, cw = pw, ch = (vb[3] + 60) * sc;
         Object.assign(fxCanvas.style, { left: cx + 'px', top: cy + 'px', width: cw + 'px', height: ch + 'px' });
         return { x0: x0 - cx, y0: y0 - cy, s: sc };
       };
       const api = window.__waterAPI;
+      // Where rain and snow rings may land: the whole open lake, in world units. The water starts
+      // below each bank (the banks draw under this layer, so rings must stay off them) and runs
+      // down to the near shore, which draws over it. Lake rocks are left out. Rings further up
+      // the lake are smaller. Converted to the shimmer's local units (its 1600-wide box sits
+      // centred in the world at scale 1).
+      if (api && api.setSpawnArea) {
+        const LX = (VW - 1600) / 2, farEdge = (x) => x < 1740 ? 1860 : x < 2745 ? 1600 : 1840;
+        const ROCKS = [[3440, 1860, 3980, 2240]];
+        api.setSpawnArea(() => {
+          for (let tries = 0; tries < 6; tries++) {
+            const x = 60 + Math.random() * (VW - 120), top = farEdge(x);
+            const y = top + 10 + Math.pow(Math.random(), 0.8) * (2680 - top - 10);
+            if (ROCKS.some(r => x > r[0] && x < r[2] && y > r[1] && y < r[3])) continue;
+            const k = Math.max(0.35, Math.min(1.15, (y - 1560) / 900));
+            return [x - LX, y - 1550, k];
+          }
+          return null;
+        });
+      }
       if (api && api.attachCanvas) {
         api.attachCanvas(fxCanvas, placeFxCanvas());
         let rz = 0;
@@ -1319,6 +1419,18 @@ function _bootInner() {
           scheduleNext();
         }, delay);
       })();
+      // A fat raindrop falling into the lake, then two rings (the 'Drip Drop' pen): storms only.
+      function dripDrop(x, y) {
+        const drop = mk('path', { d: 'M0 -9 Q4 -1 3.2 2.2 A3.4 3.4 0 1 1 -3.2 2.2 Q-4 -1 0 -9 Z', fill: '#e8f4fb', opacity: 0.85 }, fishGroup);
+        const t0 = performance.now(), fallMs = 260, from = y - 90;
+        (function tick(now) {
+          const t = Math.min(1, (now - t0) / fallMs);
+          drop.setAttribute('transform', `translate(${x.toFixed(1)},${(from + (y - from) * t * t).toFixed(1)}) scale(2.2)`);
+          if (t < 1) requestAnimationFrame(tick);
+          else { drop.remove(); ripple(x, y, 0.8); setTimeout(() => ripple(x, y, 0.45), 200); }
+        })(t0);
+      }
+      window.__dripDrop = dripDrop;
       window.__fishJumpGroup = fishGroup;
       window.__spawnFishJump = spawnFishJump;
       window.__lakeRipple = ripple;
@@ -1412,8 +1524,11 @@ function _bootInner() {
         }
       });
       if (opts.flipped) mirrorNested(nested);
+      nested.setAttribute('data-env', 'rock');   // its grass grows from a crevice (liftSways)
+      ROCKS.push({ x, y: yTop, w, h, in: opts.in || 'water' });   // what the rock stands in, for plant bases
       return nested;
     }
+    const ROCKS = [];
     const boulderInstances = [
       // Two rock outcrops framing open water, not one wall of rocks. y values match the measured
       // top edge of the real terrain / foreground band. Shore-side left cluster:
@@ -1436,23 +1551,32 @@ function _bootInner() {
         }
       });
       if (opts.flipped) mirrorNested(nested);
+      nested.setAttribute('data-env', opts.env || 'ground');   // where it stands: its base is masked to match (liftSways)
+      // opts.dur [min, max] s: a slower sway for stiff plants on land. The default 1.3-2 s rock
+      // suits the reeds out in the water but makes a succulent look like it's bobbing.
+      const sway = opts.dur && nested.querySelector('.plant-sway');
+      if (sway) sway.style.setProperty('--dur', (opts.dur[0] + Math.random() * (opts.dur[1] - opts.dur[0])).toFixed(2) + 's');
       return nested;
     }
     // Placement rules: the fern and agave (aloe) are not rock plants, so they stay on grass (the
     // left shore or the hero tree's foreground); only the reeds and spiky yucca sit by the rocks.
     // plant2 sits right of the hero-copy text column; further left it hides behind the text panel.
     const plantInstances = [
-      // On leftShore's own grass, above the boulder/water tier.
-      placePlant('plant2', 1350, 1550, 320, 320, 'assets/fg-plant-agave.svg'),
+      // On the left bank's grass in front of the pines (base at world y 1840, well above the
+      // waterline). It used to sit at the bank's thin tip (x 1350-1670, base 1870), right on the
+      // water, where it read as floating in the lake.
+      placePlant('plant2', 770, 1580, 260, 260, 'assets/fg-plant-agave.svg', { dur: [3.2, 4.2] }),
       // Foreground, tucked beside the hero tree's flower cluster.
       placePlant('plant1', 3300, 3050, 220, 220, 'assets/fg-plant-fern.svg'),
       placePlant('plant6', 4250, 3040, 140, 140, 'assets/fg-plant-agave.svg', { flipped: true }),
       // Left cluster, near lagoonBankLeft / boulder1-2 (shore-side, shallow).
-      placePlant('plant4', 350,  2030, 110, 116, 'assets/fg-plant-yellow-flower-stem.svg'),
+      placePlant('plant4', 350,  2030, 110, 116, 'assets/fg-plant-yellow-flower-stem.svg', { env: 'rock' }),
       // Second left cluster, around boulder6/7 out in the open water: a clump of reeds at the
       // rock's foot (it replaced the rounded bush, which didn't read as a lake plant).
-      placePlant('plant3', 690,  2250, 360, 336, 'assets/fg-plant-reeds.svg'),
-      placePlant('plant5', 1150, 2420, 130, 130, 'assets/fg-plant-spiky-yucca.svg', { flipped: true }),
+      placePlant('plant3', 690,  2250, 360, 336, 'assets/fg-plant-reeds.svg', { env: 'water' }),
+      // In the open water just right of boulder7, clear of the rock's own grass clump (it used to
+      // sit on that clump, the two tangled together).
+      placePlant('plant5', 1400, 2440, 130, 130, 'assets/fg-plant-spiky-yucca.svg', { flipped: true, env: 'water' }),
     ];
     window.__plantInstances = plantInstances;
 
@@ -1557,6 +1681,33 @@ function _bootInner() {
     // which the GPU does for free. Content drawn after the group (the painterly glow, later
     // flowers) moves to a third layer above it, so stacking order is unchanged.
     // Runs after the painterly pass (queued earlier), so the glow's clip copies still match.
+    // Plant bases (liftSways): the mask tile for each surrounding, in a 40-wide, 100-high tile
+    // (100 = the plant layer's height), opaque above the edge. n tiles span the layer.
+    // Plant bases (liftSways): the mask tile for each surrounding, a 40-wide, 100-high tile
+    // (100 = the plant layer's height), opaque above the edge; n tiles span the layer. Water is
+    // measured in world units so every clump gets the same size of wave, whatever its box.
+    function plantEdge(env, lwW, lwH) {
+      if (env === 'water') {
+        // U-shaped scallops, cusps up, like the waves over the pen's boat hull: 40 units a wave.
+        const A = 9.5 / lwH * 100;
+        return { n: Math.max(3, Math.round(lwW / 40)), depth: 11.5 / lwH * 100, amp: A,
+          shape: (L) => `M0 0H40V${L - A}Q40 ${L + A} 20 ${L + A}Q0 ${L + A} 0 ${L - A}Z` };
+      }
+      if (env === 'ground') return { n: 14, depth: 1.5,
+        // Blades of the ground's grass rise in front of the base; in winter a soft drift of snow.
+        shape: (L) => `M0 0H40V${L}L37 ${L - 3.6}L35 ${L}L30 ${L - 2.2}L27 ${L}L22 ${L - 4}L19 ${L}L13 ${L - 2.8}L10 ${L}L5 ${L - 3.4}L2 ${L}L0 ${L}Z`,
+        winter: (L) => `M0 0H40V${L}Q30 ${L - 2.6} 20 ${L - 1.6}Q10 ${L - 0.6} 0 ${L}Z` };
+      // rock: an uneven crevice line.
+      return { n: 6, depth: 1.5,
+        shape: (L) => `M0 0H40V${L}Q34 ${L - 2} 26 ${L - 1}Q18 ${L} 12 ${L - 1.6}Q5 ${L - 2.4} 0 ${L}Z` };
+    }
+    // Content-aware: a clump whose base sits down at the foot of a rock standing in the lake is in
+    // the water, whatever it was placed as; higher up the rock it grows from a crevice.
+    function surroundings(env, bx, by) {
+      const r = ROCKS.find(r => bx >= r.x && bx <= r.x + r.w && by >= r.y && by <= r.y + r.h + 25);
+      if (!r) return env;
+      return by > r.y + r.h * 0.78 ? (r.in === 'water' ? 'water' : 'ground') : 'rock';
+    }
     queueMicrotask(function liftSways() {
       const items = Array.from(fgFrame.querySelectorAll('.grass-clump-sway, .flower-nod'));
       if (!items.length) return;
@@ -1571,10 +1722,14 @@ function _bootInner() {
           if (/scale\(\s*-1/.test(a.getAttribute && a.getAttribute('transform') || '')) flipped = !flipped;
         }
         return { e, k: kinds[i], flipped, ok: r.width > 0 && d.width > 0 && d.height > 0,
+          w0: r.width, dw: d.width, env: kinds[i] !== 'flower-nod' && (e.closest('[data-env]') || {}).dataset?.env,
+          ...(() => { const ls = e.closest('.fg-layer').style, lx = parseFloat(ls.left) / 100 * VW, ly = parseFloat(ls.top) / 100 * VH;
+            const lwW = parseFloat(ls.width) / 100 * VW, lwH = parseFloat(ls.height) / 100 * VH;
+            return { lwW, lwH, bx: lx + (r.left + r.width / 2 - d.left) / d.width * lwW, by: ly + (r.bottom - d.top) / d.height * lwH }; })(),
           ox: (r.left + r.width / 2 - d.left) / d.width * 100, oy: (r.bottom - d.top) / d.height * 100 };
       });
       const shallow = n => { const c = n.cloneNode(false); if (c.removeAttribute) c.removeAttribute('id'); return c; };
-      jobs.forEach(({ e: swayEl, k, flipped, ok, ox, oy }) => {
+      jobs.forEach(({ e: swayEl, k, flipped, ok, ox, oy, w0, dw, env: env0, lwW, lwH, bx, by }) => {
         if (!ok) { swayEl.classList.add(k); return; }   // not laid out (hidden): keep the SVG sway
         // A flower moves as its whole <g class="flower"> (its setColor/opacity hooks live there).
         const e = k === 'flower-nod' ? (swayEl.closest('.flower') || swayEl) : swayEl;
@@ -1603,7 +1758,59 @@ function _bootInner() {
         d2.style.transformOrigin = `${ox.toFixed(3)}% ${oy.toFixed(3)}%`;
         ['--dur', '--delay'].forEach(v => { const x = swayEl.style.getPropertyValue(v); if (x) d2.style.setProperty(v, x); });
         layer.after(d2);
-        if (moved) d2.after(d3);
+        let last = d2;
+        const env = env0 && surroundings(env0, bx, by);
+        if (env) {
+          // Plant it in its surroundings. A still wrapper masks the clump below an edge shaped for
+          // where it stands; whatever is behind (water, grass, snow, rock) shows through the cut,
+          // so the edge always matches in colour through seasons and night.
+          //   water: U-shaped scallops that slide sideways, with their outline drawn along them
+          //          (after the 'Outline Pure CSS' pen's boat), and rings spreading behind the stems.
+          //   ground: blades of grass in front of the base; in winter a soft drift of snow.
+          //   rock: an uneven crevice line.
+          const E = plantEdge(env, lwW, lwH);
+          const L = oy - E.depth;                       // the edge line, % of the layer's height
+          const tileUrl = (shape) => `url("data:image/svg+xml,${encodeURIComponent(
+            `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 100' preserveAspectRatio='none'><path d='${shape(L)}'/></svg>`)}")`;
+          const wrap = mkLayer();
+          wrap.classList.add('plant-edge', 'edge-' + env);
+          wrap.style.setProperty('--edge', tileUrl(E.shape));
+          if (E.winter) wrap.style.setProperty('--edge-winter', tileUrl(E.winter));
+          wrap.style.setProperty('--edge-size', `${(100 / E.n).toFixed(4)}% 100%`);
+          wrap.style.setProperty('--edge-to', `${(-100 / (E.n - 1)).toFixed(4)}%`);   // one tile to the left
+          d2.before(wrap);
+          wrap.appendChild(d2);
+          Object.assign(d2.style, { left: '0', top: '0', width: '100%', height: '100%' });
+          last = wrap;
+          if (env === 'water') {
+            const N = E.n, A = E.amp;
+            const lw = w0 * 1.3 / dw * 100;             // the outline runs a little past the clump
+            const lx = parseFloat(wrap.style.left), lwd = parseFloat(wrap.style.width);
+            const ly = parseFloat(wrap.style.top), lh = parseFloat(wrap.style.height);
+            const band = 2 * A + 1;
+            const line = mkLayer();
+            line.classList.add('waterline-line');
+            Object.assign(line.style, { left: `${lx + (ox - lw / 2) * lwd / 100}%`, width: `${lw * lwd / 100}%`,
+              top: `${ly + (L - A - 0.5) * lh / 100}%`, height: `${band * lh / 100}%` });
+            // The strip is laid out in the wrapper's own tile units so it keeps step with the mask.
+            let d = `M0 ${L - A}`;
+            for (let i = 0, x = 0; i <= N; i++, x += 40) d += `Q${x} ${L + A} ${x + 20} ${L + A}Q${x + 40} ${L + A} ${x + 40} ${L - A}`;
+            line.innerHTML = `<div class="wl-strip" style="--edge-to:${(-100 / (N + 1)).toFixed(4)}%;width:${(N + 1) / N * 100 / lw * 100}%;left:${-(ox - lw / 2) / lw * 100}%">`
+              + `<svg viewBox="0 ${L - A - 0.5} ${(N + 1) * 40} ${band}" preserveAspectRatio="none"><path d="${d}"/></svg></div>`;
+            wrap.after(line);
+            last = line;
+            // Rings go BEHIND the clump: the stems hide their far half, the near half lies on the water.
+            const rings = mkLayer();
+            rings.classList.add('water-rings');
+            rings.innerHTML = '<i></i><i></i><i></i>';
+            rings.style.setProperty('--rx', ox.toFixed(3) + '%');
+            rings.style.setProperty('--ry', L.toFixed(3) + '%');
+            rings.style.setProperty('--rw', (w0 * 0.6 / dw * 100).toFixed(3) + '%');
+            rings.style.clipPath = `inset(${L.toFixed(3)}% -50% -50% -50%)`;   // near half only: never drawn over a rock
+            wrap.before(rings);
+          }
+        }
+        if (moved) last.after(d3);
       });
     });
   })();
@@ -1736,6 +1943,16 @@ function _bootInner() {
     } else {
       moonBody.setAttribute('opacity', '0');
     }
+    if (window.__glitter) {
+      const mo = parseFloat(moonBody.getAttribute('opacity')) || 0;
+      const g = Math.max(sunOp * 0.85, mo);
+      const key = g.toFixed(2) + (mo > sunOp ? 'm' : 's');
+      if (window.__glitter.__k !== key) {
+        window.__glitter.__k = key;
+        window.__glitter.style.opacity = g.toFixed(2);
+        window.__glitter.style.setProperty('--glint', mo > sunOp ? '226, 236, 255' : '255, 243, 204');
+      }
+    }
 
     // ── aurora + stars: night mode only (aurora bands winter/fall only) ────
     // Stars and aurora use separate gates. auroraSvg (and starField inside it) follows the night
@@ -1765,6 +1982,7 @@ function _bootInner() {
 
   // Main rAF loop
   function mainLoop(now) {
+    if (window.__away) { requestAnimationFrame(mainLoop); return; }   // at the getaway: the lake rests
     render(now);
     if (window.__updateClouds) window.__updateClouds(now);
     requestAnimationFrame(mainLoop);
@@ -2038,7 +2256,9 @@ function _bootInner() {
   })();
 
   // ── 9. SEASON TABS + TRAVEL() ─────────────────────────────────────────────
-  const SEASON_VIEW = { 1:'studio', 2:'signal', 3:'workshop', 0:'lab' };
+  // The tabs run through the year from summer: Books summer, Web fall, Workshop winter, Play spring (its view is still called 'lab' inside).
+  const SEASON_VIEW = { 2:'studio', 3:'signal', 0:'workshop', 1:'lab' };
+  const BOOT_SEASON = 2; // the page opens on summer (Books)
   // tod target per season (currently all 0.50, midday).
   const SEASON_TOD  = { 0:0.50, 1:0.50, 2:0.50, 3:0.50 };
   // kf(s, [winter, spring, summer, fall]): 0=winter 1=spring 2=summer 3=fall
@@ -2159,6 +2379,7 @@ function _bootInner() {
     const prevSeason = SEASON;
     SEASON = season;
     window.__currentSeason = season;
+    document.documentElement.dataset.season = seasonNames[season] || 'spring';   // CSS: winter plant bases
 
     document.querySelectorAll('.tab').forEach(t =>
       t.setAttribute('aria-selected', String(+t.dataset.season === season)));
@@ -2207,6 +2428,9 @@ function _bootInner() {
   let _nightRaf = null;
   function toggleNightMode() {
     NIGHT_MODE = !NIGHT_MODE;
+    // The page around the scene follows night mode only (dark header and notes, css html.night-page).
+    // Season changes dim the sky too but never touch this, so the page stays light while tabs change.
+    document.documentElement.classList.toggle('night-page', NIGHT_MODE);
     const modeBtn = $('modeBtn');
     if (modeBtn) {
       modeBtn.setAttribute('aria-pressed', String(NIGHT_MODE));
@@ -2235,7 +2459,7 @@ function _bootInner() {
 
   // "Play the whole year": loops all four seasons, one travel() crossfade at a time, with a
   // dwell on each. Works in night mode unchanged, since setSeason()/travel() read NIGHT_MODE.
-  const YEAR_ORDER = [0, 1, 2, 3]; // winter -> spring -> summer -> fall -> winter…
+  const YEAR_ORDER = [2, 3, 0, 1]; // summer -> fall -> winter -> spring -> summer…, the tab order
   const YEAR_DWELL_MS = 3500; // pause on each season after its crossfade settles
   const TRAVEL_DURATION_MS = 7000; // must match travel()'s own DURATION above
   let _playingYear = false;
@@ -2279,7 +2503,8 @@ function _bootInner() {
     t.addEventListener('click', stopPlayYear);
   });
 
-  // Boot on spring
+  // The scene is built on spring; the link jump below moves it to BOOT_SEASON (summer) before
+  // the first frame unless the address asks for another season.
   s = 1;
   showViews(1);
   // Flowers are built with summer colours; give them spring's on first load too.
@@ -2308,7 +2533,11 @@ function _bootInner() {
       KINDS.forEach(([sel, amp, rate]) => document.querySelectorAll(sel).forEach((e) => {
         if (!(e instanceof HTMLElement)) return;
         const r = e.getBoundingClientRect();
-        els.push({ e, amp: amp * (0.8 + Math.random() * 0.4), rate, ph: Math.random() * 6, lag: Math.max(0, r.left) / Math.max(1, innerWidth) * 0.6, anims: null, last: '' });
+        // Grass and plants lean by a shear on their <svg>, pinned at the same base pivot, so the
+        // base line stays level in a gust too (a rotate would tilt it).
+        const lean = sel.startsWith('.sway-grass') && e.firstElementChild;
+        if (lean) lean.style.transformOrigin = e.style.transformOrigin;
+        els.push({ e, lean, amp: amp * (0.8 + Math.random() * 0.4), rate, ph: Math.random() * 6, lag: Math.max(0, r.left) / Math.max(1, innerWidth) * 0.6, anims: null, last: '' });
       }));
     }
     function write(g, t) {
@@ -2317,7 +2546,11 @@ function _bootInner() {
         const flutter = gl * 0.35 * Math.sin(t * (2.2 + o.rate) + o.ph);
         const deg = gl * o.amp + flutter * o.amp * 0.4;
         const v = Math.abs(deg) < 0.02 ? '' : deg.toFixed(2) + 'deg';
-        if (v !== o.last) { o.e.style.rotate = v; o.last = v; }
+        if (v !== o.last) {
+          if (o.lean) o.lean.style.transform = v && `skewX(${(-deg).toFixed(2)}deg)`;
+          else o.e.style.rotate = v;
+          o.last = v;
+        }
         if (!o.anims) o.anims = o.e.getAnimations ? o.e.getAnimations() : [];
         const pr = 1 + gl * 1.3 * o.rate;
         o.anims.forEach((a) => { if (Math.abs(a.playbackRate - pr) > 0.03) a.playbackRate = pr; });
@@ -2329,12 +2562,23 @@ function _bootInner() {
       const dt = Math.min(0.1, (now - last) / 1000); last = now;
       const t = now / 1000;
       if (now >= nextAt && target === 0) {                          // a new gust
-        target = (0.55 + Math.random() * 0.45) * (SEASON_GUST[SEASON] || 0.8);
-        holdTo = now + 1500 + 1000 + Math.random() * 2500;
+        const stormy = window.__storm ? window.__storm.level : 0;
+        if (SEASON === 0 && stormy > 0.45) {
+          // Blizzard gusts: random spurts. Mostly moderate, sometimes a big one; short or long.
+          target = (0.35 + Math.pow(Math.random(), 1.8) * 1.1) * (SEASON_GUST[SEASON] || 0.8) * (1 + stormy);
+          holdTo = now + 500 + Math.random() * (Math.random() < 0.3 ? 3500 : 1400);
+        } else {
+          target = (0.55 + Math.random() * 0.45) * (SEASON_GUST[SEASON] || 0.8) * (1 + stormy * 0.9);
+          holdTo = now + 1500 + 1000 + Math.random() * 2500;
+        }
         WIND.target = WIND.base + target * 0.6;
       }
-      if (target > 0 && now > holdTo) { target = 0; WIND.target = WIND.base; nextAt = now + 6000 + Math.random() * 8000; }
-      const rateUp = target > gust ? 0.9 : 0.55;                   // builds a bit faster than it dies
+      if (target > 0 && now > holdTo) { target = 0; WIND.target = WIND.base; nextAt = now + (window.__storm && window.__storm.on
+          ? (SEASON === 0 ? (Math.random() < 0.55 ? 600 + Math.random() * 2400 : 5000 + Math.random() * 8000)   // bursts, then lulls
+            : (6000 + Math.random() * 8000) * 0.35)
+          : 6000 + Math.random() * 8000); }
+      const blizzard = SEASON === 0 && window.__storm && window.__storm.on && window.__storm.max > 0.55;
+      const rateUp = target > gust ? (blizzard ? 2.2 : 0.9) : (blizzard ? 0.45 : 0.55);   // builds faster than it dies; a blizzard gust hits hard
       gust += (target - gust) * Math.min(1, dt * rateUp * 1.6);
       if (gust < 0.004 && target === 0) { if (gust) { gust = 0; write(0, t); } return; }
       write(gust, t);
@@ -2355,29 +2599,250 @@ function _bootInner() {
     else setTimeout(waitLoaded, 250);
   })();
 
+  // ── STORM: heavy rain and strong wind ────────────────────────────────────
+  // After the rain pens (#4, #9, #12, #17): heavier rain that leans with the wind (the rain loop
+  // above reads window.__storm.level), fat drops splashing into the lake, beads of water sliding
+  // on the headline and button (snow building on them in winter), a darker sky, the odd lightning flash, and stronger, more frequent
+  // gusts. Starts from ?storm, the test panel (window.__storm.set(true)), or now and then on its
+  // own in spring to fall. All CSS/DOM on transform and opacity except the rain canvas it reuses.
+  window.__storm = (function () {
+    const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const fx = $('plateFx');
+    const st = { on: false, level: 0, max: 1, set, toggle: () => set(!st.on) };
+    if (!fx) return st;
+    const shade = document.createElement('div'); shade.className = 'storm-shade';
+    const flash = document.createElement('div'); flash.className = 'storm-flash';
+    fx.append(shade, flash);
+
+    // Weather on the page copy: while a storm blows, rain beads sit on the headline's letters
+    // and drip off their bottom edges, and on the button; in winter snow builds up along the
+    // letters' top edges and on top of the button, then melts away. The letter shapes are read
+    // once from a canvas (each character drawn where the page draws it), so the drops and snow
+    // land on the real ink. Rebuilt when the tab, season or width changes.
+    const copyWx = { el: null, key: '' };
+    function inkEdges(h1, box) {
+      const r = h1.getBoundingClientRect(), W = Math.ceil(r.width), H = Math.ceil(r.height);
+      if (!W || !H) return null;
+      const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+      const ctx = cv.getContext('2d'), cs = getComputedStyle(h1);
+      ctx.font = `${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+      ctx.fillStyle = '#000'; ctx.textBaseline = 'alphabetic';
+      const asc = ctx.measureText('Hg').fontBoundingBoxAscent || parseFloat(cs.fontSize) * 0.9;
+      const walker = document.createTreeWalker(h1, NodeFilter.SHOW_TEXT);
+      const rg = document.createRange();
+      for (let n = walker.nextNode(); n; n = walker.nextNode()) {
+        for (let i = 0; i < n.data.length; i++) {
+          if (/\s/.test(n.data[i])) continue;
+          rg.setStart(n, i); rg.setEnd(n, i + 1);
+          const c = rg.getBoundingClientRect();
+          ctx.fillText(n.data[i], c.left - r.left, c.top - r.top + asc);
+        }
+      }
+      const a = ctx.getImageData(0, 0, W, H).data, ink = (x, y) => y >= 0 && y < H && a[(y * W + x) * 4 + 3] > 120;
+      const top = [], bottom = [], face = [], clearUp = Math.round(parseFloat(cs.fontSize) * 0.45);
+      const ox = r.left - box.left, oy = r.top - box.top;
+      for (let x = 1; x < W - 1; x += 2) for (let y = 1; y < H - 1; y++) {
+        if (!ink(x, y)) continue;
+        if (!ink(x, y - 1)) {                       // a top edge with open air above it (not inside a loop)
+          let clear = true; for (let k = 2; k <= clearUp && clear; k++) if (ink(x, y - k)) clear = false;
+          if (clear) top.push([ox + x, oy + y]);
+        }
+        if (!ink(x, y + 1) && !ink(x, y + 4)) bottom.push([ox + x, oy + y]);
+        else if (y % 5 === 0 && x % 6 === 1) face.push([ox + x, oy + y]);
+      }
+      return { top, bottom, face };
+    }
+    const pick = (arr, n) => { const o = []; for (let i = 0; i < n && arr.length; i++) o.push(arr[Math.floor(Math.random() * arr.length)]); return o; };
+    function dot(wx, cls, x, y, w, h, per, extra) {
+      const d = document.createElement('i'); d.className = cls;
+      Object.assign(d.style, { left: (x - w / 2).toFixed(1) + 'px', top: (y - h).toFixed(1) + 'px', width: w.toFixed(1) + 'px', height: h.toFixed(1) + 'px',
+        animationDuration: per.toFixed(1) + 's', animationDelay: (-Math.random() * per).toFixed(1) + 's' }, extra || {});
+      wx.appendChild(d);
+    }
+    // Running drops: each one crawls slowly down a line of the headline, runs quickly across the
+    // gap to the next line, crawls again, and so on down (over the button too, if it's above it),
+    // then falls away fast and fades. The path comes from the headline's real line boxes; the
+    // motion is a Web Animation on transform/opacity, so the compositor runs it.
+    function lineBands(h1, box) {
+      const rg = document.createRange(); rg.selectNodeContents(h1);
+      const lines = [];
+      [...rg.getClientRects()].forEach(r => {
+        if (r.width < 4) return;
+        const l = lines.find(b => Math.abs(b.t - (r.top - box.top)) < r.height * 0.5);
+        if (l) { l.l = Math.min(l.l, r.left - box.left); l.r = Math.max(l.r, r.right - box.left); }
+        else lines.push({ t: r.top - box.top, b: r.bottom - box.top, l: r.left - box.left, r: r.right - box.left });
+      });
+      // the ink sits inside the line box: trim to roughly cap height and baseline
+      return lines.sort((a, b) => a.t - b.t).map(b => { const h = b.b - b.t; return { t: b.t + h * 0.2, b: b.t + h * 0.86, l: b.l, r: b.r }; });
+    }
+    function runDrops(wx, view, box, h1, btn, light) {
+      const bands = h1 ? lineBands(h1, box) : [];
+      if (btn) { const b = btn.getBoundingClientRect(); bands.push({ t: b.top - box.top + 4, b: b.bottom - box.top - 2, l: b.left - box.left + 8, r: b.right - box.left - 8, btn: true }); }
+      if (!bands.length) return;
+      const SLOW = [14, 26], FAST = 320, FALL = 520;
+      for (let n = 0, N = light ? 4 : window.__smallScreen ? 7 : 12; n < N; n++) {
+        const i0 = Math.floor(Math.pow(Math.random(), 1.6) * bands.length);   // most start near the top
+        const s0 = bands[i0], x = s0.l + 6 + Math.random() * Math.max(1, s0.r - s0.l - 12);
+        const path = bands.slice(i0).filter(b => x >= b.l && x <= b.r);
+        const w = 5 + Math.random() * 4, h = w * 1.15, slow = SLOW[0] + Math.random() * (SLOW[1] - SLOW[0]);
+        const kf = [], at = (y, tMs, o, sx, sy, easing) => kf.push({ t: tMs, y, o, sx, sy, easing });
+        let t = 0, y = path[0].t + Math.random() * (path[0].b - path[0].t) * 0.35;
+        at(y, t, 0, 0.3, 0.3); t += 500; at(y, t, 0.95, 1, 1);
+        path.forEach((b, k) => {
+          t += (b.b - y) / slow * 1000; y = b.b; at(y, t, 0.95, 0.95, 1.1);              // crawl down the line
+          const next = path[k + 1];
+          if (next && next.t > y) { t += (next.t - y) / FAST * 1000; y = next.t; at(y, t, 0.9, 0.85, 1.35); t += 120; at(y, t, 0.95, 1, 1); }
+        });
+        const fall = 90 + Math.random() * 90;                                            // then away
+        at(y, t, 0.95, 0.9, 1.3, 'cubic-bezier(.55,0,1,.45)'); t += fall / FALL * 1000; y += fall; at(y, t, 0, 0.6, 2);
+        const rest = light ? 8000 + Math.random() * 16000 : 800 + Math.random() * 3500; t += rest; at(y, t, 0, 0.6, 2);          // a pause before it runs again
+        const d = document.createElement('i'); d.className = 'wx-run';
+        Object.assign(d.style, { width: w.toFixed(1) + 'px', height: h.toFixed(1) + 'px' });
+        wx.appendChild(d);
+        d.animate(kf.map(k => ({ offset: k.t / t, opacity: k.o, easing: k.easing || 'linear',
+          transform: `translate(${(x - w / 2).toFixed(1)}px, ${(k.y - h).toFixed(1)}px) scale(${k.sx}, ${k.sy})` })),
+          { duration: t, iterations: Infinity, delay: -Math.random() * t });
+      }
+    }
+    // One flake: falls with a gentle sway from above its landing spot, settles onto the edge,
+    // sits a while, then melts away; pauses, and falls again. A Web Animation on transform and
+    // opacity, looping on its own random timing.
+    function stickFlake(wx, x, y, light) {
+      const w = 5 + Math.random() * 5, drop = 70 + Math.random() * 150, drift = (Math.random() - 0.5) * 50;
+      const fallMs = drop / (22 + Math.random() * 18) * 1000, sitMs = (window.__storm && window.__storm.on && window.__storm.max < 0.55) ? 200 + Math.random() * 500 : 2500 + Math.random() * 4000;
+      const flurry = window.__storm && window.__storm.on && window.__storm.max < 0.55;   // flurries melt as they land
+      const meltMs = flurry ? 900 + Math.random() * 1200 : 5000 + Math.random() * 5000, restMs = light ? 12000 + Math.random() * 26000 : 1000 + Math.random() * 6000;   // light snow: long gaps
+      const T = fallMs + sitMs + meltMs + restMs, kf = [];
+      const pos = (px, py, sx, sy) => `translate(${(px - w / 2).toFixed(1)}px, ${(py - w * 0.8).toFixed(1)}px) scale(${sx}, ${sy})`;
+      for (let i = 0; i <= 6; i++) {                          // the fall, swaying side to side
+        const u = i / 6, px = x - drift * (1 - u) + Math.sin(u * Math.PI * 3) * 6 * (1 - u);
+        kf.push({ offset: u * fallMs / T, opacity: i === 0 ? 0 : 0.95, transform: pos(px, y - drop * (1 - u), 1, 1) });
+      }
+      kf.push({ offset: (fallMs + 250) / T, opacity: 0.95, transform: pos(x, y + 0.5, 1.2, 0.8) });   // settles
+      kf.push({ offset: (fallMs + sitMs) / T, opacity: 0.95, transform: pos(x, y + 0.5, 1.2, 0.8) });
+      kf.push({ offset: (fallMs + sitMs + meltMs) / T, opacity: 0, transform: pos(x, y + 1, 1.05, 0.55) });   // melts
+      kf.push({ offset: 1, opacity: 0, transform: pos(x, y + 1, 1.05, 0.55) });
+      const f = document.createElement('i'); f.className = 'wx-flake';
+      Object.assign(f.style, { width: w.toFixed(1) + 'px', height: w.toFixed(1) + 'px' });
+      wx.appendChild(f);
+      f.animate(kf, { duration: T, iterations: Infinity, delay: -Math.random() * T, easing: 'linear' });
+    }
+    function buildCopyWx(view, snow, light) {
+      if (copyWx.el) copyWx.el.remove();
+      const wx = document.createElement('div'); wx.className = 'copy-wx'; wx.setAttribute('aria-hidden', 'true');
+      view.appendChild(wx);
+      const box = view.getBoundingClientRect(), h1 = view.querySelector('h1'), btn = view.querySelector('.btn');
+      const e = h1 && inkEdges(h1, box);
+      if (snow) {
+        // Flakes drift down through the copy and stick where they land: on a letter's top edge
+        // or the top of the button, then melt away slowly.
+        // Ordinary snow days (light): just a few, with long gaps, so it collects slowly.
+        const spots = e ? pick(e.top, light ? (window.__smallScreen ? 6 : 12) : (window.__smallScreen ? 22 : 40)) : [];
+        if (btn) { const b = btn.getBoundingClientRect();
+          for (let i = 0, m = light ? 3 : (window.__smallScreen ? 6 : 10); i < m; i++) spots.push([b.left - box.left + 10 + Math.random() * (b.width - 20), b.top - box.top + 1]); }
+        spots.forEach(([x, y]) => stickFlake(wx, x, y, light));
+      } else if (e) {
+        pick(e.face, light ? 5 : window.__smallScreen ? 10 : 18).forEach(([x, y]) => { const w = 5 + Math.random() * 5; dot(wx, 'wx-bead', x, y + w / 2, w, w, 6 + Math.random() * 6); });
+      }
+      if (!snow) runDrops(wx, view, box, h1, btn, light);
+      if (btn) {
+        const b = btn.getBoundingClientRect(), bx = b.left - box.left, by = b.top - box.top;
+        if (!snow) {
+          for (let i = 0, m = light ? 2 : 6; i < m; i++) { const w = 5 + Math.random() * 4; dot(wx, 'wx-bead', bx + 8 + Math.random() * (b.width - 16), by + 6 + Math.random() * (b.height - 12), w, w, 6 + Math.random() * 6); }
+
+        }
+      }
+      copyWx.el = wx;
+    }
+    function copyWeather(level, light) {
+      if (reduced) return;
+      const view = document.querySelector('#heroCopy .view.on');
+      if (level < 0.05 || !view) { if (copyWx.el) { copyWx.el.remove(); copyWx.el = null; copyWx.key = ''; } return; }
+      const snow = SEASON === 0, key = view.dataset.view + (snow ? 's' : 'r') + (light ? 'l' : '') + Math.round(view.getBoundingClientRect().width);
+      if (key !== copyWx.key) { copyWx.key = key; buildCopyWx(view, snow, light); }
+      copyWx.el.style.opacity = Math.min(1, level * 1.3).toFixed(2);
+    }
+    let raf = 0, last = 0, splashT = 0, boltT = 0;
+    function tick(now) {
+      const dt = Math.min(0.1, (now - (last || now)) / 1000); last = now;
+      st.level += ((st.on ? st.max : 0) - st.level) * Math.min(1, dt * 0.45);
+      const op = st.level.toFixed(3);
+      const winter = SEASON === 0;
+      if (shade.__o !== op) { shade.__o = op; shade.style.opacity = op; }
+      if (now - (copyWx.t || 0) > 250) { copyWx.t = now; copyWeather(Math.max(st.level, 0.3), st.max < 0.55); }
+      if (st.level > 0.3 && !winter && now > splashT) {          // fat drops into the lake, more the harder it rains
+        splashT = now + (350 + Math.random() * 650) / st.level;
+        if (window.__dripDrop) window.__dripDrop(700 + Math.random() * 3200, 1900 + Math.random() * 520);
+      }
+      if (st.level > 0.85 && !reduced && now > boltT) {            // lightning: only at the top level
+        boltT = now + (winter ? 40000 + Math.random() * 40000 : 7000 + Math.random() * 12000);   // thundersnow is rare
+        flash.classList.remove('on'); void flash.offsetWidth; flash.classList.add('on');
+      }
+      if (st.on || st.level > 0.004) raf = requestAnimationFrame(tick);
+      else { st.level = 0; shade.style.opacity = '0'; copyWeather(0); raf = 0; last = 0; }
+    }
+    // set(on, level): level 0..1, the weather's strength (see STORM_LEVELS: drizzle/flurries 0.4,
+    // rain/snowfall 0.7, downpour/blizzard 1). Everything scales with it.
+    function set(on, level) {
+      st.on = !!on;
+      if (on) st.max = level == null ? 1 : Math.max(0.2, Math.min(1, level));
+      boltT = performance.now() + (SEASON === 0 ? 30000 : 4000);
+      if (st.on && window.__windShow) window.__windShow.gustNow();
+      if (!raf) raf = requestAnimationFrame(tick);
+    }
+    // Ordinary winter snow (no storm): a few flakes collect on the copy too, slowly. The storm
+    // loop takes over while a storm blows; this only runs between storms.
+    // Fall's everyday rain does the same with a few beads and slow running drops.
+    setInterval(() => {
+      if (st.on || raf || document.hidden) return;
+      const sn = window.__snowOpacity || 0, rn = window.__rainOpacity || 0;
+      copyWeather(SEASON === 0 ? (sn > 0.25 ? sn : 0) : (rn > 0.2 ? Math.min(1, rn * 1.6) : 0), true);
+    }, 1000);
+    // Now and then a storm blows through by itself (spring to fall): after the first two minutes,
+    // a 1 in 5 chance every three minutes, lasting 35-55 s.
+    (function natural() {
+      setTimeout(() => {
+        if (!st.on && SEASON !== 0 && !document.hidden && Math.random() < 0.2) {
+          set(true, [0.4, 0.7, 0.7, 1][Math.floor(Math.random() * 4)]);   // drizzle, rain, or now and then a downpour setTimeout(() => set(false), 35000 + Math.random() * 20000);
+        }
+        natural();
+      }, 180000);
+    })();
+    return st;
+  })();
+
   // ── SHAREABLE LINKS ──────────────────────────────────────────────────────
   // The address can set the scene: ?summer+night, ?winter, ?fall+day, ?night. Words combine with
   // + (or & , or spaces) in any order. Seasons: spring summer fall/autumn winter, or the tab
-  // names books web workshop lab. Also: day, night, play (plays the whole year). Animal names
+  // names books web workshop lab (summer, fall, winter, spring; the Play tab is lab, since play already means the whole year). With no season the page opens on BOOT_SEASON. Also: day, night (or nightmode, darkmode, dark: the page around the scene goes dark too), play (plays the whole year). Animal names
   // (?fox, ?summer+night+owl) bring that animal in once the wildlife loads (wildlife.js).
   // The page opens straight on that look (no crossfade), and the address bar follows every
   // season/night change after that, so the current view can always be copied and shared.
   // Other flags (?bench ?fps ?wildlife ?diag) are left as they are.
-  const LINK_SEASON = { spring: 1, summer: 2, fall: 3, autumn: 3, winter: 0, books: 1, web: 2, workshop: 3, lab: 0 };
-  const LINK_KEEP = ['bench', 'fps', 'wildlife', 'diag'];
+  const LINK_SEASON = { spring: 1, summer: 2, fall: 3, autumn: 3, winter: 0, books: 2, web: 3, workshop: 0, lab: 1,
+    // Play's sections open the Play (spring) tab on that section: ?daydreams, ?spring+above, ?notes.
+    notes: 1, dose: 1, above: 1, daydreams: 1 };
+  // Weather levels: each word sets how hard it rains (or snows, in winter). Light, medium, full.
+  // Rain: drizzle, shower, tempest. Snow: flurries, snow, blizzard. (Older words kept as aliases.)
+  const STORM_LEVELS = { drizzle: 0.4, shower: 0.7, tempest: 1, flurries: 0.4, snow: 0.7, blizzard: 1,
+    rain: 0.7, downpour: 1, snowfall: 0.7, snowstorm: 0.7, storm: 1, thunder: 1, heavyrain: 1 };
+  const LINK_KEEP = ['bench', 'fps', 'wildlife', 'diag', 'beach', 'getaway', 'sunset', 'about'].concat(Object.keys(STORM_LEVELS));
   const linkWords = decodeURIComponent(location.search.slice(1)).toLowerCase()
     .split(/[+&,;\s]+/).map(w => w.split('=')[0]).filter(Boolean);
   window.__linkWords = linkWords;
   let linkSeason = null, linkNight = null;
   linkWords.forEach(w => {
     if (w in LINK_SEASON) linkSeason = LINK_SEASON[w];
-    if (w === 'night') linkNight = true;
-    if (w === 'day') linkNight = false;
+    if (w === 'night' || w === 'nightmode' || w === 'darkmode' || w === 'dark') linkNight = true;
+    if (w === 'day' || w === 'daymode' || w === 'lightmode' || w === 'light') linkNight = false;
+    if (w in STORM_LEVELS) setTimeout(() => window.__storm.set(true, STORM_LEVELS[w]), 1200);
   });
-  if (linkSeason != null && linkSeason !== SEASON) {
+  if (linkSeason == null) linkSeason = BOOT_SEASON;
+  if (linkSeason != null) {  // always runs: the HTML's selected tab is Books (summer), so even ?spring must set the tabs
     // Jump straight there: everything travel()/setSeason() would set, without the animation.
     SEASON = linkSeason; s = SEASON_S[linkSeason]; window.__currentSeason = linkSeason;
     const sName = seasonNames[linkSeason];
+    document.documentElement.dataset.season = sName;
     document.querySelectorAll('.tab').forEach(t => t.setAttribute('aria-selected', String(+t.dataset.season === linkSeason)));
     updateClockLabel(linkSeason);
     showViews(linkSeason);
@@ -2394,11 +2859,14 @@ function _bootInner() {
   if (linkNight) {
     NIGHT_MODE = true;
     LIGHT.tod = 0; window.__moonEligible = 1; window.__moonDip = 1;
+    document.documentElement.classList.add('night-page');
     if (modeBtn) { modeBtn.setAttribute('aria-pressed', 'true'); modeBtn.textContent = 'Day mode'; }
   }
   function writeLink() {
     const words = [seasonNames[SEASON], NIGHT_MODE ? 'night' : 'day']
-      .concat(linkWords.filter(w => LINK_KEEP.includes(w)));
+      .concat(linkWords.filter(w => LINK_KEEP.includes(w)))
+      // On the Play tab, keep its section/series words (play-inline.js owns them).
+      .concat(SEASON === 1 && window.__playWords ? window.__playWords() : []);
     try { history.replaceState(null, '', location.pathname + '?' + words.join('+') + location.hash); } catch (e) { /* file:// */ }
   }
   // Only rewrite the address once someone changes the view (a plain visit keeps a clean URL).

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+<title>Field Notes</title>
+<link>https://www.christiangehrke.com/play/</link>
+<atom:link href="https://www.christiangehrke.com/play/feed.xml" rel="self" type="application/rss+xml"/>
+<description>Rides, hikes and foraging walks in the high desert and the Sierra, written up by Christian Gehrke and told as short episodes by a narrator who came along. Episodes are narrated by an AI voice, reading a script written from Christian&#39;s own notes, track and photos.</description>
+<language>en-us</language>
+<itunes:author>Christian Gehrke</itunes:author>
+<itunes:explicit>false</itunes:explicit>
+<item>
+<title>Three scenes and a sleeping dog</title>
+<link>https://www.christiangehrke.com/play/2026-10-02-three-scenes/</link>
+<guid isPermaLink="true">https://www.christiangehrke.com/play/2026-10-02-three-scenes/</guid>
+<pubDate>Fri, 02 Oct 2026 16:00:00 GMT</pubDate>
+<description>A Mini-Cast about one day of building animated scenes for the site: a canyon rescue, a deep sea and a workshop at night, and how each idea led to the next.</description>
+<enclosure url="https://www.christiangehrke.com/play/media/2026-10-02-three-scenes/episode.mp3" length="2766681" type="audio/mpeg"/>
+<itunes:duration>231</itunes:duration>
+</item>
+<item>
+<title>Pack the lights</title>
+<link>https://www.christiangehrke.com/play/2026-10-02-friday-dinner-ride/</link>
+<guid isPermaLink="true">https://www.christiangehrke.com/play/2026-10-02-friday-dinner-ride/</guid>
+<pubDate>Fri, 02 Oct 2026 16:00:00 GMT</pubDate>
+<description>A Friday evening ride out for dinner with his wife: a rainbow running through a cloud over the ridge, no bike lights, and a sunset on the way home.</description>
+<enclosure url="https://www.christiangehrke.com/play/media/2026-10-02-friday-dinner-ride/episode.mp3" length="1166733" type="audio/mpeg"/>
+<itunes:duration>97</itunes:duration>
+</item>
+<item>
+<title>Clear Creek after dark</title>
+<link>https://www.christiangehrke.com/play/2026-09-12-evening-ride/</link>
+<guid isPermaLink="true">https://www.christiangehrke.com/play/2026-09-12-evening-ride/</guid>
+<pubDate>Thu, 01 Oct 2026 16:00:00 GMT</pubDate>
+<description>Spooner Summit to James Lee Park on the Clear Creek Trail with his brother and nephew, visiting from Buffalo, New York, on their first ride in years. The last stretch was by bike light.</description>
+<enclosure url="https://www.christiangehrke.com/play/media/2026-09-12-evening-ride/episode.mp3" length="1321273" type="audio/mpeg"/>
+<itunes:duration>110</itunes:duration>
+</item>
+<item>
+<title>The whales of Whale Beach</title>
+<link>https://www.christiangehrke.com/play/2026-03-28-whale-beach/</link>
+<guid isPermaLink="true">https://www.christiangehrke.com/play/2026-03-28-whale-beach/</guid>
+<pubDate>Thu, 01 Oct 2026 16:00:00 GMT</pubDate>
+<description>A sunset ride down to Whale Beach on Lake Tahoe&#39;s east shore, with his wife and Marley walking down. An hour on the beach, polished carnelian in the sand, and Marley swimming the whole time.</description>
+<enclosure url="https://www.christiangehrke.com/play/media/2026-03-28-whale-beach/episode.mp3" length="945737" type="audio/mpeg"/>
+<itunes:duration>79</itunes:duration>
+</item>
+<item>
+<title>Before the dam work</title>
+<link>https://www.christiangehrke.com/play/2024-09-05-marlette/</link>
+<guid isPermaLink="true">https://www.christiangehrke.com/play/2024-09-05-marlette/</guid>
+<pubDate>Sat, 03 Oct 2026 16:00:00 GMT</pubDate>
+<description>An early September morning with Marley from Spooner Lake up North Canyon to Marlette Lake, one of the last rides up there before the trails closed for two years of dam repairs.</description>
+<enclosure url="https://www.christiangehrke.com/play/media/2024-09-05-marlette/episode.mp3" length="1531298" type="audio/mpeg"/>
+<itunes:duration>128</itunes:duration>
+</item>
+</channel>
+</rss>

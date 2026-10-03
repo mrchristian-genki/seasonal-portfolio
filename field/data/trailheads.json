@@ -1,0 +1,30 @@
+{
+ "_about": "Known trailheads. A track that starts or ends near one is trimmed to start/end exactly there, so nothing before it (like the ride from home) is published. radius is in metres. Add your regular spots; the source link can be AllTrails, a land agency page, etc.",
+ "trailheads": [
+  {
+   "id": "spooner-lake",
+   "name": "Spooner Lake Trailhead",
+   "lat": 39.1063,
+   "lon": -119.9166,
+   "radius": 150,
+   "area": "Lake Tahoe Nevada State Park",
+   "source": "https://parks.nv.gov/parks/lake-tahoe-nevada-state-park"
+  },
+  {
+   "id": "spooner-summit",
+   "name": "Spooner Summit (Clear Creek Trail)",
+   "lat": 39.1038,
+   "lon": -119.8952,
+   "radius": 200,
+   "area": "Clear Creek Trail, top"
+  },
+  {
+   "id": "james-lee-park",
+   "name": "James Lee Park",
+   "lat": 39.088,
+   "lon": -119.77,
+   "radius": 250,
+   "area": "Clear Creek Trail, bottom"
+  }
+ ]
+}

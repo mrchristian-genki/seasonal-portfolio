@@ -1,0 +1,55 @@
+{
+ "id": "2026-10-02-friday-dinner-ride",
+ "title": "Friday night dinner ride",
+ "date": "2026-10-02",
+ "kind": "ride",
+ "place": "The high desert, at dusk",
+ "status": "published",
+ "summary": "A Friday evening ride out for dinner with his wife: a rainbow running through a cloud over the ridge, no bike lights, and a sunset on the way home.",
+ "trailhead": null,
+ "links": [],
+ "track": null,
+ "photos": [
+  {
+   "src": "data/photos/2026-10-02-friday-dinner-ride/01.jpg",
+   "caption": "A rainbow running through a cloud over the ridge, just after six.",
+   "w": 1600,
+   "h": 1081,
+   "use": "post",
+   "cover": true
+  },
+  {
+   "src": "data/photos/2026-10-02-friday-dinner-ride/02.jpg",
+   "caption": "On the way home: pink light over the Sierra and the sagebrush going dark.",
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false
+  },
+  {
+   "src": "data/photos/2026-10-02-friday-dinner-ride/03.jpg",
+   "caption": "The last of the sunset, from the dirt road.",
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false
+  }
+ ],
+ "fieldNotes": "From Christian's voice memo (Oct 2): took the bikes through the neighbourhood, crossed the main road, took a bumpy back road with helmets on, realised they had no lights, ordered food to go and came home on well-lit roads; enjoying the meal. Christian (Oct 3): a Friday night ride for dinner; the track does not matter, the views do.\nPrivacy: the ride starts and ends at home, so by Christian's decision (Oct 3) it is used with NO track, map, route, distances, restaurant, shopping centre or street names. Photos: only sky and distant views; the intersection photos are cropped to sky and ridge (the sign, lights and streets removed), the selfie at the intersection and the photo with nearby houses are left out; EXIF stripped. Videos (IMG_7370/7372/7377) not used yet: too large for the Drive connector.\nFrom the photos: iridescent cloud at 6:14 PM; sunset over the sagebrush at 6:51 to 6:54 PM.",
+ "post": {
+  "title": "Friday night dinner ride",
+  "body": "Friday night, my wife and I decided dinner was worth riding to. Helmets on, across the main road and up a back way that's more dirt than road, a bit bumpy and a lot more fun than driving.\n\nA few minutes in I stopped for the sky. Over the ridge there was a cloud with a rainbow running through it, pink, green and violet like oil on water.\n\nOrdering went fine. Then we realized neither of us had brought a bike light, and the sun was already heading behind the Sierra. Dinner to go, and home the long way on the best-lit roads we know.\n\nThe sky made up for it on the way back: a long pink streak over the mountains and the sagebrush going dark below it.\n\nWhat I learned: pack the lights, even for a ride to dinner."
+ },
+ "episode": {
+  "title": "Pack the lights",
+  "script": "It's a Friday evening in early October, a little after six. Christian and his wife decide that dinner tonight will be reached by bike.\n\nHelmets on. Out across the main road, then up a back way that is more dirt than road. Bumpy. A little off-road for two people heading out for dinner. Nobody minds.\n\n***\n\nA few minutes in, Christian looks up and stops.\n\nOver the dark ridge of the mountains there's a cloud doing something clouds rarely do. Pale gold at the edges, and through the middle, a smear of every colour. Pink, green, violet, all running together like oil on water. A rainbow, folded into a cloud.\n\nHe takes three pictures. Then they ride on.\n\n***\n\nDinner is the easy part. The ordering goes fine. And that's when they notice what they don't have.\n\nLights.\n\nThe sun is already on its way down behind the Sierra. Neither of them has brought a bike light. So the plan changes. Dinner to go. And a ride home on the best-lit roads they know, rather than the bumpy way they came.\n\n***\n\nOn the way back, the sky puts on a second show. The sagebrush goes dark and quiet. Behind the mountains the light turns cream, then pink, a long streak of it stretched across the sky, glowing at the edges of the ridge.\n\nChristian stops once more for that.\n\n***\n\nThey get home safe, in the last of the light. And a few minutes later they're sitting down to a hot dinner, earned the long way round.\n\nLesson noted, again. Pack the lights. Even for dinner.",
+  "audio": "data/audio/2026-10-02-friday-dinner-ride.mp3",
+  "audioInfo": {
+   "voice": "AI voice, rendered by Christian Oct 2, 2026",
+   "loudness": "-16.0 LUFS integrated",
+   "duration": "1:37",
+   "checked": "Transcribed and compared with the script: every paragraph read, in order (269 of 270 words)."
+  }
+ },
+ "consent": "Wife: OK to appear in photos, not named (Oct 1). Not in the photos used."
+}

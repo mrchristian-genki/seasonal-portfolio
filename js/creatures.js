@@ -496,6 +496,9 @@
         earL: -12 * pulse(t, 4.3, 1, 0.1, 0.08, 0.18), earR: 10 * pulse(t, 5.9, 2.6, 0.1, 0.08, 0.18), tail: 5 * osc(t, 0.2) - 6 * pulse(t, 6, 3, 0.5, 0.6, 0.8) } }),
       sniff: (t) => { const dn = pulse(t, 6, 0.5, 0.8, 2.6, 0.9); return { root: { sy: 1 + 0.005 * osc(t, 0.3) },
         parts: { neck: 38 * dn, head: -12 * dn + 2 * dn * osc(t, 3.2), tail: 4 * osc(t, 0.25) } }; },
+      // sniffUp: nose raised toward the page copy above, twitching in short bursts.
+      sniffUp: (t) => { const up = pulse(t, 5, 0.3, 0.7, 2.8, 0.8); return { root: { sy: 1 + 0.006 * osc(t, 0.3) },
+        parts: { neck: -16 * up, head: -12 * up + 2.2 * up * osc(t, 4.5), earL: -6 * up, earR: 5 * up, tail: 6 * osc(t, 0.6) } }; },
       walk: (t) => ({ root: { y: -10 * Math.abs(sw(t, 1.3)) }, parts: Object.assign(legs4(t, 1.3, 16, DEER_LEGS),
         { neck: 3 * sw(t, 2.6), head: -3 * sw(t, 2.6), tail: 6 * sw(t, 1.3, 1) }) }),
     }, travel: { walk: 0.12 }, coats: { winter: { '#eb7338': '#d9692f', '#ef864e': '#e07a44' } } },
@@ -510,6 +513,9 @@
       run: (t) => ({ root: { y: -12 * Math.abs(sw(t, 1.6)), r: 0.8 * sw(t, 3.2) },
         parts: Object.assign(legs4(t, 1.6, 17, DEER_LEGS), { head: 3 * sw(t, 3.2, 0.6), tail: 5 * sw(t, 1.6, -1.2) }) }),
       walk: (t) => ({ root: { y: -7 * Math.abs(sw(t, 1)) }, parts: Object.assign(legs4(t, 1, 12, DEER_LEGS), { head: 2 * sw(t, 2), tail: 4 * sw(t, 1) }) }),
+      look: (t) => ({ root: { sy: 1 + 0.007 * osc(t, 0.3) }, parts: { head: poses(t, [[2.2, 0], [1.8, -7], [2.4, 5], [1.6, -3]], 0.6), tail: 3 * osc(t, 0.25) } }),
+      sniff: (t) => { const dn = pulse(t, 5.5, 0.4, 0.8, 2.4, 0.9); return { root: { sy: 1 + 0.006 * osc(t, 0.3) },
+        parts: { head: 18 * dn + 2 * dn * osc(t, 4), tail: 3 * osc(t, 0.3) } }; },
     }, travel: { run: 0.7, walk: 0.25 }, coats: {} },
     // Bear: heavy, slow. walk = a rolling amble; forage = head down, nosing about.
     bear: { behaviors: {
@@ -528,6 +534,8 @@
         return { root: { y: -150 * air, r: -7 * air + 3 * crouch, sy: 1 - 0.05 * crouch }, parts: { nearFront: -28 * air, farFront: -22 * air, ears: -14 * air, head: -4 * air, tail: -12 * air } }; },
       sit: (t) => ({ root: { sy: 1 + 0.006 * osc(t, 0.4) }, parts: { head: 3 * pulse(t, 5, 1, 0.3, 1.4, 0.4) + 0.8 * osc(t, 6) * pulse(t, 5, 1, 0.3, 1.4, 0.4),
         ears: -8 * pulse(t, 3.7, 0.5, 0.12, 0.3, 0.25) + 5 * pulse(t, 6.1, 3, 0.2, 0.8, 0.4), tail: -10 * pulse(t, 4.3, 2, 0.1, 0.05, 0.2) } }),
+      sniffUp: (t) => { const up = pulse(t, 4.4, 0.2, 0.5, 2.6, 0.6); return { root: { sy: 1 + 0.008 * osc(t, 0.4) + 0.02 * up },
+        parts: { head: -10 * up + 1.5 * up * osc(t, 7), ears: -9 * up + 3 * osc(t, 0.5), nearFront: -8 * up, farFront: -6 * up } }; },
     }, travel: { hop: 0.55 },
       // Snowshoe hare: white in winter (greys to near-white, the cream stays).
       coats: { winter: { '#ada59d': '#dfe3e7', '#978f87': '#c7cdd3', '#c4bdb4': '#eef1f4', '#a09890': '#d3d8dd', '#7b756e': '#aab3bc', '#6f6a63': '#8f99a4' } } },
@@ -535,6 +543,8 @@
     squirrel: { behaviors: {
       nibble: (t) => { const up = pulse(t, 4.2, 0.4, 0.35, 2.2, 0.4); return { root: { sy: 1 + 0.008 * osc(t, 0.5) },
         parts: { arm: -22 * up + 3 * up * osc(t, 5), head: 6 * up + 1.5 * up * osc(t, 5, 1) - 4 * pulse(t, 4.2, 3.2, 0.15, 0.5, 0.2), tail: 2.5 * osc(t, 0.4) - 3 * pulse(t, 3.1, 1.5, 0.08, 0.05, 0.25) } }; },
+      sniffUp: (t) => { const up = pulse(t, 4, 0.2, 0.4, 2.4, 0.5); return { root: { sy: 1 + 0.008 * osc(t, 0.5) + 0.02 * up },
+        parts: { arm: -12 * up, head: -10 * up + 2 * up * osc(t, 7), tail: 3 * osc(t, 0.5) } }; },
     }, coats: {} },
     // Chipmunk: alert = quick looks, paw tucks, tail flicks (held poses, snapping between them).
     chipmunk: { behaviors: {
@@ -542,6 +552,8 @@
         head: poses(t, [[0.9, 0], [0.6, -8], [1.1, 4], [0.5, -3], [0.8, 7], [0.7, 0]], 0.12),
         arm: poses(t, [[1.5, 0], [1, -18], [1.2, 0], [0.8, -10]], 0.15),
         tail: poses(t, [[0.7, 0], [0.3, -6], [0.9, 2], [0.4, -4]], 0.1) } }),
+      sniffUp: (t) => { const up = pulse(t, 3.6, 0.2, 0.3, 2.2, 0.4); return { root: { sy: 1 + 0.01 * osc(t, 0.8) + 0.02 * up },
+        parts: { head: -12 * up + 2 * up * osc(t, 8), arm: -16 * up, tail: 3 * osc(t, 0.9) - 5 * pulse(t, 2.9, 1, 0.08, 0.05, 0.2) } }; },
     }, coats: {} },
     // Perched birds: snappy head turns between held poses, a slow breath, a tail flick (hawk).
     hawk: { behaviors: {
@@ -641,6 +653,11 @@
       el('path', { d, fill: 'none', stroke: C.color, 'stroke-width': C.w * 4.2, 'stroke-linecap': 'round', opacity: 0.3 }, collar);
       el('path', { d, fill: 'none', stroke: C.color, 'stroke-width': C.w * 1.8, 'stroke-linecap': 'round', opacity: 0.45 }, collar);
       el('path', { d, fill: 'none', stroke: C.core, 'stroke-width': C.w, 'stroke-linecap': 'round' }, collar);
+      // By day the same collar is a plain leather band with a brass tag (the glow shows only at night).
+      collar.day = el('g', { class: 'o-collar-day' }, g);
+      el('path', { d, fill: 'none', stroke: C.day || '#a8392f', 'stroke-width': C.w * 0.85, 'stroke-linecap': 'round' }, collar.day);
+      const mx = (C.from[0] + C.to[0]) / 2, my = (C.from[1] + C.to[1]) / 2;
+      el('circle', { cx: mx + C.w * 0.2, cy: my + C.w * 0.75, r: C.w * 0.42, fill: C.tag || '#d9a93b' }, collar.day);
     }
     let line = null;
     if (rig.line && partEls[rig.line.part]) {
@@ -653,7 +670,7 @@
       behavior: opts.behavior && behaviors[opts.behavior] ? opts.behavior : Object.keys(behaviors)[0],
       t0: performance.now() / 1000 - (opts.phase != null ? opts.phase : Math.random() * 20),
       season: opts.season || 'summer', night: !!opts.night, rate: opts.rate || 1,
-      graded: !!(opts.paint && opts.paint.graded),
+      graded: !!(opts.paint && opts.paint.graded), glow: opts.glow,
     };
     function applyPalette() {
       const swap = (rig.coats && rig.coats[inst.season]) || {};
@@ -662,7 +679,10 @@
         if (inst.night && !inst.graded) c = shadeNight(c);
         svg.style.setProperty('--o' + i, c);
       });
-      if (collar) collar.style.display = inst.night ? '' : 'none';
+      // The collar glows at night; by day it is a plain band. opts.glow overrides for actors in the
+      // colour-graded foreground, which are built with night off (the plate darkens them instead).
+      const glow = inst.glow != null ? inst.glow : inst.night;
+      if (collar) { collar.style.display = glow ? '' : 'none'; collar.day.style.display = glow ? 'none' : ''; }
       svg.style.setProperty('--oline', inst.night && !inst.graded ? 'rgba(200,210,220,.35)' : 'rgba(60,50,45,.55)');
     }
     applyPalette();

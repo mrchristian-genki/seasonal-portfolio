@@ -87,6 +87,14 @@
   const lakeFrame = worldFrame(mg, $('mgShores'));      // on the water, behind both banks
   const frontFrame = worldFrame(mg, $('mgTrees') && $('mgTrees').nextSibling);   // on the banks, IN FRONT of the pines
   const skyFrame = birds ? worldFrame(birds) : null;    // with the bird flock
+  // Top of the midground: over both banks, the pines and the tent, still under the foreground
+  // plate. The fish-catching eagle flies here, so a stoop to a fish low on the lake never passes
+  // behind the shore trees.
+  const topFrame = worldFrame(mg);
+  // Top of everything but the UI: the fx plate, under its rain. Not colour-graded, so a close-up
+  // Marley at night keeps the bright glowing collar (the graded foreground would dim it).
+  const fxPlate = $('plateFx');
+  const fxFrame = fxPlate ? worldFrame(fxPlate, fxPlate.firstChild) : null;
   const iso = $('isoTree');
   const treeBox = document.createElement('div');       // in front of the hero tree, before the flowers
   treeBox.className = 'wl-box';
@@ -109,11 +117,11 @@
   fgItems.insertBefore(rockClip, fgItems.firstChild);
   const STAGE = {
     far: box(farFrame, FULL), front: box(frontFrame, FULL), lake: box(lakeFrame, FULL), sky: skyFrame ? box(skyFrame, FULL) : null,
-    tree: treeBox, rock: rockClip, behindTree,
+    tree: treeBox, rock: rockClip, behindTree, top: box(topFrame, FULL), fx: fxFrame ? box(fxFrame, FULL) : treeBox,
   };
   // Aliases: same layer, but separate "one visitor at a time" slots, so the right bank, the
   // pine tops and the left bank don't block each other (and the fisherman doesn't block the shore).
-  STAGE.boat = STAGE.lake; STAGE.bank = STAGE.far; STAGE.pines = STAGE.far; STAGE.left = STAGE.far; STAGE.rockR = STAGE.lake; STAGE.fore = STAGE.behindTree; STAGE.catch = STAGE.lake;
+  STAGE.boat = STAGE.lake; STAGE.bank = STAGE.far; STAGE.pines = STAGE.far; STAGE.left = STAGE.far; STAGE.rockR = STAGE.lake; STAGE.fore = STAGE.behindTree; STAGE.catch = STAGE.top; STAGE.leftRock = STAGE.fx;
   // Foreground stages sit inside the foreground plate, which already carries the scene's
   // season/night colour grade, so animals there use their day palette.
   const GRADED = new Set(['tree', 'rock', 'behindTree']);
@@ -133,7 +141,7 @@
     o.phase = rand(0, 5);
     const c = window.Creatures.build(id, {
       season: season(), night: GRADED.has(stageName) ? false : night(),
-      behavior: o.behavior, rate: o.rate, phase: o.phase, paint: painter(id, GRADED.has(stageName)),
+      behavior: o.behavior, rate: o.rate, phase: o.phase, paint: painter(id, GRADED.has(stageName)), glow: o.glow,
     });
     // Size: o.h was tuned against the silhouette art. An origami animal keeps the silhouette's
     // on-screen WIDTH (its body length), so a standing fox takes the sitting fox's footprint.
@@ -258,6 +266,103 @@
   }
   const live = new Set();
 
+  // ── weather on the animals in a storm. Winter: flakes drift down and stick to the top of the
+  // animal (backs, heads, ears), then melt, the same way they land on the headline. Spring to
+  // fall: rain beads sit on its coat and drops gather along its lower edges (belly, chin, tail),
+  // hang, and drip off. Only animals big enough to see it. The outline comes from a one-off
+  // snapshot of the animal's drawing in a canvas; everything lives inside the animal's own box,
+  // so it travels with it. Redone if it turns round or the weather changes; cleared after.
+  const WX_GAP = { v: 0 };                                  // extra pause between flakes on light days
+  const WX_FLAKE = (w, drop, drift) => {
+    const fallMs = drop / (22 + Math.random() * 18) * 1000, sitMs = 2500 + Math.random() * 4000, meltMs = 5000 + Math.random() * 5000;
+    const T = fallMs + sitMs + meltMs + 1000 + Math.random() * 5000 + (WX_GAP.v || 0);
+    const pos = (dx, dy, sx, sy) => `translate(${(dx - w / 2).toFixed(1)}px, ${(dy - w * 0.8).toFixed(1)}px) scale(${sx}, ${sy})`;
+    const kf = [];
+    for (let k = 0; k <= 5; k++) { const u = k / 5; kf.push({ offset: u * fallMs / T, opacity: k ? 0.95 : 0, transform: pos(-drift * (1 - u) + Math.sin(u * 9.4) * 5 * (1 - u), -drop * (1 - u), 1, 1) }); }
+    kf.push({ offset: (fallMs + 250) / T, opacity: 0.95, transform: pos(0, 0.5, 1.2, 0.8) });
+    kf.push({ offset: (fallMs + sitMs) / T, opacity: 0.95, transform: pos(0, 0.5, 1.2, 0.8) });
+    kf.push({ offset: (fallMs + sitMs + meltMs) / T, opacity: 0, transform: pos(0, 1, 1.05, 0.55) });
+    kf.push({ offset: 1, opacity: 0, transform: pos(0, 1, 1.05, 0.55) });
+    return [kf, T];
+  };
+  const WX_BEAD = (w) => {                                   // appears, sits, slips a little, fades
+    const T = 5000 + Math.random() * 7000, slip = 2 + Math.random() * 6;
+    const pos = (dy, s) => `translate(${(-w / 2).toFixed(1)}px, ${(dy - w / 2).toFixed(1)}px) scale(${s})`;
+    return [[{ offset: 0, opacity: 0, transform: pos(0, 0.3) }, { offset: 0.15, opacity: 0.9, transform: pos(0, 1) },
+      { offset: 0.7, opacity: 0.9, transform: pos(slip, 1) }, { offset: 0.85, opacity: 0, transform: pos(slip + 1, 0.8) },
+      { offset: 1, opacity: 0, transform: pos(slip + 1, 0.8) }], T];
+  };
+  const WX_DRIP = (w, fall) => {                             // gathers, hangs, stretches, lets go
+    const T = 3500 + Math.random() * 4500;
+    const pos = (dy, sx, sy) => `translate(${(-w / 2).toFixed(1)}px, ${dy.toFixed(1)}px) scale(${sx}, ${sy})`;
+    return [[{ offset: 0, opacity: 0, transform: pos(0, 0.2, 0.2) }, { offset: 0.5, opacity: 0.95, transform: pos(0, 1, 1) },
+      { offset: 0.66, opacity: 0.95, transform: pos(2, 0.92, 1.4), easing: 'cubic-bezier(.55,0,1,.45)' },
+      { offset: 0.76, opacity: 0.8, transform: pos(fall, 0.7, 1.9) }, { offset: 0.8, opacity: 0, transform: pos(fall + 10, 0.6, 2) },
+      { offset: 1, opacity: 0, transform: pos(fall + 10, 0.6, 2) }], T];
+  };
+  function weatherOnActor(a, kind, amt) {
+    const W = a.el.offsetWidth, H = a.el.offsetHeight;
+    if (H < 70 || !a.el.classList.contains('on')) return;
+    const svg = a.c.svg.cloneNode(true);
+    svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg'); svg.setAttribute('width', W); svg.setAttribute('height', H);
+    svg.removeAttribute('style');
+    const flip = /scaleX\(-1\)/.test(a.c.svg.style.transform || '');
+    const img = new Image(), d = a.d;
+    a.wx = { kind, d, amt };
+    img.onload = () => {
+      if (!a.wx || a.wx.d !== d || a.wx.kind !== kind || a.wx.amt !== amt) return;
+      const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+      const ctx = cv.getContext('2d');
+      if (flip) { ctx.translate(W, 0); ctx.scale(-1, 1); }
+      ctx.drawImage(img, 0, 0, W, H);
+      let px; try { px = ctx.getImageData(0, 0, W, H).data; } catch (e) { return; }
+      const ink = (x, y) => y >= 0 && y < H && px[(y * W + x) * 4 + 3] > 140, clear = Math.max(4, Math.round(H * 0.06));
+      const tops = [], bottoms = [], coat = [];
+      for (let x = 2; x < W - 2; x += 2) for (let y = 1; y < H - 1; y++) {
+        if (!ink(x, y)) continue;
+        if (!ink(x, y - 1) && y < H * 0.8) { let ok = true; for (let k = 2; k <= clear && ok; k++) if (ink(x, y - k)) ok = false; if (ok) tops.push([x, y]); }
+        if (!ink(x, y + 1) && y < H * 0.97) { let ok = true; for (let k = 2; k <= clear && ok; k++) if (ink(x, y + k)) ok = false; if (ok) bottoms.push([x, y]); }
+        else if (y % 7 === 0 && x % 8 === 2 && ink(x, y - 4) && ink(x, y + 4)) coat.push([x, y]);
+      }
+      const any = (arr) => arr[Math.floor(Math.random() * arr.length)];
+      const box = document.createElement('div'); box.className = 'wl-weather';
+      const add = (cls, x, y, w, h, [kf, T]) => {
+        const f = document.createElement('i'); f.className = cls;
+        Object.assign(f.style, { left: (x / W * 100).toFixed(2) + '%', top: (y / H * 100).toFixed(2) + '%', width: w.toFixed(1) + 'px', height: h.toFixed(1) + 'px' });
+        box.appendChild(f);
+        f.animate(kf, { duration: T, iterations: Infinity, delay: -Math.random() * T });
+      };
+      WX_GAP.v = amt < 0.5 ? 10000 + Math.random() * 15000 : 0;
+      const n = Math.max(3, Math.round(Math.max(8, Math.min(30, H / 22)) * (window.__smallScreen ? 0.5 : 1) * amt)), sz = Math.min(10, 4 + H / 140);
+      if (kind === 'snow' && tops.length) {
+        for (let i = 0; i < n; i++) { const [x, y] = any(tops), w = sz * (0.7 + Math.random() * 0.6);
+          add('wl-flake', x, y, w, w, WX_FLAKE(w, 40 + Math.random() * 110, (Math.random() - 0.5) * 40)); }
+      } else if (kind === 'rain') {
+        if (coat.length) for (let i = 0; i < n; i++) { const [x, y] = any(coat), w = sz * (0.6 + Math.random() * 0.5); add('wl-drop', x, y, w, w, WX_BEAD(w)); }
+        if (bottoms.length) for (let i = 0; i < Math.ceil(n * 0.6); i++) { const [x, y] = any(bottoms), w = sz * (0.6 + Math.random() * 0.4);
+          add('wl-drop', x, y, w, w * 1.15, WX_DRIP(w, 30 + Math.random() * 60)); }
+      }
+      if (!box.children.length) return;
+      a.el.appendChild(box);
+      a.wx = { kind, d, amt, el: box };
+    };
+    img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(new XMLSerializer().serializeToString(svg));
+  }
+  const dropWeather = (a) => { if (a.wx && a.wx.el) a.wx.el.remove(); a.wx = null; };
+  setInterval(() => {
+    // A storm at any level, or the season's own weather (winter snow, fall rain) at a light level.
+    const st = window.__storm, reducedM = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const winter = season() === 'winter', stormy = !!(st && st.on && st.level > 0.25);
+    const everyday = winter ? (window.__snowOpacity || 0) > 0.25 : season() === 'fall' && (window.__rainOpacity || 0) > 0.2;
+    const kind = reducedM || !(stormy || everyday) ? null : winter ? 'snow' : 'rain';
+    const amt = stormy ? Math.max(0.35, st.max) : 0.3;       // how much weather sits on the animal
+    live.forEach((v) => v.actors.forEach((a) => {
+      if (!kind) { if (a.wx) dropWeather(a); return; }
+      if (a.wx && (a.wx.d !== a.d || a.wx.kind !== kind || a.wx.amt !== amt)) dropWeather(a);   // turned, or the weather changed
+      if (!a.wx) weatherOnActor(a, kind, amt);
+    }));
+  }, 1500);
+
   // ── the cast ──
   // when: 'day' | 'night' | 'any'. seasons: list. stage: which layer (for the one-per-stage rule).
   // Positions are world units, tuned against the art (see the zoomed grids in the Sept 24 notes).
@@ -348,6 +453,7 @@
     await v.move(a, a.x + sx * Math.min(dist, Math.abs(a.home.x0 - a.x)), a.home.y, speed, (t, now) => -1 * Math.abs(Math.sin(now / 420)));
   }
   const foreExit = (v) => backOut(v, 38, '4.5s');
+  const HOWL_SPOT = [4180, 4320];                        // under the hero tree's canopy, left of the trunk
 
   // ── close-up beasts: a rare big moment IN FRONT of the hero tree ──
   // A bear or a bull elk walks in from beyond the right edge, much closer than the foreground
@@ -359,9 +465,12 @@
   // Sept 24: shy, not bold. They only half emerge from beyond the right edge (hind end stays off
   // screen), feet below the bottom of the view, so what you see is a massive body and head
   // looking about, then backing away. xStop = where the body centre stops.
-  const CLOSE = { x0: VW + 1400, xStop: { bear: [4560, 4700], elk: [4520, 4660] }, y: 3420, size: { bear: 1350, elk: 2000 } };
-  async function closeVisit(v, id, steps) {
-    const a = v.actor('tree', id, { x: CLOSE.x0, y: CLOSE.y, h: 100, hReal: CLOSE.size[id], dir: -1, behavior: 'walk', fade: 2.5 });
+  // Close-up sizes are about 3 to 4 times the foreground ones; each stops in front of the tree.
+  const CLOSE = { x0: VW + 1400, y: 3420,
+    xStop: { bear: [4560, 4700], elk: [4520, 4660], doe: [4480, 4640], deer: [4480, 4620], 'wolf-run': [4460, 4620], marley: [4420, 4600] },
+    size: { bear: 1350, elk: 2000, doe: 1450, deer: 1600, 'wolf-run': 980, marley: 720 } };
+  async function closeVisit(v, id, steps, stageName = 'tree', extra = {}) {
+    const a = v.actor(stageName, id, Object.assign({ x: CLOSE.x0, y: CLOSE.y, h: 100, hReal: CLOSE.size[id], dir: -1, behavior: 'walk', fade: 2.5 }, extra));
     a.home = { x0: CLOSE.x0, y: CLOSE.y };
     await v.wait(60); a.show();
     walking(a, true);
@@ -369,6 +478,61 @@
     for (const [b, t] of steps) { if (a.c.behaviors.includes(b)) { a.c.setBehavior(b); await v.wait(t * 1000 * rand(0.85, 1.15)); } }
   }
   const closeExit = (v) => backOut(v, 70, '4s');
+
+  // ── small close-ups at the bottom left, under the page copy ──
+  // Fox, hare, chipmunk and squirrel come up on the nearest ground in front of the big left rocks
+  // and sniff up at the headline and button above them, big and close to the camera. They sit in
+  // the fx stage, in front of the rocks and plants; their heads stay below the button. The fox walks and the hare hops in from the left edge; the
+  // chipmunk and squirrel pop up onto the rock.
+  // As big as the right-side close-ups: feet far below the frame, so mostly the head and
+  // shoulders rise up out of the bottom-left corner, nose toward the button.
+  // Shy: they stop close to the left edge, part of the body still off-frame, flinch back toward
+  // it now and then, and dart away left when they go.
+  // Low on the near shore and zoomed in: feet well below the frame, so the head and neck fill
+  // the bottom-left corner, looking up at the button.
+  const LEFT = { x0: -1900, spot: [60, 220], y: 3900, rise: 1000,
+    size: { fox: 1750, hare: 1550, chipmunk: 1600, squirrel: 1650 },
+    feet: { chipmunk: 3520, squirrel: 3580 },            // squat bodies: stand higher so the face clears the wave
+    move: { fox: 'walk', hare: 'hop', chipmunk: 'pop', squirrel: 'pop' } };
+  async function leftVisit(v, id, steps) {
+    const how = LEFT.move[id], x = rand(LEFT.spot[0], LEFT.spot[1]), y = LEFT.feet[id] || LEFT.y;
+    const pop = how === 'pop';
+    const a = v.actor('fx', id, { x: pop ? x : LEFT.x0, y: pop ? y + LEFT.rise : y, h: 100, hReal: LEFT.size[id], dir: 1,
+      behavior: pop ? steps[0][0] : how, fade: pop ? 0.6 : 1.6 });
+    a.home = { x0: LEFT.x0, y, pop };
+    await v.wait(60); a.show();
+    if (pop) await v.move(a, x, y, 500);
+    else {
+      if (how === 'walk') walking(a, true);
+      await v.move(a, x, y, how === 'hop' ? a.c.travelSpeed() * a.w : 160, how === 'walk' ? (t, now) => -3 * Math.abs(Math.sin(now / 300)) : null);
+    }
+    // Look up at the button: tip the head and shoulders up a little (nose up, toward the right).
+    a.c.svg.style.transition = 'transform 1.2s ease-in-out';
+    a.tilt(-rand(6, 10));
+    const flinchAt = Math.floor(rand(1, steps.length));   // a nervous start between two of the steps
+    for (let i = 0; i < steps.length; i++) {
+      const [b, t] = steps[i];
+      if (i === flinchAt && Math.random() < 0.7) {
+        await v.move(a, a.x - 110, a.y, 900);                   // jerk back toward the edge...
+        await v.wait(rand(500, 1100));
+        await v.move(a, a.x + rand(40, 110), a.y, 140);         // ...then ease out again, a little less far
+      }
+      if (a.c.behaviors.includes(b)) { a.c.setBehavior(b); await v.wait(t * 1000 * rand(0.85, 1.15)); }
+    }
+  }
+  async function leftExit(v) {
+    const a = v.actors[0]; if (!a) return;
+    a.tilt(0);
+    // Pop away: turn and dart off the left edge, fast.
+    a.el.style.setProperty('--fade', '0.9s');
+    a.el.style.transitionTimingFunction = 'ease-in';
+    a.face(-1);
+    if (a.c.behaviors.includes('walk')) { a.c.setBehavior('walk'); walking(a, true); }
+    else if (a.c.behaviors.includes('hop')) a.c.setBehavior('hop');
+    await v.wait(120);
+    a.show(false);
+    await v.move(a, a.home.x0, a.y + (a.home.pop ? 120 : 0), 1100);
+  }
 
   const CAST = {
     deer: {
@@ -475,7 +639,7 @@
     hare: {
       // Hops out of the water's-edge grass at the tip of the right bank and along it, left to
       // right, behind the pines (white in winter: the rig's snowshoe palette).
-      stage: 'left', seasons: ['spring', 'summer', 'fall', 'winter'], when: 'any', weight: 2,
+      stage: 'leftRock', seasons: ['spring', 'summer', 'fall', 'winter'], when: 'any', weight: 2,
       async run(v) {
         // In front of the pines (it used to hop behind the trunks and looked like it was inside them),
         // a little lower on the grass, nearer the water.
@@ -513,6 +677,32 @@
       async run(v) { await foreVisit(v, 'wolf-run', { speed: 90, steps: [['walk', 0.01]] }); await v.wait(rand(3000, 5000)); },
       exit: foreExit,
     },
+    foreHowl: {
+      // Every night, all year: a wolf trots out from behind the hero tree, stops under its
+      // canopy (the trunk on one side, the branches arching over), and settles into a howl,
+      // muzzle up toward the moon. The trot and howl poses are two rigs, crossfaded in place.
+      stage: 'fore', seasons: ['spring', 'summer', 'fall', 'winter'], when: 'night', weight: 2,
+      async run(v) {
+        const a = v.actor('fore', 'wolf-run', { x: FORE.x0, y: FORE.y, h: 100, hReal: FORE_SIZE['wolf-run'], dir: -1, behavior: 'walk', fade: 2 });
+        a.home = { x0: FORE.x0, y: FORE.y };
+        await v.wait(60); a.show();
+        walking(a, true);
+        const x = rand(HOWL_SPOT[0], HOWL_SPOT[1]);
+        await v.move(a, x, FORE.y, 90, bob);
+        walking(a, false);
+        if (a.c.behaviors.includes('look')) a.c.setBehavior('look');
+        await v.wait(rand(1800, 2600));
+        const hw = v.actor('fore', 'wolf-howl', { x: x - 20, y: FORE.y, h: 100, hReal: FORE_SIZE['wolf-howl'], dir: -1, behavior: 'howl', fade: 0.45 });
+        await v.wait(60); hw.show(); a.el.style.setProperty('--fade', '0.45s'); a.show(false);
+        await v.wait(rand(11000, 15000));
+      },
+      // Back to the standing wolf (if it was howling), then it backs away behind the tree.
+      async exit(v) {
+        const [a, hw] = v.actors;
+        if (hw && hw.el.classList.contains('on')) { a.show(true); hw.show(false); await new Promise((r) => setTimeout(r, 500)); }
+        return foreExit(v);
+      },
+    },
     closeBear: {
       stage: 'tree', seasons: ['spring', 'summer', 'fall'], when: 'day', weight: 1,
       async run(v) { await closeVisit(v, 'bear', [['look', 5], ['forage', 2.5], ['look', 3.5]]); },
@@ -521,6 +711,54 @@
     closeElk: {
       stage: 'tree', seasons: ['fall', 'winter'], when: 'any', weight: 1,
       async run(v) { await closeVisit(v, 'elk', [['look', 5], ['alert', 2.5], ['look', 3]]); },
+      exit: closeExit,
+    },
+    // More close-ups, all walking in from the right to stop in front of the hero tree.
+    closeDoe: {
+      stage: 'tree', seasons: ['spring', 'summer', 'fall'], when: 'any', weight: 1,
+      async run(v) { await closeVisit(v, 'doe', [['idle', 3.5], ['graze', 5], ['alert', 3], ['idle', 2.5]]); },
+      exit: closeExit,
+    },
+    closeDeer: {
+      // The buck (doe's body with antlers), all year; winter coat in winter.
+      stage: 'tree', seasons: ['spring', 'summer', 'fall', 'winter'], when: 'any', weight: 1,
+      async run(v) { await closeVisit(v, 'deer', [['alert', 3.5], ['graze', 4.5], ['idle', 3], ['alert', 2.5]]); },
+      exit: closeExit,
+    },
+    closeFox: {
+      stage: 'leftRock', seasons: ['spring', 'summer', 'fall', 'winter'], when: 'any', weight: 1,
+      async run(v) { await leftVisit(v, 'fox', [['sit', 2.5], ['sniffUp', 5], ['sit', 2], ['sniffUp', 3.5]]); },
+      exit: leftExit,
+    },
+    closeHare: {
+      // Brown most of the year, white in winter.
+      stage: 'leftRock', seasons: ['spring', 'summer', 'fall', 'winter'], when: 'any', weight: 1,
+      async run(v) { await leftVisit(v, 'hare', [['sit', 2.5], ['sniffUp', 5], ['sit', 2.5]]); },
+      exit: leftExit,
+    },
+    closeChipmunk: {
+      stage: 'leftRock', seasons: ['spring', 'summer', 'fall'], when: 'day', weight: 1,
+      async run(v) { await leftVisit(v, 'chipmunk', [['alert', 2], ['sniffUp', 4.5], ['alert', 2.5]]); },
+      exit: leftExit,
+    },
+    closeSquirrel: {
+      stage: 'leftRock', seasons: ['spring', 'summer', 'fall'], when: 'day', weight: 1,
+      async run(v) { await leftVisit(v, 'squirrel', [['nibble', 3], ['sniffUp', 4.5], ['nibble', 3]]); },
+      exit: leftExit,
+    },
+    closeWolf: {
+      stage: 'tree', seasons: ['fall', 'winter'], when: 'any', weight: 1,
+      async run(v) { await closeVisit(v, 'wolf-run', [['look', 5], ['sniff', 3.5], ['look', 3]]); },
+      exit: closeExit,
+    },
+    closeMarley: {
+      // Marley up close: a plain red collar by day, the glowing one at night. At night she walks
+      // in the ungraded fx stage so the glow stays bright (the graded foreground would dim it).
+      stage: 'tree', seasons: ['spring', 'summer', 'fall', 'winter'], when: 'any', weight: 1,
+      async run(v) {
+        const n = night();
+        await closeVisit(v, 'marley', [['idle', 4], ['sniff', 4], ['idle', 3.5]], n ? 'fx' : 'tree', { glow: n });
+      },
       exit: closeExit,
     },
     marley: {
@@ -660,7 +898,7 @@
       stage: 'pines', seasons: ['spring', 'summer', 'fall'], when: 'day', weight: 2,
       async run(v) {
         const [x, y] = pick(PINE_TOPS);
-        const a = v.actor('pines', 'hawk', { x, y: y + 8, h: 46, dir: pick([1, -1]), behavior: 'perch' });
+        const a = v.actor('pines', 'hawk', { x, y: y + 8, h: 54, dir: pick([1, -1]), behavior: 'perch' });
         await v.wait(60); a.show();
         await v.wait(rand(10000, 15000));
       },
@@ -671,7 +909,7 @@
       ok: () => night() || season() === 'winter',
       async run(v) {
         const [x, y] = pick(PINE_TOPS);
-        const a = v.actor('pines', 'owl', { x, y: y + 10, h: 44, behavior: 'perch' });
+        const a = v.actor('pines', 'owl', { x, y: y + 10, h: 52, behavior: 'perch' });
         await v.wait(60); a.show();
         await v.wait(rand(12000, 18000));
       },
@@ -742,6 +980,9 @@
         a.el.appendChild(lamp); a.el.appendChild(streak);
         a.onNight = (n) => { lamp.classList.toggle('on', n); streak.classList.toggle('on', n); };
         a.onNight(night());
+        // The getaway: tap the boat and it sails off to the beach (js/getaway.js).
+        const tap = boatTap(v, a);
+        try {
         await v.wait(60); a.show();
         await v.move(a, 2700, 1796, 14);
         const out = (3050 - 2700) / 14;                       // seconds left to the fade point
@@ -749,9 +990,27 @@
         a.el.style.transitionTimingFunction = 'ease-in';
         a.show(false);
         await v.move(a, 3050, 1794, 14);
+        } finally { tap.remove(); }
       },
     },
   };
+  // A tap target that rides along with the fisherman's boat. Tapping it sails the boat off
+  // to the right, fast, while the wave carries the view to the getaway.
+  function boatTap(v, a) {
+    const h = document.createElement('div');
+    h.className = 'wl-box wl-hot'; h.style.cursor = 'pointer';
+    const place = () => { const w = 230, ht = 230;
+      Object.assign(h.style, { left: ((a.x - w / 2) / VW * 100).toFixed(3) + '%', top: ((a.y - ht) / VH * 100).toFixed(3) + '%', width: (w / VW * 100).toFixed(3) + '%', height: (ht / VH * 100).toFixed(3) + '%' }); };
+    place(); const t = setInterval(place, 250);
+    h.addEventListener('click', () => {
+      if (!window.__getaway) return;
+      a.el.animate([{ transform: a.el.style.transform }, { transform: a.el.style.transform + ' translateX(260%)', opacity: 0 }], { duration: 1100, easing: 'ease-in', fill: 'forwards' });
+      window.__getaway.go();
+      v.leave();
+    });
+    if (hotFrame) hotFrame.appendChild(h);
+    return { remove() { clearInterval(t); h.remove(); } };
+  }
 
   const eligible = (key) => {
     const d = CAST[key];
@@ -872,7 +1131,7 @@
   const FISH_CHARGE_MS = 2500;
   // Full charge (daytime, not winter) also calls in the eagle (eagleCatch above).
   const CATCH = { v: null, fish: null };
-  hotspot([1500, 1680, 3700, 2700], (x, y, held) => {
+  const lakeSpot = hotspot([1500, 1680, 3700, 2700], (x, y, held) => {
     if (season() === 'winter') { if (window.__lakeRipple) window.__lakeRipple(x, y); return; }
     const power = Math.min(1, (held || 0) / FISH_CHARGE_MS);
     const h = window.__spawnFishJump ? window.__spawnFishJump(x, y, power) : null;
@@ -884,14 +1143,31 @@
       CATCH.fish = null; CATCH.v = start('eagleCatch', { force: true, at: { x, y } });
     }
   } });
+  // Rings follow the mouse over the lake (after the 'Mouse hover water effect' pen), a hint that
+  // it can be tapped. Mouse only, throttled, and only over open water (not the right bank).
+  if (lakeSpot) {
+    let lastT = 0, lx = -1e9, ly = 0;
+    lakeSpot.addEventListener('pointermove', (e) => {
+      if (e.pointerType !== 'mouse' || !window.__lakeRipple) return;
+      const now = performance.now();
+      if (now - lastT < 180 || Math.hypot(e.clientX - lx, e.clientY - ly) < 22) return;
+      const fr = hotFrame.getBoundingClientRect();
+      const wx = (e.clientX - fr.left) / fr.width * VW, wy = (e.clientY - fr.top) / fr.height * VH;
+      if (wx > 2750 && wy < 1860) return;                    // the right bank, pines and tent
+      lastT = now; lx = e.clientX; ly = e.clientY;
+      window.__lakeRipple(wx, wy, 1.8);
+      setTimeout(() => window.__lakeRipple(wx, wy, 0.9), 140);
+    });
+  }
   hotspot([1450, 1470, 2760, 1640], () => invite(['wolfHowl', 'deer', 'doe', 'elk', 'bear', 'wolfRun'])); // far shore
   hotspot([2800, 985, 3700, 1825], () => invite(['owl', 'hawk', 'bankDeer']));    // right-bank pines
   hotspot([3780 + HERO_DX, 1120, 5000, 1900], () => invite(['squirrel']));        // hero tree canopy
   hotspot([0, 1560, 1250, 1860], () => invite(['hare']));                         // left bank
   hotspot([0, 2780, VW, VH], () => invite(['snowHare']));                          // front grass: the hare
   hotspot([3790, 1590, 4190, 1780], () => invite(['marley']));                     // the tent: Marley
-  hotspot([3500, 2440, 4400, 2780], () => invite(['foreDeer', 'foreElk', 'foreBear', 'foreWolf', 'fox']));
-  hotspot([4500 + HERO_DX, 1900, 4850 + HERO_DX, 2700], () => invite(['closeBear', 'closeElk']));                // hero tree trunk: a close-up beast // foreground grass by the hero tree
+  hotspot([3500, 2440, 4400, 2780], () => invite(['foreDeer', 'foreElk', 'foreBear', 'foreWolf', 'foreHowl', 'fox']));
+  hotspot([660, 2300, 1040, 2600], () => invite(['closeFox', 'closeHare', 'closeChipmunk', 'closeSquirrel']));  // grass beside the left rocks: a small close-up
+  hotspot([4500 + HERO_DX, 1900, 4850 + HERO_DX, 2700], () => invite(['closeBear', 'closeElk', 'closeDoe', 'closeDeer', 'closeWolf', 'closeMarley']));                // hero tree trunk: a close-up beast // foreground grass by the hero tree
   // Sun by day, moon by night (same spot): an eagle, or at night a wolf answers the moon.
   hotspot([3380, 900, 3830, 1370], () => invite(night() ? ['wolfHowl', 'owl'] : ['eagle']));
 
@@ -902,10 +1178,11 @@
   const PANEL_ITEMS = [
     ['Far shore', [['deer', 'Deer (buck)'], ['doe', 'Doe, drinking'], ['elk', 'Elk'], ['bear', 'Bear'], ['wolfRun', 'Wolf, running'], ['wolfHowl', 'Wolf, howling']]],
     ['Right bank', [['bankDeer', 'Deer from behind a pine'], ['hare', 'Hare'], ['marley', 'Marley (from the tent)'], ['hawk', 'Hawk on a pine top'], ['owl', 'Owl on a pine top']]],
-    ['Foreground (by the hero tree)', [['foreDeer', 'Doe or buck, grazing'], ['foreElk', 'Elk'], ['foreBear', 'Bear, foraging'], ['foreWolf', 'Wolf, walking'], ['fox', 'Fox'], ['snowHare', 'Hare across the front (white in winter)']]],
-    ['Close-up (in front of the tree)', [['closeBear', 'Grizzly, close-up'], ['closeElk', 'Bull elk, close-up']]],
+    ['Foreground (by the hero tree)', [['foreDeer', 'Doe or buck, grazing'], ['foreElk', 'Elk'], ['foreBear', 'Bear, foraging'], ['foreWolf', 'Wolf, walking'], ['foreHowl', 'Wolf howling under the tree (every night)'], ['fox', 'Fox'], ['snowHare', 'Hare across the front (white in winter)']]],
+    ['Close-up (in front of the tree)', [['closeBear', 'Grizzly, close-up'], ['closeElk', 'Bull elk, close-up'], ['closeMarley', 'Marley, close-up'], ['closeDoe', 'Doe, close-up'], ['closeDeer', 'Buck, close-up'], ['closeWolf', 'Wolf, close-up']]],
+    ['Close-up (on the left rocks)', [['closeFox', 'Fox'], ['closeHare', 'Hare'], ['closeChipmunk', 'Chipmunk'], ['closeSquirrel', 'Squirrel']]],
     ['Rocks & tree', [['chipmunk', 'Chipmunk'], ['squirrel', 'Squirrel (hero tree)']]],
-    ['Lake & sky', [['fisherman', 'Fisherman'], ['eagle', 'Eagle'], ['@fish', 'Fish jump'], ['@bigfish', 'Big fish jump (full charge)'], ['@catch', 'Eagle catches a fish']]],
+    ['Lake & sky', [['fisherman', 'Fisherman'], ['eagle', 'Eagle'], ['@fish', 'Fish jump'], ['@bigfish', 'Big fish jump (full charge)'], ['@catch', 'Eagle catches a fish'], ['@getaway', 'The getaway (beach)'], ['@storm', 'Storm (on / off)'], ['@drizzle', 'Drizzle / flurries'], ['@rain', 'Shower / snow'], ['@downpour', 'Tempest / blizzard']]],
     ['Scene effects', [['@gust', 'Wind gust now'], ['@calm', 'Stop the wind'], ['@night', 'Day / night (fireflies, collar, tent light)']]],
   ];
   let panel = null;
@@ -941,6 +1218,10 @@
         setTimeout(() => { const h = window.__spawnFishJump && window.__spawnFishJump(x, y, 1); if (CATCH.v) CATCH.fish = h || 'miss'; }, 3200);
         note.textContent = 'Eagle circling… big jump in 3 s.'; return;
       }
+      const LV = { '@drizzle': 0.4, '@rain': 0.7, '@downpour': 1 };
+      if (k in LV) { if (window.__storm) window.__storm.set(true, LV[k]); note.textContent = 'Weather set'; return; }
+      if (k === '@getaway') { if (window.__getaway) (window.__getaway.active ? window.__getaway.home() : window.__getaway.go()); note.textContent = 'Setting sail'; return; }
+      if (k === '@storm') { if (window.__storm) { window.__storm.toggle(); note.textContent = window.__storm.on ? 'Storm rolling in' : 'Storm passing'; } return; }
       if (k === '@bigfish') { if (window.__spawnFishJump) window.__spawnFishJump(rand(2000, 2900), rand(1900, 2300), 1); note.textContent = 'Big jump!'; return; }
       if (k === '@fish') {
         if (window.__spawnFishJump) window.__spawnFishJump(rand(1900, 3000), rand(1800, 2300));
@@ -979,7 +1260,7 @@
   if (/[?&]wildlife\b/.test(location.search)) openPanel();
   // Links: ?fox, ?summer+night+owl ... bring that animal in once (scene.js parses the words).
   // A few friendly names map to their visit: wolf (howl at night, run by day), deer = the buck.
-  const LINK_ALIAS = { dog: 'marley', tent: 'marley', wolf: () => (night() ? 'wolfHowl' : 'wolfRun'), howl: 'wolfHowl', buck: 'deer', rabbit: 'hare', snowhare: 'snowHare', bankdeer: 'bankDeer' };
+  const LINK_ALIAS = { closebuck: 'closeDeer', closedog: 'closeMarley', closerabbit: 'closeHare', dog: 'marley', tent: 'marley', wolf: () => (night() ? 'wolfHowl' : 'wolfRun'), howl: 'wolfHowl', buck: 'deer', rabbit: 'hare', snowhare: 'snowHare', bankdeer: 'bankDeer' };
   // Any visit's own name works too, in any case and with or without dashes: ?foreelk, ?fore-elk,
   // ?closebear, ?bankdeer, ?wolfhowl ... (the list is in the footer trigger guide).
   const CAST_BY_LC = {}; Object.keys(CAST).forEach((k) => { CAST_BY_LC[k.toLowerCase()] = k; });
@@ -1022,8 +1303,9 @@
   // the top effects plate (ungraded, so night doesn't dim them), drawn at ~30 fps and only while
   // the night gate is open (window.__moonEligible); by day it's hidden and its buffer released.
   // Each light is a pre-drawn glow sprite blitted with drawImage (no shadowBlur, cheap in Safari).
-  // Real fireflies are a spring/summer thing; fall gets a few late amber ones and winter a handful
-  // of icy "snow sparks" so every season has a little magic at night.
+  // Fireflies only come out on calm, dry nights: spring and summer, and never in a storm (fall
+  // rains and winter snows, so they stay away then). They fade out as a storm rolls in and back
+  // once it passes; while they're away the canvas is released and nothing is drawn.
   (function fireflies() {
     const host = $('rainCanvas') ? $('rainCanvas').parentNode : $('plateFx');
     if (!host || reduced) return;
@@ -1057,10 +1339,14 @@
         z, x: rand(z[0], z[2]), y: rand(z[1], z[3]), vx: rand(-14, 14), vy: rand(-6, 6),
         ph: rand(0, 20), per: rand(2.2, 4.5), on: rand(0.35, 0.6), size: rand(0.8, 1.25) }; });
     }
-    let last = 0, raf = 0;
+    let last = 0, raf = 0, calm = 0;
     function draw(now) {
       raf = requestAnimationFrame(draw);
-      const gate = window.__moonEligible || 0;
+      const st = window.__storm, sn0 = season();
+      const calmTarget = (sn0 === 'spring' || sn0 === 'summer') && !(st && (st.on || st.level > 0.05)) ? 1 : 0;
+      calm += (calmTarget - calm) * 0.03;
+      if (calm < 0.01 && !calmTarget) calm = 0;
+      const gate = (window.__moonEligible || 0) * calm;
       if (gate < 0.02 || document.hidden) { if (cv.width > 1) { cv.width = cv.height = 1; } return; }
       if (now - last < 33) return;
       const dt = Math.min(0.1, (now - last) / 1000); last = now;

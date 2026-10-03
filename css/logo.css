@@ -1,0 +1,111 @@
+/* Logo: Marley holding Christian by the hood at the canyon edge. Five stacked layers (canyon, dog,
+   man, calm-eye lids, dog head) sized in percentages inside a sandstone ring (no length division: Firefox lacks it). One slow 6 s cycle:
+   he slips down and his eyes go wide; she eases him back up and he relaxes. Size it with --lg. */
+.logo,.brand .mark.logo{--lg:56px;--ring:calc(var(--lg) * .055);position:relative;display:block;flex:none;box-sizing:border-box;
+  width:var(--lg);height:var(--lg);padding:var(--ring);border-radius:50%;
+  background:var(--lg-ring,linear-gradient(150deg,#f6cf7e 0%,#e08a3c 45%,#9c4a2c 75%,#5e3a5c 100%));
+  box-shadow:0 3px 10px rgba(60,30,20,.3)}
+.logo .lg-stage{position:relative;display:block;width:100%;height:100%;border-radius:50%;overflow:hidden}
+.logo .lg-stage img,.logo .lg-man{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
+.logo .lg-man,.logo .lg-head,.logo .lg-lids{will-change:transform,opacity}
+.logo .lg-stage{contain:paint;isolation:isolate}
+.logo .lg-man{animation:lg-slip 6s ease-in-out infinite}
+.logo .lg-head{transform-origin:48.3% -11.25%;animation:lg-hold 6s ease-in-out infinite}
+.logo .lg-lids{animation:lg-calm 6s ease-in-out infinite}
+@keyframes lg-slip{0%,100%{transform:translateY(0)}45%{transform:translateY(3%)}55%{transform:translateY(2.85%)}}
+@keyframes lg-hold{0%,100%{transform:scaleY(1)}45%{transform:scaleY(1.05)}55%{transform:scaleY(1.0475)}}
+@keyframes lg-calm{0%,8%{opacity:1}30%,62%{opacity:0}88%,100%{opacity:1}}
+@media (prefers-reduced-motion:reduce){.logo .lg-man,.logo .lg-head,.logo .lg-lids{animation:none}}
+
+/* Her chin (48.75% down) sits 60.25% below the head's pivot, so scaleY 1.05 moves it 3%:
+   exactly the man's drop, which keeps the hood in her mouth with no gap. */
+
+/* Homepage header: a big badge that hangs over the top edge of the scene. It only takes 44px of the
+   header's height; the rest overflows below (negative bottom margin), above the hero (z-index 3). */
+.site-head .brand .mark.logo{--lg:120px;margin:-14px 6px -76px 0;align-self:flex-start}
+.site-head .brand{align-items:flex-start;line-height:44px}
+@media (max-width:640px){.site-head .brand .mark.logo{--lg:68px;margin:-4px 2px -28px 0}}
+
+/* About page: the full-size version, and a small one in its header bar */
+.bar .brand .mark.logo{--lg:40px}
+.ab-logo{--lg:200px;float:left;margin:6px 32px 12px 0;shape-outside:circle(50%);shape-margin:14px}
+.about-page .ab-sec{clear:both}
+@media (max-width:560px){.ab-logo{--lg:120px;margin-right:18px}}
+@media print{.ab-logo{display:none}}
+
+/* Seasons and night. The page sets html[data-season] (winter/spring/summer/fall) and html.night-page;
+   two SVG overlays carry each season's touch: a tint or sun glow behind the pair, and petals, leaves,
+   snow or a gliding bird in front. Night dims the canyon, adds stars and a moon. The ring follows. */
+.logo .lg-fx{position:absolute;left:0;top:0;width:100%;height:100%;display:block;pointer-events:none;overflow:hidden}
+.logo .s,.logo .n{opacity:0;visibility:hidden;transition:opacity .8s,visibility 0s .8s}
+html[data-season="spring"] .logo .s-spring,html[data-season="summer"] .logo .s-summer,
+html[data-season="fall"] .logo .s-fall,html[data-season="winter"] .logo .s-winter{opacity:1;visibility:visible;transition:opacity .8s}
+.logo .n{transition:opacity 2.4s,visibility 0s 2.4s}
+html.night-page .logo .n{opacity:1;visibility:visible;transition:opacity 2.4s}
+html.night-page .logo .s-summer{opacity:0;visibility:hidden}                /* no sun at night */
+.logo .fall{animation:lg-fall 9s linear infinite}
+.logo .spin{animation:lg-spin 2.6s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:center}
+@keyframes lg-fall{0%{transform:translate(0,-130px)}50%{transform:translate(var(--sway),0)}100%{transform:translate(0,130px)}}
+@keyframes lg-spin{from{transform:rotate(-70deg)}to{transform:rotate(90deg)}}
+.logo .glide{animation:lg-glide 14s linear infinite}
+@keyframes lg-glide{0%{transform:translate(250px,40px)}100%{transform:translate(-30px,18px)}}
+.logo .tw{animation:lg-tw 3.2s ease-in-out infinite}
+@keyframes lg-tw{50%{opacity:.25}}
+@media (prefers-reduced-motion:reduce){.logo .fall,.logo .spin,.logo .glide,.logo .tw{animation:none}}
+
+/* Ring colours */
+html[data-season="spring"]{--lg-ring:linear-gradient(150deg,#fbe3ec 0%,#f39ab9 40%,#7bb35a 80%,#4e8a3c 100%)}
+html[data-season="fall"]{--lg-ring:linear-gradient(150deg,#f6c46a 0%,#e0772a 40%,#b2401f 75%,#6e2a1c 100%)}
+html[data-season="winter"]{--lg-ring:linear-gradient(150deg,#ffffff 0%,#d8e8f6 35%,#8fb2d6 75%,#5a7aa6 100%)}
+html.night-page{--lg-ring:linear-gradient(150deg,#d9e2f5 0%,#7d8fc4 30%,#34457a 70%,#1a2448 100%)}
+
+/* Per-logo overrides (Parts Catalog cards): data-season / data-night on the .logo itself beat the
+   page's html[data-season] / html.night-page, so one card can preview any season by day or night. */
+.logo.logo[data-season] .s,.logo.logo[data-night] .n{opacity:0;visibility:hidden}
+.logo.logo[data-season="spring"] .s-spring,.logo.logo[data-season="summer"] .s-summer,
+.logo.logo[data-season="fall"] .s-fall,.logo.logo[data-season="winter"] .s-winter,
+.logo.logo[data-night="1"] .n{opacity:1;visibility:visible;transition:opacity .8s}
+.logo.logo[data-night="1"] .s-summer{opacity:0;visibility:hidden}
+.logo[data-season="summer"]{--lg-ring:linear-gradient(150deg,#f6cf7e 0%,#e08a3c 45%,#9c4a2c 75%,#5e3a5c 100%)}
+.logo[data-season="spring"]{--lg-ring:linear-gradient(150deg,#fbe3ec 0%,#f39ab9 40%,#7bb35a 80%,#4e8a3c 100%)}
+.logo[data-season="fall"]{--lg-ring:linear-gradient(150deg,#f6c46a 0%,#e0772a 40%,#b2401f 75%,#6e2a1c 100%)}
+.logo[data-season="winter"]{--lg-ring:linear-gradient(150deg,#ffffff 0%,#d8e8f6 35%,#8fb2d6 75%,#5a7aa6 100%)}
+.logo[data-night="1"]{--lg-ring:linear-gradient(150deg,#d9e2f5 0%,#7d8fc4 30%,#34457a 70%,#1a2448 100%)}
+
+/* Deep-sea logo (Parts Catalog): a diver hands Marley's jellyfish a glowing box of parts. The
+   jellyfish layer is light on black and screens onto the water; the jellyfish and dog float together,
+   headlamps / cube / jellyfish glow on slow, out-of-step pulses, bubbles rise from the helmet. */
+.logo-deep{--lg-ring:linear-gradient(150deg,#9ff3ff 0%,#2fb6d8 35%,#2a4fb8 70%,#3a1f78 100%);box-shadow:0 3px 14px rgba(10,40,90,.45)}
+.logo-deep .dp-jelly{mix-blend-mode:screen}
+.logo-deep .dp-float{animation:dp-float 7s ease-in-out infinite}
+.logo-deep .dp-glow{mix-blend-mode:screen;animation:dp-pulse 4.2s ease-in-out infinite}
+.logo-deep .dp-g-lamp{animation-duration:3.4s}
+.logo-deep .dp-g-lamp2{animation-duration:3.4s;animation-delay:-1.7s}
+.logo-deep .dp-g-cube{animation-duration:5s;animation-delay:-1s}
+.logo-deep .dp-g-jelly{animation-duration:7s}
+.logo-deep .dp-fx{mix-blend-mode:normal}
+.logo-deep .dp-bub{animation:dp-rise 5s linear infinite}
+@keyframes dp-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-2.2%)}}
+@keyframes dp-pulse{0%,100%{opacity:.35}50%{opacity:.95}}
+@keyframes dp-rise{0%{transform:translate(0,8px);opacity:0}12%{opacity:.9}50%{transform:translate(var(--sw),-30px)}100%{transform:translate(0,-72px);opacity:0}}
+@media (prefers-reduced-motion:reduce){.logo-deep .dp-float,.logo-deep .dp-glow,.logo-deep .dp-bub{animation:none}.logo-deep .dp-glow{opacity:.6}.logo-deep .dp-bub{opacity:.6}}
+.logo-deep .lg-stage>img,.logo-deep .lg-stage>svg{scale:1.12}
+
+/* Diver logo (Parts Catalog): Christian in the helmet. The portrait drifts a hair inside the ring;
+   the shoulder lamps pulse out of step, a violet glow breathes under the visor, bubbles rise. */
+.logo-diver{--lg-ring:linear-gradient(150deg,#9ff3ff 0%,#2fb6d8 35%,#2a4fb8 70%,#3a1f78 100%);box-shadow:0 3px 14px rgba(10,40,90,.45),0 0 18px rgba(79,216,232,.25)}
+.logo-diver .dv-face{transform:scale(1.05);animation:dv-drift 8s ease-in-out infinite}
+@keyframes dv-drift{0%,100%{transform:scale(1.05) translateY(0)}50%{transform:scale(1.05) translateY(-1.6%)}}
+.logo-diver .dv-glow{mix-blend-mode:screen;animation:dp-pulse 3.6s ease-in-out infinite}
+.logo-diver .dv-lamp2{animation-delay:-1.8s}
+.logo-diver .dv-violet{animation-duration:5.5s}
+.logo-diver .dv-bub{animation:dv-rise 5s linear infinite}
+@keyframes dv-rise{0%{transform:translateY(0);opacity:0}15%{opacity:.9}100%{transform:translateY(-150px);opacity:0}}
+@media (prefers-reduced-motion:reduce){.logo-diver .dv-face,.logo-diver .dv-glow,.logo-diver .dv-bub{animation:none}.logo-diver .dv-glow{opacity:.6}}
+
+/* Maker logo (Workshop): Christian in his goggles, in a copper ring; the goggle rims glow cyan. */
+.logo-maker{--lg-ring:linear-gradient(150deg,#ffe0a8 0%,#d99550 35%,#9a5428 70%,#4a2614 100%);box-shadow:0 3px 14px rgba(40,20,8,.5),0 0 18px rgba(255,170,80,.2)}
+.logo-maker .mk-face{transform:scale(1.04)}
+.logo-maker .mk-goggle{position:absolute;left:22%;top:34%;width:56%;height:22%;border-radius:50%;
+  background:radial-gradient(ellipse,rgba(110,240,255,.5),rgba(60,200,240,.12) 55%,rgba(0,0,0,0) 72%);mix-blend-mode:screen;animation:dp-pulse 3.2s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){.logo-maker .mk-goggle{animation:none;opacity:.6}}

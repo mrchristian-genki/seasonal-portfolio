@@ -1,0 +1,242 @@
+/* PLAY, IN PLACE: styles for the Play tab's live content (js/play-inline.js). Everything is scoped to
+   .play-inline, which breaks out of the 760 px about column to give the grids room. */
+.play-inline,.pi-story,.pi-lightbox{--pi-bg:#fbfcfb;--pi-card:#fff;--pi-body:#1c3b3a;--pi-glass:rgba(255,255,255,.88);--pi-ai-bg:#efe9fb;--pi-ai:#6b4bb8;--pi-real-bg:#e2f4ec;--pi-real:#2f8f6b;--pi-ink:#0f4d47;--pi-ink2:#3f5a64;--pi-ink3:#71878f;--pi-line:#dde7e8;--pi-accent:#d8618f;--pi-soft:#fbe7ef;
+  --pi-display:"Nunito","Poppins","Arial Rounded MT Bold","Avenir Next Rounded","Avenir Next","Segoe UI",Arial,sans-serif;
+}
+.play-inline{position:relative;left:50%;transform:translateX(-50%);width:min(1120px,calc(100vw - 32px));text-align:left;margin:28px 0 8px;color:var(--pi-ink)}
+.play-inline .pi-loading{text-align:center;color:var(--pi-ink3)}
+.pi-jump{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:8px}
+.pi-jump a{font:700 14px var(--pi-display);text-decoration:none;color:var(--pi-ink);border:1px solid var(--pi-line);background:var(--pi-card);border-radius:999px;padding:6px 13px}
+.pi-jump a:hover{border-color:var(--pi-accent);color:var(--pi-accent)}
+.pi-sec{margin-top:44px;scroll-margin-top:24px}
+.pi-sec h3{font:800 clamp(22px,3.2vw,28px)/1.15 var(--pi-display);margin:0 0 4px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.pi-sub{color:var(--pi-ink2);margin:0 0 14px;max-width:760px;font-size:16px;line-height:1.55}
+.pi-more{margin:10px 0 0;font:700 15px var(--pi-display)}
+.pi-more a,.pi-more button{color:var(--pi-accent);text-decoration:none;background:none;border:0;padding:0;font:inherit;cursor:pointer}
+.pi-note{font-size:13px;color:var(--pi-ink3);margin:10px 0 0}
+.pi-badge{font:800 11px var(--pi-display);letter-spacing:.06em;text-transform:uppercase;border-radius:999px;padding:3px 9px;white-space:nowrap}
+.pi-badge.ai{background:var(--pi-ai-bg);color:var(--pi-ai)}
+.pi-badge.real{background:var(--pi-real-bg);color:var(--pi-real)}
+/* Episode card, playable in place */
+.pi-ep{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:0;border:1px solid var(--pi-line);border-radius:16px;overflow:hidden;background:var(--pi-card)}
+.pi-ep>img{width:100%;height:100%;object-fit:cover;min-height:200px}
+.pi-ep>div{padding:16px 18px}
+.pi-kick{margin:0;font-size:13px;color:var(--pi-ink3)}
+.pi-ep h4{font:800 23px/1.15 var(--pi-display);margin:4px 0 6px}
+.pi-ep p{margin:0 0 10px;color:var(--pi-ink2);font-size:16px;line-height:1.5}
+.pi-ep audio{width:100%;max-width:460px;height:40px;margin:2px 0 4px}
+@media (max-width:640px){.pi-ep{grid-template-columns:1fr}.pi-ep>img{max-height:240px}}
+/* Grids */
+.pi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.pi-grid[data-more="8"] .pi-tile:nth-child(n+9){display:none}
+.pi-tile{margin:0}
+.pi-tile a{display:block;position:relative;border-radius:10px;overflow:hidden;background:#e3ecec}
+.pi-tile img,.pi-tile video{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover}
+.pi-tile figcaption{font-size:13px;color:var(--pi-ink3);margin-top:5px}
+.pi-loop{position:absolute;right:8px;bottom:8px;width:24px;height:24px;border-radius:50%;background:rgba(0,0,0,.45);color:#fff;font-size:11px;display:grid;place-items:center;pointer-events:none}
+/* Daily Dose */
+.pi-yt{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.pi-yt figure{margin:0}
+.pi-ytbtn{position:relative;display:block;width:100%;padding:0;border:0;border-radius:12px;overflow:hidden;cursor:pointer;background:#000;aspect-ratio:16/9}
+.pi-ytbtn img{width:100%;height:100%;object-fit:cover;display:block}
+.pi-ytbtn span{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:58px;height:40px;border-radius:12px;background:#e62117;color:#fff;font-size:18px;display:grid;place-items:center}
+.pi-yt iframe{display:block;width:100%;aspect-ratio:16/9;border:0;border-radius:12px}
+.pi-yt figcaption{font:700 15px var(--pi-display);margin-top:6px}
+/* Daydreams: series cards open a panel underneath */
+.pi-series{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.pi-serie{position:relative;display:block;padding:0;border:0;border-radius:14px;overflow:hidden;color:#fff;background:#222;aspect-ratio:4/3;cursor:pointer;text-align:left;font:inherit}
+.pi-serie img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.pi-serie:hover img{transform:scale(1.04)}
+.pi-serie span{position:absolute;inset:auto 0 0 0;padding:26px 12px 10px;background:linear-gradient(0deg,rgba(0,0,0,.72),transparent);display:flex;flex-direction:column}
+.pi-serie b{font:800 17px/1.2 var(--pi-display)}
+.pi-serie i{font-style:normal;font-size:12px;opacity:.85}
+.pi-serie.on{outline:3px solid var(--pi-accent);outline-offset:2px}
+.pi-panel{margin-top:18px;padding:18px;border:1px solid var(--pi-line);border-radius:16px;background:var(--pi-bg);scroll-margin-top:16px}
+.pi-panel-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.pi-panel h4{font:800 24px var(--pi-display);margin:0}
+.pi-panel h5{font:800 18px var(--pi-display);margin:18px 0 10px;display:flex;align-items:center;gap:8px}
+.pi-close{width:36px;height:36px;border-radius:50%;border:1px solid var(--pi-line);background:var(--pi-card);font-size:22px;line-height:1;cursor:pointer;color:var(--pi-ink)}
+.pi-pager{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:18px;flex-wrap:wrap}
+.pi-pager button,.pi-pager a{font:700 14px var(--pi-display);color:var(--pi-ink);background:var(--pi-card);border:1px solid var(--pi-line);border-radius:999px;padding:6px 13px;cursor:pointer;text-decoration:none}
+.pi-pager a{color:var(--pi-ink3)}
+@media (max-width:560px){.pi-grid,.pi-series,.pi-yt{grid-template-columns:1fr 1fr;gap:6px}.pi-serie b{font-size:14px}.pi-yt figcaption{font-size:13px}.pi-ytbtn span{width:44px;height:30px;font-size:14px}.pi-panel{padding:12px}}
+/* The story pop-up: the episode's article over the homepage */
+.pi-story{border:0;padding:0;width:min(860px,96vw);max-height:92vh;max-height:calc(100dvh - 24px);border-radius:18px;background:var(--pi-bg);color:var(--pi-ink);box-shadow:0 30px 80px rgba(0,0,0,.35);overflow:hidden}
+.pi-story[open]{display:flex;flex-direction:column}
+.pi-story::backdrop{background:rgba(5,20,18,.7)}
+.pi-story-bar{flex:none;position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid var(--pi-line);background:var(--pi-card)}
+.pi-story-link{font:700 14px "Nunito","Poppins",Arial,sans-serif;color:var(--pi-ink3);text-decoration:none}
+.pi-story-body{min-height:0;overflow:auto;overscroll-behavior:contain;padding:4px 24px 28px;text-align:left;font:17px/1.6 system-ui,-apple-system,sans-serif}
+.pi-story-body h1{font:800 clamp(26px,4.5vw,40px)/1.1 "Nunito","Poppins",Arial,sans-serif;margin:6px 0 0}
+.pi-story-body h2{font:800 19px "Nunito","Poppins",Arial,sans-serif;margin:0 0 10px}
+.pi-story-body .kicker,.pi-story-body .note,.pi-story-body figcaption{font-size:14px;color:var(--pi-ink3);margin:14px 0 0}
+.pi-story-body .lede{font-size:18px;color:var(--pi-ink2)}
+.pi-story-body img{max-width:100%;height:auto;display:block;border-radius:12px}
+.pi-story-body figure{margin:22px 0}
+.pi-story-body .post figure img{max-height:70vh;max-height:60dvh;width:auto;margin:0 auto}
+.pi-story-body .listen{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin:18px 0;padding:12px 14px;border-radius:14px;background:#0f4d47;color:#fff}
+.pi-story-body .listen>div{display:flex;flex-direction:column;flex:1 1 180px}
+.pi-story-body .listen-label{font:700 12px Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#f6b8cf}
+.pi-story-body .listen audio{flex:1 1 240px;width:100%}
+.pi-story-body .route{margin-top:22px;padding:14px;border:1px solid var(--pi-line);border-radius:14px;background:var(--pi-card)}
+.pi-story-body .route-grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:12px}
+@media (max-width:640px){.pi-story-body{padding:4px 14px 22px}.pi-story-body .route-grid{grid-template-columns:1fr}}
+.pi-story-body .map{height:280px;border-radius:10px;overflow:hidden;background:#e3ecec}
+.pi-story-body .stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-content:start}
+.pi-story-body .stat{border:1px solid var(--pi-line);border-radius:10px;padding:7px 10px}
+.pi-story-body .stat b{display:block;font:800 19px "Nunito",Arial,sans-serif}
+.pi-story-body .stat span{font-size:12px;color:var(--pi-ink3)}
+.pi-story-body .profile{position:relative;margin-top:10px}
+.pi-story-body .profile svg{display:block;width:100%;height:120px}
+.pi-story-body .profile .tip{position:absolute;top:0;transform:translateX(-50%);background:#0f4d47;color:#fff;font-size:12px;padding:3px 8px;border-radius:6px;opacity:0;pointer-events:none}
+.pi-story-body .post{margin-top:24px;font-family:Charter,Georgia,serif;font-size:18px;line-height:1.7;color:var(--pi-body)}
+.pi-story-body .post p{margin:0 0 1em}
+.pi-story-body .learned{font-family:system-ui,sans-serif;font-size:16px;background:var(--pi-soft);border-radius:12px;padding:12px 14px;color:var(--pi-ink)}
+.pi-story-body .kind{font-weight:800;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#d8618f}
+.pi-story-body .lede{margin:10px 0 0;max-width:none}
+/* Views: chips are buttons now; the stage fades out, the new view's items fade up in a stagger */
+.pi-jump{position:sticky;top:8px;z-index:3;padding:6px;background:var(--pi-glass);backdrop-filter:blur(6px);border-radius:999px;width:max-content;max-width:100%;margin:0 auto 8px;overflow-x:auto;flex-wrap:nowrap;scrollbar-width:none}
+.pi-jump::-webkit-scrollbar{display:none}
+.pi-jump button{flex:none;font:700 14px var(--pi-display);color:var(--pi-ink);border:1px solid var(--pi-line);background:var(--pi-card);border-radius:999px;padding:6px 13px;cursor:pointer;transition:background .2s,color .2s,border-color .2s}
+.pi-jump button:hover{border-color:var(--pi-accent);color:var(--pi-accent)}
+.pi-jump button.on{background:var(--pi-ink);border-color:var(--pi-ink);color:var(--pi-bg)}
+.pi-stage{transition:opacity .26s ease,transform .26s ease}
+.pi-stage.pi-out{opacity:0;transform:translateY(8px)}
+.pi-in{animation:piIn .42s cubic-bezier(.2,.8,.3,1) both}
+@keyframes piIn{from{opacity:0;transform:translateY(12px) scale(.985)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.pi-in{animation:none}.pi-stage{transition:none}}
+.pi-eps{display:grid;gap:14px}
+.pi-yt figcaption small{display:block;font:500 12px system-ui,sans-serif;color:var(--pi-ink3);margin-top:2px}
+.pi-sub a{color:var(--pi-accent)}
+.pi-modal .pi-modal-kick{font:700 13px var(--pi-display,Arial);color:var(--pi-ink3)}
+.pi-modal .pi-story-body{padding-top:10px}
+.pi-modal .pi-grid{margin-top:12px}
+.pi-modal .pi-tile figcaption{margin-top:5px}
+.pi-modal .pi-tile img,.pi-modal .pi-tile video{border-radius:0;max-height:none}
+.pi-h5{font:800 18px "Nunito","Poppins",Arial,sans-serif;margin:22px 0 0;display:flex;align-items:center;gap:8px}
+.pi-player{margin:16px 0 4px;border-radius:12px;overflow:hidden;background:#000;aspect-ratio:16/9}
+.pi-player iframe{display:block;width:100%;height:100%;border:0}
+.pi-modal .pi-pager{margin-top:20px}
+.pi-modal .pi-pager span{flex:1}
+
+.pi-grid:has(> .pi-tile:only-child){grid-template-columns:minmax(0,760px)}
+.pi-grid:has(> .pi-tile:only-child) img{aspect-ratio:auto}
+.pi-modal .pi-h5{font-size:17px}
+.pi-story-body .pi-tile{margin:0}
+.ab-modal{width:min(940px,96vw)}
+.ab-modal .about-page{padding:8px 4px 30px}
+
+/* NIGHT MODE: the same colors as the rest of the page at night (scene.css --night-*). Every color
+   here is a variable; registering them lets the variables themselves animate, so the Play section
+   and any open modal fade with the page's 2.4 s day/night change. */
+@property --pi-bg{syntax:'<color>';inherits:true;initial-value:#fbfcfb}
+@property --pi-card{syntax:'<color>';inherits:true;initial-value:#fff}
+@property --pi-ink{syntax:'<color>';inherits:true;initial-value:#0f4d47}
+@property --pi-ink2{syntax:'<color>';inherits:true;initial-value:#3f5a64}
+@property --pi-ink3{syntax:'<color>';inherits:true;initial-value:#71878f}
+@property --pi-line{syntax:'<color>';inherits:true;initial-value:#dde7e8}
+@property --pi-body{syntax:'<color>';inherits:true;initial-value:#1c3b3a}
+@property --pi-soft{syntax:'<color>';inherits:true;initial-value:#fbe7ef}
+@property --pi-glass{syntax:'<color>';inherits:true;initial-value:rgba(255,255,255,.88)}
+@property --pi-ai-bg{syntax:'<color>';inherits:true;initial-value:#efe9fb}
+@property --pi-ai{syntax:'<color>';inherits:true;initial-value:#6b4bb8}
+@property --pi-real-bg{syntax:'<color>';inherits:true;initial-value:#e2f4ec}
+@property --pi-real{syntax:'<color>';inherits:true;initial-value:#2f8f6b}
+.play-inline,.pi-story,.pi-lightbox{transition:--pi-bg 2.4s ease,--pi-card 2.4s ease,--pi-ink 2.4s ease,--pi-ink2 2.4s ease,--pi-ink3 2.4s ease,--pi-line 2.4s ease,--pi-body 2.4s ease,--pi-soft 2.4s ease,--pi-glass 2.4s ease,--pi-ai-bg 2.4s ease,--pi-ai 2.4s ease,--pi-real-bg 2.4s ease,--pi-real 2.4s ease}
+.play-inline{transition-property:--pi-bg,--pi-card,--pi-ink,--pi-ink2,--pi-ink3,--pi-line,--pi-body,--pi-soft,--pi-glass,--pi-ai-bg,--pi-ai,--pi-real-bg,--pi-real,transform}
+html.night-page .play-inline,html.night-page .pi-story,html.night-page .pi-lightbox{--pi-bg:#0e1823;--pi-card:#16232f;--pi-ink:#dde8e6;--pi-ink2:#a6b8bf;--pi-ink3:#7d909a;--pi-line:#27384a;--pi-body:#cfdcda;--pi-soft:#3a2231;--pi-glass:rgba(14,24,35,.86);--pi-ai-bg:#2a2340;--pi-ai:#c4b2f2;--pi-real-bg:#16332a;--pi-real:#7fd1ab}
+html.night-page .pi-story::backdrop{background:rgba(0,0,0,.72)}
+html.night-page .pi-tile a,html.night-page .pi-story-body .map{background:#1d2c38}
+@media (prefers-reduced-motion:reduce){.play-inline,.pi-story,.pi-lightbox{transition:none}}
+
+/* BIG MEDIA. Photos: just the picture. Clips: the clip, playing, with its controls. */
+.pi-lightbox{border:0;padding:0;background:transparent;max-width:none;max-height:none;width:100vw;height:100vh;height:100dvh;display:none;place-items:center;overflow:hidden}
+.pi-lightbox[open]{display:grid;animation:piFade .26s ease both}
+.pi-lightbox.out{animation:piFadeOut .22s ease both}
+.pi-lightbox::backdrop{background:rgba(5,14,20,.9);animation:piFade .26s ease both}
+.pi-lightbox.out::backdrop{animation:piFadeOut .22s ease both}
+.pi-lb-in{display:flex;flex-direction:column;align-items:center;max-width:min(94vw,1500px);animation:piPop .3s cubic-bezier(.2,.8,.3,1) both}
+.pi-lightbox.out .pi-lb-in{animation:piPopOut .22s ease both}
+.pi-lb-in img,.pi-lb-in video{display:block;max-width:100%;max-height:84vh;max-height:84dvh;width:auto;height:auto;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.pi-lb-in p,.pi-focus p{margin:10px 4px 0;font-size:15px;color:#e8f0ef;text-align:center}
+.pi-lightbox>.pi-close{position:fixed;top:14px;right:14px;background:rgba(255,255,255,.92);color:#0f4d47;border:0}
+/* Inside a modal: the card fills with the item */
+.pi-focus{position:absolute;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:54px 18px 18px;
+  background:#0b151c;cursor:zoom-out;opacity:0;transition:opacity .25s ease}
+.pi-focus.on{opacity:1}
+.pi-focus img,.pi-focus video{display:block;max-width:100%;max-height:calc(100% - 34px);width:auto;height:auto;object-fit:contain;background:#000;border-radius:10px;transform:scale(.97);transition:transform .3s cubic-bezier(.2,.8,.3,1)}
+.pi-focus.on img,.pi-focus.on video{transform:none}
+.pi-focus video{cursor:default}
+.pi-focus-x{position:absolute;top:10px;right:12px;background:rgba(255,255,255,.92)!important;color:#0f4d47!important;border:0!important}
+@keyframes piFade{from{opacity:0}}
+@keyframes piFadeOut{to{opacity:0}}
+@keyframes piPop{from{opacity:0;transform:scale(.96)}}
+@keyframes piPopOut{to{opacity:0;transform:scale(.97)}}
+@media (prefers-reduced-motion:reduce){.pi-lightbox[open],.pi-lightbox.out,.pi-lb-in,.pi-focus,.pi-focus img,.pi-focus video{animation:none;transition:none}}
+.pi-story[open]{animation:piPop .28s cubic-bezier(.2,.8,.3,1) both}
+.pi-story[open]::backdrop{animation:piFade .28s ease both}
+@media (prefers-reduced-motion:reduce){.pi-story[open],.pi-story[open]::backdrop{animation:none}}
+/* Photos and clips: sized from their shape (--r) to the largest that fits the space, the same way
+   for both, so a small clip shows as big as a photo and its controls sit on the picture. */
+.pi-focus{container-type:size}
+.pi-focus img,.pi-focus video{width:min(100cqw,(100cqh - 34px) * var(--r,1.5));height:auto;aspect-ratio:var(--r,1.5);max-width:none;max-height:none;object-fit:contain}
+.pi-lb-in img,.pi-lb-in video{width:min(94vw,84vh * var(--r,1.5));width:min(94vw,84dvh * var(--r,1.5));height:auto;aspect-ratio:var(--r,1.5);max-width:none;max-height:none;object-fit:contain}
+/* The viewer follows the page: white by day, dark at night (same palette and fade as the modals). */
+.pi-focus{background:var(--pi-bg)}
+.pi-focus p,.pi-lb-in p{color:var(--pi-ink2)}
+.pi-lightbox::backdrop{background:rgba(251,252,251,.97)}
+html.night-page .pi-lightbox::backdrop{background:rgba(14,24,35,.97)}
+.pi-focus-x,.pi-lightbox>.pi-close{background:var(--pi-card)!important;color:var(--pi-ink)!important;border:1px solid var(--pi-line)!important}
+/* Clips in a story fit the column like photos */
+.pi-story-body video{display:block;max-width:100%;width:100%;height:auto;border-radius:12px;background:#000}
+.pi-story-body .post figure video{max-height:70vh;max-height:60dvh;width:auto;margin:0 auto}
+/* The episode card's call to action: a clean pill button, not a text link */
+.pi-more a[data-pi-story]{display:inline-flex;align-items:center;gap:8px;margin-top:4px;padding:10px 18px;border-radius:999px;
+  background:var(--pi-accent);color:#fff;font:700 14px var(--pi-display);letter-spacing:.01em;
+  box-shadow:0 2px 8px rgba(216,97,143,.28);transition:transform .15s ease,box-shadow .15s ease,filter .15s ease}
+.pi-more a[data-pi-story]:hover{filter:brightness(1.06);transform:translateY(-1px);box-shadow:0 5px 14px rgba(216,97,143,.35)}
+.pi-more a[data-pi-story]:active{transform:translateY(0)}
+.pi-more a[data-pi-story]:focus-visible{outline:3px solid var(--pi-accent);outline-offset:3px}
+html.night-page .pi-more a[data-pi-story]{color:#16232f;box-shadow:0 2px 10px rgba(0,0,0,.35)}
+@media (prefers-reduced-motion:reduce){.pi-more a[data-pi-story]{transition:none}.pi-more a[data-pi-story]:hover{transform:none}}
+
+/* The Field Notes table of old prints, inside the story pop-up (same as play/play.css): mounted prints on warm wood, each turned a little and drifting
+   on its own slow rhythm. Phones: the prints stack with a small overlap. */
+.pi-story-body .post figure.table{margin:36px auto;max-width:min(100%,900px)}
+.pi-story-body .table-top{position:relative;display:grid;grid-template-columns:1.12fr 1fr 1fr;align-items:center;gap:0;padding:44px 34px 52px;border-radius:14px;
+  background:
+    radial-gradient(ellipse at 30% 20%,rgba(255,220,170,.22),transparent 60%),
+    repeating-linear-gradient(90deg,rgba(60,30,10,.0) 0 22px,rgba(60,30,10,.10) 22px 23px,rgba(60,30,10,0) 23px 61px,rgba(255,230,190,.06) 61px 63px),
+    repeating-linear-gradient(90deg,#7a4a26 0 140px,#734524 140px 141px,#7d4d28 141px 290px),
+    #7a4a26;
+  box-shadow:inset 0 0 60px rgba(30,12,2,.55),0 10px 30px rgba(20,30,40,.18)}
+.pi-story-body .table-top .print{position:relative;display:block;background:#f4eee2;padding:10px 10px 30px;border-radius:2px;
+  box-shadow:0 2px 3px rgba(0,0,0,.35),0 14px 26px rgba(20,8,0,.45);text-decoration:none;
+  animation:print-drift 11s ease-in-out infinite;transform-origin:50% 60%}
+.pi-story-body .table-top .print video{display:block;width:100%;height:auto;border-radius:0;background:#222;filter:sepia(.12)}
+.pi-story-body .table-top .print-cap{position:absolute;left:10px;right:10px;bottom:7px;font:italic 12px/1.2 Georgia,serif;color:#5b4a36;text-align:center;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pi-story-body .table-top .p1{--r:-4deg;z-index:2;margin-right:-6%;animation-duration:13s}
+.pi-story-body .table-top .p2{--r:2.5deg;z-index:3;margin-top:-26px;animation-duration:11s;animation-delay:-4s}
+.pi-story-body .table-top .p3{--r:-1.5deg;z-index:1;margin-left:-5%;margin-top:30px;animation-duration:17s;animation-delay:-9s}
+.pi-story-body .post figure.table figcaption{text-align:center}
+@media (max-width:640px){
+  .pi-story-body .table-top{grid-template-columns:1fr;padding:26px 22px 34px;gap:0}
+  .pi-story-body .table-top .print{width:86%}
+  .pi-story-body .table-top .p1{margin:0 auto 0 0}
+  .pi-story-body .table-top .p2{margin:-14px 0 0 auto}
+  .pi-story-body .table-top .p3{margin:-14px auto 0 4%}
+}
+@media (prefers-reduced-motion:reduce){.pi-story-body .table-top .print{animation:none;transform:rotate(var(--r))}}
+@keyframes print-drift{0%,100%{transform:rotate(var(--r)) translate(0,0)}50%{transform:rotate(calc(var(--r) + .6deg)) translate(2px,-3px)}}
+.pi-story-body .table-top .print-cap{font-size:12px}
+.pi-story-body .table-top .print video{max-height:none}
+.pi-story-body .ai-badge,.pi-story-body .real-badge{font:800 11px "Nunito",Arial,sans-serif;letter-spacing:.06em;text-transform:uppercase;border-radius:999px;padding:3px 9px;white-space:nowrap}
+.pi-story-body .ai-badge{background:#efe9fb;color:#6b4bb8}
+
+/* "More" links under a post: small quiet pills instead of a run of underlined text */
+.pi-story-body .links{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:14px;color:var(--pi-ink3)}
+.pi-story-body .links a{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid var(--pi-line);border-radius:999px;background:var(--pi-card);
+  color:var(--pi-ink);text-decoration:none;font-weight:600;transition:border-color .15s,background .15s}
+.pi-story-body .links a::after{content:"↗";font-size:12px;color:var(--pi-ink3)}
+.pi-story-body .links a:hover{border-color:#d8618f;background:var(--pi-soft)}

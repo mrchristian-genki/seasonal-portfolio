@@ -1,0 +1,62 @@
+/* THE GETAWAY -- the tropical beach, a hidden destination reached by the fisherman's paper
+   boat (js/getaway.js). Loaded only when someone goes. Layer styles from the parts catalog's
+   scene tests (scenes/scene-test.css), prefixed gw-. */
+.gw-stage{position:absolute;inset:0;overflow:hidden;z-index:5;background:#0590cf;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.gw-stage[hidden]{display:none}
+.gw-world{position:absolute;left:0}
+.gw-layer{position:absolute;will-change:transform;transition:opacity 1.6s ease,filter 1.6s ease}
+.gw-inner{position:absolute;inset:0}
+.gw-inner img,.gw-inner svg{display:block;width:100%;height:100%;pointer-events:none;-webkit-user-drag:none}
+.gw-stage[data-time] .gw-layer[data-time]{opacity:0;pointer-events:none}
+.gw-stage[data-time="day"] .gw-layer[data-time="day"],.gw-stage[data-time="sunset"] .gw-layer[data-time="sunset"]{opacity:1}
+.gw-stage[data-time="sunset"] .gw-layer{filter:var(--grade-sunset,none)}
+
+/* idle motion */
+.a-drift{animation:gw-drift 38s ease-in-out infinite alternate}
+.a-drift-slow{animation:gw-drift-slow 60s ease-in-out infinite alternate}
+@keyframes gw-drift{from{transform:translateX(-4%)}to{transform:translateX(9%)}}
+@keyframes gw-drift-slow{from{transform:translateX(-1%)}to{transform:translateX(1%)}}
+.a-sway{animation:gw-sway 6.5s ease-in-out infinite}
+.a-sway-b{animation:gw-sway-b 7.3s ease-in-out infinite}
+@keyframes gw-sway{0%,100%{transform:rotate(-.6deg)}50%{transform:rotate(1.1deg)}}
+@keyframes gw-sway-b{0%,100%{transform:rotate(.6deg)}50%{transform:rotate(-1.1deg)}}
+.a-rustle{animation:gw-rustle 5.2s ease-in-out infinite}
+@keyframes gw-rustle{0%,100%{transform:skewX(0)}40%{transform:skewX(.8deg)}70%{transform:skewX(-.4deg)}}
+.a-bob{animation:gw-bob 4.8s ease-in-out infinite}
+@keyframes gw-bob{0%,100%{transform:translate(0,0) rotate(-1deg)}50%{transform:translate(6px,2px) rotate(1.2deg)}}
+.a-glide{animation:gw-glide 30s ease-in-out infinite alternate}
+@keyframes gw-glide{from{transform:translate(0,0)}to{transform:translate(5%,-2%)}}
+.gw-gull{fill:#fff;transform-box:fill-box;transform-origin:center;animation:gw-flap 1.4s ease-in-out infinite}
+@keyframes gw-flap{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.35)}}
+/* the paper boat sails in across the bay when you arrive */
+.gw-arrive img{animation:gw-arrive 4.2s cubic-bezier(.2,.7,.3,1) both}
+@keyframes gw-arrive{from{transform:translateX(-520%) rotate(-3deg)}to{transform:none}}
+
+/* procedural sea and beach (js/getaway-procedural.js) */
+.pr-sea,.pr-beach{overflow:visible}
+.pr-streak{animation:pr-streak 11s ease-in-out infinite alternate}
+@keyframes pr-streak{from{transform:translateX(0)}to{transform:translateX(var(--dx))}}
+.pr-glint{transform-box:fill-box;transform-origin:center;animation:pr-glint 3.5s ease-in-out infinite;opacity:0}
+@keyframes pr-glint{0%,100%{opacity:0;transform:scale(.4)}45%{opacity:.95;transform:scale(1)}60%{opacity:0;transform:scale(.6)}}
+.pr-surf{animation:pr-surf 3.6s ease-in-out infinite}
+.pr-surf-b{animation:pr-surf 4.4s ease-in-out -1.7s infinite reverse}
+@keyframes pr-surf{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+.pr-halo{transform-box:fill-box;transform-origin:center;animation:pr-halo 6s ease-in-out infinite}
+@keyframes pr-halo{50%{transform:scale(1.06);opacity:.85}}
+
+/* the wave that washes you there and back */
+.gw-wave{position:absolute;left:-5%;width:110%;top:0;height:135%;z-index:6;pointer-events:none;transform:translateY(102%);
+  background:linear-gradient(#e9fbff 0 3%, #7fd6e6 5%, #2aa5c4 30%, #0b6f96 100%);
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 40' preserveAspectRatio='none'%3E%3Cpath d='M0 20 Q50 0 100 20 T200 20 T300 20 T400 20 V40 H0Z'/%3E%3C/svg%3E") 0 0/25% 40px repeat-x, linear-gradient(#000,#000) 0 39px/100% 100% no-repeat;
+  mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 40' preserveAspectRatio='none'%3E%3Cpath d='M0 20 Q50 0 100 20 T200 20 T300 20 T400 20 V40 H0Z'/%3E%3C/svg%3E") 0 0/25% 40px repeat-x, linear-gradient(#000,#000) 0 39px/100% 100% no-repeat}
+
+/* while away: the lake is hidden (nothing painted) and its hidden tap spots are off */
+.scene-core.gw-away>.plate:not(.plate-ui){visibility:hidden}
+.scene-core.gw-away .wl-hot{pointer-events:none}
+.gw-home{position:absolute;right:16px;top:16px;z-index:12;font:600 13px/1 system-ui,sans-serif;color:#0d3b4a;background:rgba(255,255,255,.88);
+  border:0;border-radius:999px;padding:9px 14px;cursor:pointer;box-shadow:0 2px 8px rgba(0,40,60,.25);pointer-events:auto}
+.gw-home:hover{background:#fff}
+.gw-home:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.gw-home[hidden]{display:none}
+@media (max-width:700px){.gw-home{top:auto;bottom:24%;right:12px}}
+@media (prefers-reduced-motion:reduce){.gw-stage *{animation:none!important}.gw-layer{transition:none}}
