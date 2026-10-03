@@ -36,12 +36,12 @@
 .night .p-jar.lit .on{filter:drop-shadow(.4cqi .5cqi .5cqi rgba(10,4,0,.5)) brightness(1.05)}
 @keyframes breathe{0%,100%{opacity:.85}50%{opacity:1}}
 
-/* panel lamp: the green lens fades on, with light on the brass */
-.p-panel .on{opacity:0;transition:opacity 1.2s ease}
-.p-panel.lit .on{opacity:1}
-.p-panel .glow{position:absolute;left:28%;top:47%;width:120%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;pointer-events:none;
-  background:radial-gradient(circle,rgba(90,255,110,.5),rgba(60,220,90,.15) 35%,transparent 62%);mix-blend-mode:screen;opacity:0;transition:opacity 1.2s ease}
-.p-panel.lit .glow{opacity:.8}
+/* panel lamps: the left lens glows amber by day, the right one blue by night, matching the switch */
+.p-panel .on,.p-panel .on2{opacity:0;transition:opacity 1.2s ease}
+.table:not(.night) .p-panel .on,.night .p-panel .on2{opacity:1}
+.p-panel .glow{position:absolute;left:27.5%;top:49.7%;width:120%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;pointer-events:none;mix-blend-mode:screen;opacity:.75;
+  background:radial-gradient(circle,rgba(255,180,80,.45),rgba(255,150,50,.12) 30%,transparent 60%);transition:left 1.2s ease,background 1.2s ease}
+.night .p-panel .glow{left:72.3%;opacity:.9;background:radial-gradient(circle,rgba(130,190,255,.5),rgba(110,170,255,.14) 30%,transparent 60%)}
 
 /* a print: one of your photos inside the blank print, with the print's own light and curl over it */
 .p-print{display:grid}

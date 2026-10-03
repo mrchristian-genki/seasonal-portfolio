@@ -1,11 +1,12 @@
 <?php
 /* STUDIO API. JSON in, JSON out, for the Studio page only: every call needs the login session, and
-   every change also needs the page's CSRF token. Nothing is written to this server: entries and
-   photos go to the GitHub repo as commits. */
+   every change also needs the page's CSRF token. Entries and photos go to the GitHub repo as commits;
+   the only thing written to this server is what the Drive copy brings into ~/incoming. */
 declare(strict_types=1);
 require __DIR__ . '/lib/bootstrap.php';
 require __DIR__ . '/lib/github.php';
 require __DIR__ . '/lib/drafter.php';
+require __DIR__ . '/lib/drive.php';
 require __DIR__ . '/vendor/autoload.php';
 
 studio_security_headers();
@@ -114,6 +115,13 @@ try {
             $guide = $gh->read('field/SHOW-GUIDE.md') ?? '';
             $draft = (new Drafter($cfg, $guide))->draft($body['facts'] ?? [], $body['thumbs'] ?? []);
             json_out(['draft' => $draft]);
+
+        // Google Drive to the server: what's arrived so far, and the button that fetches new files.
+        case 'GET drive':
+            json_out((new Drive($cfg))->status());
+
+        case 'POST drive':
+            json_out((new Drive($cfg))->start());
 
         default:
             json_fail('Unknown request.', 404);

@@ -103,3 +103,13 @@ code{background:#ecdfc6}
 /* brass buttons read on both the dark page and the paper */
 button.primary{background:#c9a36a;border-color:#b08a52;color:#2b2118;box-shadow:3px 4px 8px rgba(8,4,0,.35)}
 button.primary:hover{background:#d8b47c}
+
+/* Google Drive panel: the button that brings new files to the server */
+.drive{margin-bottom:22px}
+.drive-head{display:flex;gap:16px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
+.drive h2{margin:0 0 4px;font-size:1.15rem}
+.drive .muted{margin:0}
+.drive-line{margin:12px 0 0}
+.inbox{list-style:none;margin:12px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:6px 14px}
+.inbox li{display:flex;flex-direction:column;border-top:1px dashed rgba(43,33,24,.25);padding-top:6px}
+.inbox small{opacity:.7}

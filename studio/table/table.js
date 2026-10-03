@@ -23,7 +23,7 @@
     { id: 'canister', src: 'canister', x: 1881, y: 681, w: 154, rot: 0, how: 'roll', from: 'right' },
     { id: 'mat', src: 'mat', x: 1641, y: 980, w: 717, rot: 0, how: 'slide', from: 'right' },
     { id: 'pins', src: 'pins', x: 1118, y: 1039, w: 152, rot: 0, how: 'drop' },
-    { id: 'panel', src: ['panel-off', 'panel-on'], x: 1700, y: 610, w: 112, rot: 0, how: 'slide' },
+    { id: 'panel', src: ['panel-off', 'panel-day', 'panel-night'], x: 1700, y: 610, w: 112, rot: 0, how: 'slide' },
     { id: 'contact', src: 'contact', x: 1800, y: 175, w: 330, rot: 7, how: 'slide', from: 'top' },
     { id: 'resin', src: 'resin', x: 215, y: 445, w: 175, rot: -8, how: 'slide', from: 'left' },
     { id: 'cone', src: 'cone', x: 1205, y: 330, w: 140, rot: 0, how: 'roll', from: 'top' },
@@ -41,7 +41,7 @@
   if (HEADER) PROPS = [
     { id: 'pencils', src: 'pencils', x: 279, y: 223, w: 444, rot: 0, how: 'slide', from: 'left' },
     { id: 'ruler', src: 'ruler', x: 1010, y: 90, w: 557, rot: 0, how: 'slide', from: 'top' },
-    { id: 'panel', src: ['panel-off', 'panel-on'], x: 1585, y: 300, w: 86, rot: 0, how: 'slide' },
+    { id: 'panel', src: ['panel-off', 'panel-day', 'panel-night'], x: 1585, y: 300, w: 86, rot: 0, how: 'slide' },
     { id: 'contact', src: 'contact', x: 1800, y: 135, w: 300, rot: 7, how: 'slide', from: 'top' },
     { id: 'carnelians', src: 'carnelians', x: 800, y: 300, w: 95, rot: 12, how: 'drop' },
     { id: 'cone', src: 'cone', x: 960, y: 270, w: 112, rot: 0, how: 'roll', from: 'top' },
@@ -76,6 +76,7 @@
     el.className = 'prop p-' + p.id + (Array.isArray(p.src) ? ' stack' : '');
     if (Array.isArray(p.src)) {
       el.appendChild(img(p.src[0], 'off')); el.appendChild(img(p.src[1], 'on'));
+      if (p.src[2]) el.appendChild(img(p.src[2], 'on2'));
       var g = document.createElement('span'); g.className = 'glow'; el.appendChild(g);
       if (p.id === 'jar') el.classList.add('glows');
     } else el.appendChild(img(p.src));
@@ -180,7 +181,7 @@
   // Process Content: the prints develop like film in a tray, then the green lamp lights
   function process() {
     if (!prints.length) return dropPrints().then(process);
-    var panel = els.panel; if (panel) panel.classList.remove('lit');
+    var panel = els.panel;
     var chain = Promise.resolve();
     prints.forEach(function (pr) {
       chain = chain.then(function () {
@@ -192,7 +193,7 @@
           { opacity: 1, filter: 'sepia(0) contrast(1) brightness(1)' }], { duration: 2600, easing: 'ease-in-out' });
       });
     });
-    return chain.then(function () { return wait(400); }).then(function () { if (panel) panel.classList.add('lit'); });
+    return chain.then(function () { return wait(400); }).then(function () { if (panel && !calm) anim(panel, [{ filter: 'brightness(1)' }, { filter: 'brightness(1.5)' }, { filter: 'brightness(1)' }], { duration: 900, iterations: 2 }); });
   }
 
   // Marley drops by over the top edge: leaning in by day, resting or asleep at night

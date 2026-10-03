@@ -74,8 +74,9 @@
     if (dirty && !confirm('Leave without saving?')) return;
     dirty = false; E = null; fresh = {}; removed = [];
     history.replaceState(null, '', './');
-    app.innerHTML = '<div class="head"><h1>Field Notes</h1><button id="new" class="primary">New entry</button></div><div id="list" class="cards"><p class="muted">Loading entries…</p></div>';
+    app.innerHTML = '<div class="head"><h1>Field Notes</h1><button id="new" class="primary">New entry</button></div><section id="drive" class="panel drive"><p class="muted">Checking Google Drive…</p></section><div id="list" class="cards"><p class="muted">Loading entries…</p></div>';
     $('#new').onclick = function () { edit(null); };
+    driveStatus();
     api('list').then(function (j) {
       var st = {}; (CFG.statuses || []).forEach(function (s) { st[s.id] = s.label; });
       $('#list').innerHTML = j.entries.length ? j.entries.map(function (e) {
@@ -84,6 +85,37 @@
       }).join('') : '<p class="muted">No entries yet.</p>';
       $$('.card', $('#list')).forEach(function (b) { b.onclick = function () { edit(b.getAttribute('data-id')); }; });
     }).catch(function (err) { $('#list').innerHTML = '<p class="err">' + esc(err.message) + '</p>'; });
+  }
+
+  // ---------- Google Drive: new files come to the server with rclone (one way, never deletes) ----------
+  var drivePoll = null;
+  function size(b) { return b >= 1073741824 ? (b / 1073741824).toFixed(1) + ' GB' : b >= 1048576 ? Math.round(b / 1048576) + ' MB' : Math.max(1, Math.round(b / 1024)) + ' KB'; }
+  function when(t) { return t ? new Date(t * 1000).toLocaleString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) : ''; }
+  function driveStatus() {
+    clearTimeout(drivePoll);
+    if (!$('#drive')) return;
+    api('drive').then(renderDrive).catch(function (err) { var d = $('#drive'); if (d) d.innerHTML = '<p class="err">' + esc(err.message) + '</p>'; });
+  }
+  function renderDrive(j) {
+    var d = $('#drive'); if (!d) return;
+    var names = j.folders.map(function (f) { return '“' + esc(f) + '”'; }).join(', ');
+    var line;
+    if (j.running) line = 'Bringing in new files… ' + esc(j.progress || 'starting') + (j.copiedCount ? ' · ' + j.copiedCount + ' copied so far' : '');
+    else if (j.finished) line = (j.ok ? 'Last brought in ' : 'Last try stopped with a problem, ') + esc(when(j.finished)) + (j.ok ? ' · ' + (j.copiedCount ? j.copiedCount + ' new file' + (j.copiedCount === 1 ? '' : 's') : 'nothing new') : '');
+    else line = 'Not brought in yet.';
+    var inbox = j.inbox.length ? '<ul class="inbox">' + j.inbox.slice(0, 12).map(function (f) {
+      return '<li><b>' + esc(f.name) + '</b><small>' + f.files + ' file' + (f.files === 1 ? '' : 's') + ' · ' + size(f.bytes) + '</small></li>';
+    }).join('') + '</ul>' : '';
+    d.innerHTML = '<div class="drive-head"><div><h2>Google Drive</h2><p class="muted">Watching ' + names + '. New files are copied to the server; nothing is deleted on either side.</p></div>' +
+      '<button id="driveGo" class="primary"' + (j.running || !j.ready ? ' disabled' : '') + '>' + (j.running ? 'Bringing in…' : 'Bring in from Drive') + '</button></div>' +
+      (j.problem ? '<p class="err">' + esc(j.problem) + '</p>' : '<p class="drive-line">' + line + '</p>') +
+      (j.errors.length ? '<p class="err">' + j.errors.map(esc).join('<br>') + '</p>' : '') + inbox;
+    var b = $('#driveGo');
+    if (b) b.onclick = function () {
+      b.disabled = true; b.textContent = 'Starting…';
+      api('drive', {}).then(renderDrive).catch(function (err) { toast(err.message, true); driveStatus(); });
+    };
+    if (j.running) drivePoll = setTimeout(driveStatus, 4000);
   }
 
   // ---------- editor ----------
