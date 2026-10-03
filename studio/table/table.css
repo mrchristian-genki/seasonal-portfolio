@@ -29,7 +29,7 @@
 .p-jar .on{opacity:0;transition:opacity 1.6s ease}
 .p-jar.lit .on{opacity:1;animation:breathe 5.5s ease-in-out infinite}
 .p-jar .glow{position:absolute;left:50%;top:50%;width:260%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;pointer-events:none;
-  background:radial-gradient(circle,rgba(255,170,70,.35),rgba(255,140,40,.12) 35%,transparent 65%);mix-blend-mode:screen;opacity:0;transition:opacity 1.6s ease}
+  background:radial-gradient(circle,rgba(255,158,30,.5),rgba(255,158,30,.22) 22%,rgba(255,158,30,.08) 42%,transparent 65%);mix-blend-mode:screen;opacity:0;transition:opacity 1.6s ease}
 .p-jar.lit .glow{opacity:.45;animation:breathe 5.5s ease-in-out infinite}
 .night .p-jar.lit .glow{opacity:1}
 .night .p-jar img{filter:drop-shadow(.4cqi .5cqi .5cqi rgba(10,4,0,.6)) brightness(.8)}
@@ -40,8 +40,8 @@
 .p-panel .on,.p-panel .on2{opacity:0;transition:opacity 1.2s ease}
 .table:not(.night) .p-panel .on,.night .p-panel .on2{opacity:1}
 .p-panel .glow{position:absolute;left:27.5%;top:49.7%;width:120%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;pointer-events:none;mix-blend-mode:screen;opacity:.75;
-  background:radial-gradient(circle,rgba(255,180,80,.45),rgba(255,150,50,.12) 30%,transparent 60%);transition:left 1.2s ease,background 1.2s ease}
-.night .p-panel .glow{left:72.3%;opacity:.9;background:radial-gradient(circle,rgba(130,190,255,.5),rgba(110,170,255,.14) 30%,transparent 60%)}
+  background:radial-gradient(circle,rgba(255,158,30,.7) 15%,rgba(255,158,30,.3) 23%,rgba(255,158,30,.1) 38%,transparent 58%);transition:left 1.2s ease,background 1.2s ease}
+.night .p-panel .glow{left:72.3%;opacity:.95;background:radial-gradient(circle,rgba(70,150,255,.75) 15%,rgba(70,150,255,.32) 23%,rgba(70,150,255,.1) 38%,transparent 58%)}
 
 /* a print: one of your photos inside the blank print, with the print's own light and curl over it */
 .p-print{display:grid}
@@ -105,8 +105,8 @@
   font:700 clamp(8px,.85vw,11px)/1 "Courier New",Courier,monospace;letter-spacing:.14em;color:#3d3022;opacity:.82;pointer-events:none}
 .sw-top{top:10.95%} .sw-bottom{top:64.44%}
 .sw-glow{position:absolute;left:70.8%;top:43.6%;width:120%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;pointer-events:none;mix-blend-mode:screen;
-  background:radial-gradient(circle,rgba(255,180,80,.45),rgba(255,150,50,.12) 30%,transparent 60%);transition:background .4s ease}
-.st-switch.is-night .sw-glow{background:radial-gradient(circle,rgba(130,190,255,.5),rgba(110,170,255,.14) 30%,transparent 60%)}
+  background:radial-gradient(circle,rgba(255,158,30,.6) 9%,rgba(255,158,30,.26) 16%,rgba(255,158,30,.08) 30%,transparent 52%);transition:background .4s ease}
+.st-switch.is-night .sw-glow{background:radial-gradient(circle,rgba(70,150,255,.65) 9%,rgba(70,150,255,.28) 16%,rgba(70,150,255,.09) 30%,transparent 52%)}
 .st-switch.turning .sw-glow{animation:sw-blink .45s ease}
 @keyframes sw-blink{0%{opacity:1}35%{opacity:0}100%{opacity:1}}
 @media (max-width:640px){.st-foot{--h:170px}}
