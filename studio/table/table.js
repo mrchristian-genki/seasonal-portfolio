@@ -16,8 +16,14 @@
 
   // x, y = centre; w = width; rot in degrees; how = roll | slide | drop | gentle; from = the edge it comes in over
   var PROPS = [
+    { id: 'pencils', src: 'pencils', x: 279, y: 223, w: 444, rot: 0, how: 'slide', from: 'left' },
+    { id: 'ruler', src: 'ruler', x: 819, y: 97, w: 557, rot: 0, how: 'slide', from: 'top' },
+    { id: 'tape', src: 'tape', x: 1902, y: 459, w: 191, rot: 0, how: 'roll', from: 'right' },
+    { id: 'canister', src: 'canister', x: 1881, y: 681, w: 154, rot: 0, how: 'roll', from: 'right' },
+    { id: 'mat', src: 'mat', x: 1641, y: 980, w: 717, rot: 0, how: 'slide', from: 'right' },
+    { id: 'pins', src: 'pins', x: 1118, y: 1039, w: 152, rot: 0, how: 'drop' },
     { id: 'panel', src: ['panel-off', 'panel-on'], x: 1700, y: 610, w: 112, rot: 0, how: 'drop', fixed: true },
-    { id: 'contact', src: 'contact', x: 1765, y: 175, w: 360, rot: 7, how: 'slide', from: 'top' },
+    { id: 'contact', src: 'contact', x: 1800, y: 175, w: 330, rot: 7, how: 'slide', from: 'top' },
     { id: 'resin', src: 'resin', x: 215, y: 445, w: 175, rot: -8, how: 'slide', from: 'left' },
     { id: 'cone', src: 'cone', x: 1205, y: 330, w: 140, rot: 0, how: 'roll', from: 'top' },
     { id: 'jar', src: ['jar-off', 'jar-on'], x: 245, y: 655, w: 165, rot: 0, how: 'gentle', from: 'left' },
@@ -30,6 +36,8 @@
   ];
   // the header is the top strip of the table (y 0 to about 360): fewer things, kept to that band
   if (HEADER) PROPS = [
+    { id: 'pencils', src: 'pencils', x: 279, y: 223, w: 444, rot: 0, how: 'slide', from: 'left' },
+    { id: 'ruler', src: 'ruler', x: 819, y: 97, w: 557, rot: 0, how: 'slide', from: 'top' },
     { id: 'panel', src: ['panel-off', 'panel-on'], x: 1585, y: 300, w: 86, rot: 0, how: 'drop', fixed: true },
     { id: 'contact', src: 'contact', x: 1800, y: 135, w: 300, rot: 7, how: 'slide', from: 'top' },
     { id: 'carnelians', src: 'carnelians', x: 800, y: 300, w: 95, rot: 12, how: 'drop' },
@@ -189,12 +197,12 @@
     marleyOut = true;
     var isNight = T.classList.contains('night');
     // (the resting pose comes back once its clean cut-out is in)
-    var k = HEADER ? .72 : 1;
+    var k = 1.55;   // real scale against the ruler (12 in = 557 units): her head and ears are about 600 wide
     var pose = isNight ? { src: 'marley-sleep', w: 560 * k, ratio: 357 / 640, show: 1 }
-      : { src: 'marley-look', w: 390 * k, ratio: 635 / 640, show: .62 };
+      : { src: 'marley-look', w: 390 * k, ratio: 635 / 640, show: HEADER ? .5 : .62 };
     var el = document.createElement('div'); el.className = 'prop marley';
     el.appendChild(img(pose.src));
-    var h = pose.w * pose.ratio, x = 1330;
+    var h = pose.w * pose.ratio, x = 1345;
     el.style.left = ((x - pose.w / 2) / W * 100) + '%';
     el.style.top = ((-h * (1 - pose.show)) / H * 100) + '%';
     el.style.width = (pose.w / W * 100) + '%';
