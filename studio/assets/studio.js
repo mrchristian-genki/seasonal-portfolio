@@ -147,33 +147,54 @@
       '<b>' + label + '</b><small>' + what + ' · ' + size(f.bytes) + '</small><div class="in-act">' + act + '</div></li>';
   }
 
-  // ---------- the loader: a little radio panel while the Studio works (the IN USE sign glows too) ----------
-  // A magic-eye tuning tube closes its shadow as the work goes on, nixie tubes count the percent, and the
-  // steps tick off in green phosphor.
-  // var L = loader('Processing', ['Read the folder', 'Bring in photos', 'Draft with Claude']);
+  // ---------- the loader: the reactor panel fills as the Studio works (the IN USE sign glows too) ----------
+  // The video isn't played: it's moved to the frame that matches how far along the work is, so the green
+  // fuel rises with real progress and the tube is full exactly when the work is. A clean scale, status tag
+  // and plaque are drawn over the video's own, and the steps tick off below in green phosphor.
+  // var L = loader('Processing', ['Read the folder', 'Bring in photos', 'Draft with Claude'], 'folder name');
   // L.at(1, '4–6 of 12') marks a step under way (earlier ones done); L.done() / L.fail(message) close it.
+  var RX = { src: 'assets/loader/reactor.mp4', webm: 'assets/loader/reactor.webm', poster: 'assets/loader/reactor-start.jpg', t0: 0.3, end: 0.05 };
   function loader(title, steps, sub) {
     var el = document.createElement('div'); el.className = 'loader'; el.setAttribute('role', 'alertdialog'); el.setAttribute('aria-live', 'polite');
-    el.innerHTML = '<div class="ld-card"><div class="ld-dials">' +
-        '<div class="eye" aria-hidden="true"><div class="eye-glass"><div class="eye-fan"></div><div class="eye-cap"></div><div class="eye-shine"></div></div></div>' +
-        '<div class="nixie" aria-hidden="true"><span><i>8</i><b>0</b></span><span><i>8</i><b>0</b></span><span><i>8</i><b>0</b></span><em>%</em></div>' +
-      '</div><h2>' + esc(title) + '</h2>' + (sub ? '<p class="ld-sub">' + esc(sub) + '</p>' : '') +
+    var marks = [100, 75, 50, 25, 0].map(function (n) { return '<span class="rx-mark" style="--at:' + n + '"><i></i>' + n + '%</span>'; }).join('');
+    el.innerHTML = '<div class="ld-card"><div class="rx">' +
+        '<video muted playsinline preload="auto" poster="' + RX.poster + '"><source src="' + RX.src + '" type="video/mp4"><source src="' + RX.webm + '" type="video/webm"></video>' +
+        '<div class="rx-top"><h2>' + esc(title) + '</h2>' + (sub ? '<p class="ld-sub">' + esc(sub) + '</p>' : '') + '<p class="rx-now"></p></div>' +
+        '<div class="rx-scale" aria-hidden="true"><div class="rx-lit"></div>' + marks + '</div>' +
+        '<div class="rx-tag" aria-hidden="true">STATUS: <b>EMPTY</b></div>' +
+        '<div class="rx-plate" aria-hidden="true"><span>FIELD NOTES · STUDIO</span><b>FUEL LOAD 000%</b></div>' +
+      '</div>' +
       '<ol class="ld-steps">' + steps.map(function (s) { return '<li><span class="ld-dot"></span><span class="ld-name">' + esc(s) + '</span><small></small></li>'; }).join('') + '</ol>' +
       '<p class="ld-hold">Hold on a moment, this page is working.</p></div>';
     document.body.appendChild(el); document.body.classList.add('busy');
     if (window.StudioTable) StudioTable.inUse(true);
     requestAnimationFrame(function () { el.classList.add('on'); });
-    var items = $$('.ld-steps li', el), cur = -1, eye = $('.eye', el), digits = $$('.nixie b', el), shown = 0;
-    // how far along: whole steps done, plus the part of this one ("4–6 of 12" counts as 6 of 12)
+    var items = $$('.ld-steps li', el), cur = -1, shown = 0, finished = false, closed = false;
+    var vid = $('video', el), now = $('.rx-now', el), tag = $('.rx-tag b', el), plate = $('.rx-plate b', el), rx = $('.rx', el);
+    var calmMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // follow the target frame smoothly; while waiting, the fuel churns a little around its level
+    var at = RX.t0, last = 0;
+    function frame(ts) {
+      if (closed) return;
+      var dt = last ? Math.min(0.1, (ts - last) / 1000) : 0; last = ts;
+      var dur = vid.duration || 5.17, target = RX.t0 + shown * (dur - RX.end - RX.t0);
+      at += (target - at) * Math.min(1, dt * 3.2);
+      var wiggle = (!finished && !calmMotion && shown > 0.04 && Math.abs(target - at) < 0.02) ? Math.sin(ts / 700) * 0.07 : 0;
+      var want = Math.max(0, Math.min(dur - 0.02, at + wiggle));
+      if (vid.readyState >= 2 && !vid.seeking && Math.abs(vid.currentTime - want) > 1 / 60) vid.currentTime = want;
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
     function show(frac) {
       frac = Math.max(shown, Math.min(1, frac)); shown = frac;
-      eye.style.setProperty('--gap', (110 * (1 - frac)).toFixed(1) + 'deg');
+      rx.style.setProperty('--fill', frac.toFixed(3));
       var pct = String(Math.round(frac * 100)).padStart(3, '0');
-      digits.forEach(function (d, k) { d.textContent = pct[k]; d.parentNode.classList.toggle('off', k === 0 && pct[0] === '0'); });
+      plate.textContent = 'FUEL LOAD ' + pct + '%';
+      tag.textContent = frac >= 1 ? 'READY' : frac > 0 ? 'LOADING' : 'EMPTY';
     }
     function live() { return items.filter(function (li) { return !li.classList.contains('skipped'); }).length || 1; }
     function close(ms) {
-      setTimeout(function () { el.classList.remove('on'); setTimeout(function () { el.remove(); }, 300); }, ms);
+      setTimeout(function () { el.classList.remove('on'); setTimeout(function () { closed = true; el.remove(); }, 300); }, ms);
       document.body.classList.remove('busy');
       if (window.StudioTable) StudioTable.inUse(lastDrive ? lastDrive.running : false);
     }
@@ -182,17 +203,21 @@
       at: function (i, detail) {
         for (var k = 0; k < items.length; k++) { items[k].classList.toggle('done', k < i); items[k].classList.toggle('now', k === i); }
         cur = i; if (detail != null && items[i]) $('small', items[i]).textContent = detail;
+        if (items[i]) now.textContent = $('.ld-name', items[i]).textContent + ($('small', items[i]).textContent ? ' · ' + $('small', items[i]).textContent : '');
         var before = items.slice(0, i).filter(function (li) { return !li.classList.contains('skipped'); }).length;
         var m = /(\d+)\s*of\s*(\d+)/.exec(detail || ''), part = m ? +m[1] / +m[2] : 0;
         show((before + part) / live());
-        eye.classList.toggle('waiting', !m);   // nothing to count (Claude drafting): the eye breathes
       },
       skip: function (i) { if (items[i]) items[i].classList.add('skipped'); },
       done: function () {
         items.forEach(function (li) { if (!li.classList.contains('skipped')) { li.classList.remove('now'); li.classList.add('done'); } });
-        eye.classList.remove('waiting'); show(1); close(650);
+        finished = true; now.textContent = 'Complete'; show(1); el.classList.add('complete'); close(1300);
       },
-      fail: function (msg) { el.classList.add('failed'); if (items[cur]) { items[cur].classList.remove('now'); items[cur].classList.add('bad'); $('small', items[cur]).textContent = msg; } close(2800); }
+      fail: function (msg) {
+        finished = true; el.classList.add('failed'); tag.textContent = 'FAULT';
+        if (items[cur]) { items[cur].classList.remove('now'); items[cur].classList.add('bad'); $('small', items[cur]).textContent = msg; now.textContent = msg; }
+        close(3200);
+      }
     };
   }
 

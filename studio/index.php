@@ -34,7 +34,8 @@ $in = studio_logged_in();
 <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&display=swap">
-<link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>-6">
+<link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>-7">
+<link rel="prefetch" href="assets/loader/reactor.mp4" as="video">
 <link rel="stylesheet" href="table/table.css?v=16">
 </head>
 <?php if (!$in): ?>
@@ -84,7 +85,7 @@ $in = studio_logged_in();
 </footer>
 <div id="toast" role="status" aria-live="polite"></div>
 <script src="assets/track.js?v=<?= STUDIO_VERSION ?>"></script>
-<script src="assets/studio.js?v=<?= STUDIO_VERSION ?>-7"></script>
+<script src="assets/studio.js?v=<?= STUDIO_VERSION ?>-8"></script>
 <script src="table/table.js?v=16"></script>
 <script src="table/switch.js?v=2"></script>
 </body>
