@@ -1,0 +1,2 @@
+# The table test is a plain page (the Studio above it only serves index.php)
+DirectoryIndex index.html
