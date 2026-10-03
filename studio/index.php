@@ -34,7 +34,7 @@ $in = studio_logged_in();
 <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&display=swap">
-<link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>">
+<link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>-2">
 <link rel="stylesheet" href="table/table.css?v=9">
 </head>
 <?php if (!$in): ?>
@@ -50,13 +50,7 @@ $in = studio_logged_in();
 </body>
 <?php else: ?>
 <body data-csrf="<?= h(studio_csrf()) ?>">
-<header class="bar">
-  <a class="brand" href="./"><span class="dot"></span>Studio</a>
-  <nav>
-    <a href="/play/" target="_blank" rel="noopener">Play ↗</a>
-    <form method="post"><input type="hidden" name="act" value="logout"><input type="hidden" name="csrf" value="<?= h(studio_csrf()) ?>"><button type="submit" class="link">Log out</button></form>
-  </nav>
-</header>
+
 <section class="st-hero" aria-label="Studio">
   <div class="table" id="table" data-set="header" data-base="table/">
     <img class="wood day" src="table/a/table-day.webp" alt="">
@@ -65,6 +59,10 @@ $in = studio_logged_in();
     <div class="layer" id="layer"></div>
     <div class="shade" aria-hidden="true"></div>
   </div>
+  <nav class="st-nav" aria-label="Studio">
+    <a href="/play/" target="_blank" rel="noopener">Play ↗</a>
+    <form method="post"><input type="hidden" name="act" value="logout"><input type="hidden" name="csrf" value="<?= h(studio_csrf()) ?>"><button type="submit">Log out</button></form>
+  </nav>
   <div class="st-label">
     <img class="st-logo" src="/icon-512.png?v=2" alt="">
     <div class="st-card"><h1>Studio</h1><p>Field Notes, behind the scenes</p></div>
