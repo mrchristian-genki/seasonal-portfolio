@@ -19,10 +19,10 @@ Log in, then:
   `field/data/photos/<id>/`). Set Status to **Published** and save to put it live: the deploy workflow
   rebuilds Play and uploads it in about a minute.
 
-- **Bring in from Drive** (top of the list): copies new files from the Google Drive folder `_Rides` to
-  the server with rclone, in the background. One way only, never deletes anything on either side, and
+- **Bring in from Drive** (top of the list): copies new files from the Google Drive folder `Rides` (at
+  the top of My Drive) to the server with rclone, in the background. One way only, never deletes anything on either side, and
   skips files it already has, so pressing it again only fetches what's new. Files land in
-  `~/incoming/_Rides/` on DreamHost, outside the web folder, so none of it is public. Phone or Drive app
+  `~/incoming/Rides/` on DreamHost, outside the web folder, so none of it is public. Phone or Drive app
   uploads of any size work, since nothing passes through the browser.
 
 Not in the Studio yet: episode audio (render it, then hand it to a Claude Code session to master and
@@ -73,11 +73,11 @@ DreamHost (outside the web folder, mode 600): the password hash, the Anthropic A
    scope `2` (read-only), service account blank, advanced `n`, auto config `n`. It prints a line starting
    `rclone authorize "drive"`: run that on the Mac (`brew install rclone` first if needed), sign in to
    Google in the browser that opens, and paste the code back. Shared drive `n`, then `y` to keep it.
-3. In Google Drive, rename the folder to `_Rides` (the underscore keeps it at the top of the list).
-4. Test from SSH: `~/bin/rclone lsd gdrive:_Rides`.
+3. The watched folder is `Rides` at the top of My Drive (starred, so it shows first in the Drive app).
+4. Test from SSH: `~/bin/rclone lsd gdrive:Rides`.
 
 To watch more folders later (the AI content, phase 2), add them to the private config, e.g.
-`'drive_folders' => ['_Rides', '_Studio'],`. Optional settings: `'rclone'` (path) and `'drive_remote'`.
+`'drive_folders' => ['Rides', 'Studio'],`. Optional settings: `'rclone'` (path) and `'drive_remote'`.
 The copy's log is `~/studio-private/drive-sync.log`.
 
 ## For Claude Code sessions
