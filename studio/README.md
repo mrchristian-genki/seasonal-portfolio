@@ -24,6 +24,17 @@ Log in, then:
   skips files it already has, so pressing it again only fetches what's new. Files land in
   `~/incoming/Rides/` on DreamHost, outside the web folder, so none of it is public. Phone or Drive app
   uploads of any size work, since nothing passes through the browser.
+- **The inbox list** (under the Drive button): one row per folder in `Rides`, with its date, what's in it
+  (photos, videos, track, notes) and where it stands: **New**, the note's status (Draft, Published…), and
+  **N new since** when files arrived after the note was made. Loose files outside a folder are left off
+  until they belong to a note. A folder is matched to a note it was processed into, or to a note on the
+  same date.
+- **Process** (on a New folder): opens a new entry filled from the folder: title and date from the folder
+  name (e.g. `2026-10-03 1630 Peavine loop`; else the photos' date), photos through the same resize and
+  location-stripping step, the GPX/CSV track trimmed in the browser, and any `.txt`/`.md` as your notes;
+  then Claude drafts it. Read it through and Save; the folder then shows as that note. Videos are listed
+  as waiting for the video step and stay on the server.
+- **Add N new** (on an updated folder): opens the note and brings in just the files that came later.
 
 Not in the Studio yet: episode audio (render it, then hand it to a Claude Code session to master and
 attach), animated clips and the prints-on-a-table layout.

@@ -72,12 +72,13 @@
   // ---------- list ----------
   function showList() {
     if (dirty && !confirm('Leave without saving?')) return;
-    dirty = false; E = null; fresh = {}; removed = [];
+    dirty = false; E = null; fresh = {}; removed = []; INBOX = null;
     history.replaceState(null, '', './');
     app.innerHTML = '<div class="head"><h1>Field Notes</h1><button id="new" class="primary">New entry</button></div><section id="drive" class="panel drive"><p class="muted">Checking Google Drive…</p></section><div id="list" class="cards"><p class="muted">Loading entries…</p></div>';
     $('#new').onclick = function () { edit(null); };
     driveStatus();
     api('list').then(function (j) {
+      ENTRIES = j.entries; if (lastDrive) renderDrive(lastDrive);
       var st = {}; (CFG.statuses || []).forEach(function (s) { st[s.id] = s.label; });
       $('#list').innerHTML = j.entries.length ? j.entries.map(function (e) {
         return '<button class="card" data-id="' + esc(e.id) + '"><span class="st st-' + esc(e.status) + '">' + esc(st[e.status] || e.status) + '</span>' +
@@ -88,7 +89,7 @@
   }
 
   // ---------- Google Drive: new files come to the server with rclone (one way, never deletes) ----------
-  var drivePoll = null;
+  var drivePoll = null, lastDrive = null, ENTRIES = null, INBOX = null;
   function size(b) { return b >= 1073741824 ? (b / 1073741824).toFixed(1) + ' GB' : b >= 1048576 ? Math.round(b / 1048576) + ' MB' : Math.max(1, Math.round(b / 1024)) + ' KB'; }
   function when(t) { return t ? new Date(t * 1000).toLocaleString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) : ''; }
   function driveStatus() {
@@ -97,6 +98,7 @@
     api('drive').then(renderDrive).catch(function (err) { var d = $('#drive'); if (d) d.innerHTML = '<p class="err">' + esc(err.message) + '</p>'; });
   }
   function renderDrive(j) {
+    lastDrive = j;
     if (window.StudioTable) StudioTable.inUse(j.running);
     var d = $('#drive'); if (!d) return;
     var names = j.folders.map(function (f) { return '“' + esc(f) + '”'; }).join(', ');
@@ -104,9 +106,9 @@
     if (j.running) line = 'Bringing in new files… ' + esc(j.progress || 'starting') + (j.copiedCount ? ' · ' + j.copiedCount + ' copied so far' : '');
     else if (j.finished) line = (j.ok ? 'Last brought in ' : 'Last try stopped with a problem, ') + esc(when(j.finished)) + (j.ok ? ' · ' + (j.copiedCount ? j.copiedCount + ' new file' + (j.copiedCount === 1 ? '' : 's') : 'nothing new') : '');
     else line = 'Not brought in yet.';
-    var inbox = j.inbox.length ? '<ul class="inbox">' + j.inbox.slice(0, 12).map(function (f) {
-      return '<li><b>' + esc(f.name) + '</b><small>' + f.files + ' file' + (f.files === 1 ? '' : 's') + ' · ' + size(f.bytes) + '</small></li>';
-    }).join('') + '</ul>' : '';
+    // folders, plus loose files only once they belong to a note (the rest is left for tidying in Drive)
+    var items = j.inbox.filter(function (f) { return f.dir || f.note; });
+    var inbox = items.length ? '<ul class="inbox">' + items.slice(0, 30).map(inboxRow).join('') + '</ul>' : '';
     d.innerHTML = '<div class="drive-head"><div><h2>Google Drive</h2><p class="muted">Watching ' + names + '. New files are copied to the server; nothing is deleted on either side.</p></div>' +
       '<button id="driveGo" class="primary"' + (j.running || !j.ready ? ' disabled' : '') + '>' + (j.running ? 'Bringing in…' : 'Bring in from Drive') + '</button></div>' +
       (j.problem ? '<p class="err">' + esc(j.problem) + '</p>' : '<p class="drive-line">' + line + '</p>') +
@@ -116,7 +118,121 @@
       b.disabled = true; b.textContent = 'Starting…';
       api('drive', {}).then(renderDrive).catch(function (err) { toast(err.message, true); driveStatus(); });
     };
+    $$('.inbox .open', d).forEach(function (b) { b.onclick = function () { edit(b.getAttribute('data-id')); }; });
+    $$('.inbox .process', d).forEach(function (b) {
+      b.onclick = function () {
+        if (b.classList.contains('add')) addNew(b.getAttribute('data-src'), b.getAttribute('data-id'), +b.getAttribute('data-at'));
+        else processFolder(b.getAttribute('data-src'));
+      };
+    });
     if (j.running) drivePoll = setTimeout(driveStatus, 4000);
+  }
+
+  // one inbox item: its date, what's in it, and where it stands (new, draft, published, updated since)
+  function inboxRow(f) {
+    var note = noteFor(f), day = f.date || guessDate(f.name), c = f.count || {};
+    var what = [['photo', 'photo'], ['video', 'video'], ['track', 'track'], ['text', 'note'], ['audio', 'audio file']].filter(function (k) { return c[k[0]]; })
+      .map(function (k) { return c[k[0]] + ' ' + k[1] + (c[k[0]] === 1 ? '' : 's'); }).join(' · ') || (f.files + ' files');
+    var st = {}; (CFG.statuses || []).forEach(function (s) { st[s.id] = s.label; });
+    var badge, act = '';
+    if (!note) { badge = '<span class="st st-new">New</span>'; act = '<button class="process" data-src="' + esc(f.source) + '">Process</button>'; }
+    else {
+      badge = '<span class="st st-' + esc(note.status || 'notes') + '">' + esc(st[note.status] || note.status || 'Note') + '</span>';
+      if (f.since) badge += '<span class="st st-updated">' + f.since + ' new since</span>';
+      act = '<button class="link open" data-id="' + esc(note.id) + '">Open “' + esc(note.title || note.id) + '”</button>' +
+        (f.since ? '<button class="process add" data-src="' + esc(f.source) + '" data-id="' + esc(note.id) + '" data-at="' + ((f.note && f.note.at) || 0) + '">Add ' + f.since + ' new</button>' : '');
+    }
+    var label = f.dir ? esc(f.name) : 'Loose files';
+    return '<li><div class="in-top">' + badge + '<small>' + (day ? esc(new Date(day + 'T12:00').toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })) : 'No date') + '</small></div>' +
+      '<b>' + label + '</b><small>' + what + ' · ' + size(f.bytes) + '</small><div class="in-act">' + act + '</div></li>';
+  }
+
+  // ---------- Process Content: an inbox folder becomes a new draft note ----------
+  var MONTHS = 'jan feb mar apr may jun jul aug sep oct nov dec'.split(' ');
+  function pad(n) { return String(n).padStart(2, '0'); }
+  // a date in the folder name: 2026-10-03, Sep-5-2024, March_28_2026, 9-5-2024
+  function guessDate(name) {
+    var m = /(\d{4})-(\d{2})-(\d{2})/.exec(name);
+    if (m) return m[1] + '-' + m[2] + '-' + m[3];
+    m = /\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*[\s_.,-]+(\d{1,2})(?:st|nd|rd|th)?[\s_.,-]+(\d{4})/i.exec(name);
+    if (m) return m[3] + '-' + pad(MONTHS.indexOf(m[1].toLowerCase()) + 1) + '-' + pad(m[2]);
+    m = /\b(\d{1,2})[-_.](\d{1,2})[-_.](\d{4})\b/.exec(name);
+    if (m) return m[3] + '-' + pad(m[1]) + '-' + pad(m[2]);
+    return null;
+  }
+  // whatever's left of the folder name once the date, a time and words like "images" are gone
+  function guessTitle(name) {
+    var t = name.replace(/\d{4}-\d{2}-\d{2}/, ' ')
+      .replace(/\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*[\s_.,-]+\d{1,2}(st|nd|rd|th)?[\s_.,-]+\d{4}/i, ' ')
+      .replace(/\b\d{1,2}[-_.]\d{1,2}[-_.]\d{4}\b/, ' ').replace(/\b\d{3,4}\b/g, ' ')
+      .replace(/\b(images?|photos?|pics?|videos?|files?|new)\b/gi, ' ').replace(/[_]+/g, ' ').replace(/\s+/g, ' ').trim();
+    return t ? t.charAt(0).toUpperCase() + t.slice(1) : '';
+  }
+  // the note an inbox folder became (remembered when it was saved), or one already on that day
+  function noteFor(f) {
+    var list = ENTRIES || [];
+    if (f.note) return list.filter(function (e) { return e.id === f.note.id; })[0] || { id: f.note.id, title: '' };
+    var d = f.date || guessDate(f.name);
+    return d ? list.filter(function (e) { return e.date === d; })[0] || null : null;
+  }
+  function fromInbox(src, f) {
+    return fetch('api.php?a=inboxfile&f=' + encodeURIComponent(src) + '&n=' + encodeURIComponent(f.name)).then(function (r) {
+      if (!r.ok) throw new Error('Couldn\'t fetch ' + f.name);
+      return r.blob();
+    }).then(function (b) { return new File([b], f.name.split('/').pop(), { type: b.type, lastModified: f.changed * 1000 }); });
+  }
+  function processFolder(src) {
+    if (dirty && !confirm('Leave without saving?')) return;
+    api('inbox', null, '&f=' + encodeURIComponent(src)).then(function (j) {
+      INBOX = j; dirty = false; fresh = {}; removed = [];
+      var name = src.split('/').slice(1).join('/').replace(/^#/, ''), when = guessDate(name);
+      E = blank(); E.source = src; E.title = guessTitle(name); E.fieldNotes = j.notes || '';
+      if (when) E.date = when;
+      render();
+      var photos = j.files.filter(function (f) { return f.kind === 'photo'; }).slice(0, 40);
+      var track = j.files.filter(function (f) { return f.kind === 'track'; })[0];
+      toast('Bringing in ' + photos.length + ' photo' + (photos.length === 1 ? '' : 's') + (track ? ' and the track' : '') + ' from ' + name + '…');
+      var chain = Promise.resolve();
+      if (track) chain = chain.then(function () { return fromInbox(src, track).then(addTrack); });
+      for (var i = 0; i < photos.length; i += 6) (function (batch) {
+        chain = chain.then(function () { return Promise.all(batch.map(function (f) { return fromInbox(src, f); })).then(addPhotos); });
+      })(photos.slice(i, i + 6));
+      return chain.then(function () {
+        if (!when && !E.track) {   // no date in the name or a track: the earliest photo's day
+          var t = E.photos.map(function (p) { return p.takenAt; }).filter(Boolean).sort()[0];
+          if (t) { E.date = String(t).slice(0, 10); var di = $('#date'); if (di) di.value = E.date; }
+        }
+        if (E.fieldNotes.trim() || E.track || E.photos.length) draft();
+      });
+    }).catch(function (err) { toast(err.message, true); });
+  }
+  // files that reached an inbox item after its note was made: open the note and bring just those in
+  function addNew(src, id, since) {
+    Promise.all([api('inbox', null, '&f=' + encodeURIComponent(src)), edit(id)]).then(function (r) {
+      var j = r[0]; if (!E || E.id !== id) return;
+      INBOX = j; E.source = src;
+      var later = j.files.filter(function (f) { return f.arrived > since; });
+      var photos = later.filter(function (f) { return f.kind === 'photo'; }), track = !E.track && later.filter(function (f) { return f.kind === 'track'; })[0];
+      render();
+      if (!photos.length && !track) { toast('Nothing new to bring in here: the new files are ' + later.map(function (f) { return f.kind; }).join(', ') + '.'); markDirty(); return; }
+      toast('Bringing in ' + photos.length + ' new photo' + (photos.length === 1 ? '' : 's') + (track ? ' and the track' : '') + '…');
+      var chain = Promise.resolve();
+      if (track) chain = chain.then(function () { return fromInbox(src, track).then(addTrack); });
+      for (var i = 0; i < photos.length; i += 6) (function (batch) {
+        chain = chain.then(function () { return Promise.all(batch.map(function (f) { return fromInbox(src, f); })).then(addPhotos); });
+      })(photos.slice(i, i + 6));
+      return chain.then(function () { toast('Added. Draft again if you like, then Save.'); });
+    }).catch(function (err) { toast(err.message, true); });
+  }
+  function inboxPanel() {
+    if (!E.source || !INBOX || INBOX.source !== E.source) return E.source ? '<section class="panel from"><p class="muted">Made from the Drive folder <b>' + esc(E.source) + '</b>.</p></section>' : '';
+    var later = INBOX.files.filter(function (f) { return f.kind === 'video' || f.kind === 'audio'; });
+    var other = INBOX.files.filter(function (f) { return f.kind === 'other'; });
+    return '<section class="panel from"><h2>From Drive: ' + esc(E.source) + '</h2>' +
+      '<p class="muted">' + (E.id ? 'New photos from this folder are added below. Draft again if you like, then Save to keep them.'
+        : 'Photos' + (INBOX.files.some(function (f) { return f.kind === 'track'; }) ? ', the track' : '') + (INBOX.notes ? ' and your text notes' : '') + ' are brought in below, then Claude drafts it. Read it through and Save.') + '</p>' +
+      (later.length ? '<p><b>Waiting for the video step</b> (they stay on the server):</p><ul class="later">' + later.map(function (f) { return '<li>' + esc(f.name) + ' <small>' + size(f.bytes) + '</small></li>'; }).join('') + '</ul>' : '') +
+      (other.length ? '<p class="muted">Not used: ' + other.map(function (f) { return esc(f.name); }).join(', ') + '</p>' : '') + '</section>';
   }
 
   // ---------- editor ----------
@@ -127,9 +243,9 @@
   function edit(id) {
     if (dirty && !confirm('Leave without saving?')) return;
     dirty = false; fresh = {}; removed = [];
-    if (!id) { E = blank(); render(); return; }
+    if (!id) { E = blank(); render(); return Promise.resolve(); }
     app.innerHTML = '<p class="muted">Opening…</p>';
-    api('entry', null, '&id=' + encodeURIComponent(id)).then(function (j) {
+    return api('entry', null, '&id=' + encodeURIComponent(id)).then(function (j) {
       E = j.entry; E.post = E.post || { title: '', body: '' }; E.episode = E.episode || { title: '', script: '', audio: null }; E.questions = E.questions || []; E.photos = E.photos || [];
       history.replaceState(null, '', '?e=' + encodeURIComponent(id)); render();
     }).catch(function (err) { toast(err.message, true); showList(); });
@@ -140,7 +256,7 @@
     var sOpts = (CFG.statuses || []).map(function (s) { return '<option value="' + s.id + '"' + (E.status === s.id ? ' selected' : '') + '>' + esc(s.label) + '</option>'; }).join('');
     var kOpts = ['ride', 'hike', 'forage', 'make'].map(function (k) { return '<option' + (E.kind === k ? ' selected' : '') + '>' + k + '</option>'; }).join('');
     app.innerHTML =
-      '<div class="head"><button class="back" id="back">← Entries</button><h1>' + esc(E.title || 'New entry') + '</h1></div>' +
+      '<div class="head"><button class="back" id="back">← Entries</button><h1>' + esc(E.title || 'New entry') + '</h1></div>' + inboxPanel() +
       '<section class="panel grid2">' +
         field('Title', '<input id="title" value="' + esc(E.title) + '">') +
         field('Date', '<input id="date" type="date" value="' + esc(E.date) + '"' + (E.id ? ' disabled' : '') + '>', E.id ? 'The address is <code>' + esc(E.id) + '</code>' : 'Sets the address with the title, on first save') +
@@ -226,7 +342,7 @@
     return '<svg class="map" viewBox="0 0 ' + (w * sc + 20).toFixed(0) + ' ' + (h * sc + 20).toFixed(0) + '">' + segs.map(function (s) { return '<polyline points="' + s.join(' ') + '"/>'; }).join('') + '</svg>';
   }
   function addTrack(file) {
-    file.text().then(function (txt) {
+    return file.text().then(function (txt) {
       var built = Track.build(txt, { kind: E.kind, trailheads: CFG.trailheads, privateZones: CFG.zones });
       var z = CFG.zones || [], raw = built.raw || [];
       var inZ = function (p) { return p && z.some(function (zz) { return Track.dist(zz, p) <= (zz.radius || 400); }); };
@@ -274,8 +390,8 @@
   }
   function addPhotos(files) {
     collect();
-    var list = [].slice.call(files).filter(function (f) { return /^image\//.test(f.type) || /\.(jpe?g|heic|png)$/i.test(f.name); });
-    if (!list.length) return;
+    var list = [].slice.call(files).filter(function (f) { return /^image\//.test(f.type) || /\.(jpe?g|heic|png|webp)$/i.test(f.name); });
+    if (!list.length) return Promise.resolve();
     toast('Preparing ' + list.length + ' photo' + (list.length > 1 ? 's' : '') + '…');
     var chain = Promise.resolve();
     list.forEach(function (f) {
@@ -291,7 +407,7 @@
         }).catch(function () { toast('Couldn\'t read ' + f.name + ' (if it\'s HEIC, export it as JPEG first).', true); });
       });
     });
-    chain.then(function () {
+    return chain.then(function () {
       E.photos.sort(function (a, b) { return String(a.takenAt || '~').localeCompare(String(b.takenAt || '~')); });
       markDirty(); renderPhotos();
     });

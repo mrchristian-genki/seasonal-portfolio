@@ -110,6 +110,12 @@ button.primary:hover{background:#d8b47c}
 .drive h2{margin:0 0 4px;font-size:1.15rem}
 .drive .muted{margin:0}
 .drive-line{margin:12px 0 0}
-.inbox{list-style:none;margin:12px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:6px 14px}
-.inbox li{display:flex;flex-direction:column;border-top:1px dashed rgba(43,33,24,.25);padding-top:6px}
+.inbox{list-style:none;margin:12px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px 16px}
+.inbox li{display:flex;flex-direction:column;gap:2px;border-top:1px dashed rgba(43,33,24,.25);padding-top:8px}
+.in-top{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.in-act{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:4px}
+.inbox .process{padding:5px 12px;font-size:.9rem}
+.st-new{background:#c9a36a;color:#2b2118}
+.st-updated{background:#e6d3a6;color:#5a3d12}
+.panel.from ul.later{margin:4px 0 0;padding-left:18px}
 .inbox small{opacity:.7}
