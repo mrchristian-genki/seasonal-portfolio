@@ -42,8 +42,8 @@
   if (HEADER) PROPS = [
     { id: 'pencils', src: 'pencils', x: 279, y: 223, w: 444, rot: 0, how: 'slide', from: 'left' },
     { id: 'ruler', src: 'ruler', x: 1010, y: 90, w: 557, rot: 0, how: 'slide', from: 'top' },
-    { id: 'panel', src: ['panel-off', 'panel-day', 'panel-night'], x: 1585, y: 300, w: 86, rot: 0, how: 'slide' },
     { id: 'contact', src: 'contact', x: 1800, y: 135, w: 300, rot: 7, how: 'slide', from: 'top' },
+    { id: 'panel', src: ['panel-off', 'panel-day', 'panel-night'], x: 1585, y: 300, w: 92, rot: 0, how: 'slide', from: 'right', pin: 'nav' },
     { id: 'carnelians', src: 'carnelians', x: 800, y: 300, w: 95, rot: 12, how: 'drop' },
     { id: 'cone', src: 'cone', x: 1597, y: 139, w: 112, rot: 0, how: 'roll', from: 'top' },
     { id: 'inuse', src: ['inuse-off', 'inuse-on'], x: 950, y: 270, w: 200, rot: -4, how: 'slide', from: 'bottom' },
@@ -245,8 +245,24 @@
       .then(function () { var ok = !touchesKeep(el); el.remove(); delete els[p.id]; return ok; });
   }
 
+  // the day/night lamps sit just under the Play and Log out buttons at every screen width
+  var NAV = document.querySelector('.st-nav');
+  function pin() {
+    if (!NAV) return;
+    var t = T.getBoundingClientRect(), n = NAV.getBoundingClientRect();
+    if (!t.width || !n.width) return;
+    PROPS.forEach(function (p) {
+      if (p.pin !== 'nav') return;
+      var u = W / t.width;
+      p.x = Math.round((n.left + n.width / 2 - t.left) * u);
+      p.y = Math.round((n.bottom - t.top) * u + 14 + p.w * 0.48);
+      if (els[p.id]) place(els[p.id], p, p.w);
+    });
+  }
+  window.addEventListener('resize', pin);
+
   function start() {
-    L.innerHTML = ''; els = {}; prints = [];
+    L.innerHTML = ''; els = {}; prints = []; pin();
     var chain = Promise.resolve();
     PROPS.forEach(function (p, i) {
       chain = chain.then(function () { return fits(p); }).then(function (ok) { p.off = !ok; });
