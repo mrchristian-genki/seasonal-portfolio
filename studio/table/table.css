@@ -29,19 +29,27 @@
 .p-jar .on{opacity:0;transition:opacity 1.6s ease}
 .p-jar.lit .on{opacity:1;animation:breathe 5.5s ease-in-out infinite}
 .p-jar .glow{position:absolute;left:50%;top:50%;width:260%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;pointer-events:none;
-  background:radial-gradient(circle,rgba(255,170,70,.35),rgba(255,140,40,.12) 35%,transparent 65%);mix-blend-mode:screen;opacity:0;transition:opacity 1.6s ease}
+  background:radial-gradient(circle,rgba(255,158,30,.5),rgba(255,158,30,.22) 22%,rgba(255,158,30,.08) 42%,transparent 65%);mix-blend-mode:screen;opacity:0;transition:opacity 1.6s ease}
 .p-jar.lit .glow{opacity:.45;animation:breathe 5.5s ease-in-out infinite}
 .night .p-jar.lit .glow{opacity:1}
 .night .p-jar img{filter:drop-shadow(.4cqi .5cqi .5cqi rgba(10,4,0,.6)) brightness(.8)}
 .night .p-jar.lit .on{filter:drop-shadow(.4cqi .5cqi .5cqi rgba(10,4,0,.5)) brightness(1.05)}
 @keyframes breathe{0%,100%{opacity:.85}50%{opacity:1}}
 
-/* panel lamp: the green lens fades on, with light on the brass */
-.p-panel .on{opacity:0;transition:opacity 1.2s ease}
-.p-panel.lit .on{opacity:1}
-.p-panel .glow{position:absolute;left:28%;top:47%;width:120%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;pointer-events:none;
-  background:radial-gradient(circle,rgba(90,255,110,.5),rgba(60,220,90,.15) 35%,transparent 62%);mix-blend-mode:screen;opacity:0;transition:opacity 1.2s ease}
-.p-panel.lit .glow{opacity:.8}
+/* panel lamps: the left lens glows amber by day, the right one blue by night, matching the switch */
+.p-panel .on,.p-panel .on2{opacity:0;transition:opacity 1.2s ease}
+.table:not(.night) .p-panel .on,.night .p-panel .on2{opacity:1}
+.p-panel .glow{position:absolute;left:27.5%;top:49.7%;width:120%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;pointer-events:none;mix-blend-mode:screen;opacity:.75;
+  background:radial-gradient(circle,rgba(255,158,30,.7) 15%,rgba(255,158,30,.3) 23%,rgba(255,158,30,.1) 38%,transparent 58%);transition:left 1.2s ease,background 1.2s ease}
+.night .p-panel .glow{left:72.3%;opacity:.95;background:radial-gradient(circle,rgba(70,150,255,.75) 15%,rgba(70,150,255,.32) 23%,rgba(70,150,255,.1) 38%,transparent 58%)}
+
+/* IN USE sign: frosted uranium glass, lit green while something's running, with a soft neon halo on the wood */
+.p-inuse .on{opacity:0;transition:opacity 1.4s ease}
+.p-inuse.lit .on{opacity:1;animation:breathe 4.5s ease-in-out infinite}
+.p-inuse .glow{position:absolute;left:50%;top:50%;width:150%;aspect-ratio:1.45;translate:-50% -50%;border-radius:50%;pointer-events:none;mix-blend-mode:screen;opacity:0;transition:opacity 1.4s ease;
+  background:radial-gradient(ellipse,rgba(90,255,50,.5) 28%,rgba(80,240,40,.2) 42%,rgba(70,220,40,.07) 56%,transparent 70%)}
+.p-inuse.lit .glow{opacity:.8;animation:breathe 4.5s ease-in-out infinite}
+.night .p-inuse.lit .glow{opacity:1}
 
 /* a print: one of your photos inside the blank print, with the print's own light and curl over it */
 .p-print{display:grid}
@@ -64,7 +72,7 @@
 .table-page .controls button.primary{background:#3d6b4a;border-color:#5a9a6a}
 .table-page .controls button[aria-pressed=true]{background:#5a4430}
 .table-page .note{color:#bfa98a;font-size:14px;max-width:70ch}
-@media (prefers-reduced-motion:reduce){.p-jar.lit .on,.p-jar.lit .glow{animation:none}}
+@media (prefers-reduced-motion:reduce){.p-jar.lit .on,.p-jar.lit .glow,.p-inuse.lit .on,.p-inuse.lit .glow{animation:none}}
 
 /* THE STUDIO HEADER: the top strip of the table, as tall as the other headers. The table keeps its
    proportions and fills the width; on narrow screens it's cropped to the middle. */
@@ -105,8 +113,8 @@
   font:700 clamp(8px,.85vw,11px)/1 "Courier New",Courier,monospace;letter-spacing:.14em;color:#3d3022;opacity:.82;pointer-events:none}
 .sw-top{top:10.95%} .sw-bottom{top:64.44%}
 .sw-glow{position:absolute;left:70.8%;top:43.6%;width:120%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;pointer-events:none;mix-blend-mode:screen;
-  background:radial-gradient(circle,rgba(255,180,80,.45),rgba(255,150,50,.12) 30%,transparent 60%);transition:background .4s ease}
-.st-switch.is-night .sw-glow{background:radial-gradient(circle,rgba(130,190,255,.5),rgba(110,170,255,.14) 30%,transparent 60%)}
+  background:radial-gradient(circle,rgba(255,158,30,.6) 9%,rgba(255,158,30,.26) 16%,rgba(255,158,30,.08) 30%,transparent 52%);transition:background .4s ease}
+.st-switch.is-night .sw-glow{background:radial-gradient(circle,rgba(70,150,255,.65) 9%,rgba(70,150,255,.28) 16%,rgba(70,150,255,.09) 30%,transparent 52%)}
 .st-switch.turning .sw-glow{animation:sw-blink .45s ease}
 @keyframes sw-blink{0%{opacity:1}35%{opacity:0}100%{opacity:1}}
 @media (max-width:640px){.st-foot{--h:170px}}
@@ -114,3 +122,17 @@
   background:radial-gradient(ellipse 40% 90% at 50% 50%,rgba(0,0,0,0) 30%,rgba(10,5,2,.55) 100%),rgba(10,5,2,.25)}
 .st-foot.night::after{opacity:1}
 .st-foot .st-switch{z-index:2}
+
+/* the day/night dial beside the switch: the painted disc turns half a circle under the brass face, the
+   sun setting out of the window as the moon comes up (and back by morning) */
+.st-dial{position:absolute;z-index:2;top:50%;left:calc(50% - clamp(150px,16vw,210px) / 2 - 34px);translate:-100% -50%;width:clamp(118px,12.8vw,165px);aspect-ratio:1;
+  filter:drop-shadow(6px 9px 9px rgba(20,10,2,.5));transition:filter 2.4s ease}
+.st-foot.night .st-dial{filter:drop-shadow(8px 11px 10px rgba(10,4,0,.6)) brightness(.88)}
+.st-dial img{position:absolute;display:block}
+.dial-disc{width:75.92%;left:12.04%;top:10.92%;rotate:var(--turn,0deg);transition:rotate 2.6s cubic-bezier(.45,.05,.3,1)}
+.dial-face{inset:0;width:100%;height:100%;filter:drop-shadow(1px 3px 2px rgba(20,10,2,.45))}
+@media (max-width:640px){
+  .st-foot .st-switch{left:calc(50% + 68px)}
+  .st-dial{left:calc(50% - 68px);translate:-50% -50%;width:112px}
+}
+@media (prefers-reduced-motion:reduce){.dial-disc{transition:none}}

@@ -23,14 +23,16 @@
     { id: 'canister', src: 'canister', x: 1881, y: 681, w: 154, rot: 0, how: 'roll', from: 'right' },
     { id: 'mat', src: 'mat', x: 1641, y: 980, w: 717, rot: 0, how: 'slide', from: 'right' },
     { id: 'pins', src: 'pins', x: 1118, y: 1039, w: 152, rot: 0, how: 'drop' },
-    { id: 'panel', src: ['panel-off', 'panel-on'], x: 1700, y: 610, w: 112, rot: 0, how: 'slide' },
+    { id: 'panel', src: ['panel-off', 'panel-day', 'panel-night'], x: 1700, y: 610, w: 112, rot: 0, how: 'slide' },
     { id: 'contact', src: 'contact', x: 1800, y: 175, w: 330, rot: 7, how: 'slide', from: 'top' },
     { id: 'resin', src: 'resin', x: 215, y: 445, w: 175, rot: -8, how: 'slide', from: 'left' },
     { id: 'cone', src: 'cone', x: 1205, y: 330, w: 140, rot: 0, how: 'roll', from: 'top' },
     { id: 'jar', src: ['jar-off', 'jar-on'], x: 245, y: 655, w: 165, rot: 0, how: 'gentle', from: 'left' },
-    { id: 'carnelians', src: 'carnelians', x: 525, y: 800, w: 125, rot: 12, how: 'drop' },
+    { id: 'carnelians', src: 'carnelians', x: 745, y: 835, w: 125, rot: 12, how: 'drop' },
+    { id: 'gloves', src: 'gloves', x: 600, y: 590, w: 360, rot: -9, how: 'slide', from: 'left' },
     { id: 'notebook', src: 'notebook', x: 340, y: 1010, w: 430, rot: -6, how: 'slide', from: 'bottom' },
     { id: 'map', src: 'map', x: 790, y: 1065, w: 440, rot: -3, how: 'slide', from: 'bottom' },
+    { id: 'inuse', src: ['inuse-off', 'inuse-on'], x: 1060, y: 780, w: 210, rot: -4, how: 'slide', from: 'bottom' },
     { id: 'mug', src: 'mug', x: 1562, y: 812, w: 160, rot: 0, how: 'gentle', from: 'right' },
     { id: 'fox', src: 'fox', x: 1700, y: 1010, w: 400, rot: -5, how: 'slide', from: 'right' },
     { id: 'foxsit', src: 'fox-sitting', x: 1330, y: 640, w: 230, rot: 8, how: 'slide', from: 'right' },
@@ -40,10 +42,11 @@
   if (HEADER) PROPS = [
     { id: 'pencils', src: 'pencils', x: 279, y: 223, w: 444, rot: 0, how: 'slide', from: 'left' },
     { id: 'ruler', src: 'ruler', x: 1010, y: 90, w: 557, rot: 0, how: 'slide', from: 'top' },
-    { id: 'panel', src: ['panel-off', 'panel-on'], x: 1585, y: 300, w: 86, rot: 0, how: 'slide' },
-    { id: 'contact', src: 'contact', x: 1800, y: 135, w: 300, rot: 7, how: 'slide', from: 'top' },
+    { id: 'contact', src: 'contact', x: 1800, y: 135, w: 300, rot: 7, how: 'slide', from: 'top', spots: [[1800, 135], [1545, 165], [1450, 175]] },
+    { id: 'panel', src: ['panel-off', 'panel-day', 'panel-night'], x: 1585, y: 300, w: 92, rot: 0, how: 'slide', from: 'right', pin: 'nav', ar: 211 / 220 },
     { id: 'carnelians', src: 'carnelians', x: 800, y: 300, w: 95, rot: 12, how: 'drop' },
-    { id: 'cone', src: 'cone', x: 960, y: 270, w: 112, rot: 0, how: 'roll', from: 'top' },
+    { id: 'cone', src: 'cone', x: 1597, y: 139, w: 112, rot: 0, how: 'roll', from: 'top' },
+    { id: 'inuse', src: ['inuse-off', 'inuse-on'], x: 950, y: 270, w: 200, rot: -4, how: 'slide', from: 'bottom' },
     { id: 'jar', src: ['jar-off', 'jar-on'], x: 1175, y: 265, w: 132, rot: 0, how: 'gentle', from: 'top' }
   ];
   var PHOTOS = ['01', '02', '03'].map(function (n) { return '../../play/media/2024-09-05-marlette/' + n + '.jpg'; });
@@ -75,8 +78,10 @@
     el.className = 'prop p-' + p.id + (Array.isArray(p.src) ? ' stack' : '');
     if (Array.isArray(p.src)) {
       el.appendChild(img(p.src[0], 'off')); el.appendChild(img(p.src[1], 'on'));
+      if (p.src[2]) el.appendChild(img(p.src[2], 'on2'));
       var g = document.createElement('span'); g.className = 'glow'; el.appendChild(g);
       if (p.id === 'jar') el.classList.add('glows');
+      if (p.id === 'inuse' && inUseOn) el.classList.add('lit');
     } else el.appendChild(img(p.src));
     place(el, p, p.w);
     el.style.transform = rest(p);
@@ -179,7 +184,7 @@
   // Process Content: the prints develop like film in a tray, then the green lamp lights
   function process() {
     if (!prints.length) return dropPrints().then(process);
-    var panel = els.panel; if (panel) panel.classList.remove('lit');
+    var panel = els.panel, wasInUse = inUseOn; inUse(true);
     var chain = Promise.resolve();
     prints.forEach(function (pr) {
       chain = chain.then(function () {
@@ -191,7 +196,7 @@
           { opacity: 1, filter: 'sepia(0) contrast(1) brightness(1)' }], { duration: 2600, easing: 'ease-in-out' });
       });
     });
-    return chain.then(function () { return wait(400); }).then(function () { if (panel) panel.classList.add('lit'); });
+    return chain.then(function () { return wait(400); }).then(function () { inUse(wasInUse); if (panel && !calm) anim(panel, [{ filter: 'brightness(1)' }, { filter: 'brightness(1.5)' }, { filter: 'brightness(1)' }], { duration: 900, iterations: 2 }); });
   }
 
   // Marley drops by over the top edge: leaning in by day, resting or asleep at night
@@ -206,12 +211,16 @@
       : { src: 'marley-look', w: 390 * k, ratio: 635 / 640, show: HEADER ? .5 : .62 };
     var el = document.createElement('div'); el.className = 'prop marley';
     el.appendChild(img(pose.src));
-    var h = pose.w * pose.ratio, x = 1345;
-    el.style.left = ((x - pose.w / 2) / W * 100) + '%';
+    var h = pose.w * pose.ratio;
     el.style.top = ((-h * (1 - pose.show)) / H * 100) + '%';
     el.style.width = (pose.w / W * 100) + '%';
     L.appendChild(el);
-    if (touchesKeep(el)) { el.remove(); marleyOut = false; return Promise.resolve(); }
+    // her usual spot, or the nearest one that keeps clear of the logo and the lamps
+    var spot = (HEADER ? [1345, 1290, 1240, 1180] : [1345]).filter(function (x) {
+      el.style.left = ((x - pose.w / 2) / W * 100) + '%'; return !touchesKeep(el);
+    })[0];
+    if (spot == null) { el.remove(); marleyOut = false; return Promise.resolve(); }
+    el.style.left = ((spot - pose.w / 2) / W * 100) + '%';
     var up = 'translateY(' + px(-h * pose.show - 40) + 'px)';
     return anim(el, [{ transform: up }, { transform: 'none' }], { duration: 1600, easing: 'cubic-bezier(.2,.7,.3,1)' })
       .then(function () { // a sniff: a small lean in and back
@@ -224,24 +233,89 @@
 
   function setLamps() { if (els.jar) els.jar.classList.toggle('lit', T.classList.contains('night')); }
 
-  // the header's logo and label sit on the table like a mug: any prop that would touch them (on this
-  // screen size) is left off, with a margin around them
-  var KEEP = document.querySelector('.st-label');
-  function touchesKeep(el) {
-    if (!KEEP) return false;
-    var a = KEEP.getBoundingClientRect(), b = el.getBoundingClientRect(), m = 24;
-    return !(b.right < a.left - m || b.left > a.right + m || b.bottom < a.top - m || b.top > a.bottom + m);
+  // The desk's two mounted pieces, one at each end of the header: the logo and label on the left (like a
+  // mug), and the day/night lamps under the Play and Log out buttons on the right. They stay put at every
+  // screen width; every other prop (and Marley) keeps a margin clear of them, and is left off if it can't.
+  var LABEL = document.querySelector('.st-label'), NAV = document.querySelector('.st-nav');
+  var GAP = 24;
+  function pinned() { return PROPS.filter(function (p) { return p.pin === 'nav'; }); }
+  // where a pinned prop rests on screen, worked out from its spot (it may still be sliding in)
+  function pinnedRect(p) {
+    var t = T.getBoundingClientRect(), k = t.width / W, w = p.w * k, h = w * (p.ar || 1);
+    var x = t.left + (p.x - p.w / 2) * k, y = t.top + p.y * k - h / 2;
+    return { left: x, top: y, right: x + w, bottom: y + h };
   }
+  function keepRects() {
+    var out = [];
+    if (LABEL) out.push(LABEL.getBoundingClientRect());
+    if (NAV) {
+      var n = NAV.getBoundingClientRect(), r = { left: n.left, top: n.top, right: n.right, bottom: n.bottom };
+      pinned().forEach(function (p) {
+        var q = pinnedRect(p);
+        r = { left: Math.min(r.left, q.left), top: Math.min(r.top, q.top), right: Math.max(r.right, q.right), bottom: Math.max(r.bottom, q.bottom) };
+      });
+      out.push(r);
+    }
+    return out;
+  }
+  function touchesKeep(el) {
+    var b = el.getBoundingClientRect();
+    return keepRects().some(function (a) {
+      return !(b.right < a.left - GAP || b.left > a.right + GAP || b.bottom < a.top - GAP || b.top > a.bottom + GAP);
+    });
+  }
+  // a prop with more than one spot takes the first that's clear (its usual one first)
   function fits(p) {
-    if (!KEEP) return Promise.resolve(true);
+    if (p.pin || (!LABEL && !NAV)) return Promise.resolve(true);
     var el = makeProp(p); el.style.visibility = 'hidden';
     var pics = [].slice.call(el.querySelectorAll('img'));
     return Promise.all(pics.map(function (i) { return i.decode ? i.decode().catch(function () {}) : null; }))
-      .then(function () { var ok = !touchesKeep(el); el.remove(); delete els[p.id]; return ok; });
+      .then(function () {
+        var ok = (p.spots || [[p.x, p.y]]).some(function (sp) {
+          p.x = sp[0]; p.y = sp[1]; place(el, p, p.w); return !touchesKeep(el);
+        });
+        el.remove(); delete els[p.id]; return ok;
+      });
   }
 
+  // the day/night lamps sit just under the Play and Log out buttons at every screen width
+  function pin() {
+    if (!NAV) return;
+    var t = T.getBoundingClientRect(), n = NAV.getBoundingClientRect();
+    if (!t.width || !n.width) return;
+    pinned().forEach(function (p) {
+      var u = W / t.width;
+      p.x = Math.round((n.left + n.width / 2 - t.left) * u);
+      p.y = Math.round((n.bottom - t.top) * u + 14 + p.w * 0.48);
+      if (els[p.id]) place(els[p.id], p, p.w);
+    });
+  }
+
+  // when the window changes size, props that now crowd the mounted pieces lift away, and ones that fit
+  // again come back
+  var settled = false, sizeTimer = null;
+  function reflow() {
+    if (!settled) return;
+    pin();
+    PROPS.forEach(function (p) {
+      if (p.pin) return;
+      var el = els[p.id];
+      if (el && el.isConnected && !p.off) {
+        if (!touchesKeep(el)) return;
+        p.off = true; delete els[p.id];
+        anim(el, [{ opacity: 1 }, { opacity: 0 }], { duration: 450 }).then(function () {
+          el.remove();
+          return fits(p).then(function (ok) { if (ok && p.off) { p.off = false; arrive(p); } });
+        });
+      } else if (p.off) {
+        fits(p).then(function (ok) { if (ok && p.off) { p.off = false; arrive(p); } });
+      }
+    });
+  }
+  window.addEventListener('resize', function () { clearTimeout(sizeTimer); sizeTimer = setTimeout(reflow, 250); });
+
   function start() {
-    L.innerHTML = ''; els = {}; prints = [];
+    L.innerHTML = ''; els = {}; prints = []; settled = false; pin();
     var chain = Promise.resolve();
     PROPS.forEach(function (p, i) {
       chain = chain.then(function () { return fits(p); }).then(function (ok) { p.off = !ok; });
@@ -253,13 +327,17 @@
         arrive(p); return wait(340);
       });
     });
-    return chain.then(function () { return wait(1600); }).then(setLamps);
+    return chain.then(function () { return wait(1600); }).then(function () { settled = true; setLamps(); });
   }
 
   var timer = null;
   function visits() { clearTimeout(timer); if (calm) return; timer = setTimeout(function () { marley().then(visits); }, 28000 + Math.random() * 22000); }
 
-  window.StudioTable = { process: process, drop: dropPrints, marley: marley,
+  // the IN USE sign: uranium glass that glows green while the Studio is busy (bringing files in from Drive)
+  var inUseOn = false;
+  function inUse(on) { inUseOn = !!on; if (els.inuse) els.inuse.classList.toggle('lit', inUseOn); }
+
+  window.StudioTable = { process: process, drop: dropPrints, marley: marley, inUse: inUse, tick: function () { return tick(); },
     night: function (on) { T.classList.toggle('night', on); setLamps(); } };
   var C = document.querySelector('.controls');
   if (C) C.addEventListener('click', function (e) {
@@ -276,17 +354,49 @@
     else if (act === 'handin') {
       var gone = PROPS.filter(function (p) { return !p.fixed && !p.off && !(els[p.id] && els[p.id].isConnected); });
       var back = gone[Math.floor(Math.random() * gone.length)];
+      if (back) back.away = false;
       job = back ? handIn(back) : Promise.resolve();
     }
     else if (act === 'take') {
       var pool = prints.filter(function (pr) { return pr.el.isConnected; }).map(function (pr) { return { el: pr.el, p: pr.p }; })
         .concat(PROPS.filter(function (p) { return !p.fixed && els[p.id] && els[p.id].isConnected; }).map(function (p) { return { el: els[p.id], p: p }; }));
       var pick = pool[Math.floor(Math.random() * pool.length)];
+      if (pick && pick.p.id !== 'print') pick.p.away = true;
       job = pick ? takeAway(pick.el, pick.p) : Promise.resolve();
     }
     (job || Promise.resolve()).then(function () { busy = false; });
   });
   if (night && C) C.querySelector('[data-act=night]').textContent = 'Day';
 
-  start().then(function () { return calm ? null : wait(settle ? 4000 : 1500).then(marley); }).then(visits);
+  // A lived-in desk: every few minutes something small happens. The hand tidies one thing away, brings
+  // back something it took, or an item gets nudged. The mounted pieces (logo, lamps) never move, and
+  // nothing lands near them.
+  var idleTimer = null;
+  function onDesk(p) { return !p.pin && !p.off && els[p.id] && els[p.id].isConnected; }
+  function tick() {
+    if (busy || marleyOut || document.hidden || !settled) return Promise.resolve();
+    var here = PROPS.filter(onDesk);
+    var away = PROPS.filter(function (p) { return p.away && !p.pin && !p.off; });
+    var r = Math.random(), job;
+    if (away.length && (away.length >= 2 || r < .35)) {
+      var back = away[Math.floor(Math.random() * away.length)];
+      job = fits(back).then(function (ok) { if (!ok) return; back.away = false; return handIn(back); });
+    } else if (here.length > 4 && r < .7) {
+      var go = here[Math.floor(Math.random() * here.length)];
+      go.away = true; job = takeAway(els[go.id], go);
+    } else if (here.length) {
+      var n = here[Math.floor(Math.random() * here.length)], el = els[n.id], from = rest(n);
+      n.rot = Math.max(-14, Math.min(14, n.rot + (Math.random() < .5 ? -1 : 1) * (2 + Math.random() * 4)));
+      var dx = (Math.random() - .5) * 30, dy = (Math.random() - .5) * 20, was = { x: n.x, y: n.y };
+      n.x += dx; n.y += dy; place(el, n, n.w);
+      if (touchesKeep(el)) { n.x = was.x; n.y = was.y; place(el, n, n.w); }
+      var dxp = px(n.x - was.x), dyp = px(n.y - was.y);
+      job = anim(el, [{ transform: 'translate(' + (-dxp) + 'px,' + (-dyp) + 'px) ' + from }, { transform: rest(n) }], { duration: 900, easing: 'cubic-bezier(.3,.6,.3,1)' });
+    }
+    busy = true;
+    return (job || Promise.resolve()).then(function () { busy = false; }, function () { busy = false; });
+  }
+  function idle() { clearTimeout(idleTimer); if (calm) return; idleTimer = setTimeout(function () { tick().then(idle); }, 150000 + Math.random() * 150000); }
+
+  start().then(function () { return calm ? null : wait(settle ? 4000 : 1500).then(marley); }).then(function () { visits(); idle(); });
 })();

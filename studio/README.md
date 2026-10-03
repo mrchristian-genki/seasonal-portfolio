@@ -19,6 +19,12 @@ Log in, then:
   `field/data/photos/<id>/`). Set Status to **Published** and save to put it live: the deploy workflow
   rebuilds Play and uploads it in about a minute.
 
+- **Bring in from Drive** (top of the list): copies new files from the Google Drive folder `_Rides` to
+  the server with rclone, in the background. One way only, never deletes anything on either side, and
+  skips files it already has, so pressing it again only fetches what's new. Files land in
+  `~/incoming/_Rides/` on DreamHost, outside the web folder, so none of it is public. Phone or Drive app
+  uploads of any size work, since nothing passes through the browser.
+
 Not in the Studio yet: episode audio (render it, then hand it to a Claude Code session to master and
 attach), animated clips and the prints-on-a-table layout.
 
@@ -30,12 +36,13 @@ attach), animated clips and the prints-on-a-table layout.
 | `api.php` | JSON API for the page: config, list, entry, photo, blob, save, draft. Login and CSRF on every call |
 | `lib/bootstrap.php` | Private config, session (secure cookie, idle timeout), login throttle (5 tries per 15 min), headers |
 | `lib/github.php` | Reads and commits to the repo through the GitHub API |
+| `lib/drive.php` | Bring in from Drive: starts `rclone copy` in the background and reads back its log |
 | `lib/drafter.php` | The Claude call (official Anthropic PHP SDK, structured output, server-side fallback) |
 | `assets/studio.js`, `assets/studio.css` | The page. `assets/track.js` is copied from `field/track.js` at deploy |
 | `tools/setup.php` | One-time setup over SSH; writes the private config |
 | `composer.json` / `.lock` | The SDK (installed by the deploy workflow; `vendor/` isn't in git) |
 
-Nothing is stored on the web server. The private settings live in `~/studio-private/config.php` on
+Nothing is stored on the web server except what "Bring in from Drive" copies to `~/incoming`. The private settings live in `~/studio-private/config.php` on
 DreamHost (outside the web folder, mode 600): the password hash, the Anthropic API key, the GitHub token
 (fine-grained, this repo only, Contents read/write) and the private zones.
 
@@ -51,6 +58,27 @@ DreamHost (outside the web folder, mode 600): the password hash, the Anthropic A
    ssh -t adapt123@pdx1-shared-a1-09.dreamhost.com "php christiangehrke.com/studio/tools/setup.php"
    ```
    Run it again any time to change one value; Return keeps the others.
+
+## Google Drive (once)
+
+1. Install rclone on DreamHost:
+   ```
+   ssh adapt123@pdx1-shared-a1-09.dreamhost.com
+   mkdir -p ~/bin && cd ~/bin
+   curl -LO https://downloads.rclone.org/rclone-current-linux-amd64.zip
+   unzip -j rclone-current-linux-amd64.zip '*/rclone' && rm rclone-current-linux-amd64.zip
+   ~/bin/rclone version
+   ```
+2. `~/bin/rclone config`: `n` (new remote), name `gdrive`, storage `drive`, client id and secret blank,
+   scope `2` (read-only), service account blank, advanced `n`, auto config `n`. It prints a line starting
+   `rclone authorize "drive"`: run that on the Mac (`brew install rclone` first if needed), sign in to
+   Google in the browser that opens, and paste the code back. Shared drive `n`, then `y` to keep it.
+3. In Google Drive, rename the folder to `_Rides` (the underscore keeps it at the top of the list).
+4. Test from SSH: `~/bin/rclone lsd gdrive:_Rides`.
+
+To watch more folders later (the AI content, phase 2), add them to the private config, e.g.
+`'drive_folders' => ['_Rides', '_Studio'],`. Optional settings: `'rclone'` (path) and `'drive_remote'`.
+The copy's log is `~/studio-private/drive-sync.log`.
 
 ## For Claude Code sessions
 
