@@ -43,7 +43,7 @@ its prompt, it's linked to its source and shows a green light, and becomes a car
 
 ## Decided (Oct 3, 2026)
 - Files come in through the Studio drop zone or a Google Drive folder.
-- Processing runs on a button (working name "Develop"): it checks the Studio uploads and the Drive inbox
+- Processing runs on a "Process Content" button (as in processing film): it checks the Studio uploads and the Drive inbox
   for anything new, then runs privacy prep, the brief and the link search. Nothing runs on its own.
 - Drive inbox: one folder per Note named with date and time, e.g. `2026-10-03 1730 Short name`.
 - Animations and narration are made outside and brought back at their prompt, with a green light.
@@ -53,4 +53,4 @@ its prompt, it's linked to its source and shows a green light, and becomes a car
 - Large files on DreamHost, not GitHub; browser video compiling only if needed.
 
 ## Open
-- The process button's name ("Develop", or another).
+Nothing open.
