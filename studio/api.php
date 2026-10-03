@@ -108,6 +108,8 @@ try {
             $files[EVENTS . "/$id.json"] = ['text' => repo_json($e)];
             $what = ($e['status'] ?? '') === 'published' ? 'Publish' : 'Save';
             $sha = $gh->commit($files, "Studio: $what $id");
+            // a note made from an inbox folder: remember which, so the folder shows it's done
+            if (isset($e['source']) && is_string($e['source'])) (new Drive($cfg))->remember($e['source'], $id);
             json_out(['ok' => true, 'commit' => $sha]);
 
         case 'POST draft':
@@ -122,6 +124,13 @@ try {
 
         case 'POST drive':
             json_out((new Drive($cfg))->start());
+
+        // Process Content: what's in one inbox folder, and its photos, tracks and notes one at a time
+        case 'GET inbox':
+            json_out((new Drive($cfg))->files((string) ($_GET['f'] ?? '')));
+
+        case 'GET inboxfile':
+            (new Drive($cfg))->send((string) ($_GET['f'] ?? ''), (string) ($_GET['n'] ?? ''));
 
         default:
             json_fail('Unknown request.', 404);

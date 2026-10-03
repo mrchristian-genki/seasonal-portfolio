@@ -12,6 +12,7 @@ final class Drive {
     private string $home;
     private string $rclone;
     private string $remote;
+    private string $tz;
     /** @var string[] */
     private array $folders;
 
@@ -19,6 +20,7 @@ final class Drive {
         $this->home = dirname(studio_private_dir());
         $this->rclone = $cfg['rclone'] ?? $this->home . '/bin/rclone';
         $this->remote = $cfg['drive_remote'] ?? 'gdrive';
+        $this->tz = $cfg['timezone'] ?? 'America/Los_Angeles';
         $this->folders = array_values(array_filter($cfg['drive_folders'] ?? ['Rides'],
             fn($f) => is_string($f) && preg_match('/^[\w .-]{1,80}$/u', $f) && !str_contains($f, '..')));
     }
@@ -103,24 +105,142 @@ final class Drive {
         ];
     }
 
-    // What's on the server now: each subfolder of each watched folder, with its file count and size.
+    // What's on the server now, one item per note-to-be: each subfolder of a watched folder, and loose
+    // files at its top level grouped by the day they were taken. Each item says what's in it and when its
+    // newest file arrived, and which note it became (if any) and how many files came after that.
     private function inbox(): array {
-        $out = [];
+        $out = []; $done = $this->processed();
         foreach ($this->folders as $f) {
             $root = $this->dest($f);
             if (!is_dir($root)) continue;
+            $loose = [];
             foreach (scandir($root) ?: [] as $name) {
                 if ($name[0] === '.') continue;
-                $path = "$root/$name"; $n = 0; $bytes = 0;
-                if (is_dir($path)) {
-                    $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS));
-                    foreach ($it as $file) { if ($file->isFile()) { $n++; $bytes += $file->getSize(); } }
-                } else { $n = 1; $bytes = (int) filesize($path); }
-                $out[] = ['folder' => $f, 'name' => $name, 'files' => $n, 'bytes' => $bytes, 'changed' => (int) filemtime($path)];
+                $path = "$root/$name";
+                if (is_dir($path)) $out[] = $this->item("$f/$name", $name, $this->listFiles($path), $done, true);
+                elseif (is_file($path)) $loose[$this->day($path)][] = ['path' => $path, 'rel' => $name];
+            }
+            foreach ($loose as $day => $files) {
+                $out[] = $this->item("$f/#$day", $day, array_map(fn($x) => $this->fileInfo($x['path'], $x['rel']), $files), $done, false) + ['date' => $day];
             }
         }
-        usort($out, fn($a, $b) => $b['changed'] <=> $a['changed']);
+        usort($out, fn($a, $b) => $b['arrived'] <=> $a['arrived']);
         return $out;
+    }
+
+    private function item(string $source, string $name, array $files, array $done, bool $dir): array {
+        $count = ['photo' => 0, 'video' => 0, 'track' => 0, 'text' => 0, 'audio' => 0, 'other' => 0];
+        $bytes = 0; $arrived = 0;
+        foreach ($files as $x) { $count[$x['kind']]++; $bytes += $x['bytes']; $arrived = max($arrived, $x['arrived']); }
+        $note = $done[$source] ?? null;
+        $since = $note ? count(array_filter($files, fn($x) => $x['arrived'] > (int) ($note['at'] ?? 0))) : 0;
+        return ['source' => $source, 'name' => $name, 'dir' => $dir, 'files' => count($files), 'bytes' => $bytes, 'count' => $count,
+            'arrived' => $arrived, 'note' => $note, 'since' => $since];
+    }
+
+    // when a file landed on the server (rclone keeps Drive's modified time, so the inode change time is
+    // the arrival), and what kind it is
+    private function fileInfo(string $path, string $rel): array {
+        $st = stat($path);
+        return ['name' => $rel, 'kind' => self::kind($rel), 'bytes' => (int) $st['size'], 'changed' => (int) $st['mtime'], 'arrived' => (int) $st['ctime']];
+    }
+    private function listFiles(string $dir): array {
+        $out = [];
+        $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS));
+        foreach ($it as $file) {
+            if (!$file->isFile() || $file->getFilename()[0] === '.') continue;
+            $out[] = $this->fileInfo($file->getPathname(), substr($file->getPathname(), strlen($dir) + 1));
+        }
+        usort($out, fn($a, $b) => strnatcasecmp($a['name'], $b['name']));
+        return $out;
+    }
+    // the day a loose file belongs to: when the photo was taken (from its camera data), else its date in Drive
+    private function day(string $path): string {
+        $tz = new DateTimeZone($this->tz);
+        if (preg_match('/\.jpe?g$/i', $path) && function_exists('exif_read_data')) {
+            $x = @exif_read_data($path, 'EXIF');
+            $t = $x['DateTimeOriginal'] ?? null;
+            if (is_string($t) && preg_match('/^(\d{4}):(\d{2}):(\d{2})/', $t, $m)) return "$m[1]-$m[2]-$m[3]";
+        }
+        return (new DateTime('@' . filemtime($path)))->setTimezone($tz)->format('Y-m-d');
+    }
+
+    // ---------- Process Content: a folder that came in from Drive becomes a draft note ----------
+
+    // Which inbox folder became which note: "Rides/<folder>" => entry id, kept with the private config.
+    private function mapFile(): string { return studio_private_dir() . '/processed.json'; }
+    public function processed(): array {
+        $f = $this->mapFile();
+        $m = is_file($f) ? (json_decode((string) file_get_contents($f), true) ?: []) : [];
+        return array_map(fn($v) => is_array($v) ? $v : ['id' => (string) $v, 'at' => 0], $m);
+    }
+    public function remember(string $source, string $id): void {
+        if ($this->resolve($source) === null) return;
+        $m = $this->processed(); $m[$source] = ['id' => $id, 'at' => time()];
+        file_put_contents($this->mapFile(), json_encode($m, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), LOCK_EX);
+    }
+
+    // "Rides/<folder>" -> that folder; "Rides/#2026-10-03" -> the loose files of that day. Null unless it's
+    // really in the inbox (no climbing out).
+    private function resolve(string $source): ?array {
+        $parts = explode('/', $source, 2);
+        if (count($parts) !== 2 || !in_array($parts[0], $this->folders, true)) return null;
+        $root = realpath($this->dest($parts[0]));
+        if (!$root) return null;
+        if (preg_match('/^#(\d{4}-\d{2}-\d{2})$/', $parts[1], $m)) return ['root' => $root, 'day' => $m[1]];
+        $path = realpath($this->dest($parts[0]) . '/' . $parts[1]);
+        if (!$path || !is_dir($path) || dirname($path) !== $root) return null;
+        return ['root' => $path, 'day' => null];
+    }
+    private function filesOf(array $r): array {
+        if ($r['day'] === null) return $this->listFiles($r['root']);
+        $out = [];
+        foreach (scandir($r['root']) ?: [] as $name) {
+            $p = $r['root'] . '/' . $name;
+            if ($name[0] !== '.' && is_file($p) && $this->day($p) === $r['day']) $out[] = $this->fileInfo($p, $name);
+        }
+        return $out;
+    }
+
+    public static function kind(string $name): string {
+        $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+        if (in_array($ext, ['jpg', 'jpeg', 'png', 'heic', 'heif', 'webp'], true)) return 'photo';
+        if (in_array($ext, ['mov', 'mp4', 'm4v'], true)) return 'video';
+        if (in_array($ext, ['gpx', 'csv'], true)) return 'track';
+        if (in_array($ext, ['txt', 'md'], true)) return 'text';
+        if (in_array($ext, ['wav', 'mp3', 'm4a'], true)) return 'audio';
+        return 'other';
+    }
+
+    // Everything in one inbox item, with any text notes read in.
+    public function files(string $source): array {
+        $r = $this->resolve($source);
+        if ($r === null) throw new RuntimeException('That folder isn\'t in the inbox.');
+        $files = $this->filesOf($r); $notes = [];
+        foreach ($files as $x) {
+            if ($x['kind'] === 'text' && $x['bytes'] < 65536) $notes[] = trim((string) file_get_contents($r['root'] . '/' . $x['name']));
+        }
+        return ['source' => $source, 'files' => $files, 'notes' => implode("\n\n", array_filter($notes)),
+            'note' => $this->processed()[$source] ?? null, 'day' => $r['day']];
+    }
+
+    // One photo or track from an inbox folder, sent to the logged-in Studio page (which resizes photos and
+    // trims tracks in the browser, as it does for dropped files).
+    public function send(string $source, string $name): never {
+        $r = $this->resolve($source);
+        $root = $r['root'] ?? '';
+        $path = $r === null ? false : realpath("$root/$name");
+        if (!$path || !is_file($path) || !str_starts_with($path, $root . '/')) json_fail('No such file.', 404);
+        if ($r['day'] !== null && (dirname($path) !== $root || $this->day($path) !== $r['day'])) json_fail('No such file.', 404);
+        $kind = self::kind($path);
+        if (!in_array($kind, ['photo', 'track', 'text'], true)) json_fail('Only photos, tracks and notes come through here.', 400);
+        $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+        $type = ['jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'png' => 'image/png', 'webp' => 'image/webp', 'heic' => 'image/heic', 'heif' => 'image/heif'][$ext] ?? 'text/plain; charset=utf-8';
+        header('Content-Type: ' . $type);
+        header('Content-Length: ' . filesize($path));
+        header('Cache-Control: private, max-age=600');
+        readfile($path);
+        exit;
     }
 
     private function tail(string $file, int $n): array {
