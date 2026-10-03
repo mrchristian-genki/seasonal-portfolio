@@ -64,8 +64,42 @@ main{max-width:980px;margin:0 auto;padding:24px 16px 120px}
 #toast{position:fixed;left:50%;bottom:76px;transform:translate(-50%,20px);opacity:0;background:var(--ink);color:#fff;padding:10px 16px;border-radius:12px;max-width:min(92vw,560px);transition:.25s;pointer-events:none;z-index:20}
 #toast.show{opacity:1;transform:translate(-50%,0)} #toast.bad{background:var(--bad)}
 
-body.login{display:flex;align-items:center;justify-content:center;min-height:100vh;min-height:100dvh;padding:16px}
-.login-box{background:#fff;border:1px solid var(--line);border-radius:18px;padding:28px;width:min(100%,360px);display:flex;flex-direction:column;gap:14px}
+body.login{background:#3a281b url(../table/a/table-day.webp) center/cover;display:flex;align-items:center;justify-content:center;min-height:100vh;min-height:100dvh;padding:16px}
+.login-box{background:var(--paper,#f4ead6);border:0;border-radius:3px;box-shadow:8px 12px 18px rgba(20,10,2,.45);padding:28px;width:min(100%,360px);display:flex;flex-direction:column;gap:14px}
 .login-box .sub{margin:-8px 0 4px;color:var(--ink3)} .login-box label{display:flex;flex-direction:column;gap:6px;font-weight:600;font-size:14px}
 
 @media (max-width:640px){.grid2,.trackrow{grid-template-columns:1fr} .panel{padding:14px} .savebar{padding:10px 14px}}
+
+/* THE WORKSHOP LOOK: the page below the table header is the table's dark edge; panels and cards are
+   sheets of paper lying on it, lit like the table (light from the top left, shadow to the bottom
+   right). Ink is warm brown, not teal. */
+:root{--ink:#2b2118;--ink2:#5a4a3a;--ink3:#8a7763;--line:#e2d6c0;--bg:#2a1d14;--card:#f6efe2;--paper:#f4ead6;--soft:#f3e3c8}
+body{background:
+  linear-gradient(rgba(20,12,6,.55),rgba(20,12,6,.75)),
+  repeating-linear-gradient(90deg,rgba(255,220,170,.025) 0 2px,transparent 2px 9px),
+  #3a281b;background-attachment:fixed}
+main>.head h1{color:#f3e6d2;text-shadow:0 2px 8px rgba(0,0,0,.4)}
+.muted{color:#c9b597} .panel .muted,.card .muted{color:var(--ink3)}
+.panel,.card{background:var(--paper);border:0;border-radius:3px;box-shadow:6px 9px 14px rgba(8,4,0,.45),inset 0 0 40px rgba(170,130,80,.14)}
+.card:hover{box-shadow:8px 12px 18px rgba(8,4,0,.5),inset 0 0 40px rgba(170,130,80,.14);translate:0 -1px}
+.card:nth-child(3n+1){rotate:-.4deg} .card:nth-child(3n+2){rotate:.3deg} .card:nth-child(3n){rotate:-.15deg}
+input,select,textarea{background:#fffaf0;border-color:#dccdb2}
+button{background:#fffaf0;border-color:#cdbb9c;color:var(--ink)}
+button.primary{background:#2b2118;border-color:#2b2118;color:#f6efe2}
+button.primary:hover{background:#45362a}
+.head .back{background:transparent;color:#f3e6d2;border-color:rgba(243,230,210,.4)}
+.st{background:#ecdfc6;color:var(--ink2)} .st-published{background:#dfe9cf;color:#4a6a2a}
+.drop{background:rgba(255,250,240,.6);border-color:#cdbb9c}
+.savebar{background:rgba(42,29,20,.92);border-top:1px solid rgba(243,230,210,.15)} .savebar .muted{color:#d8c6a8}
+.ph{background:#fffaf0;border-color:#e2d6c0;border-radius:2px}
+code{background:#ecdfc6}
+/* nav: two small paper tags at the top right of the table */
+.st-nav{position:absolute;z-index:50;top:12px;right:clamp(12px,3vw,40px);display:flex;gap:10px;align-items:center}
+.st-nav form{margin:0}
+.st-nav a,.st-nav button{font:700 13px "Nunito",system-ui,sans-serif;color:#2b2118;background:#f4ead6;border:0;border-radius:2px;padding:5px 11px;text-decoration:none;cursor:pointer;
+  box-shadow:4px 6px 8px rgba(36,18,4,.38);rotate:-1.5deg}
+.st-nav button{rotate:1.2deg}
+.st-nav a:hover,.st-nav button:hover{background:#fffaf0}
+/* brass buttons read on both the dark page and the paper */
+button.primary{background:#c9a36a;border-color:#b08a52;color:#2b2118;box-shadow:3px 4px 8px rgba(8,4,0,.35)}
+button.primary:hover{background:#d8b47c}

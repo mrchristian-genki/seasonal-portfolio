@@ -34,8 +34,8 @@ $in = studio_logged_in();
 <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&display=swap">
-<link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>">
-<link rel="stylesheet" href="table/table.css?v=8">
+<link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>-2">
+<link rel="stylesheet" href="table/table.css?v=11">
 </head>
 <?php if (!$in): ?>
 <body class="login">
@@ -50,13 +50,7 @@ $in = studio_logged_in();
 </body>
 <?php else: ?>
 <body data-csrf="<?= h(studio_csrf()) ?>">
-<header class="bar">
-  <a class="brand" href="./"><span class="dot"></span>Studio</a>
-  <nav>
-    <a href="/play/" target="_blank" rel="noopener">Play ↗</a>
-    <form method="post"><input type="hidden" name="act" value="logout"><input type="hidden" name="csrf" value="<?= h(studio_csrf()) ?>"><button type="submit" class="link">Log out</button></form>
-  </nav>
-</header>
+
 <section class="st-hero" aria-label="Studio">
   <div class="table" id="table" data-set="header" data-base="table/">
     <img class="wood day" src="table/a/table-day.webp" alt="">
@@ -65,16 +59,30 @@ $in = studio_logged_in();
     <div class="layer" id="layer"></div>
     <div class="shade" aria-hidden="true"></div>
   </div>
+  <nav class="st-nav" aria-label="Studio">
+    <a href="/play/" target="_blank" rel="noopener">Play ↗</a>
+    <form method="post"><input type="hidden" name="act" value="logout"><input type="hidden" name="csrf" value="<?= h(studio_csrf()) ?>"><button type="submit">Log out</button></form>
+  </nav>
   <div class="st-label">
     <img class="st-logo" src="/icon-512.png?v=2" alt="">
     <div class="st-card"><h1>Studio</h1><p>Field Notes, behind the scenes</p></div>
   </div>
 </section>
 <main id="app"><p class="muted">Loading…</p></main>
+<footer class="st-foot" aria-label="Studio">
+  <div class="st-foot-wood" aria-hidden="true"><span class="day"></span><span class="night"></span></div>
+  <button type="button" class="st-switch" id="dayNight" role="switch" aria-checked="false" aria-label="Day. Switch to night">
+    <img class="sw-day" src="table/a/switch-day.webp" alt="">
+    <img class="sw-night" src="table/a/switch-night.webp" alt="">
+    <span class="sw-label sw-top">DAY</span><span class="sw-label sw-bottom">NIGHT</span>
+    <span class="sw-glow" aria-hidden="true"></span>
+  </button>
+</footer>
 <div id="toast" role="status" aria-live="polite"></div>
 <script src="assets/track.js?v=<?= STUDIO_VERSION ?>"></script>
 <script src="assets/studio.js?v=<?= STUDIO_VERSION ?>"></script>
-<script src="table/table.js?v=8"></script>
+<script src="table/table.js?v=11"></script>
+<script src="table/switch.js?v=1"></script>
 </body>
 <?php endif; ?>
 </html>
