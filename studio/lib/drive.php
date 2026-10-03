@@ -19,7 +19,7 @@ final class Drive {
         $this->home = dirname(studio_private_dir());
         $this->rclone = $cfg['rclone'] ?? $this->home . '/bin/rclone';
         $this->remote = $cfg['drive_remote'] ?? 'gdrive';
-        $this->folders = array_values(array_filter($cfg['drive_folders'] ?? ['_Rides'],
+        $this->folders = array_values(array_filter($cfg['drive_folders'] ?? ['Rides'],
             fn($f) => is_string($f) && preg_match('/^[\w .-]{1,80}$/u', $f) && !str_contains($f, '..')));
     }
 
