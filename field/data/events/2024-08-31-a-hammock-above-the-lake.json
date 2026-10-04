@@ -2174,7 +2174,7 @@
    "w": 1600,
    "h": 900,
    "use": "post",
-   "cover": true,
+   "cover": false,
    "from": "IMG_6736.JPG"
   },
   {
@@ -2218,7 +2218,7 @@
    "w": 960,
    "h": 540,
    "use": "post",
-   "cover": false,
+   "cover": true,
    "from": "updated_pass_by-Small.mp4",
    "range": [
     0,
