@@ -36,7 +36,7 @@
     // props may rest on the near bank of the river, so even a thin strip of wood gets a proper-sized prop
     var height = Math.min(Math.max(riverTop + 34, 84), 130);
     var n = nav && nav.getBoundingClientRect();                  // the nav tags, when they sit up top
-    var right = (n && n.top - h.top < height ? n.left - h.left : h.width) - 14, width = right - left;
+    var right = (n && n.top - h.top < height ? n.left - h.left : h.width) - (h.width < 640 ? 30 : 14), width = right - left;
     s.hidden = height < 34 || width < 50;
     s.style.left = left + 'px'; s.style.width = width + 'px'; s.style.top = '0px'; s.style.height = height + 'px';
   }
@@ -53,7 +53,8 @@
   // size a prop to fit its shelf, in proportion to its real size
   function sizeFor(sh, name) {
     var b = sh.box.getBoundingClientRect(), p = POOL[name];
-    var h = Math.min(b.height * .78 * Math.min(1, .55 + p[1] * .28), b.width * .9 / p[0]);
+    var k = sh.from === 'top' && HERO.clientWidth < 640 ? .58 : .78;    // a phone's header strip is small
+    var h = Math.min(b.height * k * Math.min(1, .55 + p[1] * .28), b.width * .9 / p[0]);
     return { w: h * p[0], h: h };
   }
   function bring(sh, not) {
@@ -64,7 +65,8 @@
     img.addEventListener('click', function () { collect(sh, img); });
     return (img.decode ? img.decode().catch(function () {}) : Promise.resolve()).then(function () {
       var z = sizeFor(sh, name), b = sh.box.getBoundingClientRect(), rot = (Math.random() * 16 - 8).toFixed(1);
-      var x = (b.width - z.w) * (.25 + Math.random() * .5);
+      // the header's props stay toward the STUDIO panel, clear of the screen edge; the footer's anywhere central
+      var x = (b.width - z.w) * (sh.from === 'top' ? .1 + Math.random() * .4 : .25 + Math.random() * .5);
       img.style.width = z.w + 'px'; img.style.left = x + 'px'; img.style.top = ((b.height - z.h) / 2) + 'px';
       sh.box.appendChild(img); sh.prop = img; sh.name = name;
       if (sh.from === 'top') {                                  // dropped in from above, with a little settle
