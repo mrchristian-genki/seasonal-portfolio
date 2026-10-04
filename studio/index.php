@@ -13,8 +13,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $act = $_POST['act'] ?? '';
     if ($act === 'login') {
         if (studio_locked_out()) $error = 'Too many tries. Wait 15 minutes and try again.';
-        elseif (studio_login((string) ($_POST['password'] ?? ''))) { header('Location: ./'); exit; }
-        else $error = 'That password isn\'t right.';
+        elseif (studio_login((string) ($_POST['username'] ?? ''), (string) ($_POST['password'] ?? ''))) { header('Location: ./'); exit; }
+        else $error = 'That username and password don\'t match.';
     } elseif ($act === 'logout' && hash_equals(studio_csrf(), (string) ($_POST['csrf'] ?? ''))) {
         $_SESSION = [];
         session_destroy();
@@ -45,7 +45,7 @@ $in = studio_logged_in();
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&family=Special+Elite&display=swap">
 <link rel="stylesheet" href="../css/route-dash.css?v=<?= STUDIO_VERSION ?>-3">
-<link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>-29">
+<link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>-31">
 <link rel="stylesheet" href="table/table.css?v=41">
 </head>
 <?php if (!$in): ?>
@@ -97,13 +97,14 @@ $in = studio_logged_in();
   <h1>Studio</h1>
   <p class="sub">Field Notes, behind the scenes.</p>
   <input type="hidden" name="act" value="login">
-  <label>Password <input type="password" name="password" autocomplete="current-password" required autofocus></label>
+  <label>Username <input type="text" name="username" autocomplete="username" autocapitalize="none" spellcheck="false" required autofocus></label>
+  <label>Password <input type="password" name="password" autocomplete="current-password" required></label>
   <?php if ($error): ?><p class="err"><?= h($error) ?></p><?php endif; ?>
   <button type="submit">Log in</button>
 </form>
 <section class="about-studio" aria-labelledby="whatH">
   <h2 id="whatH">What the Studio does</h2>
-  <p class="lede">The Studio is where a day out becomes a Field Note: a written post with photos and a map, and a short episode for the Field Notes podcast. It's a private workshop, so it needs a password; what it makes is public on <a href="/play/">Play</a>.</p>
+  <p class="lede">The Studio is where a day out becomes a Field Note: a written post with photos and a map, and a short episode for the Field Notes podcast. It's a private workshop, so it needs a login; what it makes is public on <a href="/play/">Play</a>.</p>
   <ol class="steps">
     <li><b>Bring it in</b><span>Photos, video, the ride's track and any notes go into a Google Drive folder. One tap copies them to the server.</span></li>
     <li><b>Sort it out</b><span>Each folder becomes a draft note, grouped by day. Photos are resized and their location data removed before they leave the device, and private places are trimmed off the track.</span></li>
@@ -130,7 +131,7 @@ $in = studio_logged_in();
 <div id="toast" role="status" aria-live="polite"></div>
 <script src="assets/track.js?v=<?= STUDIO_VERSION ?>-3"></script>
 <script src="../js/route-view.js?v=<?= STUDIO_VERSION ?>-4"></script>
-<script src="assets/studio.js?v=<?= STUDIO_VERSION ?>-28"></script>
+<script src="assets/studio.js?v=<?= STUDIO_VERSION ?>-30"></script>
 <?php endif; ?>
 <script src="table/table.js?v=22"></script>
 <script src="table/river.js?v=6"></script>

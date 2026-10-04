@@ -79,9 +79,9 @@ function studio_clear_failures(): void {
 }
 
 /* People. The owner logs in with the password in the private config and can do everything. Editors
-   (added by the owner in the Studio, kept in ~/studio-private/users.json with their password hashes)
-   can work on notes, but what they save waits for the owner's review and never goes live by itself.
-   Each person has their own password, so the password alone says who it is. */
+   (added by the owner in the Studio, kept in ~/studio-private/users.json with their usernames and
+   password hashes) can work on notes, but what they save waits for the owner's review and never goes
+   live by itself. Everyone logs in with a username and a password. */
 function studio_users_file(): string { return studio_private_dir() . '/users.json'; }
 function studio_users(): array {
     $f = studio_users_file();
@@ -93,12 +93,22 @@ function studio_save_users(array $users): void {
     @chmod(studio_users_file(), 0600);
 }
 
-function studio_login(string $password): bool {
+// a username from a name: lowercase letters and digits ("Sam Lee" -> "samlee")
+function studio_username(string $name): string {
+    $u = strtolower(preg_replace('/[^A-Za-z0-9]+/', '', iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $name) ?: $name) ?? '');
+    return substr($u !== '' ? $u : 'editor', 0, 24);
+}
+// the owner's usernames: the config's owner_user, else "christian" or "owner"
+function studio_owner_users(array $cfg): array {
+    return isset($cfg['owner_user']) ? [strtolower((string) $cfg['owner_user'])] : ['christian', 'owner'];
+}
+
+function studio_login(string $username, string $password): bool {
     if (studio_locked_out()) return false;
     $cfg = studio_config();
-    $who = null;
-    if (password_verify($password, $cfg['password_hash'] ?? '')) $who = ['name' => $cfg['owner_name'] ?? 'Owner', 'role' => 'owner'];
-    else foreach (studio_users() as $u) if (password_verify($password, $u['hash'])) { $who = ['name' => $u['name'], 'role' => 'editor']; break; }
+    $who = null; $user = strtolower(trim($username));
+    if (in_array($user, studio_owner_users($cfg), true) && password_verify($password, $cfg['password_hash'] ?? '')) $who = ['name' => $cfg['owner_name'] ?? 'Christian', 'role' => 'owner'];
+    else foreach (studio_users() as $u) if (($u['user'] ?? studio_username($u['name'])) === $user && password_verify($password, $u['hash'])) { $who = ['name' => $u['name'], 'role' => 'editor']; break; }
     if ($who === null) {
         studio_note_failure();
         usleep(400000);

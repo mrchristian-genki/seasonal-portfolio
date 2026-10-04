@@ -139,9 +139,14 @@
     var box = $('#peopleBox'); box.innerHTML = '<p class="muted">Loading…</p>';
     api('users').then(function (j) {
       box.innerHTML = '<h2>People</h2><p class="muted">Editors can make and change notes, bring in from Drive and draft with Claude. What they save waits for your review here; they can\'t publish or change what\'s live.</p>' +
-        (j.users.length ? '<ul class="ppl">' + j.users.map(function (u) { return '<li><b>' + esc(u.name) + '</b> <small>editor' + (u.added ? ' · since ' + esc(when(u.added)) : '') + '</small><button type="button" class="link" data-reset="' + esc(u.name) + '">New password</button><button type="button" class="link" data-del="' + esc(u.name) + '">Remove</button></li>'; }).join('') + '</ul>' : '<p>No editors yet.</p>') +
+        (j.users.length ? '<ul class="ppl">' + j.users.map(function (u) { return '<li><b>' + esc(u.name) + '</b> <small>username <code>' + esc(u.user) + '</code> · editor' + (u.added ? ' · since ' + esc(when(u.added)) : '') + '</small><button type="button" class="link" data-reset="' + esc(u.name) + '">New password</button><button type="button" class="link" data-del="' + esc(u.name) + '">Remove</button></li>'; }).join('') + '</ul>' : '<p>No editors yet.</p>') +
         '<div class="row"><input id="pplName" placeholder="Name" maxlength="40"><button type="button" class="small" id="pplAdd">Add an editor</button></div><div id="pplPw"></div>';
-      var show = function (r) { $('#pplPw').innerHTML = '<div class="pw"><p>' + esc(r.name) + '\'s password, shown only this once. Send it to them privately:</p><code>' + esc(r.password) + '</code><button type="button" class="small" id="pwCopy">Copy</button></div>'; $('#pwCopy').onclick = function () { navigator.clipboard.writeText(r.password).then(function () { toast('Copied.'); }); }; };
+      var show = function (r) {
+        var text = 'Studio: https://www.christiangehrke.com/studio/\nUsername: ' + r.user + '\nPassword: ' + r.password;
+        $('#pplPw').innerHTML = '<div class="pw"><p>' + esc(r.name) + '\'s login. The password is shown only this once: send it to them privately.</p>' +
+          '<div class="pw-l"><span>Username</span><code>' + esc(r.user) + '</code></div><div class="pw-l"><span>Password</span><code>' + esc(r.password) + '</code></div><button type="button" class="small" id="pwCopy">Copy both</button></div>';
+        $('#pwCopy').onclick = function () { navigator.clipboard.writeText(text).then(function () { toast('Copied.'); }); };
+      };
       $('#pplAdd').onclick = function () { var n = $('#pplName').value.trim(); if (!n) return; api('useradd', { name: n }).then(function (r) { renderPeople(); setTimeout(function () { show(r); }, 300); }).catch(function (err) { toast(err.message, true); }); };
       $$('[data-reset]', box).forEach(function (b) { b.onclick = function () { var n = b.getAttribute('data-reset'); if (!confirm('Give ' + n + ' a new password? The old one stops working.')) return; api('userreset', { name: n }).then(show).catch(function (err) { toast(err.message, true); }); }; });
       $$('[data-del]', box).forEach(function (b) { b.onclick = function () { var n = b.getAttribute('data-del'); if (!confirm('Remove ' + n + '? They\'re logged out, and what they saved for review stays for you to approve or discard.')) return; api('userdel', { name: n }).then(renderPeople).catch(function (err) { toast(err.message, true); }); }; });
@@ -171,13 +176,27 @@
     d.innerHTML = '<div class="drive-head"><div><h2>Google Drive</h2><p class="muted">Watching ' + names + '. New files are copied to the server; nothing is deleted on either side.</p></div>' +
       '<button id="driveGo" class="primary"' + (j.running || !j.ready ? ' disabled' : '') + '>' + (j.running ? 'Bringing in…' : 'Bring in from Drive') + '</button></div>' +
       (j.problem ? '<p class="err">' + esc(j.problem) + '</p>' : '<p class="drive-line">' + line + '</p>') +
-      (j.errors.length ? '<p class="err">' + j.errors.map(esc).join('<br>') + '</p>' : '') + inbox;
+      (j.errors.length ? '<p class="err">' + j.errors.map(esc).join('<br>') + '</p>' : '') + inbox +
+      ((j.ignored || []).length && owner() ? '<details class="ignored"><summary>Ignored (' + j.ignored.length + ')</summary><ul>' + j.ignored.map(function (x) {
+        return '<li>' + esc(x.source) + ' <small>' + esc(when(x.at)) + (x.dropped ? ' · server copy deleted' : '') + '</small> <button class="link unignore" data-src="' + esc(x.source) + '">Restore</button></li>'; }).join('') + '</ul></details>' : '');
     var b = $('#driveGo');
     if (b) b.onclick = function () {
       b.disabled = true; b.textContent = 'Starting…';
       api('drive', {}).then(renderDrive).catch(function (err) { toast(err.message, true); driveStatus(); });
     };
     $$('.inbox .open', d).forEach(function (b) { b.onclick = function () { edit(b.getAttribute('data-id')); }; });
+    // a folder that won't be used: hidden for good, and (a folder) its copy on the server deleted if you say so
+    $$('.inbox .ignore', d).forEach(function (b) {
+      b.onclick = function () {
+        var src = b.getAttribute('data-src');
+        if (!confirm('Ignore “' + src + '”? It goes from this list for good, even if Drive copies it again. (You can restore it below.)')) return;
+        var drop = !!b.getAttribute('data-dir') && confirm('Also delete the server\'s copy of it, to free the space? Google Drive isn\'t touched.\n\nOK deletes the copy; Cancel keeps it.');
+        api('ignore', { source: src, drop: drop }).then(function (j) { renderDrive(j); toast('Ignored' + (drop ? ', and the server copy deleted.' : '.')); }).catch(function (err) { toast(err.message, true); });
+      };
+    });
+    $$('.ignored .unignore', d).forEach(function (b) {
+      b.onclick = function () { api('unignore', { source: b.getAttribute('data-src') }).then(function (j) { renderDrive(j); toast('Restored.'); }).catch(function (err) { toast(err.message, true); }); };
+    });
     $$('.inbox .process', d).forEach(function (b) {
       b.onclick = function () {
         if (b.classList.contains('add')) addNew(b.getAttribute('data-src'), b.getAttribute('data-id'), +b.getAttribute('data-at'));
@@ -201,6 +220,7 @@
       act = '<button class="link open" data-id="' + esc(note.id) + '">Open “' + esc(note.title || note.id) + '”</button>' +
         (f.since ? '<button class="process add" data-src="' + esc(f.source) + '" data-id="' + esc(note.id) + '" data-at="' + ((f.note && f.note.at) || 0) + '">Add ' + f.since + ' new</button>' : '');
     }
+    if (owner()) act += '<button class="link ignore" data-src="' + esc(f.source) + '" data-dir="' + (f.dir ? 1 : '') + '" title="Hide it here for good">Ignore</button>';
     var label = f.dir ? esc(f.name) : 'Loose files';
     return '<li><div class="in-top">' + badge + '<small>' + (day ? esc(new Date(day + 'T12:00').toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })) : 'No date') + '</small></div>' +
       '<b>' + label + '</b><small>' + what + ' · ' + size(f.bytes) + '</small><div class="in-act">' + act + '</div></li>';
