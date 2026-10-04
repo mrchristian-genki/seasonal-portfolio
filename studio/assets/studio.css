@@ -256,3 +256,23 @@ body:has(.savebar){padding-bottom:64px}
 .about-studio .steps b{display:block;margin:4px 0 4px;color:#f1e3c4}
 .about-studio .steps span{display:block;font-size:14.5px;line-height:1.5;color:#c9b48e}
 .about-studio .more{margin:20px 0 0;text-align:center;font-weight:700}
+/* audio from Drive: a role for each file; voice notes play above Your notes */
+.dfiles{list-style:none;margin:6px 0 0;padding:0}
+.dfiles li{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line)}
+.dfiles .dname{overflow-wrap:anywhere}
+.dfiles select{min-width:150px}
+.vnotes{margin:0 0 12px;padding:10px 12px;border-radius:8px;background:rgba(170,130,80,.12)}
+.vnotes .vn{margin-top:8px} .vnotes .vn small{display:block;color:var(--ink3)} .vnotes audio{width:100%}
+/* next steps: what to do now, most important first, at the top of a note */
+.panel.next h2{margin:0 0 8px}
+.nsteps{list-style:none;margin:0;padding:0;counter-reset:ns}
+.nsteps li{counter-increment:ns;display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between;padding:10px 0 10px 40px;position:relative;border-top:1px solid var(--line)}
+.nsteps li:first-child{border-top:0}
+.nsteps li::before{content:counter(ns);position:absolute;left:0;top:12px;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;
+  font:800 13px/1 "Nunito",system-ui,sans-serif;color:var(--ink3);border:2px solid var(--line)}
+.nsteps li.now::before{color:#2a1c0a;border-color:transparent;background:radial-gradient(circle at 35% 30%,#fbe3a2,#c99a48 60%,#7d5a22)}
+.nsteps li > div:first-child{flex:1 1 320px}
+.nsteps b{display:block} .nsteps span{display:block;color:var(--ink3);font-size:14.5px}
+.nsteps li:not(.now) b{color:var(--ink2)}
+.nsteps .nb{display:flex;gap:12px;align-items:center}
+.nsteps a.btn{display:inline-block;text-decoration:none;padding:6px 14px;border-radius:999px;font-weight:700}

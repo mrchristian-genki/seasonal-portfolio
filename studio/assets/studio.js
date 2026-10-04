@@ -9,6 +9,7 @@
   var CFG = null, E = null, dirty = false;
   var fresh = {};     // name -> { blob, thumb (data URL), b64 } for photos not yet saved
   var audioNew = null, audioGone = false;   // the episode's MP3: one attached since the last save, or removed
+  var DRIVEAUD = null;                      // audio files in the note's Drive folder (null until looked up)
   var removed = [];   // photo files to delete on save
 
   // ---------- helpers ----------
@@ -29,7 +30,7 @@
   function dur(s) { if (s == null) return ''; var h = Math.floor(s / 3600), m = Math.round((s % 3600) / 60); return (h ? h + ' h ' : '') + m + ' m'; }
   function words(s) { return (String(s || '').match(/\S+/g) || []).length; }
   function blobToB64(blob) { return new Promise(function (ok) { var r = new FileReader(); r.onload = function () { ok(String(r.result).split(',')[1]); }; r.readAsDataURL(blob); }); }
-  function markDirty() { dirty = true; var s = $('#saveState'); if (s) s.textContent = 'Unsaved changes'; }
+  function markDirty() { dirty = true; var s = $('#saveState'); if (s) s.textContent = 'Unsaved changes'; if (typeof renderNext === 'function') renderNext(); }
   window.addEventListener('beforeunload', function (ev) { if (dirty) { ev.preventDefault(); ev.returnValue = ''; } });
 
   // ---------- photos: EXIF date, resize, strip ----------
@@ -95,7 +96,7 @@
   // ---------- list ----------
   function showList() {
     if (dirty && !confirm('Leave without saving?')) return;
-    dirty = false; E = null; fresh = {}; removed = []; INBOX = null; audioNew = null; audioGone = false;
+    dirty = false; E = null; fresh = {}; removed = []; INBOX = null; audioNew = null; audioGone = false; DRIVEAUD = null;
     route('notes');
     app.innerHTML = '<div class="head"><h1>Field Notes</h1><button id="new" class="primary">New entry</button></div><section id="drive" class="panel drive"><p class="muted">Checking Google Drive…</p></section><div id="list" class="cards"><p class="muted">Loading entries…</p></div>';
     $('#new').onclick = function () { edit(null); };
@@ -296,9 +297,9 @@
     var L = loader('Processing', ['Read the folder', 'Bring in the track', 'Bring in the photos', 'Claude drafts the note', 'Ready for you to read'], label);
     L.at(0);
     api('inbox', null, '&f=' + encodeURIComponent(src)).then(function (j) {
-      INBOX = j; dirty = false; fresh = {}; removed = []; audioNew = null; audioGone = false;
+      INBOX = j; dirty = false; fresh = {}; removed = []; audioNew = null; audioGone = false; DRIVEAUD = null;
       var name = src.split('/').slice(1).join('/').replace(/^#/, ''), when = guessDate(name);
-      E = blank(); E.source = src; E.title = guessTitle(name); E.fieldNotes = j.notes || '';
+      E = blank(); savedStatus = null; E.source = src; E.title = guessTitle(name); E.fieldNotes = j.notes || '';
       if (when) E.date = when;
       render();
       var photos = j.files.filter(function (f) { return f.kind === 'photo'; }).slice(0, 40);
@@ -330,12 +331,13 @@
   }
   function inboxPanel() {
     if (!E.source || !INBOX || INBOX.source !== E.source) return E.source ? '<section class="panel from"><p class="muted">Made from the Drive folder <b>' + esc(E.source) + '</b>.</p></section>' : '';
-    var later = INBOX.files.filter(function (f) { return f.kind === 'video' || f.kind === 'audio'; });
+    var later = INBOX.files.filter(function (f) { return f.kind === 'video'; }), aud = INBOX.files.filter(function (f) { return f.kind === 'audio'; });
     var other = INBOX.files.filter(function (f) { return f.kind === 'other'; });
     return '<section class="panel from"><h2>From Drive: ' + esc(E.source) + '</h2>' +
       '<p class="muted">' + (E.id ? 'New photos from this folder are added below. Draft again if you like, then Save to keep them.'
         : 'Photos' + (INBOX.files.some(function (f) { return f.kind === 'track'; }) ? ', the track' : '') + (INBOX.notes ? ' and your text notes' : '') + ' are brought in below, then Claude drafts it. Read it through and Save.') + '</p>' +
       (later.length ? '<p><b>Waiting for the video step</b> (they stay on the server):</p><ul class="later">' + later.map(function (f) { return '<li>' + esc(f.name) + ' <small>' + size(f.bytes) + '</small></li>'; }).join('') + '</ul>' : '') +
+      (aud.length ? '<p class="muted">Audio (' + aud.map(function (f) { return esc(f.name); }).join(', ') + '): choose what each file is under Episode, in <b>Audio from Drive</b>. Voice notes play above your notes.</p>' : '') +
       (other.length ? '<p class="muted">Not used: ' + other.map(function (f) { return esc(f.name); }).join(', ') + '</p>' : '') + '</section>';
   }
 
@@ -346,11 +348,11 @@
   }
   function edit(id) {
     if (dirty && !confirm('Leave without saving?')) return;
-    dirty = false; fresh = {}; removed = []; audioNew = null; audioGone = false;
-    if (!id) { E = blank(); route('new'); render(); return Promise.resolve(); }
+    dirty = false; fresh = {}; removed = []; audioNew = null; audioGone = false; DRIVEAUD = null;
+    if (!id) { E = blank(); savedStatus = null; route('new'); render(); return Promise.resolve(); }
     app.innerHTML = '<p class="muted">Opening…</p>';
     return api('entry', null, '&id=' + encodeURIComponent(id)).then(function (j) {
-      E = j.entry; E.post = E.post || { title: '', body: '' }; E.episode = E.episode || { title: '', script: '', audio: null }; E.questions = E.questions || []; E.photos = E.photos || [];
+      E = j.entry; savedStatus = E.status; E.post = E.post || { title: '', body: '' }; E.episode = E.episode || { title: '', script: '', audio: null }; E.questions = E.questions || []; E.photos = E.photos || [];
       route('note/' + id); render();
     }).catch(function (err) { toast(err.message, true); showList(); });
   }
@@ -363,7 +365,8 @@
     var sOpts = (CFG.statuses || []).map(function (s) { return '<option value="' + s.id + '"' + (E.status === s.id ? ' selected' : '') + '>' + esc(s.label) + '</option>'; }).join('');
     var kOpts = ['ride', 'hike', 'forage', 'make'].map(function (k) { return '<option' + (E.kind === k ? ' selected' : '') + '>' + k + '</option>'; }).join('');
     app.innerHTML =
-      '<div class="head"><button class="back" id="back">← Entries</button><h1>' + esc(E.title || 'New entry') + '</h1></div>' + inboxPanel() +
+      '<div class="head"><button class="back" id="back">← Entries</button><h1>' + esc(E.title || 'New entry') + '</h1></div>' +
+      '<section class="panel next" id="next" aria-live="polite"></section>' + inboxPanel() +
       '<section class="panel grid2">' +
         field('Title', '<input id="title" value="' + esc(E.title) + '">') +
         field('Date', '<input id="date" type="date" value="' + esc(E.date) + '"' + (E.id ? ' disabled' : '') + '>', E.id ? 'The address is <code>' + esc(E.id) + '</code>' : 'Sets the address with the title, on first save') +
@@ -374,14 +377,14 @@
       '</section>' +
       (trackTop ? '<section class="panel"><h2>Track</h2><div id="track"></div></section>' : '') +
       '<section class="panel"><h2>Photos</h2>' + (later ? '' : dropPhotos) + '<div id="photos" class="photos"></div>' + (later && !E.photos.length ? '<p class="muted">No photos yet. Add some at the bottom of the page.</p>' : '') + '</section>' +
-      '<section class="panel"><h2>Your notes</h2>' + field('', '<textarea id="fieldNotes" rows="8" placeholder="What happened, in your words: who came, what you saw, what to leave out.">' + esc(E.fieldNotes) + '</textarea>') + '</section>' +
+      '<section class="panel"><h2>Your notes</h2><div id="voiceNotes"></div>' + field('', '<textarea id="fieldNotes" rows="8" placeholder="What happened, in your words: who came, what you saw, what to leave out.">' + esc(E.fieldNotes) + '</textarea>') + '</section>' +
       '<section class="panel draft"><h2>Draft with Claude</h2><div class="row"><input id="instr" placeholder="Optional: e.g. shorter, or add the bit about the hammock"><button id="draft" class="primary">Draft with Claude</button></div>' +
         '<div id="questions"></div></section>' +
       '<section class="panel">' + field('Card summary', '<textarea id="summary" rows="2">' + esc(E.summary) + '</textarea>') + '</section>' +
       '<section class="panel"><h2>Post</h2>' + field('Title', '<input id="postTitle" value="' + esc(E.post.title) + '">') + field('Text', '<textarea id="postBody" rows="14">' + esc(E.post.body) + '</textarea>', 'First person. A blank line between paragraphs. End with "What I learned: …" when there is something real.') + '</section>' +
       '<section class="panel"><h2>Episode</h2>' + field('Title', '<input id="epTitle" value="' + esc(E.episode.title) + '">') + field('Script', '<textarea id="epScript" rows="16">' + esc(E.episode.script) + '</textarea>', '<span id="epCount"></span>') +
         '<div class="row"><button id="copyPrompt">Copy the audio prompt</button><span class="muted">Render it with your voice tool, then drop the file below.</span></div>' +
-        '<h3>Audio</h3><div id="audio"></div></section>' +
+        '<h3>Audio</h3><div id="audio"></div><div id="driveFiles"></div></section>' +
       (later ? '<section class="panel more"><h2>Add more</h2><p class="muted">Only if you want to add to what\'s here.</p>' + (trackTop ? '' : '<h3>Track</h3><div id="track"></div>') + '<h3>Photos</h3>' + dropPhotos + '</section>' : '') +
       '<footer class="savebar"><span id="saveState" class="muted">' + (E.id ? 'Saved' : 'Not saved yet') + '</span><button id="save" class="primary">Save</button></footer>';
 
@@ -390,6 +393,9 @@
     ['kind', 'status', 'date'].forEach(function (k) { $('#' + k).addEventListener('change', markDirty); });
     $('#epScript').addEventListener('input', count); count();
     renderTrack(); renderPhotos(); renderQuestions(); renderAudio();
+    driveAudio().then(function () { renderDriveFiles(); renderVoiceNotes(); renderNext(); });
+    ['postBody', 'epScript', 'fieldNotes'].forEach(function (k) { $('#' + k).addEventListener('change', renderNext); });
+    renderNext();
     var dp = $('#drop-photos');
     ['dragover', 'dragenter'].forEach(function (t) { dp.addEventListener(t, function (ev) { ev.preventDefault(); dp.classList.add('on'); }); });
     dp.addEventListener('dragleave', function () { dp.classList.remove('on'); });
@@ -527,6 +533,7 @@
   function mmss(sec) { sec = Math.round(sec || 0); return Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0'); }
   function renderAudio() {
     var box = $('#audio'); if (!box) return;
+    setTimeout(renderNext, 0);
     var has = audioNew || (E.episode.audio && !audioGone);
     if (has) {
       box.innerHTML = '<div class="aud"><audio controls preload="metadata"' + (audioNew && audioNew.url ? ' src="' + audioNew.url + '"' : '') + '></audio>' +
@@ -540,23 +547,99 @@
       }
       $('#dropAudio').onclick = function () { if (audioNew) audioNew = null; else audioGone = true; markDirty(); renderAudio(); };
     } else {
-      box.innerHTML = '<div id="drop-audio" class="drop">Drop the episode\'s audio here (WAV or MP3), or <label class="pick">choose<input type="file" accept="audio/*,.wav,.mp3,.m4a" hidden id="pickAudio"></label>. It\'s levelled and made into an MP3 in your browser, then uploaded.</div><div id="driveAudio"></div>' +
+      box.innerHTML = '<div id="drop-audio" class="drop">Drop the episode\'s audio here (WAV or MP3), or <label class="pick">choose<input type="file" accept="audio/*,.wav,.mp3,.m4a" hidden id="pickAudio"></label>. It\'s levelled and made into an MP3 in your browser, then uploaded.</div>' +
         '<small class="muted credit">MP3 encoding by <a href="https://lame.sourceforge.net" target="_blank" rel="noopener">LAME</a>.</small>';
       var dz = $('#drop-audio');
       ['dragover', 'dragenter'].forEach(function (t) { dz.addEventListener(t, function (ev) { ev.preventDefault(); dz.classList.add('on'); }); });
       dz.addEventListener('dragleave', function () { dz.classList.remove('on'); });
       dz.addEventListener('drop', function (ev) { ev.preventDefault(); dz.classList.remove('on'); if (ev.dataTransfer.files[0]) attachAudio(ev.dataTransfer.files[0]); });
-      if (E.source) api('inbox', null, '&f=' + encodeURIComponent(E.source)).then(function (j) {
-        var mp3 = j.files.filter(function (f) { return f.kind === 'audio'; }), d = $('#driveAudio');
-        if (!mp3.length || !d) return;
-        d.innerHTML = '<p class="muted">In this note\'s Drive folder:</p>' + mp3.map(function (f) {
-          return '<button type="button" class="small useDrive" data-n="' + esc(f.name) + '">Use ' + esc(f.name.split('/').pop()) + ' <small>' + size(f.bytes) + '</small></button>';
-        }).join(' ');
-        $$('.useDrive', d).forEach(function (b) { b.onclick = function () { fromDrive(b.getAttribute('data-n'), b); }; });
-      }).catch(function () {});
     }
     var pick = $('#pickAudio', box); if (pick) pick.onchange = function () { if (this.files[0]) attachAudio(this.files[0]); this.value = ''; };
   }
+  // ---------- next steps: once the content is in, what to do now, most important first, at the top of the
+  // note. Worked out from the note itself, so it moves on as you go: voice notes into your notes, a draft,
+  // Claude's questions (the script isn't final until they're answered), the episode audio, save, publish ----------
+  var savedStatus = null;
+  function go(sel) {
+    var el = $(sel); if (!el) return;
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    var f = el.matches('input,textarea,select,button') ? el : $('textarea,input,select,button', el);
+    if (f) setTimeout(function () { f.focus({ preventScroll: true }); }, 400);
+  }
+  function nextSteps() {
+    var val = function (id) { var el = $('#' + id); return el ? el.value.trim() : ''; };
+    var drafted = !!(val('postBody') || val('epScript')), q = (E.questions || []).length;
+    var vn = (DRIVEAUD || []).filter(function (f) { return roleOf(f.name) === 'notes'; }).length;
+    var audio = !!(audioNew || (E.episode.audio && !audioGone));
+    var videos = INBOX && INBOX.source === E.source ? INBOX.files.filter(function (f) { return f.kind === 'video'; }).length : 0;
+    var out = [];
+    if (vn && !E.voiceNotesDone) out.push({ t: 'Listen to your voice notes', d: 'Add what matters to Your notes: Claude can only use what\'s written there.', b: 'Listen', go: '#voiceNotes', done: 'voice' });
+    if (!drafted) out.push({ t: 'Draft with Claude', d: 'Claude writes the post, the captions and the episode script from your notes, track and photos.', b: 'Draft', run: function () { draft(); } });
+    if (q) out.push({ t: 'Answer Claude\'s ' + (q === 1 ? 'question' : q + ' questions'), d: 'The script isn\'t final until they\'re answered. Answer them one by one, then send them all at once.', b: 'Answer', go: '#questions' });
+    if (drafted && !q && !audio) out.push({ t: 'Record the episode', d: 'Copy the audio prompt, render it with your voice tool, then drop the audio in or choose it from Drive.', b: 'Go to the audio', go: '#copyPrompt' });
+    if (dirty) out.push({ t: 'Save', d: 'Keep what you have so far.', b: 'Save', run: save });
+    if (drafted && !q && audio && val('status') !== 'published') out.push({ t: 'Publish', d: 'Set Status to Published, then Save. Play and the podcast feed update in about a minute.', b: 'Set status', go: '#status' });
+    if (!out.length && E.id && savedStatus === 'published') out.push({ t: 'All done', d: 'It\'s live on Play' + (videos ? '. The videos wait for the video step.' : '.'), b: 'Open on Play', href: '/play/' + E.id + '/' });
+    return out;
+  }
+  function renderNext() {
+    var box = $('#next'); if (!box || !E) return;
+    var steps = nextSteps().slice(0, 3);
+    if (!steps.length) { box.hidden = true; return; }
+    box.hidden = false;
+    box.innerHTML = '<h2>Next steps</h2><ol class="nsteps">' + steps.map(function (st, i) {
+      return '<li' + (i ? '' : ' class="now"') + '><div><b>' + esc(st.t) + '</b><span>' + esc(st.d) + '</span></div><div class="nb">' +
+        (st.href ? '<a class="btn' + (i ? '' : ' primary') + '" href="' + st.href + '" target="_blank" rel="noopener">' + esc(st.b) + ' ↗</a>'
+          : '<button type="button" class="small' + (i ? '' : ' primary') + '" data-i="' + i + '">' + esc(st.b) + '</button>') +
+        (st.done ? '<button type="button" class="link" data-done="' + st.done + '">Done</button>' : '') + '</div></li>';
+    }).join('') + '</ol>';
+    $$('button[data-i]', box).forEach(function (b) {
+      var st = steps[+b.getAttribute('data-i')];
+      b.onclick = function () { if (st.run) st.run(); else go(st.go); };
+    });
+    $$('button[data-done]', box).forEach(function (b) { b.onclick = function () { E.voiceNotesDone = true; markDirty(); }; });
+  }
+
+  // ---------- audio from the note's Drive folder: each file has a role, chosen here. Voice notes (your own
+  // account of the day) play above Your notes while you write them up; the episode audio is levelled and
+  // attached like a dropped file; anything else is left alone. New audio starts as voice notes, since the
+  // episode is recorded later from the script. The choices are saved with the note. ----------
+  var ROLES = [['notes', 'Voice notes'], ['episode', 'Episode audio'], ['skip', 'Not used']];
+  function driveAudio() {
+    if (!E.source) return Promise.resolve(DRIVEAUD = []);
+    if (DRIVEAUD) return Promise.resolve(DRIVEAUD);
+    return api('inbox', null, '&f=' + encodeURIComponent(E.source))
+      .then(function (j) { return (DRIVEAUD = j.files.filter(function (f) { return f.kind === 'audio'; })); })
+      .catch(function () { return (DRIVEAUD = []); });
+  }
+  function roleOf(name) { return (E.audioRoles || {})[name] || 'notes'; }
+  function driveUrl(name) { return 'api.php?a=inboxfile&f=' + encodeURIComponent(E.source) + '&n=' + encodeURIComponent(name); }
+  function renderDriveFiles() {
+    var box = $('#driveFiles'); if (!box) return;
+    if (!DRIVEAUD || !DRIVEAUD.length) { box.innerHTML = ''; return; }
+    box.innerHTML = '<h3>Audio from Drive</h3><p class="muted">Choose what each file is.</p><ul class="dfiles">' + DRIVEAUD.map(function (f, i) {
+      var r = roleOf(f.name);
+      return '<li><span class="dname">' + esc(f.name.split('/').pop()) + ' <small>' + size(f.bytes) + '</small></span>' +
+        '<select data-i="' + i + '" aria-label="What ' + esc(f.name) + ' is">' + ROLES.map(function (o) { return '<option value="' + o[0] + '"' + (o[0] === r ? ' selected' : '') + '>' + o[1] + '</option>'; }).join('') + '</select></li>';
+    }).join('') + '</ul>';
+    $$('select', box).forEach(function (sel) {
+      sel.onchange = function () {
+        var f = DRIVEAUD[+sel.getAttribute('data-i')], v = sel.value;
+        E.audioRoles = E.audioRoles || {};
+        if (v === 'episode') Object.keys(E.audioRoles).forEach(function (k) { if (E.audioRoles[k] === 'episode') E.audioRoles[k] = 'notes'; });
+        E.audioRoles[f.name] = v; markDirty(); renderDriveFiles(); renderVoiceNotes();
+        if (v === 'episode') fromDrive(f.name);
+      };
+    });
+  }
+  function renderVoiceNotes() {
+    var box = $('#voiceNotes'); if (!box) return;
+    var vn = (DRIVEAUD || []).filter(function (f) { return roleOf(f.name) === 'notes'; });
+    box.innerHTML = vn.length ? '<div class="vnotes"><b>Your voice notes</b> <span class="muted">Listen while you write them up below.</span>' + vn.map(function (f) {
+      return '<div class="vn"><small>' + esc(f.name.split('/').pop()) + '</small><audio controls preload="metadata" src="' + driveUrl(f.name) + '"></audio></div>';
+    }).join('') + '</div>' : '';
+  }
+
   // Mastering, in the browser, to match the show: mono, 44.1 kHz, levelled to -16 LUFS (measured the
   // ITU BS.1770 way) with a gentle limiter keeping peaks under -2.5 dB (room for the MP3's own overshoot;
   // if the limiter takes a lot off, it's measured again and topped up), then a 96 kbps MP3 made by LAME
@@ -654,7 +737,7 @@
     }).catch(function (err) { toast(err.message, true); renderAudio(); });
   }
   function fromDrive(name, btn) {
-    btn.disabled = true; btn.textContent = 'Fetching from Drive…';
+    if (btn) { btn.disabled = true; btn.textContent = 'Fetching from Drive…'; }
     fetch('api.php?a=inboxfile&f=' + encodeURIComponent(E.source) + '&n=' + encodeURIComponent(name)).then(function (r) {
       if (!r.ok) throw new Error('Couldn\'t fetch that file from the server.'); return r.blob();
     }).then(function (b) { attachAudio(new File([b], name.split('/').pop(), { type: b.type })); })
@@ -664,6 +747,7 @@
   // ---------- questions: answered one at a time, sent to Claude all together ----------
   var QA = { list: null, at: 0, ans: {}, skip: {} };
   function renderQuestions() {
+    setTimeout(renderNext, 0);
     var q = E.questions || [], box = $('#questions');
     if (QA.list !== q) QA = { list: q, at: 0, ans: {}, skip: {} };       // a new set of questions starts fresh
     if (!q.length) { box.innerHTML = ''; return; }
@@ -796,7 +880,8 @@
         .catch(function (err) { E.episode.audio = hadAudio; throw err; });
     }).then(function () {
       var hadNew = !!audioNew;
-      fresh = {}; removed = []; dirty = false; audioNew = null; audioGone = false;
+      fresh = {}; removed = []; dirty = false; audioNew = null; audioGone = false; savedStatus = E.status;
+      setTimeout(renderNext, 0); DRIVEAUD = null;
       if (hadNew && !first) renderAudio();
       $('#saveState').textContent = E.status === 'published' ? 'Saved and publishing: live in about a minute' : 'Saved';
       if (first) { route('note/' + E.id, true); render(); }
