@@ -252,7 +252,7 @@
 @media (max-width:640px){.st-plate h1{font-size:24px;letter-spacing:.04em}}
 
 /* the shelves: open wood where one prop at a time slides in and out (shelf.js) */
-.shelf{position:absolute;z-index:3;pointer-events:none;overflow:hidden}
+.shelf{position:absolute;z-index:3;pointer-events:none}
 .shelf[hidden]{display:none}
 .st-foot .shelf{top:6%;height:88%}
 .st-foot .shelf-left{left:3%;width:calc(50% - 3% - clamp(96px,9vw,128px) / 2 - 18px)}
@@ -261,3 +261,10 @@
 .st-foot.night .shelf-prop{filter:drop-shadow(4px 7px 6px rgba(5,2,0,.7)) brightness(.62) saturate(.8)}
 /* Marley and the night shade (in the table layer) pass over the header shelf; the layer lets taps through */
 .st-hero .table{z-index:4;pointer-events:none}
+/* the shelves' hand: the old table's pinch, its sleeve tiled on past the edge of the header or footer */
+.shelf-hand{position:absolute;display:flex;align-items:stretch;pointer-events:none;filter:drop-shadow(4px 7px 6px rgba(20,10,2,.45))}
+.shelf-hand .palm{flex:none;height:100%;display:block;max-width:none}
+.shelf-hand .sleeve{flex:1;margin-left:-1px;background:url(a/hand-pinch-sleeve.webp) repeat-x left center/auto 100%}
+.st-foot.night .shelf-hand{filter:drop-shadow(4px 7px 6px rgba(5,2,0,.6)) brightness(.62) saturate(.8)}
+/* the hand's arm runs past these edges: clip it there without giving them anything to scroll */
+.st-hero,.st-foot{overflow:clip}

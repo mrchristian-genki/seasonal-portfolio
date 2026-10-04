@@ -2,7 +2,8 @@
    right of the STUDIO panel (above the river), and the footer either side of the lamps. Every so often a
    prop leaves a shelf and another arrives (dropping in from the top in the header, sliding in from the side
    in the footer), picked at random from the ones not already out, so a page left open long enough shows the
-   whole collection. Tap one to collect it and another takes its place.
+   whole collection. A hand brings each one in and takes it away. Tap one to collect it and another takes
+   its place.
    Works on the login page too. Marley (in the table layer) passes over all of them. */
 (function () {
   'use strict';
@@ -57,6 +58,36 @@
     var h = Math.min(b.height * k * Math.min(1, .55 + p[1] * .28), b.width * .9 / p[0]);
     return { w: h * p[0], h: h };
   }
+  // the hand (the old table's pinch) reaches in from the edge nearest the prop, pinching it at its middle;
+  // its sleeve runs on past the edge of the header or footer, so the end of the arm is never seen
+  var HW = 560 / 219;                                   // hand-pinch.webp: width / height
+  function makeHand(sh, cx, cy, z) {
+    // the edge of the header (or footer) nearest the prop: the header's bottom is the brass rail, and
+    // the footer's top meets the page, so those two are never used
+    var b = sh.box.getBoundingClientRect(), wrap = (sh.from === 'top' ? HERO : FOOT).getBoundingClientRect();
+    var px = b.left + cx, py = b.top + cy;
+    var ways = sh.from === 'top' ? [['top', py - wrap.top]] : [['bottom', wrap.bottom - py]];
+    ways.push(['left', px - wrap.left], ['right', wrap.right - px]);
+    ways.sort(function (m, n) { return m[1] - n[1]; });
+    var side = ways[0][0], edge = ways[0][1];
+    var hh = Math.max(26, Math.min(z.h * .7, 90)), hw = hh * HW, len = Math.max(hw, edge + 60);
+    var hand = document.createElement('div'); hand.className = 'shelf-hand';
+    hand.style.left = (cx - hw * .05) + 'px'; hand.style.top = (cy - hh * .6) + 'px';
+    hand.style.width = len + 'px'; hand.style.height = hh + 'px';
+    hand.style.transformOrigin = (hw * .05) + 'px 60%';
+    var pic = new Image(); pic.alt = ''; pic.className = 'palm'; pic.src = A + 'hand-pinch.webp'; pic.style.width = hw + 'px';
+    var sleeve = document.createElement('span'); sleeve.className = 'sleeve';
+    hand.appendChild(pic); hand.appendChild(sleeve); sh.box.appendChild(hand);
+    var turn = { right: '', left: 'scaleX(-1)', top: 'rotate(-90deg)', bottom: 'rotate(90deg)' }[side];
+    var out = edge + (side === 'top' || side === 'bottom' ? z.h : z.w) / 2 + 30;
+    var d = { right: [out, 0], left: [-out, 0], top: [0, -out], bottom: [0, out] }[side];
+    var move = 'translate(' + d[0] + 'px,' + d[1] + 'px)';
+    return { el: hand, at: 'translate(0,0) ' + turn, gone: move + ' ' + turn, move: move };
+  }
+  var IN = 'cubic-bezier(.25,.7,.3,1)', OUT = 'cubic-bezier(.5,0,.75,.4)';
+  function pause(ms) { return new Promise(function (ok) { setTimeout(ok, calm ? 0 : ms); }); }
+
+  // bring: a hand carries a new prop in, sets it down and leaves
   function bring(sh, not) {
     if (sh.box.hidden) return Promise.resolve();
     var name = pick(not); if (!name) return Promise.resolve();
@@ -65,28 +96,39 @@
     img.addEventListener('click', function () { collect(sh, img); });
     return (img.decode ? img.decode().catch(function () {}) : Promise.resolve()).then(function () {
       var z = sizeFor(sh, name), b = sh.box.getBoundingClientRect(), rot = (Math.random() * 16 - 8).toFixed(1);
-      // the header's props stay toward the STUDIO panel, clear of the screen edge; the footer's anywhere central
-      var x = (b.width - z.w) * (sh.from === 'top' ? .1 + Math.random() * .4 : .25 + Math.random() * .5);
-      img.style.width = z.w + 'px'; img.style.left = x + 'px'; img.style.top = ((b.height - z.h) / 2) + 'px';
-      sh.box.appendChild(img); sh.prop = img; sh.name = name;
-      if (sh.from === 'top') {                                  // dropped in from above, with a little settle
-        var up = -((b.height + z.h) / 2 + 40);
-        return anim(img, [{ transform: 'translateY(' + up + 'px) rotate(' + (rot * 2) + 'deg)' },
-                          { transform: 'translateY(6px) rotate(' + rot + 'deg)', offset: .7 },
-                          { transform: 'translateY(0) rotate(' + rot + 'deg)' }], 1100, 'cubic-bezier(.45,0,.6,1)');
-      }
-      var off = sh.from === 'left' ? -(x + z.w + 40) : (b.width - x + 40);
-      return anim(img, [{ transform: 'translateX(' + off + 'px) rotate(' + (rot * 3) + 'deg)' }, { transform: 'translateX(0) rotate(' + rot + 'deg)' }], 1400, 'cubic-bezier(.2,.7,.25,1)');
+      // props keep close to an edge, for the hand: the header's sit near its top (toward the STUDIO panel, so
+      // clear of the screen's edge), the footer's toward the outer edge of their side
+      var f = Math.random() * .25, x = (b.width - z.w) * (sh.from === 'top' ? .1 + Math.random() * .4 : sh.from === 'left' ? f : 1 - f);
+      var y = (b.height - z.h) / 2;
+      img.style.width = z.w + 'px'; img.style.left = x + 'px'; img.style.top = y + 'px';
+      var r = 'rotate(' + rot + 'deg)', h = makeHand(sh, x + z.w / 2, y + z.h / 2, z);
+      img.style.transform = h.move + ' ' + r; h.el.style.transform = h.gone;
+      sh.box.insertBefore(img, h.el); sh.prop = img; sh.name = name;
+      return Promise.all([
+        anim(h.el, [{ transform: h.gone }, { transform: h.at }], 1300, IN),
+        anim(img, [{ transform: h.move + ' ' + r }, { transform: 'translate(0,0) ' + r }], 1300, IN)
+      ]).then(function () { return pause(300); })
+        .then(function () { return anim(h.el, [{ transform: h.at }, { transform: h.gone }], 1000, OUT); })
+        .then(function () { h.el.remove(); });
     });
   }
+  // take: a hand reaches in, pinches the prop and pulls it back out
   function take(sh) {
     var img = sh.prop; if (!img) return Promise.resolve();
-    var b = sh.box.getBoundingClientRect(), r = img.getBoundingClientRect();
-    var cur = getComputedStyle(img).transform, to;
-    if (sh.from === 'top') to = 'translateY(' + -(r.bottom - b.top + 40) + 'px)';     // lifted back out the top
-    else to = 'translateX(' + (sh.from === 'left' ? -(r.right - b.left + 40) : (b.right - r.left + 40)) + 'px)';
-    return anim(img, [{ transform: cur === 'none' ? 'none' : cur }, { transform: to }], 1000, 'cubic-bezier(.5,0,.75,.4)')
-      .then(function () { img.remove(); delete out[sh.name]; sh.prop = null; sh.name = null; });
+    var name = sh.name;
+    var cx = parseFloat(img.style.left) + img.offsetWidth / 2, cy = parseFloat(img.style.top) + img.offsetHeight / 2;
+    var h = makeHand(sh, cx, cy, { w: img.offsetWidth, h: img.offsetHeight });
+    var from = getComputedStyle(img).transform; from = from === 'none' ? '' : from;
+    h.el.style.transform = h.gone;
+    return anim(h.el, [{ transform: h.gone }, { transform: h.at }], 1100, IN)
+      .then(function () { return pause(250); })
+      .then(function () {
+        return Promise.all([
+          anim(h.el, [{ transform: h.at }, { transform: h.gone }], 1150, OUT),
+          anim(img, [{ transform: 'translate(0,0) ' + from }, { transform: h.move + ' ' + from }], 1150, OUT)
+        ]);
+      })
+      .then(function () { h.el.remove(); img.remove(); delete out[name]; sh.prop = null; sh.name = null; });
   }
 
   // tap or click a prop to collect it: it hops up and vanishes, and a different one slides in
