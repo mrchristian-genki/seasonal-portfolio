@@ -140,7 +140,15 @@ for (const e of events) {
   // Photos sit between the post's paragraphs (the cover heads the page), spread evenly.
   // Clips marked "table" (old photos laid out on a table) gather into one figure, after paragraph
   // "after" (0-based); its caption is the first clip's tableCaption. Others spread evenly.
-  const ps = paras(e.post && e.post.body), table = photos.filter((p) => p.table), inline = photos.filter((p) => p !== cover && !p.table);
+  // Tall photos and loops that come one after another pair up side by side, so a run of phone videos
+  // doesn't stack into a long column. Each pair (or a lone picture) is one unit spread through the text.
+  const ps = paras(e.post && e.post.body), table = photos.filter((p) => p.table), loose = photos.filter((p) => p !== cover && !p.table);
+  const tall = (p) => p.w && p.h && p.h > p.w * 1.1;
+  const inline = [];
+  for (let k = 0; k < loose.length; k++) {
+    if (tall(loose[k]) && loose[k + 1] && tall(loose[k + 1])) { inline.push([loose[k], loose[k + 1]]); k++; }
+    else inline.push([loose[k]]);
+  }
   const slots = inline.map((_, i) => Math.min(ps.length - 1, Math.round((i + 1) * ps.length / (inline.length + 1)) - 1));
   const tableSlot = table.length ? Math.min(ps.length - 1, table[0].after != null ? table[0].after : ps.length - 2) : -1;
   const tableCap = (e.photos || []).find((p) => p.tableCaption);
@@ -153,7 +161,7 @@ for (const e of events) {
   ps.forEach((p, i) => {
     const m = /^What I learned:\s*/i.exec(p);
     body += m ? `<p class="learned"><b>What I learned:</b> ${esc(p.slice(m[0].length))}</p>\n` : `<p>${esc(p)}</p>\n`;
-    inline.forEach((ph, k) => { if (slots[k] === i) body += fig(ph) + '\n'; });
+    inline.forEach((u, k) => { if (slots[k] === i) body += (u.length > 1 ? `<div class="duo">${u.map((ph) => fig(ph)).join('')}</div>` : fig(u[0], tall(u[0]) ? 'photo tall' : '')) + '\n'; });
     if (i === tableSlot) body += tableFig() + '\n';
   });
 
