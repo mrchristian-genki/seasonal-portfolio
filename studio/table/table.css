@@ -239,3 +239,7 @@
 /* the DAY / NIGHT tags scale with the switch, big enough to read */
 .st-switch{container-type:inline-size}
 .st-switch .sw-label{font-size:8.6cqi;letter-spacing:.04em;font-weight:800;opacity:.92}
+
+/* the STUDIO panel sits up near the top of the header, level with the Play and Log out buttons */
+.st-label{top:14px;translate:none}
+@media (max-width:640px){.st-label{top:10px}}
