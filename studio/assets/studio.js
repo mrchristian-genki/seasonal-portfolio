@@ -174,6 +174,17 @@
     var items = $$('.ld-steps li', el), cur = -1, shown = 0, finished = false, closed = false;
     var vid = $('video', el), now = $('.rx-now', el), tag = $('.rx-tag b', el), plate = $('.rx-plate b', el), rx = $('.rx', el);
     var calmMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // iPhone Safari ignores preload and won't decode a frame until the video has played once, so seeking
+    // alone never paints: start it muted for a moment, then pause and drive it by seeking as everywhere else
+    vid.muted = true; vid.playsInline = true;
+    var primed = false;
+    function prime() {
+      if (primed) return; primed = true;
+      var p = vid.play();
+      if (p && p.then) p.then(function () { vid.pause(); }, function () { vid.load(); });
+      else vid.pause();
+    }
+    prime();
     // follow the target frame smoothly; while waiting, the fuel churns a little around its level
     var at = RX.t0, last = 0;
     function frame(ts) {
@@ -183,7 +194,7 @@
       at += (target - at) * Math.min(1, dt * 3.2);
       var wiggle = (!finished && !calmMotion && shown > 0.04 && Math.abs(target - at) < 0.02) ? Math.sin(ts / 700) * 0.07 : 0;
       var want = Math.max(0, Math.min(dur - 0.02, at + wiggle));
-      if (vid.readyState >= 2 && !vid.seeking && Math.abs(vid.currentTime - want) > 1 / 60) vid.currentTime = want;
+      if (vid.readyState >= 1 && !vid.seeking && Math.abs(vid.currentTime - want) > 1 / 60) { if (!vid.paused) vid.pause(); vid.currentTime = want; }
       requestAnimationFrame(frame);
     }
     requestAnimationFrame(frame);
