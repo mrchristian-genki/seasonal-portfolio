@@ -20,7 +20,7 @@
   var a = vid(), b = vid(), front = null;
   function load(v, name, loop) {
     v.loop = loop;
-    v.innerHTML = '<source src="' + A + name + '.mp4" type="video/mp4"><source src="' + A + name + '.webm" type="video/webm">';
+    v.innerHTML = '<source src="' + A + name + '.mp4?v=2" type="video/mp4"><source src="' + A + name + '.webm?v=2" type="video/webm">';
     v.load();
   }
   // bring a layer to the front once it's really playing; the other fades out underneath
