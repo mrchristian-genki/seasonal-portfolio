@@ -113,11 +113,36 @@ Not ginger: his hair is sandy strawberry blond.
 - Phones: size dialogs with `dvh`, or the close button hides under Safari's toolbar.
 - A sleeping animal needs a sign it's asleep (breath, z's).
 - Don't overwrite a node's whole inline style after a library sets CSS variables on it.
+- iPhone Safari ignores `preload` and won't show a seeked frame until a video has played once:
+  prefer a playing loop you reveal or mask over scrubbing a paused video.
 
 ## Small template: old prints on a table
 For animated historic photos inside a post: mounted prints on warm wood, each a few degrees off
 square, drifting 2-3 px over 11-17 s, out of step. Same rules as the big scenes: subtle, slow, real
 things only. How-to in `field/README.md`.
+
+## Technique: a live fill (loop revealed to a level)
+For anything that fills with progress (first used on the Studio's reactor loader, Oct 4, 2026; code
+in `studio/assets/studio.js` `loader()` and `studio/assets/studio.css` `.rx-*`). Don't scrub a
+fill-up video frame by frame: it looks frozen, and iPhone Safari won't paint a seeked frame until
+the video has played. Instead:
+
+1. **Ask for the fill-up clip** (empty at the start, full at the end, everything peaking together,
+   locked camera). The empty first frame becomes the backdrop still.
+2. **Cut a loop from the full end**: the last ~0.7 s where it's full, slowed about 2x with motion
+   interpolation and played forward then back (ping-pong), so it churns forever with no seam:
+   `ffmpeg -ss 4.45 -i fill.mp4 -an -vf "fps=24,setpts=2.2*PTS,minterpolate=fps=24:mi_mode=mci:mc_mode=aobmc:vsbmc=1" f/%03d.png`,
+   then frames + reversed frames (minus the ends) into a silent MP4 with a WebM fallback. ~90 KB.
+3. **Layer it**: the backdrop still, then the loop twice, both `muted playsinline loop autoplay`:
+   - the *fuel* copy clipped to the container from the bottom up to the level:
+     `clip-path: inset(calc(BOTTOM - var(--fill) * RANGE) RIGHT BOTTOM LEFT)`, measured in percent
+     of the frame where the liquid sits at 0% and 100%;
+   - the *glow* copy with `opacity: var(--fill)`, masked off the container, so light on the
+     surroundings comes up with it;
+   - a thin glowing line at the surface.
+4. **Drive one number**: register `--fill` with `@property` (`<number>`) and transition it, so the
+   level eases between steps. Progress = steps done + the share of the current one ("7 of 14").
+5. Reduced motion: don't autoplay the loops; the level still rises.
 
 ## Next scenes
 Ideas on the list: the Books page (a reading nook), Play (trail at golden hour), each with its own
