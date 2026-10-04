@@ -2158,6 +2158,16 @@
  },
  "photos": [
   {
+   "src": "data/photos/2024-08-31-a-hammock-above-the-lake/02.jpg",
+   "caption": "",
+   "takenAt": "2024:08:31 11:10:10",
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "IMG_6733.JPG"
+  },
+  {
    "src": "data/photos/2024-08-31-a-hammock-above-the-lake/01.jpg",
    "caption": "11:25. A blue hammock between two pines, granite boulders and the lake through the trees.",
    "takenAt": "2024:08:31 11:25:09",
@@ -2166,6 +2176,38 @@
    "use": "post",
    "cover": true,
    "from": "IMG_6736.JPG"
+  },
+  {
+   "src": "data/photos/2024-08-31-a-hammock-above-the-lake/clip-1.mp4",
+   "poster": "data/photos/2024-08-31-a-hammock-above-the-lake/clip-1.jpg",
+   "video": true,
+   "caption": "Hammock timelapse.",
+   "takenAt": "2024:08:31 11:43:25",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "IMG_6739.MOV",
+   "range": [
+    0,
+    8
+   ]
+  },
+  {
+   "src": "data/photos/2024-08-31-a-hammock-above-the-lake/clip-2.mp4",
+   "poster": "data/photos/2024-08-31-a-hammock-above-the-lake/clip-2.jpg",
+   "video": true,
+   "caption": "Riding the flume trail through the closed ski resort.",
+   "takenAt": "2024:08:31 12:03:02",
+   "w": 540,
+   "h": 960,
+   "use": "post",
+   "cover": false,
+   "from": "IMG_6742.MOV",
+   "range": [
+    13.35,
+    21.05
+   ]
   }
  ],
  "fieldNotes": "Did this ride start or end at home? If so, it can only be told as a views-only story with no track, route or distances.\nThe track I just added should be cut off after 7 miles as the trip home was recorded by mistake.\n\nPrivacy first: the recording ran on into the trip home. Did the ride also start at home? If so, it can only be told views-only, with no track, map, route or distances. Either way, nothing about the trip home goes in the text.\nNo it did not start at home. Started a few minutes into the trail.\n\nThe current figures (7.8 miles, 1 h 2 m moving and so on) still include the trip home. Can you re-trim the track at 7 miles and send the new figures before any numbers go in?\nyes\n\nWas the trip home recorded while driving or while riding? It matters for whether the 'forgot to stop the tracker' gag fits.\nDriving a car and forgot.\n\nWho is in the hammock, and are they OK appearing in the photo? Should they be named or stay anonymous?\nMy wife. Yes\n\nWhere was this? Trailhead or public-land name, and which lake?\nFlume Trail near Incline Village.\n\nAnything from the ride itself to add: route, who came along, whether Marley was there?\nMarley, Helena and Myself.\n\nPlease send the re-trimmed figures (cut at 7 miles). The current ones still include the drive, so no numbers are in the text yet.\nSorry my mistake that was for the last ride. This one is perfect.\n\nYou mentioned Helena. The show guide keeps your wife unnamed, so the draft says \"my wife\". Do you want her named from now on? If so, the guide and her consent entry need updating.\nYes that works.\n\nThe draft says Lake Tahoe, since the Flume Trail near Incline Village looks over it. Is that right?\nCorrect\n\nMarley isn't visible in the photo. Do you have a photo of Marley from this ride, or anything Marley did on the trail worth adding?\nShe is in the videos I think. That is ok.\n\nHelena is now named in the text: please update her consent entry and the show guide's cast line (wife, named Helena) before publishing.\nNo. Should be \"My wife\".\n\nSince the trip-home recording belonged to the last ride, I took out the 'forgot to stop the tracker' line here. OK to leave it out?\nyes",
