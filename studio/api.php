@@ -42,6 +42,29 @@ function repo_json(array $e): string {
 
 function valid_id(string $id): bool { return (bool) preg_match('/^\d{4}-\d{2}-\d{2}-[a-z0-9-]{1,60}$/', $id); }
 
+/* Review. An editor's save goes to the branch review/<id>, never to the live branch, so nothing they do
+   reaches the site until the owner approves it (merges it in). The state of each review (ready, or sent
+   back with a note) is kept beside the private config. */
+function rb(string $id): string { return "review/$id"; }
+function reviews_file(): string { return studio_private_dir() . '/reviews.json'; }
+function reviews(): array { $f = reviews_file(); return is_file($f) ? (json_decode((string) file_get_contents($f), true) ?: []) : []; }
+function set_review(string $id, ?array $r): void {
+    $all = reviews(); if ($r === null) unset($all[$id]); else $all[$id] = $r;
+    file_put_contents(reviews_file(), json_encode($all, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+}
+function owner_only(): void { if (!studio_is_owner()) json_fail('Only the owner can do that.', 403); }
+// a file of an entry: from its review copy when there is one, else the live one
+function read_either(GitHub $gh, string $id, string $path): ?string {
+    if (isset(reviews()[$id])) { $b = $gh->readBytes($path, rb($id)); if ($b !== null) return $b; }
+    return $gh->readBytes($path);
+}
+// a new password for an editor: four short words' worth of letters and digits, easy to type once
+function new_password(): string {
+    $a = 'abcdefghjkmnpqrstuvwxyz23456789'; $out = [];
+    for ($g = 0; $g < 4; $g++) { $w = ''; for ($i = 0; $i < 4; $i++) $w .= $a[random_int(0, strlen($a) - 1)]; $out[] = $w; }
+    return implode('-', $out);
+}
+
 try {
     switch ("$method $action") {
 
@@ -55,6 +78,7 @@ try {
                 'trailheads' => $trail['trailheads'] ?? [],
                 'statuses' => $show['statuses'] ?? [],
                 'audioPrompt' => $show['audioPrompt'] ?? '',
+                'me' => studio_me(),
             ]);
 
         case 'GET list':
@@ -66,6 +90,17 @@ try {
                 $out[] = ['id' => $e['id'], 'title' => $e['title'] ?? '', 'date' => $e['date'] ?? '', 'kind' => $e['kind'] ?? '',
                     'status' => $e['status'] ?? 'notes', 'photos' => count($e['photos'] ?? []), 'summary' => $e['summary'] ?? ''];
             }
+            // notes waiting for review: their review copy stands in for the live one (or is new)
+            $byId = []; foreach ($out as $k => $x) $byId[$x['id']] = $k;
+            foreach (reviews() as $rid => $r) {
+                if (!valid_id((string) $rid)) continue;
+                $e = json_decode($gh->read(EVENTS . "/$rid.json", rb($rid)) ?? 'null', true);
+                if (!$e) { set_review((string) $rid, null); continue; }   // the branch is gone
+                $row = ['id' => $e['id'], 'title' => $e['title'] ?? '', 'date' => $e['date'] ?? '', 'kind' => $e['kind'] ?? '',
+                    'status' => $e['status'] ?? 'notes', 'photos' => count($e['photos'] ?? []), 'summary' => $e['summary'] ?? '',
+                    'review' => $r + ['isNew' => !isset($byId[$rid])]];
+                if (isset($byId[$rid])) $out[$byId[$rid]] = $row; else $out[] = $row;
+            }
             usort($out, fn($a, $b) => strcmp($b['date'], $a['date']));
             json_out(['entries' => $out]);
 
@@ -73,14 +108,16 @@ try {
             $id = $_GET['id'] ?? '';
             if (!valid_id($id)) json_fail('No such entry.', 404);
             $raw = $gh->read(EVENTS . "/$id.json");
-            if ($raw === null) json_fail('No such entry.', 404);
-            json_out(['entry' => json_decode($raw, true)]);
+            $r = reviews()[$id] ?? null;
+            $rev = $r ? $gh->read(EVENTS . "/$id.json", rb($id)) : null;
+            if ($raw === null && $rev === null) json_fail('No such entry.', 404);
+            json_out(['entry' => json_decode($rev ?? $raw, true), 'live' => $raw === null ? null : json_decode($raw, true), 'review' => $rev === null ? null : $r]);
 
         // A photo already in the repo, for the editor's thumbnails.
         case 'GET photo':
             $id = $_GET['id'] ?? ''; $n = $_GET['n'] ?? '';
             if (!valid_id($id) || !preg_match('/^[a-z0-9-]{1,40}\.jpg$/', $n)) json_fail('No such photo.', 404);
-            $bytes = $gh->readBytes(PHOTOS . "/$id/$n");
+            $bytes = read_either($gh, $id, PHOTOS . "/$id/$n");
             if ($bytes === null) json_fail('No such photo.', 404);
             header('Content-Type: image/jpeg');
             header('Cache-Control: private, max-age=3600');
@@ -114,7 +151,7 @@ try {
         case 'GET audio':
             $id = $_GET['id'] ?? '';
             if (!valid_id($id)) json_fail('No such audio.', 404);
-            $bytes = $gh->readBytes(AUDIO . "/$id.mp3");
+            $bytes = read_either($gh, $id, AUDIO . "/$id.mp3");
             if ($bytes === null) json_fail('No such audio.', 404);
             header('Content-Type: audio/mpeg');
             header('Cache-Control: private, max-age=600');
@@ -162,9 +199,29 @@ try {
             } elseif (!empty($body['removeAudio']) && $audio === null) {
                 $files[AUDIO . "/$id.mp3"] = null;
             }
+            $me = studio_me();
+            if (!studio_is_owner()) {
+                // An editor can't change what's live: a published note stays published (its update waits
+                // for review), and nothing else can be made published.
+                $live = json_decode($gh->read(EVENTS . "/$id.json") ?? 'null', true);
+                $wasLive = ($live['status'] ?? '') === 'published';
+                if (!$wasLive && ($e['status'] ?? '') === 'published') json_fail('Only the owner can publish. Save it, and it waits for review.', 403);
+                if ($wasLive) $e['status'] = 'published';
+                $files[EVENTS . "/$id.json"] = ['text' => repo_json($e)];
+                $sha = $gh->commit($files, "Studio ({$me['name']}): Save $id for review", rb($id));
+                set_review($id, ['by' => $me['name'], 'at' => time(), 'state' => 'ready', 'live' => $wasLive]);
+                if (isset($e['source']) && is_string($e['source'])) (new Drive($cfg))->remember($e['source'], $id);
+                json_out(['ok' => true, 'commit' => $sha, 'review' => true]);
+            }
+            // The owner saves to the live branch. A note waiting for review takes its review in first (so
+            // the photos the editor added come along), and is then no longer waiting.
+            if (isset(reviews()[$id])) {
+                if (!$gh->mergeIn(rb($id), "Studio: take in the review of $id")) json_fail('The review copy and the live note both changed the same thing. Ask for it in a Claude Code session to merge by hand.', 409);
+            }
             $files[EVENTS . "/$id.json"] = ['text' => repo_json($e)];
             $what = ($e['status'] ?? '') === 'published' ? 'Publish' : 'Save';
             $sha = $gh->commit($files, "Studio: $what $id");
+            if (isset(reviews()[$id])) { $gh->deleteBranch(rb($id)); set_review($id, null); }
             // a note made from an inbox folder: remember which, so the folder shows it's done
             if (isset($e['source']) && is_string($e['source'])) (new Drive($cfg))->remember($e['source'], $id);
             json_out(['ok' => true, 'commit' => $sha]);
@@ -213,12 +270,65 @@ try {
         case 'GET clip':
             $id = $_GET['id'] ?? ''; $n = $_GET['n'] ?? '';
             if (!valid_id($id) || !preg_match('/^[a-z0-9-]{1,40}\.mp4$/', $n)) json_fail('No such clip.', 404);
-            $bytes = $gh->readBytes(PHOTOS . "/$id/$n");
+            $bytes = read_either($gh, $id, PHOTOS . "/$id/$n");
             if ($bytes === null) json_fail('No such clip.', 404);
             header('Content-Type: video/mp4');
             header('Cache-Control: private, max-age=600');
             echo $bytes;
             exit;
+
+        // Review, for the owner: approve (merge the review copy into the live site), send it back with a
+        // note, or throw it away.
+        case 'POST approve':
+            owner_only();
+            $id = (string) ($body['id'] ?? ''); if (!valid_id($id) || !isset(reviews()[$id])) json_fail('Nothing waits for review there.');
+            $r = reviews()[$id];
+            if (!$gh->mergeIn(rb($id), "Studio: approve {$r['by']}'s changes to $id")) json_fail('The review copy and the live note both changed the same thing. Ask for it in a Claude Code session to merge by hand.', 409);
+            $gh->deleteBranch(rb($id)); set_review($id, null);
+            json_out(['ok' => true]);
+
+        case 'POST sendback':
+            owner_only();
+            $id = (string) ($body['id'] ?? ''); if (!valid_id($id) || !isset(reviews()[$id])) json_fail('Nothing waits for review there.');
+            set_review($id, ['state' => 'returned', 'note' => substr(trim((string) ($body['note'] ?? '')), 0, 2000), 'returnedAt' => time()] + reviews()[$id]);
+            json_out(['ok' => true]);
+
+        case 'POST discard':
+            owner_only();
+            $id = (string) ($body['id'] ?? ''); if (!valid_id($id) || !isset(reviews()[$id])) json_fail('Nothing waits for review there.');
+            $gh->deleteBranch(rb($id)); set_review($id, null);
+            json_out(['ok' => true]);
+
+        // People, for the owner: editors and their passwords (shown once, when made).
+        case 'GET users':
+            owner_only();
+            json_out(['users' => array_map(fn($u) => ['name' => $u['name'], 'added' => $u['added'] ?? null], studio_users())]);
+
+        case 'POST useradd':
+            owner_only();
+            $name = trim((string) ($body['name'] ?? ''));
+            if (!preg_match('/^[\p{L}\p{N} .\'-]{1,40}$/u', $name)) json_fail('Give a name of up to 40 letters.');
+            $users = studio_users();
+            foreach ($users as $u) if (strcasecmp($u['name'], $name) === 0) json_fail('There is already someone called that.');
+            $pw = new_password();
+            $users[] = ['name' => $name, 'hash' => password_hash($pw, PASSWORD_DEFAULT), 'role' => 'editor', 'added' => time()];
+            studio_save_users($users);
+            json_out(['name' => $name, 'password' => $pw]);
+
+        case 'POST userreset':
+            owner_only();
+            $name = (string) ($body['name'] ?? ''); $users = studio_users(); $pw = null;
+            foreach ($users as &$u) if ($u['name'] === $name) { $pw = new_password(); $u['hash'] = password_hash($pw, PASSWORD_DEFAULT); }
+            unset($u);
+            if ($pw === null) json_fail('No one by that name.');
+            studio_save_users($users);
+            json_out(['name' => $name, 'password' => $pw]);
+
+        case 'POST userdel':
+            owner_only();
+            $name = (string) ($body['name'] ?? '');
+            studio_save_users(array_filter(studio_users(), fn($u) => $u['name'] !== $name));
+            json_out(['ok' => true]);
 
         default:
             json_fail('Unknown request.', 404);

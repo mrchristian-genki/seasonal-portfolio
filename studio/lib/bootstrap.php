@@ -45,6 +45,7 @@ function studio_session(): void {
 
 function studio_logged_in(): bool {
     studio_session();
+    if (!empty($_SESSION['ok']) && !studio_logged_in_still()) $_SESSION = [];
     return !empty($_SESSION['ok']);
 }
 
@@ -77,10 +78,28 @@ function studio_clear_failures(): void {
     if (is_file($f)) unlink($f);
 }
 
+/* People. The owner logs in with the password in the private config and can do everything. Editors
+   (added by the owner in the Studio, kept in ~/studio-private/users.json with their password hashes)
+   can work on notes, but what they save waits for the owner's review and never goes live by itself.
+   Each person has their own password, so the password alone says who it is. */
+function studio_users_file(): string { return studio_private_dir() . '/users.json'; }
+function studio_users(): array {
+    $f = studio_users_file();
+    $u = is_file($f) ? (json_decode((string) file_get_contents($f), true) ?: []) : [];
+    return array_values(array_filter($u, fn($x) => is_array($x) && isset($x['name'], $x['hash'])));
+}
+function studio_save_users(array $users): void {
+    file_put_contents(studio_users_file(), json_encode(array_values($users), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+    @chmod(studio_users_file(), 0600);
+}
+
 function studio_login(string $password): bool {
     if (studio_locked_out()) return false;
     $cfg = studio_config();
-    if (!password_verify($password, $cfg['password_hash'] ?? '')) {
+    $who = null;
+    if (password_verify($password, $cfg['password_hash'] ?? '')) $who = ['name' => $cfg['owner_name'] ?? 'Owner', 'role' => 'owner'];
+    else foreach (studio_users() as $u) if (password_verify($password, $u['hash'])) { $who = ['name' => $u['name'], 'role' => 'editor']; break; }
+    if ($who === null) {
         studio_note_failure();
         usleep(400000);
         return false;
@@ -88,9 +107,17 @@ function studio_login(string $password): bool {
     studio_clear_failures();
     studio_session();
     session_regenerate_id(true);
-    $_SESSION = ['ok' => true, 'born' => time(), 'seen' => time()];
+    $_SESSION = ['ok' => true, 'born' => time(), 'seen' => time(), 'name' => $who['name'], 'role' => $who['role']];
     return true;
 }
+function studio_logged_in_still(): bool {
+    // an editor removed by the owner is logged out on their next request
+    if (($_SESSION['role'] ?? 'owner') !== 'editor') return true;
+    foreach (studio_users() as $u) if ($u['name'] === ($_SESSION['name'] ?? '')) return true;
+    return false;
+}
+function studio_me(): array { return ['name' => $_SESSION['name'] ?? 'Owner', 'role' => $_SESSION['role'] ?? 'owner']; }
+function studio_is_owner(): bool { return (studio_me()['role']) === 'owner'; }
 
 function studio_security_headers(): void {
     header('X-Frame-Options: DENY');

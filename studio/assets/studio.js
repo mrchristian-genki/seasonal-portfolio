@@ -7,6 +7,8 @@
   var app = document.getElementById('app');
   var Track = window.FieldTrack;   // field/track.js, copied here at deploy
   var CFG = null, E = null, dirty = false;
+  var REVIEW = null, LIVE = null;   // the note's review state (waiting, or sent back) and its live version, to compare
+  function owner() { return !CFG || !CFG.me || CFG.me.role === 'owner'; }
   var fresh = {};     // name -> { blob, thumb (data URL), b64 } for photos not yet saved
   var audioNew = null, audioGone = false;   // the episode's MP3: one attached since the last save, or removed
   var DRIVEAUD = null;                      // audio files in the note's Drive folder (null until looked up)
@@ -103,18 +105,47 @@
     if (dirty && !confirm('Leave without saving?')) return;
     dirty = false; E = null; fresh = {}; removed = []; INBOX = null; audioNew = null; audioGone = false; DRIVEAUD = null; DRIVETRK = null; trackRaw = null; trackSwap = false; clipsNew = {}; posterNew = {}; DRIVEVID = null; stopTrim();
     route('notes');
-    app.innerHTML = '<div class="head"><h1>Field Notes</h1><button id="new" class="primary">New entry</button></div><section id="drive" class="panel drive"><p class="muted">Checking Google Drive…</p></section><div id="list" class="cards"><p class="muted">Loading entries…</p></div>';
+    app.innerHTML = '<div class="head"><h1>Field Notes</h1><span class="me">' + esc(CFG.me ? CFG.me.name : '') + (owner() ? '' : ' · editor') + '</span>' +
+      (owner() ? '<button id="people" class="small">People</button>' : '') + '<button id="new" class="primary">New entry</button></div>' +
+      '<section id="queue" class="panel queue" hidden></section><section id="peopleBox" class="panel people" hidden></section>' +
+      '<section id="drive" class="panel drive"><p class="muted">Checking Google Drive…</p></section><div id="list" class="cards"><p class="muted">Loading entries…</p></div>';
     $('#new').onclick = function () { edit(null); };
+    if (owner()) $('#people').onclick = function () { var b = $('#peopleBox'); b.hidden = !b.hidden; if (!b.hidden) renderPeople(); };
     driveStatus();
     api('list').then(function (j) {
       ENTRIES = j.entries; if (lastDrive) renderDrive(lastDrive);
       var st = {}; (CFG.statuses || []).forEach(function (s) { st[s.id] = s.label; });
+      // notes waiting for the owner's review, first
+      var waiting = j.entries.filter(function (e) { return e.review; }), q = $('#queue');
+      if (waiting.length) {
+        q.hidden = false;
+        q.innerHTML = '<h2>' + (owner() ? 'Ready for review' : 'Waiting for review') + '</h2><ul class="rq">' + waiting.map(function (e) {
+          var r = e.review;
+          return '<li><button type="button" class="link" data-id="' + esc(e.id) + '">' + esc(e.title || e.id) + '</button> <small>' + (r.isNew ? 'new note' : r.live ? 'changes to a live post' : 'changes') + ' by ' + esc(r.by) + ' · ' + esc(when(r.at)) + '</small>' +
+            (r.state === 'returned' ? ' <span class="rq-back">Sent back' + (r.note ? ': ' + esc(r.note) : '') + '</span>' : '') + '</li>';
+        }).join('') + '</ul>';
+        $$('button[data-id]', q).forEach(function (b) { b.onclick = function () { edit(b.getAttribute('data-id')); }; });
+      }
       $('#list').innerHTML = j.entries.length ? j.entries.map(function (e) {
-        return '<button class="card" data-id="' + esc(e.id) + '"><span class="st st-' + esc(e.status) + '">' + esc(st[e.status] || e.status) + '</span>' +
+        return '<button class="card" data-id="' + esc(e.id) + '"><span class="st st-' + esc(e.status) + '">' + esc(st[e.status] || e.status) + '</span>' + (e.review ? '<span class="st st-review">' + (e.review.state === 'returned' ? 'Sent back' : 'In review') + '</span>' : '') +
           '<b>' + esc(e.title || e.id) + '</b><small>' + esc(e.date) + ' · ' + esc(e.kind) + ' · ' + e.photos + ' photos</small><span class="sum">' + esc(e.summary) + '</span></button>';
       }).join('') : '<p class="muted">No entries yet.</p>';
       $$('.card', $('#list')).forEach(function (b) { b.onclick = function () { edit(b.getAttribute('data-id')); }; });
     }).catch(function (err) { $('#list').innerHTML = '<p class="err">' + esc(err.message) + '</p>'; });
+  }
+
+  // ---------- People (owner only): editors can work on notes; their saves wait for review ----------
+  function renderPeople() {
+    var box = $('#peopleBox'); box.innerHTML = '<p class="muted">Loading…</p>';
+    api('users').then(function (j) {
+      box.innerHTML = '<h2>People</h2><p class="muted">Editors can make and change notes, bring in from Drive and draft with Claude. What they save waits for your review here; they can\'t publish or change what\'s live.</p>' +
+        (j.users.length ? '<ul class="ppl">' + j.users.map(function (u) { return '<li><b>' + esc(u.name) + '</b> <small>editor' + (u.added ? ' · since ' + esc(when(u.added)) : '') + '</small><button type="button" class="link" data-reset="' + esc(u.name) + '">New password</button><button type="button" class="link" data-del="' + esc(u.name) + '">Remove</button></li>'; }).join('') + '</ul>' : '<p>No editors yet.</p>') +
+        '<div class="row"><input id="pplName" placeholder="Name" maxlength="40"><button type="button" class="small" id="pplAdd">Add an editor</button></div><div id="pplPw"></div>';
+      var show = function (r) { $('#pplPw').innerHTML = '<div class="pw"><p>' + esc(r.name) + '\'s password, shown only this once. Send it to them privately:</p><code>' + esc(r.password) + '</code><button type="button" class="small" id="pwCopy">Copy</button></div>'; $('#pwCopy').onclick = function () { navigator.clipboard.writeText(r.password).then(function () { toast('Copied.'); }); }; };
+      $('#pplAdd').onclick = function () { var n = $('#pplName').value.trim(); if (!n) return; api('useradd', { name: n }).then(function (r) { renderPeople(); setTimeout(function () { show(r); }, 300); }).catch(function (err) { toast(err.message, true); }); };
+      $$('[data-reset]', box).forEach(function (b) { b.onclick = function () { var n = b.getAttribute('data-reset'); if (!confirm('Give ' + n + ' a new password? The old one stops working.')) return; api('userreset', { name: n }).then(show).catch(function (err) { toast(err.message, true); }); }; });
+      $$('[data-del]', box).forEach(function (b) { b.onclick = function () { var n = b.getAttribute('data-del'); if (!confirm('Remove ' + n + '? They\'re logged out, and what they saved for review stays for you to approve or discard.')) return; api('userdel', { name: n }).then(renderPeople).catch(function (err) { toast(err.message, true); }); }; });
+    }).catch(function (err) { box.innerHTML = '<p class="err">' + esc(err.message) + '</p>'; });
   }
 
   // ---------- Google Drive: new files come to the server with rclone (one way, never deletes) ----------
@@ -351,10 +382,11 @@
   function edit(id) {
     if (dirty && !confirm('Leave without saving?')) return;
     dirty = false; fresh = {}; removed = []; audioNew = null; audioGone = false; DRIVEAUD = null; DRIVETRK = null; trackRaw = null; trackSwap = false; clipsNew = {}; posterNew = {}; DRIVEVID = null; stopTrim();
+    REVIEW = null; LIVE = null;
     if (!id) { E = blank(); savedStatus = null; route('new'); render(); return Promise.resolve(); }
     app.innerHTML = '<p class="muted">Opening…</p>';
     return api('entry', null, '&id=' + encodeURIComponent(id)).then(function (j) {
-      E = j.entry; savedStatus = E.status; E.post = E.post || { title: '', body: '' }; E.episode = E.episode || { title: '', script: '', audio: null }; E.questions = E.questions || []; E.photos = E.photos || [];
+      E = j.entry; savedStatus = E.status; REVIEW = j.review || null; LIVE = j.live || null; E.post = E.post || { title: '', body: '' }; E.episode = E.episode || { title: '', script: '', audio: null }; E.questions = E.questions || []; E.photos = E.photos || [];
       route('note/' + id); render();
     }).catch(function (err) { toast(err.message, true); showList(); });
   }
@@ -368,7 +400,7 @@
     app.innerHTML =
       '<section class="panel sum" id="sum"><div class="sum-top"><button class="back" id="back">← Entries</button><h1 id="sumTitle">' + esc(E.title || 'New entry') + '</h1><span id="sumLive"></span></div>' +
         '<div class="sum-meta" id="sumMeta"></div><ol class="stages" id="stages"></ol>' +
-        '<div class="sum-next" id="next" aria-live="polite"></div><div class="sum-left" id="left"></div>' + inboxHint() + '</section>' +
+        '<div class="sum-next" id="next" aria-live="polite"></div><div class="sum-left" id="left"></div>' + inboxHint() + '<div id="revBar"></div></section>' +
       '<section class="panel grid2">' +
         field('Title', '<input id="title" value="' + esc(E.title) + '">') +
         field('Date', '<input id="date" type="date" value="' + esc(E.date) + '"' + (E.id ? ' disabled' : '') + '>', E.id ? 'The address is <code>' + esc(E.id) + '</code>' : 'Sets the address with the title, on first save') +
@@ -390,7 +422,7 @@
         '<h3>Audio</h3><div id="audio"></div><div id="driveFiles"></div></section>' +
       (later ? '<section class="panel more"><h2>Add more</h2><p class="muted">Only if you want to add to what\'s here.</p>' + (trackTop ? '' : '<h3>Track</h3><div id="track"></div>') + '<h3>Photos</h3>' + dropPhotos + '</section>' : '') +
       '<footer class="savebar"><span id="saveState" class="muted">' + (E.id ? 'Saved' : 'Not saved yet') + '</span>' +
-        '<button type="button" id="publish" class="pub"><span class="pub-t">Publish</span><small class="pub-n"></small></button><button id="save" class="primary">Save</button></footer>';
+        '<button type="button" id="publish" class="pub"><span class="pub-t">Publish</span><small class="pub-n"></small></button><button id="save" class="primary">' + (owner() ? 'Save' : 'Save for review') + '</button></footer>';
 
     $('#back').onclick = showList;
     ['title', 'place', 'consent', 'fieldNotes', 'summary', 'postTitle', 'postBody', 'epTitle', 'epScript'].forEach(function (k) { $('#' + k).addEventListener('input', markDirty); });
@@ -994,6 +1026,7 @@
   }
   function renderPublish() {
     var b = $('#publish'); if (!b || !E) return;
+    if (!owner()) { b.hidden = true; return; }
     var r = readiness(), live = savedStatus === 'published';
     // yellow (hue 48) when barely ready, green (hue 135) when every part is there; the glow grows with it
     b.style.setProperty('--h', live ? '135' : String(Math.round(48 + 87 * r.score * r.score)));
@@ -1028,6 +1061,11 @@
     if (drafted && !q && val('epScript') && !audio) out.push({ t: 'Record the episode', d: 'Copy the audio prompt, render it with your voice tool, then drop the audio in or choose it from Drive.', b: 'Go to the audio', go: '#copyPrompt' });
     if (videos && !loops && !E.loopsDone) out.push({ t: 'Trim video loops', d: videos + ' video' + (videos > 1 ? 's' : '') + ' in the Drive folder. Pick the moments worth a short silent loop.', b: 'Trim loops', go: '#loops', done: 'loops' });
     if (dirty) out.push({ t: 'Save', d: 'Keep what you have so far.', b: 'Save', run: save });
+    if (!owner()) {
+      if (REVIEW && REVIEW.state === 'returned') out.unshift({ t: 'Sent back for changes', d: REVIEW.note || 'Make the changes, then save it for review again.', b: 'Save for review', run: save });
+      else if (dirty) out.push({ t: 'Save for review', d: 'The owner reviews it and puts it live. Nothing on the site changes until then.', b: 'Save for review', run: save });
+      return out.filter(function (x) { return x.t !== 'Save'; });
+    }
     if (drafted && !q && audio && savedStatus !== 'published') out.push({ t: 'Publish', d: 'Everything the episode needs is here. Play and the podcast feed update about a minute after you publish.', b: 'Publish', run: publish });
     if (!out.length && E.id && savedStatus === 'published') out.push({ t: 'All done', d: 'It\'s live on Play.', b: 'Open on Play', href: '/play/' + E.id + '/' });
     return out;
@@ -1073,7 +1111,8 @@
       (nq ? chip(nq + ' open question' + (nq > 1 ? 's' : ''), '#questions', true) : '') +
       (E.source ? '<span class="src" title="Made from this Drive folder">Drive: ' + esc(E.source) + '</span>' : ''));
     put($('#sumLive'), savedStatus === 'published' && E.id ? '<a class="live" href="/play/' + esc(E.id) + '/" target="_blank" rel="noopener">● Live on Play ↗</a><button type="button" class="link" id="unpub">Take it down</button>' : '');
-    var up = $('#unpub'); if (up) up.onclick = unpublish;
+    var up = $('#unpub'); if (up) { if (!owner()) up.remove(); else up.onclick = unpublish; }
+    renderReviewBar();
     // the one thing to do next, and the two after it
     var steps = nextSteps().filter(function (x) { return !x.href; }).slice(0, 3), box = $('#next');   // "live on Play" is already at the top
     box.hidden = !steps.length;
@@ -1092,6 +1131,60 @@
     var bar = $('.rbar i', left); bar.style.width = Math.round(r.score * 100) + '%'; bar.style.setProperty('--h', String(Math.round(48 + 87 * r.score * r.score)));
     $$('#sum [data-go]').forEach(function (b) { b.onclick = function () { go(b.getAttribute('data-go')); }; });
   }
+  // ---------- review: an editor's saves wait on a review copy until the owner approves them ----------
+  function renderReviewBar() {
+    var box = $('#revBar'); if (!box) return;
+    if (!REVIEW) { put(box, ''); return; }
+    var r = REVIEW;
+    if (!owner()) {
+      put(box, '<div class="revbar ' + (r.state === 'returned' ? 'back' : '') + '"><b>' + (r.state === 'returned' ? 'Sent back for changes' : 'Waiting for review') + '</b>' +
+        '<span>' + (r.state === 'returned' ? esc(r.note || 'Make the changes, then save it for review again.') : 'Saved ' + esc(when(r.at)) + '. Nothing on the site changes until it\'s approved.') + '</span></div>');
+      return;
+    }
+    var ch = changes();
+    put(box, '<div class="revbar"><div><b>' + esc(r.by) + '\'s ' + (LIVE ? 'changes' : 'new note') + ' wait for your review</b><span>Saved ' + esc(when(r.at)) + (r.state === 'returned' ? ' · sent back' + (r.note ? ': ' + esc(r.note) : '') : '') + '</span></div>' +
+      '<div class="rb-btns"><button type="button" class="primary" id="rvOk">' + (r.live ? 'Approve and update the live post' : 'Approve') + '</button><button type="button" class="small" id="rvBack">Send back</button><button type="button" class="link" id="rvDrop">Discard</button></div>' +
+      (ch.length ? '<details class="rb-ch"><summary>What changed (' + ch.length + ')</summary><ul>' + ch.map(function (c) { return '<li>' + esc(c) + '</li>'; }).join('') + '</ul></details>' : '') + '</div>');
+    $('#rvOk').onclick = function () {
+      if (dirty && !confirm('You have unsaved changes of your own. Approve without them?')) return;
+      var b = this; b.disabled = true; b.textContent = 'Approving…';
+      api('approve', { id: E.id }).then(function () { toast(r.live ? 'Approved. The live post updates in about a minute.' : 'Approved. It\'s in the notes now.'); dirty = false; edit(E.id); })
+        .catch(function (err) { b.disabled = false; b.textContent = 'Approve'; toast(err.message, true); });
+    };
+    $('#rvBack').onclick = function () {
+      var note = prompt('What should ' + r.by + ' change? (they see this on the note)'); if (note === null) return;
+      api('sendback', { id: E.id, note: note }).then(function () { REVIEW.state = 'returned'; REVIEW.note = note; box._h = null; renderReviewBar(); toast('Sent back to ' + r.by + '.'); }).catch(function (err) { toast(err.message, true); });
+    };
+    $('#rvDrop').onclick = function () {
+      if (!confirm('Throw away ' + r.by + '\'s changes to this note? This can\'t be undone.')) return;
+      api('discard', { id: E.id }).then(function () { toast('Discarded.'); dirty = false; if (LIVE) edit(E.id); else showList(); }).catch(function (err) { toast(err.message, true); });
+    };
+  }
+  // what the review copy changes, part by part, against the live note
+  function changes() {
+    var a = LIVE, b = E, out = [];
+    if (!a) return ['A new note: ' + (b.title || b.id)];
+    var w = function (t) { return (String(t || '').match(/\S+/g) || []).length; };
+    var txt = function (label, x, y) { if ((x || '') !== (y || '')) out.push(label + (x && y ? ' edited (' + w(x) + ' → ' + w(y) + ' words)' : y ? ' added' : ' removed')); };
+    [['Title', 'title'], ['Place', 'place'], ['Card summary', 'summary'], ['Who appears', 'consent'], ['Your notes', 'fieldNotes']].forEach(function (f) { if ((a[f[1]] || '') !== (b[f[1]] || '')) out.push(f[0] + (f[1] === 'fieldNotes' ? ' edited' : ': “' + (b[f[1]] || '') + '”')); });
+    txt('Post text', a.post && a.post.body, b.post && b.post.body);
+    if ((a.post && a.post.title) !== (b.post && b.post.title)) out.push('Post title: “' + ((b.post && b.post.title) || '') + '”');
+    txt('Episode script', a.episode && a.episode.script, b.episode && b.episode.script);
+    if ((a.episode && a.episode.audio) !== (b.episode && b.episode.audio)) out.push(b.episode && b.episode.audio ? 'Episode audio added or replaced' : 'Episode audio removed');
+    var an = (a.photos || []).map(photoName), bn = (b.photos || []).map(photoName);
+    var add = bn.filter(function (n) { return an.indexOf(n) < 0; }), gone = an.filter(function (n) { return bn.indexOf(n) < 0; });
+    if (add.length) out.push(add.length + ' photo' + (add.length > 1 ? 's' : '') + ' or loop' + (add.length > 1 ? 's' : '') + ' added (' + add.join(', ') + ')');
+    if (gone.length) out.push(gone.length + ' removed (' + gone.join(', ') + ')');
+    var cap = (b.photos || []).filter(function (p) { var o = (a.photos || []).filter(function (q) { return photoName(q) === photoName(p); })[0]; return o && ((o.caption || '') !== (p.caption || '') || o.use !== p.use || !!o.cover !== !!p.cover); });
+    if (cap.length) out.push(cap.length + ' photo' + (cap.length > 1 ? 's' : '') + ' with a new caption, cover or use');
+    var ta = a.track && a.track.stats, tb = b.track && b.track.stats;
+    if (!!ta !== !!tb) out.push(tb ? 'Track added' : 'Track removed');
+    else if (ta && tb && Math.abs((ta.distanceKm || 0) - (tb.distanceKm || 0)) > 0.01) out.push('Track trimmed: ' + mi(ta.distanceKm) + ' → ' + mi(tb.distanceKm) + ' mi');
+    if (JSON.stringify(a.dashboard || null) !== JSON.stringify(b.dashboard || null)) out.push('Trail stats shown on the post');
+    if ((a.questions || []).length !== (b.questions || []).length) out.push('Claude\'s questions: ' + (a.questions || []).length + ' → ' + (b.questions || []).length);
+    return out;
+  }
+
   function stepBtn(x, i, main) {
     if (x.href) return '<a class="btn' + (main ? ' primary' : ' small') + '" href="' + x.href + '" target="_blank" rel="noopener">' + esc(main ? x.b : x.t) + ' ↗</a>';
     return '<button type="button" class="' + (main ? 'primary' : 'small') + '" data-i="' + i + '" title="' + esc(x.d) + '">' + esc(main ? x.b : x.t) + '</button>' +
@@ -1391,15 +1484,16 @@
       setTimeout(renderNext, 0); DRIVEAUD = null;
       if (hadNew && !first) renderAudio();
       if (hadClips && !first) renderPhotos();
-      $('#saveState').textContent = E.status === 'published' ? 'Saved and publishing: live in about a minute' : 'Saved';
+      if (!owner()) REVIEW = { by: CFG.me.name, at: Math.floor(Date.now() / 1000), state: 'ready', live: savedStatus === 'published' }; else REVIEW = null;
+      $('#saveState').textContent = !owner() ? 'Saved for review' : E.status === 'published' ? 'Saved and publishing: live in about a minute' : 'Saved';
       if (first) { route('note/' + E.id, true); render(); }
-      toast(E.status === 'published' ? 'Saved. The site updates in about a minute.' : 'Saved.');
+      toast(!owner() ? 'Saved. It waits for review; nothing on the site changes until it\'s approved.' : E.status === 'published' ? 'Saved. The site updates in about a minute.' : 'Saved.');
       L.at(2); L.done();
     }).catch(function (err) {
       L.fail(err.message);
       if (first) { E.id = ''; }
       toast('Not saved: ' + err.message, true);
-    }).then(function () { var b = $('#save'); if (b) { b.disabled = false; b.textContent = 'Save'; } publishing = false; renderNext(); });
+    }).then(function () { var b = $('#save'); if (b) { b.disabled = false; b.textContent = owner() ? 'Save' : 'Save for review'; } publishing = false; renderNext(); });
   }
 
   // ---------- start ----------
