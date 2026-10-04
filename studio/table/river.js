@@ -8,6 +8,13 @@
   var R = document.getElementById('river'), T = document.getElementById('table');
   if (!R || !T) return;
   var A = 'table/a/';
+  // the size this screen needs: the header's width in device pixels, rounded up to 1280, 1920 or 2560
+  function size() {
+    var need = (R.clientWidth || innerWidth) * (window.devicePixelRatio || 1);
+    var save = navigator.connection && navigator.connection.saveData;
+    return save || need <= 1400 ? 1280 : need <= 2100 ? 1920 : 2560;
+  }
+  var W = size();
   var calm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var night = T.classList.contains('night'), busy = null;
 
@@ -20,7 +27,7 @@
   var a = vid(), b = vid(), front = null;
   function load(v, name, loop) {
     v.loop = loop;
-    v.innerHTML = '<source src="' + A + name + '.mp4?v=2" type="video/mp4"><source src="' + A + name + '.webm?v=2" type="video/webm">';
+    v.innerHTML = '<source src="' + A + name + '-' + W + '.mp4?v=3" type="video/mp4"><source src="' + A + name + '-1280.webm?v=3" type="video/webm">';
     v.load();
   }
   // bring a layer to the front once it's really playing; the other fades out underneath
@@ -45,6 +52,7 @@
     if (n === night && front) return;
     var change = n !== night; night = n;
     if (calm) { stills(n); return; }
+    if (!started) { stills(n); return; }
     if (!change || !front) { stills(n); loopFor(n); return; }
     // dusk or dawn: play the clip once, then the loop for the new time of day
     var token = {}; busy = token;
@@ -59,7 +67,15 @@
   }
 
   stills(night);
-  if (!calm) loopFor(night);
+  // the video waits until the page itself has loaded, so the Studio's own content comes first; the stills
+  // show meanwhile. It pauses when the header is scrolled away or the tab is hidden.
+  var started = false;
+  function begin() { if (started || calm) return; started = true; if (!front) loopFor(night); }
+  if (document.readyState === 'complete') setTimeout(begin, 300); else addEventListener('load', function () { setTimeout(begin, 300); });
+  var seen = true;
+  function wake() { if (front && front.loop) { if (seen && !document.hidden) { var p = front.play(); if (p && p.catch) p.catch(function () {}); } else front.pause(); } }
+  if ('IntersectionObserver' in window) new IntersectionObserver(function (e) { seen = e[0].isIntersecting; wake(); }).observe(R);
+  document.addEventListener('visibilitychange', wake);
 
   // follow the switch: StudioTable.night is what it calls
   var tab = window.StudioTable;

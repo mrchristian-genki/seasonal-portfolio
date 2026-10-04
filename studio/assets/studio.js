@@ -152,6 +152,10 @@
   // and plaque are drawn over the video's own, and the steps tick off below in green phosphor.
   // var L = loader('Processing', ['Read the folder', 'Bring in photos', 'Draft with Claude'], 'folder name');
   // L.at(1, '4–6 of 12') marks a step under way (earlier ones done); L.done() / L.fail(message) close it.
+  // fetch the loader's video quietly once the page has settled, so it's ready before the first Process
+  addEventListener('load', function () {
+    setTimeout(function () { var l = document.createElement('link'); l.rel = 'prefetch'; l.href = RX.src; document.head.appendChild(l); }, 6000);
+  });
   var RX = { src: 'assets/loader/reactor.mp4', webm: 'assets/loader/reactor.webm', poster: 'assets/loader/reactor-start.jpg', t0: 0.3, end: 0.05 };
   function loader(title, steps, sub) {
     var el = document.createElement('div'); el.className = 'loader'; el.setAttribute('role', 'alertdialog'); el.setAttribute('aria-live', 'polite');

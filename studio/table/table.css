@@ -90,8 +90,8 @@
 /* THE FOOTER: the bottom strip of the table, with the day/night switch plate on it */
 .st-foot{--h:200px;position:relative;height:var(--h);overflow:hidden;margin-top:40px;background:#6b4526;box-shadow:inset 0 14px 18px -10px rgba(20,10,2,.55)}
 .st-foot-wood span{position:absolute;inset:0;background:center bottom/max(100%,calc(var(--h) * 2000 / 360)) auto no-repeat;transition:opacity 2.4s ease}
-.st-foot-wood .day{background-image:url(a/table-day.webp)}
-.st-foot-wood .night{background-image:url(a/table-night.webp);opacity:0}
+.st-foot-wood .day{background-image:url(a/foot-day.webp)}
+.st-foot-wood .night{background-image:url(a/foot-night.webp);opacity:0}
 .st-foot.night .st-foot-wood .night{opacity:1}
 .st-switch{position:absolute;left:50%;top:50%;translate:-50% -50%;width:clamp(150px,16vw,210px);aspect-ratio:560/448;padding:0;border:0;background:none;cursor:pointer;
   filter:drop-shadow(8px 11px 9px rgba(36,18,4,.45))}
@@ -186,8 +186,7 @@
 @media (max-width:640px){.st-dn{padding:8px 10px;gap:7px}.st-plate{padding:8px 16px}.st-plate h1{font-size:17px;letter-spacing:.14em}.st-plate p{display:none}}
 
 /* STEAMPUNK: the control panel gets a riveted copper-and-brass frame, a copper steam pipe running in from
-   the left, gears turning behind it (they spin up when the switch is thrown), and an ornate engraved
-   nameplate */
+   the left, and a nameplate stamped in typewriter capitals */
 .st-dn{isolation:isolate;border:3px solid transparent;border-radius:10px;padding:14px 18px;
   background:
     repeating-linear-gradient(90deg,transparent 0 14px,#e6cf96 14px 15.5px,#6b4e22 15.5px 17px,transparent 17px 28px) top 5px left 0/100% 3px no-repeat,
@@ -207,29 +206,13 @@
     linear-gradient(180deg,#e2c483,#b8944f 45%,#9a7a3c 70%,#caa865) padding-box,
     linear-gradient(135deg,#6b4a1c,#f3dc9c 40%,#7d5a24 70%,#e3c47f) border-box}
 .st-plate::before{content:"";position:absolute;inset:4px;border:1px solid rgba(60,38,10,.55);border-radius:3px;box-shadow:inset 0 0 0 1px rgba(255,240,200,.35);pointer-events:none}
-.st-plate h1{font:900 clamp(22px,2.6vw,34px)/1 "Cinzel Decorative","Cinzel",Georgia,serif;letter-spacing:.12em;text-transform:none}
-.st-plate p{font:600 9px/1 "Cinzel",Georgia,serif;letter-spacing:.2em}
+/* stamped type, like the lettering on an old patent drawing */
+.st-plate h1{font:400 clamp(24px,2.7vw,36px)/1 "Special Elite","Courier New",monospace;letter-spacing:.16em;text-transform:uppercase}
+.st-plate p{font:400 10px/1 "Special Elite","Courier New",monospace;letter-spacing:.14em}
 /* the steam pipe, coming in from the left edge into the panel */
 .st-dn .pipe{position:absolute;z-index:1;right:100%;top:50%;width:60px;height:14px;translate:0 -50%;margin-right:-2px;
   background:linear-gradient(180deg,#f2c39a,#b06a3a 35%,#7a3f1c 70%,#c88554);border-radius:2px;box-shadow:0 3px 4px rgba(0,0,0,.5)}
 .st-dn .pipe::before,.st-dn .pipe::after{content:"";position:absolute;top:-4px;width:9px;height:22px;border-radius:2px;
   background:linear-gradient(180deg,#e9d39a,#a37a35 45%,#6e4f1c 75%,#c9a65c);box-shadow:1px 2px 3px rgba(0,0,0,.5)}
 .st-dn .pipe::before{left:6px}.st-dn .pipe::after{right:4px}
-/* gears: brass, behind the panel, peeking out at its edges */
-.gear{position:absolute;z-index:-1;border-radius:50%;--t:12;
-  background:
-    radial-gradient(circle at 34% 30%,rgba(255,240,200,.55),rgba(255,240,200,0) 45%),
-    radial-gradient(circle,#1d1008 0 11%,#5a3d14 12% 15%,#d9b56c 16% 18%,transparent 19%),
-    radial-gradient(circle,transparent 0 33%,#6e4c1a 34% 37%,transparent 38% 54%,#6e4c1a 55% 58%,transparent 59%),
-    radial-gradient(circle,#b38639 0 58%,#7a5520 59% 62%,transparent 63%),
-    repeating-conic-gradient(from 0deg,#9c7330 0 calc(180deg / var(--t)),transparent calc(180deg / var(--t)) calc(360deg / var(--t)));
-  -webkit-mask:radial-gradient(circle,#000 0 70%,transparent 71%);mask:radial-gradient(circle,#000 0 70%,transparent 71%);
-  filter:drop-shadow(2px 3px 2px rgba(0,0,0,.6));animation:gear-spin 24s linear infinite}
-.gear.g1{width:86px;height:86px;left:-34px;bottom:-40px;--t:14}
-.gear.g2{width:58px;height:58px;left:38px;bottom:-34px;--t:10;animation-direction:reverse;animation-duration:16.5s}
-.gear.g3{width:70px;height:70px;right:-30px;top:-34px;--t:12;animation-duration:20s}
-.gear{transform:rotate(var(--crank,0deg));transition:transform 2.4s cubic-bezier(.4,0,.2,1)}
-.gear.g2{transform:rotate(calc(var(--crank,0deg) * -1.4))}
-@keyframes gear-spin{to{rotate:360deg}}
-@media (prefers-reduced-motion:reduce){.gear{animation:none}}
-@media (max-width:640px){.st-dn{padding:9px 11px}.st-plate{padding:8px 18px}.st-plate h1{font-size:17px;letter-spacing:.08em}.gear.g1{width:60px;height:60px;left:-24px;bottom:-28px}.gear.g2{display:none}.gear.g3{width:48px;height:48px;right:-20px;top:-24px}.st-dn .pipe{width:30px;height:10px}}
+@media (max-width:640px){.st-dn{padding:9px 11px}.st-plate{padding:8px 18px}.st-plate h1{font-size:17px;letter-spacing:.08em}.st-dn .pipe{width:30px;height:10px}}

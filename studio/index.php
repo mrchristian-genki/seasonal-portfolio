@@ -33,10 +33,9 @@ $in = studio_logged_in();
 <title>Studio · Field Notes</title>
 <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&family=Special+Elite&display=swap">
 <link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>-7">
-<link rel="prefetch" href="assets/loader/reactor.mp4" as="video">
-<link rel="stylesheet" href="table/table.css?v=22">
+<link rel="stylesheet" href="table/table.css?v=23">
 </head>
 <?php if (!$in): ?>
 <body class="login">
@@ -54,8 +53,8 @@ $in = studio_logged_in();
 
 <section class="st-hero" aria-label="Studio">
   <div class="river" id="river" aria-hidden="true">
-    <img class="rv-still day" src="table/a/river-day.webp?v=2" alt="">
-    <img class="rv-still night" src="table/a/river-night.webp?v=2" alt="">
+    <img class="rv-still day" src="table/a/river-day.webp?v=3" alt="">
+    <img class="rv-still night" src="table/a/river-night.webp?v=3" alt="">
   </div>
   <div class="table" id="table" data-set="header" data-base="table/">
     <div class="layer" id="layer"></div>
@@ -67,7 +66,6 @@ $in = studio_logged_in();
   </nav>
   <div class="st-label">
     <div class="st-dn">
-      <span class="gear g1" aria-hidden="true"></span><span class="gear g2" aria-hidden="true"></span><span class="gear g3" aria-hidden="true"></span>
       <span class="pipe" aria-hidden="true"></span>
       <div class="st-dial" aria-hidden="true">
         <img class="dial-disc" id="dialDisc" src="table/a/dial-disc.webp?v=2" alt="">
@@ -95,10 +93,10 @@ $in = studio_logged_in();
 </footer>
 <div id="toast" role="status" aria-live="polite"></div>
 <script src="assets/track.js?v=<?= STUDIO_VERSION ?>"></script>
-<script src="assets/studio.js?v=<?= STUDIO_VERSION ?>-8"></script>
+<script src="assets/studio.js?v=<?= STUDIO_VERSION ?>-9"></script>
 <script src="table/table.js?v=20"></script>
-<script src="table/river.js?v=2"></script>
-<script src="table/switch.js?v=3"></script>
+<script src="table/river.js?v=3"></script>
+<script src="table/switch.js?v=4"></script>
 </body>
 <?php endif; ?>
 </html>
