@@ -243,3 +243,10 @@
 /* the STUDIO panel sits up near the top of the header, level with the Play and Log out buttons */
 .st-label{top:14px;translate:none}
 @media (max-width:640px){.st-label{top:10px}}
+
+/* the STUDIO nameplate in LifeCraft (Eliot Truelove, donationware via DaFont): the Warcraft-style
+   display face, cut into the brass like a forged maker's plate */
+@font-face{font-family:"LifeCraft";src:url(../assets/fonts/lifecraft.woff2) format("woff2");font-display:swap}
+.st-plate h1{font:400 clamp(30px,3.4vw,46px)/.9 "LifeCraft","Special Elite",Georgia,serif;letter-spacing:.06em;text-transform:none;
+  color:#2b1806;text-shadow:0 1px 0 rgba(255,236,190,.65),0 -1px 0 rgba(0,0,0,.45),0 0 1px rgba(0,0,0,.4)}
+@media (max-width:640px){.st-plate h1{font-size:24px;letter-spacing:.04em}}

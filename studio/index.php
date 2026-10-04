@@ -34,8 +34,8 @@ $in = studio_logged_in();
 <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&family=Special+Elite&display=swap">
-<link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>-9">
-<link rel="stylesheet" href="table/table.css?v=29">
+<link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>-10">
+<link rel="stylesheet" href="table/table.css?v=30">
 </head>
 <?php if (!$in): ?>
 <body class="login">
