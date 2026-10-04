@@ -198,7 +198,8 @@
     // (the resting pose comes back once its clean cut-out is in)
     var k = 1.55;   // real scale against the ruler (12 in = 557 units): her head and ears are about 600 wide
     // in the header, just her snout pokes over the top edge, day or night
-    var pose = HEADER ? { src: 'marley-look', w: 390 * k, ratio: 635 / 640, show: .2 }
+    // the header is a pipeline seen from further back, so she's smaller there: a snout peeking over the edge
+    var pose = HEADER ? { src: 'marley-look', w: 390 * .62, ratio: 635 / 640, show: .26 }
       : isNight ? { src: 'marley-sleep', w: 560 * k, ratio: 357 / 640, show: 1 }
       : { src: 'marley-look', w: 390 * k, ratio: 635 / 640, show: .62 };
     var el = document.createElement('div'); el.className = 'prop marley';
