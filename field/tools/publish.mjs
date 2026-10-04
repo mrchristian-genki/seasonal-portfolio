@@ -62,10 +62,25 @@ for (const d of ['data', 'media']) {
 // lake-scene share card, used when a page has no photo of its own.
 const ICONS = '<link rel="icon" href="/favicon.ico?v=2" sizes="any"><link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml"><link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2"><meta name="theme-color" content="#4f8fd0">';
 const SITE_IMAGE = 'https://www.christiangehrke.com/og-image.jpg?v=2';
+const SITE_IMAGE_ALT = 'A cartoon mountain lake in summer with the name Christian Gehrke and his logo: a low-poly portrait of his dog holding him by the hood at a canyon edge.';
+// The share card for a page (what Messages, Slack and social sites show for a link): its kind, the image
+// with its size and a description of it, and for a ride the date and the episode's audio.
+const shareMeta = (title, desc, url, image, m) => {
+  const img = image || SITE_IMAGE, own = !!image;
+  const w = own ? m.w : 1200, h = own ? m.h : 630, alt = own ? (m.alt || title) : SITE_IMAGE_ALT;
+  return [
+    `<meta property="og:site_name" content="Christian Gehrke"><meta property="og:locale" content="en_US"><meta property="og:type" content="${m.type || 'website'}">`,
+    `<meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(desc)}"><meta property="og:url" content="${esc(url)}">`,
+    `<meta property="og:image" content="${esc(img)}">` + (w && h ? `<meta property="og:image:width" content="${w}"><meta property="og:image:height" content="${h}">` : '') + `<meta property="og:image:alt" content="${esc(alt)}">`,
+    m.published ? `<meta property="article:published_time" content="${esc(m.published)}"><meta property="article:author" content="Christian Gehrke">` : '',
+    m.audio ? `<meta property="og:audio" content="${esc(m.audio)}"><meta property="og:audio:type" content="audio/mpeg">` : '',
+    `<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${esc(title)}"><meta name="twitter:description" content="${esc(desc)}"><meta name="twitter:image" content="${esc(img)}"><meta name="twitter:image:alt" content="${esc(alt)}">`
+  ].filter(Boolean).join('\n');
+};
 const robots = show.listed ? '' : '<meta name="robots" content="noindex">\n';
 // Every page carries the main site's tabs (each opens that tab on the homepage) and Play's own bar.
 const PLAYBAR = [['field-notes', 'Field Notes', '#field-notes'], ['daily-dose', 'Daily Dose', '#daily-dose'], ['above', 'From Above', 'above/'], ['daydreams', 'Daydreams', '#daydreams']];
-const head = (title, desc, url, image, rel, sub = '') => `<!doctype html>
+const head = (title, desc, url, image, rel, sub = '', meta = {}) => `<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -73,8 +88,7 @@ const head = (title, desc, url, image, rel, sub = '') => `<!doctype html>
 ${robots}<title>${esc(title)}</title>
 <meta name="description" content="${esc(desc)}">
 <link rel="canonical" href="${esc(url)}">
-<meta property="og:type" content="article"><meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(desc)}"><meta property="og:url" content="${esc(url)}">
-<meta property="og:image" content="${esc(image || SITE_IMAGE)}"><meta name="twitter:card" content="summary_large_image">
+${shareMeta(title, desc, url, image, meta)}
 <link rel="alternate" type="application/rss+xml" title="${esc(show.showTitle)}" href="${rel}feed.xml">
 ${ICONS}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
@@ -141,7 +155,8 @@ for (const e of events) {
 
   const url = `${show.siteUrl}${e.id}/`, title = `${e.post && e.post.title || e.title} · ${show.showTitle}`;
   const desc = e.summary || paras(e.post && e.post.body)[0] || '';
-  const html = head(title, desc, url, cover && cover.abs, '../', 'field-notes') + `<main class="article"${t ? ` data-route="../data/${esc(e.id)}.json"` : ''}>
+  const html = head(title, desc, url, cover && cover.abs, '../', 'field-notes', { type: 'article', published: e.date,
+    w: cover && cover.w, h: cover && cover.h, alt: cover && cover.caption, audio: audio && audio.abs }) + `<main class="article"${t ? ` data-route="../data/${esc(e.id)}.json"` : ''}>
 <p class="kicker"><span class="kind ${esc(e.kind)}">${KIND[e.kind] || esc(e.kind)}</span> · <time datetime="${esc(e.date)}">${day(e.date, true)}</time>${e.place ? ` · ${esc(e.place)}` : ''}</p>
 <h1>${esc(e.post && e.post.title || e.title)}</h1>
 ${e.summary ? `<p class="lede">${esc(e.summary)}</p>` : ''}
