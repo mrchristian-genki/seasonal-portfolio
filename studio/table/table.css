@@ -142,3 +142,21 @@
 .st-hero .table{background:none}
 .st-hero .table::after{display:none}
 .st-hero .table.night .shade{display:none}
+
+/* the day/night dial and switch take the logo's place at the left of the header, before the Studio card */
+.st-dn{display:flex;align-items:center;gap:10px;pointer-events:auto}
+.st-dn .st-dial,.st-dn .st-switch{position:relative;left:auto;top:auto;translate:none}
+.st-dn .st-dial{width:clamp(84px,8vw,112px);filter:drop-shadow(5px 8px 7px rgba(10,5,2,.55))}
+.st-dn .st-switch{width:clamp(92px,8.8vw,124px);filter:drop-shadow(5px 8px 7px rgba(10,5,2,.55))}
+.st-dn .sw-label{font-size:clamp(5px,.55vw,8px)}
+@media (max-width:640px){.st-label{gap:10px}.st-dn{gap:6px}.st-dn .st-dial{width:60px}.st-dn .st-switch{width:66px}.st-dn .sw-label{font-size:5px}}
+
+/* the brass day/night lamps, now set into the footer: amber by day, blue by night */
+.st-lamps{position:absolute;z-index:2;left:50%;top:50%;translate:-50% -50%;width:clamp(96px,9vw,128px);aspect-ratio:220/211;filter:drop-shadow(6px 9px 9px rgba(20,10,2,.5))}
+.st-lamps img{position:absolute;inset:0;width:100%;height:100%;transition:opacity 1.2s ease}
+.st-lamps .lp-night{opacity:0}
+.st-foot.night .st-lamps .lp-day{opacity:0}
+.st-foot.night .st-lamps .lp-night{opacity:1}
+.lp-glow{position:absolute;left:27.5%;top:49.7%;width:120%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;pointer-events:none;mix-blend-mode:screen;opacity:.75;
+  background:radial-gradient(circle,rgba(255,158,30,.7) 15%,rgba(255,158,30,.3) 23%,rgba(255,158,30,.1) 38%,transparent 58%);transition:left 1.2s ease,background 1.2s ease}
+.st-foot.night .lp-glow{left:72.3%;opacity:.95;background:radial-gradient(circle,rgba(70,150,255,.75) 15%,rgba(70,150,255,.32) 23%,rgba(70,150,255,.1) 38%,transparent 58%)}
