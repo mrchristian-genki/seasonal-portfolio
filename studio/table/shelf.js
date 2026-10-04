@@ -1,7 +1,8 @@
 /* STUDIO SHELVES: three bits of open wood, each showing one prop at a time. The header's plank band to the
    right of the STUDIO panel (above the river), and the footer either side of the lamps. Every so often a
    prop slides out of a shelf and another one slides in, picked at random from the ones not already out, so
-   a page left open long enough shows the whole collection. Works on the login page too. */
+   a page left open long enough shows the whole collection. Tap one to collect it and another takes its place.
+   Works on the login page too. Marley (in the table layer) passes over all of them. */
 (function () {
   'use strict';
   var HERO = document.querySelector('.st-hero'), FOOT = document.querySelector('.st-foot');
@@ -37,8 +38,8 @@
     s.style.left = left + 'px'; s.style.width = width + 'px'; s.style.top = '0px'; s.style.height = height + 'px';
   }
 
-  function pick() {
-    var free = NAMES.filter(function (n) { return !out[n]; });
+  function pick(not) {
+    var free = NAMES.filter(function (n) { return !out[n] && n !== not; });
     return free[Math.floor(Math.random() * free.length)];
   }
   function anim(node, frames, ms, ease) {
@@ -52,11 +53,12 @@
     var h = Math.min(b.height * .78 * Math.min(1, .55 + p[1] * .28), b.width * .9 / p[0]);
     return { w: h * p[0], h: h };
   }
-  function bring(sh) {
+  function bring(sh, not) {
     if (sh.box.hidden) return Promise.resolve();
-    var name = pick(); if (!name) return Promise.resolve();
+    var name = pick(not); if (!name) return Promise.resolve();
     out[name] = true;
-    var img = new Image(); img.alt = ''; img.className = 'shelf-prop'; img.src = A + name + '.webp';
+    var img = new Image(); img.alt = ''; img.className = 'shelf-prop'; img.src = A + name + '.webp'; img.draggable = false;
+    img.addEventListener('click', function () { collect(sh, img); });
     return (img.decode ? img.decode().catch(function () {}) : Promise.resolve()).then(function () {
       var z = sizeFor(sh, name), b = sh.box.getBoundingClientRect(), rot = (Math.random() * 16 - 8).toFixed(1);
       var x = (b.width - z.w) * (.25 + Math.random() * .5);
@@ -75,20 +77,36 @@
       .then(function () { img.remove(); delete out[sh.name]; sh.prop = null; sh.name = null; });
   }
 
+  // tap or click a prop to collect it: it hops up and vanishes, and a different one slides in
+  function collect(sh, img) {
+    if (sh.busy || sh.prop !== img) return;
+    sh.busy = true;
+    var was = sh.name, cur = getComputedStyle(img).transform; cur = cur === 'none' ? '' : cur + ' ';
+    anim(img, [{ transform: cur + 'translateY(0) scale(1)', opacity: 1 },
+               { transform: cur + 'translateY(-18%) scale(1.18)', opacity: 1, offset: .35 },
+               { transform: cur + 'translateY(-30%) scale(.2)', opacity: 0 }], 650, 'cubic-bezier(.3,.6,.4,1)')
+      .then(function () { img.remove(); delete out[was]; sh.prop = null; sh.name = null; return new Promise(function (ok) { setTimeout(ok, 350); }); })
+      .then(function () { return bring(sh, was); })
+      .then(function () { sh.busy = false; }, function () { sh.busy = false; });
+  }
+
   // one shelf changes at a time, every 12 to 25 seconds; nothing moves while the tab is hidden
   var turn = 0;
   function swap() {
     if (document.hidden) return schedule();
     var sh = shelves[turn++ % shelves.length];
-    (sh.box.hidden ? Promise.resolve() : take(sh).then(function () { return new Promise(function (ok) { setTimeout(ok, 500); }); }).then(function () { return bring(sh); }))
-      .then(schedule, schedule);
+    if (sh.box.hidden || sh.busy) return schedule();
+    sh.busy = true;
+    var was = sh.name, done = function () { sh.busy = false; schedule(); };
+    take(sh).then(function () { return new Promise(function (ok) { setTimeout(ok, 500); }); }).then(function () { return bring(sh, was); })
+      .then(done, done);
   }
   function schedule() { if (!calm) setTimeout(swap, 12000 + Math.random() * 13000); }
 
   function start() {
     placeTop();
     var chain = Promise.resolve();
-    shelves.forEach(function (sh, i) { chain = chain.then(function () { return new Promise(function (ok) { setTimeout(ok, i ? 600 : 1200); }); }).then(function () { return bring(sh); }); });
+    shelves.forEach(function (sh, i) { chain = chain.then(function () { return new Promise(function (ok) { setTimeout(ok, i ? 600 : 1200); }); }).then(function () { sh.busy = true; return bring(sh); }).then(function () { sh.busy = false; }); });
     chain.then(schedule);
   }
   var resizing = null;

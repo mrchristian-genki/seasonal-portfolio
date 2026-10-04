@@ -257,5 +257,7 @@
 .st-foot .shelf{top:6%;height:88%}
 .st-foot .shelf-left{left:3%;width:calc(50% - 3% - clamp(96px,9vw,128px) / 2 - 18px)}
 .st-foot .shelf-right{right:3%;width:calc(50% - 3% - clamp(96px,9vw,128px) / 2 - 18px)}
-.shelf-prop{position:absolute;display:block;max-width:none;filter:drop-shadow(4px 7px 6px rgba(20,10,2,.55));transition:filter 2.4s ease}
-.st-foot.night .shelf-prop,.st-hero:has(.table.night) .shelf-prop{filter:drop-shadow(4px 7px 6px rgba(5,2,0,.7)) brightness(.62) saturate(.8)}
+.shelf-prop{position:absolute;display:block;max-width:none;pointer-events:auto;cursor:pointer;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent;filter:drop-shadow(4px 7px 6px rgba(20,10,2,.55));transition:filter 2.4s ease}
+.st-foot.night .shelf-prop{filter:drop-shadow(4px 7px 6px rgba(5,2,0,.7)) brightness(.62) saturate(.8)}
+/* Marley and the night shade (in the table layer) pass over the header shelf; the layer lets taps through */
+.st-hero .table{z-index:4;pointer-events:none}
