@@ -44,7 +44,7 @@ $in = studio_logged_in();
 <link rel="icon" href="/favicon.ico?v=2" sizes="any"><link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml"><link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2"><meta name="theme-color" content="#2a1d14">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&family=Special+Elite&display=swap">
-<link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>-21">
+<link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>-22">
 <link rel="stylesheet" href="table/table.css?v=41">
 </head>
 <?php if (!$in): ?>
@@ -128,7 +128,7 @@ $in = studio_logged_in();
 <?php if ($in): ?>
 <div id="toast" role="status" aria-live="polite"></div>
 <script src="assets/track.js?v=<?= STUDIO_VERSION ?>-3"></script>
-<script src="assets/studio.js?v=<?= STUDIO_VERSION ?>-23"></script>
+<script src="assets/studio.js?v=<?= STUDIO_VERSION ?>-24"></script>
 <?php endif; ?>
 <script src="table/table.js?v=22"></script>
 <script src="table/river.js?v=6"></script>

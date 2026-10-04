@@ -392,7 +392,8 @@
         '<div class="row"><button id="copyPrompt">Copy the audio prompt</button><span class="muted">Render it with your voice tool, then drop the file below.</span></div>' +
         '<h3>Audio</h3><div id="audio"></div><div id="driveFiles"></div></section>' +
       (later ? '<section class="panel more"><h2>Add more</h2><p class="muted">Only if you want to add to what\'s here.</p>' + (trackTop ? '' : '<h3>Track</h3><div id="track"></div>') + '<h3>Photos</h3>' + dropPhotos + '</section>' : '') +
-      '<footer class="savebar"><span id="saveState" class="muted">' + (E.id ? 'Saved' : 'Not saved yet') + '</span><button id="save" class="primary">Save</button></footer>';
+      '<footer class="savebar"><span id="saveState" class="muted">' + (E.id ? 'Saved' : 'Not saved yet') + '</span>' +
+        '<button type="button" id="publish" class="pub"><span class="pub-t">Publish</span><small class="pub-n"></small></button><button id="save" class="primary">Save</button></footer>';
 
     $('#back').onclick = showList;
     ['title', 'place', 'consent', 'fieldNotes', 'summary', 'postTitle', 'postBody', 'epTitle', 'epScript'].forEach(function (k) { $('#' + k).addEventListener('input', markDirty); });
@@ -409,6 +410,7 @@
     $('#pickPhotos').onchange = function () { addPhotos(this.files); this.value = ''; };
     $('#draft').onclick = function () { draft(); };
     $('#save').onclick = save;
+    $('#publish').onclick = publish;
     $('#copyPrompt').onclick = function () {
       collect();
       var p = (CFG.audioPrompt || '').replace('{{title}}', E.episode.title || E.title).replace('{{script}}', E.episode.script);
@@ -447,7 +449,7 @@
       return;
     }
     var s = t.stats || {};
-    box.innerHTML = '<div class="trackrow">' + mapSvg(t.line) + '<div class="stats">' +
+    box.innerHTML = '<div class="trackrow"><div class="lmap" id="trView">' + mapSvg(t.line) + '</div><div class="stats">' +
       '<div><b>' + mi(s.distanceKm || 0) + ' mi</b><span>distance</span></div><div><b>' + ft(s.gainM || 0).toLocaleString() + ' ft</b><span>climbing</span></div>' +
       '<div><b>' + dur(s.movingSec) + '</b><span>moving</span></div><div><b>' + ft(s.maxEleM || 0).toLocaleString() + ' ft</b><span>high point</span></div></div></div>' +
       '<ul class="notes">' + ((t.trim && t.trim.notes) || []).map(function (n) { return '<li' + (/private zone|Warning/.test(n) ? ' class="warn"' : '') + '>' + esc(n) + '</li>'; }).join('') + '</ul>' +
@@ -456,7 +458,29 @@
       '<div class="row"><button type="button" class="link" id="swapTrack">Replace the track</button><button id="dropTrack" class="link">Remove the track</button></div>';
     $('#dropTrack').onclick = function () { if (confirm('Remove the track from this entry?')) { E.track = null; E.trailhead = null; trackRaw = null; markDirty(); renderTrack(); } };
     $('#swapTrack').onclick = function () { trackSwap = true; renderTrack(); };
-    wireRange();
+    wireRange(); viewMap(t.line);
+  }
+  // The published line on a real map (the outline above stays if the map can't load). Breaks in the line
+  // (a private zone mid-way) stay breaks.
+  var VIEW = null;
+  function viewMap(line) {
+    var pts = (line || []).filter(Boolean); if (pts.length < 2) return;
+    leaflet().then(function (L) {
+      var el = $('#trView'); if (!el || E.track == null || E.track.line !== line) return;
+      if (VIEW) { VIEW.remove(); VIEW = null; }
+      el.innerHTML = ''; el.classList.add('on');
+      var segs = [], cur = [];
+      line.forEach(function (p) { if (!p) { if (cur.length > 1) segs.push(cur); cur = []; } else cur.push([p[0], p[1]]); });
+      if (cur.length > 1) segs.push(cur);
+      var map = VIEW = L.map(el, { scrollWheelZoom: false, zoomSnap: 0.25 });
+      var topo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', { maxZoom: 17, attribution: '© OpenStreetMap contributors, SRTM | © OpenTopoMap (CC-BY-SA)' });
+      var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OpenStreetMap contributors' });
+      topo.addTo(map); L.control.layers({ Topo: topo, Streets: osm }, null, { position: 'topright' }).addTo(map);
+      var pl = L.polyline(segs, { color: '#c0457a', weight: 4, opacity: .95 }).addTo(map);
+      L.circleMarker([pts[0][0], pts[0][1]], { radius: 6, color: '#fff', weight: 2, fillColor: '#2f8f4e', fillOpacity: 1 }).bindTooltip('Start').addTo(map);
+      L.circleMarker([pts[pts.length - 1][0], pts[pts.length - 1][1]], { radius: 6, color: '#fff', weight: 2, fillColor: '#b0412e', fillOpacity: 1 }).bindTooltip('End').addTo(map);
+      map.fitBounds(pl.getBounds(), { padding: [18, 18] });
+    }).catch(function (err) { if (window.console) console.warn('track map:', err); });
   }
   function mapSvg(line) {
     var pts = (line || []).filter(Boolean); if (pts.length < 2) return '<div class="map"></div>';
@@ -866,6 +890,54 @@
     var f = el.matches('input,textarea,select,button') ? el : $('textarea,input,select,button', el);
     if (f) setTimeout(function () { f.focus({ preventScroll: true }); }, 400);
   }
+  // How ready the note is to publish: every part the post, the card and the episode need. Title and post
+  // text are a must (it can't go out without them); the rest only make the Publish button brighter, from
+  // yellow to green, and are listed when you publish with something still missing.
+  function readiness() {
+    var val = function (id) { var el = $('#' + id); return el ? el.value.trim() : ''; };
+    var used = E.photos.filter(function (p) { return p.use !== 'skip'; });
+    var capd = used.filter(function (p) { var d = $('.ph[data-i="' + E.photos.indexOf(p) + '"] textarea'); return (d ? d.value : p.caption || '').trim(); });
+    var kind = val('kind') || E.kind, needsTrack = kind === 'ride' || kind === 'hike';
+    var list = [
+      { t: 'Title', ok: !!val('title'), must: true },
+      { t: 'The post\'s text', ok: !!val('postBody'), must: true },
+      { t: 'The post\'s title', ok: !!val('postTitle') },
+      { t: 'Card summary', ok: !!val('summary') },
+      { t: 'Place', ok: !!val('place') },
+      { t: 'Who appears', ok: !!val('consent') },
+      { t: 'Photos', ok: used.some(function (p) { return !p.video; }) },
+      { t: 'Captions on every photo and loop', ok: used.length > 0 && capd.length === used.length },
+      { t: needsTrack ? 'The track' : 'The track (none needed)', ok: !needsTrack || !!E.track },
+      { t: 'No ride from home on the map', ok: !(E.track && E.track.homeWarning) },
+      { t: 'Claude\'s questions answered', ok: !(E.questions || []).length },
+      { t: 'The episode script', ok: !!val('epScript') },
+      { t: 'The episode audio', ok: !!(audioNew || (E.episode.audio && !audioGone)) }
+    ];
+    var n = list.filter(function (x) { return x.ok; }).length;
+    return { list: list, done: n, score: n / list.length, able: list.every(function (x) { return !x.must || x.ok; }) };
+  }
+  function renderPublish() {
+    var b = $('#publish'); if (!b || !E) return;
+    var r = readiness(), live = savedStatus === 'published';
+    // yellow (hue 48) when barely ready, green (hue 135) when every part is there; the glow grows with it
+    b.style.setProperty('--h', live ? '135' : String(Math.round(48 + 87 * r.score * r.score)));
+    b.style.setProperty('--g', live ? '.35' : r.able ? (0.15 + 0.85 * r.score * r.score).toFixed(2) : '0');
+    b.classList.toggle('full', r.score === 1 && !live);
+    b.classList.toggle('live', live);
+    b.disabled = !r.able && !live;
+    $('.pub-t', b).textContent = live ? (dirty ? 'Live: Save updates it' : 'Live on Play') : r.score === 1 ? 'Ready to publish' : 'Publish';
+    $('.pub-n', b).textContent = live ? '' : r.done + ' of ' + r.list.length;
+    b.title = r.list.map(function (x) { return (x.ok ? '✓ ' : '○ ') + x.t; }).join('\n');
+  }
+  function publish() {
+    var r = readiness();
+    if (savedStatus === 'published') { if (dirty) save(); else window.open('/play/' + E.id + '/', '_blank', 'noopener'); return; }
+    if (!r.able) return;
+    var miss = r.list.filter(function (x) { return !x.ok; }).map(function (x) { return '  · ' + x.t; });
+    if (miss.length && !confirm('Not everything is ready yet:\n' + miss.join('\n') + '\n\nPublish anyway?')) return;
+    $('#status').value = 'published';
+    save(true);
+  }
   function nextSteps() {
     var val = function (id) { var el = $('#' + id); return el ? el.value.trim() : ''; };
     var drafted = !!(val('postBody') || val('epScript')), q = (E.questions || []).length;
@@ -884,6 +956,7 @@
     return out;
   }
   function renderNext() {
+    renderPublish();
     var box = $('#next'); if (!box || !E) return;
     var steps = nextSteps().slice(0, 3);
     if (!steps.length) { box.hidden = true; return; }
@@ -1150,10 +1223,10 @@
   }
 
   // ---------- save ----------
-  function save() {
+  function save(asked) {   // asked: Publish already listed what's missing and you said go ahead
     collect();
     if (!E.title) { toast('Give it a title first.', true); return; }
-    if (E.status === 'published') {
+    if (E.status === 'published' && asked !== true) {
       if (E.track && E.track.homeWarning && !confirm('This track starts or ends at home. Publish it with the map anyway?')) return;
       if ((E.questions || []).length && !confirm('There are still open questions. Publish anyway?')) return;
     }
