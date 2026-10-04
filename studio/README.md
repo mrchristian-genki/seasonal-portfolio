@@ -117,6 +117,18 @@ tar xJf ffmpeg-release-amd64-static.tar.xz --wildcards --strip-components=1 '*/f
 ```
 Optional setting: `'ffmpeg'` (path). Its work sits in `~/studio-private/video` and is cleared after two weeks.
 
+## People and review
+
+The owner logs in with the password in the private config (`'owner_name'` sets the name shown). Under
+**People** on the notes list the owner adds **editors**: each gets their own password, shown once, to send
+them privately. Editors can make and change notes, bring in from Drive, draft with Claude and make loops,
+but they can't publish, take a post down or change what's live: their saves go to a branch of the repo,
+`review/<id>`, which the deploy never builds. The owner sees them under **Ready for review** and on the
+note: **Approve** merges the branch in (a live post updates a minute later), **Send back** shows the
+editor a note, **Discard** deletes the branch. The owner saving a note that waits for review takes the
+review in too. Editors and their password hashes are in `~/studio-private/users.json`; the review states
+in `~/studio-private/reviews.json`. Removing an editor logs them out at once.
+
 ## For Claude Code sessions
 
 Entries saved in the Studio land on `main`, so start from the latest `main`. Field Notes still works the

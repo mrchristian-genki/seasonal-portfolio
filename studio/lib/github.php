@@ -53,19 +53,19 @@ final class GitHub
         return $data ?? [];
     }
 
-    /** A text file from the branch, or null if it isn't there. */
-    public function read(string $file): ?string
+    /** A text file from the branch (or another, $ref), or null if it isn't there. */
+    public function read(string $file, ?string $ref = null): ?string
     {
-        [$code, $raw] = $this->call('GET', "/repos/{$this->repo}/contents/" . $this->encode($file) . '?ref=' . rawurlencode($this->branch), null, 'application/vnd.github.raw+json');
+        [$code, $raw] = $this->call('GET', "/repos/{$this->repo}/contents/" . $this->encode($file) . '?ref=' . rawurlencode($ref ?? $this->branch), null, 'application/vnd.github.raw+json');
         if ($code === 404) return null;
         if ($code >= 300) throw new RuntimeException("GitHub $code reading $file");
         return $raw;
     }
 
     /** Raw bytes of a file (for photos), or null. */
-    public function readBytes(string $file): ?string
+    public function readBytes(string $file, ?string $ref = null): ?string
     {
-        return $this->read($file);
+        return $this->read($file, $ref);
     }
 
     /** Names of the files in a folder. */
@@ -82,9 +82,11 @@ final class GitHub
      * ['sha' => an uploaded blob]
      * or null to delete the file.
      */
-    public function commit(array $files, string $message): string
+    public function commit(array $files, string $message, ?string $branch = null): string
     {
-        $ref = $this->json('GET', "/repos/{$this->repo}/git/ref/heads/" . rawurlencode($this->branch));
+        $branch = $branch ?? $this->branch;
+        if ($branch !== $this->branch && $this->head($branch) === null) $this->makeBranch($branch);
+        $ref = $this->json('GET', "/repos/{$this->repo}/git/ref/heads/" . $this->encode($branch));
         $parent = $ref['object']['sha'];
         $base = $this->json('GET', "/repos/{$this->repo}/git/commits/$parent");
         $tree = [];
@@ -99,8 +101,51 @@ final class GitHub
         $newTree = $this->json('POST', "/repos/{$this->repo}/git/trees", ['base_tree' => $base['tree']['sha'], 'tree' => $tree]);
         $commit = $this->json('POST', "/repos/{$this->repo}/git/commits", ['message' => $message, 'tree' => $newTree['sha'], 'parents' => [$parent]]);
         // Not forced: if someone pushed in between, this fails and the save can simply be retried.
-        $this->json('PATCH', "/repos/{$this->repo}/git/refs/heads/" . rawurlencode($this->branch), ['sha' => $commit['sha'], 'force' => false]);
+        $this->json('PATCH', "/repos/{$this->repo}/git/refs/heads/" . $this->encode($branch), ['sha' => $commit['sha'], 'force' => false]);
         return $commit['sha'];
+    }
+
+    // ---- review branches: an editor's saves go to review/<id>, off the live branch, until approved ----
+
+    /** The head commit of a branch, or null if there's no such branch. */
+    public function head(string $branch): ?string
+    {
+        [$code, $raw] = $this->call('GET', "/repos/{$this->repo}/git/ref/heads/" . $this->encode($branch));
+        if ($code === 404) return null;
+        if ($code >= 300) throw new RuntimeException("GitHub $code reading branch $branch");
+        return json_decode($raw, true)['object']['sha'] ?? null;
+    }
+    private function makeBranch(string $branch): void
+    {
+        $from = $this->head($this->branch);
+        $this->json('POST', "/repos/{$this->repo}/git/refs", ['ref' => "refs/heads/$branch", 'sha' => $from]);
+    }
+    /** Branch names starting with $prefix (e.g. "review/"). */
+    public function branches(string $prefix): array
+    {
+        [$code, $raw] = $this->call('GET', "/repos/{$this->repo}/git/matching-refs/heads/" . $this->encode($prefix));
+        if ($code >= 300) return [];
+        return array_map(fn($r) => substr($r['ref'], strlen('refs/heads/')), json_decode($raw, true) ?: []);
+    }
+    /** The latest commit on a branch: when and with what message. */
+    public function lastCommit(string $branch): ?array
+    {
+        $sha = $this->head($branch); if ($sha === null) return null;
+        $c = $this->json('GET', "/repos/{$this->repo}/git/commits/$sha");
+        return ['sha' => $sha, 'date' => $c['committer']['date'] ?? null, 'message' => $c['message'] ?? ''];
+    }
+    /** Merge a branch into the live one. True when merged (or nothing to merge); false on a conflict. */
+    public function mergeIn(string $branch, string $message): bool
+    {
+        [$code, $raw] = $this->call('POST', "/repos/{$this->repo}/merges", ['base' => $this->branch, 'head' => $branch, 'commit_message' => $message]);
+        if ($code === 201 || $code === 204) return true;
+        if ($code === 409) return false;
+        $data = json_decode($raw, true);
+        throw new RuntimeException("GitHub $code: " . ($data['message'] ?? substr($raw, 0, 200)));
+    }
+    public function deleteBranch(string $branch): void
+    {
+        $this->call('DELETE', "/repos/{$this->repo}/git/refs/heads/" . $this->encode($branch));
     }
 
     /** Upload one file's bytes (base64) as a blob; returns its id for a later commit. */

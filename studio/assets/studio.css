@@ -442,3 +442,22 @@ dialog.pfp::backdrop{background:rgba(20,12,6,.7)}
 .ph .opts .pfBtn,.ph .opts .rm{font-size:13px}
 .dash.steam .dprof .pg-l{stroke:#e2b45b} .dash.steam .dprof .pg-a{fill:rgba(226,180,91,.14)} .dash.steam .dprof .pg-t{stroke:rgba(201,154,72,.25)}
 .dash.steam .dprof .pg-x{fill:#b39b74} .dash.steam .dprof .tip{background:#e2b45b;color:#2b2118;font-family:"Special Elite",monospace}
+
+/* review: the queue on the notes list, the bar on a note waiting for review, and People */
+.head .me{margin-left:auto;font:400 14px "Special Elite",monospace;color:#dccaa8}
+.panel.queue{border-left:5px solid #e2b45b}
+.panel.queue h2{margin-bottom:6px}
+.rq{list-style:none;margin:0;padding:0;display:grid;gap:6px} .rq li{display:flex;flex-wrap:wrap;gap:4px 8px;align-items:baseline}
+.rq .link{font-weight:700;color:var(--ink)} .rq small{color:var(--ink3)}
+.rq-back{font-size:13px;color:#8a4b12;background:#fbefd2;border-radius:6px;padding:1px 7px}
+.st.st-review{background:#fbefd2;color:#7a5410;margin-left:4px}
+.revbar{margin-top:10px;padding:10px 12px;border-radius:6px;background:#fbefd2;border:1px solid #e5c47c;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
+.revbar.back{background:#fde3d6;border-color:#e7a07a}
+.revbar b{display:block;color:#5c3a0c} .revbar span{display:block;font-size:13.5px;color:#7a5a2a}
+.revbar > div:first-child{flex:1 1 280px}
+.rb-btns{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.rb-ch{flex-basis:100%;font-size:14px} .rb-ch summary{cursor:pointer;color:#7a5410;font-weight:700} .rb-ch ul{margin:6px 0 0;padding-left:20px;color:var(--ink2)}
+.panel.people .ppl{list-style:none;padding:0;margin:8px 0 12px;display:grid;gap:6px}
+.panel.people .ppl li{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap} .panel.people .ppl small{color:var(--ink3)}
+.panel.people .pw{margin-top:10px;padding:10px 12px;background:#fffaf0;border:1px dashed #c99a48;border-radius:6px}
+.panel.people .pw code{display:inline-block;font-size:18px;padding:4px 10px;margin:4px 10px 0 0;letter-spacing:.04em}
