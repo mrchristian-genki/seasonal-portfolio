@@ -43,6 +43,7 @@ main{max-width:980px;margin:0 auto;padding:24px 16px 120px}
 
 .trackrow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:center}
 .map{width:100%;max-height:260px;background:#eef4f3;border-radius:12px}
+.lmap.on{height:300px;border-radius:12px;overflow:hidden;z-index:0;background:#e8e2d6}
 .map polyline{fill:none;stroke:var(--accent);stroke-width:3;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke}
 .stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .stats div{border:1px solid var(--line);border-radius:10px;padding:8px 10px} .stats b{display:block;font:800 19px var(--display)} .stats span{font-size:12px;color:var(--ink3)}
@@ -307,3 +308,16 @@ body:has(.savebar){padding-bottom:64px}
 .ph video.clip{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;background:#1d1d1d;cursor:pointer}
 .vt-log{margin:6px 0 10px;font-size:13px} .vt-log summary{cursor:pointer;color:var(--ink2)}
 .vt-log pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px;background:rgba(0,0,0,.06);padding:8px;border-radius:6px;max-height:240px;overflow:auto}
+
+/* Publish: yellow and dim when barely ready, green and glowing when every part of the note is there */
+.pub{--h:48;--g:0;display:inline-flex;align-items:baseline;gap:8px;font-weight:700;border-radius:999px;padding:10px 18px;
+  border:1px solid hsl(var(--h) 70% 40%);color:#1d1a10;background:linear-gradient(180deg,hsl(var(--h) 85% calc(56% + var(--g) * 8%)),hsl(var(--h) 75% 42%));
+  box-shadow:0 0 calc(var(--g) * 26px) calc(var(--g) * 4px) hsl(var(--h) 95% 55% / calc(.25 + var(--g) * .55)),inset 0 1px 0 rgba(255,255,255,.5);
+  filter:saturate(calc(.55 + var(--g) * .6)) brightness(calc(.85 + var(--g) * .25));transition:box-shadow .5s,background .5s,filter .5s}
+.pub small{font-weight:600;opacity:.75;font-size:12px}
+.pub:disabled{filter:grayscale(.85) brightness(.8);box-shadow:none;cursor:not-allowed}
+.pub.full{animation:pubglow 2.4s ease-in-out infinite}
+@keyframes pubglow{50%{box-shadow:0 0 34px 8px hsl(var(--h) 95% 55% / .9),inset 0 1px 0 rgba(255,255,255,.5)}}
+.pub.live{animation:none}
+@media (prefers-reduced-motion:reduce){.pub.full{animation:none}}
+@media (max-width:640px){.savebar{gap:10px} .pub{padding:9px 12px} .pub small{display:none} #saveState{font-size:13px}}
