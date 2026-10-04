@@ -111,6 +111,30 @@ function json_fail(string $message, int $code = 400): never {
     json_out(['error' => $message], $code);
 }
 
+// A private file to the logged-in page, a part of it when asked (Safari plays audio and video only
+// from a server that answers ranges).
+function studio_send_file(string $path, string $type): never {
+    header('Content-Type: ' . $type);
+    header('Cache-Control: private, max-age=600');
+    header('Accept-Ranges: bytes');
+    $total = filesize($path);
+    if (preg_match('/^bytes=(\d*)-(\d*)$/', $_SERVER['HTTP_RANGE'] ?? '', $m) && ($m[1] !== '' || $m[2] !== '')) {
+        $from = $m[1] === '' ? max(0, $total - (int) $m[2]) : (int) $m[1];
+        $to = $m[1] === '' || $m[2] === '' ? $total - 1 : min((int) $m[2], $total - 1);
+        if ($from > $to || $from >= $total) { http_response_code(416); header("Content-Range: bytes */$total"); exit; }
+        http_response_code(206);
+        header("Content-Range: bytes $from-$to/$total");
+        header('Content-Length: ' . ($to - $from + 1));
+        $fh = fopen($path, 'rb'); fseek($fh, $from); $left = $to - $from + 1;
+        while ($left > 0 && !feof($fh)) { $chunk = fread($fh, min(65536, $left)); echo $chunk; $left -= strlen($chunk); }
+        fclose($fh);
+        exit;
+    }
+    header('Content-Length: ' . $total);
+    readfile($path);
+    exit;
+}
+
 function h(string $s): string {
     return htmlspecialchars($s, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }

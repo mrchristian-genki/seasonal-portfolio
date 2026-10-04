@@ -235,39 +235,28 @@ final class Drive {
             'note' => $this->processed()[$source] ?? null, 'day' => $r['day']];
     }
 
-    // One photo, track or audio file from an inbox folder, sent to the logged-in Studio page (which resizes
-    // photos, trims tracks and masters audio in the browser, as it does for dropped files).
-    public function send(string $source, string $name): never {
+    // The real path of one file in an inbox item, or null (no climbing out of it).
+    public function path(string $source, string $name): ?string {
         $r = $this->resolve($source);
         $root = $r['root'] ?? '';
         $path = $r === null ? false : realpath("$root/$name");
-        if (!$path || !is_file($path) || !str_starts_with($path, $root . '/')) json_fail('No such file.', 404);
-        if ($r['day'] !== null && (dirname($path) !== $root || $this->day($path) !== $r['day'])) json_fail('No such file.', 404);
+        if (!$path || !is_file($path) || !str_starts_with($path, $root . '/')) return null;
+        if ($r['day'] !== null && (dirname($path) !== $root || $this->day($path) !== $r['day'])) return null;
+        return $path;
+    }
+
+    // One photo, track or audio file from an inbox folder, sent to the logged-in Studio page (which resizes
+    // photos, trims tracks and masters audio in the browser, as it does for dropped files). Videos stay
+    // here: the page gets a small preview of them instead (lib/video.php).
+    public function send(string $source, string $name): never {
+        $path = $this->path($source, $name);
+        if ($path === null) json_fail('No such file.', 404);
         $kind = self::kindOf($path, $path);
         if (!in_array($kind, ['photo', 'track', 'text', 'audio'], true)) json_fail('Only photos, tracks, notes and audio come through here.', 400);
         $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
         $type = ['jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'png' => 'image/png', 'webp' => 'image/webp', 'heic' => 'image/heic', 'heif' => 'image/heif',
             'wav' => 'audio/wav', 'mp3' => 'audio/mpeg', 'm4a' => 'audio/mp4'][$ext] ?? 'text/plain; charset=utf-8';
-        header('Content-Type: ' . $type);
-        header('Cache-Control: private, max-age=600');
-        header('Accept-Ranges: bytes');
-        $total = filesize($path);
-        // a part of the file when asked (Safari plays audio only from a server that answers ranges)
-        if (preg_match('/^bytes=(\d*)-(\d*)$/', $_SERVER['HTTP_RANGE'] ?? '', $m) && ($m[1] !== '' || $m[2] !== '')) {
-            $from = $m[1] === '' ? max(0, $total - (int) $m[2]) : (int) $m[1];
-            $to = $m[1] === '' || $m[2] === '' ? $total - 1 : min((int) $m[2], $total - 1);
-            if ($from > $to || $from >= $total) { http_response_code(416); header("Content-Range: bytes */$total"); exit; }
-            http_response_code(206);
-            header("Content-Range: bytes $from-$to/$total");
-            header('Content-Length: ' . ($to - $from + 1));
-            $fh = fopen($path, 'rb'); fseek($fh, $from); $left = $to - $from + 1;
-            while ($left > 0 && !feof($fh)) { $chunk = fread($fh, min(65536, $left)); echo $chunk; $left -= strlen($chunk); }
-            fclose($fh);
-            exit;
-        }
-        header('Content-Length: ' . $total);
-        readfile($path);
-        exit;
+        studio_send_file($path, $type);
     }
 
     private function tail(string $file, int $n): array {
