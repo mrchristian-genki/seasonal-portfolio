@@ -735,7 +735,7 @@
   function openTrim(name) {
     stopTrim();
     VT = { name: name, state: 'working', pct: 0 };
-    renderLoops(); pollPreview(false);
+    renderLoops(); pollPreview(true);   // opening a video again gives one that failed before a fresh try
   }
   function pollPreview(retry) {
     var vt = VT; if (!vt) return;

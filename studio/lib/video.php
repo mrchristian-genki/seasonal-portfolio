@@ -100,7 +100,8 @@ final class Video {
             $why = '';
             foreach ($lines as $l) if ($why === '' && preg_match('/error|invalid|unable|cannot|could not|not supported|resource|killed|no such|denied|failed/i', $l) && !preg_match('/^Conversion failed/i', $l)) $why = $l;
             return ['state' => 'failed', 'error' => substr($why !== '' ? $why : (string) end($lines), 0, 240),
-                'log' => array_map(fn($l) => substr(str_replace(dirname(studio_private_dir()), '~', $l), 0, 240), array_merge(array_slice($lines, 0, 1), array_slice($lines, -24)))];
+                'log' => array_map(fn($l) => substr(str_replace(dirname(studio_private_dir()), '~', $l), 0, 240),
+                    array_merge(array_slice(file($log, FILE_IGNORE_NEW_LINES) ?: [], 0, 1), array_slice($lines, -24)))];
         }
         $pct = 0;
         if ($sec > 0 && preg_match_all('/time=(\d+):(\d+):([\d.]+)/', $t, $mm)) {
