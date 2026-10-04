@@ -135,7 +135,8 @@ try {
             $files = [];
             foreach ($body['newPhotos'] ?? [] as $p) {
                 $n = (string) ($p['name'] ?? ''); $sha = (string) ($p['sha'] ?? '');
-                if (!preg_match('/^\d{2}\.jpg$/', $n) || !preg_match('/^[0-9a-f]{40}$/', $sha)) json_fail('Bad photo.');
+                // a photo (01.jpg) or a loop's poster frame picked in the Studio (clip-1.jpg)
+                if (!preg_match('/^(\d{2}|clip-\d{1,3})\.jpg$/', $n) || !preg_match('/^[0-9a-f]{40}$/', $sha)) json_fail('Bad photo.');
                 $files[PHOTOS . "/$id/$n"] = ['sha' => $sha];
             }
             // Video loops made on this server (lib/video.php) go straight from it into the commit.
@@ -145,7 +146,8 @@ try {
                 if (!preg_match('/^clip-\d{1,3}$/', $n) || !$mp4 || !$jpg) json_fail('A video loop is missing on the server. Make it again.');
                 if (filesize($mp4) > CLIP_MAX) json_fail('A video loop is too big.');
                 $files[PHOTOS . "/$id/$n.mp4"] = ['sha' => $gh->blob(base64_encode((string) file_get_contents($mp4)))];
-                $files[PHOTOS . "/$id/$n.jpg"] = ['sha' => $gh->blob(base64_encode((string) file_get_contents($jpg)))];
+                // the server's poster frame, unless one was picked by hand (it came up with the photos)
+                if (!isset($files[PHOTOS . "/$id/$n.jpg"])) $files[PHOTOS . "/$id/$n.jpg"] = ['sha' => $gh->blob(base64_encode((string) file_get_contents($jpg)))];
             }
             foreach ($body['removePhotos'] ?? [] as $n) {
                 if (preg_match('/^[a-z0-9-]{1,40}\.(jpg|mp4)$/', (string) $n)) $files[PHOTOS . "/$id/$n"] = null;

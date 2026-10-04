@@ -13,6 +13,8 @@
   var trackRaw = null, trackSwap = false;   // the raw track, in this browser only (for setting where it starts and ends)
   var removed = [];   // photo files to delete on save
   var clipsNew = {};  // clip-N.mp4 -> { token } for video loops made on the server and not yet saved
+  var posterBust = '';   // after a save with new poster frames, so the editor shows them and not a cached old one
+  var posterNew = {}; // clip-N.jpg -> { blob, url } for a loop's poster frame picked here and not yet saved
   var DRIVEVID = null, VT = null;           // the videos in the note's Drive folder; the one being trimmed
 
   // ---------- helpers ----------
@@ -99,7 +101,7 @@
   // ---------- list ----------
   function showList() {
     if (dirty && !confirm('Leave without saving?')) return;
-    dirty = false; E = null; fresh = {}; removed = []; INBOX = null; audioNew = null; audioGone = false; DRIVEAUD = null; DRIVETRK = null; trackRaw = null; trackSwap = false; clipsNew = {}; DRIVEVID = null; stopTrim();
+    dirty = false; E = null; fresh = {}; removed = []; INBOX = null; audioNew = null; audioGone = false; DRIVEAUD = null; DRIVETRK = null; trackRaw = null; trackSwap = false; clipsNew = {}; posterNew = {}; DRIVEVID = null; stopTrim();
     route('notes');
     app.innerHTML = '<div class="head"><h1>Field Notes</h1><button id="new" class="primary">New entry</button></div><section id="drive" class="panel drive"><p class="muted">Checking Google Drive…</p></section><div id="list" class="cards"><p class="muted">Loading entries…</p></div>';
     $('#new').onclick = function () { edit(null); };
@@ -302,7 +304,7 @@
     var L = loader('Processing', ['Read the folder', 'Bring in the track', 'Bring in the photos', 'Claude drafts the note', 'Ready for you to read'], label);
     L.at(0);
     api('inbox', null, '&f=' + encodeURIComponent(src)).then(function (j) {
-      INBOX = j; dirty = false; fresh = {}; removed = []; audioNew = null; audioGone = false; DRIVEAUD = null; DRIVETRK = null; trackRaw = null; trackSwap = false; clipsNew = {}; DRIVEVID = null; stopTrim();
+      INBOX = j; dirty = false; fresh = {}; removed = []; audioNew = null; audioGone = false; DRIVEAUD = null; DRIVETRK = null; trackRaw = null; trackSwap = false; clipsNew = {}; posterNew = {}; DRIVEVID = null; stopTrim();
       var name = src.split('/').slice(1).join('/').replace(/^#/, ''), when = guessDate(name);
       E = blank(); savedStatus = null; E.source = src; E.title = guessTitle(name); E.fieldNotes = j.notes || '';
       if (when) E.date = when;
@@ -348,7 +350,7 @@
   }
   function edit(id) {
     if (dirty && !confirm('Leave without saving?')) return;
-    dirty = false; fresh = {}; removed = []; audioNew = null; audioGone = false; DRIVEAUD = null; DRIVETRK = null; trackRaw = null; trackSwap = false; clipsNew = {}; DRIVEVID = null; stopTrim();
+    dirty = false; fresh = {}; removed = []; audioNew = null; audioGone = false; DRIVEAUD = null; DRIVETRK = null; trackRaw = null; trackSwap = false; clipsNew = {}; posterNew = {}; DRIVEVID = null; stopTrim();
     if (!id) { E = blank(); savedStatus = null; route('new'); render(); return Promise.resolve(); }
     app.innerHTML = '<p class="muted">Opening…</p>';
     return api('entry', null, '&id=' + encodeURIComponent(id)).then(function (j) {
@@ -661,7 +663,7 @@
         '<div class="meta"><small>' + esc(n) + (p.table ? ' · on the table' : '') + (p.takenAt ? ' · ' + esc(String(p.takenAt).slice(11, 16)) : '') + (fresh[n] || clipsNew[n] ? ' · new' : '') + '</small>' +
         '<textarea rows="2" placeholder="Caption">' + esc(p.caption) + '</textarea>' +
         '<div class="opts"><label><input type="checkbox" class="use"' + (p.use !== 'skip' ? ' checked' : '') + '> Use</label>' +
-        '<label><input type="radio" name="cover" class="cover"' + (p.cover ? ' checked' : '') + (clip ? ' disabled' : '') + '> Cover</label>' +
+        '<label><input type="radio" name="cover" class="cover"' + (p.cover ? ' checked' : '') + '> Cover</label>' + (clip ? '<button type="button" class="link pfBtn">Poster frame</button>' : '') +
         '<button class="link rm">Remove</button></div></div></div>';
     }).join('');
     $$('.ph', box).forEach(function (d) {
@@ -671,10 +673,12 @@
         if (!confirm('Remove this photo from the entry?')) return;
         collect();
         var i = +d.getAttribute('data-i'), p = E.photos[i], n = photoName(p);
+        if (p.poster) delete posterNew[p.poster.split('/').pop()];
         if (fresh[n]) delete fresh[n]; else if (clipsNew[n]) delete clipsNew[n]; else { removed.push(n); if (p.poster) removed.push(p.poster.split('/').pop()); }
         E.photos.splice(i, 1); markDirty(); renderPhotos(); renderLoops();
       };
     });
+    $$('.pfBtn', box).forEach(function (b) { b.onclick = function () { collect(); posterPicker(E.photos[+b.closest('.ph').getAttribute('data-i')]); }; });
     // a saved loop plays when tapped: fetched once, then played from memory
     $$('video[data-clip]', box).forEach(function (v) {
       v.onclick = function () {
@@ -686,10 +690,77 @@
     });
   }
   function clipView(p, n) {
-    var c = clipsNew[n];
-    if (c) return '<video class="clip" muted loop playsinline autoplay src="api.php?a=vfile&t=loop&k=' + c.token + '" poster="api.php?a=vfile&t=poster&k=' + c.token + '"></video>';
+    var c = clipsNew[n], pn = p.poster ? p.poster.split('/').pop() : '', pk = posterNew[pn];
+    if (c) return '<video class="clip" muted loop playsinline autoplay src="api.php?a=vfile&t=loop&k=' + c.token + '" poster="' + (pk ? pk.url : 'api.php?a=vfile&t=poster&k=' + c.token) + '"></video>';
     if (!E.id || !p.poster) return '<div class="clip">Clip ' + esc(n) + '</div>';
-    return '<video class="clip" muted loop playsinline data-clip="' + esc(n) + '" poster="api.php?a=photo&id=' + encodeURIComponent(E.id) + '&n=' + encodeURIComponent(p.poster.split('/').pop()) + '" title="Tap to play"></video>';
+    return '<video class="clip" muted loop playsinline data-clip="' + esc(n) + '" poster="' + (pk ? pk.url : 'api.php?a=photo&id=' + encodeURIComponent(E.id) + '&n=' + encodeURIComponent(pn) + posterBust) + '" title="Tap to play"></video>';
+  }
+  // A loop's poster frame: the still that shows before it plays, on cards and when it's shared. Scrub to any
+  // frame, or let it find a good one: frames across the loop are scored for sharpness, colour and exposure.
+  function posterPicker(p) {
+    var n = photoName(p), pn = p.poster.split('/').pop(), c = clipsNew[n];
+    var d = document.createElement('dialog'); d.className = 'pfp';
+    d.innerHTML = '<h2>Poster frame <small>' + esc(n) + '</small></h2><video muted playsinline preload="auto"></video>' +
+      '<input type="range" min="0" max="1" step="0.01" value="0" class="pf-r"><div class="pf-t muted"></div><div class="pf-c"></div>' +
+      '<div class="row"><button type="button" class="small pf-find">Find a nice frame</button><span class="sp"></span><button type="button" class="link pf-x">Cancel</button><button type="button" class="primary pf-use">Use this frame</button></div>';
+    document.body.appendChild(d); d.showModal();
+    var v = $('video', d), r = $('.pf-r', d), t = $('.pf-t', d), url = null;
+    var close = function () { d.close(); d.remove(); if (url) URL.revokeObjectURL(url); };
+    $('.pf-x', d).onclick = close; d.addEventListener('cancel', close);
+    var src = c ? Promise.resolve('api.php?a=vfile&t=loop&k=' + c.token)
+      : fetch('api.php?a=clip&id=' + encodeURIComponent(E.id) + '&n=' + encodeURIComponent(n)).then(function (x) { if (!x.ok) throw new Error('couldn\'t load the loop'); return x.blob(); }).then(function (b) { return (url = URL.createObjectURL(b)); });
+    src.then(function (u) { v.src = u; }).catch(function (err) { t.textContent = err.message; });
+    var seek = function (sec) { return new Promise(function (ok) { var f = function () { v.removeEventListener('seeked', f); ok(); }; v.addEventListener('seeked', f); v.currentTime = sec; }); };
+    v.addEventListener('loadedmetadata', function () { r.max = v.duration.toFixed(2); r.step = Math.max(0.01, v.duration / 300).toFixed(3); t.textContent = '0.0 s of ' + v.duration.toFixed(1) + ' s'; seek(0.01); });
+    r.oninput = function () { v.currentTime = +r.value; t.textContent = (+r.value).toFixed(1) + ' s of ' + v.duration.toFixed(1) + ' s'; };
+    $('.pf-find', d).onclick = function () {
+      var b = this; b.disabled = true; b.textContent = 'Looking…';
+      bestFrames(v, seek).then(function (list) {
+        b.disabled = false; b.textContent = 'Find a nice frame';
+        var box = $('.pf-c', d);
+        box.innerHTML = list.map(function (f, i) { return '<button type="button" class="pf-k' + (i === 0 ? ' best' : '') + '" data-t="' + f.t + '" title="' + f.t.toFixed(1) + ' s"><img src="' + f.thumb + '" alt=""></button>'; }).join('');
+        $$('.pf-k', box).forEach(function (k) { k.onclick = function () { $$('.pf-k', box).forEach(function (x) { x.classList.remove('on'); }); k.classList.add('on'); r.value = k.getAttribute('data-t'); r.oninput(); }; });
+        r.value = list[0].t; r.oninput();
+      });
+    };
+    $('.pf-use', d).onclick = function () {
+      var cv = document.createElement('canvas'); cv.width = v.videoWidth; cv.height = v.videoHeight;
+      cv.getContext('2d').drawImage(v, 0, 0);
+      cv.toBlob(function (bl) {
+        if (posterNew[pn]) URL.revokeObjectURL(posterNew[pn].url);
+        posterNew[pn] = { blob: bl, url: URL.createObjectURL(bl) };
+        close(); markDirty(); renderPhotos(); toast('Poster frame set. Save to keep it.');
+      }, 'image/jpeg', 0.86);
+    };
+  }
+  // frames across the loop, best first: sharp (the spread of a Laplacian), colourful (Hasler and Süsstrunk's
+  // measure) and well exposed. Scored small, on 12 frames between the first and last 5%.
+  function bestFrames(v, seek) {
+    var W = 160, H = Math.max(1, Math.round(160 * v.videoHeight / v.videoWidth)), cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+    var g = cv.getContext('2d', { willReadFrequently: true }), out = [], chain = Promise.resolve();
+    for (var i = 0; i < 12; i++) (function (k) {
+      var at = v.duration * (0.05 + 0.9 * k / 11);
+      chain = chain.then(function () { return seek(at); }).then(function () {
+        g.drawImage(v, 0, 0, W, H);
+        var px = g.getImageData(0, 0, W, H).data, n = W * H, gray = new Float32Array(n), srg = 0, syb = 0, qrg = 0, qyb = 0, lum = 0;
+        for (var j = 0; j < n; j++) {
+          var R = px[j * 4], G = px[j * 4 + 1], B = px[j * 4 + 2], rg = R - G, yb = (R + G) / 2 - B;
+          gray[j] = 0.299 * R + 0.587 * G + 0.114 * B; lum += gray[j]; srg += rg; syb += yb; qrg += rg * rg; qyb += yb * yb;
+        }
+        var mrg = srg / n, myb = syb / n, color = Math.sqrt(qrg / n - mrg * mrg + qyb / n - myb * myb) + 0.3 * Math.sqrt(mrg * mrg + myb * myb);
+        var ls = 0, lq = 0, m = 0;
+        for (var y = 1; y < H - 1; y++) for (var x = 1; x < W - 1; x++) {
+          var q = y * W + x, L = 4 * gray[q] - gray[q - 1] - gray[q + 1] - gray[q - W] - gray[q + W]; ls += L; lq += L * L; m++;
+        }
+        var sharp = lq / m - (ls / m) * (ls / m), mean = lum / n;
+        out.push({ t: at, sharp: sharp, color: color, expo: mean < 45 ? (45 - mean) / 45 : mean > 215 ? (mean - 215) / 40 : 0, thumb: cv.toDataURL('image/jpeg', 0.7) });
+      });
+    })(i);
+    return chain.then(function () {
+      var ms = Math.max.apply(0, out.map(function (f) { return f.sharp; })) || 1, mc = Math.max.apply(0, out.map(function (f) { return f.color; })) || 1;
+      out.forEach(function (f) { f.score = 0.55 * f.sharp / ms + 0.45 * f.color / mc - 0.6 * f.expo; });
+      return out.sort(function (a, b) { return b.score - a.score; }).slice(0, 6);
+    });
   }
   function nextName() {
     var max = 0;
@@ -1294,14 +1365,14 @@
       E.photos.forEach(function (p) { p.src = 'data/photos/' + E.id + '/' + photoName(p); if (p.poster) p.poster = 'data/photos/' + E.id + '/' + p.poster.split('/').pop(); });
     }
     var btn = $('#save'); btn.disabled = true; btn.textContent = 'Saving…';
-    var names = Object.keys(fresh), uploaded = [];
+    var names = Object.keys(fresh).concat(Object.keys(posterNew)), uploaded = [];
     var L = loader(E.status === 'published' ? 'Saving and publishing' : 'Saving', ['Upload the photos', 'Save the note', E.status === 'published' ? 'Publishing starts (live in about a minute)' : 'Saved']);
     if (!names.length) L.skip(0);
     var chain = Promise.resolve();
     names.forEach(function (n, i) {
       chain = chain.then(function () {
         btn.textContent = 'Uploading photo ' + (i + 1) + ' of ' + names.length + '…'; L.at(0, (i + 1) + ' of ' + names.length);
-        return blobToB64(fresh[n].blob).then(function (b64) { return api('blob', { b64: b64 }); }).then(function (r) { uploaded.push({ name: n, sha: r.sha }); });
+        return blobToB64((fresh[n] || posterNew[n]).blob).then(function (b64) { return api('blob', { b64: b64 }); }).then(function (r) { uploaded.push({ name: n, sha: r.sha }); });
       });
     });
     chain.then(function () {
@@ -1314,8 +1385,9 @@
         .catch(function (err) { E.episode.audio = hadAudio; throw err; });
     }).then(function () {
       var hadNew = !!audioNew;
-      var hadClips = Object.keys(clipsNew).length;
-      fresh = {}; removed = []; clipsNew = {}; dirty = false; audioNew = null; audioGone = false; savedStatus = E.status;
+      var hadClips = Object.keys(clipsNew).length + Object.keys(posterNew).length;
+      if (Object.keys(posterNew).length) posterBust = '&v=' + Date.now().toString(36);
+      fresh = {}; removed = []; clipsNew = {}; posterNew = {}; dirty = false; audioNew = null; audioGone = false; savedStatus = E.status;
       setTimeout(renderNext, 0); DRIVEAUD = null;
       if (hadNew && !first) renderAudio();
       if (hadClips && !first) renderPhotos();
