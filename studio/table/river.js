@@ -66,6 +66,21 @@
     show(t).then(function () { setTimeout(finish, 8000); });   // in case 'ended' never comes
   }
 
+  // Frame the river: the clips are the strip of the frame from 20% to 74% of its height. Show a window
+  // centred on the river (47.5%) that never reaches below 62%, so the brass plaque near the bottom of the
+  // footage is never half in view, at any screen size. The video and stills share the same placement.
+  var F0 = 0.20, F1 = 0.74, LIMIT = 0.62, MID = 0.475, AR = 2560 / 790;
+  function frame() {
+    var w = R.clientWidth, h = R.clientHeight; if (!w || !h) return;
+    var vw = Math.max(w, h * AR * (F1 - F0) / (LIMIT - F0)), vh = vw / AR;
+    var v = h / vh * (F1 - F0);                                   // how much of the frame shows
+    var c = Math.min(Math.max(MID, F0 + v / 2), LIMIT - v / 2);    // where its middle sits
+    var top = -((c - v / 2) - F0) / (F1 - F0) * vh;
+    R.style.setProperty('--rv-w', vw + 'px'); R.style.setProperty('--rv-h', vh + 'px');
+    R.style.setProperty('--rv-x', ((w - vw) / 2) + 'px'); R.style.setProperty('--rv-y', top + 'px');
+  }
+  frame(); addEventListener('resize', frame);
+
   stills(night);
   // the video waits until the page itself has loaded, so the Studio's own content comes first; the stills
   // show meanwhile. It pauses when the header is scrolled away or the tab is hidden.

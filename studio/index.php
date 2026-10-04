@@ -35,7 +35,7 @@ $in = studio_logged_in();
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&family=Special+Elite&display=swap">
 <link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>-7">
-<link rel="stylesheet" href="table/table.css?v=23">
+<link rel="stylesheet" href="table/table.css?v=24">
 </head>
 <?php if (!$in): ?>
 <body class="login">
@@ -95,7 +95,7 @@ $in = studio_logged_in();
 <script src="assets/track.js?v=<?= STUDIO_VERSION ?>"></script>
 <script src="assets/studio.js?v=<?= STUDIO_VERSION ?>-9"></script>
 <script src="table/table.js?v=20"></script>
-<script src="table/river.js?v=3"></script>
+<script src="table/river.js?v=4"></script>
 <script src="table/switch.js?v=4"></script>
 </body>
 <?php endif; ?>
