@@ -145,6 +145,7 @@
     //    Any step over 40 m at an impossible speed (over 60 km/h) counts; the last one wins, since a
     //    warm-up can settle in a few hops.
     var warm = -1;
+    if (!(opts.range && opts.range[0] > 0))   // a start set by hand is where you said, warm-up or not
     for (var w = a + 1; w <= b && pts[w].t != null && pts[a].t != null && pts[w].t - pts[a].t <= 60000; w++) {
       var jd = dist(pts[w - 1], pts[w]), jt = (pts[w].t - pts[w - 1].t) / 1000;
       if (jd > 40 && jt > 0 && jd / jt * 3.6 > 60) warm = w;
@@ -154,7 +155,9 @@
     // 1. Driving at either end. A drive with more of the activity before it than after it is the
     //    drive home: the track ends where it starts. One with more after it is a drive to the start.
     //    Judged by distance, not time, so hours of the phone sitting at home don't confuse it.
-    var runs = drivingRuns(pts, kind), cum = cumDist(pts), total = cum[cum.length - 1];
+    // A range set by hand already says where the ride started and ended, so nothing inside it is cut
+    // as driving (a fast descent can read like a car).
+    var runs = opts.range ? [] : drivingRuns(pts, kind), cum = cumDist(pts), total = cum[cum.length - 1];
     runs.forEach(function (r) {
       var before = cum[r[0]], after = total - cum[r[1]];
       if (after < before && r[0] - 1 < b) {
@@ -202,8 +205,8 @@
       fb = Math.max(fb, 800);
       notes.push('Warning: starts and ends at the same spot, and it isn\'t a known trailhead. If that\'s home, add it as a private zone before publishing.');
     }
-    if (!sTH && fb) { var a1 = walk(pts, a, b, fb, 1); if (a1 > a) { notes.push('No trailhead near the start: trimmed the first ' + fb + ' m.'); a = a1; } }
-    if (!eTH && fb) { var b1 = walk(pts, b, a, fb, -1); if (b1 < b) { notes.push('No trailhead near the end: trimmed the last ' + fb + ' m.'); b = b1; } }
+    if (!sTH && fb) { var a1 = walk(pts, a, b, fb, 1); if (a1 > a) { notes.push('No trailhead near the start: trimmed the first ' + Math.round(fb * 3.28084).toLocaleString('en-US') + ' ft.'); a = a1; } }
+    if (!eTH && fb) { var b1 = walk(pts, b, a, fb, -1); if (b1 < b) { notes.push('No trailhead near the end: trimmed the last ' + Math.round(fb * 3.28084).toLocaleString('en-US') + ' ft.'); b = b1; } }
 
     return {
       points: pts.slice(a, b + 1), from: a, to: b, notes: notes, activity: act,
@@ -219,8 +222,8 @@
   // The trailhead nearest the start (or end) within range, and the index where the track is
   // closest to it: searched over the first (or last) 40% of the kept track.
   function nearestOnSpan(th, pts, a, b, range, fromStart) {
-    if (!th.length) return null;
-    var n = b - a, lim = Math.max(1, Math.floor(n * 0.4)), best = null;
+    if (!th.length || b - a < 1) return null;
+    var n = b - a, lim = Math.min(n, Math.max(1, Math.floor(n * 0.4))), best = null;
     th.forEach(function (t) {
       var r = t.radius || 150, bi = -1, bd = Infinity;
       for (var k = 0; k <= lim; k++) {
@@ -310,7 +313,7 @@
     opts = Object.assign({}, opts, { kind: kind });
     // opts.range [fromKm, toKm]: where the activity really started and ended, set by hand (a ride that
     // kept recording on the drive home, say). Everything outside it is dropped before the trim.
-    var cut = [];
+    var cut = [], off = 0;
     if (opts.range && g.points.length > 2) {
       var cd = cumDist(g.points), all = cd[cd.length - 1], lo = opts.range[0] * 1000, hi = opts.range[1] * 1000, i0 = 0, i1 = g.points.length - 1;
       while (i0 < i1 - 1 && cd[i0] < lo) i0++;
@@ -318,7 +321,7 @@
       var mi = function (m) { return (m / 1609.344).toFixed(1) + ' mi'; };
       if (i0 > 0) cut.push('You started the ride ' + mi(cd[i0]) + ' in (' + clock(g.points[i0].t) + ').');
       if (i1 < g.points.length - 1) cut.push('You ended the ride at ' + mi(cd[i1]) + ' (' + clock(g.points[i1].t) + '): cut the ' + mi(all - cd[i1]) + ' after it.');
-      g.points = g.points.slice(i0, i1 + 1);
+      g.points = g.points.slice(i0, i1 + 1); off = i0;
     }
     var tr = trim(g.points, opts), pts = tr.points;
     tr.notes = cut.concat(tr.notes);
@@ -342,13 +345,13 @@
     return {
       name: g.name, kind: kind, localDate: g.localDate || null, stats: st, line: line, profile: profile(pts),
       trim: { notes: tr.notes, rawPoints: g.points.length, shownKm: shownKm, keptFrom: tr.from, keptTo: tr.to, startTrailhead: tr.startTrailhead, endTrailhead: tr.endTrailhead },
-      raw: g.points, kept: [tr.from, tr.to], activity: tr.activity || [tr.from, tr.to]
+      raw: g.points, offset: off, kept: [tr.from, tr.to], activity: tr.activity || [tr.from, tr.to]
     };
   }
 
   function km(pts, i, j) {
     var d = 0; for (var k = i + 1; k <= j; k++) d += dist(pts[k - 1], pts[k]);
-    return d >= 1000 ? (d / 1000).toFixed(1) + ' km' : Math.round(d) + ' m';
+    return d >= 160 ? (d / 1609.344).toFixed(1) + ' mi' : Math.round(d * 3.28084) + ' ft';
   }
   function clock(t) { if (t == null) return '--:--'; var d = new Date(t); return ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2); }
 

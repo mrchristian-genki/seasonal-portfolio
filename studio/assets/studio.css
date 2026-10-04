@@ -281,5 +281,11 @@ body:has(.savebar){padding-bottom:64px}
 .trange b{display:block} .trange > span{display:block;font-size:14px;margin:2px 0 8px}
 .trange label{display:grid;grid-template-columns:44px 1fr minmax(120px,auto);gap:10px;align-items:center;font-weight:600;font-size:14px;margin:4px 0}
 .trange input[type=range]{width:100%;accent-color:#b08a52}
+.trmap{height:340px;border-radius:8px;margin:4px 0 6px;z-index:0;background:#e8e2d6}
+@media (max-width:600px){.trmap{height:280px}}
+.trkey{font-size:13px;color:var(--ink2);margin:0 0 8px;display:flex;flex-wrap:wrap;gap:4px 12px;align-items:center}
+.trkey i{display:inline-block;width:22px;height:0;border-top:4px solid #2f6f8f;margin-right:5px;vertical-align:middle}
+.trkey .k-rng{border-top-color:#d08a2c} .trkey .k-cut{border-top:3px dashed #7a6a58}
+.trpick b{display:block;margin-bottom:6px} .trpick button{margin:0 6px 0 0}
 .trange output{font-weight:400;color:var(--ink2);white-space:nowrap}
 .drvtrk{margin-top:8px} .drvtrk .useTrk{margin:4px 6px 0 0}

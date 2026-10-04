@@ -184,7 +184,7 @@
   var RX = { src: 'assets/loader/reactor-loop.mp4', webm: 'assets/loader/reactor-loop.webm', poster: 'assets/loader/reactor-start.jpg' };
   function loader(title, steps, sub) {
     var el = document.createElement('div'); el.className = 'loader'; el.setAttribute('role', 'alertdialog'); el.setAttribute('aria-live', 'polite');
-    var marks = [100, 75, 50, 25, 0].map(function (n) { return '<span class="rx-mark" style="--at:' + n + '"><i></i>' + n + '%</span>'; }).join('');
+    var marks = [100, 75, 50, 25, 0].map(function (n) { return '<span class="rx-mark" data-at="' + n + '"><i></i>' + n + '%</span>'; }).join('');
     el.innerHTML = '<div class="ld-card"><div class="rx">' +
         // the empty reactor is the backdrop; a short loop of the full, bubbling tube plays over it, shown only
         // up to the fuel level inside the tube, while its glow on the rest of the panel brightens with it
@@ -198,6 +198,8 @@
       '</div>' +
       '<ol class="ld-steps">' + steps.map(function (s) { return '<li><span class="ld-dot"></span><span class="ld-name">' + esc(s) + '</span><small></small></li>'; }).join('') + '</ol>' +
       '<p class="ld-hold">Hold on a moment, this page is working.</p></div>';
+    // set by script: the page's CSP blocks style attributes written in HTML
+    $$('.rx-mark', el).forEach(function (m) { m.style.setProperty('--at', m.getAttribute('data-at')); });
     document.body.appendChild(el); document.body.classList.add('busy');
     requestAnimationFrame(function () { el.classList.add('on'); });
     var items = $$('.ld-steps li', el), cur = -1, shown = 0;
@@ -469,7 +471,7 @@
     return file.text().then(function (txt) {
       var g = Track.parse(txt), cd = Track.cumDist(g.points);
       if (g.points.length < 2) throw new Error('no points in it');
-      trackRaw = { text: txt, cd: cd, t: g.points.map(function (p) { return p.t; }), km: cd[cd.length - 1] / 1000, range: null };
+      trackRaw = { text: txt, cd: cd, t: g.points.map(function (p) { return p.t; }), ll: g.points.map(function (p) { return [p.lat, p.lon]; }), km: cd[cd.length - 1] / 1000, range: null, kept: null };
       trackSwap = false;
       applyTrack(); toast('Track added and trimmed.');
     }).catch(function (err) { toast('Couldn\'t read that track: ' + err.message, true); });
@@ -480,6 +482,7 @@
     var inZ = function (p) { return p && z.some(function (zz) { return Track.dist(zz, p) <= (zz.radius || 400); }); };
     var home = raw.length && (inZ(raw[0]) || inZ(raw[raw.length - 1]));
     E.track = { stats: built.stats, line: built.line, profile: built.profile, trim: built.trim };
+    trackRaw.kept = [(built.offset || 0) + built.kept[0], (built.offset || 0) + built.kept[1]];
     if (home) E.track.homeWarning = 'This starts or ends at home. By the show\'s rules, a ride from home is only told views-only: no track, no map, no distances. Remove the track before publishing unless you mean to.';
     E.trailhead = built.trim.startTrailhead || null;
     var th = (CFG.trailheads || []).filter(function (t) { return t.id === E.trailhead; })[0];
@@ -488,16 +491,17 @@
     markDirty(); renderTrack();
   }
   // the clock time at a distance along the raw track
+  function idxAt(kmv) { var r = trackRaw, i = 0; while (i < r.cd.length - 1 && r.cd[i] < kmv * 1000) i++; return i; }
   function clockAt(kmv) {
-    var r = trackRaw, i = 0; while (i < r.cd.length - 1 && r.cd[i] < kmv * 1000) i++;
-    var t = r.t[i]; if (t == null) return '';
+    var t = trackRaw.t[idxAt(kmv)]; if (t == null) return '';
     var d = new Date(t); return d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
   }
   function rangeBox() {
     var r = trackRaw, from = r.range ? r.range[0] : 0, to = r.range ? r.range[1] : r.km, step = Math.max(0.01, +(r.km / 400).toFixed(2));
     var lab = function (v) { return mi(v) + ' mi' + (clockAt(v) ? ' · ' + clockAt(v) : ''); };
     return '<div class="trange"><b>Where did the ride start and end?</b><span class="muted">Forgot to stop recording? Drag the end back to where the ride really ended. ' +
-      'The whole recording is ' + mi(r.km) + ' mi; the cut happens here in your browser.</span>' +
+      'The whole recording is ' + mi(r.km) + ' mi; the cut happens here in your browser. Tap the map to set the start or end.</span>' +
+      '<div class="trmap-slot"></div><p class="trkey"><i class="k-pub"></i>published <i class="k-rng"></i>your start to end <i class="k-cut"></i>cut</p>' +
       '<label>Start <input type="range" id="trS" min="0" max="' + r.km.toFixed(2) + '" step="' + step + '" value="' + from.toFixed(2) + '"><output id="trSo">' + lab(from) + '</output></label>' +
       '<label>End <input type="range" id="trE" min="0" max="' + r.km.toFixed(2) + '" step="' + step + '" value="' + to.toFixed(2) + '"><output id="trEo">' + lab(to) + '</output></label>' +
       (r.range ? '<button type="button" class="link" id="trReset">Use the whole recording</button>' : '') + '</div>';
@@ -506,8 +510,8 @@
     var S = $('#trS'), En = $('#trE'); if (!S) return;
     var lab = function (v) { return mi(v) + ' mi' + (clockAt(v) ? ' · ' + clockAt(v) : ''); };
     var gap = trackRaw.km * 0.02;
-    S.oninput = function () { if (+S.value > +En.value - gap) S.value = Math.max(0, +En.value - gap); $('#trSo').textContent = lab(+S.value); };
-    En.oninput = function () { if (+En.value < +S.value + gap) En.value = Math.min(trackRaw.km, +S.value + gap); $('#trEo').textContent = lab(+En.value); };
+    S.oninput = function () { if (+S.value > +En.value - gap) S.value = Math.max(0, +En.value - gap); $('#trSo').textContent = lab(+S.value); syncMap(); };
+    En.oninput = function () { if (+En.value < +S.value + gap) En.value = Math.min(trackRaw.km, +S.value + gap); $('#trEo').textContent = lab(+En.value); syncMap(); };
     var set = function () {
       var a = +S.value, b = +En.value;
       trackRaw.range = a <= 0.001 && b >= trackRaw.km - 0.001 ? null : [a, b];
@@ -515,6 +519,79 @@
     };
     S.onchange = set; En.onchange = set;
     var rs = $('#trReset'); if (rs) rs.onclick = function () { trackRaw.range = null; applyTrack(); };
+    showMap();
+  }
+  // The trim map: the whole raw recording on a real map, so you can see where the ride really ended.
+  // Leaflet loads only when this panel shows. The raw points stay in this browser like the rest of it.
+  var LL = null, trMap = null;
+  function leaflet() {
+    if (LL) return LL;
+    LL = new Promise(function (ok, no) {
+      var c = document.createElement('link'); c.rel = 'stylesheet'; c.href = 'assets/vendor/leaflet/leaflet.css?v=1.9.4'; document.head.appendChild(c);
+      var j = document.createElement('script'); j.src = 'assets/vendor/leaflet/leaflet.js?v=1.9.4';
+      j.onload = function () { ok(window.L); }; j.onerror = function () { LL = null; no(new Error('map didn\'t load')); };
+      document.head.appendChild(j);
+    });
+    return LL;
+  }
+  function showMap() {
+    var slot = $('.trmap-slot'); if (!slot) return;
+    var r = trackRaw;
+    leaflet().then(function (L) {
+      if (!$('.trmap-slot') || trackRaw !== r) return;
+      if (!trMap || trMap.raw !== r) {
+        if (trMap) trMap.map.remove();
+        var el = document.createElement('div'); el.className = 'trmap';
+        $('.trmap-slot').appendChild(el);
+        var map = L.map(el, { scrollWheelZoom: false, zoomSnap: 0.25 });
+        var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OpenStreetMap contributors' });
+        var topo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', { maxZoom: 17, attribution: '© OpenStreetMap contributors, SRTM | © OpenTopoMap (CC-BY-SA)' });
+        osm.addTo(map); L.control.layers({ Streets: osm, Topo: topo }, null, { position: 'topright' }).addTo(map);
+        var all = L.polyline(r.ll, { color: '#7a6a58', weight: 3, opacity: .55, dashArray: '4 6', interactive: false }).addTo(map);
+        trMap = {
+          raw: r, el: el, map: map,
+          rng: L.polyline([], { color: '#d08a2c', weight: 5, opacity: .75, interactive: false }).addTo(map),
+          pub: L.polyline([], { color: '#2f6f8f', weight: 4, opacity: .95, interactive: false }).addTo(map),
+          s: L.circleMarker(r.ll[0], { radius: 8, color: '#fff', weight: 2, fillColor: '#2f8f4e', fillOpacity: 1 }).bindTooltip('Start', { permanent: true, direction: 'top', offset: [0, -8] }).addTo(map),
+          e: L.circleMarker(r.ll[r.ll.length - 1], { radius: 8, color: '#fff', weight: 2, fillColor: '#b0412e', fillOpacity: 1 }).bindTooltip('End', { permanent: true, direction: 'top', offset: [0, -8] }).addTo(map)
+        };
+        map.fitBounds(all.getBounds(), { padding: [34, 34] });
+        map.on('click', function (ev) { pickOnMap(L, ev.latlng); });
+      } else {
+        $('.trmap-slot').appendChild(trMap.el);
+        trMap.map.invalidateSize();
+      }
+      syncMap();
+    }).catch(function (err) { var sl = $('.trmap-slot'); if (sl) sl.innerHTML = '<p class="muted">The map couldn\'t load (' + esc(err.message) + '). The sliders still work.</p>'; });
+  }
+  function syncMap() {
+    var S = $('#trS'), En = $('#trE'); if (!trMap || !S || trMap.raw !== trackRaw) return;
+    var r = trackRaw, i0 = idxAt(+S.value), i1 = idxAt(+En.value);
+    trMap.rng.setLatLngs(r.ll.slice(i0, i1 + 1));
+    trMap.pub.setLatLngs(r.kept ? r.ll.slice(r.kept[0], r.kept[1] + 1) : []);
+    trMap.s.setLatLng(r.ll[i0]); trMap.e.setLatLng(r.ll[i1]);
+  }
+  // tap the map: the nearest point of the recording, with "Start here" and "End here"
+  function pickOnMap(L, at) {
+    var r = trackRaw, best = 0, bd = Infinity, k = Math.cos(at.lat * Math.PI / 180);
+    r.ll.forEach(function (p, i) { var dy = p[0] - at.lat, dx = (p[1] - at.lng) * k, d = dx * dx + dy * dy; if (d < bd) { bd = d; best = i; } });
+    var kmv = r.cd[best] / 1000, t = r.t[best];
+    var box = document.createElement('div'); box.className = 'trpick';
+    box.innerHTML = '<b>' + mi(kmv) + ' mi in' + (t != null ? ' · ' + esc(new Date(t).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })) : '') + '</b>' +
+      '<button type="button" class="small" data-w="s">Start here</button><button type="button" class="small" data-w="e">End here</button>';
+    var pop = L.popup({ closeButton: true }).setLatLng(r.ll[best]).setContent(box).openOn(trMap.map);
+    $$('button', box).forEach(function (b) {
+      b.onclick = function () {
+        var S = $('#trS'), En = $('#trE'), a = +S.value, z = +En.value;
+        // a start past the end (or an end before the start) moves the other one back out of the way
+        var gap = trackRaw.km * 0.02;
+        if (b.getAttribute('data-w') === 's') { a = kmv; if (z < a + gap) z = trackRaw.km; } else { z = kmv; if (a > z - gap) a = 0; }
+        a = Math.max(0, Math.min(a, trackRaw.km - gap)); z = Math.min(trackRaw.km, Math.max(z, a + gap));
+        trMap.map.closePopup(pop);
+        trackRaw.range = a <= 0.001 && z >= trackRaw.km - 0.001 ? null : [a, z];
+        applyTrack();
+      };
+    });
   }
   // track files in the note's Drive folder, offered for adding or replacing the track
   var DRIVETRK = null;

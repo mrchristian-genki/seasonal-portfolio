@@ -97,7 +97,7 @@ function studio_security_headers(): void {
     header('X-Content-Type-Options: nosniff');
     header('Referrer-Policy: same-origin');
     header('Cache-Control: no-store');
-    header("Content-Security-Policy: default-src 'self'; img-src 'self' blob: data:; media-src 'self' blob:; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'");
+    header("Content-Security-Policy: default-src 'self'; img-src 'self' blob: data: https://tile.openstreetmap.org https://*.tile.opentopomap.org; media-src 'self' blob:; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'");
 }
 
 function json_out($data, int $code = 200): never {
