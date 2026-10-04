@@ -35,7 +35,7 @@ $in = studio_logged_in();
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&family=Special+Elite&display=swap">
 <link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>-11">
-<link rel="stylesheet" href="table/table.css?v=35">
+<link rel="stylesheet" href="table/table.css?v=36">
 </head>
 <?php if (!$in): ?>
 <body class="login">
@@ -96,12 +96,12 @@ $in = studio_logged_in();
 <?php endif; ?>
 <footer class="st-foot" aria-label="Studio">
   <div class="st-foot-wood" aria-hidden="true"><span class="day"></span><span class="night"></span></div>
-  <div class="st-lamps" aria-hidden="true">
+  <button type="button" class="st-lamps" id="lamps" aria-label="Day. Switch to night">
     <img class="lp-off" src="table/a/panel-off.webp" alt="">
     <img class="lp-day" src="table/a/panel-day.webp" alt="">
     <img class="lp-night" src="table/a/panel-night.webp" alt="">
     <span class="lp-glow"></span>
-  </div>
+  </button>
 </footer>
 <?php if ($in): ?>
 <div id="toast" role="status" aria-live="polite"></div>
@@ -110,7 +110,7 @@ $in = studio_logged_in();
 <?php endif; ?>
 <script src="table/table.js?v=22"></script>
 <script src="table/river.js?v=6"></script>
-<script src="table/switch.js?v=4"></script>
+<script src="table/switch.js?v=5"></script>
 <script src="table/shelf.js?v=10"></script>
 </body>
 </html>

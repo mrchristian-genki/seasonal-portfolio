@@ -1,4 +1,4 @@
-/* STUDIO SWITCH: the day/night switch plate on the footer strip of the table. Turning it flips the whole
+/* STUDIO SWITCH: the day/night switch plate (and a tap on the footer's lamps). Turning it flips the whole
    Studio (header table, footer, lamps, the dial beside it) and remembers the choice on this device; with
    no choice the Studio follows the clock (night from 7 pm to 6 am). */
 (function () {
@@ -6,6 +6,7 @@
   var sw = document.getElementById('dayNight');
   if (!sw) return;
   var foot = document.querySelector('.st-foot'), table = document.getElementById('table');
+  var lamps = document.getElementById('lamps');            // the footer's lamps flip it too
   // the dial's disc only ever turns clockwise: each flip adds half a turn
   var disc = document.getElementById('dialDisc'), turn = 0;
   function isNight() { return table ? table.classList.contains('night') : document.body.classList.contains('night'); }
@@ -13,6 +14,7 @@
     sw.classList.toggle('is-night', n);
     sw.setAttribute('aria-checked', n ? 'true' : 'false');
     sw.setAttribute('aria-label', n ? 'Night. Switch to day' : 'Day. Switch to night');
+    if (lamps) lamps.setAttribute('aria-label', n ? 'Night. Switch to day' : 'Day. Switch to night');
     if (foot) foot.classList.toggle('night', n);
     if (disc) {
       if (turn % 360 !== (n ? 180 : 0)) turn += 180;
@@ -28,6 +30,7 @@
     sw.classList.remove('turning'); void sw.offsetWidth; sw.classList.add('turning');
     set(!isNight());
   });
+  if (lamps) lamps.addEventListener('click', function () { sw.click(); });
   if (disc) disc.style.transition = 'none';
   show(isNight());
   if (disc) { void disc.offsetWidth; disc.style.transition = ''; }
