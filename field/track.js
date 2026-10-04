@@ -308,7 +308,20 @@
   function build(gpxText, opts) {
     var g = parse(gpxText), kind = (opts && opts.kind) || g.kind || 'ride';
     opts = Object.assign({}, opts, { kind: kind });
+    // opts.range [fromKm, toKm]: where the activity really started and ended, set by hand (a ride that
+    // kept recording on the drive home, say). Everything outside it is dropped before the trim.
+    var cut = [];
+    if (opts.range && g.points.length > 2) {
+      var cd = cumDist(g.points), all = cd[cd.length - 1], lo = opts.range[0] * 1000, hi = opts.range[1] * 1000, i0 = 0, i1 = g.points.length - 1;
+      while (i0 < i1 - 1 && cd[i0] < lo) i0++;
+      while (i1 > i0 + 1 && cd[i1] > hi) i1--;
+      var mi = function (m) { return (m / 1609.344).toFixed(1) + ' mi'; };
+      if (i0 > 0) cut.push('You started the ride ' + mi(cd[i0]) + ' in (' + clock(g.points[i0].t) + ').');
+      if (i1 < g.points.length - 1) cut.push('You ended the ride at ' + mi(cd[i1]) + ' (' + clock(g.points[i1].t) + '): cut the ' + mi(all - cd[i1]) + ' after it.');
+      g.points = g.points.slice(i0, i1 + 1);
+    }
     var tr = trim(g.points, opts), pts = tr.points;
+    tr.notes = cut.concat(tr.notes);
     // Stats count the whole activity (riding from home to the trailhead is still riding); the line
     // and the elevation profile show only the published part.
     var st = tr.activity ? stats(g.points.slice(tr.activity[0], tr.activity[1] + 1), kind) : stats(pts, kind);
@@ -337,7 +350,7 @@
     var d = 0; for (var k = i + 1; k <= j; k++) d += dist(pts[k - 1], pts[k]);
     return d >= 1000 ? (d / 1000).toFixed(1) + ' km' : Math.round(d) + ' m';
   }
-  function clock(t) { var d = new Date(t); return ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2); }
+  function clock(t) { if (t == null) return '--:--'; var d = new Date(t); return ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2); }
 
-  return { parse: parse, parseCSV: parseCSV, parseGPX: parseGPX, trim: trim, stats: stats, profile: profile, simplify: simplify, build: build, dist: dist, KINDS: KINDS, drivingRuns: drivingRuns };
+  return { parse: parse, parseCSV: parseCSV, parseGPX: parseGPX, cumDist: cumDist, trim: trim, stats: stats, profile: profile, simplify: simplify, build: build, dist: dist, KINDS: KINDS, drivingRuns: drivingRuns };
 });

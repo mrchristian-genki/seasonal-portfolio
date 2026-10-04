@@ -10,6 +10,7 @@
   var fresh = {};     // name -> { blob, thumb (data URL), b64 } for photos not yet saved
   var audioNew = null, audioGone = false;   // the episode's MP3: one attached since the last save, or removed
   var DRIVEAUD = null;                      // audio files in the note's Drive folder (null until looked up)
+  var trackRaw = null, trackSwap = false;   // the raw track, in this browser only (for setting where it starts and ends)
   var removed = [];   // photo files to delete on save
 
   // ---------- helpers ----------
@@ -96,7 +97,7 @@
   // ---------- list ----------
   function showList() {
     if (dirty && !confirm('Leave without saving?')) return;
-    dirty = false; E = null; fresh = {}; removed = []; INBOX = null; audioNew = null; audioGone = false; DRIVEAUD = null;
+    dirty = false; E = null; fresh = {}; removed = []; INBOX = null; audioNew = null; audioGone = false; DRIVEAUD = null; DRIVETRK = null; trackRaw = null; trackSwap = false;
     route('notes');
     app.innerHTML = '<div class="head"><h1>Field Notes</h1><button id="new" class="primary">New entry</button></div><section id="drive" class="panel drive"><p class="muted">Checking Google Drive…</p></section><div id="list" class="cards"><p class="muted">Loading entries…</p></div>';
     $('#new').onclick = function () { edit(null); };
@@ -297,7 +298,7 @@
     var L = loader('Processing', ['Read the folder', 'Bring in the track', 'Bring in the photos', 'Claude drafts the note', 'Ready for you to read'], label);
     L.at(0);
     api('inbox', null, '&f=' + encodeURIComponent(src)).then(function (j) {
-      INBOX = j; dirty = false; fresh = {}; removed = []; audioNew = null; audioGone = false; DRIVEAUD = null;
+      INBOX = j; dirty = false; fresh = {}; removed = []; audioNew = null; audioGone = false; DRIVEAUD = null; DRIVETRK = null; trackRaw = null; trackSwap = false;
       var name = src.split('/').slice(1).join('/').replace(/^#/, ''), when = guessDate(name);
       E = blank(); savedStatus = null; E.source = src; E.title = guessTitle(name); E.fieldNotes = j.notes || '';
       if (when) E.date = when;
@@ -348,7 +349,7 @@
   }
   function edit(id) {
     if (dirty && !confirm('Leave without saving?')) return;
-    dirty = false; fresh = {}; removed = []; audioNew = null; audioGone = false; DRIVEAUD = null;
+    dirty = false; fresh = {}; removed = []; audioNew = null; audioGone = false; DRIVEAUD = null; DRIVETRK = null; trackRaw = null; trackSwap = false;
     if (!id) { E = blank(); savedStatus = null; route('new'); render(); return Promise.resolve(); }
     app.innerHTML = '<p class="muted">Opening…</p>';
     return api('entry', null, '&id=' + encodeURIComponent(id)).then(function (j) {
@@ -428,8 +429,11 @@
   // ---------- track ----------
   function renderTrack() {
     var t = E.track, box = $('#track');
-    if (!t) {
-      box.innerHTML = '<div id="drop-track" class="drop">Drop the Cyclemeter export (GPX or CSV) here, or <label class="pick">choose<input type="file" accept=".gpx,.csv,.txt,application/gpx+xml" hidden id="pickTrack"></label>. It\'s trimmed here in your browser: the raw track never leaves this device.</div>';
+    if (!t || trackSwap) {
+      box.innerHTML = '<div id="drop-track" class="drop">Drop the Cyclemeter export (GPX or CSV) here, or <label class="pick">choose<input type="file" accept=".gpx,.csv,.txt,application/gpx+xml" hidden id="pickTrack"></label>. It\'s trimmed here in your browser: the raw track never leaves this device.</div><div class="drvtrk"></div>' +
+        (trackSwap ? '<button type="button" class="link" id="keepTrack">Keep the current track</button>' : '');
+      offerDriveTracks(box);
+      if (trackSwap) $('#keepTrack').onclick = function () { trackSwap = false; renderTrack(); };
       var d = $('#drop-track');
       ['dragover', 'dragenter'].forEach(function (ty) { d.addEventListener(ty, function (ev) { ev.preventDefault(); d.classList.add('on'); }); });
       d.addEventListener('dragleave', function () { d.classList.remove('on'); });
@@ -443,8 +447,11 @@
       '<div><b>' + dur(s.movingSec) + '</b><span>moving</span></div><div><b>' + ft(s.maxEleM || 0).toLocaleString() + ' ft</b><span>high point</span></div></div></div>' +
       '<ul class="notes">' + ((t.trim && t.trim.notes) || []).map(function (n) { return '<li' + (/private zone|Warning/.test(n) ? ' class="warn"' : '') + '>' + esc(n) + '</li>'; }).join('') + '</ul>' +
       (t.homeWarning ? '<p class="err">' + esc(t.homeWarning) + '</p>' : '') +
-      '<button id="dropTrack" class="link">Remove the track</button>';
-    $('#dropTrack').onclick = function () { if (confirm('Remove the track from this entry?')) { E.track = null; E.trailhead = null; markDirty(); renderTrack(); } };
+      (trackRaw ? rangeBox() : '<p class="muted">To change where the ride starts or ends, add the track file again: the original isn\'t kept.</p>') +
+      '<div class="row"><button type="button" class="link" id="swapTrack">Replace the track</button><button id="dropTrack" class="link">Remove the track</button></div>';
+    $('#dropTrack').onclick = function () { if (confirm('Remove the track from this entry?')) { E.track = null; E.trailhead = null; trackRaw = null; markDirty(); renderTrack(); } };
+    $('#swapTrack').onclick = function () { trackSwap = true; renderTrack(); };
+    wireRange();
   }
   function mapSvg(line) {
     var pts = (line || []).filter(Boolean); if (pts.length < 2) return '<div class="map"></div>';
@@ -456,20 +463,83 @@
     if (cur.length) segs.push(cur);
     return '<svg class="map" viewBox="0 0 ' + (w * sc + 20).toFixed(0) + ' ' + (h * sc + 20).toFixed(0) + '">' + segs.map(function (s) { return '<polyline points="' + s.join(' ') + '"/>'; }).join('') + '</svg>';
   }
+  // A track's raw file stays in this browser (never uploaded), so where the ride really started and ended
+  // can be set by hand: a ride that kept recording on the drive home is cut where you say.
   function addTrack(file) {
     return file.text().then(function (txt) {
-      var built = Track.build(txt, { kind: E.kind, trailheads: CFG.trailheads, privateZones: CFG.zones });
-      var z = CFG.zones || [], raw = built.raw || [];
-      var inZ = function (p) { return p && z.some(function (zz) { return Track.dist(zz, p) <= (zz.radius || 400); }); };
-      var home = raw.length && (inZ(raw[0]) || inZ(raw[raw.length - 1]));
-      E.track = { stats: built.stats, line: built.line, profile: built.profile, trim: built.trim };
-      if (home) E.track.homeWarning = 'This starts or ends at home. By the show\'s rules, a ride from home is only told views-only: no track, no map, no distances. Remove the track before publishing unless you mean to.';
-      E.trailhead = built.trim.startTrailhead || null;
-      var th = (CFG.trailheads || []).filter(function (t) { return t.id === E.trailhead; })[0];
-      if (!E.id && built.localDate) { E.date = built.localDate; $('#date').value = built.localDate; }
-      if (!$('#place').value && th && th.area) $('#place').value = th.area;
-      markDirty(); renderTrack(); toast('Track added and trimmed.');
+      var g = Track.parse(txt), cd = Track.cumDist(g.points);
+      if (g.points.length < 2) throw new Error('no points in it');
+      trackRaw = { text: txt, cd: cd, t: g.points.map(function (p) { return p.t; }), km: cd[cd.length - 1] / 1000, range: null };
+      trackSwap = false;
+      applyTrack(); toast('Track added and trimmed.');
     }).catch(function (err) { toast('Couldn\'t read that track: ' + err.message, true); });
+  }
+  function applyTrack() {
+    var built = Track.build(trackRaw.text, { kind: E.kind, trailheads: CFG.trailheads, privateZones: CFG.zones, range: trackRaw.range });
+    var z = CFG.zones || [], raw = built.raw || [];
+    var inZ = function (p) { return p && z.some(function (zz) { return Track.dist(zz, p) <= (zz.radius || 400); }); };
+    var home = raw.length && (inZ(raw[0]) || inZ(raw[raw.length - 1]));
+    E.track = { stats: built.stats, line: built.line, profile: built.profile, trim: built.trim };
+    if (home) E.track.homeWarning = 'This starts or ends at home. By the show\'s rules, a ride from home is only told views-only: no track, no map, no distances. Remove the track before publishing unless you mean to.';
+    E.trailhead = built.trim.startTrailhead || null;
+    var th = (CFG.trailheads || []).filter(function (t) { return t.id === E.trailhead; })[0];
+    if (!E.id && built.localDate) { E.date = built.localDate; $('#date').value = built.localDate; }
+    if (!$('#place').value && th && th.area) $('#place').value = th.area;
+    markDirty(); renderTrack();
+  }
+  // the clock time at a distance along the raw track
+  function clockAt(kmv) {
+    var r = trackRaw, i = 0; while (i < r.cd.length - 1 && r.cd[i] < kmv * 1000) i++;
+    var t = r.t[i]; if (t == null) return '';
+    var d = new Date(t); return d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+  }
+  function rangeBox() {
+    var r = trackRaw, from = r.range ? r.range[0] : 0, to = r.range ? r.range[1] : r.km, step = Math.max(0.01, +(r.km / 400).toFixed(2));
+    var lab = function (v) { return mi(v) + ' mi' + (clockAt(v) ? ' · ' + clockAt(v) : ''); };
+    return '<div class="trange"><b>Where did the ride start and end?</b><span class="muted">Forgot to stop recording? Drag the end back to where the ride really ended. ' +
+      'The whole recording is ' + mi(r.km) + ' mi; the cut happens here in your browser.</span>' +
+      '<label>Start <input type="range" id="trS" min="0" max="' + r.km.toFixed(2) + '" step="' + step + '" value="' + from.toFixed(2) + '"><output id="trSo">' + lab(from) + '</output></label>' +
+      '<label>End <input type="range" id="trE" min="0" max="' + r.km.toFixed(2) + '" step="' + step + '" value="' + to.toFixed(2) + '"><output id="trEo">' + lab(to) + '</output></label>' +
+      (r.range ? '<button type="button" class="link" id="trReset">Use the whole recording</button>' : '') + '</div>';
+  }
+  function wireRange() {
+    var S = $('#trS'), En = $('#trE'); if (!S) return;
+    var lab = function (v) { return mi(v) + ' mi' + (clockAt(v) ? ' · ' + clockAt(v) : ''); };
+    var gap = trackRaw.km * 0.02;
+    S.oninput = function () { if (+S.value > +En.value - gap) S.value = Math.max(0, +En.value - gap); $('#trSo').textContent = lab(+S.value); };
+    En.oninput = function () { if (+En.value < +S.value + gap) En.value = Math.min(trackRaw.km, +S.value + gap); $('#trEo').textContent = lab(+En.value); };
+    var set = function () {
+      var a = +S.value, b = +En.value;
+      trackRaw.range = a <= 0.001 && b >= trackRaw.km - 0.001 ? null : [a, b];
+      applyTrack();
+    };
+    S.onchange = set; En.onchange = set;
+    var rs = $('#trReset'); if (rs) rs.onclick = function () { trackRaw.range = null; applyTrack(); };
+  }
+  // track files in the note's Drive folder, offered for adding or replacing the track
+  var DRIVETRK = null;
+  function driveTracks() {
+    if (!E.source) return Promise.resolve([]);
+    if (DRIVETRK) return Promise.resolve(DRIVETRK);
+    return api('inbox', null, '&f=' + encodeURIComponent(E.source))
+      .then(function (j) { return (DRIVETRK = j.files.filter(function (f) { return f.kind === 'track'; })); })
+      .catch(function () { return []; });
+  }
+  function offerDriveTracks(box) {
+    driveTracks().then(function (list) {
+      var d = $('.drvtrk', box); if (!d || !list.length) return;
+      d.innerHTML = '<p class="muted">In this note\'s Drive folder:</p>' + list.map(function (f) {
+        return '<button type="button" class="small useTrk" data-n="' + esc(f.name) + '">Use ' + esc(f.name.split('/').pop()) + ' <small>' + size(f.bytes) + '</small></button>';
+      }).join(' ');
+      $$('.useTrk', d).forEach(function (b) {
+        b.onclick = function () {
+          b.disabled = true; b.textContent = 'Reading…';
+          fetch(driveUrl(b.getAttribute('data-n'))).then(function (r) { if (!r.ok) throw new Error('couldn\'t fetch it'); return r.blob(); })
+            .then(function (bl) { return addTrack(new File([bl], b.getAttribute('data-n').split('/').pop())); })
+            .catch(function (err) { toast('Couldn\'t read that track: ' + err.message, true); renderTrack(); });
+        };
+      });
+    });
   }
 
   // ---------- photos ----------
