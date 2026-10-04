@@ -239,6 +239,15 @@ try {
         case 'POST drive':
             json_out((new Drive($cfg))->start());
 
+        // A folder that won't be used: set aside (owner only), and its server copy deleted if asked.
+        case 'POST ignore':
+            owner_only();
+            json_out((new Drive($cfg))->ignore((string) ($body['source'] ?? ''), !empty($body['drop'])));
+
+        case 'POST unignore':
+            owner_only();
+            json_out((new Drive($cfg))->unignore((string) ($body['source'] ?? '')));
+
         // Process Content: what's in one inbox folder, and its photos, tracks and notes one at a time
         case 'GET inbox':
             json_out((new Drive($cfg))->files((string) ($_GET['f'] ?? '')));
@@ -302,7 +311,7 @@ try {
         // People, for the owner: editors and their passwords (shown once, when made).
         case 'GET users':
             owner_only();
-            json_out(['users' => array_map(fn($u) => ['name' => $u['name'], 'added' => $u['added'] ?? null], studio_users())]);
+            json_out(['users' => array_map(fn($u) => ['name' => $u['name'], 'user' => $u['user'] ?? studio_username($u['name']), 'added' => $u['added'] ?? null], studio_users())]);
 
         case 'POST useradd':
             owner_only();
@@ -310,19 +319,24 @@ try {
             if (!preg_match('/^[\p{L}\p{N} .\'-]{1,40}$/u', $name)) json_fail('Give a name of up to 40 letters.');
             $users = studio_users();
             foreach ($users as $u) if (strcasecmp($u['name'], $name) === 0) json_fail('There is already someone called that.');
+            // a username from the name, kept apart from everyone else's (and the owner's)
+            $taken = array_merge(studio_owner_users($cfg), array_map(fn($u) => $u['user'] ?? studio_username($u['name']), $users));
+            $base = studio_username($name); $user = $base; $k = 2;
+            while (in_array($user, $taken, true)) $user = $base . $k++;
             $pw = new_password();
-            $users[] = ['name' => $name, 'hash' => password_hash($pw, PASSWORD_DEFAULT), 'role' => 'editor', 'added' => time()];
+            $users[] = ['name' => $name, 'user' => $user, 'hash' => password_hash($pw, PASSWORD_DEFAULT), 'role' => 'editor', 'added' => time()];
             studio_save_users($users);
-            json_out(['name' => $name, 'password' => $pw]);
+            json_out(['name' => $name, 'user' => $user, 'password' => $pw]);
 
         case 'POST userreset':
             owner_only();
             $name = (string) ($body['name'] ?? ''); $users = studio_users(); $pw = null;
-            foreach ($users as &$u) if ($u['name'] === $name) { $pw = new_password(); $u['hash'] = password_hash($pw, PASSWORD_DEFAULT); }
+            $user = '';
+            foreach ($users as &$u) if ($u['name'] === $name) { $pw = new_password(); $u['hash'] = password_hash($pw, PASSWORD_DEFAULT); $user = $u['user'] = $u['user'] ?? studio_username($u['name']); }
             unset($u);
             if ($pw === null) json_fail('No one by that name.');
             studio_save_users($users);
-            json_out(['name' => $name, 'password' => $pw]);
+            json_out(['name' => $name, 'user' => $user, 'password' => $pw]);
 
         case 'POST userdel':
             owner_only();

@@ -26,6 +26,12 @@ function have(array $cfg, string $k): string { return empty($cfg[$k]) ? '' : ' [
 
 echo "Studio setup for christiangehrke.com\n\n";
 
+$u = ask('Your Studio username [' . ($cfg['owner_user'] ?? 'christian') . '; Return keeps it]: ', false);
+if ($u !== '') {
+    if (!preg_match('/^[a-z0-9]{2,24}$/', strtolower($u))) exit("  Letters and digits only. Nothing saved.\n");
+    $cfg['owner_user'] = strtolower($u);
+}
+
 while (true) {
     $p = ask('Studio password (12+ characters)' . have($cfg, 'password_hash') . ': ', true);
     if ($p === '' && !empty($cfg['password_hash'])) break;

@@ -102,6 +102,7 @@ final class Drive {
             'copied' => array_map($clean, array_slice($copied, -40)), 'copiedCount' => count($copied),
             'errors' => array_map($clean, array_slice($errors, -10)),
             'inbox' => $this->inbox(),
+            'ignored' => array_map(fn($k, $v) => ['source' => $k] + $v, array_keys($this->ignored()), array_values($this->ignored())),
         ];
     }
 
@@ -109,7 +110,7 @@ final class Drive {
     // files at its top level grouped by the day they were taken. Each item says what's in it and when its
     // newest file arrived, and which note it became (if any) and how many files came after that.
     private function inbox(): array {
-        $out = []; $done = $this->processed();
+        $out = []; $done = $this->processed(); $skip = $this->ignored();
         foreach ($this->folders as $f) {
             $root = $this->dest($f);
             if (!is_dir($root)) continue;
@@ -124,8 +125,39 @@ final class Drive {
                 $out[] = $this->item("$f/#$day", $day, array_map(fn($x) => $this->fileInfo($x['path'], $x['rel']), $files), $done, false) + ['date' => $day];
             }
         }
+        $out = array_values(array_filter($out, fn($x) => !isset($skip[$x['source']])));
         usort($out, fn($a, $b) => $b['arrived'] <=> $a['arrived']);
         return $out;
+    }
+
+    // ---------- folders set aside: hidden from the inbox for good, even if Drive copies them again ----------
+    private function ignoreFile(): string { return studio_private_dir() . '/ignored.json'; }
+    public function ignored(): array {
+        $f = $this->ignoreFile();
+        return is_file($f) ? (json_decode((string) file_get_contents($f), true) ?: []) : [];
+    }
+    /** Set an inbox item aside; with $drop, also delete the server's copy of a folder (Drive is untouched). */
+    public function ignore(string $source, bool $drop): array {
+        $r = $this->resolve($source);
+        if ($r === null) throw new RuntimeException('That folder isn\'t in the inbox.');
+        $all = $this->ignored();
+        $all[$source] = ['at' => time(), 'dropped' => $drop && $r['day'] === null];
+        file_put_contents($this->ignoreFile(), json_encode($all, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), LOCK_EX);
+        if ($drop && $r['day'] === null) $this->removeTree($r['root']);
+        return $this->status();
+    }
+    public function unignore(string $source): array {
+        $all = $this->ignored(); unset($all[$source]);
+        file_put_contents($this->ignoreFile(), json_encode($all, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), LOCK_EX);
+        return $this->status();
+    }
+    // only ever a folder inside a watched folder's copy on this server (resolve() has checked that)
+    private function removeTree(string $dir): void {
+        $real = realpath($dir); $home = realpath($this->home . '/incoming');
+        if (!$real || !$home || !str_starts_with($real, $home . '/') || substr_count(substr($real, strlen($home)), '/') < 2) return;
+        $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($real, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST);
+        foreach ($it as $f) $f->isDir() && !$f->isLink() ? @rmdir($f->getPathname()) : @unlink($f->getPathname());
+        @rmdir($real);
     }
 
     private function item(string $source, string $name, array $files, array $done, bool $dir): array {

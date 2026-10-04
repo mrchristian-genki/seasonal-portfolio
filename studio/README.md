@@ -119,9 +119,10 @@ Optional setting: `'ffmpeg'` (path). Its work sits in `~/studio-private/video` a
 
 ## People and review
 
-The owner logs in with the password in the private config (`'owner_name'` sets the name shown). Under
-**People** on the notes list the owner adds **editors**: each gets their own password, shown once, to send
-them privately. Editors can make and change notes, bring in from Drive, draft with Claude and make loops,
+Everyone logs in with a username and password. The owner's username is `christian` (or `owner`; setup.php
+can set another, `'owner_user'`) with the password in the private config (`'owner_name'` sets the name
+shown). Under **People** on the notes list the owner adds **editors**: each gets a username made from
+their name and their own password, shown once, to send them privately. Editors can make and change notes, bring in from Drive, draft with Claude and make loops,
 but they can't publish, take a post down or change what's live: their saves go to a branch of the repo,
 `review/<id>`, which the deploy never builds. The owner sees them under **Ready for review** and on the
 note: **Approve** merges the branch in (a live post updates a minute later), **Send back** shows the
