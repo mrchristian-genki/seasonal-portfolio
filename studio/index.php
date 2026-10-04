@@ -44,7 +44,7 @@ $in = studio_logged_in();
 <link rel="icon" href="/favicon.ico?v=2" sizes="any"><link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml"><link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2"><meta name="theme-color" content="#2a1d14">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&family=Special+Elite&display=swap">
-<link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>-14">
+<link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>-15">
 <link rel="stylesheet" href="table/table.css?v=41">
 </head>
 <?php if (!$in): ?>
@@ -100,6 +100,18 @@ $in = studio_logged_in();
   <?php if ($error): ?><p class="err"><?= h($error) ?></p><?php endif; ?>
   <button type="submit">Log in</button>
 </form>
+<section class="about-studio" aria-labelledby="whatH">
+  <h2 id="whatH">What the Studio does</h2>
+  <p class="lede">The Studio is where a day out becomes a Field Note: a written post with photos and a map, and a short episode for the Field Notes podcast. It's a private workshop, so it needs a password; what it makes is public on <a href="/play/">Play</a>.</p>
+  <ol class="steps">
+    <li><b>Bring it in</b><span>Photos, video, the ride's track and any notes go into a Google Drive folder. One tap copies them to the server.</span></li>
+    <li><b>Sort it out</b><span>Each folder becomes a draft note, grouped by day. Photos are resized and their location data removed before they leave the device, and private places are trimmed off the track.</span></li>
+    <li><b>Draft with Claude</b><span>Claude reads the notes, the track and the photos, then writes the post, the captions and an episode script. Where it isn't sure, it asks, and the answers go back in one pass.</span></li>
+    <li><b>Record the episode</b><span>The script is read by a voice tool. Drop in the audio and it's levelled to podcast loudness and made into an MP3 right here in the browser.</span></li>
+    <li><b>Publish</b><span>Save keeps everything in the site's repository. Publish, and Play and the podcast feed update in about a minute.</span></li>
+  </ol>
+  <p class="more"><a href="/play/">See what it's made on Play →</a></p>
+</section>
 </main>
 <?php else: ?>
 <main id="app"><p class="muted">Loading…</p></main>

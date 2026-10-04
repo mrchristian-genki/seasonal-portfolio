@@ -240,3 +240,19 @@ body.busy{overflow:hidden}
 .savebar{z-index:100}
 body:has(.savebar){padding-bottom:64px}
 #audio .credit{display:block;margin-top:6px}
+/* the login page explains itself: what the Studio is for, in five steps on brass-trimmed cards */
+.login-main{flex-direction:column;gap:44px}
+.about-studio{width:min(100%,880px);color:#e9dcc0}
+.about-studio h2{margin:0 0 10px;text-align:center;font:400 26px/1.15 "Special Elite",Georgia,serif;letter-spacing:.04em;color:#e2c483}
+.about-studio .lede{max-width:640px;margin:0 auto 22px;text-align:center;color:#c9b48e;line-height:1.55}
+.about-studio a{color:#e2c483}
+.about-studio .steps{list-style:none;counter-reset:st;margin:0;padding:0;display:grid;grid-template-columns:1fr;gap:14px}
+@media (min-width:760px){.about-studio .steps{grid-template-columns:repeat(6,1fr)} .about-studio .steps li{grid-column:span 2} .about-studio .steps li:nth-child(4){grid-column:2/4} .about-studio .steps li:nth-child(5){grid-column:4/6}}
+.about-studio .steps li{counter-increment:st;position:relative;padding:16px 16px 16px 58px;border-radius:8px;
+  background:linear-gradient(180deg,rgba(60,40,22,.85),rgba(34,22,12,.9));border:1px solid #6b4f28;box-shadow:0 6px 14px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,230,170,.08)}
+.about-studio .steps li::before{content:counter(st);position:absolute;left:14px;top:14px;width:30px;height:30px;border-radius:50%;
+  display:grid;place-items:center;font:800 15px/1 "Nunito",system-ui,sans-serif;color:#2a1c0a;
+  background:radial-gradient(circle at 35% 30%,#fbe3a2,#c99a48 60%,#7d5a22);box-shadow:0 2px 4px rgba(0,0,0,.5)}
+.about-studio .steps b{display:block;margin:4px 0 4px;color:#f1e3c4}
+.about-studio .steps span{display:block;font-size:14.5px;line-height:1.5;color:#c9b48e}
+.about-studio .more{margin:20px 0 0;text-align:center;font-weight:700}
