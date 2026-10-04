@@ -133,7 +133,8 @@
    switch plays the dusk or dawn clip, then the matching loop (river.js). Stills show until the video
    is ready, and instead of it when it can't play or motion is reduced. The props layer sits above. */
 .st-hero .river{position:absolute;inset:0;overflow:hidden;background:#2a1d12}
-.river img,.river video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 47%;display:block}
+/* the clips are the river strip of the 4K frames (rows 20-74%), cropped so nothing is stretched */
+.river img,.river video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 52%;display:block}
 .river .rv-still.night{opacity:0;transition:opacity 1.2s ease}
 .river.is-night .rv-still.night{opacity:1}
 .river video{opacity:0;transition:opacity .45s ease}
@@ -141,4 +142,3 @@
 .st-hero .table{background:none}
 .st-hero .table::after{display:none}
 .st-hero .table.night .shade{display:none}
-@media (max-width:640px){.river img,.river video{scale:1.75;transform-origin:50% 47%}}
