@@ -127,3 +127,45 @@
 .dash .range p{grid-row:auto;grid-column:auto;grid-area:p;margin:2px 0 0;text-align:center}
 .dash .range small{display:block;margin:0}
 .dash .range b{font-size:15px}
+
+/* NEON (Play): a deep-navy instrument panel, lit in runs of colour (teal to violet, pink to orange) */
+.dash.neon{--dk:#eef1ff;--dk2:#c3c9f2;--dk3:#8d95cf;--dl:rgba(140,150,255,.18);--dc:#1a2156;--da:#ff5fa8;--dsoft:rgba(120,130,255,.12);
+  --g0:linear-gradient(0deg,#2b6cff,#29e0d6);--g1:linear-gradient(0deg,#3a58ff,#4cc9ff);--g2:linear-gradient(0deg,#5b5bff,#8fb4ff);--g3:linear-gradient(0deg,#5a5f9e,#9aa0d6);
+  --g4:linear-gradient(0deg,#b44dff,#ff8de0);--g5:linear-gradient(0deg,#ff3d9a,#ff9f6b);--g6:linear-gradient(0deg,#ff2f6d,#ffb347);
+  --tu:#ff4f9a;--tf:#7b6cff;--td:#2fd6e0;--tsp:#2c3577;
+  padding:12px;border-radius:18px;background:radial-gradient(120% 90% at 10% 0%,#2a2f8a 0,#141a46 55%,#0e1336 100%);box-shadow:0 10px 30px rgba(14,19,54,.35)}
+.dash.neon .dc{border:1px solid rgba(140,150,255,.16);background:linear-gradient(180deg,rgba(40,48,120,.75),rgba(24,30,82,.75));border-radius:14px}
+.dash.neon .dc h3{color:#9ea6ea;letter-spacing:.1em}
+.dash.neon .gb i{background:var(--g3)} .dash.neon .gb i.g0{background:var(--g0)} .dash.neon .gb i.g1{background:var(--g1)} .dash.neon .gb i.g2{background:var(--g2)}
+.dash.neon .gb i.g4{background:var(--g4)} .dash.neon .gb i.g5{background:var(--g5)} .dash.neon .gb i.g6{background:var(--g6)}
+.dash.neon .gb i{border-radius:6px;box-shadow:0 0 12px rgba(255,95,168,.18)}
+/* ring gauges */
+.dash .gauge.ring svg{max-width:170px}
+.dash .ring .rs{fill:none;stroke:rgba(150,160,255,.16);stroke-width:13}
+.dash .ring .rs.on{filter:drop-shadow(0 0 3px rgba(255,255,255,.35))}
+.dash .ring .rr-o{fill:none;stroke-width:2.5;opacity:.85;filter:drop-shadow(0 0 6px rgba(255,255,255,.25))}
+.dash .ring .rr-i{fill:rgba(10,14,48,.55);stroke:rgba(150,160,255,.18)}
+.dash .ring .rv{font:800 30px var(--dd);fill:#fff;text-anchor:middle}
+.dash .ring .ru{font:700 12px system-ui,sans-serif;fill:#9ea6ea;text-anchor:middle;letter-spacing:.06em}
+.dash .ring figcaption span{color:#c3c9f2;font-weight:700}
+@media (prefers-reduced-motion:no-preference){.dash .ring .rs.on{animation:ringon .35s both}}
+@keyframes ringon{from{opacity:0}}
+/* the speed line: a glowing run of colour */
+.dash.neon .chart .l0{stop-color:#29e0d6} .dash.neon .chart .l1{stop-color:#b44dff} .dash.neon .chart .l2{stop-color:#ff7a59}
+.dash.neon .chart .ln{stroke:url(#sgl);stroke-width:2;filter:drop-shadow(0 0 4px rgba(180,77,255,.6))}
+.dash.neon .chart .s0{stop-color:#b44dff;stop-opacity:.35} .dash.neon .chart .s1{stop-color:#2b6cff;stop-opacity:0}
+.dash.neon .chart .avg{stroke:#29e0d6} .dash.neon .chart .gl{stroke:rgba(140,150,255,.15)} .dash.neon .chart .ax{fill:#8d95cf}
+.dash.neon .chart .topdot{fill:#0e1336;stroke:#ff7a59;stroke-width:3}
+.dash.neon .cap .k{border-top-color:#b44dff} .dash.neon .cap .k.avg{border-top-color:#29e0d6} .dash.neon .cap .k.top{background:#ff7a59}
+/* climbing as glowing bars, splits as capsules */
+.dash.neon .udb.up i{background:linear-gradient(0deg,#ff2f6d,#ffb347);box-shadow:0 0 14px rgba(255,79,154,.45);border-radius:12px}
+.dash.neon .udb.down i{background:linear-gradient(180deg,#29e0d6,#2b6cff);box-shadow:0 0 14px rgba(41,224,214,.4);border-radius:12px}
+.dash.neon .range .bar{background:linear-gradient(90deg,#2b6cff,#b44dff,#ff7a59);box-shadow:0 0 10px rgba(180,77,255,.5)}
+.dash.neon .spl .sb{position:relative}
+.dash.neon .sb i{border-radius:999px;background:linear-gradient(0deg,#5b5bff,#29e0d6);opacity:1;box-shadow:0 0 10px rgba(41,224,214,.3)}
+.dash.neon .sb.best i{background:linear-gradient(0deg,#ff2f6d,#ffb347);box-shadow:0 0 12px rgba(255,79,154,.55)}
+.dash.neon .donut .seg{stroke-linecap:round}
+.dash.neon .donut .dn-b{fill:#fff}
+.dash.neon .rose .pet{fill:#b44dff;fill-opacity:.7;stroke:#ff8de0} .dash.neon .rose .rr{stroke:rgba(140,150,255,.25)}
+.dash.neon dl div{background:rgba(120,130,255,.1);border:1px solid rgba(140,150,255,.18)}
+.dash.neon dd b{color:#fff} .dash.neon dt{color:#8d95cf}

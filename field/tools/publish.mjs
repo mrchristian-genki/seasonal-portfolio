@@ -172,7 +172,7 @@ ${t ? `<section class="route" aria-label="The route"><h2>The route</h2>
 <div class="stat"><b>${mi(s.distanceKm)}</b><span>Distance</span></div><div class="stat"><b>${dur(s.movingSec)}</b><span>Moving time</span></div>
 <div class="stat"><b>${ft(s.gainM)}</b><span>Climbing</span></div><div class="stat"><b>${ft(s.maxEleM)}</b><span>High point</span></div></div></div>
 <div class="profile" id="profile"></div>
-<div class="dash" id="dash" hidden></div>
+<div class="dash neon" id="dash" hidden></div>
 ${t.trim && t.trim.shownKm != null && t.trim.shownKm < s.distanceKm - 0.2 ? `<p class="note">The map shows ${mi(t.trim.shownKm)} of the ${mi(s.distanceKm)}; the numbers count all of it.</p>` : ''}
 </section>` : ''}
 <article class="post">
