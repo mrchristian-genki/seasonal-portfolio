@@ -58,6 +58,7 @@ attach), animated clips and the prints-on-a-table layout.
 | `lib/bootstrap.php` | Private config, session (secure cookie, idle timeout), login throttle (5 tries per 15 min), headers |
 | `lib/github.php` | Reads and commits to the repo through the GitHub API |
 | `lib/drive.php` | Bring in from Drive: starts `rclone copy` in the background and reads back its log |
+| `lib/video.php` | Video loops: ffmpeg makes a small preview of a Drive video, then cuts the chosen part into a silent loop |
 | `lib/drafter.php` | The Claude call (official Anthropic PHP SDK, structured output, server-side fallback) |
 | `assets/studio.js`, `assets/studio.css` | The page. `assets/track.js` is copied from `field/track.js` at deploy |
 | `tools/setup.php` | One-time setup over SSH; writes the private config |
@@ -100,6 +101,21 @@ DreamHost (outside the web folder, mode 600): the password hash, the Anthropic A
 To watch more folders later (the AI content, phase 2), add them to the private config, e.g.
 `'drive_folders' => ['Rides', 'Studio'],`. Optional settings: `'rclone'` (path) and `'drive_remote'`.
 The copy's log is `~/studio-private/drive-sync.log`.
+
+## Video loops (once)
+
+The videos that come in from Drive stay on the server. In a note, **Video loops** makes a small preview of
+one to scrub through, and cuts the part you choose (30 seconds at most) into a silent loop: 960 px on the
+long edge, H.264, with a poster frame; iPhone HDR is toned to ordinary colour. The loop is committed with
+the next Save and plays in place in the post, like the other clips. It needs ffmpeg on DreamHost:
+```
+ssh adapt123@pdx1-shared-a1-09.dreamhost.com
+mkdir -p ~/bin && cd ~/bin
+curl -LO https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz
+tar xJf ffmpeg-release-amd64-static.tar.xz --wildcards --strip-components=1 '*/ffmpeg' && rm ffmpeg-release-amd64-static.tar.xz
+~/bin/ffmpeg -version | head -1
+```
+Optional setting: `'ffmpeg'` (path). Its work sits in `~/studio-private/video` and is cleared after two weeks.
 
 ## For Claude Code sessions
 

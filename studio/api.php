@@ -7,6 +7,7 @@ require __DIR__ . '/lib/bootstrap.php';
 require __DIR__ . '/lib/github.php';
 require __DIR__ . '/lib/drafter.php';
 require __DIR__ . '/lib/drive.php';
+require __DIR__ . '/lib/video.php';
 require __DIR__ . '/vendor/autoload.php';
 
 studio_security_headers();
@@ -25,7 +26,8 @@ $gh = new GitHub($cfg);
 const EVENTS = 'field/data/events';
 const PHOTOS = 'field/data/photos';
 const AUDIO = 'field/data/audio';
-const AUDIO_MAX = 40_000_000;           // an episode MP3 is a few MB; this leaves plenty of room
+const AUDIO_MAX = 40_000_000;
+const CLIP_MAX = 40_000_000;            // a loop of up to 30 s at 960 px is a few MB           // an episode MP3 is a few MB; this leaves plenty of room
 
 // An MP3 starts with an ID3 tag or an MPEG audio frame.
 function is_mp3(string $head): bool {
@@ -136,6 +138,15 @@ try {
                 if (!preg_match('/^\d{2}\.jpg$/', $n) || !preg_match('/^[0-9a-f]{40}$/', $sha)) json_fail('Bad photo.');
                 $files[PHOTOS . "/$id/$n"] = ['sha' => $sha];
             }
+            // Video loops made on this server (lib/video.php) go straight from it into the commit.
+            $vid = new Video($cfg);
+            foreach ($body['newClips'] ?? [] as $c) {
+                $n = (string) ($c['name'] ?? ''); $mp4 = $vid->file((string) ($c['loop'] ?? ''), 'loop'); $jpg = $vid->file((string) ($c['loop'] ?? ''), 'poster');
+                if (!preg_match('/^clip-\d{1,3}$/', $n) || !$mp4 || !$jpg) json_fail('A video loop is missing on the server. Make it again.');
+                if (filesize($mp4) > CLIP_MAX) json_fail('A video loop is too big.');
+                $files[PHOTOS . "/$id/$n.mp4"] = ['sha' => $gh->blob(base64_encode((string) file_get_contents($mp4)))];
+                $files[PHOTOS . "/$id/$n.jpg"] = ['sha' => $gh->blob(base64_encode((string) file_get_contents($jpg)))];
+            }
             foreach ($body['removePhotos'] ?? [] as $n) {
                 if (preg_match('/^[a-z0-9-]{1,40}\.(jpg|mp4)$/', (string) $n)) $files[PHOTOS . "/$id/$n"] = null;
             }
@@ -175,6 +186,37 @@ try {
 
         case 'GET inboxfile':
             (new Drive($cfg))->send((string) ($_GET['f'] ?? ''), (string) ($_GET['n'] ?? ''));
+
+        // Video loops: a video in the note's Drive folder gets a small preview to scrub through, then the
+        // chosen part is cut into a loop, all on this server. Both run in the background; the page asks again.
+        case 'GET video':
+            @set_time_limit(60);
+            $path = (new Drive($cfg))->path((string) ($_GET['f'] ?? ''), (string) ($_GET['n'] ?? ''));
+            if ($path === null || Drive::kind($path) !== 'video') json_fail('No such video.', 404);
+            json_out((new Video($cfg))->preview($path, !empty($_GET['retry'])));
+
+        case 'POST loop':
+            $path = (new Drive($cfg))->path((string) ($body['f'] ?? ''), (string) ($body['n'] ?? ''));
+            if ($path === null || Drive::kind($path) !== 'video') json_fail('No such video.', 404);
+            json_out((new Video($cfg))->loop($path, (float) ($body['from'] ?? 0), (float) ($body['to'] ?? 0), !empty($body['retry'])));
+
+        case 'GET vfile':
+            $t = (string) ($_GET['t'] ?? '');
+            if (!in_array($t, ['preview', 'loop', 'poster'], true)) json_fail('No such file.', 404);
+            $f = (new Video($cfg))->file((string) ($_GET['k'] ?? ''), $t);
+            if ($f === null) json_fail('No such file.', 404);
+            studio_send_file($f, $t === 'poster' ? 'image/jpeg' : 'video/mp4');
+
+        // A saved loop, for the editor's player (fetched once and played from memory, like the audio).
+        case 'GET clip':
+            $id = $_GET['id'] ?? ''; $n = $_GET['n'] ?? '';
+            if (!valid_id($id) || !preg_match('/^[a-z0-9-]{1,40}\.mp4$/', $n)) json_fail('No such clip.', 404);
+            $bytes = $gh->readBytes(PHOTOS . "/$id/$n");
+            if ($bytes === null) json_fail('No such clip.', 404);
+            header('Content-Type: video/mp4');
+            header('Cache-Control: private, max-age=600');
+            echo $bytes;
+            exit;
 
         default:
             json_fail('Unknown request.', 404);
