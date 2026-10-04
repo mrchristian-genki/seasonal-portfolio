@@ -156,12 +156,16 @@
   addEventListener('load', function () {
     setTimeout(function () { var l = document.createElement('link'); l.rel = 'prefetch'; l.href = RX.src; document.head.appendChild(l); }, 6000);
   });
-  var RX = { src: 'assets/loader/reactor.mp4', webm: 'assets/loader/reactor.webm', poster: 'assets/loader/reactor-start.jpg', t0: 0.3, end: 0.05 };
+  var RX = { src: 'assets/loader/reactor-loop.mp4', webm: 'assets/loader/reactor-loop.webm', poster: 'assets/loader/reactor-start.jpg' };
   function loader(title, steps, sub) {
     var el = document.createElement('div'); el.className = 'loader'; el.setAttribute('role', 'alertdialog'); el.setAttribute('aria-live', 'polite');
     var marks = [100, 75, 50, 25, 0].map(function (n) { return '<span class="rx-mark" style="--at:' + n + '"><i></i>' + n + '%</span>'; }).join('');
     el.innerHTML = '<div class="ld-card"><div class="rx">' +
-        '<video muted playsinline preload="auto" poster="' + RX.poster + '"><source src="' + RX.src + '" type="video/mp4"><source src="' + RX.webm + '" type="video/webm"></video>' +
+        // the empty reactor is the backdrop; a short loop of the full, bubbling tube plays over it, shown only
+        // up to the fuel level inside the tube, while its glow on the rest of the panel brightens with it
+        '<video class="rx-glow" muted playsinline loop autoplay preload="auto"><source src="' + RX.src + '" type="video/mp4"><source src="' + RX.webm + '" type="video/webm"></video>' +
+        '<video class="rx-fuel" muted playsinline loop autoplay preload="auto"><source src="' + RX.src + '" type="video/mp4"><source src="' + RX.webm + '" type="video/webm"></video>' +
+        '<span class="rx-surface" aria-hidden="true"></span>' +
         '<div class="rx-top"><h2>' + esc(title) + '</h2>' + (sub ? '<p class="ld-sub">' + esc(sub) + '</p>' : '') + '<p class="rx-now"></p></div>' +
         '<div class="rx-scale" aria-hidden="true"><div class="rx-lit"></div>' + marks + '</div>' +
         '<div class="rx-tag" aria-hidden="true">STATUS: <b>EMPTY</b></div>' +
@@ -171,33 +175,14 @@
       '<p class="ld-hold">Hold on a moment, this page is working.</p></div>';
     document.body.appendChild(el); document.body.classList.add('busy');
     requestAnimationFrame(function () { el.classList.add('on'); });
-    var items = $$('.ld-steps li', el), cur = -1, shown = 0, finished = false, closed = false;
-    var vid = $('video', el), now = $('.rx-now', el), tag = $('.rx-tag b', el), plate = $('.rx-plate b', el), rx = $('.rx', el);
+    var items = $$('.ld-steps li', el), cur = -1, shown = 0;
+    var now = $('.rx-now', el), tag = $('.rx-tag b', el), plate = $('.rx-plate b', el), rx = $('.rx', el);
     var calmMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-    // iPhone Safari ignores preload and won't decode a frame until the video has played once, so seeking
-    // alone never paints: start it muted for a moment, then pause and drive it by seeking as everywhere else
-    vid.muted = true; vid.playsInline = true;
-    var primed = false;
-    function prime() {
-      if (primed) return; primed = true;
-      var p = vid.play();
-      if (p && p.then) p.then(function () { vid.pause(); }, function () { vid.load(); });
-      else vid.pause();
-    }
-    prime();
-    // follow the target frame smoothly; while waiting, the fuel churns a little around its level
-    var at = RX.t0, last = 0;
-    function frame(ts) {
-      if (closed) return;
-      var dt = last ? Math.min(0.1, (ts - last) / 1000) : 0; last = ts;
-      var dur = vid.duration || 5.17, target = RX.t0 + shown * (dur - RX.end - RX.t0);
-      at += (target - at) * Math.min(1, dt * 3.2);
-      var wiggle = (!finished && !calmMotion && shown > 0.04 && Math.abs(target - at) < 0.02) ? Math.sin(ts / 700) * 0.07 : 0;
-      var want = Math.max(0, Math.min(dur - 0.02, at + wiggle));
-      if (vid.readyState >= 1 && !vid.seeking && Math.abs(vid.currentTime - want) > 1 / 60) { if (!vid.paused) vid.pause(); vid.currentTime = want; }
-      requestAnimationFrame(frame);
-    }
-    requestAnimationFrame(frame);
+    $$('video', el).forEach(function (v) {
+      v.muted = true; v.playsInline = true;
+      if (calmMotion) { v.removeAttribute('autoplay'); v.pause(); return; }
+      var p = v.play(); if (p && p.catch) p.catch(function () {});
+    });
     function show(frac) {
       frac = Math.max(shown, Math.min(1, frac)); shown = frac;
       rx.style.setProperty('--fill', frac.toFixed(3));
@@ -207,7 +192,7 @@
     }
     function live() { return items.filter(function (li) { return !li.classList.contains('skipped'); }).length || 1; }
     function close(ms) {
-      setTimeout(function () { el.classList.remove('on'); setTimeout(function () { closed = true; el.remove(); }, 300); }, ms);
+      setTimeout(function () { el.classList.remove('on'); setTimeout(function () { el.remove(); }, 300); }, ms);
       document.body.classList.remove('busy');
     }
     show(0);
@@ -223,10 +208,10 @@
       skip: function (i) { if (items[i]) items[i].classList.add('skipped'); },
       done: function () {
         items.forEach(function (li) { if (!li.classList.contains('skipped')) { li.classList.remove('now'); li.classList.add('done'); } });
-        finished = true; now.textContent = 'Complete'; show(1); el.classList.add('complete'); close(1300);
+        now.textContent = 'Complete'; show(1); el.classList.add('complete'); close(1300);
       },
       fail: function (msg) {
-        finished = true; el.classList.add('failed'); tag.textContent = 'FAULT';
+        el.classList.add('failed'); tag.textContent = 'FAULT';
         if (items[cur]) { items[cur].classList.remove('now'); items[cur].classList.add('bad'); $('small', items[cur]).textContent = msg; now.textContent = msg; }
         close(3200);
       }

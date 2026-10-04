@@ -36,9 +36,10 @@ Log in, then:
   as waiting for the video step and stay on the server.
 - **Add N new** (on an updated folder): opens the note and brings in just the files that came later.
 
-- **The loader**: while the Studio works, the reactor panel (`assets/loader/reactor.mp4`, a WebM copy as a
-  fallback) is moved to the frame matching the progress, so the fuel rises with the real work and is full
-  when it is done. The scale, status tag and plaque are drawn over the video in CSS.
+- **The loader**: while the Studio works, the reactor panel fills with the real progress: the empty
+  reactor is the backdrop, and a short loop of the full, bubbling tube (`assets/loader/reactor-loop.mp4`,
+  WebM fallback, 90 KB) plays over it, cut to the glass up to the fuel level, its glow coming up with it.
+  The scale, status tag and plaque are drawn over it in CSS.
 
 - **The header** is the river table: a looping video of the glowing river (`table/a/river-day|night`),
   with the day/night lamps and Marley's visits on top. The switch plays the dusk or dawn clip
