@@ -45,8 +45,8 @@ $in = studio_logged_in();
 
 <section class="st-hero" aria-label="Studio">
   <div class="river" id="river" aria-hidden="true">
-    <img class="rv-still day" src="table/a/river-day.webp?v=3" alt="">
-    <img class="rv-still night" src="table/a/river-night.webp?v=3" alt="">
+    <img class="rv-still day" src="table/a/river-day.webp?v=4" alt="">
+    <img class="rv-still night" src="table/a/river-night.webp?v=4" alt="">
   </div>
   <div class="table" id="table" data-set="header" data-base="table/">
     <div class="layer" id="layer"></div>
@@ -106,7 +106,7 @@ $in = studio_logged_in();
 <script src="assets/studio.js?v=<?= STUDIO_VERSION ?>-11"></script>
 <?php endif; ?>
 <script src="table/table.js?v=22"></script>
-<script src="table/river.js?v=5"></script>
+<script src="table/river.js?v=6"></script>
 <script src="table/switch.js?v=4"></script>
 <script src="table/shelf.js?v=4"></script>
 </body>
