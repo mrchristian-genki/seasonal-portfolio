@@ -36,7 +36,7 @@ $in = studio_logged_in();
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&display=swap">
 <link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>-7">
 <link rel="prefetch" href="assets/loader/reactor.mp4" as="video">
-<link rel="stylesheet" href="table/table.css?v=20">
+<link rel="stylesheet" href="table/table.css?v=21">
 </head>
 <?php if (!$in): ?>
 <body class="login">
@@ -77,8 +77,8 @@ $in = studio_logged_in();
         <span class="sw-label sw-top">DAY</span><span class="sw-label sw-bottom">NIGHT</span>
         <span class="sw-glow" aria-hidden="true"></span>
       </button>
+      <div class="st-plate"><h1>Studio</h1><p>Field Notes · Behind the scenes</p></div>
     </div>
-    <div class="st-card"><h1>Studio</h1><p>Field Notes, behind the scenes</p></div>
   </div>
 </section>
 <main id="app"><p class="muted">Loading…</p></main>
