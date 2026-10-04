@@ -34,22 +34,14 @@ $in = studio_logged_in();
 <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&family=Special+Elite&display=swap">
-<link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>-8">
+<link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>-9">
 <link rel="stylesheet" href="table/table.css?v=29">
 </head>
 <?php if (!$in): ?>
 <body class="login">
-<form method="post" class="login-box" autocomplete="on">
-  <h1>Studio</h1>
-  <p class="sub">Field Notes, behind the scenes.</p>
-  <input type="hidden" name="act" value="login">
-  <label>Password <input type="password" name="password" autocomplete="current-password" required autofocus></label>
-  <?php if ($error): ?><p class="err"><?= h($error) ?></p><?php endif; ?>
-  <button type="submit">Log in</button>
-</form>
-</body>
 <?php else: ?>
 <body data-csrf="<?= h(studio_csrf()) ?>">
+<?php endif; ?>
 
 <section class="st-hero" aria-label="Studio">
   <div class="river" id="river" aria-hidden="true">
@@ -60,10 +52,12 @@ $in = studio_logged_in();
     <div class="layer" id="layer"></div>
     <div class="shade" aria-hidden="true"></div>
   </div>
+<?php if ($in): ?>
   <nav class="st-nav" aria-label="Studio">
     <a href="/play/" target="_blank" rel="noopener">Play ↗</a>
     <form method="post"><input type="hidden" name="act" value="logout"><input type="hidden" name="csrf" value="<?= h(studio_csrf()) ?>"><button type="submit">Log out</button></form>
   </nav>
+<?php endif; ?>
   <div class="st-dn st-ctrl">
     <button type="button" class="st-switch" id="dayNight" role="switch" aria-checked="false" aria-label="Day. Switch to night">
       <img class="sw-day" src="table/a/switch-day.webp" alt="">
@@ -83,7 +77,20 @@ $in = studio_logged_in();
     </div>
   </div>
 </section>
+<?php if (!$in): ?>
+<main class="login-main">
+<form method="post" class="login-box" autocomplete="on">
+  <h1>Studio</h1>
+  <p class="sub">Field Notes, behind the scenes.</p>
+  <input type="hidden" name="act" value="login">
+  <label>Password <input type="password" name="password" autocomplete="current-password" required autofocus></label>
+  <?php if ($error): ?><p class="err"><?= h($error) ?></p><?php endif; ?>
+  <button type="submit">Log in</button>
+</form>
+</main>
+<?php else: ?>
 <main id="app"><p class="muted">Loading…</p></main>
+<?php endif; ?>
 <footer class="st-foot" aria-label="Studio">
   <div class="st-foot-wood" aria-hidden="true"><span class="day"></span><span class="night"></span></div>
   <div class="st-lamps" aria-hidden="true">
@@ -93,12 +100,13 @@ $in = studio_logged_in();
     <span class="lp-glow"></span>
   </div>
 </footer>
+<?php if ($in): ?>
 <div id="toast" role="status" aria-live="polite"></div>
 <script src="assets/track.js?v=<?= STUDIO_VERSION ?>"></script>
 <script src="assets/studio.js?v=<?= STUDIO_VERSION ?>-11"></script>
+<?php endif; ?>
 <script src="table/table.js?v=22"></script>
 <script src="table/river.js?v=5"></script>
 <script src="table/switch.js?v=4"></script>
 </body>
-<?php endif; ?>
 </html>
