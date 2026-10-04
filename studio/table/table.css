@@ -268,3 +268,9 @@
 .st-foot.night .shelf-hand{filter:drop-shadow(4px 7px 6px rgba(5,2,0,.6)) brightness(.62) saturate(.8)}
 /* the hand's arm runs past these edges: clip it there without giving them anything to scroll */
 .st-hero,.st-foot{overflow:clip}
+/* where the page meets the footer: the same riveted brass rail as under the header, its shadow on the wood */
+.st-foot::before{content:"";position:absolute;left:0;right:0;top:0;height:12px;z-index:46;pointer-events:none;
+  background:
+    radial-gradient(circle at 50% 50%,#fff0c4 0 1.6px,#7a5a26 2.4px,#3a2610 3.1px,transparent 3.8px) 18px 0/44px 100% repeat-x,
+    linear-gradient(180deg,#e6c983,#a87e3a 40%,#7a5520 75%,#4a3212);
+  box-shadow:0 -1px 0 rgba(0,0,0,.6),inset 0 1px 0 rgba(255,235,180,.35),0 4px 10px rgba(20,10,2,.6)}
