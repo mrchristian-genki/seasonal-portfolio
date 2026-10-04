@@ -334,16 +334,11 @@
       return bringIn(src, photos, track, L, 1, 2).then(function () { L.at(3); L.done(); toast('Added. Draft again if you like, then Save.'); });
     }).catch(function (err) { L.fail(err.message); toast(err.message, true); });
   }
-  function inboxPanel() {
-    if (!E.source || !INBOX || INBOX.source !== E.source) return E.source ? '<section class="panel from"><p class="muted">Made from the Drive folder <b>' + esc(E.source) + '</b>.</p></section>' : '';
-    var later = INBOX.files.filter(function (f) { return f.kind === 'video'; }), aud = INBOX.files.filter(function (f) { return f.kind === 'audio'; });
-    var other = INBOX.files.filter(function (f) { return f.kind === 'other'; });
-    return '<section class="panel from"><h2>From Drive: ' + esc(E.source) + '</h2>' +
-      '<p class="muted">' + (E.id ? 'New photos from this folder are added below. Draft again if you like, then Save to keep them.'
-        : 'Photos' + (INBOX.files.some(function (f) { return f.kind === 'track'; }) ? ', the track' : '') + (INBOX.notes ? ' and your text notes' : '') + ' are brought in below, then Claude drafts it. Read it through and Save.') + '</p>' +
-      (later.length ? '<p class="muted">Videos (' + later.length + '): they stay on the server. Trim silent loops from them under <b>Video loops</b>.</p>' : '') +
-      (aud.length ? '<p class="muted">Audio (' + aud.map(function (f) { return esc(f.name); }).join(', ') + '): choose what each file is under Episode, in <b>Audio from Drive</b>. Voice notes play above your notes.</p>' : '') +
-      (other.length ? '<p class="muted">Not used: ' + other.map(function (f) { return esc(f.name); }).join(', ') + '</p>' : '') + '</section>';
+  // the Drive folder's own note, only while a new note is being made from it
+  function inboxHint() {
+    if (E.id || !E.source || !INBOX || INBOX.source !== E.source) return '';
+    return '<p class="sum-hint">Photos' + (INBOX.files.some(function (f) { return f.kind === 'track'; }) ? ', the track' : '') + (INBOX.notes ? ' and your text notes' : '') +
+      ' from <b>' + esc(E.source) + '</b> are brought in below, then Claude drafts it. Read it through and Save.</p>';
   }
 
   // ---------- editor ----------
@@ -367,17 +362,17 @@
     // a note made from a Drive folder, or already saved, has its content: the drop zones wait at the bottom
     var later = !!(E.id || E.source), trackTop = !later || !!E.track;
     var dropPhotos = '<div id="drop-photos" class="drop">Drop photos here, or <label class="pick">choose<input type="file" accept="image/*" multiple hidden id="pickPhotos"></label>. They\'re resized and their location data removed before upload.</div>';
-    var sOpts = (CFG.statuses || []).map(function (s) { return '<option value="' + s.id + '"' + (E.status === s.id ? ' selected' : '') + '>' + esc(s.label) + '</option>'; }).join('');
     var kOpts = ['ride', 'hike', 'forage', 'make'].map(function (k) { return '<option' + (E.kind === k ? ' selected' : '') + '>' + k + '</option>'; }).join('');
     app.innerHTML =
-      '<div class="head"><button class="back" id="back">← Entries</button><h1>' + esc(E.title || 'New entry') + '</h1></div>' +
-      '<section class="panel next" id="next" aria-live="polite"></section>' + inboxPanel() +
+      '<section class="panel sum" id="sum"><div class="sum-top"><button class="back" id="back">← Entries</button><h1 id="sumTitle">' + esc(E.title || 'New entry') + '</h1><span id="sumLive"></span></div>' +
+        '<div class="sum-meta" id="sumMeta"></div><ol class="stages" id="stages"></ol>' +
+        '<div class="sum-next" id="next" aria-live="polite"></div><div class="sum-left" id="left"></div>' + inboxHint() + '</section>' +
       '<section class="panel grid2">' +
         field('Title', '<input id="title" value="' + esc(E.title) + '">') +
         field('Date', '<input id="date" type="date" value="' + esc(E.date) + '"' + (E.id ? ' disabled' : '') + '>', E.id ? 'The address is <code>' + esc(E.id) + '</code>' : 'Sets the address with the title, on first save') +
         field('Kind', '<select id="kind">' + kOpts + '</select>') +
         field('Place', '<input id="place" value="' + esc(E.place) + '" placeholder="Trailhead or public land, never closer to home">') +
-        field('Status', '<select id="status">' + sOpts + '</select>', 'Published goes live on the next save') +
+        '<input type="hidden" id="status" value="' + esc(E.status) + '">' +
         field('Who appears', '<input id="consent" value="' + esc(E.consent || '') + '" placeholder="e.g. Christian and Marley only">') +
       '</section>' +
       (trackTop ? '<section class="panel"><h2>Track</h2><div id="track"></div></section>' : '') +
@@ -397,7 +392,8 @@
 
     $('#back').onclick = showList;
     ['title', 'place', 'consent', 'fieldNotes', 'summary', 'postTitle', 'postBody', 'epTitle', 'epScript'].forEach(function (k) { $('#' + k).addEventListener('input', markDirty); });
-    ['kind', 'status', 'date'].forEach(function (k) { $('#' + k).addEventListener('change', markDirty); });
+    ['kind', 'date'].forEach(function (k) { $('#' + k).addEventListener('change', markDirty); });
+    $('#title').addEventListener('input', function () { $('#sumTitle').textContent = this.value.trim() || 'New entry'; });
     $('#epScript').addEventListener('input', count); count();
     renderTrack(); renderPhotos(); renderQuestions(); renderAudio(); renderLoops();
     driveAudio().then(function () { renderDriveFiles(); renderVoiceNotes(); renderNext(); });
@@ -899,19 +895,19 @@
     var capd = used.filter(function (p) { var d = $('.ph[data-i="' + E.photos.indexOf(p) + '"] textarea'); return (d ? d.value : p.caption || '').trim(); });
     var kind = val('kind') || E.kind, needsTrack = kind === 'ride' || kind === 'hike';
     var list = [
-      { t: 'Title', ok: !!val('title'), must: true },
-      { t: 'The post\'s text', ok: !!val('postBody'), must: true },
-      { t: 'The post\'s title', ok: !!val('postTitle') },
-      { t: 'Card summary', ok: !!val('summary') },
-      { t: 'Place', ok: !!val('place') },
-      { t: 'Who appears', ok: !!val('consent') },
-      { t: 'Photos', ok: used.some(function (p) { return !p.video; }) },
-      { t: 'Captions on every photo and loop', ok: used.length > 0 && capd.length === used.length },
-      { t: needsTrack ? 'The track' : 'The track (none needed)', ok: !needsTrack || !!E.track },
-      { t: 'No ride from home on the map', ok: !(E.track && E.track.homeWarning) },
-      { t: 'Claude\'s questions answered', ok: !(E.questions || []).length },
-      { t: 'The episode script', ok: !!val('epScript') },
-      { t: 'The episode audio', ok: !!(audioNew || (E.episode.audio && !audioGone)) }
+      { go: '#title', t: 'Title', ok: !!val('title'), must: true },
+      { go: '#postBody', t: 'The post\'s text', ok: !!val('postBody'), must: true },
+      { go: '#postTitle', t: 'The post\'s title', ok: !!val('postTitle') },
+      { go: '#summary', t: 'Card summary', ok: !!val('summary') },
+      { go: '#place', t: 'Place', ok: !!val('place') },
+      { go: '#consent', t: 'Who appears', ok: !!val('consent') },
+      { go: '#photos', t: 'Photos', ok: used.some(function (p) { return !p.video; }) },
+      { go: '#photos', t: 'Captions on every photo and loop', ok: used.length > 0 && capd.length === used.length },
+      { go: '#track', t: needsTrack ? 'The track' : 'The track (none needed)', ok: !needsTrack || !!E.track },
+      { go: '#track', t: 'No ride from home on the map', ok: !(E.track && E.track.homeWarning) },
+      { go: '#questions', t: 'Claude\'s questions answered', ok: !(E.questions || []).length },
+      { go: '#epScript', t: 'The episode script', ok: !!val('epScript') },
+      { go: '#audio', t: 'The episode audio', ok: !!(audioNew || (E.episode.audio && !audioGone)) }
     ];
     var n = list.filter(function (x) { return x.ok; }).length;
     return { list: list, done: n, score: n / list.length, able: list.every(function (x) { return !x.must || x.ok; }) };
@@ -935,7 +931,7 @@
     if (!r.able) return;
     var miss = r.list.filter(function (x) { return !x.ok; }).map(function (x) { return '  · ' + x.t; });
     if (miss.length && !confirm('Not everything is ready yet:\n' + miss.join('\n') + '\n\nPublish anyway?')) return;
-    $('#status').value = 'published';
+    $('#status').value = 'published'; publishing = true;
     save(true);
   }
   function nextSteps() {
@@ -948,30 +944,83 @@
     if (vn && !E.voiceNotesDone) out.push({ t: 'Listen to your voice notes', d: 'Add what matters to Your notes: Claude can only use what\'s written there.', b: 'Listen', go: '#voiceNotes', done: 'voice' });
     if (!drafted) out.push({ t: 'Draft with Claude', d: 'Claude writes the post, the captions and the episode script from your notes, track and photos.', b: 'Draft', run: function () { draft(); } });
     if (q) out.push({ t: 'Answer Claude\'s ' + (q === 1 ? 'question' : q + ' questions'), d: 'The script isn\'t final until they\'re answered. Answer them one by one, then send them all at once.', b: 'Answer', go: '#questions' });
-    if (drafted && !q && !audio) out.push({ t: 'Record the episode', d: 'Copy the audio prompt, render it with your voice tool, then drop the audio in or choose it from Drive.', b: 'Go to the audio', go: '#copyPrompt' });
+    if (drafted && !q && !val('epScript')) out.push({ t: 'Write the episode script', d: 'The episode is read from it. Draft with Claude writes one from the post, or write your own.', b: 'Go to the script', go: '#epScript' });
+    if (drafted && !q && val('epScript') && !audio) out.push({ t: 'Record the episode', d: 'Copy the audio prompt, render it with your voice tool, then drop the audio in or choose it from Drive.', b: 'Go to the audio', go: '#copyPrompt' });
     if (videos && !loops && !E.loopsDone) out.push({ t: 'Trim video loops', d: videos + ' video' + (videos > 1 ? 's' : '') + ' in the Drive folder. Pick the moments worth a short silent loop.', b: 'Trim loops', go: '#loops', done: 'loops' });
     if (dirty) out.push({ t: 'Save', d: 'Keep what you have so far.', b: 'Save', run: save });
-    if (drafted && !q && audio && val('status') !== 'published') out.push({ t: 'Publish', d: 'Set Status to Published, then Save. Play and the podcast feed update in about a minute.', b: 'Set status', go: '#status' });
+    if (drafted && !q && audio && savedStatus !== 'published') out.push({ t: 'Publish', d: 'Everything the episode needs is here. Play and the podcast feed update about a minute after you publish.', b: 'Publish', run: publish });
     if (!out.length && E.id && savedStatus === 'published') out.push({ t: 'All done', d: 'It\'s live on Play.', b: 'Open on Play', href: '/play/' + E.id + '/' });
     return out;
   }
+  // The note's status follows what's in it: notes in, then a draft, a finished script, the audio, and
+  // Published once you publish it. Worked out each time anything changes, and kept in the saved note.
+  var publishing = false;   // between Publish and the end of its save, the status stays Published
+  var STAGES = [['notes', 'Notes in'], ['draft', 'Draft'], ['script', 'Script ready'], ['audio', 'Audio done'], ['published', 'Published']];
+  function stageOf() {
+    var val = function (id) { var el = $('#' + id); return el ? el.value.trim() : ''; };
+    var done = {
+      notes: !!(E.photos.length || E.track || val('fieldNotes') || E.source || val('postBody')),
+      draft: !!val('postBody'),
+      script: !!val('epScript') && !(E.questions || []).length,
+      audio: !!(audioNew || (E.episode.audio && !audioGone)),
+      published: savedStatus === 'published'
+    };
+    var at = 0; while (at < 4 && done[STAGES[at][0]]) at++;   // the first step not yet done (Published is only ever set by you)
+    return { done: done, at: done.published ? 5 : at, status: done.published ? 'published' : STAGES[Math.max(0, at - 1)][0] };
+  }
+  // only what changed is redrawn: a click on a chip lands even when leaving a field just redrew the summary
+  function put(el, html) { if (el && el._h !== html) { el.innerHTML = html; el._h = html; } }
   function renderNext() {
     renderPublish();
-    var box = $('#next'); if (!box || !E) return;
-    var steps = nextSteps().slice(0, 3);
-    if (!steps.length) { box.hidden = true; return; }
-    box.hidden = false;
-    box.innerHTML = '<h2>Next steps</h2><ol class="nsteps">' + steps.map(function (st, i) {
-      return '<li' + (i ? '' : ' class="now"') + '><div><b>' + esc(st.t) + '</b><span>' + esc(st.d) + '</span></div><div class="nb">' +
-        (st.href ? '<a class="btn' + (i ? '' : ' primary') + '" href="' + st.href + '" target="_blank" rel="noopener">' + esc(st.b) + ' ↗</a>'
-          : '<button type="button" class="small' + (i ? '' : ' primary') + '" data-i="' + i + '">' + esc(st.b) + '</button>') +
-        (st.done ? '<button type="button" class="link" data-done="' + st.done + '">Done</button>' : '') + '</div></li>';
-    }).join('') + '</ol>';
+    if (!E || !$('#sum')) return;
+    var st = stageOf(), stEl = $('#status');
+    if (stEl && !publishing && savedStatus !== 'published' && stEl.value !== st.status) { stEl.value = st.status; E.status = st.status; }
+    // the stages, with the one you're on lit
+    put($('#stages'), STAGES.map(function (x, i) {
+      var cls = i < st.at ? 'done' : i === st.at ? 'now' : '';
+      return '<li class="' + cls + '"><span>' + (cls === 'done' ? '✓' : i + 1) + '</span>' + esc(x[1]) + '</li>';
+    }).join(''));
+    // what the note holds, each a jump to its part
+    var used = E.photos.filter(function (p) { return p.use !== 'skip'; }), loops = used.filter(function (p) { return p.video; }).length, vids = (DRIVEVID || []).length;
+    var dt = $('#date') ? $('#date').value : E.date, place = $('#place') ? $('#place').value.trim() : E.place, kind = $('#kind') ? $('#kind').value : E.kind;
+    var chip = function (txt, to, warn) { return '<button type="button" class="chip' + (warn ? ' warn' : '') + '" data-go="' + to + '">' + txt + '</button>'; };
+    var ts = E.track && E.track.stats, nq = (E.questions || []).length, np = used.length - loops;
+    put($('#sumMeta'), '<span>' + esc(dt ? new Date(dt + 'T12:00:00').toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }) : '') + ' · ' + esc(kind) + '</span>' +
+      (place ? chip(esc(place), '#place') : chip('Add the place', '#place', true)) +
+      (ts ? chip(mi(ts.distanceKm || 0) + ' mi · ↑ ' + ft(ts.gainM || 0).toLocaleString() + ' ft', '#track') : (kind === 'ride' || kind === 'hike' ? chip('No track yet', '#track', true) : '')) +
+      chip(np + ' photo' + (np === 1 ? '' : 's'), '#photos', !np) +
+      (loops || vids ? chip(loops + ' loop' + (loops === 1 ? '' : 's') + (vids ? ' · ' + vids + ' video' + (vids === 1 ? '' : 's') : ''), E.source ? '#loops' : '#photos') : '') +
+      (nq ? chip(nq + ' open question' + (nq > 1 ? 's' : ''), '#questions', true) : '') +
+      (E.source ? '<span class="src" title="Made from this Drive folder">Drive: ' + esc(E.source) + '</span>' : ''));
+    put($('#sumLive'), savedStatus === 'published' && E.id ? '<a class="live" href="/play/' + esc(E.id) + '/" target="_blank" rel="noopener">● Live on Play ↗</a><button type="button" class="link" id="unpub">Take it down</button>' : '');
+    var up = $('#unpub'); if (up) up.onclick = unpublish;
+    // the one thing to do next, and the two after it
+    var steps = nextSteps().filter(function (x) { return !x.href; }).slice(0, 3), box = $('#next');   // "live on Play" is already at the top
+    box.hidden = !steps.length;
+    put(box, steps.length ? '<div class="now"><div><small>Next</small><b>' + esc(steps[0].t) + '</b><span>' + esc(steps[0].d) + '</span></div><div class="nb">' + stepBtn(steps[0], 0, true) + '</div></div>' +
+      (steps.length > 1 ? '<div class="then"><small>Then</small>' + steps.slice(1).map(function (x, i) { return stepBtn(x, i + 1, false); }).join('') + '</div>' : '') : '');
     $$('button[data-i]', box).forEach(function (b) {
-      var st = steps[+b.getAttribute('data-i')];
-      b.onclick = function () { if (st.run) st.run(); else go(st.go); };
+      var x = steps[+b.getAttribute('data-i')];
+      b.onclick = function () { if (x.run) x.run(); else go(x.go); };
     });
     $$('button[data-done]', box).forEach(function (b) { b.onclick = function () { E[b.getAttribute('data-done') === 'loops' ? 'loopsDone' : 'voiceNotesDone'] = true; markDirty(); }; });
+    // what's still missing for a full post: a bar from yellow to green, and each missing part a jump
+    var r = readiness(), miss = r.list.filter(function (x) { return !x.ok; }), left = $('#left');
+    put(left, '<div class="rbar"><i></i></div><span class="rn"><b>' + r.done + ' of ' + r.list.length + '</b> ready</span>' +
+      (miss.length ? '<span class="rmiss">' + miss.map(function (x) { return '<button type="button" class="chip' + (x.must ? ' warn' : '') + '" data-go="' + x.go + '">' + esc(x.t) + '</button>'; }).join('') + '</span>'
+        : '<span class="rmiss ok">Everything a full post needs is here.</span>'));
+    var bar = $('.rbar i', left); bar.style.width = Math.round(r.score * 100) + '%'; bar.style.setProperty('--h', String(Math.round(48 + 87 * r.score * r.score)));
+    $$('#sum [data-go]').forEach(function (b) { b.onclick = function () { go(b.getAttribute('data-go')); }; });
+  }
+  function stepBtn(x, i, main) {
+    if (x.href) return '<a class="btn' + (main ? ' primary' : ' small') + '" href="' + x.href + '" target="_blank" rel="noopener">' + esc(main ? x.b : x.t) + ' ↗</a>';
+    return '<button type="button" class="' + (main ? 'primary' : 'small') + '" data-i="' + i + '" title="' + esc(x.d) + '">' + esc(main ? x.b : x.t) + '</button>' +
+      (main && x.done ? '<button type="button" class="link" data-done="' + x.done + '">Done</button>' : '');
+  }
+  function unpublish() {
+    if (!confirm('Take this note off Play? It goes back to its last step and stays here to work on.')) return;
+    savedStatus = null; E.status = stageOf().status; $('#status').value = E.status;
+    save();
   }
 
   // ---------- audio from the note's Drive folder: each file has a role, chosen here. Voice notes (your own
@@ -1269,7 +1318,7 @@
       L.fail(err.message);
       if (first) { E.id = ''; }
       toast('Not saved: ' + err.message, true);
-    }).then(function () { var b = $('#save'); if (b) { b.disabled = false; b.textContent = 'Save'; } });
+    }).then(function () { var b = $('#save'); if (b) { b.disabled = false; b.textContent = 'Save'; } publishing = false; renderNext(); });
   }
 
   // ---------- start ----------
