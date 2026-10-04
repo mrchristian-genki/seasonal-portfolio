@@ -224,6 +224,17 @@ final class Drive {
             'note' => $this->processed()[$source] ?? null, 'day' => $r['day']];
     }
 
+    // An MP3 from an inbox folder, for attaching as an episode's audio.
+    public function audio(string $source, string $name): string {
+        $r = $this->resolve($source);
+        $root = $r['root'] ?? '';
+        $path = $r === null ? false : realpath("$root/$name");
+        if (!$path || !is_file($path) || !str_starts_with($path, $root . '/')) json_fail('No such file.', 404);
+        if ($r['day'] !== null && (dirname($path) !== $root || $this->day($path) !== $r['day'])) json_fail('No such file.', 404);
+        if (strtolower(pathinfo($path, PATHINFO_EXTENSION)) !== 'mp3') json_fail('Only MP3 files can be attached.');
+        return (string) file_get_contents($path);
+    }
+
     // One photo or track from an inbox folder, sent to the logged-in Studio page (which resizes photos and
     // trims tracks in the browser, as it does for dropped files).
     public function send(string $source, string $name): never {
