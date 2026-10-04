@@ -35,7 +35,7 @@ $in = studio_logged_in();
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&family=Special+Elite&display=swap">
 <link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>-7">
-<link rel="stylesheet" href="table/table.css?v=25">
+<link rel="stylesheet" href="table/table.css?v=27">
 </head>
 <?php if (!$in): ?>
 <body class="login">
@@ -65,10 +65,6 @@ $in = studio_logged_in();
     <form method="post"><input type="hidden" name="act" value="logout"><input type="hidden" name="csrf" value="<?= h(studio_csrf()) ?>"><button type="submit">Log out</button></form>
   </nav>
   <div class="st-dn st-ctrl">
-    <div class="st-dial" aria-hidden="true">
-      <img class="dial-disc" id="dialDisc" src="table/a/dial-disc.webp?v=2" alt="">
-      <img class="dial-face" src="table/a/dial-face.webp?v=2" alt="">
-    </div>
     <button type="button" class="st-switch" id="dayNight" role="switch" aria-checked="false" aria-label="Day. Switch to night">
       <img class="sw-day" src="table/a/switch-day.webp" alt="">
       <img class="sw-night" src="table/a/switch-night.webp" alt="">
@@ -79,6 +75,10 @@ $in = studio_logged_in();
   <div class="st-label">
     <div class="st-dn">
       <span class="pipe" aria-hidden="true"></span>
+      <div class="st-dial" aria-hidden="true">
+        <img class="dial-disc" id="dialDisc" src="table/a/dial-disc.webp?v=2" alt="">
+        <img class="dial-face" src="table/a/dial-face.webp?v=2" alt="">
+      </div>
       <div class="st-plate"><h1>Studio</h1><p>Field Notes · Behind the scenes</p></div>
     </div>
   </div>
