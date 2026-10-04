@@ -17,7 +17,7 @@
     mug: [1.21, 1], cone: [1.11, .9], carnelians: [1.15, .75], resin: [1.33, 1],
     deer: [.59, 1], 'fox-sitting': [.71, 1.3], gloves: [1.02, 1.6], 'jar-off': [.92, 1.2],
     pencils: [1.02, 1.7], notebook: [1.38, 1.9], contact: [.75, 1.7], map: [1.3, 1.9], fox: [1.6, 1.8],
-    compass: [2.04, 1.15], vial: [3.54, -.6], 'firefly-jar': [1.76, 1.15]
+    compass: [2.04, 1.15], vial: [3.54, -.6], 'firefly-jar': [1.76, 1.15], projector: [1, .9]
   };
   // (no tape: that image is a half roll made to peek in from an edge; no film canister: it carries a brand;
   // no pins: tacks lying on a shelf looked odd; no ruler: too long for these strips)
@@ -26,7 +26,32 @@
   // props that light up at night: their night picture fades in with a glow of its colour on the wood. They
   // keep to the footer's side shelves, where the light shows (the header's night shade would cover it)
   var LAMP = { 'jar-off': ['jar-on', 'amber'], compass: ['compass-night', 'radium'], vial: ['vial-night', 'green'],
-    'firefly-jar': ['firefly-jar-night', 'firefly'] };
+    'firefly-jar': ['firefly-jar-night', 'firefly'], projector: ['projector-night', 'holo'] };
+  // the projector's holograms, from our other work: Marley and the paper animals (the origami cast) and the
+  // squid from the Parts Catalog. By night one floats over the lens; a tap on it flickers to the next
+  var HOLO = ['marley', 'squid', 'fox', 'owl', 'hare'];
+  function hologram(box) {
+    var beam = document.createElement('span'); beam.className = 'beam';
+    var holo = document.createElement('div'); holo.className = 'holo';
+    var fig = new Image(); fig.alt = ''; fig.draggable = false;
+    var scan = document.createElement('span'); scan.className = 'scan';
+    holo.appendChild(fig); holo.appendChild(scan); box.appendChild(beam); box.appendChild(holo);
+    var at = Math.floor(Math.random() * HOLO.length);
+    function show(i) {
+      at = (i + HOLO.length) % HOLO.length;
+      var u = A + 'holo-' + HOLO[at] + '.webp';
+      fig.src = u; scan.style.webkitMaskImage = scan.style.maskImage = 'url(' + u + ')';
+      holo.setAttribute('data-figure', HOLO[at]);
+    }
+    show(at);
+    holo.addEventListener('click', function (e) {
+      e.stopPropagation();
+      if (holo.classList.contains('glitch')) return;
+      holo.classList.add('glitch');
+      setTimeout(function () { show(at + 1); }, 220);
+      setTimeout(function () { holo.classList.remove('glitch'); }, 480);
+    });
+  }
   var NAMES = Object.keys(POOL), out = {};
 
   function el(cls, parent) { var d = document.createElement('div'); d.className = cls; parent.appendChild(d); return d; }
@@ -118,6 +143,7 @@
       var lit = new Image(); lit.alt = ''; lit.className = 'lit'; lit.src = A + LAMP[name][0] + '.webp'; lit.draggable = false;
       var glow = document.createElement('span'); glow.className = 'glow';
       img.appendChild(glow); img.appendChild(pic); img.appendChild(lit);
+      if (name === 'projector') hologram(img);
     }
     img.classList.add('shelf-prop');
     img.addEventListener('click', function () { collect(sh, img); });
