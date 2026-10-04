@@ -292,3 +292,26 @@ button.st-lamps:focus-visible{outline:2px solid #e6c983;outline-offset:4px;borde
 .st-foot.night .shelf-prop.lamp .lit{opacity:1;animation:breathe 5.5s ease-in-out infinite;filter:drop-shadow(4px 7px 6px rgba(5,2,0,.5)) brightness(1.05)}
 .st-foot.night .shelf-prop.lamp .glow{opacity:1;animation:breathe 5.5s ease-in-out infinite}
 @media (prefers-reduced-motion:reduce){.st-foot.night .shelf-prop.lamp .lit,.st-foot.night .shelf-prop.lamp .glow{animation:none}}
+/* the projector: by night a beam rises from its lens and a hologram floats above it, tinted green-cyan,
+   with scanlines, a slow scan band, a gentle bob and the odd flicker. A tap on the hologram changes it */
+.shelf-prop.glow-holo .glow{--g:110,255,215}
+.shelf-prop .beam{position:absolute;left:50%;bottom:50%;width:90%;height:45%;translate:-50% 0;pointer-events:none;opacity:0;transition:opacity 1.6s ease;
+  background:linear-gradient(to top,rgba(140,255,225,.55),rgba(140,255,225,.12) 70%,transparent);clip-path:polygon(44% 100%,56% 100%,100% 0,0 0)}
+.shelf-prop .holo{position:absolute;left:50%;top:50%;height:125%;translate:-50% -62%;pointer-events:none;opacity:0;transition:opacity 1.6s ease;cursor:pointer}
+.shelf-prop .holo[data-figure=marley]{height:85%}
+.shelf-prop .holo[data-figure=squid]{height:48%}
+.shelf-prop .holo img{display:block;height:100%;width:auto;max-width:none;opacity:.8;
+  filter:grayscale(1) brightness(1.25) sepia(1) hue-rotate(110deg) saturate(4) drop-shadow(0 0 5px rgba(90,255,210,.9))}
+.shelf-prop .holo .scan{position:absolute;inset:0;pointer-events:none;
+  -webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+  background:linear-gradient(to bottom,transparent 0,rgba(210,255,240,.45) 6%,transparent 12%) 0 -20%/100% 300% no-repeat,
+    repeating-linear-gradient(to bottom,rgba(0,30,20,.5) 0 1px,transparent 1px 3px)}
+.st-foot.night .shelf-prop .beam{opacity:1;animation:holo-flicker 4.7s steps(1) infinite}
+.st-foot.night .shelf-prop .holo{opacity:1;pointer-events:auto;animation:holo-bob 5.5s ease-in-out infinite,holo-flicker 4.7s steps(1) infinite}
+.st-foot.night .shelf-prop .holo .scan{animation:holo-scan 3.2s linear infinite}
+.shelf-prop .holo.glitch{animation:holo-glitch .48s steps(2) 1!important}
+@keyframes holo-bob{0%,100%{translate:-50% -62%}50%{translate:-50% -68%}}
+@keyframes holo-flicker{0%,100%{opacity:1}31%{opacity:.82}32%{opacity:1}67%{opacity:.6}68%{opacity:.95}69%{opacity:.7}70%{opacity:1}}
+@keyframes holo-scan{from{background-position:0 -20%,0 0}to{background-position:0 120%,0 0}}
+@keyframes holo-glitch{0%{opacity:1;translate:-47% -62%;filter:hue-rotate(40deg)}25%{opacity:.3;translate:-54% -62%}50%{opacity:.05;translate:-50% -62%}75%{opacity:.5;translate:-46% -62%;filter:hue-rotate(-30deg)}100%{opacity:1;translate:-50% -62%}}
+@media (prefers-reduced-motion:reduce){.st-foot.night .shelf-prop .holo,.st-foot.night .shelf-prop .beam,.st-foot.night .shelf-prop .holo .scan{animation:none}}
