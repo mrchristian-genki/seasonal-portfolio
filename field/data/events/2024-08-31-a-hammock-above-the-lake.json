@@ -2210,6 +2210,22 @@
    ]
   },
   {
+   "src": "data/photos/2024-08-31-a-hammock-above-the-lake/clip-5.mp4",
+   "poster": "data/photos/2024-08-31-a-hammock-above-the-lake/clip-5.jpg",
+   "video": true,
+   "caption": "Riding under the chair lifts.",
+   "takenAt": "2024:08:31 12:03:22",
+   "w": 540,
+   "h": 960,
+   "use": "post",
+   "cover": false,
+   "from": "IMG_6742.MOV",
+   "range": [
+    33.2,
+    37.35
+   ]
+  },
+  {
    "src": "data/photos/2024-08-31-a-hammock-above-the-lake/clip-4.mp4",
    "poster": "data/photos/2024-08-31-a-hammock-above-the-lake/clip-4.jpg",
    "video": true,
