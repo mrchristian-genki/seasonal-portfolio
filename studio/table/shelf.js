@@ -32,9 +32,10 @@
     var riverTop = ry + rh * ((0.355 - 0.20) / 0.54);          // where the stream starts in the footage
     var panel = document.querySelector('.st-label .st-dn'), nav = document.querySelector('.st-nav');
     var left = (panel ? panel.getBoundingClientRect().right - h.left : 0) + 14;
-    var right = (nav ? nav.getBoundingClientRect().left - h.left : h.width) - 14;
     // props may rest on the near bank of the river, so even a thin strip of wood gets a proper-sized prop
-    var height = Math.min(Math.max(riverTop + 34, 84), 130), width = right - left;
+    var height = Math.min(Math.max(riverTop + 34, 84), 130);
+    var n = nav && nav.getBoundingClientRect();                  // the nav tags, when they sit up top
+    var right = (n && n.top - h.top < height ? n.left - h.left : h.width) - 14, width = right - left;
     s.hidden = height < 34 || width < 50;
     s.style.left = left + 'px'; s.style.width = width + 'px'; s.style.top = '0px'; s.style.height = height + 'px';
   }
