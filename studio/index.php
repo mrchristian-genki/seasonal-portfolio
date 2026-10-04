@@ -35,7 +35,7 @@ $in = studio_logged_in();
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&family=Special+Elite&display=swap">
 <link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>-7">
-<link rel="stylesheet" href="table/table.css?v=24">
+<link rel="stylesheet" href="table/table.css?v=25">
 </head>
 <?php if (!$in): ?>
 <body class="login">
@@ -64,19 +64,21 @@ $in = studio_logged_in();
     <a href="/play/" target="_blank" rel="noopener">Play ↗</a>
     <form method="post"><input type="hidden" name="act" value="logout"><input type="hidden" name="csrf" value="<?= h(studio_csrf()) ?>"><button type="submit">Log out</button></form>
   </nav>
+  <div class="st-dn st-ctrl">
+    <div class="st-dial" aria-hidden="true">
+      <img class="dial-disc" id="dialDisc" src="table/a/dial-disc.webp?v=2" alt="">
+      <img class="dial-face" src="table/a/dial-face.webp?v=2" alt="">
+    </div>
+    <button type="button" class="st-switch" id="dayNight" role="switch" aria-checked="false" aria-label="Day. Switch to night">
+      <img class="sw-day" src="table/a/switch-day.webp" alt="">
+      <img class="sw-night" src="table/a/switch-night.webp" alt="">
+      <span class="sw-label sw-top">DAY</span><span class="sw-label sw-bottom">NIGHT</span>
+      <span class="sw-glow" aria-hidden="true"></span>
+    </button>
+  </div>
   <div class="st-label">
     <div class="st-dn">
       <span class="pipe" aria-hidden="true"></span>
-      <div class="st-dial" aria-hidden="true">
-        <img class="dial-disc" id="dialDisc" src="table/a/dial-disc.webp?v=2" alt="">
-        <img class="dial-face" src="table/a/dial-face.webp?v=2" alt="">
-      </div>
-      <button type="button" class="st-switch" id="dayNight" role="switch" aria-checked="false" aria-label="Day. Switch to night">
-        <img class="sw-day" src="table/a/switch-day.webp" alt="">
-        <img class="sw-night" src="table/a/switch-night.webp" alt="">
-        <span class="sw-label sw-top">DAY</span><span class="sw-label sw-bottom">NIGHT</span>
-        <span class="sw-glow" aria-hidden="true"></span>
-      </button>
       <div class="st-plate"><h1>Studio</h1><p>Field Notes · Behind the scenes</p></div>
     </div>
   </div>
@@ -94,7 +96,7 @@ $in = studio_logged_in();
 <div id="toast" role="status" aria-live="polite"></div>
 <script src="assets/track.js?v=<?= STUDIO_VERSION ?>"></script>
 <script src="assets/studio.js?v=<?= STUDIO_VERSION ?>-9"></script>
-<script src="table/table.js?v=21"></script>
+<script src="table/table.js?v=22"></script>
 <script src="table/river.js?v=4"></script>
 <script src="table/switch.js?v=4"></script>
 </body>

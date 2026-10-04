@@ -229,3 +229,10 @@
   background:linear-gradient(180deg,#e9d39a,#a37a35 45%,#6e4f1c 75%,#c9a65c);box-shadow:1px 2px 3px rgba(0,0,0,.5)}
 .st-dn .pipe::before{left:6px}.st-dn .pipe::after{right:4px}
 @media (max-width:640px){.st-dn{padding:9px 11px}.st-plate{padding:8px 18px}.st-plate h1{font-size:17px;letter-spacing:.08em}.st-dn .pipe{width:30px;height:10px}}
+
+/* the day/night dial and switch, in their own small riveted frame at the bottom right, above the rail */
+.st-ctrl{position:absolute;z-index:50;top:auto;bottom:24px;right:clamp(12px,3vw,40px);padding:9px 12px;gap:9px}
+.st-ctrl .st-dial{width:clamp(66px,6vw,84px)}
+.st-ctrl .st-switch{width:clamp(72px,6.6vw,92px)}
+.st-ctrl .sw-label{font-size:clamp(5px,.45vw,7px)}
+@media (max-width:640px){.st-ctrl{bottom:20px;padding:6px 8px;gap:5px}.st-ctrl .st-dial{width:48px}.st-ctrl .st-switch{width:52px}.st-ctrl .sw-label{font-size:4px}}
