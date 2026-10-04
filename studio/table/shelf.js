@@ -27,9 +27,9 @@
   // keep to the footer's side shelves, where the light shows (the header's night shade would cover it)
   var LAMP = { 'jar-off': ['jar-on', 'amber'], compass: ['compass-night', 'radium'], vial: ['vial-night', 'green'],
     'firefly-jar': ['firefly-jar-night', 'firefly'], projector: ['projector-night', 'holo'] };
-  // the projector's holograms, from our other work: Marley and the paper animals (the origami cast) and the
-  // squid from the Parts Catalog. By night one floats over the lens; a tap on it flickers to the next
-  var HOLO = ['marley', 'squid', 'fox', 'owl', 'hare'];
+  // the projector's holograms, from our other work: Marley and the paper animals (the origami cast, drawn
+  // with every nested part, heads included) and the squid from the Parts Catalog. By night one floats over the lens; a tap on it flickers to the next
+  var HOLO = ['marley', 'squid', 'fox', 'owl', 'hare', 'buck'];
   function hologram(box) {
     var beam = document.createElement('span'); beam.className = 'beam';
     var holo = document.createElement('div'); holo.className = 'holo';

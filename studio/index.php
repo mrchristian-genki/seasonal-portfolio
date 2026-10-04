@@ -111,6 +111,6 @@ $in = studio_logged_in();
 <script src="table/table.js?v=22"></script>
 <script src="table/river.js?v=6"></script>
 <script src="table/switch.js?v=6"></script>
-<script src="table/shelf.js?v=14"></script>
+<script src="table/shelf.js?v=15"></script>
 </body>
 </html>
