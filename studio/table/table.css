@@ -274,3 +274,7 @@
     radial-gradient(circle at 50% 50%,#fff0c4 0 1.6px,#7a5a26 2.4px,#3a2610 3.1px,transparent 3.8px) 18px 0/44px 100% repeat-x,
     linear-gradient(180deg,#e6c983,#a87e3a 40%,#7a5520 75%,#4a3212);
   box-shadow:0 -1px 0 rgba(0,0,0,.6),inset 0 1px 0 rgba(255,235,180,.35),0 4px 10px rgba(20,10,2,.6)}
+/* the lamps are a button too: a tap flips day and night like the switch */
+button.st-lamps{border:0;padding:0;margin:0;background:none;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:scale .15s ease}
+button.st-lamps:active{scale:.96}
+button.st-lamps:focus-visible{outline:2px solid #e6c983;outline-offset:4px;border-radius:50%}
