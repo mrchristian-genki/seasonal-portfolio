@@ -13,11 +13,14 @@
   var calm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   // name: [width / height, how big it is in real life (1 = a mug)]
   var POOL = {
-    mug: [1.21, 1], cone: [1.11, .9], carnelians: [1.15, .75], pins: [1.26, .8], resin: [1.33, 1],
+    mug: [1.21, 1], cone: [1.11, .9], carnelians: [1.15, .75], resin: [1.33, 1],
     deer: [.59, 1], 'fox-sitting': [.71, 1.3], gloves: [1.02, 1.6], 'jar-off': [.92, 1.2],
     pencils: [1.02, 1.7], ruler: [2.87, 1.9], notebook: [1.38, 1.9], contact: [.75, 1.7], map: [1.3, 1.9], fox: [1.6, 1.8]
   };
-  // (no tape: that image is a half roll made to peek in from an edge; no film canister: it carries a brand)
+  // (no tape: that image is a half roll made to peek in from an edge; no film canister: it carries a brand;
+  // no pins: tacks lying on a shelf looked odd)
+  // where the hand holds a prop, if not its middle (as fractions of the image): the mug by its handle
+  var GRIP = { mug: [.9, .5] };
   var NAMES = Object.keys(POOL), out = {};
 
   function el(cls, parent) { var d = document.createElement('div'); d.className = cls; parent.appendChild(d); return d; }
@@ -61,15 +64,25 @@
   // the hand (the old table's pinch) reaches in from the edge nearest the prop, pinching it at its middle;
   // its sleeve runs on past the edge of the header or footer, so the end of the arm is never seen
   var HW = 560 / 219;                                   // hand-pinch.webp: width / height
-  function makeHand(sh, cx, cy, z) {
-    // the edge of the header (or footer) nearest the prop: the header's bottom is the brass rail, and
-    // the footer's top meets the page, so those two are never used
+  function ways(sh, cx, cy) {
     var b = sh.box.getBoundingClientRect(), wrap = (sh.from === 'top' ? HERO : FOOT).getBoundingClientRect();
     var px = b.left + cx, py = b.top + cy;
-    var ways = sh.from === 'top' ? [['top', py - wrap.top]] : [['bottom', wrap.bottom - py]];
-    ways.push(['left', px - wrap.left], ['right', wrap.right - px]);
-    ways.sort(function (m, n) { return m[1] - n[1]; });
-    var side = ways[0][0], edge = ways[0][1];
+    // the header's bottom is the brass rail, and the footer's top meets the page, so those are never used
+    var w = { left: px - wrap.left, right: wrap.right - px };
+    if (sh.from === 'top') w.top = py - wrap.top; else w.bottom = wrap.bottom - py;
+    return w;
+  }
+  function nearest(w) { return Object.keys(w).sort(function (m, n) { return w[m] - w[n]; })[0]; }
+  // where the hand takes hold: the prop's middle, or its grip (the mug's handle) turned with the prop
+  function holdAt(name, x, y, z, rot) {
+    var g = GRIP[name], cx = x + z.w / 2, cy = y + z.h / 2;
+    if (!g) return [cx, cy];
+    var a = rot * Math.PI / 180, dx = (g[0] - .5) * z.w, dy = (g[1] - .5) * z.h;
+    return [cx + dx * Math.cos(a) - dy * Math.sin(a), cy + dx * Math.sin(a) + dy * Math.cos(a)];
+  }
+  function makeHand(sh, cx, cy, z, side) {
+    var w = ways(sh, cx, cy); side = side || nearest(w);
+    var edge = w[side];
     var hh = Math.max(26, Math.min(z.h * .7, 90)), hw = hh * HW, len = Math.max(hw, edge + 60);
     var hand = document.createElement('div'); hand.className = 'shelf-hand';
     hand.style.left = (cx - hw * .05) + 'px'; hand.style.top = (cy - hh * .6) + 'px';
@@ -101,7 +114,11 @@
       var f = Math.random() * .25, x = (b.width - z.w) * (sh.from === 'top' ? .1 + Math.random() * .4 : sh.from === 'left' ? f : 1 - f);
       var y = (b.height - z.h) / 2;
       img.style.width = z.w + 'px'; img.style.left = x + 'px'; img.style.top = y + 'px';
-      var r = 'rotate(' + rot + 'deg)', h = makeHand(sh, x + z.w / 2, y + z.h / 2, z);
+      // a prop with a grip is turned so the grip faces the edge the hand comes from
+      var side = nearest(ways(sh, x + z.w / 2, y + z.h / 2));
+      if (GRIP[name]) rot = ({ right: 0, bottom: 90, left: 180, top: -90 }[side] + (Math.random() * 16 - 8)).toFixed(1);
+      var at = holdAt(name, x, y, z, rot), r = 'rotate(' + rot + 'deg)', h = makeHand(sh, at[0], at[1], z, side);
+      sh.rot = +rot; sh.side = side;
       img.style.transform = h.move + ' ' + r; h.el.style.transform = h.gone;
       sh.box.insertBefore(img, h.el); sh.prop = img; sh.name = name;
       return Promise.all([
@@ -116,8 +133,9 @@
   function take(sh) {
     var img = sh.prop; if (!img) return Promise.resolve();
     var name = sh.name;
-    var cx = parseFloat(img.style.left) + img.offsetWidth / 2, cy = parseFloat(img.style.top) + img.offsetHeight / 2;
-    var h = makeHand(sh, cx, cy, { w: img.offsetWidth, h: img.offsetHeight });
+    var z = { w: img.offsetWidth, h: img.offsetHeight };
+    var at = holdAt(name, parseFloat(img.style.left), parseFloat(img.style.top), z, sh.rot || 0);
+    var h = makeHand(sh, at[0], at[1], z, GRIP[name] ? sh.side : null);
     var from = getComputedStyle(img).transform; from = from === 'none' ? '' : from;
     h.el.style.transform = h.gone;
     return anim(h.el, [{ transform: h.gone }, { transform: h.at }], 1100, IN)
