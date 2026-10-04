@@ -216,3 +216,10 @@ figure video{display:block;width:100%;border-radius:12px;background:#000}
 .route-grid{grid-template-columns:1fr;gap:8px}
 .stats{grid-template-columns:repeat(4,minmax(0,1fr))}
 .stat b small{font-size:.62em;font-weight:700;color:var(--ink-3);margin-left:1px}
+/* tall photos and loops side by side, two to a row (phones too: they're tall enough at half width) */
+.post .duo{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start;margin:28px 0}
+.post .duo figure{margin:0}
+.post .duo figure img,.post .duo figure video{width:100%;height:auto;max-height:none;margin:0}
+.post .duo figcaption{font-size:13px;padding:0 2px}
+@media (max-width:640px){.post .duo{gap:8px;margin:22px -8px}.post .duo figcaption{font-size:12px}}
+.post figure.tall{max-width:min(100%,440px);margin-left:auto;margin-right:auto}
