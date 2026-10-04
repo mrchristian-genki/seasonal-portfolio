@@ -229,3 +229,9 @@
   background:linear-gradient(180deg,#e9d39a,#a37a35 45%,#6e4f1c 75%,#c9a65c);box-shadow:1px 2px 3px rgba(0,0,0,.5)}
 .st-dn .pipe::before{left:6px}.st-dn .pipe::after{right:4px}
 @media (max-width:640px){.st-dn{padding:9px 11px}.st-plate{padding:8px 18px}.st-plate h1{font-size:17px;letter-spacing:.08em}.st-dn .pipe{width:30px;height:10px}}
+
+/* the day/night switch, in its own small riveted panel at the bottom right, kept clear of the river */
+.st-ctrl{position:absolute;z-index:50;top:auto;bottom:18px;right:clamp(12px,3vw,40px);padding:6px 9px;gap:7px;border-width:2px}
+.st-ctrl .st-switch{width:clamp(56px,5vw,72px)}
+.st-ctrl .sw-label{font-size:clamp(4px,.36vw,6px)}
+@media (max-width:640px){.st-ctrl{bottom:16px;padding:5px 7px;gap:5px}.st-ctrl .st-switch{width:50px}.st-ctrl .sw-label{font-size:3.5px}}

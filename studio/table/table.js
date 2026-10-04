@@ -37,8 +37,8 @@
     { id: 'foxsit', src: 'fox-sitting', x: 1330, y: 640, w: 230, rot: 8, how: 'slide', from: 'right' },
     { id: 'deer', src: 'deer', x: 150, y: 895, w: 95, rot: 20, how: 'drop' }
   ];
-  // the header is the river table now (river.js): the day/night dial and switch sit under the buttons, and
-  // Marley drops by; the props live on the full table
+  // the header is the river table now (river.js): the STUDIO plate on the left, the day/night dial and switch
+  // under the buttons on the right, and Marley drops by; the props live on the full table
   if (HEADER) PROPS = [];
   var PHOTOS = ['01', '02', '03'].map(function (n) { return '../../play/media/2024-09-05-marlette/' + n + '.jpg'; });
   var els = {}, prints = [], busy = false;
@@ -231,7 +231,7 @@
   // The desk's two mounted pieces, one at each end of the header: the logo and label on the left (like a
   // mug), and the day/night lamps under the Play and Log out buttons on the right. They stay put at every
   // screen width; every other prop (and Marley) keeps a margin clear of them, and is left off if it can't.
-  var LABEL = document.querySelector('.st-label'), NAV = document.querySelector('.st-nav'), DN = document.querySelector('.st-dn');
+  var LABEL = document.querySelector('.st-label'), NAV = document.querySelector('.st-nav'), DN = [].slice.call(document.querySelectorAll('.st-dn'));
   var GAP = 24;
   function pinned() { return PROPS.filter(function (p) { return p.pin === 'nav'; }); }
   // where a pinned prop rests on screen, worked out from its spot (it may still be sliding in)
@@ -243,7 +243,7 @@
   function keepRects() {
     var out = [];
     if (LABEL) out.push(LABEL.getBoundingClientRect());
-    if (DN) out.push(DN.getBoundingClientRect());
+    DN.forEach(function (d) { out.push(d.getBoundingClientRect()); });
     if (NAV) {
       var n = NAV.getBoundingClientRect(), r = { left: n.left, top: n.top, right: n.right, bottom: n.bottom };
       pinned().forEach(function (p) {
