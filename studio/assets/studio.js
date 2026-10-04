@@ -99,7 +99,6 @@
   }
   function renderDrive(j) {
     lastDrive = j;
-    if (window.StudioTable) StudioTable.inUse(j.running);
     var d = $('#drive'); if (!d) return;
     var names = j.folders.map(function (f) { return '“' + esc(f) + '”'; }).join(', ');
     var line;
@@ -147,7 +146,7 @@
       '<b>' + label + '</b><small>' + what + ' · ' + size(f.bytes) + '</small><div class="in-act">' + act + '</div></li>';
   }
 
-  // ---------- the loader: the reactor panel fills as the Studio works (the IN USE sign glows too) ----------
+  // ---------- the loader: the reactor panel fills as the Studio works ----------
   // The video isn't played: it's moved to the frame that matches how far along the work is, so the green
   // fuel rises with real progress and the tube is full exactly when the work is. A clean scale, status tag
   // and plaque are drawn over the video's own, and the steps tick off below in green phosphor.
@@ -167,7 +166,6 @@
       '<ol class="ld-steps">' + steps.map(function (s) { return '<li><span class="ld-dot"></span><span class="ld-name">' + esc(s) + '</span><small></small></li>'; }).join('') + '</ol>' +
       '<p class="ld-hold">Hold on a moment, this page is working.</p></div>';
     document.body.appendChild(el); document.body.classList.add('busy');
-    if (window.StudioTable) StudioTable.inUse(true);
     requestAnimationFrame(function () { el.classList.add('on'); });
     var items = $$('.ld-steps li', el), cur = -1, shown = 0, finished = false, closed = false;
     var vid = $('video', el), now = $('.rx-now', el), tag = $('.rx-tag b', el), plate = $('.rx-plate b', el), rx = $('.rx', el);
@@ -196,7 +194,6 @@
     function close(ms) {
       setTimeout(function () { el.classList.remove('on'); setTimeout(function () { closed = true; el.remove(); }, 300); }, ms);
       document.body.classList.remove('busy');
-      if (window.StudioTable) StudioTable.inUse(lastDrive ? lastDrive.running : false);
     }
     show(0);
     return {
