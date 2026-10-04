@@ -305,3 +305,5 @@ body:has(.savebar){padding-bottom:64px}
 .trim input[type=range]{width:100%;accent-color:#b08a52} .trim output{font-weight:400;color:var(--ink2);font-variant-numeric:tabular-nums}
 .vt-btns{flex-wrap:wrap;gap:6px;margin:6px 0 10px} .vt-btns span{font-size:14px}
 .ph video.clip{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;background:#1d1d1d;cursor:pointer}
+.vt-log{margin:6px 0 10px;font-size:13px} .vt-log summary{cursor:pointer;color:var(--ink2)}
+.vt-log pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px;background:rgba(0,0,0,.06);padding:8px;border-radius:6px;max-height:240px;overflow:auto}

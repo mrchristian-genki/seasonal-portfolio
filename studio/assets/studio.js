@@ -727,6 +727,10 @@
       if (VT) drawTrim();
     });
   }
+  // the end of ffmpeg's log, folded away, for when something goes wrong
+  function logBox(lines) {
+    return lines && lines.length ? '<details class="vt-log" id="vtLog"><summary>What ffmpeg said</summary><pre>' + esc(lines.join('\n')) + '</pre></details>' : '';
+  }
   function stopTrim() { if (VT) { clearTimeout(VT.poll); VT.dead = true; } VT = null; }
   function openTrim(name) {
     stopTrim();
@@ -737,7 +741,7 @@
     var vt = VT; if (!vt) return;
     api('video', null, '&f=' + encodeURIComponent(E.source) + '&n=' + encodeURIComponent(vt.name) + (retry ? '&retry=1' : '')).then(function (r) {
       if (vt.dead) return;
-      vt.key = r.key; vt.info = r.info; vt.state = r.state; vt.pct = r.pct || 0; vt.error = r.error;
+      vt.key = r.key; vt.info = r.info; vt.state = r.state; vt.pct = r.pct || 0; vt.error = r.error; vt.log = r.log;
       if (r.state === 'ready' && vt.from == null) { vt.from = 0; vt.to = Math.min(r.info.sec, 8); }
       drawTrim();
       if (r.state === 'working') vt.poll = setTimeout(function () { pollPreview(false); }, 2000);
@@ -749,7 +753,7 @@
       '<button type="button" class="link" id="vtClose">Close</button></div>';
     if (vt.state !== 'ready') {
       box.innerHTML = '<div class="trim">' + head + (vt.state === 'failed'
-        ? '<p class="err">' + esc(vt.error || 'The preview didn\'t work.') + '</p><button type="button" class="small" id="vtRetry">Try again</button>'
+        ? '<p class="err">The preview didn\'t work: ' + esc(vt.error || 'ffmpeg stopped') + '</p>' + logBox(vt.log) + '<button type="button" class="small" id="vtRetry">Try again</button>'
         : '<p class="muted">Making a small preview to scrub through… ' + (vt.pct ? vt.pct + '%' : '') + '</p><div class="vt-prog"><i></i></div>') + '</div>';
       var bar = $('.vt-prog i', box); if (bar) bar.style.width = vt.pct + '%';
       $('#vtClose').onclick = function () { stopTrim(); renderLoops(); };
@@ -767,7 +771,7 @@
       '<div class="row vt-btns"><button type="button" class="small" id="vtAtS">Start at the playhead</button><button type="button" class="small" id="vtAtE">End at the playhead</button>' +
         '<button type="button" class="small" id="vtLoop">▶ Play the loop</button><span id="vtLen" class="muted"></span></div>' +
       field('Caption', '<input id="vtCap" placeholder="What\'s happening in it">') +
-      '<div class="row"><button type="button" class="primary" id="vtMake">Make the loop</button><span id="vtMsg" class="muted"></span></div></div>';
+      '<div class="row"><button type="button" class="primary" id="vtMake">Make the loop</button><span id="vtMsg" class="muted"></span></div><div id="vtLog"></div></div>';
     var v = $('#vtv'), S = $('#vtS'), En = $('#vtE'), looping = false;
     var show = function () {
       $('#vtSo').textContent = secs(vt.from); $('#vtEo').textContent = secs(vt.to);
@@ -806,7 +810,7 @@
         retry = false;
         if (vt.dead) return;
         if (r.state === 'working') { if (msg) msg.textContent = 'Making the loop… ' + (r.pct ? r.pct + '%' : ''); setTimeout(ask, 2000); return; }
-        if (r.state === 'failed') throw new Error(r.error || 'ffmpeg stopped');
+        if (r.state === 'failed') { var lg = $('#vtLog'); if (lg) lg.outerHTML = logBox(r.log); throw new Error(r.error || 'ffmpeg stopped'); }
         collect();
         var name = nextClip();
         clipsNew[name + '.mp4'] = { token: r.token };
