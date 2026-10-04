@@ -238,8 +238,23 @@ final class Drive {
         $type = ['jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'png' => 'image/png', 'webp' => 'image/webp', 'heic' => 'image/heic', 'heif' => 'image/heif',
             'wav' => 'audio/wav', 'mp3' => 'audio/mpeg', 'm4a' => 'audio/mp4'][$ext] ?? 'text/plain; charset=utf-8';
         header('Content-Type: ' . $type);
-        header('Content-Length: ' . filesize($path));
         header('Cache-Control: private, max-age=600');
+        header('Accept-Ranges: bytes');
+        $total = filesize($path);
+        // a part of the file when asked (Safari plays audio only from a server that answers ranges)
+        if (preg_match('/^bytes=(\d*)-(\d*)$/', $_SERVER['HTTP_RANGE'] ?? '', $m) && ($m[1] !== '' || $m[2] !== '')) {
+            $from = $m[1] === '' ? max(0, $total - (int) $m[2]) : (int) $m[1];
+            $to = $m[1] === '' || $m[2] === '' ? $total - 1 : min((int) $m[2], $total - 1);
+            if ($from > $to || $from >= $total) { http_response_code(416); header("Content-Range: bytes */$total"); exit; }
+            http_response_code(206);
+            header("Content-Range: bytes $from-$to/$total");
+            header('Content-Length: ' . ($to - $from + 1));
+            $fh = fopen($path, 'rb'); fseek($fh, $from); $left = $to - $from + 1;
+            while ($left > 0 && !feof($fh)) { $chunk = fread($fh, min(65536, $left)); echo $chunk; $left -= strlen($chunk); }
+            fclose($fh);
+            exit;
+        }
+        header('Content-Length: ' . $total);
         readfile($path);
         exit;
     }
