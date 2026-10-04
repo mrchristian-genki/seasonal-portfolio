@@ -1,0 +1,100 @@
+/* ROUTE DASHBOARD: the numbers under a route's map and profile (js/route-view.js dashboard()). Shared by
+   the Play post pages and the Play view inside the home page, so it takes either's colours (and night). */
+.dash{--dk:var(--pi-ink,var(--ink,#0f4d47));--dk2:var(--pi-ink2,var(--ink-2,#3f5a64));--dk3:var(--pi-ink3,var(--ink-3,#71878f));
+  --dl:var(--pi-line,var(--line,#dde7e8));--dc:var(--pi-card,var(--card,#fff));--da:var(--pi-accent,var(--accent,#d8618f));
+  --dsoft:var(--pi-soft,var(--accent-soft,#fbe7ef));--dd:var(--pi-display,var(--display,system-ui,sans-serif));
+  display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;margin-top:16px}
+.dash[hidden]{display:none}
+.dash .dc{grid-column:span 3;border:1px solid var(--dl);border-radius:14px;padding:12px 14px 14px;background:var(--dc);min-width:0}
+.dash .dc h3{margin:0 0 8px;font:800 13px var(--dd);letter-spacing:.06em;text-transform:uppercase;color:var(--dk3)}
+.dash .speed{grid-column:1/-1}
+.dash .dir{grid-column:span 2} .dash .facts{grid-column:span 4}
+.dash .dir:last-child,.dash .facts:first-child{grid-column:1/-1}
+@media (max-width:720px){.dash{grid-template-columns:1fr}.dash .dc,.dash .dir,.dash .facts{grid-column:1/-1}}
+.dash .cap{margin:6px 0 0;font-size:12px;color:var(--dk3);display:flex;flex-wrap:wrap;gap:4px 12px;align-items:center}
+.dash .cap .k{display:inline-block;width:18px;height:0;border-top:3px solid var(--da);margin-right:4px;vertical-align:middle}
+.dash .cap .k.avg{border-top:2px dashed var(--dk)} .dash .cap .k.top{width:9px;height:9px;border:0;border-radius:50%;background:var(--da)}
+
+/* speedometers */
+.dash .gauges{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px}
+.dash .gauge{margin:0;text-align:center}
+.dash .gauge svg{display:block;width:100%;max-width:280px;margin:0 auto;overflow:visible}
+.dash .gauge .trk{fill:none;stroke:var(--dl);stroke-width:14;stroke-linecap:round}
+.dash .gauge .val{fill:none;stroke-width:14;stroke-linecap:round}
+.dash .gauge .val.g-ink{stroke:var(--dk)} .dash .gauge .val.g-acc{stroke:var(--da)}
+.dash .gauge .tk{stroke:var(--dk3);stroke-width:1.2} .dash .gauge .tk.mj{stroke:var(--dk2);stroke-width:2}
+.dash .gauge .tl{font:700 10px var(--dd);fill:var(--dk3);text-anchor:middle}
+.dash .gauge .ndl{stroke:var(--dk);stroke-width:3.5;stroke-linecap:round}
+.dash .gauge .hub{fill:var(--dk);stroke:var(--dc);stroke-width:3}
+.dash .gauge figcaption b{font:800 30px/1 var(--dd);color:var(--dk);font-variant-numeric:tabular-nums}
+.dash .gauge figcaption small{font-size:13px;color:var(--dk3);font-weight:700}
+.dash .gauge figcaption span{display:block;font-size:12px;color:var(--dk3);margin-top:2px}
+
+/* speed along the way */
+.dash .chart{display:block;width:100%;height:120px}
+.dash .chart .s0{stop-color:var(--da);stop-opacity:.45} .dash .chart .s1{stop-color:var(--da);stop-opacity:.02}
+.dash .chart .ln{fill:none;stroke:var(--da);stroke-width:2;vector-effect:non-scaling-stroke}
+.dash .chart .avg{stroke:var(--dk);stroke-width:1.5;stroke-dasharray:6 5;vector-effect:non-scaling-stroke}
+.dash .chart .gl{stroke:var(--dl);vector-effect:non-scaling-stroke}
+.dash .chart .ax{font:600 11px system-ui,sans-serif;fill:var(--dk3)}
+.dash .chart .topdot{fill:var(--da);stroke:var(--dc);stroke-width:2;vector-effect:non-scaling-stroke}
+
+/* up and down */
+.dash .ud{display:grid;grid-template-columns:70px 70px 1fr;gap:12px;align-items:end;min-height:170px}
+.dash .udb{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:170px;text-align:center}
+.dash .udb i{display:block;width:34px;border-radius:8px 8px 3px 3px;margin-bottom:6px}
+.dash .udb.up i{background:linear-gradient(0deg,var(--dsoft),var(--da))}
+.dash .udb.down i{background:linear-gradient(180deg,#bfe0e7,#1f6f8b);border-radius:3px 3px 8px 8px}
+.dash .udb b{font:800 17px var(--dd);color:var(--dk);white-space:nowrap;font-variant-numeric:tabular-nums}
+.dash .udb small,.dash .range small{display:block;font-size:11px;color:var(--dk3)}
+.dash .range{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto 1fr auto auto;column-gap:10px;height:170px}
+.dash .range .bar{grid-row:1/4;grid-column:1;width:10px;border-radius:6px;margin:6px 0;background:linear-gradient(180deg,#f2f5f5,#6c8f88 45%,#3d5b4f)}
+.dash .range .hi,.dash .range .lo{grid-column:2;font-size:13px;color:var(--dk2)}
+.dash .range .hi{grid-row:1} .dash .range .lo{grid-row:3;align-self:end}
+.dash .range b{font:800 17px var(--dd);color:var(--dk)}
+.dash .range p{grid-column:1/-1;grid-row:4;margin:6px 0 0;font-size:12px;color:var(--dk3)}
+
+/* grades */
+.dash .grades{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;align-items:end;height:150px}
+.dash .gb{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;min-width:0}
+.dash .gb i{display:block;width:100%;border-radius:5px 5px 2px 2px}
+.dash .gb .gv{font:800 12px var(--dd);color:var(--dk2);margin-bottom:3px}
+.dash .gb small{flex:none;font-size:10px;line-height:1.15;color:var(--dk3);text-align:center;margin-top:4px;height:2.4em}
+
+/* where the time went */
+.dash .donut{display:flex;gap:14px;align-items:center}
+.dash .donut svg{width:140px;flex:none}
+.dash .donut .seg{fill:none;stroke-width:22}
+.dash .donut .dn-b{font:800 15px var(--dd);fill:var(--dk);text-anchor:middle} .dash .donut .dn-s{font:600 11px system-ui,sans-serif;fill:var(--dk3);text-anchor:middle}
+.dash .donut ul{list-style:none;margin:0;padding:0;font-size:13px;color:var(--dk2);display:grid;gap:5px}
+.dash .donut li i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.dash .donut li b{color:var(--dk)} .dash .donut li small{color:var(--dk3)}
+
+/* splits */
+.dash .spl{display:flex;gap:4px;align-items:end;height:150px;overflow-x:auto;padding-bottom:2px}
+.dash .sb{flex:1 0 26px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+.dash .sb i{display:block;width:100%;border-radius:5px 5px 2px 2px;background:var(--dk2);opacity:.75}
+.dash .sb.best i{background:var(--da);opacity:1}
+.dash .sb span{font:700 9px system-ui,sans-serif;color:var(--dk3);margin-bottom:3px;writing-mode:vertical-rl;transform:rotate(180deg)}
+.dash .sb small{font-size:10px;color:var(--dk3);margin-top:3px}
+
+/* which way */
+.dash .dir{text-align:center}
+.dash .rose{width:150px;display:block;margin:0 auto}
+.dash .rose .rr{fill:none;stroke:var(--dl)} .dash .rose .pet{fill:var(--da);fill-opacity:.75;stroke:var(--dc);stroke-width:1}
+.dash .rose .rl{font:800 10px var(--dd);fill:var(--dk3);text-anchor:middle}
+.dash .rose-c{margin:4px 0 0;font-size:13px;color:var(--dk2)}
+
+/* hidden in the numbers */
+.dash dl{margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px}
+.dash dl div{border-radius:10px;background:var(--dsoft);padding:8px 10px}
+.dash dt{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--dk3)}
+.dash dd{margin:2px 0 0} .dash dd b{display:block;font:800 18px/1.2 var(--dd);color:var(--dk)} .dash dd small{font-size:12px;color:var(--dk2)}
+@media (max-width:720px){
+  .dash .ud{grid-template-columns:64px 64px minmax(0,1fr);gap:10px}
+  .dash .range{height:auto;min-height:170px}
+  .dash .range .hi,.dash .range .lo{font-size:12px}
+  .dash .gb small{font-size:9px;height:3.6em}
+  .dash .gb .gv{font-size:11px}
+  .dash .grades{gap:4px}
+}
