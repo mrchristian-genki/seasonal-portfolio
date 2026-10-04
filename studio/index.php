@@ -128,7 +128,7 @@ $in = studio_logged_in();
 <?php if ($in): ?>
 <div id="toast" role="status" aria-live="polite"></div>
 <script src="assets/track.js?v=<?= STUDIO_VERSION ?>"></script>
-<script src="assets/studio.js?v=<?= STUDIO_VERSION ?>-17"></script>
+<script src="assets/studio.js?v=<?= STUDIO_VERSION ?>-18"></script>
 <?php endif; ?>
 <script src="table/table.js?v=22"></script>
 <script src="table/river.js?v=6"></script>

@@ -30,7 +30,7 @@ const KIND = { ride: 'Ride', hike: 'Hike', forage: 'Foraging walk', make: 'Mini-
 const day = (d, long) => new Date(d + 'T12:00:00Z').toLocaleDateString('en-US', { timeZone: 'UTC', weekday: long ? 'long' : 'short', month: long ? 'long' : 'short', day: 'numeric', year: 'numeric' });
 const mi = (km) => (km * 0.621371).toFixed(km * 0.621371 < 10 ? 1 : 0) + ' mi';
 const ft = (m) => Math.round(m * 3.28084).toLocaleString('en-US') + ' ft';
-const dur = (s) => { const h = Math.floor(s / 3600), m = Math.round(s % 3600 / 60); return h ? `${h} h ${String(m).padStart(2, '0')} m` : `${m} min`; };
+const dur = (s) => { const t = Math.round(s / 60), h = Math.floor(t / 60), m = t % 60; return h ? `${h} h ${String(m).padStart(2, '0')} m` : `${m} min`; };
 const mmss = (s) => `${Math.floor(s / 60)}:${String(Math.round(s % 60)).padStart(2, '0')}`;
 const paras = (t) => String(t || '').split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
 

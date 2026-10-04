@@ -27,7 +27,7 @@
   function slug(s) { return String(s || '').toLowerCase().replace(/['’]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 48); }
   function mi(km) { return Math.round(km * 0.621371 * 10) / 10; }
   function ft(m) { return Math.round(m * 3.28084); }
-  function dur(s) { if (s == null) return ''; var h = Math.floor(s / 3600), m = Math.round((s % 3600) / 60); return (h ? h + ' h ' : '') + m + ' m'; }
+  function dur(s) { if (s == null) return ''; var t = Math.round(s / 60), h = Math.floor(t / 60), m = t % 60; return (h ? h + ' h ' : '') + m + ' m'; }
   function words(s) { return (String(s || '').match(/\S+/g) || []).length; }
   function blobToB64(blob) { return new Promise(function (ok) { var r = new FileReader(); r.onload = function () { ok(String(r.result).split(',')[1]); }; r.readAsDataURL(blob); }); }
   function markDirty() { dirty = true; var s = $('#saveState'); if (s) s.textContent = 'Unsaved changes'; if (typeof renderNext === 'function') renderNext(); }

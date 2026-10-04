@@ -142,7 +142,18 @@ final class Drive {
     // the arrival), and what kind it is
     private function fileInfo(string $path, string $rel): array {
         $st = stat($path);
-        return ['name' => $rel, 'kind' => self::kind($rel), 'bytes' => (int) $st['size'], 'changed' => (int) $st['mtime'], 'arrived' => (int) $st['ctime']];
+        return ['name' => $rel, 'kind' => self::kindOf($path, $rel), 'bytes' => (int) $st['size'], 'changed' => (int) $st['mtime'], 'arrived' => (int) $st['ctime']];
+    }
+    // A text file can be a track in disguise (a GPX export saved as File_000.txt, say): the first few KB
+    // tell. GPX, or a CSV with latitude and longitude columns, is a track; anything else stays a note.
+    public static function kindOf(string $path, string $rel): string {
+        $kind = self::kind($rel);
+        if ($kind !== 'text') return $kind;
+        $head = (string) @file_get_contents($path, false, null, 0, 4096);
+        if (preg_match('/<gpx[\s>]/i', $head)) return 'track';
+        $first = strtolower(strtok($head, "\n") ?: '');
+        if (str_contains($first, 'latitude') && str_contains($first, 'longitude') && substr_count($first, ',') >= 2) return 'track';
+        return $kind;
     }
     private function listFiles(string $dir): array {
         $out = [];
@@ -232,7 +243,7 @@ final class Drive {
         $path = $r === null ? false : realpath("$root/$name");
         if (!$path || !is_file($path) || !str_starts_with($path, $root . '/')) json_fail('No such file.', 404);
         if ($r['day'] !== null && (dirname($path) !== $root || $this->day($path) !== $r['day'])) json_fail('No such file.', 404);
-        $kind = self::kind($path);
+        $kind = self::kindOf($path, $path);
         if (!in_array($kind, ['photo', 'track', 'text', 'audio'], true)) json_fail('Only photos, tracks, notes and audio come through here.', 400);
         $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
         $type = ['jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'png' => 'image/png', 'webp' => 'image/webp', 'heic' => 'image/heic', 'heif' => 'image/heif',
