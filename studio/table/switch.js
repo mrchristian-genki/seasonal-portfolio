@@ -31,6 +31,39 @@
     set(!isNight());
   });
   if (lamps) lamps.addEventListener('click', function () { sw.click(); });
+
+  // The address keeps up: #day or #night at the end, after the Studio's own view once logged in
+  // (#notes/night, #note/<id>/day, #new/day). Flipping day and night rewrites the address in place;
+  // a change of view (studio.js, through StudioHash) adds a step, so Back and Forward walk the views.
+  // Opening an address with a hash restores both (the time of day only on opening).
+  var view = '', onview = null;
+  function parse() {
+    var parts = decodeURIComponent(location.hash.slice(1)).split('/'), mode = null;
+    if (parts[parts.length - 1] === 'day' || parts[parts.length - 1] === 'night') mode = parts.pop();
+    return { view: parts.join('/'), mode: mode };
+  }
+  function address() { return location.pathname + '#' + (view ? view + '/' : '') + (isNight() ? 'night' : 'day'); }
+  function write(push) {
+    var to = address();
+    if (location.pathname + location.search + location.hash === to) return;
+    history[push ? 'pushState' : 'replaceState'](null, '', to);
+  }
+  var first = parse();
+  view = first.view;
+  if (first.mode && (first.mode === 'night') !== isNight()) set(first.mode === 'night');
+  sw.addEventListener('click', function () { write(false); });
+  // Back and Forward change the view only: the time of day stays as it is, and the address follows it
+  addEventListener('popstate', function () {
+    var h = parse(), moved = h.view !== view;
+    view = h.view; write(false);                         // first, so the view's own update adds no step
+    if (moved && onview) onview(view);
+  });
+  window.StudioHash = {
+    view: function () { return view; },
+    go: function (v, replace) { view = v; write(!replace); },
+    onview: function (fn) { onview = fn; }
+  };
+  if (!document.getElementById('app')) write(false);    // the login page: just the time of day
   if (disc) disc.style.transition = 'none';
   show(isNight());
   if (disc) { void disc.offsetWidth; disc.style.transition = ''; }

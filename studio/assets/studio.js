@@ -69,11 +69,33 @@
   function photoName(p) { return p.src.split('/').pop(); }
   function photoUrl(p) { var n = photoName(p); return fresh[n] ? fresh[n].thumb : 'api.php?a=photo&id=' + encodeURIComponent(E.id) + '&n=' + encodeURIComponent(n); }
 
+  // ---------- where we are: the view sits in the address (#notes, #note/<id>, #new), before the time of
+  // day that switch.js keeps at the end. A new view adds a step to history, so Back and Forward work ----------
+  var here = '', starting = true;
+  function route(v, replace) {
+    here = v; replace = replace || starting; starting = false;     // a page's first view replaces, never adds
+    if (window.StudioHash) StudioHash.go(v, replace);
+    else history.replaceState(null, '', location.pathname + '#' + v);
+  }
+  function open(v) {
+    var m = /^note\/(.+)$/.exec(v || '');
+    if (m) return edit(m[1]);
+    if (v === 'new') return edit(null);
+    return showList();
+  }
+  function listen() {                    // Back and Forward (switch.js loads after this file, so at start)
+    if (window.StudioHash) StudioHash.onview(function (v) {
+      if (v === here) return;
+      if (dirty && !confirm('Leave without saving?')) { StudioHash.go(here); return; }
+      dirty = false; open(v);
+    });
+  }
+
   // ---------- list ----------
   function showList() {
     if (dirty && !confirm('Leave without saving?')) return;
     dirty = false; E = null; fresh = {}; removed = []; INBOX = null;
-    history.replaceState(null, '', './');
+    route('notes');
     app.innerHTML = '<div class="head"><h1>Field Notes</h1><button id="new" class="primary">New entry</button></div><section id="drive" class="panel drive"><p class="muted">Checking Google Drive…</p></section><div id="list" class="cards"><p class="muted">Loading entries…</p></div>';
     $('#new').onclick = function () { edit(null); };
     driveStatus();
@@ -324,11 +346,11 @@
   function edit(id) {
     if (dirty && !confirm('Leave without saving?')) return;
     dirty = false; fresh = {}; removed = [];
-    if (!id) { E = blank(); render(); return Promise.resolve(); }
+    if (!id) { E = blank(); route('new'); render(); return Promise.resolve(); }
     app.innerHTML = '<p class="muted">Opening…</p>';
     return api('entry', null, '&id=' + encodeURIComponent(id)).then(function (j) {
       E = j.entry; E.post = E.post || { title: '', body: '' }; E.episode = E.episode || { title: '', script: '', audio: null }; E.questions = E.questions || []; E.photos = E.photos || [];
-      history.replaceState(null, '', '?e=' + encodeURIComponent(id)); render();
+      route('note/' + id); render();
     }).catch(function (err) { toast(err.message, true); showList(); });
   }
 
@@ -597,7 +619,7 @@
     }).then(function () {
       fresh = {}; removed = []; dirty = false;
       $('#saveState').textContent = E.status === 'published' ? 'Saved and publishing: live in about a minute' : 'Saved';
-      if (first) { history.replaceState(null, '', '?e=' + encodeURIComponent(E.id)); render(); }
+      if (first) { route('note/' + E.id, true); render(); }
       toast(E.status === 'published' ? 'Saved. The site updates in about a minute.' : 'Saved.');
       L.at(2); L.done();
     }).catch(function (err) {
@@ -609,8 +631,9 @@
 
   // ---------- start ----------
   api('config').then(function (c) {
-    CFG = c;
-    var m = /[?&]e=([^&]+)/.exec(location.search);
-    if (m) edit(decodeURIComponent(m[1])); else showList();
+    CFG = c; listen();
+    var m = /[?&]e=([^&]+)/.exec(location.search);            // older ?e=<id> links still open their note
+    if (m) edit(decodeURIComponent(m[1]));
+    else open(window.StudioHash ? StudioHash.view() : '');
   }).catch(function (err) { app.innerHTML = '<p class="err">' + esc(err.message) + '</p>'; });
 })();
