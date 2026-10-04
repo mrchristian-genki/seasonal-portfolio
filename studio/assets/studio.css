@@ -407,3 +407,18 @@ body:has(.savebar){padding-bottom:64px}
 .dash.steam .ud{grid-template-columns:70px 70px minmax(0,1fr)}
 .dash.steam .ud{grid-template-columns:1fr 1fr}
 .dash.steam .range .bar{background:linear-gradient(90deg,#4a3216,#c99a48 55%,#f3e6d2)}
+
+/* picking a loop's poster frame */
+dialog.pfp{width:min(760px,94vw);border:0;border-radius:6px;padding:16px 18px;background:var(--paper);color:var(--ink);box-shadow:0 20px 50px rgba(0,0,0,.5)}
+dialog.pfp::backdrop{background:rgba(20,12,6,.7)}
+.pfp h2 small{font:400 13px "Special Elite",monospace;color:var(--ink3);margin-left:8px}
+.pfp video{display:block;width:100%;max-height:56vh;background:#000;border-radius:4px}
+.pfp .pf-r{width:100%;margin:10px 0 2px;accent-color:#b08a52}
+.pfp .pf-t{font-size:13px;margin-bottom:8px}
+.pfp .pf-c{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:10px}
+.pfp .pf-c:empty{display:none}
+.pfp .pf-k{padding:0;border:2px solid transparent;border-radius:4px;overflow:hidden;background:#000;line-height:0}
+.pfp .pf-k img{width:100%;aspect-ratio:16/10;object-fit:cover}
+.pfp .pf-k.best{border-color:#c99a48} .pfp .pf-k.on{border-color:#2b2118;box-shadow:0 0 0 2px #e2b45b}
+.pfp .row .sp{flex:1}
+.ph .opts .pfBtn{font-size:13px}

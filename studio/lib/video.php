@@ -144,7 +144,8 @@ final class Video {
                 [$this->ffmpeg, '-hide_banner', '-nostdin', '-y', '-ss', sprintf('%.3f', $from), '-threads', '1', '-i', $path, '-t', sprintf('%.3f', $to - $from),
                     '-filter_threads', '1', '-an', '-sn', '-dn', '-map_metadata', '-1', '-vf', $this->filters($info, 960), '-c:v', 'libx264', '-preset', 'slow', '-crf', '23',
                     '-profile:v', 'high', '-x264-params', 'threads=1:lookahead-threads=1:sliced-threads=0', '-threads', '1', '-movflags', '+faststart', "$out.part.mp4"],
-                [$this->ffmpeg, '-hide_banner', '-nostdin', '-y', '-i', "$out.part.mp4", '-frames:v', '1', '-q:v', '3', "$d/$tok.jpg"],
+                // the poster: the most representative frame of the loop (ffmpeg's thumbnail pick), not just the first
+                [$this->ffmpeg, '-hide_banner', '-nostdin', '-y', '-threads', '1', '-i', "$out.part.mp4", '-vf', 'thumbnail=' . max(2, min(300, (int) round(($to - $from) * 30))), '-frames:v', '1', '-q:v', '3', "$d/$tok.jpg"],
                 ['mv', "$out.part.mp4", $out]]);
             $s = ['state' => 'working', 'pct' => 0];
         }

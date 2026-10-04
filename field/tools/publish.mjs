@@ -110,6 +110,7 @@ const foot = (rel) => `<footer class="foot"><p>${esc(show.narrationNote)}</p>
 `;
 
 const pages = [];
+const still = (c) => (c.video ? c.poster : c.src).replace('../', '');   // a cover's picture: a loop's poster frame
 for (const e of events) {
   const dir = path.join(OUT, e.id), media = path.join(OUT, 'media', e.id);
   fs.mkdirSync(dir, { recursive: true }); fs.rmSync(media, { recursive: true, force: true }); fs.mkdirSync(media, { recursive: true });
@@ -119,12 +120,14 @@ for (const e of events) {
       const base = String(i + 1).padStart(2, '0');
       fs.copyFileSync(path.join(FIELD, p.src), path.join(media, base + '.mp4'));
       fs.copyFileSync(path.join(FIELD, p.poster), path.join(media, base + '.jpg'));
-      const tag = '?v=' + fs.statSync(path.join(FIELD, p.src)).size.toString(36);   // same name, new clip: let caches go
-      return { src: `../media/${e.id}/${base}.mp4${tag}`, poster: `../media/${e.id}/${base}.jpg${tag}`, abs: `${show.siteUrl}media/${e.id}/${base}.jpg`, caption: p.caption || '', w: p.w, h: p.h, cover: false, video: true, ai: !!p.ai, table: p.table || null, after: p.after };
+      // same name, new clip or new poster frame: let caches go
+      const tag = '?v=' + fs.statSync(path.join(FIELD, p.src)).size.toString(36) + fs.statSync(path.join(FIELD, p.poster)).size.toString(36);
+      return { src: `../media/${e.id}/${base}.mp4${tag}`, poster: `../media/${e.id}/${base}.jpg${tag}`, abs: `${show.siteUrl}media/${e.id}/${base}.jpg${tag}`, caption: p.caption || '', w: p.w, h: p.h, cover: !!p.cover, video: true, ai: !!p.ai, table: p.table || null, after: p.after };
     }
     fs.copyFileSync(path.join(FIELD, p.src), path.join(media, name));
     return { src: `../media/${e.id}/${name}`, abs: `${show.siteUrl}media/${e.id}/${name}`, caption: p.caption || '', w: p.w, h: p.h, cover: !!p.cover };
   });
+  // the cover heads the post: a photo, or a loop playing silently (its poster frame stands in for it on cards and shares)
   const cover = photos.find((p) => p.cover) || photos.find((p) => !p.video) || null;
   let audio = null;
   if (e.episode && e.episode.audio && fs.existsSync(path.join(FIELD, e.episode.audio))) {
@@ -264,7 +267,7 @@ else { try { yt = JSON.parse(fs.readFileSync(ytFile, 'utf8')); console.warn('You
 // Index
 const cards = pages.map(({ e, cover, audio }) => {
   const s = e.track && e.track.stats;
-  return `<a class="card" href="${e.id}/">${cover ? `<img src="${esc(cover.src.replace('../', ''))}" alt="" width="${cover.w}" height="${cover.h}" loading="lazy">` : '<div class="noimg"></div>'}
+  return `<a class="card" href="${e.id}/">${cover ? `<img src="${esc(still(cover))}" alt="" width="${cover.w}" height="${cover.h}" loading="lazy">` : '<div class="noimg"></div>'}
 <div class="card-body"><p class="kicker"><span class="kind ${esc(e.kind)}">${KIND[e.kind] || esc(e.kind)}</span> · ${day(e.date)}</p>
 <h2>${esc(e.post && e.post.title || e.title)}</h2>${e.summary ? `<p>${esc(e.summary)}</p>` : ''}
 <p class="meta">${s ? `${mi(s.distanceKm)} · ↑ ${ft(s.gainM)}` : ''}${audio ? ` · <span class="pill">▶ ${mmss(audio.sec)}</span>` : ''}</p></div></a>`;
@@ -295,7 +298,7 @@ fs.writeFileSync(path.join(OUT, 'hub.json'), JSON.stringify({
   totals: { miles: Math.round(totalKm * 0.621371), feet: Math.round(totalM * 3.28084), episodes: pages.filter((p) => p.audio).length,
     photos: MAN ? MAN.above.length : 0, daydreams: series.length },
   episodes: pages.map(({ e, cover, audio }) => ({ id: e.id, url: R(e.id + '/'), title: e.post && e.post.title || e.title, kind: KIND[e.kind] || e.kind, date: day(e.date),
-    place: e.place || '', summary: e.summary || '', cover: cover ? { src: R(cover.src.replace('../', '')), w: cover.w, h: cover.h } : null,
+    place: e.place || '', summary: e.summary || '', cover: cover ? { src: R(still(cover)), w: cover.w, h: cover.h } : null,
     audio: audio ? { src: R(audio.src.replace('../', '')), time: mmss(audio.sec) } : null,
     stats: e.track && e.track.stats ? `${mi(e.track.stats.distanceKm)} · ↑ ${ft(e.track.stats.gainM)}` : '' })),
   fieldNotes: { title: show.showTitle, about: show.about, note: show.narrationNote },
