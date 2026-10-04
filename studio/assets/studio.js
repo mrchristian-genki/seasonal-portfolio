@@ -450,11 +450,20 @@
       '<div><b>' + dur(s.movingSec) + '</b><span>moving</span></div><div><b>' + ft(s.maxEleM || 0).toLocaleString() + ' ft</b><span>high point</span></div></div></div>' +
       '<ul class="notes">' + ((t.trim && t.trim.notes) || []).map(function (n) { return '<li' + (/private zone|Warning/.test(n) ? ' class="warn"' : '') + '>' + esc(n) + '</li>'; }).join('') + '</ul>' +
       (t.homeWarning ? '<p class="err">' + esc(t.homeWarning) + '</p>' : '') +
+      (window.RouteView && t.line && t.line.length > 1 ? '<details class="tdash"' + (dashOpen ? ' open' : '') + '><summary>Trail stats <small>Switch each part on or off for the post</small></summary><div class="dash steam" id="trDash"></div></details>' : '') +
       (trackRaw ? rangeBox() : '<p class="muted">To change where the ride starts or ends, add the track file again: the original isn\'t kept.</p>') +
       '<div class="row"><button type="button" class="link" id="swapTrack">Replace the track</button><button id="dropTrack" class="link">Remove the track</button></div>';
     $('#dropTrack').onclick = function () { if (confirm('Remove the track from this entry?')) { E.track = null; E.trailhead = null; trackRaw = null; markDirty(); renderTrack(); } };
     $('#swapTrack').onclick = function () { trackSwap = true; renderTrack(); };
-    wireRange(); viewMap(t.line);
+    wireRange(); viewMap(t.line); drawDash();
+  }
+  // The trail stats the post can show, drawn as Play draws them, each with its On Play switch.
+  var dashOpen = true;
+  function drawDash() {
+    var el = $('#trDash'), t = E.track; if (!el || !t) return;
+    var det = el.closest('details'); det.ontoggle = function () { dashOpen = det.open; };
+    RouteView.dashboard(el, { kind: ($('#kind') || {}).value || E.kind, stats: t.stats, line: t.line, profile: t.profile },
+      { show: E.dashboard, edit: function (k, on) { E.dashboard = E.dashboard || {}; E.dashboard[k] = on; markDirty(); } });
   }
   // The published line on a real map (the outline above stays if the map can't load). Breaks in the line
   // (a private zone mid-way) stay breaks.

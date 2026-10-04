@@ -55,7 +55,7 @@
       var mapEl = document.getElementById('map'), map = null;
       if (window.L) { mapEl.innerHTML = ''; map = RV.makeMap(mapEl, RV.routeLayers(d.line)); }
       RV.profileSVG(document.getElementById('profile'), d.profile, RV.scrubber(map, d.line));
-      if (RV.dashboard) RV.dashboard(document.getElementById('dash'), d);
+      if (RV.dashboard) RV.dashboard(document.getElementById('dash'), d, { show: d.show });
       if (ub) { ub.hidden = false; ub.textContent = RV.units() === 'imperial' ? 'mi · ft' : 'km · m'; }
     }
     draw();
