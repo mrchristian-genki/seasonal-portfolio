@@ -36,7 +36,7 @@ $in = studio_logged_in();
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&display=swap">
 <link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>-7">
 <link rel="prefetch" href="assets/loader/reactor.mp4" as="video">
-<link rel="stylesheet" href="table/table.css?v=16">
+<link rel="stylesheet" href="table/table.css?v=17">
 </head>
 <?php if (!$in): ?>
 <body class="login">
@@ -53,10 +53,11 @@ $in = studio_logged_in();
 <body data-csrf="<?= h(studio_csrf()) ?>">
 
 <section class="st-hero" aria-label="Studio">
+  <div class="river" id="river" aria-hidden="true">
+    <img class="rv-still day" src="table/a/river-day.webp" alt="">
+    <img class="rv-still night" src="table/a/river-night.webp" alt="">
+  </div>
   <div class="table" id="table" data-set="header" data-base="table/">
-    <img class="wood day" src="table/a/table-day.webp" alt="">
-    <img class="wood night" src="table/a/table-night.webp" alt="">
-    <div class="lamp-pool" aria-hidden="true"></div>
     <div class="layer" id="layer"></div>
     <div class="shade" aria-hidden="true"></div>
   </div>
@@ -86,7 +87,8 @@ $in = studio_logged_in();
 <div id="toast" role="status" aria-live="polite"></div>
 <script src="assets/track.js?v=<?= STUDIO_VERSION ?>"></script>
 <script src="assets/studio.js?v=<?= STUDIO_VERSION ?>-8"></script>
-<script src="table/table.js?v=17"></script>
+<script src="table/table.js?v=18"></script>
+<script src="table/river.js?v=1"></script>
 <script src="table/switch.js?v=2"></script>
 </body>
 <?php endif; ?>

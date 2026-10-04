@@ -37,15 +37,10 @@
     { id: 'foxsit', src: 'fox-sitting', x: 1330, y: 640, w: 230, rot: 8, how: 'slide', from: 'right' },
     { id: 'deer', src: 'deer', x: 150, y: 895, w: 95, rot: 20, how: 'drop' }
   ];
-  // the header is the top strip of the table (y 0 to about 360): fewer things, kept to that band
+  // the header is the river table now (river.js): just the day/night lamps under the buttons, and Marley's
+  // visits; the other props live on the full table
   if (HEADER) PROPS = [
-    { id: 'pencils', src: 'pencils', x: 279, y: 223, w: 444, rot: 0, how: 'slide', from: 'left' },
-    { id: 'ruler', src: 'ruler', x: 1010, y: 90, w: 557, rot: 0, how: 'slide', from: 'top' },
-    { id: 'contact', src: 'contact', x: 1800, y: 135, w: 300, rot: 7, how: 'slide', from: 'top', spots: [[1800, 135], [1545, 165], [1450, 175]] },
-    { id: 'panel', src: ['panel-off', 'panel-day', 'panel-night'], x: 1585, y: 300, w: 92, rot: 0, how: 'slide', from: 'right', pin: 'nav', ar: 211 / 220 },
-    { id: 'carnelians', src: 'carnelians', x: 800, y: 300, w: 95, rot: 12, how: 'drop' },
-    { id: 'cone', src: 'cone', x: 1597, y: 139, w: 112, rot: 0, how: 'roll', from: 'top' },
-    { id: 'jar', src: ['jar-off', 'jar-on'], x: 1175, y: 265, w: 132, rot: 0, how: 'gentle', from: 'top' }
+    { id: 'panel', src: ['panel-off', 'panel-day', 'panel-night'], x: 1585, y: 300, w: 92, rot: 0, how: 'slide', from: 'right', pin: 'nav', ar: 211 / 220 }
   ];
   var PHOTOS = ['01', '02', '03'].map(function (n) { return '../../play/media/2024-09-05-marlette/' + n + '.jpg'; });
   var els = {}, prints = [], busy = false;

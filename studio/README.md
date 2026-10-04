@@ -40,6 +40,11 @@ Log in, then:
   fallback) is moved to the frame matching the progress, so the fuel rises with the real work and is full
   when it is done. The scale, status tag and plaque are drawn over the video in CSS.
 
+- **The header** is the river table: a looping video of the glowing river (`table/a/river-day|night`),
+  with the day/night lamps and Marley's visits on top. The switch plays the dusk or dawn clip
+  (`river-to-night`, `river-to-day`), then the matching loop (`table/river.js`). The day and night stills
+  show while a video loads, and instead of it with reduced motion. The other props stay on the full table.
+
 Not in the Studio yet: episode audio (render it, then hand it to a Claude Code session to master and
 attach), animated clips and the prints-on-a-table layout.
 
