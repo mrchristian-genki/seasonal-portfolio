@@ -520,27 +520,61 @@
     });
   }
 
-  // ---------- questions ----------
+  // ---------- questions: answered one at a time, sent to Claude all together ----------
+  var QA = { list: null, at: 0, ans: {}, skip: {} };
   function renderQuestions() {
-    var q = E.questions || [];
-    $('#questions').innerHTML = q.length ? '<h3>Open questions</h3><ul class="qs">' + q.map(function (s, i) {
-      return '<li data-i="' + i + '"><p class="q">' + esc(s) + '</p><textarea class="ans" rows="2" placeholder="Your answer, in a few words"></textarea>' +
-        '<div class="row"><button class="primary small answer">Submit answer</button><button class="link skip">Skip this one</button></div></li>';
-    }).join('') + '</ul><small class="muted">Each answer is added to your notes, and Claude works it into the draft.</small>' : '';
-    $$('#questions li').forEach(function (li) {
-      var i = +li.getAttribute('data-i');
-      $('.skip', li).onclick = function () { E.questions.splice(i, 1); markDirty(); renderQuestions(); };
-      $('.answer', li).onclick = function () { answer(i, $('.ans', li).value.trim()); };
+    var q = E.questions || [], box = $('#questions');
+    if (QA.list !== q) QA = { list: q, at: 0, ans: {}, skip: {} };       // a new set of questions starts fresh
+    if (!q.length) { box.innerHTML = ''; return; }
+    QA.at = Math.max(0, Math.min(QA.at, q.length - 1));
+    var i = QA.at, done = Object.keys(QA.ans).filter(function (k) { return QA.ans[k].trim(); }).length, last = i === q.length - 1;
+    box.innerHTML = '<h3>Open questions</h3>' +
+      '<div class="qdots">' + q.map(function (_, k) {
+        return '<button type="button" class="qdot' + (k === i ? ' now' : '') + ((QA.ans[k] || '').trim() ? ' done' : '') + (QA.skip[k] ? ' skipped' : '') +
+          '" data-k="' + k + '" aria-label="Question ' + (k + 1) + '"></button>';
+      }).join('') + '</div>' +
+      '<div class="qcard"><small class="muted">Question ' + (i + 1) + ' of ' + q.length + (QA.skip[i] ? ' · skipped' : '') + '</small>' +
+      '<p class="q">' + esc(q[i]) + '</p>' +
+      '<textarea class="ans" rows="3" placeholder="Your answer, in a few words">' + esc(QA.ans[i] || '') + '</textarea>' +
+      '<div class="row"><button type="button" class="link qback"' + (i ? '' : ' disabled') + '>Back</button>' +
+      '<button type="button" class="link qskip">' + (QA.skip[i] ? 'Keep this one' : 'Skip this one') + '</button>' +
+      '<span class="grow"></span><button type="button" class="small qnext">' + (last ? 'Done' : 'Next') + '</button></div></div>' +
+      '<div class="qsend"><button type="button" class="primary qsubmit"' + (done || Object.keys(QA.skip).length ? '' : ' disabled') + '>' +
+        (done ? 'Submit ' + done + ' answer' + (done === 1 ? '' : 's') : 'Submit answers') + '</button>' +
+      '<small class="muted">Your answers go into your notes, and Claude works them all into the draft at once.</small></div>';
+    var ta = $('.ans', box);
+    function go(k) { QA.ans[i] = ta.value; QA.at = k; renderQuestions(); var t = $('#questions .ans'); if (t) t.focus(); }
+    ta.addEventListener('input', function () {
+      QA.ans[i] = ta.value; if (ta.value.trim()) delete QA.skip[i]; markDirty();
+      var n = Object.keys(QA.ans).filter(function (k) { return QA.ans[k].trim(); }).length, b = $('.qsubmit', box);
+      b.disabled = !n && !Object.keys(QA.skip).length; b.textContent = n ? 'Submit ' + n + ' answer' + (n === 1 ? '' : 's') : 'Submit answers';
+      $$('.qdot', box)[i].classList.toggle('done', !!ta.value.trim());
     });
+    ta.addEventListener('keydown', function (e) { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) { e.preventDefault(); go(last ? i : i + 1); } });
+    $$('.qdot', box).forEach(function (d) { d.onclick = function () { go(+d.getAttribute('data-k')); }; });
+    $('.qback', box).onclick = function () { go(i - 1); };
+    $('.qnext', box).onclick = function () { go(last ? i : i + 1); if (last) $('.qsubmit').focus(); };
+    $('.qskip', box).onclick = function () {
+      if (QA.skip[i]) delete QA.skip[i]; else { QA.skip[i] = true; QA.ans[i] = ''; ta.value = ''; }
+      go(QA.skip[i] && !last ? i + 1 : i);
+    };
+    $('.qsubmit', box).onclick = function () { QA.ans[i] = ta.value; submitAnswers(); };
   }
-  function answer(i, text) {
-    if (!text) { toast('Write an answer first, or skip the question.', true); return; }
+  function submitAnswers() {
+    var q = E.questions, pairs = [];
+    q.forEach(function (s, k) { var a = (QA.ans[k] || '').trim(); if (a) pairs.push({ q: s, a: a }); });
     collect();
-    var q = E.questions[i];
-    E.fieldNotes = (E.fieldNotes.trim() ? E.fieldNotes.trim() + '\n\n' : '') + q + '\n' + text;
-    $('#fieldNotes').value = E.fieldNotes;
-    E.questions.splice(i, 1); markDirty(); renderQuestions();
-    draft({ title: 'Working in your answer', instruction: 'I answered one of your questions. Question: "' + q + '" My answer: "' + text + '". Work it into the draft and change nothing else.' });
+    if (pairs.length) {
+      E.fieldNotes = (E.fieldNotes.trim() ? E.fieldNotes.trim() + '\n\n' : '') + pairs.map(function (p) { return p.q + '\n' + p.a; }).join('\n\n');
+      $('#fieldNotes').value = E.fieldNotes;
+    }
+    E.questions = q.filter(function (_, k) { return !(QA.ans[k] || '').trim() && !QA.skip[k]; });
+    markDirty(); renderQuestions();
+    if (!pairs.length) { toast('Skipped questions cleared.'); return; }
+    draft({ title: pairs.length === 1 ? 'Working in your answer' : 'Working in your ' + pairs.length + ' answers',
+      instruction: 'I answered ' + (pairs.length === 1 ? 'one of your questions' : pairs.length + ' of your questions') + '. ' +
+        pairs.map(function (p, n) { return (n + 1) + '. Question: "' + p.q + '" My answer: "' + p.a + '"'; }).join(' ') +
+        ' Work ' + (pairs.length === 1 ? 'it' : 'them all') + ' into the draft and change nothing else.' });
   }
 
   // ---------- draft ----------
