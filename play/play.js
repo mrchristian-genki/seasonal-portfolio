@@ -54,8 +54,10 @@
       document.getElementById('stats').innerHTML = RV.statTiles(d.stats, d.kind);
       var mapEl = document.getElementById('map'), map = null;
       if (window.L) { mapEl.innerHTML = ''; map = RV.makeMap(mapEl, RV.routeLayers(d.line)); }
-      RV.profileSVG(document.getElementById('profile'), d.profile, RV.scrubber(map, d.line));
-      if (RV.dashboard) RV.dashboard(document.getElementById('dash'), d, { show: d.show });
+      var at = RV.scrubber(map, d.line), pf = document.getElementById('profile');
+      if (RV.dashboard) RV.dashboard(document.getElementById('dash'), d, { show: d.show, onAt: at });
+      var inDash = document.querySelector('#dash .dprof');
+      pf.hidden = !!inDash; if (!inDash) RV.profileSVG(pf, d.profile, at);
       if (ub) { ub.hidden = false; ub.textContent = RV.units() === 'imperial' ? 'mi · ft' : 'km · m'; }
     }
     draw();

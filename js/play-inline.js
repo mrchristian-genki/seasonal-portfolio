@@ -195,9 +195,9 @@
   function mapAssets() {
     return assets || (assets = Promise.all([
       need('link', { rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css' }),
-      need('link', { rel: 'stylesheet', href: 'css/route-dash.css?v=1794100000' }),
+      need('link', { rel: 'stylesheet', href: 'css/route-dash.css?v=1794300000' }),
       window.L ? 0 : need('script', { src: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js' })
-    ]).then(function () { return window.RouteView ? 0 : need('script', { src: 'js/route-view.js?v=1794200000' }); }));
+    ]).then(function () { return window.RouteView ? 0 : need('script', { src: 'js/route-view.js?v=1794300000' }); }));
   }
   function story(url) {
     if (!sdlg) {
@@ -225,8 +225,10 @@
         var RV = window.RouteView; if (!RV) return;
         body.querySelector('#stats').innerHTML = RV.statTiles(d.stats, d.kind);
         var map = window.L ? RV.makeMap(body.querySelector('#map'), RV.routeLayers(d.line)) : null;
-        RV.profileSVG(body.querySelector('#profile'), d.profile, RV.scrubber(map, d.line));
-        if (RV.dashboard) RV.dashboard(body.querySelector('#dash'), d, { show: d.show });
+        var at = RV.scrubber(map, d.line), pf = body.querySelector('#profile');
+        if (RV.dashboard) RV.dashboard(body.querySelector('#dash'), d, { show: d.show, onAt: at });
+        var inDash = body.querySelector('#dash .dprof');
+        pf.hidden = !!inDash; if (!inDash) RV.profileSVG(pf, d.profile, at);
         if (map) setTimeout(function () { map.invalidateSize(); }, 60);
       }).catch(function () {});
     }).catch(function () { location.href = abs.href; });

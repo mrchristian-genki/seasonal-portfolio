@@ -77,11 +77,12 @@
     var ticks = '', step = niceStep((units === 'imperial' ? kmMax * 0.621371 : kmMax) / 6);
     for (var v = step; v < (units === 'imperial' ? kmMax * 0.621371 : kmMax); v += step) {
       var kx = X(units === 'imperial' ? v / 0.621371 : v);
-      ticks += '<line x1="' + kx + '" x2="' + kx + '" y1="' + padT + '" y2="' + (H - padB) + '" stroke="#e3ecee"/><text x="' + kx + '" y="' + (H - 4) + '" font-size="11" fill="#7d929b" text-anchor="middle">' + +v.toFixed(1) + '</text>';
+      ticks += '<line x1="' + kx + '" x2="' + kx + '" y1="' + padT + '" y2="' + (H - padB) + '" stroke="#e3ecee" class="pg-t"/><text x="' + kx + '" y="' + (H - 4) + '" font-size="11" fill="#7d929b" text-anchor="middle" class="pg-x">' + +v.toFixed(1) + '</text>';
     }
     el.innerHTML = '<svg viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none" role="img" aria-label="Elevation profile: ' + U.ele(e0) + ' to ' + U.ele(e1) + '">' +
-      '<defs><linearGradient id="pg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d8618f" stop-opacity=".35"/><stop offset="1" stop-color="#d8618f" stop-opacity=".03"/></linearGradient></defs>' + ticks +
-      '<path d="' + d + 'L' + W + ' ' + (H - padB) + 'L0 ' + (H - padB) + 'Z" fill="url(#pg)"/><path d="' + d + '" fill="none" stroke="#d8618f" stroke-width="2.2" vector-effect="non-scaling-stroke"/>' +
+      '<defs><linearGradient id="pg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d8618f" stop-opacity=".35"/><stop offset="1" stop-color="#d8618f" stop-opacity=".03"/></linearGradient>' +
+      '<linearGradient id="pgl" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#d8618f" class="l0"/><stop offset=".5" stop-color="#d8618f" class="l1"/><stop offset="1" stop-color="#d8618f" class="l2"/></linearGradient></defs>' + ticks +
+      '<path d="' + d + 'L' + W + ' ' + (H - padB) + 'L0 ' + (H - padB) + 'Z" fill="url(#pg)" class="pg-a"/><path d="' + d + '" fill="none" stroke="#d8618f" stroke-width="2.2" vector-effect="non-scaling-stroke" class="pg-l"/>' +
       '<line class="cur" x1="-10" x2="-10" y1="' + padT + '" y2="' + (H - padB) + '" stroke="#0f4d47" stroke-width="1.5" vector-effect="non-scaling-stroke"/></svg><div class="tip"></div>';
     var svg = el.querySelector('svg'), cur = el.querySelector('.cur'), tip = el.querySelector('.tip');
     function at(ev) {
@@ -347,8 +348,8 @@
   }
   // Which parts a post shows. A note can pick its own (the Studio has a switch on each); without a pick,
   // the speed, the climbing and the hidden numbers show and the rest wait to be switched on.
-  var PARTS = { speed: 'Speed', updown: 'Up and down', grade: 'How steep', time: 'Where the time went', splits: 'Mile by mile', dir: 'Which way', facts: 'Hidden in the numbers' };
-  var SHOWN = { speed: true, updown: true, facts: true };
+  var PARTS = { speed: 'Speed', updown: 'Up and down', elev: 'Elevation', grade: 'How steep', time: 'Where the time went', splits: 'Mile by mile', dir: 'Which way', facts: 'Hidden in the numbers' };
+  var SHOWN = { speed: true, updown: true, elev: true, facts: true };
   function shown(show, k) { return show && show[k] != null ? !!show[k] : !!SHOWN[k]; }
   // opts.show: the note's pick; opts.edit(key, on): draw every part with an On Play switch (the Studio)
   function dashboard(el, d, opts) {
@@ -378,6 +379,8 @@
         '<div class="udb down"><i data-st="height:' + Math.max(4, (s.lossM || 0) / mxv * 100).toFixed(0) + '%"></i><b>↓ ' + upV(s.lossM || 0).toLocaleString() + '</b><small>' + upU() + ' descent</small></div>' +
         (lo != null && hi != null ? '<div class="range"><span class="hi"><b>' + upV(hi).toLocaleString() + '</b> ' + upU() + '<small>high point</small></span><span class="bar"></span><span class="lo"><b>' + upV(lo).toLocaleString() + '</b> ' + upU() + '<small>low point</small></span><p>' + upV(hi - lo).toLocaleString() + ' ' + upU() + ' between them</p></div>' : '') + '</div>');
     }
+    // the elevation profile, beside up and down; the page draws it (its pointer moves a dot on the map)
+    if ((d.profile || []).some(function (q) { return q[1] != null; })) html += card('elev', 'Elevation', '<div class="profile dprof"></div><p class="cap">Point along it to see where that is on the map.</p>');
     if (a.grades) html += card('grade', 'How steep', gradeBars(a.grades) + '<p class="cap">Share of the distance at each grade: level is within 1.5%, steep is over 8%.</p>');
     if (a.time) html += card('time', 'Where the time went', donut([['Climbing', a.time.climb, 't-up'], ['Level', a.time.flat, 't-flat'], ['Descending', a.time.down, 't-down'], ['Stopped', a.time.stop, 't-stop']].filter(function (p) { return p[1] > 30; })));
     if (a.splits && a.splits.length > 1) html += card('splits', (units === 'imperial' ? 'Mile' : 'Kilometre') + ' by ' + (units === 'imperial' ? 'mile' : 'kilometre'), splitBars(a.splits) + '<p class="cap">Time for each whole ' + (units === 'imperial' ? 'mile' : 'km') + '; taller is quicker, the quickest is marked.</p>');
@@ -406,6 +409,7 @@
     el.hidden = !html;
     // sizes are set here, not in the markup, so a page that forbids inline styles (the Studio) draws it too
     [].forEach.call(el.querySelectorAll('[data-st]'), function (n) { n.style.cssText = n.getAttribute('data-st'); });
+    var pe = el.querySelector('.dprof'); if (pe) profileSVG(pe, d.profile, opts.onAt || null);
     if (opts.edit) [].forEach.call(el.querySelectorAll('.dsw input'), function (c) {
       c.onchange = function () { c.closest('.dc').classList.toggle('off', !c.checked); opts.edit(c.getAttribute('data-k'), c.checked); };
     });

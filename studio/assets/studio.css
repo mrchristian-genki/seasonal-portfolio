@@ -440,3 +440,5 @@ dialog.pfp::backdrop{background:rgba(20,12,6,.7)}
 .ph .opts{flex-wrap:wrap;gap:6px 12px}
 .ph .opts > *{white-space:nowrap;flex:none}
 .ph .opts .pfBtn,.ph .opts .rm{font-size:13px}
+.dash.steam .dprof .pg-l{stroke:#e2b45b} .dash.steam .dprof .pg-a{fill:rgba(226,180,91,.14)} .dash.steam .dprof .pg-t{stroke:rgba(201,154,72,.25)}
+.dash.steam .dprof .pg-x{fill:#b39b74} .dash.steam .dprof .tip{background:#e2b45b;color:#2b2118;font-family:"Special Elite",monospace}
