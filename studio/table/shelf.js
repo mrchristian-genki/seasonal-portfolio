@@ -21,6 +21,9 @@
   // no pins: tacks lying on a shelf looked odd)
   // where the hand holds a prop, if not its middle (as fractions of the image): the mug by its handle
   var GRIP = { mug: [.9, .5] };
+  // props that light up at night: the lamp jar, its lit image fading in with a glow on the wood. It keeps to
+  // the footer's side shelves, where the light shows (the header's night shade would cover it)
+  var LAMP = { 'jar-off': 'jar-on' };
   var NAMES = Object.keys(POOL), out = {};
 
   function el(cls, parent) { var d = document.createElement('div'); d.className = cls; parent.appendChild(d); return d; }
@@ -45,8 +48,8 @@
     s.style.left = left + 'px'; s.style.width = width + 'px'; s.style.top = '0px'; s.style.height = height + 'px';
   }
 
-  function pick(not) {
-    var free = NAMES.filter(function (n) { return !out[n] && n !== not; });
+  function pick(not, sh) {
+    var free = NAMES.filter(function (n) { return !out[n] && n !== not && !(LAMP[n] && sh.from === 'top'); });
     return free[Math.floor(Math.random() * free.length)];
   }
   function anim(node, frames, ms, ease) {
@@ -103,11 +106,19 @@
   // bring: a hand carries a new prop in, sets it down and leaves
   function bring(sh, not) {
     if (sh.box.hidden) return Promise.resolve();
-    var name = pick(not); if (!name) return Promise.resolve();
+    var name = pick(not, sh); if (!name) return Promise.resolve();
     out[name] = true;
-    var img = new Image(); img.alt = ''; img.className = 'shelf-prop'; img.src = A + name + '.webp'; img.draggable = false;
+    var pic = new Image(); pic.alt = ''; pic.src = A + name + '.webp'; pic.draggable = false;
+    var img = pic;                                           // the prop itself: the picture, or a lamp's stack
+    if (LAMP[name]) {
+      img = document.createElement('div'); img.className = 'lamp';
+      var lit = new Image(); lit.alt = ''; lit.className = 'lit'; lit.src = A + LAMP[name] + '.webp'; lit.draggable = false;
+      var glow = document.createElement('span'); glow.className = 'glow';
+      img.appendChild(glow); img.appendChild(pic); img.appendChild(lit);
+    }
+    img.classList.add('shelf-prop');
     img.addEventListener('click', function () { collect(sh, img); });
-    return (img.decode ? img.decode().catch(function () {}) : Promise.resolve()).then(function () {
+    return (pic.decode ? pic.decode().catch(function () {}) : Promise.resolve()).then(function () {
       var z = sizeFor(sh, name), b = sh.box.getBoundingClientRect(), rot = (Math.random() * 16 - 8).toFixed(1);
       // props keep close to an edge, for the hand: the header's sit near its top (toward the STUDIO panel, so
       // clear of the screen's edge), the footer's toward the outer edge of their side

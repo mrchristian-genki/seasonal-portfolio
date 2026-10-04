@@ -278,3 +278,14 @@
 button.st-lamps{border:0;padding:0;margin:0;background:none;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:scale .15s ease}
 button.st-lamps:active{scale:.96}
 button.st-lamps:focus-visible{outline:2px solid #e6c983;outline-offset:4px;border-radius:50%}
+/* the lamp jar on a shelf: by night its lit image fades in, breathing, and its light spills onto the wood.
+   The shadow goes on the jar's pictures, not the whole stack, so the glow casts none */
+.shelf-prop.lamp,.st-foot.night .shelf-prop.lamp{filter:none}
+.shelf-prop.lamp img{display:block;width:100%;filter:drop-shadow(4px 7px 6px rgba(20,10,2,.55))}
+.shelf-prop.lamp .lit{position:absolute;inset:0;opacity:0;transition:opacity 1.6s ease}
+.shelf-prop.lamp .glow{position:absolute;left:50%;top:50%;width:300%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,rgba(255,170,50,.55),rgba(255,150,30,.25) 22%,rgba(255,140,30,.08) 42%,transparent 65%);opacity:0;transition:opacity 1.6s ease}
+.st-foot.night .shelf-prop.lamp > img:not(.lit){filter:drop-shadow(4px 7px 6px rgba(5,2,0,.7)) brightness(.62) saturate(.8)}
+.st-foot.night .shelf-prop.lamp .lit{opacity:1;animation:breathe 5.5s ease-in-out infinite;filter:drop-shadow(4px 7px 6px rgba(5,2,0,.5)) brightness(1.05)}
+.st-foot.night .shelf-prop.lamp .glow{opacity:1;animation:breathe 5.5s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){.st-foot.night .shelf-prop.lamp .lit,.st-foot.night .shelf-prop.lamp .glow{animation:none}}
