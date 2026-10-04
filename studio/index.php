@@ -31,7 +31,17 @@ $in = studio_logged_in();
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Studio · Field Notes</title>
-<link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml">
+<meta name="description" content="Field Notes, behind the scenes: the private workshop where rides become posts and episodes, on a glowing river desk that turns from day to night.">
+<link rel="canonical" href="https://www.christiangehrke.com/studio/">
+<meta property="og:site_name" content="Christian Gehrke"><meta property="og:locale" content="en_US"><meta property="og:type" content="website">
+<meta property="og:title" content="Studio · Field Notes"><meta property="og:url" content="https://www.christiangehrke.com/studio/">
+<meta property="og:description" content="Field Notes, behind the scenes: the private workshop where rides become posts and episodes.">
+<meta property="og:image" content="https://www.christiangehrke.com/studio/assets/og-studio.jpg?v=1"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Studio at night: a brass STUDIO nameplate over a glowing green river, and on the wood below a brass projector casting a squid hologram beside a glowing compass.">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Studio · Field Notes">
+<meta name="twitter:description" content="Field Notes, behind the scenes: the private workshop where rides become posts and episodes.">
+<meta name="twitter:image" content="https://www.christiangehrke.com/studio/assets/og-studio.jpg?v=1">
+<link rel="icon" href="/favicon.ico?v=2" sizes="any"><link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml"><link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2"><meta name="theme-color" content="#2a1d14">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&family=Special+Elite&display=swap">
 <link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>-14">
