@@ -276,3 +276,10 @@ body:has(.savebar){padding-bottom:64px}
 .nsteps li:not(.now) b{color:var(--ink2)}
 .nsteps .nb{display:flex;gap:12px;align-items:center}
 .nsteps a.btn{display:inline-block;text-decoration:none;padding:6px 14px;border-radius:999px;font-weight:700}
+/* the track: where the ride really started and ended, set by hand */
+.trange{margin:12px 0 4px;padding:10px 12px;border-radius:8px;background:rgba(170,130,80,.12)}
+.trange b{display:block} .trange > span{display:block;font-size:14px;margin:2px 0 8px}
+.trange label{display:grid;grid-template-columns:44px 1fr minmax(120px,auto);gap:10px;align-items:center;font-weight:600;font-size:14px;margin:4px 0}
+.trange input[type=range]{width:100%;accent-color:#b08a52}
+.trange output{font-weight:400;color:var(--ink2);white-space:nowrap}
+.drvtrk{margin-top:8px} .drvtrk .useTrk{margin:4px 6px 0 0}
