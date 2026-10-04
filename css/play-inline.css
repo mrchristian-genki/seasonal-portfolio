@@ -240,3 +240,7 @@ html.night-page .pi-more a[data-pi-story]{color:#16232f;box-shadow:0 2px 10px rg
   color:var(--pi-ink);text-decoration:none;font-weight:600;transition:border-color .15s,background .15s}
 .pi-story-body .links a::after{content:"↗";font-size:12px;color:var(--pi-ink3)}
 .pi-story-body .links a:hover{border-color:#d8618f;background:var(--pi-soft)}
+.pi-story-body .stats{gap:6px} .pi-story-body .stat{padding:6px 10px;border-radius:9px} .pi-story-body .stat b{font-size:17px;line-height:1.2} .pi-story-body .stat span{font-size:11px;display:block;line-height:1.2}
+@media (max-width:640px){.pi-story-body .stats{grid-template-columns:repeat(4,minmax(0,1fr))} .pi-story-body .stat b{font-size:14px} .pi-story-body .stat span{font-size:10px}}
+.pi-story-body .route-grid{grid-template-columns:1fr;gap:8px} .pi-story-body .stats{grid-template-columns:repeat(4,minmax(0,1fr))}
+.pi-story-body .stat b small{font-size:.62em;font-weight:700;color:var(--pi-ink3);margin-left:1px}
