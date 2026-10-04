@@ -74,6 +74,8 @@ final class Video {
     private function run(string $name, array $cmds): void {
         $d = $this->dir(); $log = "$d/$name.log";
         $this->sweep();
+        // threads are capped (-threads 2 for decoding and encoding, one for filters): shared hosting limits how
+        // many an account may start, and ffmpeg would otherwise start one per core of a big server
         $sh = 'rc=0; ' . implode(' && ', array_map(fn($c) => implode(' ', array_map('escapeshellarg', $c)), $cmds)) .
             ' || rc=$?; echo "STUDIO-DONE $rc" >> ' . escapeshellarg($log);
         file_put_contents($log, '');
@@ -93,7 +95,11 @@ final class Video {
         $t = $this->tail($log);
         if (preg_match('/STUDIO-DONE (\d+)/', $t, $m) && $m[1] !== '0') {
             $lines = array_values(array_filter(array_map('trim', preg_split('/[\r\n]+/', $t)), fn($l) => $l !== '' && !str_starts_with($l, 'STUDIO-DONE')));
-            return ['state' => 'failed', 'error' => substr((string) end($lines), 0, 200)];
+            // ffmpeg's last words are only "Conversion failed!": the line that says why comes before it
+            $why = '';
+            foreach ($lines as $l) if (preg_match('/error|invalid|unable|cannot|could not|not supported|resource|killed|no such|denied|failed/i', $l) && !preg_match('/^Conversion failed/i', $l)) $why = $l;
+            return ['state' => 'failed', 'error' => substr($why !== '' ? $why : (string) end($lines), 0, 240),
+                'log' => array_map(fn($l) => substr(str_replace(dirname(studio_private_dir()), '~', $l), 0, 240), array_slice($lines, -12))];
         }
         $pct = 0;
         if ($sec > 0 && preg_match_all('/time=(\d+):(\d+):([\d.]+)/', $t, $mm)) {
@@ -112,7 +118,7 @@ final class Video {
         $s = $this->state("$k.preview", $info['sec'], $out);
         if ($s['state'] === 'failed' && $retry) { @unlink($this->dir() . "/$k.preview.log"); $s = ['state' => 'none']; }
         if ($s['state'] === 'none') {
-            $this->run("$k.preview", [[$this->ffmpeg, '-hide_banner', '-nostdin', '-y', '-i', $path, '-an', '-vf', $this->filters($info, 640),
+            $this->run("$k.preview", [[$this->ffmpeg, '-hide_banner', '-nostdin', '-y', '-threads', '2', '-i', $path, '-an', '-filter_threads', '1', '-vf', $this->filters($info, 640),
                 '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '28', '-g', '15', '-threads', '2', '-movflags', '+faststart', "$out.part.mp4"],
                 ['mv', "$out.part.mp4", $out]]);
             $s = ['state' => 'working', 'pct' => 0];
@@ -133,8 +139,8 @@ final class Video {
         if ($s['state'] === 'failed' && $retry) { @unlink("$d/$tok.log"); $s = ['state' => 'none']; }
         if ($s['state'] === 'none') {
             $this->run($tok, [
-                [$this->ffmpeg, '-hide_banner', '-nostdin', '-y', '-ss', sprintf('%.3f', $from), '-i', $path, '-t', sprintf('%.3f', $to - $from),
-                    '-an', '-sn', '-dn', '-map_metadata', '-1', '-vf', $this->filters($info, 960), '-c:v', 'libx264', '-preset', 'slow', '-crf', '23',
+                [$this->ffmpeg, '-hide_banner', '-nostdin', '-y', '-ss', sprintf('%.3f', $from), '-threads', '2', '-i', $path, '-t', sprintf('%.3f', $to - $from),
+                    '-filter_threads', '1', '-an', '-sn', '-dn', '-map_metadata', '-1', '-vf', $this->filters($info, 960), '-c:v', 'libx264', '-preset', 'slow', '-crf', '23',
                     '-profile:v', 'high', '-threads', '2', '-movflags', '+faststart', "$out.part.mp4"],
                 [$this->ffmpeg, '-hide_banner', '-nostdin', '-y', '-i', "$out.part.mp4", '-frames:v', '1', '-q:v', '3', "$d/$tok.jpg"],
                 ['mv', "$out.part.mp4", $out]]);
