@@ -33,10 +33,10 @@ $in = studio_logged_in();
 <title>Studio · Field Notes</title>
 <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@600&display=swap">
 <link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>-7">
 <link rel="prefetch" href="assets/loader/reactor.mp4" as="video">
-<link rel="stylesheet" href="table/table.css?v=21">
+<link rel="stylesheet" href="table/table.css?v=22">
 </head>
 <?php if (!$in): ?>
 <body class="login">
@@ -67,6 +67,8 @@ $in = studio_logged_in();
   </nav>
   <div class="st-label">
     <div class="st-dn">
+      <span class="gear g1" aria-hidden="true"></span><span class="gear g2" aria-hidden="true"></span><span class="gear g3" aria-hidden="true"></span>
+      <span class="pipe" aria-hidden="true"></span>
       <div class="st-dial" aria-hidden="true">
         <img class="dial-disc" id="dialDisc" src="table/a/dial-disc.webp?v=2" alt="">
         <img class="dial-face" src="table/a/dial-face.webp?v=2" alt="">
@@ -96,7 +98,7 @@ $in = studio_logged_in();
 <script src="assets/studio.js?v=<?= STUDIO_VERSION ?>-8"></script>
 <script src="table/table.js?v=20"></script>
 <script src="table/river.js?v=2"></script>
-<script src="table/switch.js?v=2"></script>
+<script src="table/switch.js?v=3"></script>
 </body>
 <?php endif; ?>
 </html>
