@@ -32,7 +32,6 @@
     { id: 'gloves', src: 'gloves', x: 600, y: 590, w: 360, rot: -9, how: 'slide', from: 'left' },
     { id: 'notebook', src: 'notebook', x: 340, y: 1010, w: 430, rot: -6, how: 'slide', from: 'bottom' },
     { id: 'map', src: 'map', x: 790, y: 1065, w: 440, rot: -3, how: 'slide', from: 'bottom' },
-    { id: 'inuse', src: ['inuse-off', 'inuse-on'], x: 1060, y: 780, w: 210, rot: -4, how: 'slide', from: 'bottom' },
     { id: 'mug', src: 'mug', x: 1562, y: 812, w: 160, rot: 0, how: 'gentle', from: 'right' },
     { id: 'fox', src: 'fox', x: 1700, y: 1010, w: 400, rot: -5, how: 'slide', from: 'right' },
     { id: 'foxsit', src: 'fox-sitting', x: 1330, y: 640, w: 230, rot: 8, how: 'slide', from: 'right' },
@@ -46,7 +45,6 @@
     { id: 'panel', src: ['panel-off', 'panel-day', 'panel-night'], x: 1585, y: 300, w: 92, rot: 0, how: 'slide', from: 'right', pin: 'nav', ar: 211 / 220 },
     { id: 'carnelians', src: 'carnelians', x: 800, y: 300, w: 95, rot: 12, how: 'drop' },
     { id: 'cone', src: 'cone', x: 1597, y: 139, w: 112, rot: 0, how: 'roll', from: 'top' },
-    { id: 'inuse', src: ['inuse-off', 'inuse-on'], x: 950, y: 270, w: 200, rot: -4, how: 'slide', from: 'bottom' },
     { id: 'jar', src: ['jar-off', 'jar-on'], x: 1175, y: 265, w: 132, rot: 0, how: 'gentle', from: 'top' }
   ];
   var PHOTOS = ['01', '02', '03'].map(function (n) { return '../../play/media/2024-09-05-marlette/' + n + '.jpg'; });
@@ -81,7 +79,6 @@
       if (p.src[2]) el.appendChild(img(p.src[2], 'on2'));
       var g = document.createElement('span'); g.className = 'glow'; el.appendChild(g);
       if (p.id === 'jar') el.classList.add('glows');
-      if (p.id === 'inuse' && inUseOn) el.classList.add('lit');
     } else el.appendChild(img(p.src));
     place(el, p, p.w);
     el.style.transform = rest(p);
@@ -184,7 +181,7 @@
   // Process Content: the prints develop like film in a tray, then the green lamp lights
   function process() {
     if (!prints.length) return dropPrints().then(process);
-    var panel = els.panel, wasInUse = inUseOn; inUse(true);
+    var panel = els.panel;
     var chain = Promise.resolve();
     prints.forEach(function (pr) {
       chain = chain.then(function () {
@@ -196,7 +193,7 @@
           { opacity: 1, filter: 'sepia(0) contrast(1) brightness(1)' }], { duration: 2600, easing: 'ease-in-out' });
       });
     });
-    return chain.then(function () { return wait(400); }).then(function () { inUse(wasInUse); if (panel && !calm) anim(panel, [{ filter: 'brightness(1)' }, { filter: 'brightness(1.5)' }, { filter: 'brightness(1)' }], { duration: 900, iterations: 2 }); });
+    return chain.then(function () { return wait(400); }).then(function () { if (panel && !calm) anim(panel, [{ filter: 'brightness(1)' }, { filter: 'brightness(1.5)' }, { filter: 'brightness(1)' }], { duration: 900, iterations: 2 }); });
   }
 
   // Marley drops by over the top edge: leaning in by day, resting or asleep at night
@@ -333,11 +330,7 @@
   var timer = null;
   function visits() { clearTimeout(timer); if (calm) return; timer = setTimeout(function () { marley().then(visits); }, 28000 + Math.random() * 22000); }
 
-  // the IN USE sign: uranium glass that glows green while the Studio is busy (bringing files in from Drive)
-  var inUseOn = false;
-  function inUse(on) { inUseOn = !!on; if (els.inuse) els.inuse.classList.toggle('lit', inUseOn); }
-
-  window.StudioTable = { process: process, drop: dropPrints, marley: marley, inUse: inUse, tick: function () { return tick(); },
+  window.StudioTable = { process: process, drop: dropPrints, marley: marley, tick: function () { return tick(); },
     night: function (on) { T.classList.toggle('night', on); setLamps(); } };
   var C = document.querySelector('.controls');
   if (C) C.addEventListener('click', function (e) {
