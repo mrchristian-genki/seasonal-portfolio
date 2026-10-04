@@ -210,3 +210,10 @@ body.busy{overflow:hidden}
 /* small screens: just the title over the picture; the steps below say the rest */
 @container (max-width:520px){.rx-top{padding-right:46%}.rx-top .ld-sub,.rx-now{display:none}.rx-plate span{display:none}}
 @media (prefers-reduced-motion:reduce){.rx-top h2,.ld-steps,.rx-now::after,.ld-steps li.now .ld-dot{animation:none}.rx-lit{transition:none}}
+.st-nav a:nth-child(2){rotate:1deg}.st-nav a:nth-child(3){rotate:-.6deg}
+/* phones: no room beside the STUDIO panel, so the tags line up along the bottom left, clear of the switch */
+@media (max-width:640px){
+  .st-nav{top:auto;bottom:22px;left:12px;right:auto;max-width:calc(100% - 124px);flex-wrap:wrap-reverse;gap:6px}
+  .st-nav a,.st-nav button{font-size:11.5px;padding:4px 8px}
+  .st-nav .ext{display:none}
+}
