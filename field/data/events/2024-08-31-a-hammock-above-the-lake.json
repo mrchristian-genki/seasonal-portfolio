@@ -5,7 +5,7 @@
  "kind": "ride",
  "place": "",
  "status": "notes",
- "summary": "A late-August ride in 2024 with a stop under the pines: a blue hammock strung between two trees, granite boulders, and a lake showing through the forest. Notes and place are still to come, and the track needs trimming because the tracker kept recording after the ride.",
+ "summary": "A late-August 2024 ride on the Flume Trail near Incline Village with his wife and Marley, and a stop in the pines above Lake Tahoe: a blue hammock between two trees, granite boulders, and the lake through the forest. The numbers wait for a re-trimmed track, because the tracker kept recording after the ride.",
  "trailhead": null,
  "links": [],
  "track": {
@@ -2168,24 +2168,23 @@
    "from": "IMG_6736.JPG"
   }
  ],
- "fieldNotes": "Did this ride start or end at home? If so, it can only be told as a views-only story with no track, route or distances.\nThe track I just added should be cut off after 7 miles as the trip home was recorded by mistake.",
+ "fieldNotes": "Did this ride start or end at home? If so, it can only be told as a views-only story with no track, route or distances.\nThe track I just added should be cut off after 7 miles as the trip home was recorded by mistake.\n\nPrivacy first: the recording ran on into the trip home. Did the ride also start at home? If so, it can only be told views-only, with no track, map, route or distances. Either way, nothing about the trip home goes in the text.\nNo it did not start at home. Started a few minutes into the trail.\n\nThe current figures (7.8 miles, 1 h 2 m moving and so on) still include the trip home. Can you re-trim the track at 7 miles and send the new figures before any numbers go in?\nyes\n\nWas the trip home recorded while driving or while riding? It matters for whether the 'forgot to stop the tracker' gag fits.\nDriving a car and forgot.\n\nWho is in the hammock, and are they OK appearing in the photo? Should they be named or stay anonymous?\nMy wife. Yes\n\nWhere was this? Trailhead or public-land name, and which lake?\nFlume Trail near Incline Village.\n\nAnything from the ride itself to add: route, who came along, whether Marley was there?\nMarley, Helena and Myself.",
  "post": {
   "title": "A hammock above the lake",
-  "body": "This one is mostly a photo for now. On the last day of August 2024 I was out on a ride, and at 11:25 in the morning we had stopped in the pines.\n\nThe hammock went up between two trees on a slope of pine needles and dry ground. Big granite boulders sat in the low green brush, and through the trunks you could see the lake, deep blue, with mountains on the far side. The sky was clear apart from a few thin clouds.\n\nI wasn't the one in the hammock. I was the one taking the picture.\n\nI'll fill in the rest of the ride once I've gone back through the track and my notes. The tracker kept running after the ride was over, so that part gets cut off first."
+  "body": "On the last day of August 2024 I rode the Flume Trail near Incline Village. Marley and my wife came along. At 11:25 in the morning we had stopped in the pines above Lake Tahoe.\n\nThe hammock went up between two trees on a slope of pine needles and dry ground. Big granite boulders sat in the low green brush, and through the trunks you could see the lake, deep blue, with mountains on the far side. The sky was clear apart from a few thin clouds.\n\nMy wife was in the hammock. I was the one taking the picture.\n\nI'll add the numbers once the track is trimmed. I forgot to stop the tracker before I drove off, so it kept running after the ride was over, and that part gets cut first."
  },
  "episode": {
   "title": "The hammock stop",
-  "script": "Late morning, the last day of August, in the pines above the lake.\n\nChristian was out on a ride. At twenty-five past eleven, the ride had turned into a stop.\n\nA blue hammock hung between two trees. Granite boulders sat in the brush below it, and through the trunks the lake showed up deep blue, with mountains on the far shore.\n\n***\n\nChristian wasn't in the hammock. He was behind the camera, which is its own kind of rest.\n\nThe rest of the ride is still in the notes he hasn't written yet. The tracker, as usual, kept going after the ride was done.",
+  "script": "Late morning, the last day of August, in the pines above Lake Tahoe.\n\nChristian was out on the Flume Trail near Incline Village, with his wife and Marley along. At twenty-five past eleven, the ride had turned into a stop.\n\nA blue hammock hung between two trees. Granite boulders sat in the brush below it, and through the trunks the lake showed up deep blue, with mountains on the far shore.\n\n***\n\nHis wife was in the hammock. Christian was behind the camera, which is its own kind of rest.\n\nThe numbers will have to wait for a trimmed track. The tracker, as usual, kept going after the ride was done. He forgot to stop it before he drove off.",
   "audio": null
  },
  "questions": [
-  "Privacy first: the recording ran on into the trip home. Did the ride also start at home? If so, it can only be told views-only, with no track, map, route or distances. Either way, nothing about the trip home goes in the text.",
-  "The current figures (7.8 miles, 1 h 2 m moving and so on) still include the trip home. Can you re-trim the track at 7 miles and send the new figures before any numbers go in?",
-  "Was the trip home recorded while driving or while riding? It matters for whether the 'forgot to stop the tracker' gag fits.",
-  "Who is in the hammock, and are they OK appearing in the photo? Should they be named or stay anonymous?",
-  "Where was this? Trailhead or public-land name, and which lake?",
-  "Anything from the ride itself to add: route, who came along, whether Marley was there?"
+  "Please send the re-trimmed figures (cut at 7 miles). The current ones still include the drive, so no numbers are in the text yet.",
+  "You mentioned Helena. The show guide keeps your wife unnamed, so the draft says \"my wife\". Do you want her named from now on? If so, the guide and her consent entry need updating.",
+  "The draft says Lake Tahoe, since the Flume Trail near Incline Village looks over it. Is that right?",
+  "Marley isn't visible in the photo. Do you have a photo of Marley from this ride, or anything Marley did on the trail worth adding?"
  ],
  "consent": "",
- "source": "Rides/August 31 2024"
+ "source": "Rides/August 31 2024",
+ "voiceNotesDone": true
 }
