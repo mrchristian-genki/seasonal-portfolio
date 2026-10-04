@@ -35,7 +35,7 @@ $in = studio_logged_in();
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&family=Special+Elite&display=swap">
 <link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>-13">
-<link rel="stylesheet" href="table/table.css?v=40">
+<link rel="stylesheet" href="table/table.css?v=41">
 </head>
 <?php if (!$in): ?>
 <body class="login">
