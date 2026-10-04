@@ -1,7 +1,8 @@
 /* STUDIO SHELVES: three bits of open wood, each showing one prop at a time. The header's plank band to the
    right of the STUDIO panel (above the river), and the footer either side of the lamps. Every so often a
-   prop slides out of a shelf and another one slides in, picked at random from the ones not already out, so
-   a page left open long enough shows the whole collection. Tap one to collect it and another takes its place.
+   prop leaves a shelf and another arrives (dropping in from the top in the header, sliding in from the side
+   in the footer), picked at random from the ones not already out, so a page left open long enough shows the
+   whole collection. Tap one to collect it and another takes its place.
    Works on the login page too. Marley (in the table layer) passes over all of them. */
 (function () {
   'use strict';
@@ -20,7 +21,7 @@
 
   function el(cls, parent) { var d = document.createElement('div'); d.className = cls; parent.appendChild(d); return d; }
   var shelves = [
-    { box: el('shelf shelf-top', HERO), from: 'right' },
+    { box: el('shelf shelf-top', HERO), from: 'top' },
     { box: el('shelf shelf-left', FOOT), from: 'left' },
     { box: el('shelf shelf-right', FOOT), from: 'right' }
   ];
@@ -66,6 +67,12 @@
       var x = (b.width - z.w) * (.25 + Math.random() * .5);
       img.style.width = z.w + 'px'; img.style.left = x + 'px'; img.style.top = ((b.height - z.h) / 2) + 'px';
       sh.box.appendChild(img); sh.prop = img; sh.name = name;
+      if (sh.from === 'top') {                                  // dropped in from above, with a little settle
+        var up = -((b.height + z.h) / 2 + 40);
+        return anim(img, [{ transform: 'translateY(' + up + 'px) rotate(' + (rot * 2) + 'deg)' },
+                          { transform: 'translateY(6px) rotate(' + rot + 'deg)', offset: .7 },
+                          { transform: 'translateY(0) rotate(' + rot + 'deg)' }], 1100, 'cubic-bezier(.45,0,.6,1)');
+      }
       var off = sh.from === 'left' ? -(x + z.w + 40) : (b.width - x + 40);
       return anim(img, [{ transform: 'translateX(' + off + 'px) rotate(' + (rot * 3) + 'deg)' }, { transform: 'translateX(0) rotate(' + rot + 'deg)' }], 1400, 'cubic-bezier(.2,.7,.25,1)');
     });
@@ -73,9 +80,10 @@
   function take(sh) {
     var img = sh.prop; if (!img) return Promise.resolve();
     var b = sh.box.getBoundingClientRect(), r = img.getBoundingClientRect();
-    var off = sh.from === 'left' ? -(r.right - b.left + 40) : (b.right - r.left + 40);
-    var cur = getComputedStyle(img).transform;
-    return anim(img, [{ transform: cur === 'none' ? 'none' : cur }, { transform: 'translateX(' + off + 'px)' }], 1100, 'cubic-bezier(.5,0,.75,.4)')
+    var cur = getComputedStyle(img).transform, to;
+    if (sh.from === 'top') to = 'translateY(' + -(r.bottom - b.top + 40) + 'px)';     // lifted back out the top
+    else to = 'translateX(' + (sh.from === 'left' ? -(r.right - b.left + 40) : (b.right - r.left + 40)) + 'px)';
+    return anim(img, [{ transform: cur === 'none' ? 'none' : cur }, { transform: to }], 1000, 'cubic-bezier(.5,0,.75,.4)')
       .then(function () { img.remove(); delete out[sh.name]; sh.prop = null; sh.name = null; });
   }
 
