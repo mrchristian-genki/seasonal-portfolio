@@ -8,6 +8,7 @@
   var Track = window.FieldTrack;   // field/track.js, copied here at deploy
   var CFG = null, E = null, dirty = false;
   var fresh = {};     // name -> { blob, thumb (data URL), b64 } for photos not yet saved
+  var audioNew = null, audioGone = false;   // the episode's MP3: one attached since the last save, or removed
   var removed = [];   // photo files to delete on save
 
   // ---------- helpers ----------
@@ -94,7 +95,7 @@
   // ---------- list ----------
   function showList() {
     if (dirty && !confirm('Leave without saving?')) return;
-    dirty = false; E = null; fresh = {}; removed = []; INBOX = null;
+    dirty = false; E = null; fresh = {}; removed = []; INBOX = null; audioNew = null; audioGone = false;
     route('notes');
     app.innerHTML = '<div class="head"><h1>Field Notes</h1><button id="new" class="primary">New entry</button></div><section id="drive" class="panel drive"><p class="muted">Checking Google Drive…</p></section><div id="list" class="cards"><p class="muted">Loading entries…</p></div>';
     $('#new').onclick = function () { edit(null); };
@@ -295,7 +296,7 @@
     var L = loader('Processing', ['Read the folder', 'Bring in the track', 'Bring in the photos', 'Claude drafts the note', 'Ready for you to read'], label);
     L.at(0);
     api('inbox', null, '&f=' + encodeURIComponent(src)).then(function (j) {
-      INBOX = j; dirty = false; fresh = {}; removed = [];
+      INBOX = j; dirty = false; fresh = {}; removed = []; audioNew = null; audioGone = false;
       var name = src.split('/').slice(1).join('/').replace(/^#/, ''), when = guessDate(name);
       E = blank(); E.source = src; E.title = guessTitle(name); E.fieldNotes = j.notes || '';
       if (when) E.date = when;
@@ -345,7 +346,7 @@
   }
   function edit(id) {
     if (dirty && !confirm('Leave without saving?')) return;
-    dirty = false; fresh = {}; removed = [];
+    dirty = false; fresh = {}; removed = []; audioNew = null; audioGone = false;
     if (!id) { E = blank(); route('new'); render(); return Promise.resolve(); }
     app.innerHTML = '<p class="muted">Opening…</p>';
     return api('entry', null, '&id=' + encodeURIComponent(id)).then(function (j) {
@@ -379,7 +380,8 @@
       '<section class="panel">' + field('Card summary', '<textarea id="summary" rows="2">' + esc(E.summary) + '</textarea>') + '</section>' +
       '<section class="panel"><h2>Post</h2>' + field('Title', '<input id="postTitle" value="' + esc(E.post.title) + '">') + field('Text', '<textarea id="postBody" rows="14">' + esc(E.post.body) + '</textarea>', 'First person. A blank line between paragraphs. End with "What I learned: …" when there is something real.') + '</section>' +
       '<section class="panel"><h2>Episode</h2>' + field('Title', '<input id="epTitle" value="' + esc(E.episode.title) + '">') + field('Script', '<textarea id="epScript" rows="16">' + esc(E.episode.script) + '</textarea>', '<span id="epCount"></span>') +
-        '<div class="row"><button id="copyPrompt">Copy the audio prompt</button><span class="muted">' + (E.episode.audio ? 'Audio attached.' : 'Audio: render it with your voice tool, then hand the file to Claude Code to master and attach (Studio upload comes next).') + '</span></div></section>' +
+        '<div class="row"><button id="copyPrompt">Copy the audio prompt</button><span class="muted">Render it with your voice tool, export an MP3, then attach it below.</span></div>' +
+        '<h3>Audio</h3><div id="audio"></div></section>' +
       (later ? '<section class="panel more"><h2>Add more</h2><p class="muted">Only if you want to add to what\'s here.</p>' + (trackTop ? '' : '<h3>Track</h3><div id="track"></div>') + '<h3>Photos</h3>' + dropPhotos + '</section>' : '') +
       '<footer class="savebar"><span id="saveState" class="muted">' + (E.id ? 'Saved' : 'Not saved yet') + '</span><button id="save" class="primary">Save</button></footer>';
 
@@ -387,7 +389,7 @@
     ['title', 'place', 'consent', 'fieldNotes', 'summary', 'postTitle', 'postBody', 'epTitle', 'epScript'].forEach(function (k) { $('#' + k).addEventListener('input', markDirty); });
     ['kind', 'status', 'date'].forEach(function (k) { $('#' + k).addEventListener('change', markDirty); });
     $('#epScript').addEventListener('input', count); count();
-    renderTrack(); renderPhotos(); renderQuestions();
+    renderTrack(); renderPhotos(); renderQuestions(); renderAudio();
     var dp = $('#drop-photos');
     ['dragover', 'dragenter'].forEach(function (t) { dp.addEventListener(t, function (ev) { ev.preventDefault(); dp.classList.add('on'); }); });
     dp.addEventListener('dragleave', function () { dp.classList.remove('on'); });
@@ -520,6 +522,64 @@
     });
   }
 
+  // ---------- the episode's audio: an MP3 dropped here (or picked from the note's Drive folder) goes up
+  // in pieces to a Git blob straight away, plays here to check, and is committed with the next Save ----------
+  function mmss(sec) { sec = Math.round(sec || 0); return Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0'); }
+  function renderAudio() {
+    var box = $('#audio'); if (!box) return;
+    var has = audioNew || (E.episode.audio && !audioGone);
+    if (has) {
+      box.innerHTML = '<div class="aud"><audio controls preload="metadata"' + (audioNew && audioNew.url ? ' src="' + audioNew.url + '"' : '') + '></audio>' +
+        '<p class="muted">' + (audioNew ? '<b>' + esc(audioNew.name) + '</b> · ' + size(audioNew.bytes) + '<span class="alen"></span> · new: Save to keep it' : 'Attached<span class="alen"></span>') + '</p>' +
+        '<div class="row"><label class="pick link">Replace<input type="file" accept="audio/mpeg,.mp3" hidden id="pickAudio"></label><button type="button" class="link" id="dropAudio">Remove</button></div></div>';
+      var el = $('audio', box);
+      el.addEventListener('loadedmetadata', function () { var l = $('.alen', box); if (l && isFinite(el.duration)) l.textContent = ' · ' + mmss(el.duration); });
+      if (!audioNew && E.id) {          // the saved one: fetched once, played from memory (Safari wants that)
+        fetch('api.php?a=audio&id=' + encodeURIComponent(E.id)).then(function (r) { if (!r.ok) throw 0; return r.blob(); })
+          .then(function (b) { el.src = URL.createObjectURL(b); }).catch(function () {});
+      }
+      $('#dropAudio').onclick = function () { if (audioNew) audioNew = null; else audioGone = true; markDirty(); renderAudio(); };
+    } else {
+      box.innerHTML = '<div id="drop-audio" class="drop">Drop the episode\'s MP3 here, or <label class="pick">choose<input type="file" accept="audio/mpeg,.mp3" hidden id="pickAudio"></label>.</div><div id="driveAudio"></div>';
+      var dz = $('#drop-audio');
+      ['dragover', 'dragenter'].forEach(function (t) { dz.addEventListener(t, function (ev) { ev.preventDefault(); dz.classList.add('on'); }); });
+      dz.addEventListener('dragleave', function () { dz.classList.remove('on'); });
+      dz.addEventListener('drop', function (ev) { ev.preventDefault(); dz.classList.remove('on'); if (ev.dataTransfer.files[0]) attachAudio(ev.dataTransfer.files[0]); });
+      if (E.source) api('inbox', null, '&f=' + encodeURIComponent(E.source)).then(function (j) {
+        var mp3 = j.files.filter(function (f) { return /\.mp3$/i.test(f.name); }), d = $('#driveAudio');
+        if (!mp3.length || !d) return;
+        d.innerHTML = '<p class="muted">In this note\'s Drive folder:</p>' + mp3.map(function (f) {
+          return '<button type="button" class="small useDrive" data-n="' + esc(f.name) + '">Use ' + esc(f.name.split('/').pop()) + ' <small>' + size(f.bytes) + '</small></button>';
+        }).join(' ');
+        $$('.useDrive', d).forEach(function (b) { b.onclick = function () { fromDrive(b.getAttribute('data-n'), b); }; });
+      }).catch(function () {});
+    }
+    var pick = $('#pickAudio', box); if (pick) pick.onchange = function () { if (this.files[0]) attachAudio(this.files[0]); this.value = ''; };
+  }
+  function attachAudio(file) {
+    if (!/\.mp3$/i.test(file.name) && file.type !== 'audio/mpeg') { toast('Export the episode as an MP3 first, then drop that.', true); return; }
+    if (file.size > 40e6) { toast('That audio file is too big (40 MB at most).', true); return; }
+    var up = Array.from(crypto.getRandomValues(new Uint8Array(8)), function (b) { return b.toString(16).padStart(2, '0'); }).join('');
+    var CH = 1500000, n = Math.ceil(file.size / CH), chain = Promise.resolve(), res = null, box = $('#audio');
+    box.innerHTML = '<p class="muted aup">Uploading ' + esc(file.name) + '… <b>0%</b></p>';
+    for (var i = 0; i < n; i++) (function (i) {
+      chain = chain.then(function () { return blobToB64(file.slice(i * CH, (i + 1) * CH)); })
+        .then(function (b64) { return api('audiopart', { up: up, i: i, last: i === n - 1, b64: b64 }); })
+        .then(function (r) { res = r; var b = $('#audio .aup b'); if (b) b.textContent = Math.round((i + 1) / n * 100) + '%'; });
+    })(i);
+    chain.then(function () {
+      audioNew = { sha: res.sha, name: file.name, bytes: file.size, url: URL.createObjectURL(file) }; audioGone = false;
+      markDirty(); renderAudio(); toast('Audio attached. Save to keep it.');
+    }).catch(function (err) { toast(err.message, true); renderAudio(); });
+  }
+  function fromDrive(name, btn) {
+    btn.disabled = true; btn.textContent = 'Attaching…';
+    api('audiofromdrive', { f: E.source, n: name }).then(function (r) {
+      audioNew = { sha: r.sha, name: name.split('/').pop(), bytes: r.bytes, url: null }; audioGone = false;
+      markDirty(); renderAudio(); toast('Audio attached from Drive. Save to keep it.');
+    }).catch(function (err) { toast(err.message, true); renderAudio(); });
+  }
+
   // ---------- questions: answered one at a time, sent to Claude all together ----------
   var QA = { list: null, at: 0, ans: {}, skip: {} };
   function renderQuestions() {
@@ -649,9 +709,14 @@
     });
     chain.then(function () {
       btn.textContent = 'Saving…'; L.at(1);
-      return api('save', { entry: E, newPhotos: uploaded, removePhotos: removed });
+      var hadAudio = E.episode.audio;
+      if (audioNew) E.episode.audio = 'data/audio/' + E.id + '.mp3'; else if (audioGone) E.episode.audio = null;
+      return api('save', { entry: E, newPhotos: uploaded, removePhotos: removed, newAudio: audioNew ? audioNew.sha : '', removeAudio: audioGone && !!hadAudio })
+        .catch(function (err) { E.episode.audio = hadAudio; throw err; });
     }).then(function () {
-      fresh = {}; removed = []; dirty = false;
+      var hadNew = !!audioNew;
+      fresh = {}; removed = []; dirty = false; audioNew = null; audioGone = false;
+      if (hadNew && !first) renderAudio();
       $('#saveState').textContent = E.status === 'published' ? 'Saved and publishing: live in about a minute' : 'Saved';
       if (first) { route('note/' + E.id, true); render(); }
       toast(E.status === 'published' ? 'Saved. The site updates in about a minute.' : 'Saved.');

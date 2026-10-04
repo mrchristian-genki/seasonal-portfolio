@@ -24,6 +24,13 @@ $cfg = studio_config();
 $gh = new GitHub($cfg);
 const EVENTS = 'field/data/events';
 const PHOTOS = 'field/data/photos';
+const AUDIO = 'field/data/audio';
+const AUDIO_MAX = 40_000_000;           // an episode MP3 is a few MB; this leaves plenty of room
+
+// An MP3 starts with an ID3 tag or an MPEG audio frame.
+function is_mp3(string $head): bool {
+    return str_starts_with($head, 'ID3') || (strlen($head) > 1 && ord($head[0]) === 0xFF && (ord($head[1]) & 0xE0) === 0xE0);
+}
 
 // The same layout as the repo's own tools write (JSON.stringify(ev, null, 1)), so diffs stay clean.
 function repo_json(array $e): string {
@@ -85,6 +92,39 @@ try {
             if ($bytes === false || substr($bytes, 0, 3) !== "\xFF\xD8\xFF" || strlen($bytes) > 4_000_000) json_fail("That photo isn't a usable JPEG.");
             json_out(['sha' => $gh->blob(base64_encode($bytes))]);
 
+        // The episode's MP3 comes up in pieces (so no request is large), gathered in a private file on
+        // this server; the last piece checks it's an MP3 and turns it into a Git blob for the save.
+        case 'POST audiopart':
+            $up = (string) ($body['up'] ?? ''); $i = (int) ($body['i'] ?? -1);
+            if (!preg_match('/^[0-9a-f]{16}$/', $up) || $i < 0) json_fail('Bad upload.');
+            $bytes = base64_decode((string) ($body['b64'] ?? ''), true);
+            if ($bytes === false || strlen($bytes) > 3_000_000) json_fail('Bad upload piece.');
+            $part = studio_private_dir() . "/audio-$up.part";
+            if ($i === 0) { if (!is_mp3($bytes)) json_fail("That isn't an MP3. Export the episode as MP3 and try again."); file_put_contents($part, $bytes); }
+            else { if (!is_file($part)) json_fail('The upload was interrupted. Try again.'); file_put_contents($part, $bytes, FILE_APPEND); }
+            clearstatcache(true, $part);
+            if (filesize($part) > AUDIO_MAX) { @unlink($part); json_fail('That audio file is too big (40 MB at most).'); }
+            if (empty($body['last'])) json_out(['ok' => true]);
+            $all = (string) file_get_contents($part); @unlink($part);
+            json_out(['sha' => $gh->blob(base64_encode($all)), 'bytes' => strlen($all)]);
+
+        // An MP3 that came in through Google Drive: straight from the inbox to a Git blob.
+        case 'POST audiofromdrive':
+            $all = (new Drive($cfg))->audio((string) ($body['f'] ?? ''), (string) ($body['n'] ?? ''));
+            if (strlen($all) > AUDIO_MAX || !is_mp3(substr($all, 0, 4))) json_fail("That file isn't a usable MP3.");
+            json_out(['sha' => $gh->blob(base64_encode($all)), 'bytes' => strlen($all)]);
+
+        // An entry's attached MP3, for the editor's player.
+        case 'GET audio':
+            $id = $_GET['id'] ?? '';
+            if (!valid_id($id)) json_fail('No such audio.', 404);
+            $bytes = $gh->readBytes(AUDIO . "/$id.mp3");
+            if ($bytes === null) json_fail('No such audio.', 404);
+            header('Content-Type: audio/mpeg');
+            header('Cache-Control: private, max-age=600');
+            echo $bytes;
+            exit;
+
         // Save = one commit: the entry JSON, the new photos (by blob id) and any removed ones.
         case 'POST save':
             $e = $body['entry'] ?? null;
@@ -104,6 +144,16 @@ try {
             }
             foreach ($body['removePhotos'] ?? [] as $n) {
                 if (preg_match('/^[a-z0-9-]{1,40}\.(jpg|mp4)$/', (string) $n)) $files[PHOTOS . "/$id/$n"] = null;
+            }
+            // The episode's audio lives at one place per entry, and only there.
+            $audio = $e['episode']['audio'] ?? null;
+            if ($audio !== null && $audio !== "data/audio/$id.mp3") json_fail('The audio path is outside this entry.');
+            $na = (string) ($body['newAudio'] ?? '');
+            if ($na !== '') {
+                if (!preg_match('/^[0-9a-f]{40}$/', $na) || $audio === null) json_fail('Bad audio.');
+                $files[AUDIO . "/$id.mp3"] = ['sha' => $na];
+            } elseif (!empty($body['removeAudio']) && $audio === null) {
+                $files[AUDIO . "/$id.mp3"] = null;
             }
             $files[EVENTS . "/$id.json"] = ['text' => repo_json($e)];
             $what = ($e['status'] ?? '') === 'published' ? 'Publish' : 'Save';

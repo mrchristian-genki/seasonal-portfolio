@@ -230,3 +230,12 @@ body.busy{overflow:hidden}
 .qcard .grow{flex:1}
 .qcard button[disabled]{opacity:.4;cursor:default}
 .qsend{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;margin:12px 0 4px}
+/* the episode's audio */
+.aud audio{width:100%;margin:0 0 4px}
+.aud p{margin:0 0 6px}
+#driveAudio{margin-top:8px}
+#driveAudio .useDrive{margin:4px 6px 0 0}
+/* the save bar stays on top of the footer (it used to slide under it at the bottom of the page), and the
+   page leaves room for it so the footer isn't covered */
+.savebar{z-index:100}
+body:has(.savebar){padding-bottom:64px}
