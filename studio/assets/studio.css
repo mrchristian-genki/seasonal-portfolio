@@ -436,3 +436,7 @@ dialog.pfp::backdrop{background:rgba(20,12,6,.7)}
 .dash.steam .dial .ndl{stroke:#ff6a1a;stroke-width:3.5;stroke-linecap:round;filter:drop-shadow(0 0 3px rgba(255,106,26,.8))}
 .dash.steam .dial .hub{fill:#2b2118;stroke:#c99a48;stroke-width:3}
 .dash.steam .dial figcaption span{color:#e2b45b;font:400 13px "Special Elite",monospace}
+/* a photo's controls wrap to a second line rather than squeeze (a loop has one more: Poster frame) */
+.ph .opts{flex-wrap:wrap;gap:6px 12px}
+.ph .opts > *{white-space:nowrap;flex:none}
+.ph .opts .pfBtn,.ph .opts .rm{font-size:13px}
