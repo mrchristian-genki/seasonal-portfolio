@@ -106,11 +106,11 @@ $in = studio_logged_in();
 <?php if ($in): ?>
 <div id="toast" role="status" aria-live="polite"></div>
 <script src="assets/track.js?v=<?= STUDIO_VERSION ?>"></script>
-<script src="assets/studio.js?v=<?= STUDIO_VERSION ?>-11"></script>
+<script src="assets/studio.js?v=<?= STUDIO_VERSION ?>-12"></script>
 <?php endif; ?>
 <script src="table/table.js?v=22"></script>
 <script src="table/river.js?v=6"></script>
-<script src="table/switch.js?v=5"></script>
+<script src="table/switch.js?v=6"></script>
 <script src="table/shelf.js?v=11"></script>
 </body>
 </html>
