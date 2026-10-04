@@ -116,9 +116,243 @@
     return tiles.map(function (t) { return '<div class="stat"><b>' + t[0] + '</b><span>' + t[1] + '</span></div>'; }).join('');
   }
 
+  // ── Dashboard: what the track says beyond the four tiles ──────────────
+  // Everything here is worked out in the browser from the published line (lat, lon, elevation, seconds
+  // from the start), its elevation profile and the stats. The line is only the mapped part, so the charts
+  // follow it; the headline numbers are the whole activity's.
+  var TZ = 'America/Los_Angeles';
+  function clock(ms) { return new Date(ms).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: TZ }).toLowerCase().replace(' ', ' '); }
+  function mmss(sec) { sec = Math.round(sec); var h = Math.floor(sec / 3600), m = Math.floor(sec % 3600 / 60), x = sec % 60; return (h ? h + ':' + ('0' + m).slice(-2) : m) + ':' + ('0' + x).slice(-2); }
+  function spd(kmh) { return units === 'imperial' ? kmh * 0.621371 : kmh; }
+  function spdU() { return units === 'imperial' ? 'mph' : 'km/h'; }
+  function upU() { return units === 'imperial' ? 'ft' : 'm'; }
+  function upV(m) { return Math.round(units === 'imperial' ? m * 3.28084 : m); }
+  function bearing(a, b) {
+    var r = Math.PI / 180, y = Math.sin((b[1] - a[1]) * r) * Math.cos(b[0] * r);
+    var x = Math.cos(a[0] * r) * Math.sin(b[0] * r) - Math.sin(a[0] * r) * Math.cos(b[0] * r) * Math.cos((b[1] - a[1]) * r);
+    return (Math.atan2(y, x) / r + 360) % 360;
+  }
+  function D(a, b) { return dist({ lat: a[0], lon: a[1] }, { lat: b[0], lon: b[1] }); }
+  // sunrise and sunset (the sunrise equation; within a minute or two)
+  function sun(ms, lat, lon) {
+    // the day number of the ride's local date (noon UTC that day), then solar noon there from the longitude
+    var ymd = new Date(ms).toLocaleDateString('en-CA', { timeZone: TZ }).split('-');
+    var r = Math.PI / 180, jd = Date.UTC(+ymd[0], +ymd[1] - 1, +ymd[2], 12) / 86400000 + 2440587.5, n = Math.round(jd - 2451545 + 0.0008), J = n - lon / 360;
+    var M = (357.5291 + 0.98560028 * J) % 360, C = 1.9148 * Math.sin(M * r) + 0.02 * Math.sin(2 * M * r) + 0.0003 * Math.sin(3 * M * r);
+    var lam = (M + C + 180 + 102.9372) % 360, Jt = 2451545 + J + 0.0053 * Math.sin(M * r) - 0.0069 * Math.sin(2 * lam * r);
+    var dec = Math.asin(Math.sin(lam * r) * Math.sin(23.44 * r)), cw = (Math.sin(-0.833 * r) - Math.sin(lat * r) * Math.sin(dec)) / (Math.cos(lat * r) * Math.cos(dec));
+    if (cw < -1 || cw > 1) return null;
+    var w = Math.acos(cw) / r / 360, toMs = function (j) { return (j - 2440587.5) * 86400000; };
+    return { rise: toMs(Jt - w), set: toMs(Jt + w) };
+  }
+  function analyse(d) {
+    var s = d.stats || {}, L = solid(d.line), out = { s: s };
+    if (L.length < 2) return out;
+    var c = [0], timed = L[0].length > 3 && L[L.length - 1][3] != null;
+    for (var i = 1; i < L.length; i++) c.push(c[i - 1] + D(L[i - 1], L[i]));
+    out.km = c[c.length - 1] / 1000;
+    // speed along the way: over windows of at least 150 m, so GPS jitter between close points doesn't spike it
+    if (timed) {
+      var sp = [], j = 0;
+      for (i = 0; i < L.length; i++) {
+        var a = i, b = i;
+        while (a > 0 && c[i] - c[a] < 75) a--;
+        while (b < L.length - 1 && c[b] - c[i] < 75) b++;
+        var dt = L[b][3] - L[a][3];
+        sp.push(dt > 0 ? (c[b] - c[a]) / dt * 3.6 : 0);
+      }
+      out.speed = sp.map(function (v, k) { return [c[k] / 1000, Math.min(v, (s.maxKmh || 80) * 1.05)]; });
+      // time by terrain, moving only: climbing (over 2%), level, descending, and stopped
+      var tc = 0, tf = 0, td = 0, ts = 0, up = 0;
+      for (i = 1; i < L.length; i++) {
+        var dd = c[i] - c[i - 1], t = L[i][3] - L[i - 1][3], g = dd > 0 && L[i][2] != null && L[i - 1][2] != null ? (L[i][2] - L[i - 1][2]) / dd : 0;
+        if (t <= 0) continue;
+        if (dd / t * 3.6 < 2.5) { ts += t; continue; }
+        if (g > 0.02) { tc += t; up += L[i][2] - L[i - 1][2]; } else if (g < -0.02) td += t; else tf += t;
+      }
+      out.time = { climb: tc, flat: tf, down: td, stop: ts };
+      // splits: the time for each whole mile (or km)
+      var unit = units === 'imperial' ? 1609.344 : 1000, splits = [], last = 0, k = 1;
+      for (i = 1; i < L.length; i++) {
+        while (c[i] >= k * unit) {
+          var f = (k * unit - c[i - 1]) / ((c[i] - c[i - 1]) || 1), at = L[i - 1][3] + (L[i][3] - L[i - 1][3]) * f;
+          splits.push(at - last); last = at; k++;
+        }
+      }
+      out.splits = splits;
+      out.climbRate = tc > 600 && up > 30 ? up / (tc / 3600) : null;
+    }
+    // grades, from the evenly spaced profile (a little smoothed)
+    var P = (d.profile || []).filter(function (q) { return q[1] != null; });
+    if (P.length > 4) {
+      var bins = [0, 0, 0, 0, 0, 0, 0], edges = [-8, -4, -1.5, 1.5, 4, 8];
+      var steep = { g: 0 }, climb = null, best = null;
+      for (i = 1; i < P.length; i++) {
+        var dk = (P[i][0] - P[i - 1][0]) * 1000; if (dk <= 0) continue;
+        var i0 = Math.max(0, i - 2), i1 = Math.min(P.length - 1, i + 1), gr = (P[i1][1] - P[i0][1]) / (((P[i1][0] - P[i0][0]) * 1000) || 1) * 100;
+        var bi = 0; while (bi < edges.length && gr >= edges[bi]) bi++;
+        bins[bi] += dk;
+      }
+      out.grades = bins;
+      // steepest stretch of at least 200 m
+      for (i = 0; i < P.length; i++) {
+        for (j = i + 1; j < P.length && (P[j][0] - P[i][0]) * 1000 < 200; j++);
+        if (j >= P.length) break;
+        var gg = (P[j][1] - P[i][1]) / ((P[j][0] - P[i][0]) * 1000) * 100;
+        if (gg > steep.g) steep = { g: gg, at: P[i][0] };
+      }
+      out.steepest = steep.g > 1 ? steep : null;
+      // longest climb: up and up, letting dips of under 10 m pass
+      for (i = 1; i < P.length; i++) {
+        if (!climb) climb = { from: P[i - 1], top: P[i - 1] };
+        if (P[i][1] >= climb.top[1]) climb.top = P[i];
+        else if (climb.top[1] - P[i][1] > 10) {
+          if (!best || climb.top[1] - climb.from[1] > best.up) best = { up: climb.top[1] - climb.from[1], km: climb.top[0] - climb.from[0], at: climb.from[0] };
+          climb = { from: P[i], top: P[i] };
+        }
+      }
+      if (climb && (!best || climb.top[1] - climb.from[1] > best.up)) best = { up: climb.top[1] - climb.from[1], km: climb.top[0] - climb.from[0], at: climb.from[0] };
+      out.longest = best && best.up >= 15 ? best : null;
+    }
+    // the shape of it: a loop, an out-and-back or one way, how far it ever got from the start, and which way it went
+    var far = 0, rose = [0, 0, 0, 0, 0, 0, 0, 0];
+    for (i = 1; i < L.length; i++) {
+      far = Math.max(far, D(L[0], L[i]));
+      rose[Math.round(bearing(L[i - 1], L[i]) / 45) % 8] += c[i] - c[i - 1];
+    }
+    out.far = far / 1000; out.rose = rose;
+    var gap = D(L[0], L[L.length - 1]);
+    if (gap > Math.max(400, far * 0.35)) out.shape = 'One way';
+    else {
+      var half = Math.floor(L.length / 2), near = 0, cnt = 0;
+      for (i = half; i < L.length; i += 2) { cnt++; for (j = 0; j < half; j += 2) if (D(L[i], L[j]) < 60) { near++; break; } }
+      out.shape = cnt && near / cnt > 0.6 ? 'Out and back' : 'Loop';
+    }
+    // the clock and the sun
+    if (s.start) {
+      var t0 = Date.parse(s.start), t1 = t0 + (s.elapsedSec || 0) * 1000, sn = sun(t0, L[0][0], L[0][1]);
+      out.clock = { start: t0, end: t1, sun: sn };
+    }
+    return out;
+  }
+
+  // a speedometer: an arc from 0 to `max`, filled to the value, with a needle that swings up to it
+  function gauge(label, v, max, color, sub) {
+    var W = 220, cx = 110, cy = 112, r = 88, ang = Math.PI * (1 - Math.min(v, max) / max);
+    function pt(a, rr) { return [(cx + rr * Math.cos(a)).toFixed(1), (cy - rr * Math.sin(a)).toFixed(1)]; }
+    var p0 = pt(Math.PI, r), p1 = pt(0, r), pv = pt(ang, r), step = niceStep(max / 5), ticks = '';
+    for (var t = 0; t <= max + 1e-9; t += step / 2) {
+      var a = Math.PI * (1 - t / max), major = Math.abs(t / step - Math.round(t / step)) < 1e-6, q0 = pt(a, r - 13), q1 = pt(a, r - (major ? 24 : 19));
+      ticks += '<line x1="' + q0[0] + '" y1="' + q0[1] + '" x2="' + q1[0] + '" y2="' + q1[1] + '" class="tk' + (major ? ' mj' : '') + '"/>';
+      if (major) { var ql = pt(a, r - 36); ticks += '<text x="' + ql[0] + '" y="' + (+ql[1] + 4) + '" class="tl">' + +t.toFixed(1) + '</text>'; }
+    }
+    var deg = 180 * Math.min(v, max) / max, n = pt(ang, r - 16), anim = (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) ? '' :
+      '<animateTransform attributeName="transform" type="rotate" from="' + (-deg) + ' ' + cx + ' ' + cy + '" to="0 ' + cx + ' ' + cy + '" dur="1.4s" fill="freeze" calcMode="spline" keyTimes="0;1" keySplines=".2 .9 .25 1"/>';
+    return '<figure class="gauge"><svg viewBox="0 0 ' + W + ' 132" role="img" aria-label="' + esc(label) + ': ' + v.toFixed(1) + ' ' + spdU() + '">' +
+      '<path d="M' + p0 + ' A' + r + ' ' + r + ' 0 0 1 ' + p1 + '" class="trk"/>' +
+      '<path d="M' + p0 + ' A' + r + ' ' + r + ' 0 0 1 ' + pv + '" class="val ' + color + '"/>' + ticks +
+      '<g><line x1="' + cx + '" y1="' + cy + '" x2="' + n[0] + '" y2="' + n[1] + '" class="ndl"/>' + anim + '</g><circle cx="' + cx + '" cy="' + cy + '" r="7" class="hub"/></svg>' +
+      '<figcaption><b>' + v.toFixed(1) + '</b> <small>' + spdU() + '</small><span>' + esc(label) + (sub ? ' · ' + esc(sub) : '') + '</span></figcaption></figure>';
+  }
+  // speed along the way, with the average as a dashed line and the top speed marked
+  function speedChart(sp, avg, top) {
+    var W = 1000, H = 150, pb = 18, pt = 8, kmMax = sp[sp.length - 1][0] || 1, vMax = niceStep(spd(top) / 3) * 4 || 1;
+    function X(k) { return k / kmMax * W; } function Y(v) { return pt + (1 - spd(v) / vMax) * (H - pt - pb); }
+    var d = sp.map(function (p, i) { return (i ? 'L' : 'M') + X(p[0]).toFixed(1) + ' ' + Y(p[1]).toFixed(1); }).join('');
+    var mi = 0; sp.forEach(function (p, i) { if (p[1] > sp[mi][1]) mi = i; });
+    var grid = '', st = niceStep(vMax / 3);
+    for (var v = st; v < vMax; v += st) grid += '<line x1="0" x2="' + W + '" y1="' + (pt + (1 - v / vMax) * (H - pt - pb)).toFixed(1) + '" y2="' + (pt + (1 - v / vMax) * (H - pt - pb)).toFixed(1) + '" class="gl"/><text x="4" y="' + (pt + (1 - v / vMax) * (H - pt - pb) - 3).toFixed(1) + '" class="ax">' + v + '</text>';
+    return '<svg viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none" class="chart" role="img" aria-label="Speed along the way">' +
+      '<defs><linearGradient id="sg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="s0"/><stop offset="1" class="s1"/></linearGradient></defs>' + grid +
+      '<path d="' + d + 'L' + W + ' ' + (H - pb) + 'L0 ' + (H - pb) + 'Z" fill="url(#sg)"/><path d="' + d + '" class="ln"/>' +
+      (avg ? '<line x1="0" x2="' + W + '" y1="' + Y(avg).toFixed(1) + '" y2="' + Y(avg).toFixed(1) + '" class="avg"/>' : '') +
+      '<circle cx="' + X(sp[mi][0]).toFixed(1) + '" cy="' + Y(sp[mi][1]).toFixed(1) + '" r="5" class="topdot"/></svg>';
+  }
+  function donut(parts) {
+    var tot = parts.reduce(function (a, p) { return a + p[1]; }, 0) || 1, R = 52, C = 2 * Math.PI * R, off = 0;
+    var arcs = parts.map(function (p) {
+      var len = p[1] / tot * C, a = '<circle cx="70" cy="70" r="' + R + '" stroke="' + p[2] + '" stroke-dasharray="' + len.toFixed(2) + ' ' + (C - len).toFixed(2) + '" stroke-dashoffset="' + (-off).toFixed(2) + '" class="seg"/>';
+      off += len; return a;
+    }).join('');
+    return '<div class="donut"><svg viewBox="0 0 140 140" role="img" aria-label="Where the time went"><g transform="rotate(-90 70 70)">' + arcs + '</g>' +
+      '<text x="70" y="66" class="dn-b">' + dur(tot) + '</text><text x="70" y="84" class="dn-s">in all</text></svg><ul>' +
+      parts.map(function (p) { return '<li><i style="background:' + p[2] + '"></i>' + esc(p[0]) + ' <b>' + dur(p[1]) + '</b> <small>' + Math.round(p[1] / tot * 100) + '%</small></li>'; }).join('') + '</ul></div>';
+  }
+  function gradeBars(bins) {
+    var labs = ['Steep down', 'Down', 'Easing down', 'Level', 'Easing up', 'Up', 'Steep up'], cols = ['#1f6f8b', '#3f93a8', '#86bccb', '#c9d3d6', '#f0b3c8', '#e07ba1', '#c23f6f'];
+    var tot = bins.reduce(function (a, b) { return a + b; }, 0) || 1, mx = Math.max.apply(0, bins) || 1;
+    return '<div class="grades">' + bins.map(function (b, i) {
+      return '<div class="gb"><span class="gv">' + Math.round(b / tot * 100) + '%</span><i style="height:' + Math.max(2, b / mx * 100).toFixed(0) + '%;background:' + cols[i] + '"></i><small>' + labs[i] + '</small></div>';
+    }).join('') + '</div>';
+  }
+  function splitBars(sp) {
+    var mn = Math.min.apply(0, sp), mx = Math.max.apply(0, sp), fast = sp.indexOf(mn);
+    return '<div class="spl">' + sp.map(function (t, i) {
+      var h = mx > mn ? 22 + 50 * (mx - t) / (mx - mn) : 50;
+      return '<div class="sb' + (i === fast ? ' best' : '') + '" title="' + (units === 'imperial' ? 'Mile ' : 'Km ') + (i + 1) + ': ' + mmss(t) + '"><span>' + mmss(t) + '</span><i style="height:' + h.toFixed(0) + '%"></i><small>' + (i + 1) + '</small></div>';
+    }).join('') + '</div>';
+  }
+  function roseSVG(rose) {
+    var mx = Math.max.apply(0, rose) || 1, out = '', names = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
+    for (var i = 0; i < 8; i++) {
+      var a0 = (i * 45 - 20 - 90) * Math.PI / 180, a1 = (i * 45 + 20 - 90) * Math.PI / 180, r = 12 + 46 * Math.sqrt(rose[i] / mx);
+      out += '<path d="M70 70 L' + (70 + r * Math.cos(a0)).toFixed(1) + ' ' + (70 + r * Math.sin(a0)).toFixed(1) + ' A' + r.toFixed(1) + ' ' + r.toFixed(1) + ' 0 0 1 ' + (70 + r * Math.cos(a1)).toFixed(1) + ' ' + (70 + r * Math.sin(a1)).toFixed(1) + 'Z" class="pet"/>';
+    }
+    var top = rose.indexOf(mx);
+    return '<svg viewBox="0 0 140 140" class="rose" role="img" aria-label="Mostly headed ' + names[top] + '"><circle cx="70" cy="70" r="60" class="rr"/><circle cx="70" cy="70" r="34" class="rr"/>' + out +
+      '<text x="70" y="12" class="rl">N</text><text x="133" y="74" class="rl">E</text><text x="70" y="137" class="rl">S</text><text x="7" y="74" class="rl">W</text></svg><p class="rose-c">Mostly <b>' + names[top] + '</b></p>';
+  }
+  function dashboard(el, d) {
+    if (!el) return;
+    var a = analyse(d), s = a.s, ride = d.kind !== 'hike';
+    var html = '', card = function (cls, title, body) { return '<section class="dc ' + cls + '"><h3>' + title + '</h3>' + body + '</section>'; };
+    // speed gauges
+    if (s.avgKmh || s.maxKmh) {
+      var top = spd(s.maxKmh || 0), max = Math.max(ride ? 20 : 5, niceStep(top / 4) * 5);
+      while (max < top * 1.08) max += niceStep(max / 5);
+      html += card('speed', 'Speed', '<div class="gauges">' + gauge('Average, moving', spd(s.avgKmh || 0), max, 'g-ink') + gauge('Top speed', top, max, 'g-acc') + '</div>' +
+        (a.speed ? speedChart(a.speed, s.avgKmh, s.maxKmh) + '<p class="cap"><span class="k ln"></span>speed along the way <span class="k avg"></span>average <span class="k top"></span>top</p>' : ''));
+    }
+    // up and down
+    if (s.gainM != null) {
+      var lo = s.minEleM, hi = s.maxEleM, mxv = Math.max(s.gainM || 0, s.lossM || 0) || 1;
+      html += card('updown', 'Up and down',
+        '<div class="ud"><div class="udb up"><i style="height:' + Math.max(4, (s.gainM || 0) / mxv * 100).toFixed(0) + '%"></i><b>↑ ' + upV(s.gainM || 0).toLocaleString() + '</b><small>' + upU() + ' ascent</small></div>' +
+        '<div class="udb down"><i style="height:' + Math.max(4, (s.lossM || 0) / mxv * 100).toFixed(0) + '%"></i><b>↓ ' + upV(s.lossM || 0).toLocaleString() + '</b><small>' + upU() + ' descent</small></div>' +
+        (lo != null && hi != null ? '<div class="range"><span class="hi"><b>' + upV(hi).toLocaleString() + '</b> ' + upU() + '<small>high point</small></span><span class="bar"></span><span class="lo"><b>' + upV(lo).toLocaleString() + '</b> ' + upU() + '<small>low point</small></span><p>' + upV(hi - lo).toLocaleString() + ' ' + upU() + ' between them</p></div>' : '') + '</div>');
+    }
+    if (a.grades) html += card('grade', 'How steep', gradeBars(a.grades) + '<p class="cap">Share of the distance at each grade: level is within 1.5%, steep is over 8%.</p>');
+    if (a.time) html += card('time', 'Where the time went', donut([['Climbing', a.time.climb, '#c23f6f'], ['Level', a.time.flat, '#c9b79c'], ['Descending', a.time.down, '#1f6f8b'], ['Stopped', a.time.stop, '#e6dfd3']].filter(function (p) { return p[1] > 30; })));
+    if (a.splits && a.splits.length > 1) html += card('splits', (units === 'imperial' ? 'Mile' : 'Kilometre') + ' by ' + (units === 'imperial' ? 'mile' : 'kilometre'), splitBars(a.splits) + '<p class="cap">Time for each whole ' + (units === 'imperial' ? 'mile' : 'km') + '; taller is quicker, the quickest is marked.</p>');
+    if (a.rose) html += card('dir', 'Which way', roseSVG(a.rose));
+    // the things the numbers don't say out loud
+    var facts = [];
+    if (a.steepest) facts.push(['Steepest stretch', Math.round(a.steepest.g) + '%', 'over 200 m, ' + U.dist(a.steepest.at) + ' in']);
+    if (a.longest) facts.push(['Longest climb', upV(a.longest.up).toLocaleString() + ' ' + upU(), 'over ' + U.dist(a.longest.km) + (a.longest.at < 0.05 ? ', from the start' : ', from ' + U.dist(a.longest.at) + ' in')]);
+    if (a.climbRate) facts.push(['Climbing rate', upV(a.climbRate).toLocaleString() + ' ' + upU() + '/h', 'while going up']);
+    if (a.splits && a.splits.length) { var f = Math.min.apply(0, a.splits); facts.push(['Quickest ' + (units === 'imperial' ? 'mile' : 'km'), mmss(f), (units === 'imperial' ? 'mile ' : 'km ') + (a.splits.indexOf(f) + 1)]); }
+    if (s.elapsedSec && s.movingSec) facts.push(['Stopped', dur(Math.max(0, s.elapsedSec - s.movingSec)), Math.round(100 * (1 - s.movingSec / s.elapsedSec)) + '% of the time out']);
+    if (a.far) facts.push(['Farthest from the start', U.dist(a.far), 'as the crow flies']);
+    if (a.shape) facts.push(['The shape of it', a.shape, U.dist(a.km) + ' on the map']);
+    if (a.clock) {
+      facts.push(['Out', clock(a.clock.start) + ' to ' + clock(a.clock.end), new Date(a.clock.start).toLocaleDateString('en-US', { weekday: 'long', timeZone: TZ })]);
+      var sn = a.clock.sun;
+      if (sn) {
+        var gapS = (sn.set - a.clock.end) / 1000, gapR = (a.clock.start - sn.rise) / 1000;
+        // the sun only when it was part of it: out near sunrise, or back near (or after) sunset
+        if (gapR < 2 * 3600) facts.push(['Sunrise', clock(sn.rise), gapR < 0 ? 'out ' + dur(-gapR) + ' before it' : 'out ' + dur(gapR) + ' after it']);
+        if (gapS < 3 * 3600) facts.push(['Sunset', clock(sn.set), gapS >= 0 ? 'back ' + dur(gapS) + ' before it' : 'back ' + dur(-gapS) + ' after dark']);
+      }
+    }
+    if (facts.length) html += card('facts', 'Hidden in the numbers', '<dl>' + facts.map(function (x) { return '<div><dt>' + esc(x[0]) + '</dt><dd><b>' + esc(x[1]) + '</b><small>' + esc(x[2]) + '</small></dd></div>'; }).join('') + '</dl>');
+    el.innerHTML = html;
+    el.hidden = !html;
+  }
+
   window.RouteView = {
     U: U, dur: dur, day: day, KIND: KIND, esc: esc, sketch: sketch, solid: solid, parts: parts,
     makeMap: makeMap, routeLayers: routeLayers, profileSVG: profileSVG, scrubber: scrubber, statTiles: statTiles,
+    dashboard: dashboard, analyse: analyse,
     maps: maps, clearMaps: function () { maps.forEach(function (m) { m.remove(); }); maps.length = 0; },
     units: function () { return units; },
     setUnits: function (u) { units = u; store('fieldUnits', u); }
