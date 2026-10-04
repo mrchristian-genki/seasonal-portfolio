@@ -117,6 +117,14 @@ tar xJf ffmpeg-release-amd64-static.tar.xz --wildcards --strip-components=1 '*/f
 ```
 Optional setting: `'ffmpeg'` (path). Its work sits in `~/studio-private/video` and is cleared after two weeks.
 
+## HDR from a drone's bracket
+
+When photos come in (from Drive or dropped), shots taken within 3 seconds of each other are checked as a
+possible exposure bracket (the DJI's dark, normal and bright shots). If they're one view at different
+exposures, `assets/hdr.js` lines them up and merges them into one photo by exposure fusion, in the browser;
+only the merge is kept (marked "HDR of 3"). Anything else stays separate, and a picture already merged
+elsewhere (its name says HDR) is left as it is.
+
 ## People and review
 
 Everyone logs in with a username and password. The owner's username is `christian` (or `owner`; setup.php

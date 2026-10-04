@@ -260,6 +260,14 @@ final class Drive {
         $r = $this->resolve($source);
         if ($r === null) throw new RuntimeException('That folder isn\'t in the inbox.');
         $files = $this->filesOf($r); $notes = [];
+        // when each photo was taken (to the second), so a drone's exposure bracket stays together
+        foreach ($files as &$x) {
+            if ($x['kind'] !== 'photo' || !preg_match('/\.jpe?g$/i', $x['name']) || !function_exists('exif_read_data')) continue;
+            $e = @exif_read_data($r['root'] . '/' . $x['name']);
+            $t = is_array($e) ? ($e['DateTimeOriginal'] ?? $e['DateTime'] ?? null) : null;
+            if (is_string($t)) $x['taken'] = $t;
+        }
+        unset($x);
         foreach ($files as $x) {
             if ($x['kind'] === 'text' && $x['bytes'] < 65536) $notes[] = trim((string) file_get_contents($r['root'] . '/' . $x['name']));
         }

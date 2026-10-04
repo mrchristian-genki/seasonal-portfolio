@@ -339,13 +339,18 @@
     var chain = Promise.resolve();
     if (track) chain = chain.then(function () { L.at(stepTrack, track.name.split('/').pop()); return fromInbox(src, track).then(addTrack); });
     else L.skip(stepTrack);
+    // batches of about six, never splitting shots taken within 3 seconds (a bracket merges as one)
+    var t = function (f) { return f.taken ? Date.parse(f.taken.replace(/^(\d{4}):(\d{2}):(\d{2})/, '$1-$2-$3')) : NaN; };
+    var sorted = photos.slice().sort(function (a, b) { return (t(a) || 0) - (t(b) || 0); }), batches = [], cur = [];
+    sorted.forEach(function (f, i) { var p = sorted[i - 1]; if (cur.length >= 6 && !(p && t(f) - t(p) <= 3000)) { batches.push(cur); cur = []; } cur.push(f); });
+    if (cur.length) batches.push(cur);
     var n = 0;
-    for (var i = 0; i < photos.length; i += 6) (function (batch) {
+    batches.forEach(function (batch) {
       chain = chain.then(function () {
         L.at(stepPhotos, (n + 1) + '–' + (n + batch.length) + ' of ' + photos.length);
         return Promise.all(batch.map(function (f) { return fromInbox(src, f); })).then(addPhotos).then(function () { n += batch.length; });
       });
-    })(photos.slice(i, i + 6));
+    });
     if (!photos.length) L.skip(stepPhotos);
     return chain;
   }
@@ -712,7 +717,7 @@
       var n = photoName(p), clip = !!p.video;
       return '<div class="ph' + (p.use === 'skip' ? ' off' : '') + '" data-i="' + i + '">' +
         (clip ? clipView(p, n) : '<img src="' + esc(photoUrl(p)) + '" alt="" loading="lazy">') +
-        '<div class="meta"><small>' + esc(n) + (p.table ? ' · on the table' : '') + (p.takenAt ? ' · ' + esc(String(p.takenAt).slice(11, 16)) : '') + (fresh[n] || clipsNew[n] ? ' · new' : '') + '</small>' +
+        '<div class="meta"><small>' + esc(n) + (p.hdr ? ' · HDR of ' + p.hdr : '') + (p.table ? ' · on the table' : '') + (p.takenAt ? ' · ' + esc(String(p.takenAt).slice(11, 16)) : '') + (fresh[n] || clipsNew[n] ? ' · new' : '') + '</small>' +
         '<textarea rows="2" placeholder="Caption">' + esc(p.caption) + '</textarea>' +
         '<div class="opts"><label><input type="checkbox" class="use"' + (p.use !== 'skip' ? ' checked' : '') + '> Use</label>' +
         '<label><input type="radio" name="cover" class="cover"' + (p.cover ? ' checked' : '') + '> Cover</label>' + (clip ? '<button type="button" class="link pfBtn">Poster frame</button>' : '') +
@@ -820,10 +825,56 @@
     removed.forEach(function (n) { var m = /^(\d{2})\./.exec(n); if (m) max = Math.max(max, +m[1]); });
     return String(max + 1).padStart(2, '0') + '.jpg';
   }
+  // A drone's exposure bracket (the same view shot dark, normal and bright a second or two apart) becomes
+  // one HDR photo (assets/hdr.js); only the merge is kept. Shots taken within 3 seconds of each other are a
+  // candidate set; the merge itself checks they're one view at different exposures, and if not they stay
+  // separate photos. A picture already merged elsewhere (its name says HDR) is left as it is.
+  function brackets(list, times) {
+    var items = list.map(function (f, i) { return { f: f, t: times[i] ? Date.parse(times[i].replace(/^(\d{4}):(\d{2}):(\d{2})/, '$1-$2-$3')) : NaN }; });
+    var timed = items.filter(function (x) { return !isNaN(x.t) && !/hdr/i.test(x.f.name); }).sort(function (a, b) { return a.t - b.t; });
+    var units = [], cur = [];
+    timed.forEach(function (x) { if (cur.length && (x.t - cur[cur.length - 1].t > 3000 || cur.length >= 5)) { units.push(cur); cur = []; } cur.push(x); });
+    if (cur.length) units.push(cur);
+    var grouped = units.filter(function (u) { return u.length > 1; }).map(function (u) { return u.map(function (x) { return x.f; }); });
+    var inSet = grouped.reduce(function (a, u) { return a.concat(u); }, []);
+    return { sets: grouped, singles: list.filter(function (f) { return inSet.indexOf(f) < 0; }) };
+  }
+  function mergeBracket(set) {
+    return Promise.all(set.map(exifDate)).then(function (ts) {
+      return window.StudioHDR.merge(set, 1600).then(function (r) {
+        if (!r) return false;
+        return new Promise(function (ok) { r.canvas.toBlob(ok, 'image/jpeg', 0.86); }).then(function (big) {
+          return shrink(big, 360, 0.7).then(function (th) {
+            return blobToB64(th.blob).then(function (tb64) {
+              var n = nextName();
+              fresh[n] = { blob: big, thumb: 'data:image/jpeg;base64,' + tb64 };
+              E.photos.push({ src: 'data/photos/' + (E.id || 'new') + '/' + n, caption: '', takenAt: ts.filter(Boolean).sort()[0] || null, w: r.w, h: r.h, use: 'post',
+                cover: !E.photos.some(function (p) { return p.cover; }), from: set.map(function (f) { return f.name; }).join(' + '), hdr: set.length });
+              return true;
+            });
+          });
+        });
+      });
+    }).catch(function () { return false; });
+  }
   function addPhotos(files) {
     collect();
     var list = [].slice.call(files).filter(function (f) { return /^image\//.test(f.type) || /\.(jpe?g|heic|png|webp)$/i.test(f.name); });
     if (!list.length) return Promise.resolve();
+    return Promise.all(list.map(exifDate)).then(function (times) {
+      var b = window.StudioHDR ? brackets(list, times) : { sets: [], singles: list }, merged = 0;
+      var chain = Promise.resolve();
+      b.sets.forEach(function (set) {
+        chain = chain.then(function () {
+          toast('Merging ' + set.length + ' exposures into one HDR photo…');
+          return mergeBracket(set).then(function (ok) { if (ok) merged++; else b.singles = b.singles.concat(set); });
+        });
+      });
+      return chain.then(function () { return addSingles(b.singles, merged); });
+    });
+  }
+  function addSingles(list, merged) {
+    if (!list.length) { E.photos.sort(function (a, b) { var x = String(a.takenAt || '~'), y = String(b.takenAt || '~'); return x < y ? -1 : x > y ? 1 : 0; }); markDirty(); renderPhotos(); if (merged) toast('Merged ' + merged + ' HDR photo' + (merged > 1 ? 's' : '') + '.'); return Promise.resolve(); }
     toast('Preparing ' + list.length + ' photo' + (list.length > 1 ? 's' : '') + '…');
     var chain = Promise.resolve();
     list.forEach(function (f) {
@@ -842,6 +893,7 @@
     return chain.then(function () {
       E.photos.sort(function (a, b) { var x = String(a.takenAt || '~'), y = String(b.takenAt || '~'); return x < y ? -1 : x > y ? 1 : 0; });
       markDirty(); renderPhotos();
+      if (merged) toast('Merged ' + merged + ' HDR photo' + (merged > 1 ? 's' : '') + '.');
     });
   }
 
