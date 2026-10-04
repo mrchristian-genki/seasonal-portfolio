@@ -283,8 +283,11 @@ button.st-lamps:focus-visible{outline:2px solid #e6c983;outline-offset:4px;borde
 .shelf-prop.lamp,.st-foot.night .shelf-prop.lamp{filter:none}
 .shelf-prop.lamp img{display:block;width:100%;filter:drop-shadow(4px 7px 6px rgba(20,10,2,.55))}
 .shelf-prop.lamp .lit{position:absolute;inset:0;opacity:0;transition:opacity 1.6s ease}
-.shelf-prop.lamp .glow{position:absolute;left:50%;top:50%;width:300%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;pointer-events:none;
-  background:radial-gradient(circle,rgba(255,170,50,.55),rgba(255,150,30,.25) 22%,rgba(255,140,30,.08) 42%,transparent 65%);opacity:0;transition:opacity 1.6s ease}
+.shelf-prop.lamp .glow{position:absolute;inset:-75% -50%;pointer-events:none;opacity:0;transition:opacity 1.6s ease;
+  --g:255,170,50;background:radial-gradient(closest-side,rgba(var(--g),.55),rgba(var(--g),.24) 35%,rgba(var(--g),.08) 65%,transparent)}
+.shelf-prop.glow-radium .glow{--g:120,255,170}
+.shelf-prop.glow-green .glow{--g:120,255,40}
+.shelf-prop.glow-firefly .glow{--g:220,255,90}
 .st-foot.night .shelf-prop.lamp > img:not(.lit){filter:drop-shadow(4px 7px 6px rgba(5,2,0,.7)) brightness(.62) saturate(.8)}
 .st-foot.night .shelf-prop.lamp .lit{opacity:1;animation:breathe 5.5s ease-in-out infinite;filter:drop-shadow(4px 7px 6px rgba(5,2,0,.5)) brightness(1.05)}
 .st-foot.night .shelf-prop.lamp .glow{opacity:1;animation:breathe 5.5s ease-in-out infinite}
