@@ -380,7 +380,7 @@
       '<section class="panel">' + field('Card summary', '<textarea id="summary" rows="2">' + esc(E.summary) + '</textarea>') + '</section>' +
       '<section class="panel"><h2>Post</h2>' + field('Title', '<input id="postTitle" value="' + esc(E.post.title) + '">') + field('Text', '<textarea id="postBody" rows="14">' + esc(E.post.body) + '</textarea>', 'First person. A blank line between paragraphs. End with "What I learned: …" when there is something real.') + '</section>' +
       '<section class="panel"><h2>Episode</h2>' + field('Title', '<input id="epTitle" value="' + esc(E.episode.title) + '">') + field('Script', '<textarea id="epScript" rows="16">' + esc(E.episode.script) + '</textarea>', '<span id="epCount"></span>') +
-        '<div class="row"><button id="copyPrompt">Copy the audio prompt</button><span class="muted">Render it with your voice tool, export an MP3, then attach it below.</span></div>' +
+        '<div class="row"><button id="copyPrompt">Copy the audio prompt</button><span class="muted">Render it with your voice tool, then drop the file below.</span></div>' +
         '<h3>Audio</h3><div id="audio"></div></section>' +
       (later ? '<section class="panel more"><h2>Add more</h2><p class="muted">Only if you want to add to what\'s here.</p>' + (trackTop ? '' : '<h3>Track</h3><div id="track"></div>') + '<h3>Photos</h3>' + dropPhotos + '</section>' : '') +
       '<footer class="savebar"><span id="saveState" class="muted">' + (E.id ? 'Saved' : 'Not saved yet') + '</span><button id="save" class="primary">Save</button></footer>';
@@ -531,7 +531,7 @@
     if (has) {
       box.innerHTML = '<div class="aud"><audio controls preload="metadata"' + (audioNew && audioNew.url ? ' src="' + audioNew.url + '"' : '') + '></audio>' +
         '<p class="muted">' + (audioNew ? '<b>' + esc(audioNew.name) + '</b> · ' + size(audioNew.bytes) + '<span class="alen"></span> · new: Save to keep it' : 'Attached<span class="alen"></span>') + '</p>' +
-        '<div class="row"><label class="pick link">Replace<input type="file" accept="audio/mpeg,.mp3" hidden id="pickAudio"></label><button type="button" class="link" id="dropAudio">Remove</button></div></div>';
+        '<div class="row"><label class="pick link">Replace<input type="file" accept="audio/*,.wav,.mp3,.m4a" hidden id="pickAudio"></label><button type="button" class="link" id="dropAudio">Remove</button></div></div>';
       var el = $('audio', box);
       el.addEventListener('loadedmetadata', function () { var l = $('.alen', box); if (l && isFinite(el.duration)) l.textContent = ' · ' + mmss(el.duration); });
       if (!audioNew && E.id) {          // the saved one: fetched once, played from memory (Safari wants that)
@@ -540,13 +540,14 @@
       }
       $('#dropAudio').onclick = function () { if (audioNew) audioNew = null; else audioGone = true; markDirty(); renderAudio(); };
     } else {
-      box.innerHTML = '<div id="drop-audio" class="drop">Drop the episode\'s MP3 here, or <label class="pick">choose<input type="file" accept="audio/mpeg,.mp3" hidden id="pickAudio"></label>.</div><div id="driveAudio"></div>';
+      box.innerHTML = '<div id="drop-audio" class="drop">Drop the episode\'s audio here (WAV or MP3), or <label class="pick">choose<input type="file" accept="audio/*,.wav,.mp3,.m4a" hidden id="pickAudio"></label>. It\'s levelled and made into an MP3 in your browser, then uploaded.</div><div id="driveAudio"></div>' +
+        '<small class="muted credit">MP3 encoding by <a href="https://lame.sourceforge.net" target="_blank" rel="noopener">LAME</a>.</small>';
       var dz = $('#drop-audio');
       ['dragover', 'dragenter'].forEach(function (t) { dz.addEventListener(t, function (ev) { ev.preventDefault(); dz.classList.add('on'); }); });
       dz.addEventListener('dragleave', function () { dz.classList.remove('on'); });
       dz.addEventListener('drop', function (ev) { ev.preventDefault(); dz.classList.remove('on'); if (ev.dataTransfer.files[0]) attachAudio(ev.dataTransfer.files[0]); });
       if (E.source) api('inbox', null, '&f=' + encodeURIComponent(E.source)).then(function (j) {
-        var mp3 = j.files.filter(function (f) { return /\.mp3$/i.test(f.name); }), d = $('#driveAudio');
+        var mp3 = j.files.filter(function (f) { return f.kind === 'audio'; }), d = $('#driveAudio');
         if (!mp3.length || !d) return;
         d.innerHTML = '<p class="muted">In this note\'s Drive folder:</p>' + mp3.map(function (f) {
           return '<button type="button" class="small useDrive" data-n="' + esc(f.name) + '">Use ' + esc(f.name.split('/').pop()) + ' <small>' + size(f.bytes) + '</small></button>';
@@ -556,28 +557,108 @@
     }
     var pick = $('#pickAudio', box); if (pick) pick.onchange = function () { if (this.files[0]) attachAudio(this.files[0]); this.value = ''; };
   }
+  // Mastering, in the browser, to match the show: mono, 44.1 kHz, levelled to -16 LUFS (measured the
+  // ITU BS.1770 way) with a gentle limiter keeping peaks under -2.5 dB (room for the MP3's own overshoot;
+  // if the limiter takes a lot off, it's measured again and topped up), then a 96 kbps MP3 made by LAME
+  // (lamejs, lame.sourceforge.net; assets/vendor). Any WAV, M4A or MP3 the browser can decode comes in.
+  var LUFS = -16, AIM = LUFS + 0.5, CEIL = Math.pow(10, -2.5 / 20), RATE = 44100;   // AIM: this meter reads 0.5 dB under ffmpeg's
+  function lame() {
+    if (window.lamejs) return Promise.resolve(window.lamejs);
+    return new Promise(function (ok, no) { var sc = document.createElement('script'); sc.src = 'assets/vendor/lame.min.js'; sc.onload = function () { ok(window.lamejs); }; sc.onerror = function () { no(new Error('The MP3 encoder didn\'t load.')); }; document.head.appendChild(sc); });
+  }
+  function biquad(x, b0, b1, b2, a0, a1, a2) {
+    var y = new Float32Array(x.length), x1 = 0, x2 = 0, y1 = 0, y2 = 0;
+    b0 /= a0; b1 /= a0; b2 /= a0; a1 /= a0; a2 /= a0;
+    for (var i = 0; i < x.length; i++) { var v = b0 * x[i] + b1 * x1 + b2 * x2 - a1 * y1 - a2 * y2; x2 = x1; x1 = x[i]; y2 = y1; y1 = v; y[i] = v; }
+    return y;
+  }
+  function loudness(x, fs) {
+    var w = 2 * Math.PI * 1500 / fs, A = Math.pow(10, 4 / 40), al = Math.sin(w) / (2 * Math.SQRT1_2), c = Math.cos(w), sA = Math.sqrt(A);
+    var k = biquad(x, A * ((A + 1) + (A - 1) * c + 2 * sA * al), -2 * A * ((A - 1) + (A + 1) * c), A * ((A + 1) + (A - 1) * c - 2 * sA * al),
+      (A + 1) - (A - 1) * c + 2 * sA * al, 2 * ((A - 1) - (A + 1) * c), (A + 1) - (A - 1) * c - 2 * sA * al);
+    w = 2 * Math.PI * 38 / fs; c = Math.cos(w); al = Math.sin(w) / (2 * 0.5);
+    k = biquad(k, (1 + c) / 2, -(1 + c), (1 + c) / 2, 1 + al, -2 * c, 1 - al);
+    var blk = Math.round(0.4 * fs), hop = Math.round(0.1 * fs), z = [];
+    for (var s = 0; s + blk <= k.length; s += hop) { var m = 0; for (var i = s; i < s + blk; i++) m += k[i] * k[i]; z.push(m / blk); }
+    function L(v) { return -0.691 + 10 * Math.log10(v); }
+    function mean(a) { return a.reduce(function (p, q) { return p + q; }, 0) / (a.length || 1); }
+    var g1 = z.filter(function (v) { return L(v) > -70; }), rel = L(mean(g1)) - 10;
+    return L(mean(g1.filter(function (v) { return L(v) > rel; })));
+  }
+  function master(file, step) {
+    var AC = window.AudioContext || window.webkitAudioContext;
+    return file.arrayBuffer().then(function (ab) {
+      var ctx = new AC();
+      return new Promise(function (ok, no) { ctx.decodeAudioData(ab, ok, function () { no(new Error('That audio file couldn\'t be read. Try WAV or MP3.')); }); })
+        .then(function (buf) { if (ctx.close) ctx.close(); return buf; });
+    }).then(function (buf) {
+      step('Mixing to mono');
+      var OC = window.OfflineAudioContext || window.webkitOfflineAudioContext, oc = new OC(1, Math.ceil(buf.duration * RATE), RATE);
+      var src = oc.createBufferSource(); src.buffer = buf; src.connect(oc.destination); src.start(0);
+      return oc.startRendering();
+    }).then(function (mono) {
+      step('Levelling'); var x = mono.getChannelData(0), before = loudness(x, RATE), n = x.length;
+      // the limiter: looks 3 ms ahead so it's already down when a peak arrives, then lets go over 100 ms
+      function limited(gain) {
+        var need = new Float32Array(n), y = new Float32Array(n), ahead = Math.round(0.003 * RATE), back = 1 / (0.1 * RATE), g = 1, i;
+        for (i = 0; i < n; i++) { var a = Math.abs(x[i] * gain); need[i] = a > CEIL ? CEIL / a : 1; }
+        for (i = n - 2; i >= 0; i--) need[i] = Math.min(need[i], need[i + 1] + 1 / ahead);
+        for (i = 0; i < n; i++) { g = Math.min(need[i], g + back); y[i] = x[i] * gain * g; }
+        return y;
+      }
+      var gain = Math.pow(10, (AIM - before) / 20), y = limited(gain);
+      for (var pass = 0; pass < 3; pass++) {
+        var off = AIM - loudness(y, RATE);
+        if (Math.abs(off) < 0.3) break;
+        gain *= Math.pow(10, off / 20); y = limited(gain);
+      }
+      var out = new Int16Array(n);
+      for (var i = 0; i < n; i++) out[i] = Math.max(-32768, Math.min(32767, Math.round(y[i] * 32767)));
+      return lame().then(function (L) {
+        var enc = new L.Mp3Encoder(1, RATE, 96), parts = [], at = 0;
+        return new Promise(function (ok) {
+          (function more() {
+            var stop = Math.min(n, at + 1152 * 200);
+            for (; at < stop; at += 1152) { var b = enc.encodeBuffer(out.subarray(at, at + 1152)); if (b.length) parts.push(b); }
+            step('Making the MP3', Math.round(at / n * 100));
+            if (at < n) setTimeout(more, 0); else { parts.push(enc.flush()); ok(); }
+          })();
+        }).then(function () { return { blob: new Blob(parts, { type: 'audio/mpeg' }), sec: n / RATE, before: before }; });
+      });
+    });
+  }
   function attachAudio(file) {
-    if (!/\.mp3$/i.test(file.name) && file.type !== 'audio/mpeg') { toast('Export the episode as an MP3 first, then drop that.', true); return; }
-    if (file.size > 40e6) { toast('That audio file is too big (40 MB at most).', true); return; }
+    if (!/\.(mp3|wav|wave|m4a|aac|aif|aiff|flac)$/i.test(file.name) && !/^audio\//.test(file.type)) { toast('That isn\'t an audio file. Drop the episode as WAV or MP3.', true); return; }
+    if (file.size > 400e6) { toast('That audio file is too big.', true); return; }
+    var box = $('#audio'), name = file.name.replace(/\.[^.]+$/, '') + '.mp3';
+    box.innerHTML = '<p class="muted aup"><span>Reading ' + esc(file.name) + '</span>… <b></b></p>';
+    function step(t, pc) { var p = $('#audio .aup'); if (p) { $('span', p).textContent = t; $('b', p).textContent = pc == null ? '' : pc + '%'; } }
+    master(file, step).then(function (m) {
+      if (m.blob.size > 40e6) throw new Error('That episode is too long for one file.');
+      toast('Levelled from ' + Math.round(m.before + 0.5) + ' to ' + LUFS + ' LUFS, ' + mmss(m.sec) + ' long.');
+      upload(m.blob, name);
+    }).catch(function (err) { toast(err.message, true); renderAudio(); });
+  }
+  function upload(file, name) {
     var up = Array.from(crypto.getRandomValues(new Uint8Array(8)), function (b) { return b.toString(16).padStart(2, '0'); }).join('');
     var CH = 1500000, n = Math.ceil(file.size / CH), chain = Promise.resolve(), res = null, box = $('#audio');
-    box.innerHTML = '<p class="muted aup">Uploading ' + esc(file.name) + '… <b>0%</b></p>';
+    box.innerHTML = '<p class="muted aup">Uploading ' + esc(name) + '… <b>0%</b></p>';
     for (var i = 0; i < n; i++) (function (i) {
       chain = chain.then(function () { return blobToB64(file.slice(i * CH, (i + 1) * CH)); })
         .then(function (b64) { return api('audiopart', { up: up, i: i, last: i === n - 1, b64: b64 }); })
         .then(function (r) { res = r; var b = $('#audio .aup b'); if (b) b.textContent = Math.round((i + 1) / n * 100) + '%'; });
     })(i);
     chain.then(function () {
-      audioNew = { sha: res.sha, name: file.name, bytes: file.size, url: URL.createObjectURL(file) }; audioGone = false;
+      audioNew = { sha: res.sha, name: name, bytes: file.size, url: URL.createObjectURL(file) }; audioGone = false;
       markDirty(); renderAudio(); toast('Audio attached. Save to keep it.');
     }).catch(function (err) { toast(err.message, true); renderAudio(); });
   }
   function fromDrive(name, btn) {
-    btn.disabled = true; btn.textContent = 'Attaching…';
-    api('audiofromdrive', { f: E.source, n: name }).then(function (r) {
-      audioNew = { sha: r.sha, name: name.split('/').pop(), bytes: r.bytes, url: null }; audioGone = false;
-      markDirty(); renderAudio(); toast('Audio attached from Drive. Save to keep it.');
-    }).catch(function (err) { toast(err.message, true); renderAudio(); });
+    btn.disabled = true; btn.textContent = 'Fetching from Drive…';
+    fetch('api.php?a=inboxfile&f=' + encodeURIComponent(E.source) + '&n=' + encodeURIComponent(name)).then(function (r) {
+      if (!r.ok) throw new Error('Couldn\'t fetch that file from the server.'); return r.blob();
+    }).then(function (b) { attachAudio(new File([b], name.split('/').pop(), { type: b.type })); })
+      .catch(function (err) { toast(err.message, true); renderAudio(); });
   }
 
   // ---------- questions: answered one at a time, sent to Claude all together ----------
