@@ -11,19 +11,22 @@
   if (!HERO || !FOOT) return;
   var A = 'table/a/';
   var calm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-  // name: [width / height, how big it is in real life (1 = a mug)]
+  // name: [width / height, how big it is in real life (1 = a mug; it sets the height, so a long thin vial is
+  // below zero)]
   var POOL = {
     mug: [1.21, 1], cone: [1.11, .9], carnelians: [1.15, .75], resin: [1.33, 1],
     deer: [.59, 1], 'fox-sitting': [.71, 1.3], gloves: [1.02, 1.6], 'jar-off': [.92, 1.2],
-    pencils: [1.02, 1.7], notebook: [1.38, 1.9], contact: [.75, 1.7], map: [1.3, 1.9], fox: [1.6, 1.8]
+    pencils: [1.02, 1.7], notebook: [1.38, 1.9], contact: [.75, 1.7], map: [1.3, 1.9], fox: [1.6, 1.8],
+    compass: [2.04, 1.15], vial: [3.54, -.6], 'firefly-jar': [1.76, 1.15]
   };
   // (no tape: that image is a half roll made to peek in from an edge; no film canister: it carries a brand;
   // no pins: tacks lying on a shelf looked odd; no ruler: too long for these strips)
   // where the hand holds a prop, if not its middle (as fractions of the image): the mug by its handle
   var GRIP = { mug: [.9, .5] };
-  // props that light up at night: the lamp jar, its lit image fading in with a glow on the wood. It keeps to
-  // the footer's side shelves, where the light shows (the header's night shade would cover it)
-  var LAMP = { 'jar-off': 'jar-on' };
+  // props that light up at night: their night picture fades in with a glow of its colour on the wood. They
+  // keep to the footer's side shelves, where the light shows (the header's night shade would cover it)
+  var LAMP = { 'jar-off': ['jar-on', 'amber'], compass: ['compass-night', 'radium'], vial: ['vial-night', 'green'],
+    'firefly-jar': ['firefly-jar-night', 'firefly'] };
   var NAMES = Object.keys(POOL), out = {};
 
   function el(cls, parent) { var d = document.createElement('div'); d.className = cls; parent.appendChild(d); return d; }
@@ -111,8 +114,8 @@
     var pic = new Image(); pic.alt = ''; pic.src = A + name + '.webp'; pic.draggable = false;
     var img = pic;                                           // the prop itself: the picture, or a lamp's stack
     if (LAMP[name]) {
-      img = document.createElement('div'); img.className = 'lamp';
-      var lit = new Image(); lit.alt = ''; lit.className = 'lit'; lit.src = A + LAMP[name] + '.webp'; lit.draggable = false;
+      img = document.createElement('div'); img.className = 'lamp glow-' + LAMP[name][1];
+      var lit = new Image(); lit.alt = ''; lit.className = 'lit'; lit.src = A + LAMP[name][0] + '.webp'; lit.draggable = false;
       var glow = document.createElement('span'); glow.className = 'glow';
       img.appendChild(glow); img.appendChild(pic); img.appendChild(lit);
     }
