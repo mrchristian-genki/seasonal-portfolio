@@ -7,7 +7,7 @@
   if (!sw) return;
   var foot = document.querySelector('.st-foot'), table = document.getElementById('table');
   // the dial's disc only ever turns clockwise: each flip adds half a turn
-  var disc = document.getElementById('dialDisc'), turn = 0, cranks = 0;
+  var disc = document.getElementById('dialDisc'), turn = 0;
   function isNight() { return table ? table.classList.contains('night') : document.body.classList.contains('night'); }
   function show(n) {
     sw.classList.toggle('is-night', n);
@@ -26,8 +26,6 @@
   }
   sw.addEventListener('click', function () {
     sw.classList.remove('turning'); void sw.offsetWidth; sw.classList.add('turning');
-    // throwing the switch cranks the gears round once more
-    var dn = sw.closest('.st-dn'); if (dn) { cranks++; dn.style.setProperty('--crank', (cranks * 360) + 'deg'); }
     set(!isNight());
   });
   if (disc) disc.style.transition = 'none';
