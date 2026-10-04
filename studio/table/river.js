@@ -76,8 +76,10 @@
     var v = h / vh * (F1 - F0);                                   // how much of the frame shows
     var c = Math.min(Math.max(MID, F0 + v / 2), LIMIT - v / 2);    // where its middle sits
     var top = -((c - v / 2) - F0) / (F1 - F0) * vh;
-    R.style.setProperty('--rv-w', vw + 'px'); R.style.setProperty('--rv-h', vh + 'px');
-    R.style.setProperty('--rv-x', ((w - vw) / 2) + 'px'); R.style.setProperty('--rv-y', top + 'px');
+    // set on the header itself, so the switch panel can sit on a rock in the footage (see table.css)
+    var H = R.parentNode.style;
+    H.setProperty('--rv-w', vw + 'px'); H.setProperty('--rv-h', vh + 'px');
+    H.setProperty('--rv-x', ((w - vw) / 2) + 'px'); H.setProperty('--rv-y', top + 'px');
   }
   frame(); addEventListener('resize', frame);
 

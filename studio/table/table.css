@@ -230,8 +230,12 @@
 .st-dn .pipe::before{left:6px}.st-dn .pipe::after{right:4px}
 @media (max-width:640px){.st-dn{padding:9px 11px}.st-plate{padding:8px 18px}.st-plate h1{font-size:17px;letter-spacing:.08em}.st-dn .pipe{width:30px;height:10px}}
 
-/* the day/night switch, in its own small riveted panel at the bottom right, kept clear of the river */
-.st-ctrl{position:absolute;z-index:50;top:auto;bottom:18px;right:clamp(12px,3vw,40px);padding:6px 9px;gap:7px;border-width:2px}
-.st-ctrl .st-switch{width:clamp(56px,5vw,72px)}
-.st-ctrl .sw-label{font-size:clamp(4px,.36vw,6px)}
-@media (max-width:640px){.st-ctrl{bottom:16px;padding:5px 7px;gap:5px}.st-ctrl .st-switch{width:50px}.st-ctrl .sw-label{font-size:3.5px}}
+/* the day/night switch, in its own small riveted panel, set on the big rock in the lower right of the
+   river footage (78.5% across, 60% down the strip), so it stays on that rock at every screen size */
+.st-ctrl{position:absolute;z-index:50;right:auto;bottom:auto;padding:6px 9px;gap:7px;border-width:2px;
+  left:min(calc(var(--rv-x,0px) + var(--rv-w,100%) * .785),calc(100% - 64px));top:min(calc(var(--rv-y,0px) + var(--rv-h,100%) * .6),calc(100% - 48px));translate:-50% -50%}
+.st-ctrl .st-switch{width:clamp(70px,6vw,90px)}
+@media (max-width:640px){.st-ctrl{padding:5px 7px}.st-ctrl .st-switch{width:62px}}
+/* the DAY / NIGHT tags scale with the switch, big enough to read */
+.st-switch{container-type:inline-size}
+.st-switch .sw-label{font-size:8.6cqi;letter-spacing:.04em;font-weight:800;opacity:.92}
