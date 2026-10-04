@@ -169,3 +169,19 @@
 .dash.neon .rose .pet{fill:#b44dff;fill-opacity:.7;stroke:#ff8de0} .dash.neon .rose .rr{stroke:rgba(140,150,255,.25)}
 .dash.neon dl div{background:rgba(120,130,255,.1);border:1px solid rgba(140,150,255,.18)}
 .dash.neon dd b{color:#fff} .dash.neon dt{color:#8d95cf}
+
+/* elevation, beside up and down */
+.dash .elev{grid-column:span 4}
+.dash .dprof{position:relative;margin:0;user-select:none;touch-action:pan-y}
+.dash .dprof svg{display:block;width:100%;height:150px}
+.dash .dprof .tip{position:absolute;top:0;transform:translateX(-50%);background:var(--dk);color:var(--dc);font-size:12px;font-weight:700;padding:3px 8px;border-radius:6px;white-space:nowrap;pointer-events:none;opacity:0}
+.dash .dprof .pg-l{stroke:var(--da)} .dash .dprof .pg-t{stroke:var(--dl)} .dash .dprof .pg-x{fill:var(--dk3)} .dash .dprof .cur{stroke:var(--dk)}
+@media (max-width:720px){.dash .elev{grid-column:1/-1}}
+.dash.neon .dprof .l0{stop-color:#29e0d6} .dash.neon .dprof .l1{stop-color:#b44dff} .dash.neon .dprof .l2{stop-color:#ff7a59}
+.dash.neon .dprof .pg-l{stroke:url(#pgl) #c07bff;stroke-width:2.6;filter:drop-shadow(0 0 4px rgba(180,77,255,.6))}
+.dash.neon .dprof .pg-a{fill:rgba(180,77,255,.16)}
+.dash.neon .dprof .tip{background:#ff5fa8;color:#fff}
+/* the hidden numbers take the whole row, unless Which way sits beside them */
+.dash .facts,.dash .dir + .facts{grid-column:1/-1}
+@media (max-width:720px){.dash .dir + .facts{grid-column:1/-1}}
+@media (max-width:720px){.dash dl{grid-template-columns:repeat(2,minmax(0,1fr))} .dash dd b{font-size:14px} .dash dd small{font-size:11px}}
