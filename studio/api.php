@@ -108,12 +108,6 @@ try {
             $all = (string) file_get_contents($part); @unlink($part);
             json_out(['sha' => $gh->blob(base64_encode($all)), 'bytes' => strlen($all)]);
 
-        // An MP3 that came in through Google Drive: straight from the inbox to a Git blob.
-        case 'POST audiofromdrive':
-            $all = (new Drive($cfg))->audio((string) ($body['f'] ?? ''), (string) ($body['n'] ?? ''));
-            if (strlen($all) > AUDIO_MAX || !is_mp3(substr($all, 0, 4))) json_fail("That file isn't a usable MP3.");
-            json_out(['sha' => $gh->blob(base64_encode($all)), 'bytes' => strlen($all)]);
-
         // An entry's attached MP3, for the editor's player.
         case 'GET audio':
             $id = $_GET['id'] ?? '';

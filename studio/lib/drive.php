@@ -224,19 +224,8 @@ final class Drive {
             'note' => $this->processed()[$source] ?? null, 'day' => $r['day']];
     }
 
-    // An MP3 from an inbox folder, for attaching as an episode's audio.
-    public function audio(string $source, string $name): string {
-        $r = $this->resolve($source);
-        $root = $r['root'] ?? '';
-        $path = $r === null ? false : realpath("$root/$name");
-        if (!$path || !is_file($path) || !str_starts_with($path, $root . '/')) json_fail('No such file.', 404);
-        if ($r['day'] !== null && (dirname($path) !== $root || $this->day($path) !== $r['day'])) json_fail('No such file.', 404);
-        if (strtolower(pathinfo($path, PATHINFO_EXTENSION)) !== 'mp3') json_fail('Only MP3 files can be attached.');
-        return (string) file_get_contents($path);
-    }
-
-    // One photo or track from an inbox folder, sent to the logged-in Studio page (which resizes photos and
-    // trims tracks in the browser, as it does for dropped files).
+    // One photo, track or audio file from an inbox folder, sent to the logged-in Studio page (which resizes
+    // photos, trims tracks and masters audio in the browser, as it does for dropped files).
     public function send(string $source, string $name): never {
         $r = $this->resolve($source);
         $root = $r['root'] ?? '';
@@ -244,9 +233,10 @@ final class Drive {
         if (!$path || !is_file($path) || !str_starts_with($path, $root . '/')) json_fail('No such file.', 404);
         if ($r['day'] !== null && (dirname($path) !== $root || $this->day($path) !== $r['day'])) json_fail('No such file.', 404);
         $kind = self::kind($path);
-        if (!in_array($kind, ['photo', 'track', 'text'], true)) json_fail('Only photos, tracks and notes come through here.', 400);
+        if (!in_array($kind, ['photo', 'track', 'text', 'audio'], true)) json_fail('Only photos, tracks, notes and audio come through here.', 400);
         $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
-        $type = ['jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'png' => 'image/png', 'webp' => 'image/webp', 'heic' => 'image/heic', 'heif' => 'image/heif'][$ext] ?? 'text/plain; charset=utf-8';
+        $type = ['jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'png' => 'image/png', 'webp' => 'image/webp', 'heic' => 'image/heic', 'heif' => 'image/heif',
+            'wav' => 'audio/wav', 'mp3' => 'audio/mpeg', 'm4a' => 'audio/mp4'][$ext] ?? 'text/plain; charset=utf-8';
         header('Content-Type: ' . $type);
         header('Content-Length: ' . filesize($path));
         header('Cache-Control: private, max-age=600');

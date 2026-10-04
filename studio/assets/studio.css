@@ -239,3 +239,4 @@ body.busy{overflow:hidden}
    page leaves room for it so the footer isn't covered */
 .savebar{z-index:100}
 body:has(.savebar){padding-bottom:64px}
+#audio .credit{display:block;margin-top:6px}
