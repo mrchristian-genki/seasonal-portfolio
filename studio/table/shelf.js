@@ -15,10 +15,10 @@
   var POOL = {
     mug: [1.21, 1], cone: [1.11, .9], carnelians: [1.15, .75], resin: [1.33, 1],
     deer: [.59, 1], 'fox-sitting': [.71, 1.3], gloves: [1.02, 1.6], 'jar-off': [.92, 1.2],
-    pencils: [1.02, 1.7], ruler: [2.87, 1.9], notebook: [1.38, 1.9], contact: [.75, 1.7], map: [1.3, 1.9], fox: [1.6, 1.8]
+    pencils: [1.02, 1.7], notebook: [1.38, 1.9], contact: [.75, 1.7], map: [1.3, 1.9], fox: [1.6, 1.8]
   };
   // (no tape: that image is a half roll made to peek in from an edge; no film canister: it carries a brand;
-  // no pins: tacks lying on a shelf looked odd)
+  // no pins: tacks lying on a shelf looked odd; no ruler: too long for these strips)
   // where the hand holds a prop, if not its middle (as fractions of the image): the mug by its handle
   var GRIP = { mug: [.9, .5] };
   // props that light up at night: the lamp jar, its lit image fading in with a glow on the wood. It keeps to
@@ -120,10 +120,10 @@
     img.addEventListener('click', function () { collect(sh, img); });
     return (pic.decode ? pic.decode().catch(function () {}) : Promise.resolve()).then(function () {
       var z = sizeFor(sh, name), b = sh.box.getBoundingClientRect(), rot = (Math.random() * 16 - 8).toFixed(1);
-      // props keep close to an edge, for the hand: the header's sit near its top (toward the STUDIO panel, so
-      // clear of the screen's edge), the footer's toward the outer edge of their side
-      var f = Math.random() * .25, x = (b.width - z.w) * (sh.from === 'top' ? .1 + Math.random() * .4 : sh.from === 'left' ? f : 1 - f);
-      var y = (b.height - z.h) / 2;
+      // props keep close to an edge, for the hand: the header's just under its top (toward the STUDIO panel,
+      // so clear of the screen's edge), the footer's near the outer edge of their side
+      var f = Math.random() * .12, x = (b.width - z.w) * (sh.from === 'top' ? .1 + Math.random() * .4 : sh.from === 'left' ? f : 1 - f);
+      var y = sh.from === 'top' ? 4 + Math.random() * 8 : (b.height - z.h) / 2;      // the header's tuck up to its top
       img.style.width = z.w + 'px'; img.style.left = x + 'px'; img.style.top = y + 'px';
       // a prop with a grip is turned so the grip faces the edge the hand comes from
       var side = nearest(ways(sh, x + z.w / 2, y + z.h / 2));
@@ -197,7 +197,7 @@
     clearTimeout(resizing);
     resizing = setTimeout(function () {
       placeTop();
-      shelves.forEach(function (sh) { if (sh.prop) { var z = sizeFor(sh, sh.name), b = sh.box.getBoundingClientRect(); sh.prop.style.width = z.w + 'px'; sh.prop.style.left = Math.max(0, Math.min(parseFloat(sh.prop.style.left), b.width - z.w)) + 'px'; sh.prop.style.top = ((b.height - z.h) / 2) + 'px'; } });
+      shelves.forEach(function (sh) { if (sh.prop) { var z = sizeFor(sh, sh.name), b = sh.box.getBoundingClientRect(); sh.prop.style.width = z.w + 'px'; sh.prop.style.left = Math.max(0, Math.min(parseFloat(sh.prop.style.left), b.width - z.w)) + 'px'; if (sh.from !== 'top') sh.prop.style.top = ((b.height - z.h) / 2) + 'px'; } });
     }, 200);
   });
   if (document.readyState === 'complete') setTimeout(start, 600); else addEventListener('load', function () { setTimeout(start, 600); });
