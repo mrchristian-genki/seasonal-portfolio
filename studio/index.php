@@ -87,7 +87,7 @@ $in = studio_logged_in();
 <div id="toast" role="status" aria-live="polite"></div>
 <script src="assets/track.js?v=<?= STUDIO_VERSION ?>"></script>
 <script src="assets/studio.js?v=<?= STUDIO_VERSION ?>-8"></script>
-<script src="table/table.js?v=18"></script>
+<script src="table/table.js?v=19"></script>
 <script src="table/river.js?v=1"></script>
 <script src="table/switch.js?v=2"></script>
 </body>

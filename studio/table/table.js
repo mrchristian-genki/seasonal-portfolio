@@ -199,8 +199,10 @@
     var isNight = T.classList.contains('night');
     // (the resting pose comes back once its clean cut-out is in)
     var k = 1.55;   // real scale against the ruler (12 in = 557 units): her head and ears are about 600 wide
-    var pose = isNight ? { src: 'marley-sleep', w: 560 * k, ratio: 357 / 640, show: 1 }
-      : { src: 'marley-look', w: 390 * k, ratio: 635 / 640, show: HEADER ? .5 : .62 };
+    // in the header, just her snout pokes over the top edge, day or night
+    var pose = HEADER ? { src: 'marley-look', w: 390 * k, ratio: 635 / 640, show: .2 }
+      : isNight ? { src: 'marley-sleep', w: 560 * k, ratio: 357 / 640, show: 1 }
+      : { src: 'marley-look', w: 390 * k, ratio: 635 / 640, show: .62 };
     var el = document.createElement('div'); el.className = 'prop marley';
     el.appendChild(img(pose.src));
     var h = pose.w * pose.ratio;
@@ -208,7 +210,8 @@
     el.style.width = (pose.w / W * 100) + '%';
     L.appendChild(el);
     // her usual spot, or the nearest one that keeps clear of the logo and the lamps
-    var spot = (HEADER ? [1345, 1290, 1240, 1180] : [1345]).filter(function (x) {
+    var spots = HEADER ? [1345, 1150, 950, 760].sort(function () { return Math.random() - .5; }) : [1345];
+    var spot = spots.filter(function (x) {
       el.style.left = ((x - pose.w / 2) / W * 100) + '%'; return !touchesKeep(el);
     })[0];
     if (spot == null) { el.remove(); marleyOut = false; return Promise.resolve(); }
@@ -216,9 +219,10 @@
     var up = 'translateY(' + px(-h * pose.show - 40) + 'px)';
     return anim(el, [{ transform: up }, { transform: 'none' }], { duration: 1600, easing: 'cubic-bezier(.2,.7,.3,1)' })
       .then(function () { // a sniff: a small lean in and back
-        return anim(el, [{ transform: 'none' }, { transform: 'translateY(' + px(10) + 'px) rotate(-1deg)', offset: .3 }, { transform: 'translateY(' + px(4) + 'px)', offset: .55 }, { transform: 'none' }], { duration: 1800, delay: 2200, easing: 'ease-in-out' });
+        var d = HEADER ? 4 : 10;
+        return anim(el, [{ transform: 'none' }, { transform: 'translateY(' + px(d) + 'px) rotate(-1deg)', offset: .3 }, { transform: 'translateY(' + px(d * .4) + 'px)', offset: .55 }, { transform: 'none' }], { duration: 1800, delay: 1600, easing: 'ease-in-out' });
       })
-      .then(function () { return wait(isNight ? 9000 : 6000); })
+      .then(function () { return wait(HEADER ? 3500 : isNight ? 9000 : 6000); })
       .then(function () { return anim(el, [{ transform: 'none' }, { transform: up }], { duration: 1500, easing: 'cubic-bezier(.5,0,.7,.4)' }); })
       .then(function () { el.remove(); marleyOut = false; });
   }
@@ -323,7 +327,7 @@
   }
 
   var timer = null;
-  function visits() { clearTimeout(timer); if (calm) return; timer = setTimeout(function () { marley().then(visits); }, 28000 + Math.random() * 22000); }
+  function visits() { clearTimeout(timer); if (calm) return; timer = setTimeout(function () { marley().then(visits); }, HEADER ? 60000 + Math.random() * 60000 : 28000 + Math.random() * 22000); }
 
   window.StudioTable = { process: process, drop: dropPrints, marley: marley, tick: function () { return tick(); },
     night: function (on) { T.classList.toggle('night', on); setLamps(); } };
