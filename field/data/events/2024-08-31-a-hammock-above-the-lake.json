@@ -2239,5 +2239,9 @@
  "questions": [],
  "consent": "",
  "source": "Rides/August 31 2024",
- "voiceNotesDone": true
+ "voiceNotesDone": true,
+ "dashboard": {
+  "speed": false,
+  "facts": false
+ }
 }
