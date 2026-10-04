@@ -422,3 +422,17 @@ dialog.pfp::backdrop{background:rgba(20,12,6,.7)}
 .pfp .pf-k.best{border-color:#c99a48} .pfp .pf-k.on{border-color:#2b2118;box-shadow:0 0 0 2px #e2b45b}
 .pfp .row .sp{flex:1}
 .ph .opts .pfBtn{font-size:13px}
+
+/* car dials in a brass bezel (the Studio's speed gauges) */
+.dash .gauge.dial svg{max-width:178px}
+.dash.steam .dial .bezel{fill:#2b1d12;stroke:#c99a48;stroke-width:7;filter:drop-shadow(0 3px 4px rgba(0,0,0,.6))}
+.dash.steam .dial .face{fill:#121212;stroke:#3a2a1a;stroke-width:2}
+.dash.steam .dial .red{fill:none;stroke:#c8281e;stroke-width:6}
+.dash.steam .dial .tk{stroke:#d9d2c4;stroke-width:1.2} .dash.steam .dial .tk.mj{stroke:#ff8a1f;stroke-width:3}
+.dash.steam .dial .tl{fill:#f3e6d2;font:700 12px system-ui,sans-serif;text-anchor:middle}
+.dash.steam .dial .lcd{fill:#1d1405;stroke:#5c3f16}
+.dash.steam .dial .lcdv{fill:#ffb23f;font:700 18px "Special Elite",monospace;text-anchor:middle;filter:drop-shadow(0 0 3px rgba(255,160,40,.8))}
+.dash.steam .dial .lcdu{fill:#b39b74;font:700 9px system-ui,sans-serif;text-anchor:middle;letter-spacing:.12em}
+.dash.steam .dial .ndl{stroke:#ff6a1a;stroke-width:3.5;stroke-linecap:round;filter:drop-shadow(0 0 3px rgba(255,106,26,.8))}
+.dash.steam .dial .hub{fill:#2b2118;stroke:#c99a48;stroke-width:3}
+.dash.steam .dial figcaption span{color:#e2b45b;font:400 13px "Special Elite",monospace}

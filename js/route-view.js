@@ -237,6 +237,43 @@
   }
 
   // a speedometer: an arc from 0 to `max`, filled to the value, with a needle that swings up to it
+  var still = function () { return window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches; };
+  function needleAnim(deg, cx, cy) {
+    return still() ? '' : '<animateTransform attributeName="transform" type="rotate" from="' + (-deg) + ' ' + cx + ' ' + cy + '" to="0 ' + cx + ' ' + cy + '" dur="1.4s" fill="freeze" calcMode="spline" keyTimes="0;1" keySplines=".2 .9 .25 1"/>';
+  }
+  // A neon ring (Play): 270 degrees of segments, lit up to the value in a run of colour, the number in the middle.
+  function ringGauge(label, v, max, hues) {
+    var cx = 110, cy = 104, r = 80, N = 30, lit = Math.round(Math.min(v, max) / max * N), out = '';
+    function pt(deg, rr) { var a = deg * Math.PI / 180; return (cx + rr * Math.cos(a)).toFixed(1) + ' ' + (cy + rr * Math.sin(a)).toFixed(1); }
+    for (var i = 0; i < N; i++) {
+      var a0 = 135 + i * 270 / N + 1.4, a1 = 135 + (i + 1) * 270 / N - 1.4, on = i < lit, h = hues[0] + (hues[1] - hues[0]) * i / (N - 1);
+      out += '<path d="M' + pt(a0, r) + ' A' + r + ' ' + r + ' 0 0 1 ' + pt(a1, r) + '" class="rs' + (on ? ' on' : '') + '"' + (on ? ' data-st="stroke:hsl(' + h.toFixed(0) + ' 95% 62%);animation-delay:' + (i * 0.035).toFixed(2) + 's"' : '') + '/>';
+    }
+    return '<figure class="gauge ring"><svg viewBox="0 0 220 196" role="img" aria-label="' + esc(label) + ': ' + v.toFixed(1) + ' ' + spdU() + '">' +
+      '<circle cx="' + cx + '" cy="' + cy + '" r="' + (r + 16) + '" class="rr-o" stroke="hsl(' + hues[1] + ' 95% 62%)"/><circle cx="' + cx + '" cy="' + cy + '" r="' + (r - 16) + '" class="rr-i"/>' + out +
+      '<text x="' + cx + '" y="' + (cy + 6) + '" class="rv">' + v.toFixed(1) + '</text><text x="' + cx + '" y="' + (cy + 28) + '" class="ru">' + spdU() + '</text></svg>' +
+      '<figcaption><span>' + esc(label) + '</span></figcaption></figure>';
+  }
+  // A car dial (the Studio): black face in a brass bezel, orange ticks, a red zone at the top of the range,
+  // an orange needle and a lit digital readout.
+  function carDial(label, v, max) {
+    var cx = 110, cy = 110, r = 84, A0 = 150, SW = 240, step = niceStep(max / 6), out = '';
+    function pt(deg, rr) { var a = deg * Math.PI / 180; return [(cx + rr * Math.cos(a)).toFixed(1), (cy + rr * Math.sin(a)).toFixed(1)]; }
+    var red0 = A0 + SW * 0.85, rp0 = pt(red0, r - 4), rp1 = pt(A0 + SW, r - 4);
+    out += '<path d="M' + rp0.join(' ') + ' A' + (r - 4) + ' ' + (r - 4) + ' 0 0 1 ' + rp1.join(' ') + '" class="red"/>';
+    for (var t = 0; t <= max + 1e-9; t += step / 2) {
+      var deg = A0 + SW * t / max, major = Math.abs(t / step - Math.round(t / step)) < 1e-6, q0 = pt(deg, r - 2), q1 = pt(deg, r - (major ? 16 : 10));
+      out += '<line x1="' + q0[0] + '" y1="' + q0[1] + '" x2="' + q1[0] + '" y2="' + q1[1] + '" class="tk' + (major ? ' mj' : '') + '"/>';
+      if (major) { var ql = pt(deg, r - 28); out += '<text x="' + ql[0] + '" y="' + (+ql[1] + 4) + '" class="tl">' + +t.toFixed(1) + '</text>'; }
+    }
+    var dv = SW * Math.min(v, max) / max, deg0 = A0 + dv, n = pt(deg0, r - 12), tail = pt(deg0 + 180, 14);
+    return '<figure class="gauge dial"><svg viewBox="0 0 220 214" role="img" aria-label="' + esc(label) + ': ' + v.toFixed(1) + ' ' + spdU() + '">' +
+      '<circle cx="' + cx + '" cy="' + cy + '" r="' + (r + 14) + '" class="bezel"/><circle cx="' + cx + '" cy="' + cy + '" r="' + (r + 6) + '" class="face"/>' + out +
+      '<rect x="' + (cx - 34) + '" y="' + (cy + 30) + '" width="68" height="26" rx="4" class="lcd"/><text x="' + cx + '" y="' + (cy + 49) + '" class="lcdv">' + v.toFixed(1) + '</text>' +
+      '<text x="' + cx + '" y="' + (cy + 72) + '" class="lcdu">' + spdU().toUpperCase() + '</text>' +
+      '<g><line x1="' + tail[0] + '" y1="' + tail[1] + '" x2="' + n[0] + '" y2="' + n[1] + '" class="ndl"/>' + needleAnim(dv, cx, cy) + '</g><circle cx="' + cx + '" cy="' + cy + '" r="8" class="hub"/></svg>' +
+      '<figcaption><span>' + esc(label) + '</span></figcaption></figure>';
+  }
   function gauge(label, v, max, color, sub) {
     var W = 220, cx = 110, cy = 112, r = 88, ang = Math.PI * (1 - Math.min(v, max) / max);
     function pt(a, rr) { return [(cx + rr * Math.cos(a)).toFixed(1), (cy - rr * Math.sin(a)).toFixed(1)]; }
@@ -259,12 +296,16 @@
   function speedChart(sp, avg, top) {
     var W = 1000, H = 150, pb = 18, pt = 8, kmMax = sp[sp.length - 1][0] || 1, vMax = niceStep(spd(top) / 3) * 4 || 1;
     function X(k) { return k / kmMax * W; } function Y(v) { return pt + (1 - spd(v) / vMax) * (H - pt - pb); }
-    var d = sp.map(function (p, i) { return (i ? 'L' : 'M') + X(p[0]).toFixed(1) + ' ' + Y(p[1]).toFixed(1); }).join('');
+    // a smooth line: through the midpoints, each point a control (quadratic curves)
+    var P = sp.map(function (p) { return [X(p[0]), Y(p[1])]; }), d = 'M' + P[0][0].toFixed(1) + ' ' + P[0][1].toFixed(1);
+    for (var q = 1; q < P.length - 1; q++) d += 'Q' + P[q][0].toFixed(1) + ' ' + P[q][1].toFixed(1) + ' ' + ((P[q][0] + P[q + 1][0]) / 2).toFixed(1) + ' ' + ((P[q][1] + P[q + 1][1]) / 2).toFixed(1);
+    d += 'L' + P[P.length - 1][0].toFixed(1) + ' ' + P[P.length - 1][1].toFixed(1);
     var mi = 0; sp.forEach(function (p, i) { if (p[1] > sp[mi][1]) mi = i; });
     var grid = '', st = niceStep(vMax / 3);
     for (var v = st; v < vMax; v += st) grid += '<line x1="0" x2="' + W + '" y1="' + (pt + (1 - v / vMax) * (H - pt - pb)).toFixed(1) + '" y2="' + (pt + (1 - v / vMax) * (H - pt - pb)).toFixed(1) + '" class="gl"/><text x="4" y="' + (pt + (1 - v / vMax) * (H - pt - pb) - 3).toFixed(1) + '" class="ax">' + v + '</text>';
     return '<svg viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none" class="chart" role="img" aria-label="Speed along the way">' +
-      '<defs><linearGradient id="sg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="s0"/><stop offset="1" class="s1"/></linearGradient></defs>' + grid +
+      '<defs><linearGradient id="sg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="s0"/><stop offset="1" class="s1"/></linearGradient>' +
+      '<linearGradient id="sgl" x1="0" y1="0" x2="1" y2="0"><stop offset="0" class="l0"/><stop offset=".5" class="l1"/><stop offset="1" class="l2"/></linearGradient></defs>' + grid +
       '<path d="' + d + 'L' + W + ' ' + (H - pb) + 'L0 ' + (H - pb) + 'Z" fill="url(#sg)"/><path d="' + d + '" class="ln"/>' +
       (avg ? '<line x1="0" x2="' + W + '" y1="' + Y(avg).toFixed(1) + '" y2="' + Y(avg).toFixed(1) + '" class="avg"/>' : '') +
       '<circle cx="' + X(sp[mi][0]).toFixed(1) + '" cy="' + Y(sp[mi][1]).toFixed(1) + '" r="5" class="topdot"/></svg>';
@@ -323,7 +364,9 @@
     if (s.avgKmh || s.maxKmh) {
       var top = spd(s.maxKmh || 0), max = Math.max(ride ? 20 : 5, niceStep(top / 4) * 5);
       while (max < top * 1.08) max += niceStep(max / 5);
-      html += card('speed', 'Speed', '<div class="sp-row"><div class="gauges">' + gauge('Average, moving', spd(s.avgKmh || 0), max, 'g-ink') + gauge('Top speed', top, max, 'g-acc') + '</div>' +
+      var look = el.classList.contains('neon') ? 'ring' : el.classList.contains('steam') ? 'dial' : 'arc';
+      var G = function (label, v, cls, hues) { return look === 'ring' ? ringGauge(label, v, max, hues) : look === 'dial' ? carDial(label, v, max) : gauge(label, v, max, cls); };
+      html += card('speed', 'Speed', '<div class="sp-row"><div class="gauges">' + G('Average, moving', spd(s.avgKmh || 0), 'g-ink', [190, 265]) + G('Top speed', top, 'g-acc', [320, 395]) + '</div>' +
         (a.speed ? '<div class="sp-ch">' + speedChart(a.speed, s.avgKmh, s.maxKmh) + '<p class="cap"><span class="k ln"></span>speed along the way <span class="k avg"></span>average <span class="k top"></span>top</p></div>' : '') + '</div>');
     }
     // up and down
