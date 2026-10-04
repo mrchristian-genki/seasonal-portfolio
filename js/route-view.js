@@ -107,13 +107,14 @@
     };
   }
   function statTiles(s, kind) {
+    // four, tight: climbing and descent are in Up and down below, the times in the hidden numbers
     var tiles = [
-      [U.dist(s.distanceKm), 'Distance'], [dur(s.movingSec), 'Moving time'],
-      [U.ele(s.gainM), 'Climbing'], [U.ele(s.maxEleM), 'High point'],
-      kind === 'ride' ? [U.speed(s.avgKmh), 'Average speed'] : [U.pace(s.distanceKm, s.movingSec), 'Pace'],
-      kind === 'ride' ? [U.speed(s.maxKmh), 'Top speed'] : [dur(s.elapsedSec), 'Total time']
+      [U.dist(s.distanceKm), 'Distance'], [U.ele(s.maxEleM), 'High point'],
+      kind === 'ride' ? [U.speed(s.avgKmh), 'Avg speed'] : [U.pace(s.distanceKm, s.movingSec), 'Pace'],
+      kind === 'ride' ? [U.speed(s.maxKmh), 'Top speed'] : [U.ele(s.minEleM), 'Low point']
     ];
-    return tiles.map(function (t) { return '<div class="stat"><b>' + t[0] + '</b><span>' + t[1] + '</span></div>'; }).join('');
+    // the unit smaller than the number, so "25.8 mph" fits a narrow tile
+    return tiles.map(function (t) { var v = String(t[0]), k = v.lastIndexOf(' '); return '<div class="stat"><b>' + (k > 0 ? esc(v.slice(0, k)) + '<small>' + esc(v.slice(k)) + '</small>' : esc(v)) + '</b><span>' + t[1] + '</span></div>'; }).join('');
   }
 
   // ── Dashboard: what the track says beyond the four tiles ──────────────

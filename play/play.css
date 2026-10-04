@@ -206,3 +206,13 @@ figure video{display:block;width:100%;border-radius:12px;background:#000}
 /* a loop as the cover: full width, playing silently over its poster frame */
 .cover.clip video{width:100%;max-height:none;border-radius:0;aspect-ratio:auto}
 @media (min-width:800px){.cover.clip video{border-radius:14px}}
+/* the route's numbers, tight: four small tiles beside the map (one row of four under it on a phone) */
+.stats{gap:6px}
+.stat{padding:6px 10px;border-radius:9px}
+.stat b{font-size:18px;line-height:1.2}
+.stat span{font-size:11px;line-height:1.2;display:block}
+@media (max-width:640px){.stats{grid-template-columns:repeat(4,minmax(0,1fr))}.stat{padding:5px 7px}.stat b{font-size:15px}.stat span{font-size:10px}}
+/* the map full width, its four numbers in one row under it */
+.route-grid{grid-template-columns:1fr;gap:8px}
+.stats{grid-template-columns:repeat(4,minmax(0,1fr))}
+.stat b small{font-size:.62em;font-weight:700;color:var(--ink-3);margin-left:1px}
