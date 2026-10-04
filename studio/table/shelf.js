@@ -11,10 +11,11 @@
   var calm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   // name: [width / height, how big it is in real life (1 = a mug)]
   var POOL = {
-    mug: [1.21, 1], cone: [1.11, .9], carnelians: [1.15, .75], pins: [1.26, .8], resin: [1.33, 1], canister: [1.08, .9],
-    tape: [.74, 1.15], deer: [.59, 1], 'fox-sitting': [.71, 1.3], gloves: [1.02, 1.6], 'jar-off': [.92, 1.2],
+    mug: [1.21, 1], cone: [1.11, .9], carnelians: [1.15, .75], pins: [1.26, .8], resin: [1.33, 1],
+    deer: [.59, 1], 'fox-sitting': [.71, 1.3], gloves: [1.02, 1.6], 'jar-off': [.92, 1.2],
     pencils: [1.02, 1.7], ruler: [2.87, 1.9], notebook: [1.38, 1.9], contact: [.75, 1.7], map: [1.3, 1.9], fox: [1.6, 1.8]
   };
+  // (no tape: that image is a half roll made to peek in from an edge; no film canister: it carries a brand)
   var NAMES = Object.keys(POOL), out = {};
 
   function el(cls, parent) { var d = document.createElement('div'); d.className = cls; parent.appendChild(d); return d; }
