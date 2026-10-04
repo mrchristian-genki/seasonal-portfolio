@@ -217,3 +217,16 @@ body.busy{overflow:hidden}
   .st-nav a,.st-nav button{font-size:11.5px;padding:4px 8px}
   .st-nav .ext{display:none}
 }
+/* open questions as a stepper: one card at a time, dots for progress, one submit for them all */
+.qdots{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}
+.qdot{width:14px;height:14px;padding:0;border-radius:50%;border:2px solid #b08a52;background:transparent;cursor:pointer}
+.qdot.done{background:#b08a52}
+.qdot.skipped{border-style:dashed;opacity:.5}
+.qdot.now{box-shadow:0 0 0 3px rgba(201,163,106,.45)}
+.qcard{padding:12px 14px;border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.35)}
+.qcard .q{margin:4px 0 8px;font-weight:600}
+.qcard .ans{width:100%;margin:0 0 8px}
+.qcard .row{display:flex;gap:12px;align-items:center}
+.qcard .grow{flex:1}
+.qcard button[disabled]{opacity:.4;cursor:default}
+.qsend{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;margin:12px 0 4px}
