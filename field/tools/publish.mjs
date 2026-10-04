@@ -132,7 +132,7 @@ for (const e of events) {
     audio = { src: `../media/${e.id}/episode.mp3`, abs: `${show.siteUrl}media/${e.id}/episode.mp3`, bytes: fs.statSync(path.join(media, 'episode.mp3')).size, sec: mp3Seconds(path.join(media, 'episode.mp3')) };
   }
   const t = e.track || null, s = t && t.stats;
-  if (t) fs.writeFileSync(path.join(OUT, 'data', e.id + '.json'), JSON.stringify({ kind: e.kind, stats: s, line: t.line, profile: t.profile, shownKm: t.trim && t.trim.shownKm }) + '\n');
+  if (t) fs.writeFileSync(path.join(OUT, 'data', e.id + '.json'), JSON.stringify({ kind: e.kind, stats: s, line: t.line, profile: t.profile, shownKm: t.trim && t.trim.shownKm, show: e.dashboard || null }) + '\n');
 
   // Photos sit between the post's paragraphs (the cover heads the page), spread evenly.
   // Clips marked "table" (old photos laid out on a table) gather into one figure, after paragraph

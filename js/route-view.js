@@ -249,6 +249,7 @@
     var deg = 180 * Math.min(v, max) / max, n = pt(ang, r - 16), anim = (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) ? '' :
       '<animateTransform attributeName="transform" type="rotate" from="' + (-deg) + ' ' + cx + ' ' + cy + '" to="0 ' + cx + ' ' + cy + '" dur="1.4s" fill="freeze" calcMode="spline" keyTimes="0;1" keySplines=".2 .9 .25 1"/>';
     return '<figure class="gauge"><svg viewBox="0 0 ' + W + ' 132" role="img" aria-label="' + esc(label) + ': ' + v.toFixed(1) + ' ' + spdU() + '">' +
+      '<path d="M' + (cx - r - 14) + ' ' + cy + ' A' + (r + 14) + ' ' + (r + 14) + ' 0 0 1 ' + (cx + r + 14) + ' ' + cy + ' L' + (cx + r + 14) + ' ' + (cy + 14) + ' L' + (cx - r - 14) + ' ' + (cy + 14) + 'Z" class="face"/>' +
       '<path d="M' + p0 + ' A' + r + ' ' + r + ' 0 0 1 ' + p1 + '" class="trk"/>' +
       '<path d="M' + p0 + ' A' + r + ' ' + r + ' 0 0 1 ' + pv + '" class="val ' + color + '"/>' + ticks +
       '<g><line x1="' + cx + '" y1="' + cy + '" x2="' + n[0] + '" y2="' + n[1] + '" class="ndl"/>' + anim + '</g><circle cx="' + cx + '" cy="' + cy + '" r="7" class="hub"/></svg>' +
@@ -271,25 +272,25 @@
   function donut(parts) {
     var tot = parts.reduce(function (a, p) { return a + p[1]; }, 0) || 1, R = 52, C = 2 * Math.PI * R, off = 0;
     var arcs = parts.map(function (p) {
-      var len = p[1] / tot * C, a = '<circle cx="70" cy="70" r="' + R + '" stroke="' + p[2] + '" stroke-dasharray="' + len.toFixed(2) + ' ' + (C - len).toFixed(2) + '" stroke-dashoffset="' + (-off).toFixed(2) + '" class="seg"/>';
+      var len = p[1] / tot * C, a = '<circle cx="70" cy="70" r="' + R + '" class="seg ' + p[2] + '" stroke-dasharray="' + len.toFixed(2) + ' ' + (C - len).toFixed(2) + '" stroke-dashoffset="' + (-off).toFixed(2) + '"/>';
       off += len; return a;
     }).join('');
     return '<div class="donut"><svg viewBox="0 0 140 140" role="img" aria-label="Where the time went"><g transform="rotate(-90 70 70)">' + arcs + '</g>' +
       '<text x="70" y="66" class="dn-b">' + dur(tot) + '</text><text x="70" y="84" class="dn-s">in all</text></svg><ul>' +
-      parts.map(function (p) { return '<li><i style="background:' + p[2] + '"></i>' + esc(p[0]) + ' <b>' + dur(p[1]) + '</b> <small>' + Math.round(p[1] / tot * 100) + '%</small></li>'; }).join('') + '</ul></div>';
+      parts.map(function (p) { return '<li><i class="' + p[2] + '"></i>' + esc(p[0]) + ' <b>' + dur(p[1]) + '</b> <small>' + Math.round(p[1] / tot * 100) + '%</small></li>'; }).join('') + '</ul></div>';
   }
   function gradeBars(bins) {
-    var labs = ['Steep down', 'Down', 'Easing down', 'Level', 'Easing up', 'Up', 'Steep up'], cols = ['#1f6f8b', '#3f93a8', '#86bccb', '#c9d3d6', '#f0b3c8', '#e07ba1', '#c23f6f'];
+    var labs = ['Steep down', 'Down', 'Easing down', 'Level', 'Easing up', 'Up', 'Steep up'];
     var tot = bins.reduce(function (a, b) { return a + b; }, 0) || 1, mx = Math.max.apply(0, bins) || 1;
     return '<div class="grades">' + bins.map(function (b, i) {
-      return '<div class="gb"><span class="gv">' + Math.round(b / tot * 100) + '%</span><i style="height:' + Math.max(2, b / mx * 100).toFixed(0) + '%;background:' + cols[i] + '"></i><small>' + labs[i] + '</small></div>';
+      return '<div class="gb"><span class="gv">' + Math.round(b / tot * 100) + '%</span><i class="g' + i + '" data-st="height:' + Math.max(2, b / mx * 100).toFixed(0) + '%"></i><small>' + labs[i] + '</small></div>';
     }).join('') + '</div>';
   }
   function splitBars(sp) {
     var mn = Math.min.apply(0, sp), mx = Math.max.apply(0, sp), fast = sp.indexOf(mn);
     return '<div class="spl">' + sp.map(function (t, i) {
       var h = mx > mn ? 22 + 50 * (mx - t) / (mx - mn) : 50;
-      return '<div class="sb' + (i === fast ? ' best' : '') + '" title="' + (units === 'imperial' ? 'Mile ' : 'Km ') + (i + 1) + ': ' + mmss(t) + '"><span>' + mmss(t) + '</span><i style="height:' + h.toFixed(0) + '%"></i><small>' + (i + 1) + '</small></div>';
+      return '<div class="sb' + (i === fast ? ' best' : '') + '" title="' + (units === 'imperial' ? 'Mile ' : 'Km ') + (i + 1) + ': ' + mmss(t) + '"><span>' + mmss(t) + '</span><i data-st="height:' + h.toFixed(0) + '%"></i><small>' + (i + 1) + '</small></div>';
     }).join('') + '</div>';
   }
   function roseSVG(rose) {
@@ -302,27 +303,39 @@
     return '<svg viewBox="0 0 140 140" class="rose" role="img" aria-label="Mostly headed ' + names[top] + '"><circle cx="70" cy="70" r="60" class="rr"/><circle cx="70" cy="70" r="34" class="rr"/>' + out +
       '<text x="70" y="12" class="rl">N</text><text x="133" y="74" class="rl">E</text><text x="70" y="137" class="rl">S</text><text x="7" y="74" class="rl">W</text></svg><p class="rose-c">Mostly <b>' + names[top] + '</b></p>';
   }
-  function dashboard(el, d) {
+  // Which parts a post shows. A note can pick its own (the Studio has a switch on each); without a pick,
+  // the speed, the climbing and the hidden numbers show and the rest wait to be switched on.
+  var PARTS = { speed: 'Speed', updown: 'Up and down', grade: 'How steep', time: 'Where the time went', splits: 'Mile by mile', dir: 'Which way', facts: 'Hidden in the numbers' };
+  var SHOWN = { speed: true, updown: true, facts: true };
+  function shown(show, k) { return show && show[k] != null ? !!show[k] : !!SHOWN[k]; }
+  // opts.show: the note's pick; opts.edit(key, on): draw every part with an On Play switch (the Studio)
+  function dashboard(el, d, opts) {
     if (!el) return;
+    opts = opts || {};
     var a = analyse(d), s = a.s, ride = d.kind !== 'hike';
-    var html = '', card = function (cls, title, body) { return '<section class="dc ' + cls + '"><h3>' + title + '</h3>' + body + '</section>'; };
+    var html = '', card = function (cls, title, body) {
+      var on = shown(opts.show, cls);
+      if (!opts.edit && !on) return '';
+      return '<section class="dc ' + cls + (on ? '' : ' off') + '" data-k="' + cls + '"><h3>' + title + '</h3>' +
+        (opts.edit ? '<label class="dsw" title="Show this on the post"><input type="checkbox" data-k="' + cls + '"' + (on ? ' checked' : '') + '><span>On Play</span></label>' : '') + body + '</section>';
+    };
     // speed gauges
     if (s.avgKmh || s.maxKmh) {
       var top = spd(s.maxKmh || 0), max = Math.max(ride ? 20 : 5, niceStep(top / 4) * 5);
       while (max < top * 1.08) max += niceStep(max / 5);
-      html += card('speed', 'Speed', '<div class="gauges">' + gauge('Average, moving', spd(s.avgKmh || 0), max, 'g-ink') + gauge('Top speed', top, max, 'g-acc') + '</div>' +
-        (a.speed ? speedChart(a.speed, s.avgKmh, s.maxKmh) + '<p class="cap"><span class="k ln"></span>speed along the way <span class="k avg"></span>average <span class="k top"></span>top</p>' : ''));
+      html += card('speed', 'Speed', '<div class="sp-row"><div class="gauges">' + gauge('Average, moving', spd(s.avgKmh || 0), max, 'g-ink') + gauge('Top speed', top, max, 'g-acc') + '</div>' +
+        (a.speed ? '<div class="sp-ch">' + speedChart(a.speed, s.avgKmh, s.maxKmh) + '<p class="cap"><span class="k ln"></span>speed along the way <span class="k avg"></span>average <span class="k top"></span>top</p></div>' : '') + '</div>');
     }
     // up and down
     if (s.gainM != null) {
       var lo = s.minEleM, hi = s.maxEleM, mxv = Math.max(s.gainM || 0, s.lossM || 0) || 1;
       html += card('updown', 'Up and down',
-        '<div class="ud"><div class="udb up"><i style="height:' + Math.max(4, (s.gainM || 0) / mxv * 100).toFixed(0) + '%"></i><b>↑ ' + upV(s.gainM || 0).toLocaleString() + '</b><small>' + upU() + ' ascent</small></div>' +
-        '<div class="udb down"><i style="height:' + Math.max(4, (s.lossM || 0) / mxv * 100).toFixed(0) + '%"></i><b>↓ ' + upV(s.lossM || 0).toLocaleString() + '</b><small>' + upU() + ' descent</small></div>' +
+        '<div class="ud"><div class="udb up"><i data-st="height:' + Math.max(4, (s.gainM || 0) / mxv * 100).toFixed(0) + '%"></i><b>↑ ' + upV(s.gainM || 0).toLocaleString() + '</b><small>' + upU() + ' ascent</small></div>' +
+        '<div class="udb down"><i data-st="height:' + Math.max(4, (s.lossM || 0) / mxv * 100).toFixed(0) + '%"></i><b>↓ ' + upV(s.lossM || 0).toLocaleString() + '</b><small>' + upU() + ' descent</small></div>' +
         (lo != null && hi != null ? '<div class="range"><span class="hi"><b>' + upV(hi).toLocaleString() + '</b> ' + upU() + '<small>high point</small></span><span class="bar"></span><span class="lo"><b>' + upV(lo).toLocaleString() + '</b> ' + upU() + '<small>low point</small></span><p>' + upV(hi - lo).toLocaleString() + ' ' + upU() + ' between them</p></div>' : '') + '</div>');
     }
     if (a.grades) html += card('grade', 'How steep', gradeBars(a.grades) + '<p class="cap">Share of the distance at each grade: level is within 1.5%, steep is over 8%.</p>');
-    if (a.time) html += card('time', 'Where the time went', donut([['Climbing', a.time.climb, '#c23f6f'], ['Level', a.time.flat, '#c9b79c'], ['Descending', a.time.down, '#1f6f8b'], ['Stopped', a.time.stop, '#e6dfd3']].filter(function (p) { return p[1] > 30; })));
+    if (a.time) html += card('time', 'Where the time went', donut([['Climbing', a.time.climb, 't-up'], ['Level', a.time.flat, 't-flat'], ['Descending', a.time.down, 't-down'], ['Stopped', a.time.stop, 't-stop']].filter(function (p) { return p[1] > 30; })));
     if (a.splits && a.splits.length > 1) html += card('splits', (units === 'imperial' ? 'Mile' : 'Kilometre') + ' by ' + (units === 'imperial' ? 'mile' : 'kilometre'), splitBars(a.splits) + '<p class="cap">Time for each whole ' + (units === 'imperial' ? 'mile' : 'km') + '; taller is quicker, the quickest is marked.</p>');
     if (a.rose) html += card('dir', 'Which way', roseSVG(a.rose));
     // the things the numbers don't say out loud
@@ -347,12 +360,17 @@
     if (facts.length) html += card('facts', 'Hidden in the numbers', '<dl>' + facts.map(function (x) { return '<div><dt>' + esc(x[0]) + '</dt><dd><b>' + esc(x[1]) + '</b><small>' + esc(x[2]) + '</small></dd></div>'; }).join('') + '</dl>');
     el.innerHTML = html;
     el.hidden = !html;
+    // sizes are set here, not in the markup, so a page that forbids inline styles (the Studio) draws it too
+    [].forEach.call(el.querySelectorAll('[data-st]'), function (n) { n.style.cssText = n.getAttribute('data-st'); });
+    if (opts.edit) [].forEach.call(el.querySelectorAll('.dsw input'), function (c) {
+      c.onchange = function () { c.closest('.dc').classList.toggle('off', !c.checked); opts.edit(c.getAttribute('data-k'), c.checked); };
+    });
   }
 
   window.RouteView = {
     U: U, dur: dur, day: day, KIND: KIND, esc: esc, sketch: sketch, solid: solid, parts: parts,
     makeMap: makeMap, routeLayers: routeLayers, profileSVG: profileSVG, scrubber: scrubber, statTiles: statTiles,
-    dashboard: dashboard, analyse: analyse,
+    dashboard: dashboard, analyse: analyse, PARTS: PARTS, shown: shown,
     maps: maps, clearMaps: function () { maps.forEach(function (m) { m.remove(); }); maps.length = 0; },
     units: function () { return units; },
     setUnits: function (u) { units = u; store('fieldUnits', u); }

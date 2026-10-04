@@ -363,3 +363,47 @@ body:has(.savebar){padding-bottom:64px}
   .stages{grid-template-columns:repeat(5,minmax(0,1fr))} .stages li{font-size:0;justify-content:center;padding:7px 4px 7px 12px} .stages li:first-child{padding-left:4px}
   .stages li.now{font-size:11px} .stages li span{font-size:11px}
 }
+
+/* Trail stats, in the workshop's brass: walnut panels with a brass rim and rivets, cream dials with a red
+   needle, typewritten labels. Same parts as the post (css/route-dash.css), dressed for the Studio. */
+.tdash{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}
+.tdash > summary{cursor:pointer;font:800 16px var(--display);color:var(--ink);list-style:none;display:flex;align-items:baseline;gap:10px}
+.tdash > summary::before{content:"▸";color:#a07a3a;transition:rotate .2s} .tdash[open] > summary::before{rotate:90deg}
+.tdash > summary small{font:400 13px "Special Elite",monospace;color:var(--ink3)}
+.dash.steam{--dk:#f3e6d2;--dk2:#dccaa8;--dk3:#b39b74;--dl:rgba(201,154,72,.35);--dc:#2b2118;--da:#e2b45b;--dsoft:rgba(201,154,72,.13);--dd:"Special Elite",monospace;
+  --g0:#2f5f6e;--g1:#4f8696;--g2:#8fb3ad;--g3:#b8a888;--g4:#d9b46a;--g5:#c9883a;--g6:#a3471d;
+  --tu:#c9883a;--tf:#8f7a5a;--td:#4f8696;--tsp:#4a3a2c;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;margin-top:10px}
+.dash.steam .dc{border:0;border-radius:6px;padding:12px 12px 12px;
+  background:radial-gradient(circle at 7px 7px,#f0cf86 0 2.2px,#6b4a1c 2.6px,transparent 3.4px),radial-gradient(circle at calc(100% - 7px) 7px,#f0cf86 0 2.2px,#6b4a1c 2.6px,transparent 3.4px),
+    radial-gradient(circle at 7px calc(100% - 7px),#f0cf86 0 2.2px,#6b4a1c 2.6px,transparent 3.4px),radial-gradient(circle at calc(100% - 7px) calc(100% - 7px),#f0cf86 0 2.2px,#6b4a1c 2.6px,transparent 3.4px),
+    repeating-linear-gradient(92deg,rgba(255,220,170,.035) 0 2px,transparent 2px 7px),linear-gradient(180deg,#3d2a1b,#251912);
+  box-shadow:inset 0 0 0 2px #8a6528,inset 0 0 0 3px #e2b45b55,inset 0 0 0 5px #2b1d12,inset 0 10px 24px rgba(0,0,0,.35),4px 6px 10px rgba(8,4,0,.4)}
+.dash.steam .dc h3{font:400 13px "Special Elite",monospace;letter-spacing:.08em;color:#e2b45b;text-shadow:0 1px 0 #000}
+.dash.steam .dsw{color:#dccaa8;font:400 11px "Special Elite",monospace;top:9px;right:12px}
+.dash.steam .dsw input{accent-color:#c99a48}
+.dash.steam .dc.off{filter:saturate(.4)} .dash.steam .dc.off h3{color:#9b8664}
+/* dials: a cream face in a brass bezel, black ticks, a red needle on a brass hub */
+.dash.steam .gauge .face{fill:#efe2c4;stroke:#b8893c;stroke-width:5;filter:drop-shadow(0 2px 3px rgba(0,0,0,.6))}
+.dash.steam .gauge .trk{stroke:#d7c7a2;stroke-width:10}
+.dash.steam .gauge .val{stroke-width:10} .dash.steam .gauge .val.g-ink{stroke:#4f8696} .dash.steam .gauge .val.g-acc{stroke:#c9883a}
+.dash.steam .gauge .tk{stroke:#3a2a1a} .dash.steam .gauge .tk.mj{stroke:#1d140c}
+.dash.steam .gauge .tl{fill:#3a2a1a;font:400 10px "Special Elite",monospace}
+.dash.steam .gauge .ndl{stroke:#a3271d;stroke-width:3}
+.dash.steam .gauge .hub{fill:#c99a48;stroke:#5c3f16;stroke-width:2}
+.dash.steam .gauge figcaption b{font:400 22px/1 "Special Elite",monospace;color:#f3e6d2}
+.dash.steam .chart .s0{stop-color:#e2b45b} .dash.steam .chart .ln{stroke:#e2b45b} .dash.steam .chart .avg{stroke:#8fb3ad}
+.dash.steam .chart .topdot{fill:#a3271d;stroke:#f0cf86}
+.dash.steam .cap .k{border-top-color:#e2b45b} .dash.steam .cap .k.avg{border-top-color:#8fb3ad} .dash.steam .cap .k.top{background:#a3271d}
+.dash.steam .udb.up i{background:linear-gradient(0deg,#6b4a1c,#e2b45b)} .dash.steam .udb.down i{background:linear-gradient(180deg,#8fb3ad,#2f5f6e)}
+.dash.steam .range .bar{background:linear-gradient(180deg,#f3e6d2,#c99a48 45%,#4a3216)}
+.dash.steam .udb b,.dash.steam .range b,.dash.steam dd b{font-family:"Special Elite",monospace;font-weight:400}
+.dash.steam .rose .pet{fill:#c99a48;stroke:#2b2118} .dash.steam .rose .rr{stroke:#8a6528}
+.dash.steam dl div{background:rgba(239,226,196,.07);border:1px solid rgba(201,154,72,.3)}
+.dash.steam .sb i{background:#8f7a5a;opacity:1} .dash.steam .sb.best i{background:#e2b45b}
+@media (max-width:720px){.dash.steam{grid-template-columns:1fr}}
+.dash.steam .dsw{white-space:nowrap}
+.dash.steam .ud{grid-template-columns:78px 78px 1fr}
+.dash.steam .udb b{font-size:15px}
+.dash.steam .ud{grid-template-columns:70px 70px minmax(0,1fr)}
+.dash.steam .ud{grid-template-columns:1fr 1fr}
+.dash.steam .range .bar{background:linear-gradient(90deg,#4a3216,#c99a48 55%,#f3e6d2)}
