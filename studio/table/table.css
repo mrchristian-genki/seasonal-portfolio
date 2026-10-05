@@ -92,7 +92,7 @@
 /* the footer: a pipe of the river's liquid set into the crack between two planks (foot.js); the pipe runs
    through the middle of the clips, so they're centred and cover the footer */
 .st-flow{position:absolute;inset:0;z-index:0;isolation:isolate;overflow:hidden;pointer-events:none;background:#2a1d12}
-.st-flow img,.st-flow video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 50%;display:block}
+.st-flow img,.st-flow video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 65%;display:block}
 .st-flow .fs{opacity:0;transition:opacity 1.2s ease}
 .st-flow:not(.is-night).is-blue .bd,.st-flow.is-night.is-blue .bn,.st-flow:not(.is-night):not(.is-blue) .gd,.st-flow.is-night:not(.is-blue) .gn{opacity:1}
 .st-flow video{opacity:0;transition:opacity 1.2s ease-in-out}
@@ -354,6 +354,9 @@
 
 /* the footer: the same pair in the middle of the wood, in place of the old lamp plate, with room either
    side for the shelves */
-.ft-valves{position:absolute;z-index:2;left:50%;top:50%;translate:-50% -50%;display:flex;gap:clamp(18px,2vw,30px);align-items:flex-end}
-.ft-valves .valve{position:relative;left:auto;top:auto;translate:none;width:clamp(52px,5vw,72px)}
+/* on the wood just below the pipe. The clips cover the footer at the height Hv = max(footer, width ×
+   400/1920), set 65% down where they're taller than it (more wood below the pipe); the pipe is the middle
+   22% of a clip, so its bottom edge is at Hv × .61 − (Hv − footer) × .65 */
+.ft-valves{position:absolute;z-index:2;left:50%;top:calc(max(var(--h), 100vw * .2083) * -.04 + var(--h) * .65 + 6px);translate:-50% 0;display:flex;gap:clamp(18px,2vw,30px);align-items:flex-end}
+.ft-valves .valve{position:relative;left:auto;top:auto;translate:none;width:clamp(46px,3.8vw,56px)}
 .st-foot.night .valve .n{opacity:1}
