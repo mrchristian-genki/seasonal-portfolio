@@ -63,7 +63,7 @@
     if (calm || !started || !front) { stills(n); if (started && !calm) loopFor(n); return; }
     if (!change) { stills(n); loopFor(n); return; }
     // dusk or dawn: play the clip once, then the loop for the new time of day
-    play((blue ? 'river-blue-' : 'river-') + (n ? 'to-night' : 'to-day'));
+    play((blue ? 'river-blue-' : 'river-') + (n ? 'to-night' : 'to-day'), 'light');
   }
   // the colour: the river changes in the clip for this time of day, then loops in its new colour
   function colour(b) {
@@ -71,19 +71,28 @@
     blue = b;
     try { localStorage.setItem('st-flow', b ? 'blue' : 'green'); } catch (e) {}
     if (calm || !started || !front) { stills(night); if (started && !calm) loopFor(night); return; }
-    play('river-' + (night ? 'night' : 'day') + '-to-' + (b ? 'blue' : 'green'));
+    play('river-' + (night ? 'night' : 'day') + '-to-' + (b ? 'blue' : 'green'), 'flow');
   }
   // A change clip: it fades in over the loop, the next loop is readied underneath, and it fades in over the
   // clip's last second and a bit, both playing. The switches wait until it's all done.
-  function play(clip) {
+  // How far the change has got (0 to 1) goes out as a 'river:turn' event, so the valve that started it
+  // turns in step with the river: the clip is most of the turn, the last fade the rest.
+  function turn(kind, p) { document.dispatchEvent(new CustomEvent('river:turn', { detail: { kind: kind, p: p } })); }
+  function play(clip, kind) {
     var n = night, token = {}; busy = token; lock(true);
     var t = other(); load(t, clip, false);
-    var next = null, done = false;
+    var next = null, done = false, end = 0;
+    (function tick() {
+      if (busy !== token) return;
+      var p = end ? 0.8 + 0.2 * Math.min(1, (performance.now() - end) / (XF + 400)) : t.duration ? 0.8 * Math.min(1, t.currentTime / Math.max(0.5, t.duration - XF / 1000 - 0.2)) : 0;
+      turn(kind, Math.min(p, 0.999));
+      requestAnimationFrame(tick);
+    })();
     var finish = function () {
-      if (done || busy !== token) return; done = true;
+      if (done || busy !== token) return; done = true; end = performance.now();
       stills(n);
       var v = next || other(); if (!next) load(v, loopName(n), true);
-      show(v).then(function () { setTimeout(function () { if (busy === token) { busy = null; lock(false); } }, XF); });
+      show(v).then(function () { setTimeout(function () { if (busy === token) { busy = null; lock(false); turn(kind, 1); } }, XF); });
     };
     t.addEventListener('timeupdate', function () { if (t.duration && t.duration - t.currentTime <= XF / 1000 + 0.2) finish(); });
     t.addEventListener('ended', finish, { once: true });
