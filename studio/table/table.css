@@ -573,3 +573,16 @@ body.login .login-box button:hover,body.login .login-box button:focus-visible{tr
   @keyframes vein-drop{0%,100%{filter:none}5%{filter:brightness(2.2) drop-shadow(0 0 4px rgb(var(--lr) var(--lg) var(--lb)))}25%{filter:none}}
 }
 @media (prefers-reduced-motion:reduce){.about-studio .steps li::before,.about-studio .steps li::after,.about-studio .steps::after{animation:none}}
+
+/* THE HEART, drawn: a brass heart on the bench, a day poured in at the funnel and pumped out through the five
+   stations in step order, to the lantern; one picture per liquid, the one in use fading in once the river has
+   changed. Its edges melt into the page. It takes over from the drawn vein (the step lenses still pulse). */
+.about-studio .heart{position:relative;width:min(100%,680px);aspect-ratio:1600/444;margin:-4px auto 0;
+  -webkit-mask:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent),linear-gradient(180deg,transparent,#000 14%,#000 84%,transparent);
+  -webkit-mask-composite:source-in;mask:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent),linear-gradient(180deg,transparent,#000 14%,#000 84%,transparent);
+  mask-composite:intersect}
+.about-studio .heart img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 2.2s ease}
+:root:not(.liq-green):not(.liq-orange) .heart .h-blue,:root.liq-green .heart .h-green,:root.liq-orange .heart .h-orange{opacity:1}
+.about-studio:has(.heart) .steps{margin-top:0}
+.about-studio:has(.heart) .steps::before,.about-studio:has(.heart) .steps::after,.about-studio:has(.heart) .steps li::after{display:none}
+@media (max-width:640px){.about-studio .heart{margin:0 auto 4px}}

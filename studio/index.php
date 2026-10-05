@@ -58,7 +58,7 @@ $alt = 'The Studio by ' . $tod . ': a brass STUDIO panel with its day/night dial
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&family=Special+Elite&display=swap">
 <link rel="stylesheet" href="../css/route-dash.css?v=<?= STUDIO_VERSION ?>-3">
 <link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>-38">
-<link rel="stylesheet" href="table/table.css?v=72">
+<link rel="stylesheet" href="table/table.css?v=73">
 </head>
 <?php if (!$in): ?>
 <body class="login">
@@ -126,6 +126,12 @@ $alt = 'The Studio by ' . $tod . ': a brass STUDIO panel with its day/night dial
 <section class="about-studio" aria-labelledby="whatH">
   <h2 id="whatH">What the Studio does</h2>
   <p class="lede">A site lives on what flows through it, and the Studio is its heart. A day out goes in and is carried through five stages, out to a Field Note with photos and a map, and a short podcast episode. Private to work in; what it makes is public on <a href="/play/">Play</a>.</p>
+  <!-- the heart: a day comes in at the funnel and is pumped through the five stations, in the liquid's colour -->
+  <div class="heart" aria-hidden="true">
+    <img class="h-blue" src="table/a/heart-blue.webp?v=1" alt="" width="1600" height="444" loading="lazy">
+    <img class="h-green" src="table/a/heart-green.webp?v=1" alt="" width="1600" height="444" loading="lazy">
+    <img class="h-orange" src="table/a/heart-orange.webp?v=1" alt="" width="1600" height="444" loading="lazy">
+  </div>
   <ol class="steps">
     <li><b>Bring it in</b><span>Photos, video, the track and notes, copied from Drive.</span></li>
     <li><b>Sort it out</b><span>A draft per day; locations stripped, private places trimmed.</span></li>
