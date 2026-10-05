@@ -1,5 +1,5 @@
 /* STUDIO FOOT: the footer is a glowing pipe set into the crack between two planks, the river's liquid
-   flowing through it right to left, by day or night and blue or green like the header. It follows the
+   flowing through it right to left, by day or night and blue, green or orange like the header. It follows the
    header (river.js tells it each change): the change plays as a clip (dusk, dawn, or the liquid changing
    colour), then hands over to the loop for the new setting, the two crossfading while both play. Stills
    stand in until it's seen, when it's off screen, and with reduced motion; the video only loads once the
@@ -11,10 +11,12 @@
   var A = 'table/a/', XF = 1200, z = 1;
   var calm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var river = window.StudioRiver;
-  var night = river ? river.night() : F.classList.contains('night'), blue = river ? river.blue() : true;
+  var night = river ? river.night() : F.classList.contains('night'), liq = river ? river.liquid() : 'blue';
   function W() { var need = (P.clientWidth || innerWidth) * (window.devicePixelRatio || 1); return (navigator.connection && navigator.connection.saveData) || need <= 1400 ? 1280 : 1920; }
-  function stills() { P.classList.toggle('is-night', night); P.classList.toggle('is-blue', blue); }
-  function name() { return 'foot-' + (blue ? 'blue' : 'green') + '-' + (night ? 'night' : 'day'); }
+  function stills() { P.classList.toggle('is-night', night); ['blue', 'green', 'orange'].forEach(function (l) { P.classList.toggle('is-' + l, liq === l); }); }
+  function name() { return 'foot-' + liq + '-' + (night ? 'night' : 'day'); }
+  // the change to each liquid from the one before it (the way the switch goes round)
+  var CHANGE = { green: '-to-green', orange: '-green-to-orange', blue: '-orange-to-blue' }, BEFORE = { green: 'blue', orange: 'green', blue: 'orange' };
   function vid() {
     var v = document.createElement('video');
     v.muted = true; v.playsInline = true; v.setAttribute('playsinline', ''); v.setAttribute('muted', ''); v.preload = 'auto';
@@ -57,12 +59,13 @@
     });
   }
   document.addEventListener('river:change', function (e) {
-    var was = { night: night, blue: blue }, d = e.detail;
-    night = d.night; blue = d.blue;
+    var d = e.detail, from = d.from || liq;
+    night = d.night; liq = d.liquid;
     if (!started || !seen || !front) { stills(); stale = started; if (started && seen) { stale = false; loop(); } return; }
+    if (d.kind !== 'light' && BEFORE[liq] !== from) { stills(); loop(); return; }   // not the next one: a blend
     play(d.kind === 'light'
-      ? 'foot-' + (was.blue ? 'blue' : 'green') + '-to-' + (night ? 'night' : 'day')
-      : 'foot-' + (night ? 'night' : 'day') + '-to-' + (blue ? 'blue' : 'green'));
+      ? 'foot-' + from + '-to-' + (night ? 'night' : 'day')
+      : 'foot-' + (night ? 'night' : 'day') + CHANGE[liq]);
   });
   stills();
   // start when the footer first comes near the screen (after the page has loaded); pause it when it's away

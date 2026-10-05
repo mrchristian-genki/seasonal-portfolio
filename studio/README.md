@@ -41,14 +41,17 @@ Log in, then:
   WebM fallback, 90 KB) plays over it, cut to the glass up to the fuel level, its glow coming up with it.
   The scale, status tag and plaque are drawn over it in CSS.
 
-- **The header** is the river table: a looping video of the glowing river, blue (`table/a/river-blue-day|night`)
-  or green (`river-day|night`), with the day/night lamps and Marley's visits on top. Two small controls on the STUDIO panel work it
-  (`table/toggle.js`, drawn in CSS): DAY/NIGHT and CHANGE LIQUID, each a bat-handle toggle between two jewel
-  pilot lamps (amber and blue; blue and green) on a stencilled steel plate. A tap throws the toggle; while the
-  river changes, the lamp it's going to breathes slowly and a hairline slot fills in step, and only then does the
-  old lamp go out. Both wait until the change is done. The footer is a glowing pipe in the crack between two
-  planks (`table/foot.js`, clips `foot-*`), the same liquid flowing right to left, following the header's changes
-  with its own dusk, dawn and colour clips (the video only loads once the footer comes near the screen).
+- **The header** is the river table: a looping video of the glowing river, blue (`table/a/river-blue-day|night`),
+  green (`river-day|night`) or orange (`river-orange-day|night`), with Marley's visits on top. Two small controls
+  on the STUDIO panel work it (`table/toggle.js`, drawn in CSS): DAY/NIGHT, a bat-handle toggle between an amber
+  and a blue pilot lamp, plays the dusk or dawn clip; CHANGE LIQUID, a toggle by three lamps, moves the liquid on
+  one way round (blue, green, orange, blue), playing the change clip (`river-day|night-to-green` for blue to green;
+  green to orange and orange to blue have no header footage yet and blend). While the river changes, the lamp it's
+  going to breathes and a hairline slot fills; both wait until it's done. The bank's glass tube is off by day and
+  lit at night in the liquid's colour, and the gauge's face matches (painted into the clips). The liquid is kept on
+  the device and in the address (`#notes/night-orange`). The footer is a glowing pipe in the crack between two
+  planks (`table/foot.js`, clips `foot-*`), the same liquid flowing right to left, following every change with its
+  own clips (the video only loads once the footer comes near the screen).
 
 Not in the Studio yet: episode audio (render it, then hand it to a Claude Code session to master and
 attach), animated clips and the prints-on-a-table layout.

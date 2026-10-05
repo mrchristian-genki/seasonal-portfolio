@@ -32,7 +32,7 @@
   });
   if (lamps) lamps.addEventListener('click', function () { sw.click(); });
 
-  // The address keeps up: the time of day and the river's colour at the end (day-blue, night-green…),
+  // The address keeps up: the time of day and the river's liquid at the end (day-blue, night-orange…),
   // after the Studio's own view once logged in (#notes/night-blue, #note/<id>/day-green, #new/day-blue).
   // Flipping either rewrites the address in place; a change of view (studio.js, through StudioHash) adds a
   // step, so Back and Forward walk the views. Opening an address with a hash restores all three (the time
@@ -40,13 +40,13 @@
   var view = '', onview = null, river = window.StudioRiver;
   function parse() {
     var parts = decodeURIComponent(location.hash.slice(1)).split('/'), mode = null, colour = null;
-    var m = /^(day|night)(?:-(blue|green))?$/.exec(parts[parts.length - 1]);
+    var m = /^(day|night)(?:-(blue|green|orange))?$/.exec(parts[parts.length - 1]);
     if (m) { parts.pop(); mode = m[1]; colour = m[2] || null; }
     return { view: parts.join('/'), mode: mode, colour: colour };
   }
   function address() {
     return location.pathname + '#' + (view ? view + '/' : '') + (isNight() ? 'night' : 'day') +
-      (river ? (river.blue() ? '-blue' : '-green') : '');
+      (river ? '-' + river.liquid() : '');
   }
   function write(push) {
     var to = address();
@@ -56,7 +56,7 @@
   var first = parse();
   view = first.view;
   if (first.mode && (first.mode === 'night') !== isNight()) set(first.mode === 'night');
-  if (first.colour && river && (first.colour === 'blue') !== river.blue()) river.colour(first.colour === 'blue');
+  if (first.colour && river && first.colour !== river.liquid()) river.colour(first.colour);
   sw.addEventListener('click', function () { write(false); });
   var fl = document.getElementById('flow');
   if (fl) fl.addEventListener('click', function () { write(false); });
