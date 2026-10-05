@@ -57,9 +57,12 @@
   function loopName(n) { return blue ? (n ? 'river-blue-night' : 'river-blue-day') : (n ? 'river-night' : 'river-day'); }
   function loopFor(n) { var v = other(); load(v, loopName(n), true); return show(v); }
 
+  // the footer's pipe (foot.js) follows every change
+  function tell(kind) { document.dispatchEvent(new CustomEvent('river:change', { detail: { kind: kind, night: night, blue: blue } })); }
   function set(n) {
     if (n === night && front) return;
     var change = n !== night; night = n;
+    if (change) tell('light');
     if (calm || !started || !front) { stills(n); if (started && !calm) loopFor(n); return; }
     if (!change) { stills(n); loopFor(n); return; }
     // dusk or dawn: play the clip once, then the loop for the new time of day
@@ -68,7 +71,7 @@
   // the colour: the river changes in the clip for this time of day, then loops in its new colour
   function colour(b) {
     if (b === blue) return;
-    blue = b;
+    blue = b; tell('flow');
     try { localStorage.setItem('st-flow', b ? 'blue' : 'green'); } catch (e) {}
     if (calm || !started || !front) { stills(night); if (started && !calm) loopFor(night); return; }
     play('river-' + (night ? 'night' : 'day') + '-to-' + (b ? 'blue' : 'green'), 'flow');
@@ -121,6 +124,7 @@
   // for the address (switch.js): #…/day-blue, #…/night-green
   window.StudioRiver = {
     blue: function () { return blue; },
+    night: function () { return night; },
     colour: function (b) { colour(b); flowShow(); }
   };
 
