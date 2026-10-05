@@ -9,6 +9,8 @@
   'use strict';
   var HERO = document.querySelector('.st-hero'), FOOT = document.querySelector('.st-foot');
   if (!HERO || !FOOT) return;
+  // not on a phone: its strip of wood holds the two valves
+  if (window.matchMedia && matchMedia('(max-width:640px)').matches) return;
   var A = 'table/a/';
   var calm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   // name: [width / height, how big it is in real life (1 = a mug; it sets the height, so a long thin vial is

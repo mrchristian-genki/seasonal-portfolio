@@ -328,10 +328,10 @@
 .valve:disabled{cursor:progress;opacity:1}
 .valve:disabled:not(.turning) .vbody{filter:drop-shadow(3px 6px 4px rgba(8,4,0,.7)) brightness(.7) saturate(.7)}
 @media (max-width:640px){.valve{width:40px}
-  /* a phone shows only the middle third of the footage: FLOW on the big rock right of the glass tube, LIGHT
-     on the rocks of the near bank below it, clear of the nav tags */
-  #flow{left:calc(var(--rv-x,0px) + var(--rv-w,100%) * .635);top:calc(var(--rv-y,0px) + var(--rv-h,100%) * .42)}
-  #dayNight{left:calc(var(--rv-x,0px) + var(--rv-w,100%) * .615);top:calc(var(--rv-y,0px) + var(--rv-h,100%) * .63)}}
+  /* a phone: the two valves side by side on the strip of wood right of the STUDIO panel, with their name
+     plates (no shelf props or visits there, so they have room) */
+  #flow{left:calc(100% - 142px);top:34px}
+  #dayNight{left:calc(100% - 54px);top:34px}}
 /* each valve sits in a soft pool of its own light, in the colour of its lit window, breathing slowly so
    the eye finds it; brighter while it's being thrown */
 .valve::before{content:"";position:absolute;left:50%;top:50%;width:230%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;z-index:-1;pointer-events:none;
@@ -364,3 +364,6 @@
     linear-gradient(160deg,#d9dad6,#a9aba6 45%,#c6c8c3 70%,#9c9e99);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.55),inset 0 -1px 0 rgba(0,0,0,.25),2px 3px 4px rgba(0,0,0,.5)}
 .st-foot.night .vplate{filter:brightness(.62) saturate(.8)}
+/* the header's valves wear their plates only on a phone, where they sit on the wood */
+.st-hero .vplate{display:none}
+@media (max-width:640px){.st-hero .vplate{display:block;top:92%;font-size:6.5px;letter-spacing:.05em;padding:.5em 1.25em .42em}}
