@@ -1,33 +1,37 @@
-/* STUDIO VALVES: the header's two bypass valves, LIGHT (day or night) and FLOW (blue or green). Throwing a
-   lever turns the river: it swings across in step with the change (river.js reports how far it has got),
-   from pointing at one setting to pointing at the other, starting heavy and settling at the end, and it
-   can't be thrown again until the change is done (the button is disabled meanwhile). */
+/* STUDIO VALVES: the header's two valves, LIGHT (day or night) and FLOW (blue or green). Each has two glass
+   windows; the lever rests over the one for the setting that's off, and the uncovered one glows (LIGHT:
+   amber for day, blue for night; FLOW: blue, green). Throwing the lever turns the river: it swings across
+   in step with the change (river.js reports how far it has got), heavy at first and settling at the end,
+   while the lit window dims under it and the other lights up; it can't be thrown again until the change is
+   done (the button is disabled meanwhile). */
 (function () {
   'use strict';
   var calm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var SWING = 68;                                  // degrees either side of upright
+  var SWING = 47;                                  // the windows sit 47° either side of upright
   var valves = {};
   [].forEach.call(document.querySelectorAll('.valve'), function (b) {
-    var v = { b: b, lever: b.querySelector('.lever'), angle: 0, from: 0, to: 0, goal: 0, live: false, timer: null };
+    var v = { b: b, lever: b.querySelector('.lever'), ga: b.querySelector('.ga'), gb: b.querySelector('.gb'),
+      angle: 0, from: 0, to: 0, goal: 0, live: false, timer: null };
     v.on = function () { return b.classList.contains(b.id === 'flow' ? 'is-green' : 'is-night'); };
     valves[b.getAttribute('data-kind')] = v;
-    v.angle = v.goal = v.on() ? SWING : -SWING; draw(v); mark(v);
+    // on the first setting (day, blue) the lever covers the right window and the left one glows
+    v.angle = v.goal = v.on() ? -SWING : SWING; draw(v);
     b.addEventListener('click', function () {
       // the switch's own handler (switch.js, river.js) has already flipped it; swing towards the new setting
-      v.from = v.angle; v.to = v.on() ? SWING : -SWING; v.live = false;
-      b.classList.add('turning'); mark(v);
+      v.from = v.angle; v.to = v.on() ? -SWING : SWING; v.live = false;
+      b.classList.add('turning');
       clearTimeout(v.timer);
       // no change clip to follow (reduced motion, or the video isn't running): swing on its own
       v.timer = setTimeout(function () { if (!v.live) glide(v, calm ? 300 : 1100); }, 250);
     });
   });
-  // the setting it's set to (or heading for) lights; switch.js keeps is-night in step for LIGHT
-  function mark(v) {
-    v.b.classList.toggle('is-on', v.on());
-    var a = v.b.querySelector('.vside.a'), z = v.b.querySelector('.vside.b');
-    a.classList.toggle('going', !v.on()); z.classList.toggle('going', v.on());
+  // the lever, and the windows lit by how far it is from each: fully over a window puts it out
+  function draw(v) {
+    v.lever.style.transform = 'rotate(' + v.angle.toFixed(2) + 'deg)';
+    var t = (v.angle + SWING) / (2 * SWING);       // 0: over the left window, 1: over the right one
+    v.ga.style.opacity = Math.max(0, Math.min(1, t)).toFixed(3);
+    v.gb.style.opacity = Math.max(0, Math.min(1, 1 - t)).toFixed(3);
   }
-  function draw(v) { v.lever.style.transform = 'rotate(' + v.angle.toFixed(2) + 'deg)'; }
   // ease towards the goal, so the lever never jumps even if the reports come in steps
   function kick(v) {
     if (v.raf) return;
