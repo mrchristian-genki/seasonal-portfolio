@@ -339,3 +339,12 @@ button.st-lamps:focus-visible{outline:2px solid #e6c983;outline-offset:4px;borde
 .valve:disabled:not(.turning) .vbody{filter:drop-shadow(3px 6px 4px rgba(8,4,0,.7)) brightness(.7) saturate(.7)}
 @media (max-width:640px){.valve{width:40px}
   #flow{left:calc(var(--rv-x,0px) + var(--rv-w,100%) * .62);top:calc(var(--rv-y,0px) + var(--rv-h,100%) * .3)}}
+/* each valve sits in a soft pool of its own light, in the colour of its lit window, breathing slowly so
+   the eye finds it; brighter while it's being thrown */
+.valve::before{content:"";position:absolute;left:50%;top:50%;width:230%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;z-index:-1;pointer-events:none;
+  background:radial-gradient(circle,var(--vg) 0,var(--vg) 18%,transparent 60%);mix-blend-mode:screen;opacity:.8;transition:opacity .6s ease;animation:v-breathe 4.5s ease-in-out infinite}
+#dayNight{--vg:rgba(255,170,60,.75)} #dayNight.is-night{--vg:rgba(90,160,255,.8)}
+#flow{--vg:rgba(60,228,255,.7)} #flow.is-green{--vg:rgba(125,255,74,.7)}
+.valve.turning::before,.valve:hover::before{opacity:1;animation:none}
+@keyframes v-breathe{50%{opacity:.45}}
+@media (prefers-reduced-motion:reduce){.valve::before{animation:none}}
