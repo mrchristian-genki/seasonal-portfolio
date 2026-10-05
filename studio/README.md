@@ -42,9 +42,10 @@ Log in, then:
   The scale, status tag and plaque are drawn over it in CSS.
 
 - **The header** is the river table: a looping video of the glowing river, blue (`table/a/river-blue-day|night`)
-  or green (`river-day|night`), with the day/night lamps and Marley's visits on top. The day/night switch
-  plays the dusk or dawn clip (`river-[blue-]to-night|day`), and the BLUE/GREEN switch beside it plays the
-  river changing colour (`river-day|night-to-blue|green`), then the matching loop (`table/river.js`). The
+  or green (`river-day|night`), with the day/night lamps and Marley's visits on top. Two brass handwheels on
+  the rock work it (`table/valve.js`): LIGHT plays the dusk or dawn clip (`river-[blue-]to-night|day`), FLOW plays the
+  river changing colour (`river-day|night-to-blue|green`), then the matching loop (`table/river.js`). A wheel turns in step with
+  its change (clockwise to night or green, back to day or blue) and can't be turned again until it's done. The
   colour is remembered on the device. The green clips come from 4K footage (up to 2560 wide); the blue and
   colour-change ones from 1080p (up to 1920, which big Retina screens stretch a little). The day and night stills
   show while a video loads, and instead of it with reduced motion. The other props stay on the full table.
