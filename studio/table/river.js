@@ -31,7 +31,7 @@
   // the green clips came from 4K footage and have a 2560 size; the blue, orange and change ones top out at 1920
   function load(v, name, loop) {
     v.loop = loop;
-    var cap = /blue|green|orange/.test(name), w = cap ? Math.min(W, 1920) : W, q = /orange/.test(name) ? '1' : cap ? '3' : '5';
+    var cap = /blue|green|orange/.test(name), w = cap ? Math.min(W, 1920) : W, q = /orange/.test(name) ? '1' : /blue/.test(name) || name === 'river-day-to-green' ? '4' : cap ? '3' : '5';
     v.innerHTML = '<source src="' + A + name + '-' + w + '.mp4?v=' + q + '" type="video/mp4"><source src="' + A + name + '-1280.webm?v=' + q + '" type="video/webm">';
     v.load();
   }
@@ -56,7 +56,8 @@
   // (green's are the river's first, so have no colour in their names), and the change to the next one
   var LIQ = ['blue', 'green', 'orange'], PRE = { blue: 'river-blue-', green: 'river-', orange: 'river-orange-' };
   var CHANGE = { blue: function (t) { return 'river-' + t + '-to-green'; },
-    green: null, orange: null };            // no footage yet for green to orange or orange to blue: a plain blend
+    green: null,                            // no footage yet for green to orange (nor orange to blue by night):
+    orange: function (t) { return t === 'day' ? 'river-day-orange-to-blue' : null; } };   // a plain blend
   var liq = 'blue';
   try { var kept = localStorage.getItem('st-flow'); if (LIQ.indexOf(kept) >= 0) liq = kept; } catch (e) {}
   function stills(n) { R.classList.toggle('is-night', n); LIQ.forEach(function (l) { R.classList.toggle('is-' + l, liq === l); }); }
