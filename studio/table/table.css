@@ -364,3 +364,60 @@
 .st-hero:has(.table.night) .tgl{background-color:#888}
 .st-hero:has(.table.night) .tgl .tg-lbl{opacity:.85}
 @media (max-width:640px){.st-ctl{gap:6px}.tgl{padding:5px 8px 4px;font-size:6.5px;letter-spacing:.05em}.tg-row{gap:7px}}
+
+/* COMPACT PANEL: the dial (the logo, turning with the time of day and ringed in the liquid's colour) at the
+   panel's full height on the left; the nameplate and the two controls stacked tight beside it, the same width.
+   STUDIO in Cinzel (Natanael Gama, SIL Open Font License), cut into the brass like an engraved plaque. */
+@font-face{font-family:"Cinzel";src:url(../assets/fonts/cinzel.woff2) format("woff2");font-weight:400 900;font-display:swap}
+.st-label .st-dn{grid-template-columns:auto auto;grid-template-rows:auto auto;column-gap:14px;row-gap:7px;padding:11px 14px 11px 12px}
+.st-dn .pipe{grid-row:1 / span 2}
+.st-dn .st-dial{grid-column:1;grid-row:1 / span 2;width:clamp(92px,7.6vw,112px)}
+.st-dn .st-plate{grid-column:2;grid-row:1;padding:7px 16px 6px}
+.st-plate::before{inset:3px}
+.st-plate h1{font:700 clamp(24px,2.1vw,30px)/1 "Cinzel",Georgia,serif;letter-spacing:.2em;text-transform:uppercase;margin-right:-.2em}
+.st-plate p{margin-top:3px;font:700 7.5px/1 "Cinzel",Georgia,serif;letter-spacing:.16em;color:#4a3214}
+.st-ctl{grid-column:2;grid-row:2;justify-content:space-between;gap:8px;margin:0}
+.st-ctl .tgl{flex:1}
+/* the dial's glass ringed in the liquid's colour, the ring passing to the new colour once the river has changed */
+.st-dial::after{content:"";position:absolute;inset:9%;border-radius:50%;pointer-events:none;z-index:3;mix-blend-mode:screen;
+  box-shadow:0 0 10px 2px rgba(var(--liq,60,228,255),.55),inset 0 0 12px 1px rgba(var(--liq,60,228,255),.45);transition:box-shadow 1.2s ease}
+.st-hero:has(.table.night) .st-dial::after{box-shadow:0 0 14px 4px rgba(var(--liq,60,228,255),.7),inset 0 0 16px 3px rgba(var(--liq,60,228,255),.6)}
+@media (max-width:640px){
+  .st-label .st-dn{column-gap:9px;row-gap:6px;padding:8px 10px 8px 9px}
+  .st-dn .st-dial{width:74px}
+  .st-dn .st-plate{padding:5px 10px 4px}
+  .st-plate h1{font-size:19px;letter-spacing:.16em;margin-right:-.16em}
+  .st-ctl{gap:6px}
+}
+/* the panel ties the scene together: a touch bigger on wide screens, and lit by the liquid, a halo of its colour
+   around the frame and in the engraving, as the river and the footer pipe are (brighter at night) */
+@media (min-width:641px){
+  .st-dn .st-dial{width:clamp(108px,8.8vw,138px)}
+  .st-plate h1{font-size:clamp(28px,2.6vw,38px)}
+  .st-plate p{font-size:8.5px}
+  .st-ctl .tgl{font-size:9.5px;padding:7px 12px 6px}
+  .st-ctl .lamp,.st-ctl .tg-sw{width:15px;height:15px}
+}
+.st-label .st-dn{transition:box-shadow 1.2s ease;
+  box-shadow:inset 0 0 0 2px rgba(0,0,0,.45),inset 0 2px 0 rgba(255,220,160,.25),0 0 0 1px rgba(0,0,0,.6),10px 14px 18px rgba(8,4,0,.65),
+    0 0 22px 2px rgba(var(--liq,60,228,255),.28)}
+.st-hero:has(.table.night) .st-label .st-dn{filter:none;
+  box-shadow:inset 0 0 0 2px rgba(0,0,0,.45),inset 0 2px 0 rgba(255,220,160,.25),0 0 0 1px rgba(0,0,0,.6),10px 14px 18px rgba(8,4,0,.65),
+    0 0 30px 5px rgba(var(--liq,60,228,255),.42)}
+.st-plate h1{transition:text-shadow 1.2s ease;
+  text-shadow:0 1px 0 rgba(255,236,190,.65),0 -1px 0 rgba(0,0,0,.45),0 0 10px rgba(var(--liq,60,228,255),.28)}
+.st-hero:has(.table.night) .st-plate h1{text-shadow:0 1px 0 rgba(255,236,190,.5),0 -1px 0 rgba(0,0,0,.45),0 0 12px rgba(var(--liq,60,228,255),.55)}
+/* the liquid's light along the inside of the frame too, so it reads over a river of the same colour */
+.st-label .st-dn::after{content:"";position:absolute;inset:0;border-radius:7px;pointer-events:none;z-index:1;transition:box-shadow 1.2s ease;
+  box-shadow:inset 0 0 16px 1px rgba(var(--liq,60,228,255),.22)}
+.st-hero:has(.table.night) .st-label .st-dn::after{box-shadow:inset 0 0 20px 2px rgba(var(--liq,60,228,255),.38)}
+/* the site links as small brass plates, the STUDIO nameplate's kin, so the header reads as one set of fittings */
+.st-hero .st-nav a,.st-hero .st-nav button{rotate:0deg;font:700 11px/1 "Cinzel",Georgia,serif;letter-spacing:.12em;text-transform:uppercase;color:#2b1806;
+  padding:7px 12px 6px;border-radius:4px;border:1.5px solid transparent;text-shadow:0 1px 0 rgba(255,236,190,.6);
+  background:repeating-linear-gradient(90deg,rgba(255,255,255,.07) 0 1px,transparent 1px 2px),linear-gradient(180deg,#e2c483,#b8944f 45%,#9a7a3c 70%,#caa865) padding-box,
+    linear-gradient(135deg,#6b4a1c,#f3dc9c 40%,#7d5a24 70%,#e3c47f) border-box;
+  box-shadow:inset 0 1px 0 rgba(255,245,210,.5),2px 3px 5px rgba(0,0,0,.55)}
+.st-hero .st-nav a:hover,.st-hero .st-nav button:hover{background:repeating-linear-gradient(90deg,rgba(255,255,255,.07) 0 1px,transparent 1px 2px),linear-gradient(180deg,#f0d696,#c8a45c 45%,#a8873f 70%,#d8b670) padding-box,
+    linear-gradient(135deg,#6b4a1c,#f3dc9c 40%,#7d5a24 70%,#e3c47f) border-box}
+.st-hero:has(.table.night) .st-nav a,.st-hero:has(.table.night) .st-nav button{filter:brightness(.85)}
+@media (max-width:640px){.st-hero .st-nav a,.st-hero .st-nav button{font-size:10px;padding:6px 9px 5px}}

@@ -46,7 +46,7 @@ $in = studio_logged_in();
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&family=Special+Elite&display=swap">
 <link rel="stylesheet" href="../css/route-dash.css?v=<?= STUDIO_VERSION ?>-3">
 <link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>-38">
-<link rel="stylesheet" href="table/table.css?v=63">
+<link rel="stylesheet" href="table/table.css?v=64">
 </head>
 <?php if (!$in): ?>
 <body class="login">
@@ -141,9 +141,9 @@ $in = studio_logged_in();
 <script src="assets/studio.js?v=<?= STUDIO_VERSION ?>-34"></script>
 <?php endif; ?>
 <script src="table/table.js?v=25"></script>
-<script src="table/river.js?v=17"></script>
+<script src="table/river.js?v=18"></script>
 <script src="table/switch.js?v=8"></script>
-<script src="table/toggle.js?v=2"></script>
+<script src="table/toggle.js?v=3"></script>
 <script src="table/foot.js?v=2"></script>
 <script src="table/shelf.js?v=22"></script>
 </body>

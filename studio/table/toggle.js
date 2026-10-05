@@ -49,6 +49,7 @@
   // done: the old lamp fades out as the new one comes up to a steady glow, and the slot empties
   function settle(t) {
     t.lamps.forEach(function (l) { l.classList.remove('go'); });
+    if (t.kind === 'flow') ring();
     var from = t.lit.slice(), to = t.at(), t0 = performance.now();
     (function step(now) {
       var p = Math.min(1, (now - t0) / (calm ? 200 : GLOW)), e = p * p * (3 - 2 * p);
@@ -56,6 +57,9 @@
       if (p < 1) requestAnimationFrame(step);
     })(t0);
   }
+  // the dial's ring takes the liquid's colour
+  function ring() { var p = document.querySelector('.st-dn'); if (p && ts.flow) p.style.setProperty('--liq', COL.flow[ts.flow.at()]); }
+  ring();
   document.addEventListener('river:turn', function (e) {
     var t = ts[e.detail.kind]; if (!t) return;
     t.live = true; progress(t, e.detail.p);
