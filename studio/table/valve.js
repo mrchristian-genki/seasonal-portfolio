@@ -4,8 +4,8 @@
    windows; the lever rests over the one for the setting that's off, and the uncovered one glows (LIGHT:
    amber for day, blue for night; FLOW: blue, green). Throwing the lever turns the river: it swings across
    in step with the change (river.js reports how far it has got), heavy at first and settling at the end;
-   the glows (the windows, the pool of light around the valve, its lamp or tube) keep the old setting's
-   colour all the way, the light just flickering faintly, and only once the lever has settled do they fade
+   the glows (the windows and the pool of light around the valve) keep the old setting's
+   colour all the way, and only once the lever has settled do they fade
    over to the new one. It can't be thrown again until the change is done (the button is disabled). */
 (function () {
   'use strict';
@@ -14,8 +14,8 @@
   var valves = { light: [], flow: [] };
   // the glow colours: a for day or blue, b for night or green (rgba)
   var COL = {
-    light: { vg: [[255, 170, 60, .75], [90, 160, 255, .8]], lc: [[255, 176, 70, .55], [120, 175, 255, .6]] },
-    flow: { vg: [[60, 228, 255, .7], [125, 255, 74, .7]], lc: [[70, 228, 255, .5], [130, 255, 80, .5]] }
+    light: { vg: [[255, 170, 60, .75], [90, 160, 255, .8]] },
+    flow: { vg: [[60, 228, 255, .7], [125, 255, 74, .7]] }
   };
   var GLOW = 1400;                                 // how long the glow takes to cross over at the end
   function mix(c, g) {
@@ -23,11 +23,10 @@
     return 'rgba(' + Math.round(m(0)) + ',' + Math.round(m(1)) + ',' + Math.round(m(2)) + ',' + m(3).toFixed(3) + ')';
   }
   [].forEach.call(document.querySelectorAll('.valve'), function (b) {
-    var lt = b.querySelector('.light'), id = b.getAttribute('data-for') || b.id, main = document.getElementById(id);
+    var id = b.getAttribute('data-for') || b.id, main = document.getElementById(id);
     if (!main) return;
     var cls = id === 'flow' ? 'is-green' : 'is-night';
     var v = { b: b, lever: b.querySelector('.lever'), ga: b.querySelector('.ga'), gb: b.querySelector('.gb'),
-      light: lt, la: lt && lt.querySelector('.ca'), lb: lt && lt.querySelector('.cb'),
       kind: b.getAttribute('data-kind'), g: 1, angle: 0, from: 0, to: 0, goal: 0, live: false, timer: null };
     v.on = function () { return main.classList.contains(cls); };
     // a copy wears the header valve's setting and name
@@ -54,12 +53,6 @@
     v.gb.style.opacity = (1 - v.g).toFixed(3);
     var c = COL[v.kind];
     v.b.style.setProperty('--vg', mix(c.vg, v.g));
-    if (v.light) {
-      var flick = v.b.classList.contains('turning') && !calm ? 0.88 + 0.12 * Math.random() : 1;
-      v.la.style.opacity = (v.g * flick).toFixed(3); v.lb.style.opacity = ((1 - v.g) * flick).toFixed(3);
-      v.light.style.setProperty('--lit', flick.toFixed(3));
-      v.light.style.setProperty('--lc', mix(c.lc, v.g));
-    }
   }
   // once the lever has settled, the glow crosses over to the new setting, slowly
   function settle(v) {
