@@ -100,6 +100,7 @@
 .st-switch .sw-night{opacity:0}
 .st-switch.is-night .sw-night{opacity:1}
 .st-switch.is-night .sw-day{opacity:0}
+.st-switch:disabled{cursor:progress}
 .st-switch:focus-visible{outline:3px solid #f6d58a;outline-offset:6px;border-radius:8px}
 .sw-label{position:absolute;left:19.95%;width:27.45%;height:11.6%;display:flex;align-items:center;justify-content:center;
   font:700 clamp(8px,.85vw,11px)/1 "Courier New",Courier,monospace;letter-spacing:.14em;color:#3d3022;opacity:.82;pointer-events:none}
@@ -149,13 +150,13 @@
     radial-gradient(circle at 50% 50%,#fff0c4 0 1.6px,#7a5a26 2.4px,#3a2610 3.1px,transparent 3.8px) 18px 0/44px 100% repeat-x,
     linear-gradient(180deg,#e6c983,#a87e3a 40%,#7a5520 75%,#4a3212);
   box-shadow:0 -1px 0 rgba(255,235,180,.35),inset 0 -1px 0 rgba(0,0,0,.6)}
-.st-hero .river{overflow:hidden}
+.st-hero .river{overflow:hidden;isolation:isolate}
 /* and the rail's shadow falls on the page below */
 .st-hero + main{background:linear-gradient(180deg,rgba(0,0,0,.45),rgba(0,0,0,0)) top/100% 18px no-repeat}
 /* four stills: green by day underneath, then green by night, blue by day and blue by night over it */
 .river .rv-still.night,.river .rv-still.bday,.river .rv-still.bnight{opacity:0;transition:opacity 1.2s ease}
 .river.is-night:not(.is-blue) .rv-still.night,.river.is-blue:not(.is-night) .rv-still.bday,.river.is-blue.is-night .rv-still.bnight{opacity:1}
-.river video{opacity:0;transition:opacity .45s ease}
+.river video{opacity:0;transition:opacity 1.2s ease-in-out}
 .river video.show{opacity:1}
 .st-hero .table{background:none}
 .st-hero .table::after{display:none}
