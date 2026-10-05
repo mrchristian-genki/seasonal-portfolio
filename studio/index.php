@@ -45,7 +45,7 @@ $in = studio_logged_in();
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&family=Special+Elite&display=swap">
 <link rel="stylesheet" href="../css/route-dash.css?v=<?= STUDIO_VERSION ?>-3">
-<link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>-32">
+<link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>-37">
 <link rel="stylesheet" href="table/table.css?v=59">
 </head>
 <?php if (!$in): ?>
@@ -88,7 +88,7 @@ $in = studio_logged_in();
         <button type="button" class="tgl" id="dayNight" data-kind="light" role="switch" aria-checked="false" aria-label="Day. Switch to night">
           <span class="tg-row"><span class="lamp la" aria-hidden="true"></span><span class="tg-sw" aria-hidden="true"><span class="bat"></span></span><span class="lamp lb" aria-hidden="true"></span></span>
           <span class="tg-bar" aria-hidden="true"><span></span></span>
-          <span class="tg-lbl" aria-hidden="true">LIGHTS ON/OFF</span>
+          <span class="tg-lbl" aria-hidden="true">DAY/NIGHT</span>
         </button>
         <button type="button" class="tgl" id="flow" data-kind="flow" role="switch" aria-checked="false" aria-label="Blue river. Switch to green">
           <span class="tg-row"><span class="lamp la" aria-hidden="true"></span><span class="tg-sw" aria-hidden="true"><span class="bat"></span></span><span class="lamp lb" aria-hidden="true"></span></span>
@@ -103,24 +103,22 @@ $in = studio_logged_in();
 <main class="login-main">
 <form method="post" class="login-box" autocomplete="on">
   <h1>Studio</h1>
-  <p class="sub">Field Notes, behind the scenes.</p>
   <input type="hidden" name="act" value="login">
-  <label>Username <input type="text" name="username" autocomplete="username" autocapitalize="none" spellcheck="false" required autofocus></label>
-  <label>Password <input type="password" name="password" autocomplete="current-password" required></label>
-  <?php if ($error): ?><p class="err"><?= h($error) ?></p><?php endif; ?>
+  <label><span>Username</span> <input type="text" name="username" placeholder="Username" autocomplete="username" autocapitalize="none" spellcheck="false" required autofocus></label>
+  <label><span>Password</span> <input type="password" name="password" placeholder="Password" autocomplete="current-password" required></label>
   <button type="submit">Log in</button>
+  <?php if ($error): ?><p class="err"><?= h($error) ?></p><?php endif; ?>
 </form>
 <section class="about-studio" aria-labelledby="whatH">
   <h2 id="whatH">What the Studio does</h2>
-  <p class="lede">The Studio is where a day out becomes a Field Note: a written post with photos and a map, and a short episode for the Field Notes podcast. It's a private workshop, so it needs a login; what it makes is public on <a href="/play/">Play</a>.</p>
+  <p class="lede">Where a day out becomes a Field Note: a post with photos and a map, and a short podcast episode. Private to work in; what it makes is public on <a href="/play/">Play</a>.</p>
   <ol class="steps">
-    <li><b>Bring it in</b><span>Photos, video, the ride's track and any notes go into a Google Drive folder. One tap copies them to the server.</span></li>
-    <li><b>Sort it out</b><span>Each folder becomes a draft note, grouped by day. Photos are resized and their location data removed before they leave the device, and private places are trimmed off the track.</span></li>
-    <li><b>Draft with Claude</b><span>Claude reads the notes, the track and the photos, then writes the post, the captions and an episode script. Where it isn't sure, it asks, and the answers go back in one pass.</span></li>
-    <li><b>Record the episode</b><span>The script is read by a voice tool. Drop in the audio and it's levelled to podcast loudness and made into an MP3 right here in the browser.</span></li>
-    <li><b>Publish</b><span>Save keeps everything in the site's repository. Publish, and Play and the podcast feed update in about a minute.</span></li>
+    <li><b>Bring it in</b><span>Photos, video, the track and notes, copied from Drive.</span></li>
+    <li><b>Sort it out</b><span>A draft per day; locations stripped, private places trimmed.</span></li>
+    <li><b>Draft with Claude</b><span>The post, captions and script, with questions where unsure.</span></li>
+    <li><b>Record</b><span>The episode, levelled to podcast loudness in the browser.</span></li>
+    <li><b>Publish</b><span>Play and the podcast feed update in about a minute.</span></li>
   </ol>
-  <p class="more"><a href="/play/">See what it's made on Play →</a></p>
 </section>
 </main>
 <?php else: ?>

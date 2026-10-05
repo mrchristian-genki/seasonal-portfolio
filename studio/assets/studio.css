@@ -241,22 +241,45 @@ body.busy{overflow:hidden}
 .savebar{z-index:100}
 body:has(.savebar){padding-bottom:64px}
 #audio .credit{display:block;margin-top:6px}
-/* the login page explains itself: what the Studio is for, in five steps on brass-trimmed cards */
-.login-main{flex-direction:column;gap:44px}
-.about-studio{width:min(100%,880px);color:#e9dcc0}
-.about-studio h2{margin:0 0 10px;text-align:center;font:400 26px/1.15 "Special Elite",Georgia,serif;letter-spacing:.04em;color:#e2c483}
-.about-studio .lede{max-width:640px;margin:0 auto 22px;text-align:center;color:#c9b48e;line-height:1.55}
+/* the login page, compact enough that the header, the form, what the Studio does and the footer all fit on
+   one screen: the form on one line, the five steps as small cards in a row */
+body.login .login-main{flex-direction:column;gap:clamp(14px,2.4vh,26px);padding:clamp(14px,2.6vh,30px) 16px}
+body.login .login-box{flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px 12px;width:min(100%,720px);padding:14px 18px}
+body.login .login-box h1{font-size:30px;margin:0 6px 0 0}
+body.login .login-box label{flex:1 1 150px} body.login .login-box label span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+body.login .login-box input{width:100%;padding:9px 11px}
+body.login .login-box button{padding:9px 20px}
+body.login .login-box .err{flex-basis:100%;margin:0;text-align:center}
+.about-studio{width:min(100%,1040px);color:#e9dcc0}
+.about-studio h2{margin:0 0 6px;text-align:center;font:400 20px/1.15 "Special Elite",Georgia,serif;letter-spacing:.04em;color:#e2c483}
+.about-studio .lede{max-width:680px;margin:0 auto 14px;text-align:center;color:#c9b48e;line-height:1.45;font-size:14px}
 .about-studio a{color:#e2c483}
-.about-studio .steps{list-style:none;counter-reset:st;margin:0;padding:0;display:grid;grid-template-columns:1fr;gap:14px}
-@media (min-width:760px){.about-studio .steps{grid-template-columns:repeat(6,1fr)} .about-studio .steps li{grid-column:span 2} .about-studio .steps li:nth-child(4){grid-column:2/4} .about-studio .steps li:nth-child(5){grid-column:4/6}}
-.about-studio .steps li{counter-increment:st;position:relative;padding:16px 16px 16px 58px;border-radius:8px;
-  background:linear-gradient(180deg,rgba(60,40,22,.85),rgba(34,22,12,.9));border:1px solid #6b4f28;box-shadow:0 6px 14px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,230,170,.08)}
-.about-studio .steps li::before{content:counter(st);position:absolute;left:14px;top:14px;width:30px;height:30px;border-radius:50%;
-  display:grid;place-items:center;font:800 15px/1 "Nunito",system-ui,sans-serif;color:#2a1c0a;
+.about-studio .steps{list-style:none;counter-reset:st;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media (min-width:760px){.about-studio .steps{grid-template-columns:repeat(5,1fr);gap:10px}}
+.about-studio .steps li{counter-increment:st;position:relative;padding:10px 10px 10px 40px;border-radius:7px;
+  background:linear-gradient(180deg,rgba(60,40,22,.85),rgba(34,22,12,.9));border:1px solid #6b4f28;box-shadow:0 4px 10px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,230,170,.08)}
+.about-studio .steps li:last-child:nth-child(odd){grid-column:1 / -1}
+@media (min-width:760px){.about-studio .steps li:last-child:nth-child(odd){grid-column:auto}}
+.about-studio .steps li::before{content:counter(st);position:absolute;left:9px;top:10px;width:22px;height:22px;border-radius:50%;
+  display:grid;place-items:center;font:800 12px/1 "Nunito",system-ui,sans-serif;color:#2a1c0a;
   background:radial-gradient(circle at 35% 30%,#fbe3a2,#c99a48 60%,#7d5a22);box-shadow:0 2px 4px rgba(0,0,0,.5)}
-.about-studio .steps b{display:block;margin:4px 0 4px;color:#f1e3c4}
-.about-studio .steps span{display:block;font-size:14.5px;line-height:1.5;color:#c9b48e}
-.about-studio .more{margin:20px 0 0;text-align:center;font-weight:700}
+.about-studio .steps b{display:block;margin:2px 0 3px;font-size:14px;color:#f1e3c4}
+.about-studio .steps span{display:block;font-size:12.5px;line-height:1.4;color:#c9b48e}
+body.login .st-hero{--h:clamp(220px,27vh,255px)} body.login .st-foot{--h:clamp(70px,10vh,200px)}
+@media (max-width:640px){body.login .st-hero{--h:190px} body.login .st-foot{--h:clamp(48px,7vh,170px)} body.login .login-main{gap:12px;padding:12px 14px}}
+@media (max-width:640px){
+  body.login .login-box h1{display:none}
+  body.login .login-box{padding:10px 12px;gap:8px}
+  body.login .login-box label{flex:1 1 40%}
+  body.login .login-box button{flex-basis:100%;padding:8px}
+  .about-studio h2{font-size:17px}
+  .about-studio .lede{font-size:12.5px;margin-bottom:10px}
+  /* the steps as one tight list: a number, the step, and a line */
+  .about-studio .steps{grid-template-columns:1fr;gap:5px}
+  .about-studio .steps li{padding:6px 10px 6px 36px}
+  .about-studio .steps li::before{top:6px;width:20px;height:20px;font-size:11px}
+  .about-studio .steps b{display:inline;margin:0 6px 0 0;font-size:13px}
+  .about-studio .steps span{display:inline;font-size:12px}}
 /* audio from Drive: a role for each file; voice notes play above Your notes */
 .dfiles{list-style:none;margin:6px 0 0;padding:0}
 .dfiles li{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line)}
