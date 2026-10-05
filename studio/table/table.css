@@ -348,6 +348,19 @@
 /* on the wood just below the pipe. The clips cover the footer at the height Hv = max(footer, width ×
    400/1920), set 65% down where they're taller than it (more wood below the pipe); the pipe is the middle
    22% of a clip, so its bottom edge is at Hv × .61 − (Hv − footer) × .65 */
-.ft-valves{position:absolute;z-index:2;left:50%;top:calc(max(var(--h), 100vw * .2083) * -.04 + var(--h) * .65 + 6px);translate:-50% 0;display:flex;gap:clamp(18px,2vw,30px);align-items:flex-end}
+.ft-valves{position:absolute;z-index:2;left:50%;top:calc(max(var(--h), 100vw * .2083) * -.04 + var(--h) * .65 + 6px);translate:-50% 0;display:flex;gap:clamp(64px,6vw,90px);align-items:flex-end}
 .ft-valves .valve{position:relative;left:auto;top:auto;translate:none;width:clamp(46px,3.8vw,56px)}
 .st-foot.night .valve .n{opacity:1}
+
+/* the footer valves' name plates: brushed steel, four screw holes, the words cut through as a stencil */
+@font-face{font-family:"Allerta Stencil";src:url(../assets/fonts/allerta-stencil.woff2) format("woff2");font-display:swap}
+.vplate{position:absolute;left:50%;top:86%;translate:-50% 0;z-index:3;white-space:nowrap;pointer-events:none;
+  padding:.42em .9em .36em;border-radius:3px;font:400 clamp(8px,.62vw,10px)/1 "Allerta Stencil","Courier New",monospace;letter-spacing:.08em;
+  color:#1d1a16;text-shadow:0 1px 0 rgba(255,255,255,.35);
+  background:
+    radial-gradient(circle at 5px 5px,#3a342c 0 1.2px,transparent 1.6px),radial-gradient(circle at calc(100% - 5px) 5px,#3a342c 0 1.2px,transparent 1.6px),
+    radial-gradient(circle at 5px calc(100% - 5px),#3a342c 0 1.2px,transparent 1.6px),radial-gradient(circle at calc(100% - 5px) calc(100% - 5px),#3a342c 0 1.2px,transparent 1.6px),
+    repeating-linear-gradient(90deg,rgba(255,255,255,.05) 0 1px,transparent 1px 3px),
+    linear-gradient(160deg,#d9dad6,#a9aba6 45%,#c6c8c3 70%,#9c9e99);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.55),inset 0 -1px 0 rgba(0,0,0,.25),2px 3px 4px rgba(0,0,0,.5)}
+.st-foot.night .vplate{filter:brightness(.62) saturate(.8)}
