@@ -34,13 +34,16 @@
     v.innerHTML = '<source src="' + A + name + '-' + w + '.mp4?v=' + q + '" type="video/mp4"><source src="' + A + name + '-1280.webm?v=' + q + '" type="video/webm">';
     v.load();
   }
-  // bring a layer to the front once it's really playing; the other fades out underneath
+  // Bring a layer to the front once it's really playing and fade it in over the other, which keeps playing
+  // underneath for the whole fade (XF), so the two liquids blend instead of jumping. The layers swap by
+  // z-index, not by moving them in the page, which could hitch a playing video.
+  var XF = 1200, z = 1;
   function show(v) {
     return new Promise(function (ok) {
       var go = function () {
         v.removeEventListener('playing', go);
-        v.classList.add('show'); R.appendChild(v);
-        if (front && front !== v) { var old = front; setTimeout(function () { old.classList.remove('show'); old.pause(); }, 450); }
+        v.style.zIndex = ++z; v.classList.add('show');
+        if (front && front !== v) { var old = front; setTimeout(function () { if (front !== old) { old.classList.remove('show'); old.pause(); } }, XF + 100); }
         front = v; ok();
       };
       v.addEventListener('playing', go);
@@ -70,17 +73,28 @@
     if (calm || !started || !front) { stills(night); if (started && !calm) loopFor(night); return; }
     play('river-' + (night ? 'night' : 'day') + '-to-' + (b ? 'blue' : 'green'));
   }
+  // A change clip: it fades in over the loop, the next loop is readied underneath, and it fades in over the
+  // clip's last second and a bit, both playing. The switches wait until it's all done.
   function play(clip) {
-    var n = night, token = {}; busy = token;
+    var n = night, token = {}; busy = token; lock(true);
     var t = other(); load(t, clip, false);
-    var done = false, finish = function () {
+    var next = null, done = false;
+    var finish = function () {
       if (done || busy !== token) return; done = true;
-      stills(n); loopFor(n);
+      stills(n);
+      var v = next || other(); if (!next) load(v, loopName(n), true);
+      show(v).then(function () { setTimeout(function () { if (busy === token) { busy = null; lock(false); } }, XF); });
     };
+    t.addEventListener('timeupdate', function () { if (t.duration && t.duration - t.currentTime <= XF / 1000 + 0.2) finish(); });
     t.addEventListener('ended', finish, { once: true });
     t.addEventListener('error', finish, { once: true });
-    show(t).then(function () { setTimeout(finish, 9000); });   // in case 'ended' never comes
+    show(t).then(function () {
+      setTimeout(function () { if (busy === token && !done) { next = other(); load(next, loopName(n), true); } }, XF + 200);
+      setTimeout(finish, 9000);                               // in case the clip never gets to its end
+    });
   }
+  var switches = ['dayNight', 'flow'].map(function (id) { return document.getElementById(id); }).filter(Boolean);
+  function lock(on) { switches.forEach(function (s) { s.disabled = on; }); }
 
   // the colour switch, on the rock beside the day/night one
   var fl = document.getElementById('flow');
