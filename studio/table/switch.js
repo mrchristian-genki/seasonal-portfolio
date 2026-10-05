@@ -1,4 +1,4 @@
-/* STUDIO SWITCH: the day/night valve (LIGHT; the footer's copy throws it too). Turning it flips the whole
+/* STUDIO SWITCH: the LIGHTS toggle on the STUDIO panel. Turning it flips the whole
    Studio (header table, footer, lamps, the dial beside it) and remembers the choice on this device; with
    no choice the Studio follows the clock (night from 7 pm to 6 am). */
 (function () {

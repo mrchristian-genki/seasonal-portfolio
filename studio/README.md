@@ -42,20 +42,13 @@ Log in, then:
   The scale, status tag and plaque are drawn over it in CSS.
 
 - **The header** is the river table: a looping video of the glowing river, blue (`table/a/river-blue-day|night`)
-  or green (`river-day|night`), with the day/night lamps and Marley's visits on top. Two small valves set into
-  the rocks work it (`table/valve.js`; photos `valve-`, `lever-` and the window glows `light|flow-day|night-a|b`):
-  FLOW by the STUDIO panel, LIGHT on the right: LIGHT plays the dusk or dawn clip (`river-[blue-]to-night|day`), FLOW plays the
-  river changing colour (`river-day|night-to-blue|green`), then the matching loop (`table/river.js`). The lever covers the window of the
-  setting that's off and the other glows (amber day, blue night; blue, green); it swings across in step with
-  the change, the glow crossing with it, and can't be thrown again until it's done. The footer is a glowing pipe in the crack between two planks (`table/foot.js`, clips `foot-*`), the same liquid
-  flowing through it right to left, following the header's changes with its own dusk, dawn and colour clips (the
-  video only loads once the footer comes near the screen). It carries the same pair of valves, with their lights,
-  set on the pipe (copies that throw
-  the header valves, so both swing together). The
-  colour is remembered on the device, and the address carries both settings after the view
-  (`#notes/night-green`, `#note/<id>/day-blue`), so a link opens the Studio the same way. The green clips come from 4K footage (up to 2560 wide); the blue and
-  colour-change ones from 1080p (up to 1920, which big Retina screens stretch a little). The day and night stills
-  show while a video loads, and instead of it with reduced motion. The other props stay on the full table.
+  or green (`river-day|night`), with the day/night lamps and Marley's visits on top. Two small controls on the STUDIO panel work it
+  (`table/toggle.js`, drawn in CSS): LIGHTS ON/OFF and CHANGE LIQUID, each a bat-handle toggle between two jewel
+  pilot lamps (amber and blue; blue and green) on a stencilled steel plate. A tap throws the toggle; while the
+  river changes, the lamp it's going to breathes slowly and a hairline slot fills in step, and only then does the
+  old lamp go out. Both wait until the change is done. The footer is a glowing pipe in the crack between two
+  planks (`table/foot.js`, clips `foot-*`), the same liquid flowing right to left, following the header's changes
+  with its own dusk, dawn and colour clips (the video only loads once the footer comes near the screen).
 
 Not in the Studio yet: episode audio (render it, then hand it to a Claude Code session to master and
 attach), animated clips and the prints-on-a-table layout.

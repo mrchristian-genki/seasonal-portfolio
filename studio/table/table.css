@@ -306,64 +306,53 @@
 @keyframes holo-glitch{0%{opacity:1;translate:-47% -62%;filter:hue-rotate(40deg)}25%{opacity:.3;translate:-54% -62%}50%{opacity:.05;translate:-50% -62%}75%{opacity:.5;translate:-46% -62%;filter:hue-rotate(-30deg)}100%{opacity:1;translate:-50% -62%}}
 @media (prefers-reduced-motion:reduce){.shelf-prop .holo,.shelf-prop .beam,.shelf-prop .holo .scan{animation:none}}
 
-/* the two valves, small, each set into a rock in the river footage, so they stay on their rocks at every
-   screen size: FLOW on the big rock right of the STUDIO panel, LIGHT on the rock to the right. The body,
-   lever and glows have day and night photos that swap with the header. */
-.valve{position:absolute;z-index:50;padding:0;border:0;background:none;cursor:pointer;width:clamp(44px,3.9vw,58px);translate:-50% -50%;
-  -webkit-tap-highlight-color:transparent}
-#flow{left:calc(var(--rv-x,0px) + var(--rv-w,100%) * .435);top:min(calc(var(--rv-y,0px) + var(--rv-h,100%) * .66),calc(100% - 34px))}
-#dayNight{left:min(calc(var(--rv-x,0px) + var(--rv-w,100%) * .80),calc(100% - 34px));top:min(calc(var(--rv-y,0px) + var(--rv-h,100%) * .6),calc(100% - 34px))}
-.vbody{position:relative;display:block;aspect-ratio:1;filter:drop-shadow(3px 6px 4px rgba(8,4,0,.7))}
-.vbody img,.vbody .glow{position:absolute;inset:0;width:100%;height:100%;display:block}
-/* the window glows; valve.js sets how lit each one is as the lever swings */
-.vbody .glow{opacity:0}
-/* the lever: its pivot eye (50%, 82% of the lever photo) on the body's hex boss (the centre) */
-.lever{position:absolute;left:39.01%;top:-.14%;width:21.97%;aspect-ratio:53/147;transform-origin:50% 82.03%;will-change:transform;
-  filter:drop-shadow(2px 4px 2px rgba(8,4,0,.6))}
-.lever img{position:absolute;inset:0;width:100%;height:100%}
-.valve .n{opacity:0;transition:opacity 1.2s ease}
-.st-hero:has(.table.night) .valve .n{opacity:1}
-.valve:hover:not(:disabled) .vbody{filter:drop-shadow(3px 6px 4px rgba(8,4,0,.7)) brightness(1.12)}
-.valve:focus-visible{outline:3px solid #f6d58a;outline-offset:4px;border-radius:50%}
-.valve:disabled{cursor:progress;opacity:1}
-.valve:disabled:not(.turning) .vbody{filter:drop-shadow(3px 6px 4px rgba(8,4,0,.7)) brightness(.7) saturate(.7)}
-@media (max-width:640px){.valve{width:40px}
-  /* a phone: the two valves side by side on the strip of wood right of the STUDIO panel, with their name
-     plates (no shelf props or visits there, so they have room) */
-  #flow{left:calc(100% - 142px);top:34px}
-  #dayNight{left:calc(100% - 54px);top:34px}}
-/* each valve sits in a soft pool of its own light, in the colour of its lit window, breathing slowly so
-   the eye finds it; brighter while it's being thrown */
-.valve::before{content:"";position:absolute;left:50%;top:50%;width:230%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;z-index:-1;pointer-events:none;
-  background:radial-gradient(circle,var(--vg) 0,var(--vg) 18%,transparent 60%);mix-blend-mode:screen;opacity:.8;transition:opacity .6s ease;animation:v-breathe 4.5s ease-in-out infinite}
-/* --vg (and the lights' --lc) are set by valve.js, which crosses them over only once a lever has settled */
-.valve{--vg:rgba(255,170,60,.75)}
-.valve.turning::before,.valve:hover::before{opacity:1;animation:none}
-@keyframes v-breathe{50%{opacity:.45}}
-@media (prefers-reduced-motion:reduce){.valve::before{animation:none}}
-
-
-/* the footer: the same pair in the middle of the wood, in place of the old lamp plate, with room either
-   side for the shelves */
-/* on the wood just below the pipe. The clips cover the footer at the height Hv = max(footer, width ×
-   400/1920), set 65% down where they're taller than it (more wood below the pipe); the pipe is the middle
-   22% of a clip, so its bottom edge is at Hv × .61 − (Hv − footer) × .65 */
-.ft-valves{position:absolute;z-index:2;left:50%;top:calc(max(var(--h), 100vw * .2083) * -.04 + var(--h) * .65 + 6px);translate:-50% 0;display:flex;gap:clamp(64px,6vw,90px);align-items:flex-end}
-.ft-valves .valve{position:relative;left:auto;top:auto;translate:none;width:clamp(46px,3.8vw,56px)}
-.st-foot.night .valve .n{opacity:1}
-
-/* the footer valves' name plates: brushed steel, four screw holes, the words cut through as a stencil */
 @font-face{font-family:"Allerta Stencil";src:url(../assets/fonts/allerta-stencil.woff2) format("woff2");font-display:swap}
-.vplate{position:absolute;left:50%;top:86%;translate:-50% 0;z-index:3;white-space:nowrap;pointer-events:none;
-  padding:.42em .9em .36em;border-radius:3px;font:400 clamp(8px,.62vw,10px)/1 "Allerta Stencil","Courier New",monospace;letter-spacing:.08em;
-  color:#1d1a16;text-shadow:0 1px 0 rgba(255,255,255,.35);
+
+/* THE CONTROLS, on the STUDIO panel under the nameplate: two small steel plates, each with a bat-handle
+   toggle between two jewel pilot lamps (LIGHTS: amber day, blue night; LIQUID: blue, green), a hairline
+   slot that fills while the river changes, and the name cut through as a stencil. toggle.js sets how lit
+   each lamp is (--a, --b) and how far the slot has filled (--p). */
+.st-label .st-dn{display:grid;grid-template-columns:auto auto;align-items:center}
+.st-dn .pipe{grid-row:1}
+.st-ctl{grid-column:1 / -1;display:flex;justify-content:center;gap:clamp(8px,1.2vw,16px);position:relative;z-index:2;margin-top:2px}
+.tgl{--a:1;--b:0;--p:0;--ca:255,176,70;--cb:110,170,255;
+  display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 12px 5px;border:0;border-radius:3px;cursor:pointer;
+  font:400 8.5px/1 "Allerta Stencil","Courier New",monospace;letter-spacing:.09em;color:#1d1a16;-webkit-tap-highlight-color:transparent;
   background:
-    radial-gradient(circle at 5px 5px,#3a342c 0 1.2px,transparent 1.6px),radial-gradient(circle at calc(100% - 5px) 5px,#3a342c 0 1.2px,transparent 1.6px),
-    radial-gradient(circle at 5px calc(100% - 5px),#3a342c 0 1.2px,transparent 1.6px),radial-gradient(circle at calc(100% - 5px) calc(100% - 5px),#3a342c 0 1.2px,transparent 1.6px),
+    radial-gradient(circle at 5px 5px,#3a342c 0 1.1px,transparent 1.5px),radial-gradient(circle at calc(100% - 5px) 5px,#3a342c 0 1.1px,transparent 1.5px),
+    radial-gradient(circle at 5px calc(100% - 5px),#3a342c 0 1.1px,transparent 1.5px),radial-gradient(circle at calc(100% - 5px) calc(100% - 5px),#3a342c 0 1.1px,transparent 1.5px),
     repeating-linear-gradient(90deg,rgba(255,255,255,.05) 0 1px,transparent 1px 3px),
     linear-gradient(160deg,#d9dad6,#a9aba6 45%,#c6c8c3 70%,#9c9e99);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.55),inset 0 -1px 0 rgba(0,0,0,.25),2px 3px 4px rgba(0,0,0,.5)}
-.st-foot.night .vplate{filter:brightness(.62) saturate(.8)}
-/* the header's valves wear their plates only on a phone, where they sit on the wood */
-.st-hero .vplate{display:none}
-@media (max-width:640px){.st-hero .vplate{display:block;top:92%;font-size:6.5px;letter-spacing:.05em;padding:.5em 1.25em .42em}}
+.tgl[data-kind=flow]{--ca:60,228,255;--cb:125,255,74}
+.tgl:focus-visible{outline:2px solid #f6d58a;outline-offset:3px}
+.tgl:disabled{cursor:progress;opacity:1}
+.tgl:disabled:not(.turning){filter:brightness(.88)}
+.tg-row{display:flex;align-items:center;gap:9px}
+/* a jewel pilot lamp in a knurled bezel: dark glass, lit from inside by its colour */
+.lamp{position:relative;width:11px;height:11px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.35),transparent 40%),radial-gradient(circle,#2b2a28,#121110);
+  box-shadow:0 0 0 1.5px #8d7a52,0 0 0 2.5px #4a3c22,inset 0 1px 2px rgba(0,0,0,.8)}
+.lamp::after{content:"";position:absolute;inset:0;border-radius:50%;opacity:var(--lit);
+  background:radial-gradient(circle at 38% 32%,#fff 0,rgba(var(--c),1) 35%,rgba(var(--c),.75) 70%,rgba(var(--c),.5) 100%);
+  box-shadow:0 0 5px 1px rgba(var(--c),.85),0 0 14px 3px rgba(var(--c),.45)}
+.lamp.la{--c:var(--ca);--lit:var(--a)} .lamp.lb{--c:var(--cb);--lit:var(--b)}
+/* the lamp it's going to breathes, slowly, while the change runs */
+.tgl.turning .lamp.go::after{animation:tg-breathe 1.6s cubic-bezier(.45,0,.55,1) infinite}
+@keyframes tg-breathe{0%,100%{opacity:.12}50%{opacity:.85}}
+/* the bat-handle toggle: a hex nut with a short chrome lever, thrown to one side or the other */
+.tg-sw{position:relative;width:14px;height:14px;border-radius:50%;
+  background:radial-gradient(circle at 40% 35%,#f4f4f0,#9a9c98 55%,#5c5e5a);box-shadow:0 0 0 1px #4a4a46,1px 2px 2px rgba(0,0,0,.5)}
+.tg-sw .bat{position:absolute;left:50%;bottom:50%;width:4px;height:13px;margin-left:-2px;border-radius:2px 2px 1px 1px;transform-origin:50% 100%;
+  background:linear-gradient(90deg,#8d8f8b,#f7f7f4 45%,#a4a6a2);box-shadow:1px 1px 1px rgba(0,0,0,.45);
+  rotate:-32deg;transition:rotate .32s cubic-bezier(.5,1.6,.5,1)}
+.tgl.on .tg-sw .bat{rotate:32deg}
+/* the slot: a hairline that fills while the change runs */
+.tg-bar{width:100%;height:2px;border-radius:1px;background:rgba(40,34,26,.45);box-shadow:inset 0 1px 0 rgba(0,0,0,.4);overflow:hidden}
+.tg-bar span{display:block;height:100%;width:calc(var(--p) * 100%);background:linear-gradient(90deg,rgba(var(--cb),.9),rgba(var(--ca),.9));opacity:0;transition:opacity .4s ease}
+.tgl.turning .tg-bar span{opacity:1}
+.tgl.on .tg-bar span{background:linear-gradient(90deg,rgba(var(--ca),.9),rgba(var(--cb),.9))}
+.tg-lbl{white-space:nowrap;text-shadow:0 1px 0 rgba(255,255,255,.35)}
+.st-hero:has(.table.night) .tgl{filter:brightness(.82)}
+.st-hero:has(.table.night) .tgl .lamp::after{filter:brightness(1.25)}
+@media (max-width:640px){.st-ctl{gap:6px}.tgl{padding:5px 8px 4px;font-size:6.5px;letter-spacing:.05em}.tg-row{gap:7px}}
