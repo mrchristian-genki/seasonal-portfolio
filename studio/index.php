@@ -58,7 +58,7 @@ $alt = 'The Studio by ' . $tod . ': a brass STUDIO panel with its day/night dial
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&family=Special+Elite&display=swap">
 <link rel="stylesheet" href="../css/route-dash.css?v=<?= STUDIO_VERSION ?>-3">
 <link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>-38">
-<link rel="stylesheet" href="table/table.css?v=67">
+<link rel="stylesheet" href="table/table.css?v=68">
 </head>
 <?php if (!$in): ?>
 <body class="login">

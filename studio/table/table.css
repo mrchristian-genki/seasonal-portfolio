@@ -505,3 +505,28 @@ body.login .login-box button{color:color-mix(in srgb,var(--sk-bg),#000 45%);back
 :root.liq-fill .st-plate h1::after{animation:st-wave 3.6s linear infinite,st-refill 2.2s cubic-bezier(.45,0,.3,1)}
 @keyframes st-refill{0%{--wy:80%}35%{--wy:0%}100%{--wy:80%}}
 @media (prefers-reduced-motion:reduce){.st-plate h1::after{animation:none}}
+
+/* GLOWING FITTINGS: a glint of the liquid runs round the button's rim, and its light breathes around it (the
+   call to action); the brass site links and the two toggles catch the same glint and glow when pointed at */
+@property --ga{syntax:"<angle>";inherits:false;initial-value:0deg}
+body.login .login-box button,.st-hero .st-nav a,.st-hero .st-nav button,.st-ctl .tgl{position:relative}
+body.login .login-box button::before,.st-hero .st-nav a::before,.st-hero .st-nav button::before,.st-ctl .tgl::after{
+  content:"";position:absolute;inset:-2px;border-radius:inherit;padding:2px;pointer-events:none;
+  background:conic-gradient(from var(--ga),transparent 0 58%,rgb(var(--lr) var(--lg) var(--lb) / .9) 76%,#fff 81%,rgb(var(--lr) var(--lg) var(--lb) / .9) 86%,transparent 100%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);
+  animation:fit-spin 3.2s linear infinite;opacity:0;transition:opacity .35s ease}
+@keyframes fit-spin{to{--ga:360deg}}
+body.login .login-box button::before{opacity:.85}
+body.login .login-box button{animation:fit-breathe 3.2s ease-in-out infinite;transition:translate .2s ease}
+@keyframes fit-breathe{0%,100%{box-shadow:0 3px 6px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.55),0 0 8px 1px rgb(var(--lr) var(--lg) var(--lb) / .3)}
+  50%{box-shadow:0 3px 6px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.55),0 0 20px 4px rgb(var(--lr) var(--lg) var(--lb) / .65)}}
+body.login .login-box button:hover,body.login .login-box button:focus-visible{translate:0 -1px;animation-duration:1.6s}
+body.login .login-box button:hover::before{animation-duration:1.4s;opacity:1}
+.st-hero .st-nav a:hover::before,.st-hero .st-nav button:hover::before,.st-hero .st-nav a:focus-visible::before,.st-ctl .tgl:hover::after,.st-ctl .tgl:focus-visible::after{opacity:1}
+.st-hero .st-nav a,.st-hero .st-nav button{transition:box-shadow .35s ease,translate .2s ease}
+.st-hero .st-nav a:hover,.st-hero .st-nav button:hover,.st-hero .st-nav a:focus-visible{translate:0 -1px;
+  box-shadow:inset 0 1px 0 rgba(255,245,210,.5),2px 3px 5px rgba(0,0,0,.55),0 0 16px 3px rgb(var(--lr) var(--lg) var(--lb) / .6)}
+.st-ctl .tgl{transition:box-shadow .35s ease}
+.st-ctl .tgl:hover{box-shadow:inset 0 1px 0 rgba(255,255,255,.55),inset 0 -1px 0 rgba(0,0,0,.25),2px 3px 4px rgba(0,0,0,.5),0 0 14px 2px rgb(var(--lr) var(--lg) var(--lb) / .5)}
+@media (prefers-reduced-motion:reduce){body.login .login-box button,body.login .login-box button::before,.st-hero .st-nav a::before,.st-hero .st-nav button::before,.st-ctl .tgl::after{animation:none}}
