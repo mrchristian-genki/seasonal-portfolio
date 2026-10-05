@@ -46,7 +46,7 @@ $in = studio_logged_in();
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&family=Special+Elite&display=swap">
 <link rel="stylesheet" href="../css/route-dash.css?v=<?= STUDIO_VERSION ?>-3">
 <link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>-38">
-<link rel="stylesheet" href="table/table.css?v=61">
+<link rel="stylesheet" href="table/table.css?v=62">
 </head>
 <?php if (!$in): ?>
 <body class="login">
@@ -60,6 +60,8 @@ $in = studio_logged_in();
     <img class="rv-still night" src="table/a/river-night.webp?v=5" alt="">
     <img class="rv-still bday" src="table/a/river-blue-day.webp?v=3" alt="">
     <img class="rv-still bnight" src="table/a/river-blue-night.webp?v=3" alt="">
+    <img class="rv-still oday" src="table/a/river-orange-day.webp?v=1" alt="">
+    <img class="rv-still onight" src="table/a/river-orange-night.webp?v=1" alt="">
   </div>
   <div class="table" id="table" data-set="header" data-base="table/">
     <div class="layer" id="layer"></div>
@@ -82,16 +84,16 @@ $in = studio_logged_in();
         <img class="dial-face" src="table/a/dial-face.webp?v=2" alt="">
       </div>
       <div class="st-plate"><h1>Studio</h1><p>Field Notes · Behind the scenes</p></div>
-      <!-- the two controls: a toggle between two pilot lamps each; while the river changes, the lamp it's
+      <!-- the two controls: a toggle and its pilot lamps (day, night; blue, green, orange); while the river changes, the lamp it's
            going to breathes and the slot under the toggle fills (toggle.js) -->
       <div class="st-ctl">
         <button type="button" class="tgl" id="dayNight" data-kind="light" role="switch" aria-checked="false" aria-label="Day. Switch to night">
-          <span class="tg-row"><span class="lamp la" aria-hidden="true"></span><span class="tg-sw" aria-hidden="true"><span class="bat"></span></span><span class="lamp lb" aria-hidden="true"></span></span>
+          <span class="tg-row"><span class="lamp" data-i="0" aria-hidden="true"></span><span class="tg-sw" aria-hidden="true"><span class="bat"></span></span><span class="lamp" data-i="1" aria-hidden="true"></span></span>
           <span class="tg-bar" aria-hidden="true"><span></span></span>
           <span class="tg-lbl" aria-hidden="true">DAY/NIGHT</span>
         </button>
-        <button type="button" class="tgl" id="flow" data-kind="flow" role="switch" aria-checked="false" aria-label="Blue river. Switch to green">
-          <span class="tg-row"><span class="lamp la" aria-hidden="true"></span><span class="tg-sw" aria-hidden="true"><span class="bat"></span></span><span class="lamp lb" aria-hidden="true"></span></span>
+        <button type="button" class="tgl" id="flow" data-kind="flow" aria-label="Blue liquid. Change to green">
+          <span class="tg-row"><span class="tg-sw" aria-hidden="true"><span class="bat"></span></span><span class="lamp" data-i="0" aria-hidden="true"></span><span class="lamp" data-i="1" aria-hidden="true"></span><span class="lamp" data-i="2" aria-hidden="true"></span></span>
           <span class="tg-bar" aria-hidden="true"><span></span></span>
           <span class="tg-lbl" aria-hidden="true">CHANGE LIQUID</span>
         </button>
@@ -128,6 +130,7 @@ $in = studio_logged_in();
   <div class="st-flow" id="footFlow" aria-hidden="true">
     <img class="fs bd" src="table/a/foot-blue-day.webp?v=1" alt=""><img class="fs bn" src="table/a/foot-blue-night.webp?v=1" alt="">
     <img class="fs gd" src="table/a/foot-green-day.webp?v=1" alt=""><img class="fs gn" src="table/a/foot-green-night.webp?v=1" alt="">
+    <img class="fs od" src="table/a/foot-orange-day.webp?v=1" alt=""><img class="fs on" src="table/a/foot-orange-night.webp?v=1" alt="">
   </div>
 </footer>
 <?php if ($in): ?>
@@ -138,10 +141,10 @@ $in = studio_logged_in();
 <script src="assets/studio.js?v=<?= STUDIO_VERSION ?>-34"></script>
 <?php endif; ?>
 <script src="table/table.js?v=25"></script>
-<script src="table/river.js?v=15"></script>
-<script src="table/switch.js?v=7"></script>
-<script src="table/toggle.js?v=1"></script>
-<script src="table/foot.js?v=1"></script>
+<script src="table/river.js?v=16"></script>
+<script src="table/switch.js?v=8"></script>
+<script src="table/toggle.js?v=2"></script>
+<script src="table/foot.js?v=2"></script>
 <script src="table/shelf.js?v=22"></script>
 </body>
 </html>

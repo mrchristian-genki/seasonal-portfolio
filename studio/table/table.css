@@ -97,7 +97,7 @@
 .st-flow img,.st-flow video{position:absolute;left:50%;top:50%;width:max(100%,calc(var(--h) * 4.8));height:auto;aspect-ratio:1920/400;
   max-width:none;translate:-50% -43.5%;display:block}
 .st-flow .fs{opacity:0;transition:opacity 1.2s ease}
-.st-flow:not(.is-night).is-blue .bd,.st-flow.is-night.is-blue .bn,.st-flow:not(.is-night):not(.is-blue) .gd,.st-flow.is-night:not(.is-blue) .gn{opacity:1}
+.st-flow:not(.is-night).is-blue .bd,.st-flow.is-night.is-blue .bn,.st-flow:not(.is-night).is-green .gd,.st-flow.is-night.is-green .gn,.st-flow:not(.is-night).is-orange .od,.st-flow.is-night.is-orange .on{opacity:1}
 .st-flow video{opacity:0;transition:opacity 1.2s ease-in-out}
 .st-flow video.show{opacity:1}
 .st-switch{position:absolute;left:50%;top:50%;translate:-50% -50%;width:clamp(150px,16vw,210px);aspect-ratio:560/448;padding:0;border:0;background:none;cursor:pointer;
@@ -157,8 +157,9 @@
 /* and the rail's shadow falls on the page below */
 .st-hero + main{background:linear-gradient(180deg,rgba(0,0,0,.45),rgba(0,0,0,0)) top/100% 18px no-repeat}
 /* four stills: green by day underneath, then green by night, blue by day and blue by night over it */
-.river .rv-still.night,.river .rv-still.bday,.river .rv-still.bnight{opacity:0;transition:opacity 1.2s ease}
-.river.is-night:not(.is-blue) .rv-still.night,.river.is-blue:not(.is-night) .rv-still.bday,.river.is-blue.is-night .rv-still.bnight{opacity:1}
+.river .rv-still:not(.day){opacity:0;transition:opacity 1.2s ease}
+.river.is-green.is-night .rv-still.night,.river.is-blue:not(.is-night) .rv-still.bday,.river.is-blue.is-night .rv-still.bnight,
+.river.is-orange:not(.is-night) .rv-still.oday,.river.is-orange.is-night .rv-still.onight{opacity:1}
 .river video{opacity:0;transition:opacity 1.2s ease-in-out}
 .river video.show{opacity:1}
 .st-hero .table{background:none}
@@ -312,13 +313,13 @@
 @font-face{font-family:"Allerta Stencil";src:url(../assets/fonts/allerta-stencil.woff2) format("woff2");font-display:swap}
 
 /* THE CONTROLS, on the STUDIO panel under the nameplate: two small steel plates, each with a bat-handle
-   toggle between two jewel pilot lamps (LIGHTS: amber day, blue night; LIQUID: blue, green), a hairline
+   toggle between two jewel pilot lamps (DAY/NIGHT: amber, blue; LIQUID: blue, green, orange), a hairline
    slot that fills while the river changes, and the name cut through as a stencil. toggle.js sets how lit
-   each lamp is (--a, --b) and how far the slot has filled (--p). */
+   each lamp is (--lit on each) and how far the slot has filled (--p). */
 .st-label .st-dn{display:grid;grid-template-columns:auto auto;align-items:center}
 .st-dn .pipe{grid-row:1}
 .st-ctl{grid-column:1 / -1;display:flex;justify-content:center;gap:clamp(8px,1.2vw,16px);position:relative;z-index:2;margin-top:2px}
-.tgl{--a:1;--b:0;--p:0;--ca:255,176,70;--cb:110,170,255;
+.tgl{--p:0;--cf:255,176,70;--ct:110,170,255;--c0:255,176,70;--c1:110,170,255;
   display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 12px 5px;border:0;border-radius:3px;cursor:pointer;
   font:400 8.5px/1 "Allerta Stencil","Courier New",monospace;letter-spacing:.09em;color:#1d1a16;-webkit-tap-highlight-color:transparent;
   background:
@@ -327,7 +328,8 @@
     repeating-linear-gradient(90deg,rgba(255,255,255,.05) 0 1px,transparent 1px 3px),
     linear-gradient(160deg,#d9dad6,#a9aba6 45%,#c6c8c3 70%,#9c9e99);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.55),inset 0 -1px 0 rgba(0,0,0,.25),2px 3px 4px rgba(0,0,0,.5)}
-.tgl[data-kind=flow]{--ca:60,228,255;--cb:125,255,74}
+.tgl[data-kind=flow]{--c0:60,228,255;--c1:125,255,74;--c2:255,150,50}
+.tgl[data-kind=flow] .tg-row{gap:6px}
 .tgl:focus-visible{outline:2px solid #f6d58a;outline-offset:3px}
 .tgl:disabled{cursor:progress;opacity:1}
 .tgl:disabled:not(.turning){filter:brightness(.88)}
@@ -339,7 +341,8 @@
 .lamp::after{content:"";position:absolute;inset:0;border-radius:50%;opacity:var(--lit);
   background:radial-gradient(circle at 38% 32%,#fff 0,rgba(var(--c),1) 35%,rgba(var(--c),.75) 70%,rgba(var(--c),.5) 100%);
   box-shadow:0 0 5px 1px rgba(var(--c),.85),0 0 14px 3px rgba(var(--c),.45)}
-.lamp.la{--c:var(--ca);--lit:var(--a)} .lamp.lb{--c:var(--cb);--lit:var(--b)}
+.lamp[data-i="0"]{--c:var(--c0)} .lamp[data-i="1"]{--c:var(--c1)} .lamp[data-i="2"]{--c:var(--c2)}
+.lamp{--lit:0}
 /* the lamp it's going to breathes, slowly, while the change runs */
 .tgl.turning .lamp.go::after{animation:tg-breathe 1.6s cubic-bezier(.45,0,.55,1) infinite}
 @keyframes tg-breathe{0%,100%{opacity:.12}50%{opacity:.85}}
@@ -352,9 +355,8 @@
 .tgl.on .tg-sw .bat{rotate:32deg}
 /* the slot: a hairline that fills while the change runs */
 .tg-bar{width:100%;height:2px;border-radius:1px;background:rgba(40,34,26,.45);box-shadow:inset 0 1px 0 rgba(0,0,0,.4);overflow:hidden}
-.tg-bar span{display:block;height:100%;width:calc(var(--p) * 100%);background:linear-gradient(90deg,rgba(var(--cb),.9),rgba(var(--ca),.9));opacity:0;transition:opacity .4s ease}
+.tg-bar span{display:block;height:100%;width:calc(var(--p) * 100%);background:linear-gradient(90deg,rgba(var(--cf),.9),rgba(var(--ct),.9));opacity:0;transition:opacity .4s ease}
 .tgl.turning .tg-bar span{opacity:1}
-.tgl.on .tg-bar span{background:linear-gradient(90deg,rgba(var(--ca),.9),rgba(var(--cb),.9))}
 .tg-lbl{white-space:nowrap;text-shadow:0 1px 0 rgba(255,255,255,.35)}
 .st-hero:has(.table.night) .tgl{filter:brightness(.82)}
 .st-hero:has(.table.night) .tgl .lamp::after{filter:brightness(1.25)}

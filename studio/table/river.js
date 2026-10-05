@@ -1,7 +1,8 @@
 /* STUDIO RIVER: the header's table is a short looping video of the glowing river, by day or by night, and
-   blue or green. Flipping the day/night switch plays the dusk (or dawn) clip once, then hands over to the
-   matching loop; the colour switch beside it does the same with the clip of the river changing colour.
-   The colour is remembered on this device (blue unless chosen).
+   blue, green or orange. Flipping the day/night switch plays the dusk (or dawn) clip once, then hands over
+   to the matching loop; the liquid switch beside it does the same with the clip of the river changing to
+   the next liquid, always the same way round (blue, green, orange, blue). The liquid is remembered on this
+   device (blue unless chosen).
    Two video layers take turns so the hand-over never flashes; the day and night stills sit underneath,
    so the header is never empty while a video loads, and they stand in for it when video can't play or
    motion is reduced. */
@@ -27,10 +28,10 @@
     return v;
   }
   var a = vid(), b = vid(), front = null;
-  // the green clips came from 4K footage and have a 2560 size; the blue and colour-change ones top out at 1920
+  // the green clips came from 4K footage and have a 2560 size; the blue, orange and change ones top out at 1920
   function load(v, name, loop) {
     v.loop = loop;
-    var w = /blue|green/.test(name) ? Math.min(W, 1920) : W, q = /blue|green/.test(name) ? '3' : '5';
+    var cap = /blue|green|orange/.test(name), w = cap ? Math.min(W, 1920) : W, q = /orange/.test(name) ? '1' : cap ? '3' : '5';
     v.innerHTML = '<source src="' + A + name + '-' + w + '.mp4?v=' + q + '" type="video/mp4"><source src="' + A + name + '-1280.webm?v=' + q + '" type="video/webm">';
     v.load();
   }
@@ -51,30 +52,36 @@
     });
   }
   function other() { return front === a ? b : a; }
-  var blue = true;
-  try { blue = localStorage.getItem('st-flow') !== 'green'; } catch (e) {}
-  function stills(n) { R.classList.toggle('is-night', n); R.classList.toggle('is-blue', blue); }
-  function loopName(n) { return blue ? (n ? 'river-blue-night' : 'river-blue-day') : (n ? 'river-night' : 'river-day'); }
+  // the liquids, in the order the switch goes round, and each one's clips: its loops and dusk and dawn
+  // (green's are the river's first, so have no colour in their names), and the change to the next one
+  var LIQ = ['blue', 'green', 'orange'], PRE = { blue: 'river-blue-', green: 'river-', orange: 'river-orange-' };
+  var CHANGE = { blue: function (t) { return 'river-' + t + '-to-green'; },
+    green: null, orange: null };            // no footage yet for green to orange or orange to blue: a plain blend
+  var liq = 'blue';
+  try { var kept = localStorage.getItem('st-flow'); if (LIQ.indexOf(kept) >= 0) liq = kept; } catch (e) {}
+  function stills(n) { R.classList.toggle('is-night', n); LIQ.forEach(function (l) { R.classList.toggle('is-' + l, liq === l); }); }
+  function loopName(n) { return PRE[liq] + (n ? 'night' : 'day'); }
   function loopFor(n) { var v = other(); load(v, loopName(n), true); return show(v); }
 
   // the footer's pipe (foot.js) follows every change
-  function tell(kind) { document.dispatchEvent(new CustomEvent('river:change', { detail: { kind: kind, night: night, blue: blue } })); }
+  function tell(kind, from) { document.dispatchEvent(new CustomEvent('river:change', { detail: { kind: kind, night: night, liquid: liq, from: from } })); }
   function set(n) {
     if (n === night && front) return;
     var change = n !== night; night = n;
-    if (change) tell('light');
+    if (change) tell('light', liq);
     if (calm || !started || !front) { stills(n); if (started && !calm) loopFor(n); return; }
     if (!change) { stills(n); loopFor(n); return; }
     // dusk or dawn: play the clip once, then the loop for the new time of day
-    play((blue ? 'river-blue-' : 'river-') + (n ? 'to-night' : 'to-day'), 'light');
+    play(PRE[liq] + (n ? 'to-night' : 'to-day'), 'light');
   }
-  // the colour: the river changes in the clip for this time of day, then loops in its new colour
-  function colour(b) {
-    if (b === blue) return;
-    blue = b; tell('flow');
-    try { localStorage.setItem('st-flow', b ? 'blue' : 'green'); } catch (e) {}
+  // the liquid: the river changes in the clip for this time of day, then loops in its new colour
+  function colour(l) {
+    if (l === liq || LIQ.indexOf(l) < 0) return;
+    var was = liq; liq = l; tell('flow', was);
+    try { localStorage.setItem('st-flow', l); } catch (e) {}
     if (calm || !started || !front) { stills(night); if (started && !calm) loopFor(night); return; }
-    play('river-' + (night ? 'night' : 'day') + '-to-' + (b ? 'blue' : 'green'), 'flow');
+    var c = CHANGE[was];
+    play(c && LIQ[(LIQ.indexOf(was) + 1) % 3] === l ? c(night ? 'night' : 'day') : null, 'flow');
   }
   // A change clip: it fades in over the loop, the next loop is readied underneath, and it fades in over the
   // clip's last second and a bit, both playing. The switches wait until it's all done.
@@ -83,6 +90,16 @@
   function turn(kind, p) { document.dispatchEvent(new CustomEvent('river:turn', { detail: { kind: kind, p: p } })); }
   function play(clip, kind) {
     var n = night, token = {}; busy = token; lock(true);
+    if (!clip) {                                    // no clip for this change: the new loop blends in over the old
+      var t0 = performance.now(), BL = 2600;
+      stills(n); loopFor(n);
+      (function step() {
+        if (busy !== token) return;
+        var p = Math.min(1, (performance.now() - t0) / BL);
+        if (p < 1) { turn(kind, Math.min(p, .999)); requestAnimationFrame(step); } else { busy = null; lock(false); turn(kind, 1); }
+      })();
+      return;
+    }
     var t = other(); load(t, clip, false);
     var next = null, done = false, end = 0;
     (function tick() {
@@ -108,24 +125,25 @@
   var switches = [].slice.call(document.querySelectorAll('#dayNight, #flow'));
   function lock(on) { switches.forEach(function (s) { s.disabled = on; }); }
 
-  // the colour switch, on the rock beside the day/night one
+  // the liquid switch: each throw moves on to the next liquid
   var fl = document.getElementById('flow');
+  function nextLiq() { return LIQ[(LIQ.indexOf(liq) + 1) % 3]; }
+  function cap(l) { return l.charAt(0).toUpperCase() + l.slice(1); }
   function flowShow() {
     if (!fl) return;
-    fl.classList.toggle('is-green', !blue);
-    fl.setAttribute('aria-checked', blue ? 'false' : 'true');
-    fl.setAttribute('aria-label', blue ? 'Blue river. Switch to green' : 'Green river. Switch to blue');
+    fl.setAttribute('data-liquid', liq);
+    fl.setAttribute('aria-label', cap(liq) + ' liquid. Change to ' + nextLiq());
   }
   if (fl) fl.addEventListener('click', function () {
     fl.classList.remove('turning'); void fl.offsetWidth; fl.classList.add('turning');
-    colour(!blue); flowShow();
+    colour(nextLiq()); flowShow();
   });
   flowShow();
-  // for the address (switch.js): #…/day-blue, #…/night-green
+  // for the address (switch.js): #…/day-blue, #…/night-orange
   window.StudioRiver = {
-    blue: function () { return blue; },
+    liquid: function () { return liq; },
     night: function () { return night; },
-    colour: function (b) { colour(b); flowShow(); }
+    colour: function (l) { colour(l); flowShow(); }
   };
 
   // Frame the river: the clips are the strip of the frame from 20% to 74% of its height. Show a window
