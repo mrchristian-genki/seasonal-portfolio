@@ -20,8 +20,8 @@
    "caption": "One of the Studio's six share cards: green at night, with the brass panel over the river.",
    "w": 1200,
    "h": 630,
-   "use": "post",
-   "cover": true
+   "use": "skip",
+   "cover": false
   },
   {
    "src": "data/photos/2026-10-05-the-studio-river/panel.mp4",
@@ -31,7 +31,7 @@
    "caption": "The panel up close: CHANGE LIQUID thrown, the green lamp breathing while the river turns, then STUDIO draining and filling green.",
    "w": 960,
    "h": 540,
-   "use": "post",
+   "use": "skip",
    "cover": false
   },
   {
@@ -65,7 +65,7 @@
    "w": 960,
    "h": 540,
    "use": "post",
-   "cover": false
+   "cover": true
   },
   {
    "src": "data/photos/2026-10-05-the-studio-river/orange-blue.mp4",
@@ -83,7 +83,7 @@
    "caption": "Where it started: the earlier header, with a bigger nameplate and a switch on the river bank.",
    "w": 1200,
    "h": 630,
-   "use": "post",
+   "use": "skip",
    "cover": false
   },
   {
@@ -91,7 +91,7 @@
    "caption": "Six share cards, one for each look, so a shared link's preview matches what was on screen.",
    "w": 1200,
    "h": 945,
-   "use": "post",
+   "use": "skip",
    "cover": false
   }
  ],
