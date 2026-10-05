@@ -46,7 +46,7 @@ $in = studio_logged_in();
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&family=Special+Elite&display=swap">
 <link rel="stylesheet" href="../css/route-dash.css?v=<?= STUDIO_VERSION ?>-3">
 <link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>-38">
-<link rel="stylesheet" href="table/table.css?v=62">
+<link rel="stylesheet" href="table/table.css?v=63">
 </head>
 <?php if (!$in): ?>
 <body class="login">
@@ -58,7 +58,7 @@ $in = studio_logged_in();
   <div class="river" id="river" aria-hidden="true">
     <img class="rv-still day" src="table/a/river-day.webp?v=5" alt="">
     <img class="rv-still night" src="table/a/river-night.webp?v=5" alt="">
-    <img class="rv-still bday" src="table/a/river-blue-day.webp?v=3" alt="">
+    <img class="rv-still bday" src="table/a/river-blue-day.webp?v=4" alt="">
     <img class="rv-still bnight" src="table/a/river-blue-night.webp?v=3" alt="">
     <img class="rv-still oday" src="table/a/river-orange-day.webp?v=1" alt="">
     <img class="rv-still onight" src="table/a/river-orange-night.webp?v=1" alt="">
@@ -141,7 +141,7 @@ $in = studio_logged_in();
 <script src="assets/studio.js?v=<?= STUDIO_VERSION ?>-34"></script>
 <?php endif; ?>
 <script src="table/table.js?v=25"></script>
-<script src="table/river.js?v=16"></script>
+<script src="table/river.js?v=17"></script>
 <script src="table/switch.js?v=8"></script>
 <script src="table/toggle.js?v=2"></script>
 <script src="table/foot.js?v=2"></script>

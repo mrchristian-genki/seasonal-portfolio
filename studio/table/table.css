@@ -335,17 +335,20 @@
 .tgl:disabled:not(.turning){filter:brightness(.88)}
 .tg-row{display:flex;align-items:center;gap:9px}
 /* a jewel pilot lamp in a knurled bezel: dark glass, lit from inside by its colour */
-.lamp{position:relative;width:11px;height:11px;border-radius:50%;
+.lamp{position:relative;width:13px;height:13px;border-radius:50%;
   background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.35),transparent 40%),radial-gradient(circle,#2b2a28,#121110);
   box-shadow:0 0 0 1.5px #8d7a52,0 0 0 2.5px #4a3c22,inset 0 1px 2px rgba(0,0,0,.8)}
 .lamp::after{content:"";position:absolute;inset:0;border-radius:50%;opacity:var(--lit);
-  background:radial-gradient(circle at 38% 32%,#fff 0,rgba(var(--c),1) 35%,rgba(var(--c),.75) 70%,rgba(var(--c),.5) 100%);
-  box-shadow:0 0 5px 1px rgba(var(--c),.85),0 0 14px 3px rgba(var(--c),.45)}
+  background:radial-gradient(circle at 40% 35%,#fff 0,#fff 14%,rgba(var(--c),1) 42%,rgba(var(--c),.9) 75%,rgba(var(--c),.7) 100%);
+  box-shadow:0 0 0 1px rgba(var(--c),.9),0 0 6px 2px rgba(var(--c),1),0 0 16px 6px rgba(var(--c),.75),0 0 34px 12px rgba(var(--c),.35)}
+/* the lit lamp's light falls on the plate around it */
+.lamp::before{content:"";position:absolute;left:50%;top:50%;width:64px;height:40px;translate:-50% -50%;border-radius:50%;pointer-events:none;
+  background:radial-gradient(closest-side,rgba(var(--c),.55),rgba(var(--c),0));mix-blend-mode:screen;opacity:var(--lit)}
 .lamp[data-i="0"]{--c:var(--c0)} .lamp[data-i="1"]{--c:var(--c1)} .lamp[data-i="2"]{--c:var(--c2)}
 .lamp{--lit:0}
 /* the lamp it's going to breathes, slowly, while the change runs */
-.tgl.turning .lamp.go::after{animation:tg-breathe 1.6s cubic-bezier(.45,0,.55,1) infinite}
-@keyframes tg-breathe{0%,100%{opacity:.12}50%{opacity:.85}}
+.tgl.turning .lamp.go::after,.tgl.turning .lamp.go::before{animation:tg-breathe 1.6s cubic-bezier(.45,0,.55,1) infinite}
+@keyframes tg-breathe{0%,100%{opacity:.15}50%{opacity:1}}
 /* the bat-handle toggle: a hex nut with a short chrome lever, thrown to one side or the other */
 .tg-sw{position:relative;width:14px;height:14px;border-radius:50%;
   background:radial-gradient(circle at 40% 35%,#f4f4f0,#9a9c98 55%,#5c5e5a);box-shadow:0 0 0 1px #4a4a46,1px 2px 2px rgba(0,0,0,.5)}
@@ -358,6 +361,6 @@
 .tg-bar span{display:block;height:100%;width:calc(var(--p) * 100%);background:linear-gradient(90deg,rgba(var(--cf),.9),rgba(var(--ct),.9));opacity:0;transition:opacity .4s ease}
 .tgl.turning .tg-bar span{opacity:1}
 .tg-lbl{white-space:nowrap;text-shadow:0 1px 0 rgba(255,255,255,.35)}
-.st-hero:has(.table.night) .tgl{filter:brightness(.82)}
-.st-hero:has(.table.night) .tgl .lamp::after{filter:brightness(1.25)}
+.st-hero:has(.table.night) .tgl{background-color:#888}
+.st-hero:has(.table.night) .tgl .tg-lbl{opacity:.85}
 @media (max-width:640px){.st-ctl{gap:6px}.tgl{padding:5px 8px 4px;font-size:6.5px;letter-spacing:.05em}.tg-row{gap:7px}}
