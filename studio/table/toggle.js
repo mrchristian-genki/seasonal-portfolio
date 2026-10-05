@@ -63,6 +63,7 @@
     if (!ts.flow) return;
     var c = COL.flow[ts.flow.at()], p = document.querySelector('.st-dn'), root = document.documentElement, v = c.split(',');
     if (p) p.style.setProperty('--liq', c);
+    LIQ.forEach(function (l, i) { root.classList.toggle('liq-' + l, i === ts.flow.at()); });
     if (!fill) root.style.transition = 'none';             // on opening, straight to it
     root.style.setProperty('--lr', v[0]); root.style.setProperty('--lg', v[1]); root.style.setProperty('--lb', v[2]);
     if (!fill) { void root.offsetWidth; root.style.transition = ''; }
