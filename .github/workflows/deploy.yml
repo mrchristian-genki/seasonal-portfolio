@@ -31,6 +31,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Each published Field Note's share card: its cover with the title on a brass nameplate (cards.py),
+      # made fresh on every deploy so a Note published from the Studio gets one too.
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Make the share cards
+        run: |
+          python -m pip install --quiet pillow
+          python field/tools/cards.py
+
       # Play is rebuilt from field/data on every deploy, so an entry saved or published from the
       # Studio goes live without anyone running publish.mjs by hand.
       - name: Build Play

@@ -167,8 +167,16 @@ for (const e of events) {
 
   const url = `${show.siteUrl}${e.id}/`, title = `${e.post && e.post.title || e.title} · ${show.showTitle}`;
   const desc = e.summary || paras(e.post && e.post.body)[0] || '';
-  const html = head(title, desc, url, cover && cover.abs, '../', 'field-notes', { type: 'article', published: e.date,
-    w: cover && cover.w, h: cover && cover.h, alt: cover && cover.caption, audio: audio && audio.abs }) + `<main class="article"${t ? ` data-route="../data/${esc(e.id)}.json"` : ''}>
+  // its share card: the nameplate card cards.py made from the cover (the title on brass), else the cover itself
+  const cardSrc = path.join(FIELD, 'data', 'cards', e.id + '.jpg');
+  let share = cover && { abs: cover.abs, w: cover.w, h: cover.h, alt: cover.caption };
+  if (fs.existsSync(cardSrc)) {
+    fs.copyFileSync(cardSrc, path.join(media, 'card.jpg'));
+    share = { abs: `${show.siteUrl}media/${e.id}/card.jpg?v=${fs.statSync(cardSrc).size.toString(36)}`, w: 1200, h: 630,
+      alt: `${e.post && e.post.title || e.title}: the title on a brass nameplate over the Note's cover picture` };
+  }
+  const html = head(title, desc, url, share && share.abs, '../', 'field-notes', { type: 'article', published: e.date,
+    w: share && share.w, h: share && share.h, alt: share && share.alt, audio: audio && audio.abs }) + `<main class="article"${t ? ` data-route="../data/${esc(e.id)}.json"` : ''}>
 <p class="kicker"><span class="kind ${esc(e.kind)}">${KIND[e.kind] || esc(e.kind)}</span> · <time datetime="${esc(e.date)}">${day(e.date, true)}</time>${e.place ? ` · ${esc(e.place)}` : ''}</p>
 <h1>${esc(e.post && e.post.title || e.title)}</h1>
 ${e.summary ? `<p class="lede">${esc(e.summary)}</p>` : ''}
