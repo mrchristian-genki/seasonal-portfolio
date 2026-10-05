@@ -47,7 +47,9 @@ Log in, then:
   FLOW by the STUDIO panel, LIGHT on the right: LIGHT plays the dusk or dawn clip (`river-[blue-]to-night|day`), FLOW plays the
   river changing colour (`river-day|night-to-blue|green`), then the matching loop (`table/river.js`). The lever covers the window of the
   setting that's off and the other glows (amber day, blue night; blue, green); it swings across in step with
-  the change, the glow crossing with it, and can't be thrown again until it's done. The
+  the change, the glow crossing with it, and can't be thrown again until it's done. A light stands by each (`lamp-` and `tube-off|colour`): a caged
+  lamp by LIGHT, a valve tube by FLOW, lit in the setting's colour; it dims, flickers and relights as the lever
+  crosses. The
   colour is remembered on the device, and the address carries both settings after the view
   (`#notes/night-green`, `#note/<id>/day-blue`), so a link opens the Studio the same way. The green clips come from 4K footage (up to 2560 wide); the blue and
   colour-change ones from 1080p (up to 1920, which big Retina screens stretch a little). The day and night stills
