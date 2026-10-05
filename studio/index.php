@@ -132,7 +132,7 @@ $in = studio_logged_in();
 <script src="assets/track.js?v=<?= STUDIO_VERSION ?>-3"></script>
 <script src="assets/hdr.js?v=<?= STUDIO_VERSION ?>-1"></script>
 <script src="../js/route-view.js?v=<?= STUDIO_VERSION ?>-4"></script>
-<script src="assets/studio.js?v=<?= STUDIO_VERSION ?>-32"></script>
+<script src="assets/studio.js?v=<?= STUDIO_VERSION ?>-33"></script>
 <?php endif; ?>
 <script src="table/table.js?v=22"></script>
 <script src="table/river.js?v=6"></script>
