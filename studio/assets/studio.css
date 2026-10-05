@@ -264,6 +264,7 @@ body:has(.savebar){padding-bottom:64px}
 .dfiles select{min-width:150px}
 .vnotes{margin:0 0 12px;padding:10px 12px;border-radius:8px;background:rgba(170,130,80,.12)}
 .vnotes .vn{margin-top:8px} .vnotes .vn small{display:block;color:var(--ink3)} .vnotes audio{width:100%}
+.vnotes .vn .row{margin-top:6px;gap:10px;align-items:center} .vnotes .vpaste{margin-top:6px} .vnotes .vpaste textarea{width:100%;box-sizing:border-box}
 /* next steps: what to do now, most important first, at the top of a note */
 .panel.next h2{margin:0 0 8px}
 .nsteps{list-style:none;margin:0;padding:0;counter-reset:ns}
