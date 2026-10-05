@@ -328,7 +328,10 @@
 .valve:disabled{cursor:progress;opacity:1}
 .valve:disabled:not(.turning) .vbody{filter:drop-shadow(3px 6px 4px rgba(8,4,0,.7)) brightness(.7) saturate(.7)}
 @media (max-width:640px){.valve{width:40px}
-  #flow{left:calc(var(--rv-x,0px) + var(--rv-w,100%) * .62);top:calc(var(--rv-y,0px) + var(--rv-h,100%) * .3)}}
+  /* a phone shows only the middle third of the footage: FLOW on the big rock right of the glass tube, LIGHT
+     on the rocks of the near bank below it, clear of the nav tags */
+  #flow{left:calc(var(--rv-x,0px) + var(--rv-w,100%) * .635);top:calc(var(--rv-y,0px) + var(--rv-h,100%) * .42)}
+  #dayNight{left:calc(var(--rv-x,0px) + var(--rv-w,100%) * .615);top:calc(var(--rv-y,0px) + var(--rv-h,100%) * .63)}}
 /* each valve sits in a soft pool of its own light, in the colour of its lit window, breathing slowly so
    the eye finds it; brighter while it's being thrown */
 .valve::before{content:"";position:absolute;left:50%;top:50%;width:230%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;z-index:-1;pointer-events:none;
@@ -338,18 +341,6 @@
 .valve.turning::before,.valve:hover::before{opacity:1;animation:none}
 @keyframes v-breathe{50%{opacity:.45}}
 @media (prefers-reduced-motion:reduce){.valve::before{animation:none}}
-/* a light beside each valve, in the colour of its setting: a caged lamp on a bracket up to the left of
-   LIGHT (amber by day, moonlight blue by night), a valve tube standing to the right of FLOW (blue or green).
-   valve.js sets how lit each colour is from the lever, so it dims, flickers and relights as it's thrown. */
-.light{position:absolute;pointer-events:none;filter:drop-shadow(2px 4px 3px rgba(8,4,0,.65))}
-.light img{position:absolute;inset:0;width:100%;height:100%;display:block}
-.light .ca,.light .cb{opacity:0}
-.vlamp{width:84%;aspect-ratio:180/261;left:-76%;top:-78%}
-.vtube{width:70%;aspect-ratio:180/237;left:94%;bottom:0}
-/* the light it throws: a soft pool around the bulb, as bright as the lamp is lit */
-.light::after{content:"";position:absolute;left:50%;top:var(--bulb,40%);width:260%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;
-  background:radial-gradient(circle,var(--lc) 0,transparent 58%);mix-blend-mode:screen;opacity:var(--lit,1);z-index:-1}
-.vlamp{--bulb:32%} .vtube{--bulb:42%}
 
 
 /* the footer: the same pair in the middle of the wood, in place of the old lamp plate, with room either

@@ -47,9 +47,7 @@ Log in, then:
   FLOW by the STUDIO panel, LIGHT on the right: LIGHT plays the dusk or dawn clip (`river-[blue-]to-night|day`), FLOW plays the
   river changing colour (`river-day|night-to-blue|green`), then the matching loop (`table/river.js`). The lever covers the window of the
   setting that's off and the other glows (amber day, blue night; blue, green); it swings across in step with
-  the change, the glow crossing with it, and can't be thrown again until it's done. A light stands by each (`lamp-` and `tube-off|colour`): a caged
-  lamp by LIGHT, a valve tube by FLOW, lit in the setting's colour; it dims, flickers and relights as the lever
-  crosses. The footer is a glowing pipe in the crack between two planks (`table/foot.js`, clips `foot-*`), the same liquid
+  the change, the glow crossing with it, and can't be thrown again until it's done. The footer is a glowing pipe in the crack between two planks (`table/foot.js`, clips `foot-*`), the same liquid
   flowing through it right to left, following the header's changes with its own dusk, dawn and colour clips (the
   video only loads once the footer comes near the screen). It carries the same pair of valves, with their lights,
   set on the pipe (copies that throw
