@@ -30,7 +30,7 @@
   // the green clips came from 4K footage and have a 2560 size; the blue and colour-change ones top out at 1920
   function load(v, name, loop) {
     v.loop = loop;
-    var w = /blue|green/.test(name) ? Math.min(W, 1920) : W, q = /blue|green/.test(name) ? '2' : '4';
+    var w = /blue|green/.test(name) ? Math.min(W, 1920) : W, q = /blue|green/.test(name) ? '3' : '5';
     v.innerHTML = '<source src="' + A + name + '-' + w + '.mp4?v=' + q + '" type="video/mp4"><source src="' + A + name + '-1280.webm?v=' + q + '" type="video/webm">';
     v.load();
   }

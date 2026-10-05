@@ -45,8 +45,8 @@ $in = studio_logged_in();
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&family=Special+Elite&display=swap">
 <link rel="stylesheet" href="../css/route-dash.css?v=<?= STUDIO_VERSION ?>-3">
-<link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>-37">
-<link rel="stylesheet" href="table/table.css?v=59">
+<link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>-38">
+<link rel="stylesheet" href="table/table.css?v=61">
 </head>
 <?php if (!$in): ?>
 <body class="login">
@@ -56,10 +56,10 @@ $in = studio_logged_in();
 
 <section class="st-hero" aria-label="Studio">
   <div class="river" id="river" aria-hidden="true">
-    <img class="rv-still day" src="table/a/river-day.webp?v=4" alt="">
-    <img class="rv-still night" src="table/a/river-night.webp?v=4" alt="">
-    <img class="rv-still bday" src="table/a/river-blue-day.webp?v=2" alt="">
-    <img class="rv-still bnight" src="table/a/river-blue-night.webp?v=2" alt="">
+    <img class="rv-still day" src="table/a/river-day.webp?v=5" alt="">
+    <img class="rv-still night" src="table/a/river-night.webp?v=5" alt="">
+    <img class="rv-still bday" src="table/a/river-blue-day.webp?v=3" alt="">
+    <img class="rv-still bnight" src="table/a/river-blue-night.webp?v=3" alt="">
   </div>
   <div class="table" id="table" data-set="header" data-base="table/">
     <div class="layer" id="layer"></div>
@@ -137,11 +137,11 @@ $in = studio_logged_in();
 <script src="../js/route-view.js?v=<?= STUDIO_VERSION ?>-4"></script>
 <script src="assets/studio.js?v=<?= STUDIO_VERSION ?>-34"></script>
 <?php endif; ?>
-<script src="table/table.js?v=23"></script>
-<script src="table/river.js?v=14"></script>
+<script src="table/table.js?v=25"></script>
+<script src="table/river.js?v=15"></script>
 <script src="table/switch.js?v=7"></script>
 <script src="table/toggle.js?v=1"></script>
 <script src="table/foot.js?v=1"></script>
-<script src="table/shelf.js?v=20"></script>
+<script src="table/shelf.js?v=22"></script>
 </body>
 </html>

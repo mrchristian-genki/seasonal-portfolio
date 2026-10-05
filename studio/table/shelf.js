@@ -9,6 +9,9 @@
   'use strict';
   var HERO = document.querySelector('.st-hero'), FOOT = document.querySelector('.st-foot');
   if (!HERO || !FOOT) return;
+  // paused for now: the river, its changes and Marley's visits are enough going on
+  var PAUSED = true;
+  if (PAUSED) return;
   // not on a phone: its strip of wood is kept clear
   if (window.matchMedia && matchMedia('(max-width:640px)').matches) return;
   var A = 'table/a/';
@@ -72,6 +75,9 @@
     var height = Math.min(riverTop - 2, 130);
     var n = nav && nav.getBoundingClientRect();                  // the nav tags, when they sit up top
     var right = (n && n.top - h.top < height ? n.left - h.left : h.width) - (h.width < 640 ? 30 : 14);
+    // and short of the glass tube on the bank (61% across the footage): props keep between it and the panel
+    var rx = parseFloat(cs.getPropertyValue('--rv-x')), rw = parseFloat(cs.getPropertyValue('--rv-w'));
+    if (!isNaN(rw)) right = Math.min(right, rx + rw * .605 - 14);
     var width = right - left;
     s.hidden = height < 40 || width < 80;
     s.style.left = left + 'px'; s.style.width = width + 'px'; s.style.top = '0px'; s.style.height = height + 'px';
