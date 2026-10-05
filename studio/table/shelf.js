@@ -1,5 +1,5 @@
 /* STUDIO SHELVES: three bits of open wood, each showing one prop at a time. The header's plank band to the
-   right of the STUDIO panel (above the river), and the footer either side of the lamps. Every so often a
+   right of the STUDIO panel (above the river), and the footer either side of the valves. Every so often a
    prop leaves a shelf and another arrives (dropping in from the top in the header, sliding in from the side
    in the footer), picked at random from the ones not already out, so a page left open long enough shows the
    whole collection. A hand brings each one in and takes it away. Tap one to collect it and another takes

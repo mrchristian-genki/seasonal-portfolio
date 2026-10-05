@@ -102,7 +102,7 @@
       setTimeout(finish, 9000);                               // in case the clip never gets to its end
     });
   }
-  var switches = ['dayNight', 'flow'].map(function (id) { return document.getElementById(id); }).filter(Boolean);
+  var switches = [].slice.call(document.querySelectorAll('#dayNight, #flow, .valve'));   // the footer's copies too
   function lock(on) { switches.forEach(function (s) { s.disabled = on; }); }
 
   // the colour switch, on the rock beside the day/night one

@@ -49,7 +49,8 @@ Log in, then:
   setting that's off and the other glows (amber day, blue night; blue, green); it swings across in step with
   the change, the glow crossing with it, and can't be thrown again until it's done. A light stands by each (`lamp-` and `tube-off|colour`): a caged
   lamp by LIGHT, a valve tube by FLOW, lit in the setting's colour; it dims, flickers and relights as the lever
-  crosses. The
+  crosses. The footer carries the same pair, with their lights, in the middle of the wood (copies that throw
+  the header valves, so both swing together). The
   colour is remembered on the device, and the address carries both settings after the view
   (`#notes/night-green`, `#note/<id>/day-blue`), so a link opens the Studio the same way. The green clips come from 4K footage (up to 2560 wide); the blue and
   colour-change ones from 1080p (up to 1920, which big Retina screens stretch a little). The day and night stills

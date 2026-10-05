@@ -166,16 +166,6 @@
 .st-dn .sw-label{font-size:clamp(5px,.55vw,8px)}
 @media (max-width:640px){.st-label{gap:10px}.st-dn{gap:6px}.st-dn .st-dial{width:60px}.st-dn .st-switch{width:66px}.st-dn .sw-label{font-size:5px}}
 
-/* the brass day/night lamps, now set into the footer: amber by day, blue by night */
-.st-lamps{position:absolute;z-index:2;left:50%;top:50%;translate:-50% -50%;width:clamp(96px,9vw,128px);aspect-ratio:220/211;filter:drop-shadow(6px 9px 9px rgba(20,10,2,.5))}
-.st-lamps img{position:absolute;inset:0;width:100%;height:100%;transition:opacity 1.2s ease}
-.st-lamps .lp-night{opacity:0}
-.st-foot.night .st-lamps .lp-day{opacity:0}
-.st-foot.night .st-lamps .lp-night{opacity:1}
-.lp-glow{position:absolute;left:27.5%;top:49.7%;width:120%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;pointer-events:none;mix-blend-mode:screen;opacity:.75;
-  background:radial-gradient(circle,rgba(255,158,30,.7) 15%,rgba(255,158,30,.3) 23%,rgba(255,158,30,.1) 38%,transparent 58%);transition:left 1.2s ease,background 1.2s ease}
-.st-foot.night .lp-glow{left:72.3%;opacity:.95;background:radial-gradient(circle,rgba(70,150,255,.75) 15%,rgba(70,150,255,.32) 23%,rgba(70,150,255,.1) 38%,transparent 58%)}
-
 /* one mounted unit: a dark steel backing plate, bolted at the corners, carrying the dial, the switch
    and an engraved brass STUDIO nameplate */
 .st-dn{position:relative;padding:12px 16px;gap:12px;border-radius:6px;
@@ -251,8 +241,8 @@
 .shelf{position:absolute;z-index:3;pointer-events:none}
 .shelf[hidden]{display:none}
 .st-foot .shelf{top:6%;height:88%}
-.st-foot .shelf-left{left:3%;width:calc(50% - 3% - clamp(96px,9vw,128px) / 2 - 18px)}
-.st-foot .shelf-right{right:3%;width:calc(50% - 3% - clamp(96px,9vw,128px) / 2 - 18px)}
+.st-foot .shelf-left{left:3%;width:calc(50% - 3% - clamp(180px,15vw,230px) / 2 - 18px)}
+.st-foot .shelf-right{right:3%;width:calc(50% - 3% - clamp(180px,15vw,230px) / 2 - 18px)}
 .shelf-prop{position:absolute;display:block;max-width:none;pointer-events:auto;cursor:pointer;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent;filter:drop-shadow(4px 7px 6px rgba(20,10,2,.55));transition:filter 2.4s ease}
 .st-foot.night .shelf-prop{filter:drop-shadow(4px 7px 6px rgba(5,2,0,.7)) brightness(.62) saturate(.8)}
 /* Marley and the night shade (in the table layer) pass over the header shelf; the layer lets taps through */
@@ -270,10 +260,6 @@
     radial-gradient(circle at 50% 50%,#fff0c4 0 1.6px,#7a5a26 2.4px,#3a2610 3.1px,transparent 3.8px) 18px 0/44px 100% repeat-x,
     linear-gradient(180deg,#e6c983,#a87e3a 40%,#7a5520 75%,#4a3212);
   box-shadow:0 -1px 0 rgba(0,0,0,.6),inset 0 1px 0 rgba(255,235,180,.35),0 4px 10px rgba(20,10,2,.6)}
-/* the lamps are a button too: a tap flips day and night like the switch */
-button.st-lamps{border:0;padding:0;margin:0;background:none;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:scale .15s ease}
-button.st-lamps:active{scale:.96}
-button.st-lamps:focus-visible{outline:2px solid #e6c983;outline-offset:4px;border-radius:50%}
 /* the lamp jar on a shelf: by night its lit image fades in, breathing, and its light spills onto the wood.
    The shadow goes on the jar's pictures, not the whole stack, so the glow casts none */
 .shelf-prop.lamp,.st-foot.night .shelf-prop.lamp{filter:none}
@@ -343,8 +329,8 @@ button.st-lamps:focus-visible{outline:2px solid #e6c983;outline-offset:4px;borde
    the eye finds it; brighter while it's being thrown */
 .valve::before{content:"";position:absolute;left:50%;top:50%;width:230%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;z-index:-1;pointer-events:none;
   background:radial-gradient(circle,var(--vg) 0,var(--vg) 18%,transparent 60%);mix-blend-mode:screen;opacity:.8;transition:opacity .6s ease;animation:v-breathe 4.5s ease-in-out infinite}
-#dayNight{--vg:rgba(255,170,60,.75)} #dayNight.is-night{--vg:rgba(90,160,255,.8)}
-#flow{--vg:rgba(60,228,255,.7)} #flow.is-green{--vg:rgba(125,255,74,.7)}
+.valve[data-kind=light]{--vg:rgba(255,170,60,.75)} .valve[data-kind=light].is-night{--vg:rgba(90,160,255,.8)}
+.valve[data-kind=flow]{--vg:rgba(60,228,255,.7)} .valve[data-kind=flow].is-green{--vg:rgba(125,255,74,.7)}
 .valve.turning::before,.valve:hover::before{opacity:1;animation:none}
 @keyframes v-breathe{50%{opacity:.45}}
 @media (prefers-reduced-motion:reduce){.valve::before{animation:none}}
@@ -354,11 +340,17 @@ button.st-lamps:focus-visible{outline:2px solid #e6c983;outline-offset:4px;borde
 .light{position:absolute;pointer-events:none;filter:drop-shadow(2px 4px 3px rgba(8,4,0,.65))}
 .light img{position:absolute;inset:0;width:100%;height:100%;display:block}
 .light .ca,.light .cb{opacity:0}
-.lamp{width:84%;aspect-ratio:180/261;left:-76%;top:-78%}
-.tube{width:70%;aspect-ratio:180/237;left:94%;bottom:0}
+.vlamp{width:84%;aspect-ratio:180/261;left:-76%;top:-78%}
+.vtube{width:70%;aspect-ratio:180/237;left:94%;bottom:0}
 /* the light it throws: a soft pool around the bulb, as bright as the lamp is lit */
 .light::after{content:"";position:absolute;left:50%;top:var(--bulb,40%);width:260%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;
   background:radial-gradient(circle,var(--lc) 0,transparent 58%);mix-blend-mode:screen;opacity:var(--lit,1);z-index:-1}
-.lamp{--bulb:32%} .tube{--bulb:42%}
-#dayNight .lamp{--lc:rgba(255,176,70,.55)} #dayNight.is-night .lamp{--lc:rgba(120,175,255,.6)}
-#flow .tube{--lc:rgba(70,228,255,.5)} #flow.is-green .tube{--lc:rgba(130,255,80,.5)}
+.vlamp{--bulb:32%} .vtube{--bulb:42%}
+.valve[data-kind=light] .vlamp{--lc:rgba(255,176,70,.55)} .valve[data-kind=light].is-night .vlamp{--lc:rgba(120,175,255,.6)}
+.valve[data-kind=flow] .vtube{--lc:rgba(70,228,255,.5)} .valve[data-kind=flow].is-green .vtube{--lc:rgba(130,255,80,.5)}
+
+/* the footer: the same pair in the middle of the wood, in place of the old lamp plate, with room either
+   side for the shelves */
+.ft-valves{position:absolute;z-index:2;left:50%;top:54%;translate:-50% -50%;display:flex;gap:clamp(44px,4.4vw,64px);align-items:flex-end}
+.ft-valves .valve{position:relative;left:auto;top:auto;translate:none;width:clamp(52px,5vw,72px)}
+.st-foot.night .valve .n{opacity:1}
