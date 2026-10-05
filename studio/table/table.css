@@ -577,7 +577,7 @@ body.login .login-box button:hover,body.login .login-box button:focus-visible{tr
 /* THE HEART, drawn: a brass heart on the bench, a day poured in at the funnel and pumped out through the five
    stations in step order, to the lantern; one picture per liquid, the one in use fading in once the river has
    changed. Its edges melt into the page. It takes over from the drawn vein (the step lenses still pulse). */
-.about-studio .heart{position:relative;width:min(100%,680px);aspect-ratio:1600/444;margin:-4px auto 0;
+.about-studio .heart{position:relative;width:min(100%,680px);aspect-ratio:1600/448;margin:-4px auto 0;
   -webkit-mask:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent),linear-gradient(180deg,transparent,#000 14%,#000 84%,transparent);
   -webkit-mask-composite:source-in;mask:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent),linear-gradient(180deg,transparent,#000 14%,#000 84%,transparent);
   mask-composite:intersect}
@@ -586,3 +586,6 @@ body.login .login-box button:hover,body.login .login-box button:focus-visible{tr
 .about-studio:has(.heart) .steps{margin-top:0}
 .about-studio:has(.heart) .steps::before,.about-studio:has(.heart) .steps::after,.about-studio:has(.heart) .steps li::after{display:none}
 @media (max-width:640px){.about-studio .heart{margin:0 auto 4px}}
+/* the heart's clips (heart.js), over the stills: the one playing fades in over the last */
+.about-studio .heart video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .6s ease}
+.about-studio .heart video.show{opacity:1}
