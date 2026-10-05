@@ -3,7 +3,7 @@
  "title": "Clear water in March",
  "date": "2026-03-14",
  "kind": "ride",
- "place": "",
+ "place": "Skunk Harbor",
  "status": "script",
  "summary": "A short ride on March 14, 2026, about three miles, with most of a two-hour morning spent above the clear water and snowy boulders of a Lake Tahoe shoreline.",
  "trailhead": null,
@@ -1485,6 +1485,10 @@
   "audio": null
  },
  "questions": [],
- "consent": "",
- "source": "Rides/March 14 2026"
+ "consent": "Christian and Marley",
+ "source": "Rides/March 14 2026",
+ "dashboard": {
+  "facts": false,
+  "speed": false
+ }
 }
