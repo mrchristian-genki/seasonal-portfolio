@@ -78,7 +78,7 @@
   }
   // A change clip: it fades in over the loop, the next loop is readied underneath, and it fades in over the
   // clip's last second and a bit, both playing. The switches wait until it's all done.
-  // How far the change has got (0 to 1) goes out as a 'river:turn' event, so the valve that started it
+  // How far the change has got (0 to 1) goes out as a 'river:turn' event, so the toggle that started it
   // turns in step with the river: the clip is most of the turn, the last fade the rest.
   function turn(kind, p) { document.dispatchEvent(new CustomEvent('river:turn', { detail: { kind: kind, p: p } })); }
   function play(clip, kind) {
@@ -105,7 +105,7 @@
       setTimeout(finish, 9000);                               // in case the clip never gets to its end
     });
   }
-  var switches = [].slice.call(document.querySelectorAll('#dayNight, #flow, .valve'));   // the footer's copies too
+  var switches = [].slice.call(document.querySelectorAll('#dayNight, #flow'));
   function lock(on) { switches.forEach(function (s) { s.disabled = on; }); }
 
   // the colour switch, on the rock beside the day/night one

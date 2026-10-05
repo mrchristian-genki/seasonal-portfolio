@@ -9,7 +9,7 @@
   'use strict';
   var HERO = document.querySelector('.st-hero'), FOOT = document.querySelector('.st-foot');
   if (!HERO || !FOOT) return;
-  // not on a phone: its strip of wood holds the two valves
+  // not on a phone: its strip of wood is kept clear
   if (window.matchMedia && matchMedia('(max-width:640px)').matches) return;
   var A = 'table/a/';
   var calm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -68,16 +68,10 @@
     var riverTop = ry + rh * ((0.355 - 0.20) / 0.54);          // where the stream starts in the footage
     var panel = document.querySelector('.st-label .st-dn'), nav = document.querySelector('.st-nav');
     var left = (panel ? panel.getBoundingClientRect().right - h.left : 0) + 14;
-    // the wood only: a prop never comes down onto the rocks, where the valves sit
+    // the wood only: a prop never comes down onto the rocks
     var height = Math.min(riverTop - 2, 130);
     var n = nav && nav.getBoundingClientRect();                  // the nav tags, when they sit up top
     var right = (n && n.top - h.top < height ? n.left - h.left : h.width) - (h.width < 640 ? 30 : 14);
-    // and short of the valves, where they sit up in this band (on a phone): the shelf stays empty if that
-    // leaves too little room
-    [].forEach.call(HERO.querySelectorAll('.valve'), function (v) {
-      var r = v.getBoundingClientRect();
-      if (r.top - h.top < height && r.right - h.left > left) right = Math.min(right, r.left - h.left - 12);
-    });
     var width = right - left;
     s.hidden = height < 40 || width < 80;
     s.style.left = left + 'px'; s.style.width = width + 'px'; s.style.top = '0px'; s.style.height = height + 'px';

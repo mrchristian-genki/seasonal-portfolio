@@ -327,7 +327,7 @@
   }
 
   var timer = null;
-  // no visits over a phone's header, where the valves sit on the wood she'd lean over
+  // no visits over a phone's header, which is kept clear
   var phone = HEADER && window.matchMedia && matchMedia('(max-width:640px)').matches;
   function visits() { clearTimeout(timer); if (calm || phone) return;
     timer = setTimeout(function () { marley().then(visits); }, HEADER ? 60000 + Math.random() * 60000 : 28000 + Math.random() * 22000); }
