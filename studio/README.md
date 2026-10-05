@@ -42,10 +42,12 @@ Log in, then:
   The scale, status tag and plaque are drawn over it in CSS.
 
 - **The header** is the river table: a looping video of the glowing river, blue (`table/a/river-blue-day|night`)
-  or green (`river-day|night`), with the day/night lamps and Marley's visits on top. Two bypass valves on the
-  rock work it (`table/valve.js`, photos `valve-` and `lever-day|night`): LIGHT plays the dusk or dawn clip (`river-[blue-]to-night|day`), FLOW plays the
-  river changing colour (`river-day|night-to-blue|green`), then the matching loop (`table/river.js`). A valve's lever swings in step
-  with its change, from the setting it pointed at to the other, and can't be thrown again until it's done. The
+  or green (`river-day|night`), with the day/night lamps and Marley's visits on top. Two small valves set into
+  the rocks work it (`table/valve.js`; photos `valve-`, `lever-` and the window glows `light|flow-day|night-a|b`):
+  FLOW by the STUDIO panel, LIGHT on the right: LIGHT plays the dusk or dawn clip (`river-[blue-]to-night|day`), FLOW plays the
+  river changing colour (`river-day|night-to-blue|green`), then the matching loop (`table/river.js`). The lever covers the window of the
+  setting that's off and the other glows (amber day, blue night; blue, green); it swings across in step with
+  the change, the glow crossing with it, and can't be thrown again until it's done. The
   colour is remembered on the device. The green clips come from 4K footage (up to 2560 wide); the blue and
   colour-change ones from 1080p (up to 1920, which big Retina screens stretch a little). The day and night stills
   show while a video loads, and instead of it with reduced motion. The other props stay on the full table.

@@ -46,7 +46,7 @@ $in = studio_logged_in();
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&family=Special+Elite&display=swap">
 <link rel="stylesheet" href="../css/route-dash.css?v=<?= STUDIO_VERSION ?>-3">
 <link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>-32">
-<link rel="stylesheet" href="table/table.css?v=45">
+<link rel="stylesheet" href="table/table.css?v=46">
 </head>
 <?php if (!$in): ?>
 <body class="login">
@@ -74,22 +74,21 @@ $in = studio_logged_in();
     <form method="post"><input type="hidden" name="act" value="logout"><input type="hidden" name="csrf" value="<?= h(studio_csrf()) ?>"><button type="submit">Log out</button></form>
 <?php endif; ?>
   </nav>
-  <!-- the two controls: bypass valves on the rock in the river. Throwing the lever turns the river with it,
-       in step with the change, and it can't be thrown again until the change is done -->
-  <div class="st-valves">
-    <button type="button" class="valve" id="dayNight" role="switch" aria-checked="false" aria-label="Day. Switch to night" data-kind="light">
-      <span class="vbody"><img class="d" src="table/a/valve-day.webp?v=1" alt=""><img class="n" src="table/a/valve-night.webp?v=1" alt="">
-        <span class="lever"><img class="d" src="table/a/lever-day.webp?v=1" alt=""><img class="n" src="table/a/lever-night.webp?v=1" alt=""></span></span>
-      <span class="vside a">DAY</span><span class="vside b">NIGHT</span>
-      <span class="vtag">LIGHT</span>
-    </button>
-    <button type="button" class="valve" id="flow" role="switch" aria-checked="false" aria-label="Blue river. Switch to green" data-kind="flow">
-      <span class="vbody"><img class="d" src="table/a/valve-day.webp?v=1" alt=""><img class="n" src="table/a/valve-night.webp?v=1" alt="">
-        <span class="lever"><img class="d" src="table/a/lever-day.webp?v=1" alt=""><img class="n" src="table/a/lever-night.webp?v=1" alt=""></span></span>
-      <span class="vside a">BLUE</span><span class="vside b">GREEN</span>
-      <span class="vtag">FLOW</span>
-    </button>
-  </div>
+  <!-- the two controls: small valves set into the rocks of the river. The window left uncovered glows with
+       the setting (LIGHT: amber day, blue night; FLOW: blue, green); throwing the lever covers it as the
+       river changes, and it can't be thrown again until the change is done -->
+  <button type="button" class="valve" id="flow" role="switch" aria-checked="false" aria-label="Blue river. Switch to green" title="River colour: blue or green" data-kind="flow">
+    <span class="vbody"><img class="d" src="table/a/valve-day.webp?v=3" alt=""><img class="n" src="table/a/valve-night.webp?v=3" alt="">
+      <span class="glow ga"><img class="d" src="table/a/flow-day-a.webp?v=2" alt=""><img class="n" src="table/a/flow-night-a.webp?v=2" alt=""></span>
+      <span class="glow gb"><img class="d" src="table/a/flow-day-b.webp?v=2" alt=""><img class="n" src="table/a/flow-night-b.webp?v=2" alt=""></span>
+      <span class="lever"><img class="d" src="table/a/lever-day.webp?v=2" alt=""><img class="n" src="table/a/lever-night.webp?v=2" alt=""></span></span>
+  </button>
+  <button type="button" class="valve" id="dayNight" role="switch" aria-checked="false" aria-label="Day. Switch to night" title="Day or night" data-kind="light">
+    <span class="vbody"><img class="d" src="table/a/valve-day.webp?v=3" alt=""><img class="n" src="table/a/valve-night.webp?v=3" alt="">
+      <span class="glow ga"><img class="d" src="table/a/light-day-a.webp?v=2" alt=""><img class="n" src="table/a/light-night-a.webp?v=2" alt=""></span>
+      <span class="glow gb"><img class="d" src="table/a/light-day-b.webp?v=2" alt=""><img class="n" src="table/a/light-night-b.webp?v=2" alt=""></span>
+      <span class="lever"><img class="d" src="table/a/lever-day.webp?v=2" alt=""><img class="n" src="table/a/lever-night.webp?v=2" alt=""></span></span>
+  </button>
   <div class="st-label">
     <div class="st-dn">
       <span class="pipe" aria-hidden="true"></span>
@@ -147,7 +146,7 @@ $in = studio_logged_in();
 <script src="table/table.js?v=22"></script>
 <script src="table/river.js?v=9"></script>
 <script src="table/switch.js?v=6"></script>
-<script src="table/valve.js?v=2"></script>
+<script src="table/valve.js?v=3"></script>
 <script src="table/shelf.js?v=15"></script>
 </body>
 </html>
