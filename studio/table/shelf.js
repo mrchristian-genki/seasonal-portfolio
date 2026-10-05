@@ -15,11 +15,11 @@
   // below zero)]
   var POOL = {
     mug: [1.21, 1], cone: [1.11, .9], carnelians: [1.15, .75], resin: [1.33, 1],
-    deer: [.59, 1], 'fox-sitting': [.71, 1.3], gloves: [1.02, 1.6], 'jar-off': [.92, 1.2],
+    deer: [.59, 1], 'fox-sitting': [.71, 1.3], 'jar-off': [.92, 1.2],
     pencils: [1.02, 1.7], notebook: [1.38, 1.9], contact: [.75, 1.7], map: [1.3, 1.9], fox: [1.6, 1.8],
     compass: [2.04, 1.15], vial: [3.54, -.6], 'firefly-jar': [1.76, 1.15], projector: [1, .9]
   };
-  // (no tape: that image is a half roll made to peek in from an edge; no film canister: it carries a brand;
+  // (no gloves: they looked odd on a shelf; no tape: that image is a half roll made to peek in from an edge; no film canister: it carries a brand;
   // no pins: tacks lying on a shelf looked odd; no ruler: too long for these strips)
   // where the hand holds a prop, if not its middle (as fractions of the image): the mug by its handle
   var GRIP = { mug: [.9, .5] };
