@@ -107,6 +107,10 @@
 .sw-glow{position:absolute;left:70.8%;top:43.6%;width:120%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;pointer-events:none;mix-blend-mode:screen;
   background:radial-gradient(circle,rgba(255,158,30,.6) 9%,rgba(255,158,30,.26) 16%,rgba(255,158,30,.08) 30%,transparent 52%);transition:background .4s ease}
 .st-switch.is-night .sw-glow{background:radial-gradient(circle,rgba(70,150,255,.65) 9%,rgba(70,150,255,.28) 16%,rgba(70,150,255,.09) 30%,transparent 52%)}
+/* the river's colour switch: lever up for blue (a cyan glow), down for green */
+.st-flow .sw-glow{background:radial-gradient(circle,rgba(40,220,255,.6) 9%,rgba(40,220,255,.26) 16%,rgba(40,220,255,.08) 30%,transparent 52%)}
+.st-flow.is-green .sw-night{opacity:1} .st-flow.is-green .sw-day{opacity:0}
+.st-flow.is-green .sw-glow{background:radial-gradient(circle,rgba(110,255,70,.62) 9%,rgba(110,255,70,.26) 16%,rgba(110,255,70,.08) 30%,transparent 52%)}
 .st-switch.turning .sw-glow{animation:sw-blink .45s ease}
 @keyframes sw-blink{0%{opacity:1}35%{opacity:0}100%{opacity:1}}
 @media (max-width:640px){.st-foot{--h:170px}}
@@ -148,8 +152,9 @@
 .st-hero .river{overflow:hidden}
 /* and the rail's shadow falls on the page below */
 .st-hero + main{background:linear-gradient(180deg,rgba(0,0,0,.45),rgba(0,0,0,0)) top/100% 18px no-repeat}
-.river .rv-still.night{opacity:0;transition:opacity 1.2s ease}
-.river.is-night .rv-still.night{opacity:1}
+/* four stills: green by day underneath, then green by night, blue by day and blue by night over it */
+.river .rv-still.night,.river .rv-still.bday,.river .rv-still.bnight{opacity:0;transition:opacity 1.2s ease}
+.river.is-night:not(.is-blue) .rv-still.night,.river.is-blue:not(.is-night) .rv-still.bday,.river.is-blue.is-night .rv-still.bnight{opacity:1}
 .river video{opacity:0;transition:opacity .45s ease}
 .river video.show{opacity:1}
 .st-hero .table{background:none}
@@ -233,9 +238,9 @@
 /* the day/night switch, in its own small riveted panel, set on the big rock in the lower right of the
    river footage (78.5% across, 60% down the strip), so it stays on that rock at every screen size */
 .st-ctrl{position:absolute;z-index:50;right:auto;bottom:auto;padding:6px 9px;gap:7px;border-width:2px;
-  left:min(calc(var(--rv-x,0px) + var(--rv-w,100%) * .785),calc(100% - 64px));top:min(calc(var(--rv-y,0px) + var(--rv-h,100%) * .6),calc(100% - 48px));translate:-50% -50%}
+  left:min(calc(var(--rv-x,0px) + var(--rv-w,100%) * .785),calc(100% - 112px));top:min(calc(var(--rv-y,0px) + var(--rv-h,100%) * .6),calc(100% - 48px));translate:-50% -50%}
 .st-ctrl .st-switch{width:clamp(70px,6vw,90px)}
-@media (max-width:640px){.st-ctrl{padding:5px 7px}.st-ctrl .st-switch{width:62px}}
+@media (max-width:640px){.st-ctrl{padding:5px 7px;left:min(calc(var(--rv-x,0px) + var(--rv-w,100%) * .785),calc(100% - 82px))}.st-ctrl .st-switch{width:62px}}
 /* the DAY / NIGHT tags scale with the switch, big enough to read */
 .st-switch{container-type:inline-size}
 .st-switch .sw-label{font-size:8.6cqi;letter-spacing:.04em;font-weight:800;opacity:.92}
