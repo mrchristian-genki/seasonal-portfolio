@@ -49,7 +49,8 @@ Log in, then:
   `river-day|night-green-to-orange`, `river-day|night-orange-to-blue`). While the river changes, the lamp it's
   going to breathes and a hairline slot fills; both wait until it's done. The bank's glass tube is off by day and
   lit at night in the liquid's colour, and the gauge's face matches (painted into the clips). The liquid is kept on
-  the device and in the address (`#notes/night-orange`). The footer is a glowing pipe in the crack between two
+  the device and in the address (`?look=night-orange#notes/night-orange`; the `?look=` is what a link preview sees, so a
+  shared link's card, `assets/og-studio-<look>.jpg`, shows that time of day and liquid). The footer is a glowing pipe in the crack between two
   planks (`table/foot.js`, clips `foot-*`), the same liquid flowing right to left, following every change with its
   own clips (the video only loads once the footer comes near the screen).
 
