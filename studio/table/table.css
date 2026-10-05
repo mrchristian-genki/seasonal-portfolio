@@ -89,10 +89,14 @@
 
 /* THE FOOTER: the bottom strip of the table, with the day/night switch plate on it */
 .st-foot{--h:200px;position:relative;height:var(--h);overflow:hidden;margin-top:40px;background:#6b4526;box-shadow:inset 0 14px 18px -10px rgba(20,10,2,.55)}
-.st-foot-wood span{position:absolute;inset:0;background:center bottom/max(100%,calc(var(--h) * 2000 / 360)) auto no-repeat;transition:opacity 2.4s ease}
-.st-foot-wood .day{background-image:url(a/foot-day.webp)}
-.st-foot-wood .night{background-image:url(a/foot-night.webp);opacity:0}
-.st-foot.night .st-foot-wood .night{opacity:1}
+/* the footer: a pipe of the river's liquid set into the crack between two planks (foot.js); the pipe runs
+   through the middle of the clips, so they're centred and cover the footer */
+.st-flow{position:absolute;inset:0;z-index:0;isolation:isolate;overflow:hidden;pointer-events:none;background:#2a1d12}
+.st-flow img,.st-flow video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 50%;display:block}
+.st-flow .fs{opacity:0;transition:opacity 1.2s ease}
+.st-flow:not(.is-night).is-blue .bd,.st-flow.is-night.is-blue .bn,.st-flow:not(.is-night):not(.is-blue) .gd,.st-flow.is-night:not(.is-blue) .gn{opacity:1}
+.st-flow video{opacity:0;transition:opacity 1.2s ease-in-out}
+.st-flow video.show{opacity:1}
 .st-switch{position:absolute;left:50%;top:50%;translate:-50% -50%;width:clamp(150px,16vw,210px);aspect-ratio:560/448;padding:0;border:0;background:none;cursor:pointer;
   filter:drop-shadow(8px 11px 9px rgba(36,18,4,.45))}
 .st-foot.night .st-switch{filter:drop-shadow(8px 11px 10px rgba(10,4,0,.6)) brightness(.9)}
@@ -113,7 +117,7 @@
 @media (max-width:640px){.st-foot{--h:170px}}
 .st-foot::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity 2.4s ease;
   background:radial-gradient(ellipse 40% 90% at 50% 50%,rgba(0,0,0,0) 30%,rgba(10,5,2,.55) 100%),rgba(10,5,2,.25)}
-.st-foot.night::after{opacity:1}
+.st-foot.night::after{opacity:0}
 .st-foot .st-switch{z-index:2}
 
 /* the day/night dial beside the switch: the painted disc turns half a circle under the brass face, the
@@ -350,6 +354,6 @@
 
 /* the footer: the same pair in the middle of the wood, in place of the old lamp plate, with room either
    side for the shelves */
-.ft-valves{position:absolute;z-index:2;left:50%;top:54%;translate:-50% -50%;display:flex;gap:clamp(44px,4.4vw,64px);align-items:flex-end}
+.ft-valves{position:absolute;z-index:2;left:50%;top:50%;translate:-50% -50%;display:flex;gap:clamp(44px,4.4vw,64px);align-items:flex-end}
 .ft-valves .valve{position:relative;left:auto;top:auto;translate:none;width:clamp(52px,5vw,72px)}
 .st-foot.night .valve .n{opacity:1}
