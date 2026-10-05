@@ -265,8 +265,8 @@ body.login .login-box .err{flex-basis:100%;margin:0;text-align:center}
   background:radial-gradient(circle at 35% 30%,#fbe3a2,#c99a48 60%,#7d5a22);box-shadow:0 2px 4px rgba(0,0,0,.5)}
 .about-studio .steps b{display:block;margin:2px 0 3px;font-size:14px;color:#f1e3c4}
 .about-studio .steps span{display:block;font-size:12.5px;line-height:1.4;color:#c9b48e}
-body.login .st-hero{--h:clamp(220px,27vh,255px)} body.login .st-foot{--h:clamp(70px,10vh,200px)}
-@media (max-width:640px){body.login .st-hero{--h:190px} body.login .st-foot{--h:clamp(48px,7vh,170px)} body.login .login-main{gap:12px;padding:12px 14px}}
+body.login .st-hero{--h:clamp(220px,27vh,255px)} body.login .st-foot{--h:max(clamp(70px,10vh,200px),6.6vw)}
+@media (max-width:640px){body.login .st-hero{--h:190px} body.login .st-foot{--h:max(clamp(48px,7vh,170px),60px)} body.login .login-main{gap:12px;padding:12px 14px}}
 @media (max-width:640px){
   body.login .login-box h1{display:none}
   body.login .login-box{padding:10px 12px;gap:8px}

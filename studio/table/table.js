@@ -207,9 +207,11 @@
     var h = pose.w * pose.ratio;
     el.style.top = ((-h * (1 - pose.show)) / H * 100) + '%';
     el.style.width = (pose.w / W * 100) + '%';
+    el.style.aspectRatio = String(1 / pose.ratio);        // her size before her picture has loaded, for the checks below
     L.appendChild(el);
-    // her usual spot, or the nearest one that keeps clear of the logo and the lamps
-    var spots = HEADER ? [1345, 1150, 950, 760].sort(function () { return Math.random() - .5; }) : [1345];
+    // in the header, any spot clear of the STUDIO panel and short of the tube; if there's none, she doesn't come
+    var spots = [1345];
+    if (HEADER) { spots = []; for (var sx = 560; sx <= 1400; sx += 40) spots.push(sx); spots.sort(function () { return Math.random() - .5; }); }
     var spot = spots.filter(function (x) {
       el.style.left = ((x - pose.w / 2) / W * 100) + '%'; return !touchesKeep(el);
     })[0];
@@ -243,6 +245,9 @@
   function keepRects() {
     var out = [];
     if (LABEL) out.push(LABEL.getBoundingClientRect());
+    // and in the header, everything from the glass tube on the bank rightwards (61% across the footage):
+    // visitors keep to the stretch between the STUDIO panel and the tube
+    if (HEADER) { var tl = tubeLeft(); if (tl != null) out.push({ left: tl, top: -1e5, right: 1e5, bottom: 1e5 }); }
     DN.forEach(function (d) { out.push(d.getBoundingClientRect()); });
     if (NAV) {
       var n = NAV.getBoundingClientRect(), r = { left: n.left, top: n.top, right: n.right, bottom: n.bottom };
@@ -253,6 +258,11 @@
       out.push(r);
     }
     return out;
+  }
+  function tubeLeft() {
+    var hero = T.closest('.st-hero'); if (!hero) return null;
+    var cs = getComputedStyle(hero), rx = parseFloat(cs.getPropertyValue('--rv-x')), rw = parseFloat(cs.getPropertyValue('--rv-w'));
+    return isNaN(rw) ? null : hero.getBoundingClientRect().left + rx + rw * .605;
   }
   function touchesKeep(el) {
     var b = el.getBoundingClientRect();

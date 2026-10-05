@@ -92,7 +92,10 @@
 /* the footer: a pipe of the river's liquid set into the crack between two planks (foot.js); the pipe runs
    through the middle of the clips, so they're centred and cover the footer */
 .st-flow{position:absolute;inset:0;z-index:0;isolation:isolate;overflow:hidden;pointer-events:none;background:#2a1d12}
-.st-flow img,.st-flow video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 65%;display:block}
+/* the clip covers the footer, sized and placed so the pipe (its middle, centred 43.5% down the clip) sits in
+   the middle of the footer at every width; the footer is always tall enough for the whole pipe */
+.st-flow img,.st-flow video{position:absolute;left:50%;top:50%;width:max(100%,calc(var(--h) * 4.8));height:auto;aspect-ratio:1920/400;
+  max-width:none;translate:-50% -43.5%;display:block}
 .st-flow .fs{opacity:0;transition:opacity 1.2s ease}
 .st-flow:not(.is-night).is-blue .bd,.st-flow.is-night.is-blue .bn,.st-flow:not(.is-night):not(.is-blue) .gd,.st-flow.is-night:not(.is-blue) .gn{opacity:1}
 .st-flow video{opacity:0;transition:opacity 1.2s ease-in-out}
