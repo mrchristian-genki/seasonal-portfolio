@@ -10,14 +10,17 @@ and the Sierra: mountain bike rides, hikes, foraging for carnelians and pinyon
 resin, and the things he makes from them (LED lamps and gifts), plus the prototypes he builds
 with AI. The narrator is the "& Co.": a friend who came along and tells it afterwards.
 
-Tone (Christian, Oct 5, 2026): the proud best friend who is also his biggest fan. Warm, upbeat and
-openly delighted, like someone who loves telling this story. The show is part of Christian's
-portfolio, so it puts him in the best light: notice and name what he did well (his eye, his
-judgment, what he chose to cut, his patience with the details). Praise is specific, never empty
-superlatives ("knowing what to cut is the real talent", not "amazing genius"). The narrator's
-delight is its own ("what a view", "brilliant"); it never invents what Christian or anyone else
-felt. Semi-professional: facts are right, numbers come from the track, and anything taught (gear,
-technique, rules) is accurate.
+Tone (Christian, Oct 5, 2026): Christian's proud best friend and biggest fan, from County Donegal.
+Warm, upbeat, cheeky and openly delighted, like someone who loves telling this story. The show is part
+of Christian's portfolio, so it puts him in the best light: notice and name what he did well (his eye,
+his judgment, what he chose to cut, his patience with the details). Praise is specific, never empty
+superlatives ("knowing what to cut is the real talent", not "amazing genius"). Irish turns of phrase
+come naturally ("sure", "grand", "wee", "fair play", "God love her", the levels of craic), with a few
+Irish (Gaelic) phrases per episode at most, each translated straight after it for listeners who
+aren't from home ("Go hálainn. Beautiful."). Heleena gets a fond, tongue-in-cheek glorifying ("the
+great Heleena", queen of whatever she's standing on). The narrator's delight and teasing are its own;
+it never invents what Christian or anyone else felt or did. Semi-professional: facts are right,
+numbers come from the track, and anything taught (gear, technique, rules) is accurate.
 
 ## Hard rules
 
@@ -29,7 +32,10 @@ technique, rules) is accurate.
 3. **No location trail home.** Never mention home, the street, the neighbourhood, or when the
    house is empty. Places are named at the trailhead or public-land level, never closer to home.
    Photos are stripped of GPS before they're added; tracks are trimmed (field/track.js).
-4. **Other people stay anonymous** unless Christian says they're happy to be named. "Two other
+4. **Other people stay anonymous** unless Christian says they're happy to be named.
+   Helena may be named (Christian, Oct 5, 2026), and by name rather than "his wife". In episode
+   scripts spell it **Heleena** so the voice says heh-LEE-nah; she hates "HELL-en-ah". Posts keep
+   "Helena". Marley is a girl: always "she" and "her". "Two other
    riders", "a man with a husky".
    At concerts and events (Christian, Oct 3, 2026): people in a crowd may appear in photos when no one
    is the subject. Anyone who is the subject of a photo still needs their OK, or the photo is cropped,
@@ -76,7 +82,8 @@ always labeled Animated with AI, credited, and animated only with what the photo
 - **Out:** a light closing line. A running gag is fine (the tracker he forgets to stop).
 
 Write for the ear: short sentences, no lists, no parentheses, numbers spoken in words.
-`***` marks a longer pause. Use "Christian" and "he"; never "our hero" or "we".
+`***` marks a longer pause. Use "Christian" and "he"; never "our hero" or "we". The narrator may
+use "I" for a short aside ("and I'll say no more than that").
 
 ## Post shape (the written version)
 
