@@ -43,7 +43,7 @@ Log in, then:
 
 - **The header** is the river table: a looping video of the glowing river, blue (`table/a/river-blue-day|night`)
   or green (`river-day|night`), with the day/night lamps and Marley's visits on top. Two small controls on the STUDIO panel work it
-  (`table/toggle.js`, drawn in CSS): LIGHTS ON/OFF and CHANGE LIQUID, each a bat-handle toggle between two jewel
+  (`table/toggle.js`, drawn in CSS): DAY/NIGHT and CHANGE LIQUID, each a bat-handle toggle between two jewel
   pilot lamps (amber and blue; blue and green) on a stencilled steel plate. A tap throws the toggle; while the
   river changes, the lamp it's going to breathes slowly and a hairline slot fills in step, and only then does the
   old lamp go out. Both wait until the change is done. The footer is a glowing pipe in the crack between two
