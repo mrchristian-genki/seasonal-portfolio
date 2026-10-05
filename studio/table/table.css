@@ -428,15 +428,18 @@
 @property --lr{syntax:"<number>";inherits:true;initial-value:60}
 @property --lg{syntax:"<number>";inherits:true;initial-value:228}
 @property --lb{syntax:"<number>";inherits:true;initial-value:255}
-@property --rf{syntax:"<length>";inherits:true;initial-value:1.7px}
+@property --rf{syntax:"<length>";inherits:true;initial-value:2.3px}
 :root{--lga:.7;transition:--lr 2.2s ease,--lg 2.2s ease,--lb 2.2s ease}
 :root:has(.table.night){--lga:1}
 :root.liq-fill{animation:liq-fill 2.2s cubic-bezier(.45,0,.3,1)}
-@keyframes liq-fill{0%{--rf:1.7px}30%{--rf:.2px}100%{--rf:1.7px}}
+@keyframes liq-fill{0%{--rf:2.3px}30%{--rf:.2px}100%{--rf:2.3px}}
+/* each rivet a small glass lens in a brass bezel: the liquid inside, deeper at its edge, a glint on the glass,
+   and only a little of its light on the rail around it */
 .st-hero::before,.st-foot::before{background:
-    radial-gradient(circle at 50% 50%,rgb(255 255 255 / .9) 0 calc(var(--rf) * .3),rgb(var(--lr) var(--lg) var(--lb)) calc(var(--rf) * .45) var(--rf),#3a2610 calc(var(--rf) + .9px) 3.1px,transparent 3.8px) 18px 0/44px 100% repeat-x,
-    radial-gradient(circle at 50% 50%,rgb(var(--lr) var(--lg) var(--lb) / var(--lga)) 0,rgb(var(--lr) var(--lg) var(--lb) / 0) 9px) 18px 0/44px 100% repeat-x,
-    radial-gradient(circle at 50% 50%,#7a5a26 0 2.4px,transparent 3px) 18px 0/44px 100% repeat-x,
+    radial-gradient(circle at calc(50% - .9px) calc(50% - 1px),rgb(255 255 255 / .95) 0 .55px,rgb(255 255 255 / 0) 1.3px) 18px 0/44px 100% repeat-x,
+    radial-gradient(circle at 50% 50%,color-mix(in srgb,rgb(var(--lr) var(--lg) var(--lb)),#fff 40%) 0,rgb(var(--lr) var(--lg) var(--lb)) calc(var(--rf) * .55),color-mix(in srgb,rgb(var(--lr) var(--lg) var(--lb)),#000 50%) var(--rf),#1e1206 calc(var(--rf) + .45px),transparent calc(var(--rf) + .8px)) 18px 0/44px 100% repeat-x,
+    radial-gradient(circle at 50% 50%,#2a1a08 0 2.6px,#fff0c4 2.85px,#c9a25a 3.3px,#6b4a1c 3.9px,#3a2610 4.3px,transparent 4.7px) 18px 0/44px 100% repeat-x,
+    radial-gradient(circle at 50% 50%,rgb(var(--lr) var(--lg) var(--lb) / calc(var(--lga) * .45)) 3.5px,rgb(var(--lr) var(--lg) var(--lb) / 0) 6.5px) 18px 0/44px 100% repeat-x,
     linear-gradient(180deg,#e6c983,#a87e3a 40%,#7a5520 75%,#4a3212)}
 body.login .login-box{box-shadow:inset 0 0 0 2px rgba(0,0,0,.45),inset 0 2px 0 rgba(255,220,160,.2),10px 14px 22px rgba(0,0,0,.55),
   0 0 26px 2px rgb(var(--lr) var(--lg) var(--lb) / calc(var(--lga) * .35)),inset 0 0 18px rgb(var(--lr) var(--lg) var(--lb) / calc(var(--lga) * .18))}
