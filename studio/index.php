@@ -46,7 +46,7 @@ $in = studio_logged_in();
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&family=Special+Elite&display=swap">
 <link rel="stylesheet" href="../css/route-dash.css?v=<?= STUDIO_VERSION ?>-3">
 <link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>-32">
-<link rel="stylesheet" href="table/table.css?v=44">
+<link rel="stylesheet" href="table/table.css?v=45">
 </head>
 <?php if (!$in): ?>
 <body class="login">
@@ -74,28 +74,20 @@ $in = studio_logged_in();
     <form method="post"><input type="hidden" name="act" value="logout"><input type="hidden" name="csrf" value="<?= h(studio_csrf()) ?>"><button type="submit">Log out</button></form>
 <?php endif; ?>
   </nav>
-  <svg width="0" height="0" class="defs" aria-hidden="true"><defs>
-    <linearGradient id="vBrass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f6e2a6"/><stop offset=".35" stop-color="#c9994a"/><stop offset=".7" stop-color="#7b5521"/><stop offset="1" stop-color="#d8b26a"/></linearGradient>
-    <radialGradient id="vHub" cx=".38" cy=".32" r=".8"><stop offset="0" stop-color="#fff0c0"/><stop offset=".4" stop-color="#c9994a"/><stop offset="1" stop-color="#4f3412"/></radialGradient>
-    <symbol id="valveWheel" viewBox="-50 -50 100 100" overflow="visible">
-      <g class="knurl" fill="url(#vBrass)" stroke="#3b2608" stroke-width=".8"><circle r="5.4" cx="0" cy="-40"/><circle r="5.4" cx="23.5" cy="-32.4"/><circle r="5.4" cx="38" cy="-12.4"/><circle r="5.4" cx="38" cy="12.4"/><circle r="5.4" cx="23.5" cy="32.4"/><circle r="5.4" cx="0" cy="40"/><circle r="5.4" cx="-23.5" cy="32.4"/><circle r="5.4" cx="-38" cy="12.4"/><circle r="5.4" cx="-38" cy="-12.4"/><circle r="5.4" cx="-23.5" cy="-32.4"/></g>
-      <circle r="40" fill="none" stroke="#3b2608" stroke-width="10.5"/>
-      <circle r="40" fill="none" stroke="url(#vBrass)" stroke-width="8.5"/>
-      <circle r="42.6" fill="none" stroke="rgba(255,240,200,.55)" stroke-width=".9"/>
-      <g fill="url(#vBrass)" stroke="#3b2608" stroke-width=".8"><path d="M-3.4 -9 L-2.6 -36 L2.6 -36 L3.4 -9 Z"/><path d="M-3.4 -9 L-2.6 -36 L2.6 -36 L3.4 -9 Z" transform="rotate(72)"/><path d="M-3.4 -9 L-2.6 -36 L2.6 -36 L3.4 -9 Z" transform="rotate(144)"/><path d="M-3.4 -9 L-2.6 -36 L2.6 -36 L3.4 -9 Z" transform="rotate(216)"/><path d="M-3.4 -9 L-2.6 -36 L2.6 -36 L3.4 -9 Z" transform="rotate(288)"/></g>
-      <circle r="12" fill="url(#vHub)" stroke="#3b2608" stroke-width="1"/>
-      <polygon points="9,0 4.5,7.8 -4.5,7.8 -9,0 -4.5,-7.8 4.5,-7.8" fill="#5a3c14" stroke="#e9cf8e" stroke-width=".7"/>
-    </symbol></defs></svg>
-  <!-- the two controls: brass handwheels on the rock in the river. Turning one turns the river with it, in
-       step with the change, and it can't be turned again until the change is done -->
+  <!-- the two controls: bypass valves on the rock in the river. Throwing the lever turns the river with it,
+       in step with the change, and it can't be thrown again until the change is done -->
   <div class="st-valves">
     <button type="button" class="valve" id="dayNight" role="switch" aria-checked="false" aria-label="Day. Switch to night" data-kind="light">
-      <svg class="vw" viewBox="-50 -50 100 100" aria-hidden="true"><use href="#valveWheel" x="-50" y="-50" width="100" height="100"/><circle class="jewel" r="6.2"/><circle class="jewel-hi" cx="-1.8" cy="-2" r="1.8"/></svg>
-      <span class="vtag"><small>LIGHT</small><b data-a="DAY" data-b="NIGHT">DAY</b></span>
+      <span class="vbody"><img class="d" src="table/a/valve-day.webp?v=1" alt=""><img class="n" src="table/a/valve-night.webp?v=1" alt="">
+        <span class="lever"><img class="d" src="table/a/lever-day.webp?v=1" alt=""><img class="n" src="table/a/lever-night.webp?v=1" alt=""></span></span>
+      <span class="vside a">DAY</span><span class="vside b">NIGHT</span>
+      <span class="vtag">LIGHT</span>
     </button>
     <button type="button" class="valve" id="flow" role="switch" aria-checked="false" aria-label="Blue river. Switch to green" data-kind="flow">
-      <svg class="vw" viewBox="-50 -50 100 100" aria-hidden="true"><use href="#valveWheel" x="-50" y="-50" width="100" height="100"/><circle class="jewel" r="6.2"/><circle class="jewel-hi" cx="-1.8" cy="-2" r="1.8"/></svg>
-      <span class="vtag"><small>FLOW</small><b data-a="BLUE" data-b="GREEN">BLUE</b></span>
+      <span class="vbody"><img class="d" src="table/a/valve-day.webp?v=1" alt=""><img class="n" src="table/a/valve-night.webp?v=1" alt="">
+        <span class="lever"><img class="d" src="table/a/lever-day.webp?v=1" alt=""><img class="n" src="table/a/lever-night.webp?v=1" alt=""></span></span>
+      <span class="vside a">BLUE</span><span class="vside b">GREEN</span>
+      <span class="vtag">FLOW</span>
     </button>
   </div>
   <div class="st-label">
@@ -155,7 +147,7 @@ $in = studio_logged_in();
 <script src="table/table.js?v=22"></script>
 <script src="table/river.js?v=9"></script>
 <script src="table/switch.js?v=6"></script>
-<script src="table/valve.js?v=1"></script>
+<script src="table/valve.js?v=2"></script>
 <script src="table/shelf.js?v=15"></script>
 </body>
 </html>
