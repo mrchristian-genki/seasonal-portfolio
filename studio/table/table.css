@@ -421,3 +421,36 @@
     linear-gradient(135deg,#6b4a1c,#f3dc9c 40%,#7d5a24 70%,#e3c47f) border-box}
 .st-hero:has(.table.night) .st-nav a,.st-hero:has(.table.night) .st-nav button{filter:brightness(.85)}
 @media (max-width:640px){.st-hero .st-nav a,.st-hero .st-nav button{font-size:10px;padding:6px 9px 5px}}
+
+/* THE LIQUID RUNS THROUGH THE SITE: toggle.js sets the liquid's colour on the page (--lr --lg --lb), and once the
+   river has changed it eases over to the new one. The rails' rivet holes fill with it and glow; the login plate,
+   the heading and the step numbers catch a little of its light. Brighter at night. */
+@property --lr{syntax:"<number>";inherits:true;initial-value:60}
+@property --lg{syntax:"<number>";inherits:true;initial-value:228}
+@property --lb{syntax:"<number>";inherits:true;initial-value:255}
+@property --rf{syntax:"<length>";inherits:true;initial-value:1.7px}
+:root{--lga:.7;transition:--lr 2.2s ease,--lg 2.2s ease,--lb 2.2s ease}
+:root:has(.table.night){--lga:1}
+:root.liq-fill{animation:liq-fill 2.2s cubic-bezier(.45,0,.3,1)}
+@keyframes liq-fill{0%{--rf:1.7px}30%{--rf:.2px}100%{--rf:1.7px}}
+.st-hero::before,.st-foot::before{background:
+    radial-gradient(circle at 50% 50%,rgb(255 255 255 / .9) 0 calc(var(--rf) * .3),rgb(var(--lr) var(--lg) var(--lb)) calc(var(--rf) * .45) var(--rf),#3a2610 calc(var(--rf) + .9px) 3.1px,transparent 3.8px) 18px 0/44px 100% repeat-x,
+    radial-gradient(circle at 50% 50%,rgb(var(--lr) var(--lg) var(--lb) / var(--lga)) 0,rgb(var(--lr) var(--lg) var(--lb) / 0) 9px) 18px 0/44px 100% repeat-x,
+    radial-gradient(circle at 50% 50%,#7a5a26 0 2.4px,transparent 3px) 18px 0/44px 100% repeat-x,
+    linear-gradient(180deg,#e6c983,#a87e3a 40%,#7a5520 75%,#4a3212)}
+body.login .login-box{box-shadow:inset 0 0 0 2px rgba(0,0,0,.45),inset 0 2px 0 rgba(255,220,160,.2),10px 14px 22px rgba(0,0,0,.55),
+  0 0 26px 2px rgb(var(--lr) var(--lg) var(--lb) / calc(var(--lga) * .35)),inset 0 0 18px rgb(var(--lr) var(--lg) var(--lb) / calc(var(--lga) * .18))}
+body.login .login-box h1{font:700 26px/1 "Cinzel",Georgia,serif;letter-spacing:.14em;text-transform:uppercase;
+  filter:drop-shadow(0 0 6px rgb(var(--lr) var(--lg) var(--lb) / calc(var(--lga) * .5)))}
+body.login .login-box input:focus{outline-color:rgb(var(--lr) var(--lg) var(--lb) / .8)}
+.about-studio h2{text-shadow:0 0 12px rgb(var(--lr) var(--lg) var(--lb) / calc(var(--lga) * .45))}
+.about-studio .steps li{border-color:color-mix(in srgb,#6b4f28 80%,rgb(var(--lr) var(--lg) var(--lb)))}
+.about-studio .steps li::before{box-shadow:0 2px 4px rgba(0,0,0,.5),0 0 0 2px rgb(var(--lr) var(--lg) var(--lb) / calc(var(--lga) * .7)),0 0 10px 2px rgb(var(--lr) var(--lg) var(--lb) / calc(var(--lga) * .55))}
+@media (prefers-reduced-motion:reduce){:root{transition:none}:root.liq-fill{animation:none}}
+/* the login area in the nameplate's lettering: Cinzel for the names (STUDIO, the heading, the steps, the button),
+   the plain reading face for what they say */
+.about-studio h2{font:700 19px/1.15 "Cinzel",Georgia,serif;letter-spacing:.12em;text-transform:uppercase;color:#e2c483}
+.about-studio .steps b{font:700 12.5px/1.25 "Cinzel",Georgia,serif;letter-spacing:.08em;text-transform:uppercase;color:#f1e3c4}
+.about-studio .steps li::before{font:700 12px/1 "Cinzel",Georgia,serif}
+body.login .login-box button{font:700 13px/1 "Cinzel",Georgia,serif;letter-spacing:.14em;text-transform:uppercase;padding:11px 20px}
+@media (max-width:640px){.about-studio h2{font-size:16px}.about-studio .steps b{font-size:11.5px}}
