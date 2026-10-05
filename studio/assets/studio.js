@@ -24,11 +24,26 @@
   function $(sel, root) { return (root || document).querySelector(sel); }
   function $$(sel, root) { return [].slice.call((root || document).querySelectorAll(sel)); }
   function toast(msg, bad) { var t = $('#toast'); t.textContent = msg; t.className = 'show' + (bad ? ' bad' : ''); clearTimeout(t._h); t._h = setTimeout(function () { t.className = ''; }, bad ? 7000 : 3500); }
+  // Read as text, not r.json(): a reply that isn't clean JSON (a PHP warning printed before it, or a host's
+  // error page) then still works, or at least says what came back (Safari's own message for a bad reply is
+  // only "The string did not match the expected pattern").
   function api(a, body, q) {
     var opt = body ? { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRF': CSRF }, body: JSON.stringify(body) } : {};
     return fetch('api.php?a=' + a + (q || ''), opt).then(function (r) {
       if (r.status === 401) { location.reload(); throw new Error('Logged out'); }
-      return r.json().then(function (j) { if (!r.ok) throw new Error(j.error || ('Error ' + r.status)); return j; });
+      return r.text().then(function (t) {
+        var j = null;
+        try { j = JSON.parse(t); } catch (e) {
+          var k = t.search(/[{\[]/);   // JSON after something printed before it
+          try { if (k >= 0) { j = JSON.parse(t.slice(k)); if (window.console) console.warn('Studio: the server printed this before its reply:', t.slice(0, k)); } } catch (e2) { j = null; }
+        }
+        if (j === null) {
+          var said = t.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 140);
+          throw new Error('The server\'s reply to ' + a + ' wasn\'t readable (' + r.status + (said ? ': ' + said : ', empty') + ')');
+        }
+        if (!r.ok) throw new Error(j.error || ('Error ' + r.status));
+        return j;
+      });
     });
   }
   function slug(s) { return String(s || '').toLowerCase().replace(/['’]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 48); }
@@ -1384,7 +1399,9 @@
     var box = $('#audio'), name = file.name.replace(/\.[^.]+$/, '') + '.mp3';
     box.innerHTML = '<p class="muted aup"><span>Reading ' + esc(file.name) + '</span>… <b></b></p>';
     function step(t, pc) { var p = $('#audio .aup'); if (p) { $('span', p).textContent = t; $('b', p).textContent = pc == null ? '' : pc + '%'; } }
-    master(file, step).then(function (m) {
+    var stage = 'reading it';
+    var stepped = function (t, pc) { stage = t.toLowerCase(); step(t, pc); };
+    master(file, stepped).catch(function (err) { throw new Error('While ' + stage + ': ' + (err && err.message || err)); }).then(function (m) {
       if (m.blob.size > 40e6) throw new Error('That episode is too long for one file.');
       toast('Levelled from ' + Math.round(m.before + 0.5) + ' to ' + LUFS + ' LUFS, ' + mmss(m.sec) + ' long.');
       upload(m.blob, name);
@@ -1402,7 +1419,7 @@
     chain.then(function () {
       audioNew = { sha: res.sha, name: name, bytes: file.size, url: URL.createObjectURL(file) }; audioGone = false;
       markDirty(); renderAudio(); toast('Audio attached. Save to keep it.');
-    }).catch(function (err) { toast(err.message, true); renderAudio(); });
+    }).catch(function (err) { toast('While uploading: ' + err.message, true); renderAudio(); });
   }
   function fromDrive(name, btn) {
     if (btn) { btn.disabled = true; btn.textContent = 'Fetching from Drive…'; }
