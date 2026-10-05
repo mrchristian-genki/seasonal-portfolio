@@ -46,7 +46,7 @@ $in = studio_logged_in();
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&family=Special+Elite&display=swap">
 <link rel="stylesheet" href="../css/route-dash.css?v=<?= STUDIO_VERSION ?>-3">
 <link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>-32">
-<link rel="stylesheet" href="table/table.css?v=41">
+<link rel="stylesheet" href="table/table.css?v=42">
 </head>
 <?php if (!$in): ?>
 <body class="login">
@@ -58,6 +58,8 @@ $in = studio_logged_in();
   <div class="river" id="river" aria-hidden="true">
     <img class="rv-still day" src="table/a/river-day.webp?v=4" alt="">
     <img class="rv-still night" src="table/a/river-night.webp?v=4" alt="">
+    <img class="rv-still bday" src="table/a/river-blue-day.webp?v=1" alt="">
+    <img class="rv-still bnight" src="table/a/river-blue-night.webp?v=1" alt="">
   </div>
   <div class="table" id="table" data-set="header" data-base="table/">
     <div class="layer" id="layer"></div>
@@ -77,6 +79,12 @@ $in = studio_logged_in();
       <img class="sw-day" src="table/a/switch-day.webp" alt="">
       <img class="sw-night" src="table/a/switch-night.webp" alt="">
       <span class="sw-label sw-top">DAY</span><span class="sw-label sw-bottom">NIGHT</span>
+      <span class="sw-glow" aria-hidden="true"></span>
+    </button>
+    <button type="button" class="st-switch st-flow" id="flow" role="switch" aria-checked="false" aria-label="Blue river. Switch to green">
+      <img class="sw-day" src="table/a/switch-day.webp" alt="">
+      <img class="sw-night" src="table/a/switch-night.webp" alt="">
+      <span class="sw-label sw-top">BLUE</span><span class="sw-label sw-bottom">GREEN</span>
       <span class="sw-glow" aria-hidden="true"></span>
     </button>
   </div>
@@ -135,7 +143,7 @@ $in = studio_logged_in();
 <script src="assets/studio.js?v=<?= STUDIO_VERSION ?>-34"></script>
 <?php endif; ?>
 <script src="table/table.js?v=22"></script>
-<script src="table/river.js?v=6"></script>
+<script src="table/river.js?v=7"></script>
 <script src="table/switch.js?v=6"></script>
 <script src="table/shelf.js?v=15"></script>
 </body>

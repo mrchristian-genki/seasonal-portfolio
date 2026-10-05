@@ -1,5 +1,7 @@
-/* STUDIO RIVER: the header's table is a short looping video of the glowing river, by day or by night.
-   Flipping the day/night switch plays the dusk (or dawn) clip once, then hands over to the matching loop.
+/* STUDIO RIVER: the header's table is a short looping video of the glowing river, by day or by night, and
+   blue or green. Flipping the day/night switch plays the dusk (or dawn) clip once, then hands over to the
+   matching loop; the colour switch beside it does the same with the clip of the river changing colour.
+   The colour is remembered on this device (blue unless chosen).
    Two video layers take turns so the hand-over never flashes; the day and night stills sit underneath,
    so the header is never empty while a video loads, and they stand in for it when video can't play or
    motion is reduced. */
@@ -25,9 +27,11 @@
     return v;
   }
   var a = vid(), b = vid(), front = null;
+  // the green clips came from 4K footage and have a 2560 size; the blue and colour-change ones top out at 1920
   function load(v, name, loop) {
     v.loop = loop;
-    v.innerHTML = '<source src="' + A + name + '-' + W + '.mp4?v=4" type="video/mp4"><source src="' + A + name + '-1280.webm?v=4" type="video/webm">';
+    var w = /blue|green/.test(name) ? Math.min(W, 1920) : W, q = /blue|green/.test(name) ? '1' : '4';
+    v.innerHTML = '<source src="' + A + name + '-' + w + '.mp4?v=' + q + '" type="video/mp4"><source src="' + A + name + '-1280.webm?v=' + q + '" type="video/webm">';
     v.load();
   }
   // bring a layer to the front once it's really playing; the other fades out underneath
@@ -44,27 +48,53 @@
     });
   }
   function other() { return front === a ? b : a; }
-  function stills(n) { R.classList.toggle('is-night', n); }
-
-  function loopFor(n) { var v = other(); load(v, n ? 'river-night' : 'river-day', true); return show(v); }
+  var blue = true;
+  try { blue = localStorage.getItem('st-flow') !== 'green'; } catch (e) {}
+  function stills(n) { R.classList.toggle('is-night', n); R.classList.toggle('is-blue', blue); }
+  function loopName(n) { return blue ? (n ? 'river-blue-night' : 'river-blue-day') : (n ? 'river-night' : 'river-day'); }
+  function loopFor(n) { var v = other(); load(v, loopName(n), true); return show(v); }
 
   function set(n) {
     if (n === night && front) return;
     var change = n !== night; night = n;
-    if (calm) { stills(n); return; }
-    if (!started) { stills(n); return; }
-    if (!change || !front) { stills(n); loopFor(n); return; }
+    if (calm || !started || !front) { stills(n); if (started && !calm) loopFor(n); return; }
+    if (!change) { stills(n); loopFor(n); return; }
     // dusk or dawn: play the clip once, then the loop for the new time of day
-    var token = {}; busy = token;
-    var t = other(); load(t, n ? 'river-to-night' : 'river-to-day', false);
+    play((blue ? 'river-blue-' : 'river-') + (n ? 'to-night' : 'to-day'));
+  }
+  // the colour: the river changes in the clip for this time of day, then loops in its new colour
+  function colour(b) {
+    if (b === blue) return;
+    blue = b;
+    try { localStorage.setItem('st-flow', b ? 'blue' : 'green'); } catch (e) {}
+    if (calm || !started || !front) { stills(night); if (started && !calm) loopFor(night); return; }
+    play('river-' + (night ? 'night' : 'day') + '-to-' + (b ? 'blue' : 'green'));
+  }
+  function play(clip) {
+    var n = night, token = {}; busy = token;
+    var t = other(); load(t, clip, false);
     var done = false, finish = function () {
       if (done || busy !== token) return; done = true;
       stills(n); loopFor(n);
     };
     t.addEventListener('ended', finish, { once: true });
     t.addEventListener('error', finish, { once: true });
-    show(t).then(function () { setTimeout(finish, 8000); });   // in case 'ended' never comes
+    show(t).then(function () { setTimeout(finish, 9000); });   // in case 'ended' never comes
   }
+
+  // the colour switch, on the rock beside the day/night one
+  var fl = document.getElementById('flow');
+  function flowShow() {
+    if (!fl) return;
+    fl.classList.toggle('is-green', !blue);
+    fl.setAttribute('aria-checked', blue ? 'false' : 'true');
+    fl.setAttribute('aria-label', blue ? 'Blue river. Switch to green' : 'Green river. Switch to blue');
+  }
+  if (fl) fl.addEventListener('click', function () {
+    fl.classList.remove('turning'); void fl.offsetWidth; fl.classList.add('turning');
+    colour(!blue); flowShow();
+  });
+  flowShow();
 
   // Frame the river: the clips are the strip of the frame from 20% to 74% of its height. Show a window
   // centred on the river (47.5%) that never reaches below 62%, so the brass plaque near the bottom of the

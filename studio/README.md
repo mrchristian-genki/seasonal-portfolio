@@ -41,9 +41,12 @@ Log in, then:
   WebM fallback, 90 KB) plays over it, cut to the glass up to the fuel level, its glow coming up with it.
   The scale, status tag and plaque are drawn over it in CSS.
 
-- **The header** is the river table: a looping video of the glowing river (`table/a/river-day|night`),
-  with the day/night lamps and Marley's visits on top. The switch plays the dusk or dawn clip
-  (`river-to-night`, `river-to-day`), then the matching loop (`table/river.js`). The day and night stills
+- **The header** is the river table: a looping video of the glowing river, blue (`table/a/river-blue-day|night`)
+  or green (`river-day|night`), with the day/night lamps and Marley's visits on top. The day/night switch
+  plays the dusk or dawn clip (`river-[blue-]to-night|day`), and the BLUE/GREEN switch beside it plays the
+  river changing colour (`river-day|night-to-blue|green`), then the matching loop (`table/river.js`). The
+  colour is remembered on the device. The green clips come from 4K footage (up to 2560 wide); the blue and
+  colour-change ones from 1080p (up to 1920, which big Retina screens stretch a little). The day and night stills
   show while a video loads, and instead of it with reduced motion. The other props stay on the full table.
 
 Not in the Studio yet: episode audio (render it, then hand it to a Claude Code session to master and
