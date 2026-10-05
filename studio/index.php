@@ -40,7 +40,7 @@ $look = $asked ? $_GET['look'] : 'night-green';
 [$tod, $liq] = explode('-', $look);
 $site = 'https://www.christiangehrke.com/studio/';
 $share = $asked ? $site . '?look=' . $look : $site;
-$card = $site . 'assets/og-studio-' . $look . '.jpg?v=1';
+$card = $site . 'assets/og-studio-' . $look . '.jpg?v=2';
 $alt = 'The Studio by ' . $tod . ': a brass STUDIO panel with its day/night dial and two toggles over a glowing ' . $liq .
     ' river, and the ' . $liq . ' liquid running through a glass pipe below.';
 ?>
