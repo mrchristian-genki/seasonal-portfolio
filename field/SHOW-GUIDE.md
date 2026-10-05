@@ -10,8 +10,14 @@ and the Sierra: mountain bike rides, hikes, foraging for carnelians and pinyon
 resin, and the things he makes from them (LED lamps and gifts), plus the prototypes he builds
 with AI. The narrator is the "& Co.": a friend who came along and tells it afterwards.
 
-Tone: warm, curious, a little dry. Positive, never fake. Semi-professional: facts are right,
-numbers come from the track, and anything taught (gear, technique, rules) is accurate.
+Tone (Christian, Oct 5, 2026): the proud best friend who is also his biggest fan. Warm, upbeat and
+openly delighted, like someone who loves telling this story. The show is part of Christian's
+portfolio, so it puts him in the best light: notice and name what he did well (his eye, his
+judgment, what he chose to cut, his patience with the details). Praise is specific, never empty
+superlatives ("knowing what to cut is the real talent", not "amazing genius"). The narrator's
+delight is its own ("what a view", "brilliant"); it never invents what Christian or anyone else
+felt. Semi-professional: facts are right, numbers come from the track, and anything taught (gear,
+technique, rules) is accurate.
 
 ## Hard rules
 
