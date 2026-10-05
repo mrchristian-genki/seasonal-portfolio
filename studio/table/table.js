@@ -327,7 +327,10 @@
   }
 
   var timer = null;
-  function visits() { clearTimeout(timer); if (calm) return; timer = setTimeout(function () { marley().then(visits); }, HEADER ? 60000 + Math.random() * 60000 : 28000 + Math.random() * 22000); }
+  // no visits over a phone's header, where the valves sit on the wood she'd lean over
+  var phone = HEADER && window.matchMedia && matchMedia('(max-width:640px)').matches;
+  function visits() { clearTimeout(timer); if (calm || phone) return;
+    timer = setTimeout(function () { marley().then(visits); }, HEADER ? 60000 + Math.random() * 60000 : 28000 + Math.random() * 22000); }
 
   window.StudioTable = { process: process, drop: dropPrints, marley: marley, tick: function () { return tick(); },
     night: function (on) { T.classList.toggle('night', on); setLamps(); } };
@@ -390,5 +393,5 @@
   }
   function idle() { clearTimeout(idleTimer); if (calm) return; idleTimer = setTimeout(function () { tick().then(idle); }, 150000 + Math.random() * 150000); }
 
-  start().then(function () { return calm ? null : wait(settle ? 4000 : 1500).then(marley); }).then(function () { visits(); idle(); });
+  start().then(function () { return calm || phone ? null : wait(settle ? 4000 : 1500).then(marley); }).then(function () { visits(); idle(); });
 })();

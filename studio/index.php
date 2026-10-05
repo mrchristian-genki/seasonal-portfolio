@@ -46,7 +46,7 @@ $in = studio_logged_in();
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&family=Special+Elite&display=swap">
 <link rel="stylesheet" href="../css/route-dash.css?v=<?= STUDIO_VERSION ?>-3">
 <link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>-32">
-<link rel="stylesheet" href="table/table.css?v=57">
+<link rel="stylesheet" href="table/table.css?v=58">
 </head>
 <?php if (!$in): ?>
 <body class="login">
@@ -82,12 +82,14 @@ $in = studio_logged_in();
       <span class="glow ga"><img class="d" src="table/a/flow-day-a.webp?v=2" alt=""><img class="n" src="table/a/flow-night-a.webp?v=2" alt=""></span>
       <span class="glow gb"><img class="d" src="table/a/flow-day-b.webp?v=2" alt=""><img class="n" src="table/a/flow-night-b.webp?v=2" alt=""></span>
       <span class="lever"><img class="d" src="table/a/lever-day.webp?v=2" alt=""><img class="n" src="table/a/lever-night.webp?v=2" alt=""></span></span>
+    <span class="vplate" aria-hidden="true">CHANGE LIQUID</span>
   </button>
   <button type="button" class="valve" id="dayNight" role="switch" aria-checked="false" aria-label="Day. Switch to night" title="Day or night" data-kind="light">
     <span class="vbody"><img class="d" src="table/a/valve-day.webp?v=3" alt=""><img class="n" src="table/a/valve-night.webp?v=3" alt="">
       <span class="glow ga"><img class="d" src="table/a/light-day-a.webp?v=2" alt=""><img class="n" src="table/a/light-night-a.webp?v=2" alt=""></span>
       <span class="glow gb"><img class="d" src="table/a/light-day-b.webp?v=2" alt=""><img class="n" src="table/a/light-night-b.webp?v=2" alt=""></span>
       <span class="lever"><img class="d" src="table/a/lever-day.webp?v=2" alt=""><img class="n" src="table/a/lever-night.webp?v=2" alt=""></span></span>
+    <span class="vplate" aria-hidden="true">LIGHTS ON/OFF</span>
   </button>
   <div class="st-label">
     <div class="st-dn">
@@ -157,11 +159,11 @@ $in = studio_logged_in();
 <script src="../js/route-view.js?v=<?= STUDIO_VERSION ?>-4"></script>
 <script src="assets/studio.js?v=<?= STUDIO_VERSION ?>-34"></script>
 <?php endif; ?>
-<script src="table/table.js?v=22"></script>
+<script src="table/table.js?v=23"></script>
 <script src="table/river.js?v=12"></script>
 <script src="table/switch.js?v=7"></script>
 <script src="table/valve.js?v=7"></script>
 <script src="table/foot.js?v=1"></script>
-<script src="table/shelf.js?v=18"></script>
+<script src="table/shelf.js?v=19"></script>
 </body>
 </html>
