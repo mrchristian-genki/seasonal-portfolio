@@ -144,8 +144,8 @@ $in = studio_logged_in();
 <script src="assets/studio.js?v=<?= STUDIO_VERSION ?>-34"></script>
 <?php endif; ?>
 <script src="table/table.js?v=22"></script>
-<script src="table/river.js?v=9"></script>
-<script src="table/switch.js?v=6"></script>
+<script src="table/river.js?v=10"></script>
+<script src="table/switch.js?v=7"></script>
 <script src="table/valve.js?v=3"></script>
 <script src="table/shelf.js?v=15"></script>
 </body>

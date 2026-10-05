@@ -118,6 +118,11 @@
     colour(!blue); flowShow();
   });
   flowShow();
+  // for the address (switch.js): #…/day-blue, #…/night-green
+  window.StudioRiver = {
+    blue: function () { return blue; },
+    colour: function (b) { colour(b); flowShow(); }
+  };
 
   // Frame the river: the clips are the strip of the frame from 20% to 74% of its height. Show a window
   // centred on the river (47.5%) that never reaches below 62%, so the brass plaque near the bottom of the

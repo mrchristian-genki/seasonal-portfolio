@@ -48,7 +48,8 @@ Log in, then:
   river changing colour (`river-day|night-to-blue|green`), then the matching loop (`table/river.js`). The lever covers the window of the
   setting that's off and the other glows (amber day, blue night; blue, green); it swings across in step with
   the change, the glow crossing with it, and can't be thrown again until it's done. The
-  colour is remembered on the device. The green clips come from 4K footage (up to 2560 wide); the blue and
+  colour is remembered on the device, and the address carries both settings after the view
+  (`#notes/night-green`, `#note/<id>/day-blue`), so a link opens the Studio the same way. The green clips come from 4K footage (up to 2560 wide); the blue and
   colour-change ones from 1080p (up to 1920, which big Retina screens stretch a little). The day and night stills
   show while a video loads, and instead of it with reduced motion. The other props stay on the full table.
 
