@@ -1,4 +1,6 @@
-/* STUDIO VALVES: the header's two valves, LIGHT (day or night) and FLOW (blue or green). Each has two glass
+/* STUDIO VALVES: the two valves, LIGHT (day or night) and FLOW (blue or green), in the header and again
+   in the footer (copies, with data-for naming the header one: throwing a copy throws the header valve, and
+   both swing together). Each has two glass
    windows; the lever rests over the one for the setting that's off, and the uncovered one glows (LIGHT:
    amber for day, blue for night; FLOW: blue, green). Throwing the lever turns the river: it swings across
    in step with the change (river.js reports how far it has got), heavy at first and settling at the end,
@@ -8,18 +10,25 @@
   'use strict';
   var calm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var SWING = 47;                                  // the windows sit 47° either side of upright
-  var valves = {};
+  var valves = { light: [], flow: [] };
   [].forEach.call(document.querySelectorAll('.valve'), function (b) {
-    var lt = b.querySelector('.light');
+    var lt = b.querySelector('.light'), id = b.getAttribute('data-for') || b.id, main = document.getElementById(id);
+    if (!main) return;
+    var cls = id === 'flow' ? 'is-green' : 'is-night';
     var v = { b: b, lever: b.querySelector('.lever'), ga: b.querySelector('.ga'), gb: b.querySelector('.gb'),
       light: lt, la: lt && lt.querySelector('.ca'), lb: lt && lt.querySelector('.cb'),
       angle: 0, from: 0, to: 0, goal: 0, live: false, timer: null };
-    v.on = function () { return b.classList.contains(b.id === 'flow' ? 'is-green' : 'is-night'); };
-    valves[b.getAttribute('data-kind')] = v;
+    v.on = function () { return main.classList.contains(cls); };
+    // a copy wears the header valve's setting and name
+    function mirror() { if (b !== main) { b.classList.toggle(cls, v.on()); b.setAttribute('aria-checked', main.getAttribute('aria-checked')); b.setAttribute('aria-label', main.getAttribute('aria-label')); } }
+    valves[b.getAttribute('data-kind')].push(v);
+    mirror();
     // on the first setting (day, blue) the lever covers the right window and the left one glows
     v.angle = v.goal = v.on() ? -SWING : SWING; draw(v);
-    b.addEventListener('click', function () {
+    if (b !== main) b.addEventListener('click', function () { main.click(); });
+    main.addEventListener('click', function () {
       // the switch's own handler (switch.js, river.js) has already flipped it; swing towards the new setting
+      mirror();
       v.from = v.angle; v.to = v.on() ? -SWING : SWING; v.live = false;
       b.classList.add('turning');
       clearTimeout(v.timer);
@@ -65,7 +74,6 @@
     if (p >= 1) v.b.classList.remove('turning');
   }
   document.addEventListener('river:turn', function (e) {
-    var v = valves[e.detail.kind]; if (!v) return;
-    v.live = true; progress(v, e.detail.p);
+    (valves[e.detail.kind] || []).forEach(function (v) { v.live = true; progress(v, e.detail.p); });
   });
 })();

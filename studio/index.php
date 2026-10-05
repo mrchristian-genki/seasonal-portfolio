@@ -46,7 +46,7 @@ $in = studio_logged_in();
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&family=Special+Elite&display=swap">
 <link rel="stylesheet" href="../css/route-dash.css?v=<?= STUDIO_VERSION ?>-3">
 <link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>-32">
-<link rel="stylesheet" href="table/table.css?v=48">
+<link rel="stylesheet" href="table/table.css?v=49">
 </head>
 <?php if (!$in): ?>
 <body class="login">
@@ -82,14 +82,14 @@ $in = studio_logged_in();
       <span class="glow ga"><img class="d" src="table/a/flow-day-a.webp?v=2" alt=""><img class="n" src="table/a/flow-night-a.webp?v=2" alt=""></span>
       <span class="glow gb"><img class="d" src="table/a/flow-day-b.webp?v=2" alt=""><img class="n" src="table/a/flow-night-b.webp?v=2" alt=""></span>
       <span class="lever"><img class="d" src="table/a/lever-day.webp?v=2" alt=""><img class="n" src="table/a/lever-night.webp?v=2" alt=""></span></span>
-    <span class="light tube" aria-hidden="true"><img src="table/a/tube-off.webp?v=1" alt=""><img class="ca" src="table/a/tube-cyan.webp?v=1" alt=""><img class="cb" src="table/a/tube-green.webp?v=1" alt=""></span>
+    <span class="light vtube" aria-hidden="true"><img src="table/a/tube-off.webp?v=1" alt=""><img class="ca" src="table/a/tube-cyan.webp?v=1" alt=""><img class="cb" src="table/a/tube-green.webp?v=1" alt=""></span>
   </button>
   <button type="button" class="valve" id="dayNight" role="switch" aria-checked="false" aria-label="Day. Switch to night" title="Day or night" data-kind="light">
     <span class="vbody"><img class="d" src="table/a/valve-day.webp?v=3" alt=""><img class="n" src="table/a/valve-night.webp?v=3" alt="">
       <span class="glow ga"><img class="d" src="table/a/light-day-a.webp?v=2" alt=""><img class="n" src="table/a/light-night-a.webp?v=2" alt=""></span>
       <span class="glow gb"><img class="d" src="table/a/light-day-b.webp?v=2" alt=""><img class="n" src="table/a/light-night-b.webp?v=2" alt=""></span>
       <span class="lever"><img class="d" src="table/a/lever-day.webp?v=2" alt=""><img class="n" src="table/a/lever-night.webp?v=2" alt=""></span></span>
-    <span class="light lamp" aria-hidden="true"><img src="table/a/lamp-off.webp?v=1" alt=""><img class="ca" src="table/a/lamp-amber.webp?v=1" alt=""><img class="cb" src="table/a/lamp-moon.webp?v=1" alt=""></span>
+    <span class="light vlamp" aria-hidden="true"><img src="table/a/lamp-off.webp?v=1" alt=""><img class="ca" src="table/a/lamp-amber.webp?v=1" alt=""><img class="cb" src="table/a/lamp-moon.webp?v=1" alt=""></span>
   </button>
   <div class="st-label">
     <div class="st-dn">
@@ -131,12 +131,23 @@ $in = studio_logged_in();
 <?php endif; ?>
 <footer class="st-foot" aria-label="Studio">
   <div class="st-foot-wood" aria-hidden="true"><span class="day"></span><span class="night"></span></div>
-  <button type="button" class="st-lamps" id="lamps" aria-label="Day. Switch to night">
-    <img class="lp-off" src="table/a/panel-off.webp" alt="">
-    <img class="lp-day" src="table/a/panel-day.webp" alt="">
-    <img class="lp-night" src="table/a/panel-night.webp" alt="">
-    <span class="lp-glow"></span>
-  </button>
+  <!-- the same two valves as in the header, with their lights: throwing either throws both -->
+  <div class="ft-valves">
+    <button type="button" class="valve" data-for="dayNight" role="switch" aria-checked="false" aria-label="Day. Switch to night" title="Day or night" data-kind="light">
+      <span class="vbody"><img class="d" src="table/a/valve-day.webp?v=3" alt=""><img class="n" src="table/a/valve-night.webp?v=3" alt="">
+        <span class="glow ga"><img class="d" src="table/a/light-day-a.webp?v=2" alt=""><img class="n" src="table/a/light-night-a.webp?v=2" alt=""></span>
+        <span class="glow gb"><img class="d" src="table/a/light-day-b.webp?v=2" alt=""><img class="n" src="table/a/light-night-b.webp?v=2" alt=""></span>
+        <span class="lever"><img class="d" src="table/a/lever-day.webp?v=2" alt=""><img class="n" src="table/a/lever-night.webp?v=2" alt=""></span></span>
+      <span class="light vlamp" aria-hidden="true"><img src="table/a/lamp-off.webp?v=1" alt=""><img class="ca" src="table/a/lamp-amber.webp?v=1" alt=""><img class="cb" src="table/a/lamp-moon.webp?v=1" alt=""></span>
+    </button>
+    <button type="button" class="valve" data-for="flow" role="switch" aria-checked="false" aria-label="Blue river. Switch to green" title="River colour: blue or green" data-kind="flow">
+      <span class="vbody"><img class="d" src="table/a/valve-day.webp?v=3" alt=""><img class="n" src="table/a/valve-night.webp?v=3" alt="">
+        <span class="glow ga"><img class="d" src="table/a/flow-day-a.webp?v=2" alt=""><img class="n" src="table/a/flow-night-a.webp?v=2" alt=""></span>
+        <span class="glow gb"><img class="d" src="table/a/flow-day-b.webp?v=2" alt=""><img class="n" src="table/a/flow-night-b.webp?v=2" alt=""></span>
+        <span class="lever"><img class="d" src="table/a/lever-day.webp?v=2" alt=""><img class="n" src="table/a/lever-night.webp?v=2" alt=""></span></span>
+      <span class="light vtube" aria-hidden="true"><img src="table/a/tube-off.webp?v=1" alt=""><img class="ca" src="table/a/tube-cyan.webp?v=1" alt=""><img class="cb" src="table/a/tube-green.webp?v=1" alt=""></span>
+    </button>
+  </div>
 </footer>
 <?php if ($in): ?>
 <div id="toast" role="status" aria-live="polite"></div>
@@ -146,9 +157,9 @@ $in = studio_logged_in();
 <script src="assets/studio.js?v=<?= STUDIO_VERSION ?>-34"></script>
 <?php endif; ?>
 <script src="table/table.js?v=22"></script>
-<script src="table/river.js?v=10"></script>
+<script src="table/river.js?v=11"></script>
 <script src="table/switch.js?v=7"></script>
-<script src="table/valve.js?v=4"></script>
+<script src="table/valve.js?v=5"></script>
 <script src="table/shelf.js?v=15"></script>
 </body>
 </html>
