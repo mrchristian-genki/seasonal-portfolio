@@ -35,7 +35,9 @@ numbers come from the track, and anything taught (gear, technique, rules) is acc
 4. **Other people stay anonymous** unless Christian says they're happy to be named.
    Helena may be named (Christian, Oct 5, 2026), and by name rather than "his wife". In episode
    scripts spell it **Heleena** so the voice says heh-LEE-nah; she hates "HELL-en-ah". Posts keep
-   "Helena". Marley is a girl: always "she" and "her". "Two other
+   "Helena". Marley is a girl: always "she" and "her".
+   Heleena is from Donegal, 100% Irish by a DNA test their son gave her (Christian, Oct 5, 2026), so
+   the Donegal narrator claims her as one of their own. The son stays unnamed. "Two other
    riders", "a man with a husky".
    At concerts and events (Christian, Oct 3, 2026): people in a crowd may appear in photos when no one
    is the subject. Anyone who is the subject of a photo still needs their OK, or the photo is cropped,
