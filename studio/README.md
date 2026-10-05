@@ -45,8 +45,8 @@ Log in, then:
   green (`river-day|night`) or orange (`river-orange-day|night`), with Marley's visits on top. Two small controls
   on the STUDIO panel work it (`table/toggle.js`, drawn in CSS): DAY/NIGHT, a bat-handle toggle between an amber
   and a blue pilot lamp, plays the dusk or dawn clip; CHANGE LIQUID, a toggle by three lamps, moves the liquid on
-  one way round (blue, green, orange, blue), playing the change clip (`river-day|night-to-green` for blue to green;
-  green to orange and orange to blue have no header footage yet and blend). While the river changes, the lamp it's
+  one way round (blue, green, orange, blue), playing the change clip (`river-day|night-to-green`,
+  `river-day|night-green-to-orange`, `river-day|night-orange-to-blue`). While the river changes, the lamp it's
   going to breathes and a hairline slot fills; both wait until it's done. The bank's glass tube is off by day and
   lit at night in the liquid's colour, and the gauge's face matches (painted into the clips). The liquid is kept on
   the device and in the address (`#notes/night-orange`). The footer is a glowing pipe in the crack between two

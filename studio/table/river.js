@@ -56,8 +56,8 @@
   // (green's are the river's first, so have no colour in their names), and the change to the next one
   var LIQ = ['blue', 'green', 'orange'], PRE = { blue: 'river-blue-', green: 'river-', orange: 'river-orange-' };
   var CHANGE = { blue: function (t) { return 'river-' + t + '-to-green'; },
-    green: null,                            // no footage yet for green to orange (nor orange to blue by night):
-    orange: function (t) { return t === 'day' ? 'river-day-orange-to-blue' : null; } };   // a plain blend
+    green: function (t) { return 'river-' + t + '-green-to-orange'; },
+    orange: function (t) { return 'river-' + t + '-orange-to-blue'; } };
   var liq = 'blue';
   try { var kept = localStorage.getItem('st-flow'); if (LIQ.indexOf(kept) >= 0) liq = kept; } catch (e) {}
   function stills(n) { R.classList.toggle('is-night', n); LIQ.forEach(function (l) { R.classList.toggle('is-' + l, liq === l); }); }
