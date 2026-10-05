@@ -329,8 +329,8 @@
    the eye finds it; brighter while it's being thrown */
 .valve::before{content:"";position:absolute;left:50%;top:50%;width:230%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;z-index:-1;pointer-events:none;
   background:radial-gradient(circle,var(--vg) 0,var(--vg) 18%,transparent 60%);mix-blend-mode:screen;opacity:.8;transition:opacity .6s ease;animation:v-breathe 4.5s ease-in-out infinite}
-.valve[data-kind=light]{--vg:rgba(255,170,60,.75)} .valve[data-kind=light].is-night{--vg:rgba(90,160,255,.8)}
-.valve[data-kind=flow]{--vg:rgba(60,228,255,.7)} .valve[data-kind=flow].is-green{--vg:rgba(125,255,74,.7)}
+/* --vg (and the lights' --lc) are set by valve.js, which crosses them over only once a lever has settled */
+.valve{--vg:rgba(255,170,60,.75)}
 .valve.turning::before,.valve:hover::before{opacity:1;animation:none}
 @keyframes v-breathe{50%{opacity:.45}}
 @media (prefers-reduced-motion:reduce){.valve::before{animation:none}}
@@ -346,8 +346,7 @@
 .light::after{content:"";position:absolute;left:50%;top:var(--bulb,40%);width:260%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;
   background:radial-gradient(circle,var(--lc) 0,transparent 58%);mix-blend-mode:screen;opacity:var(--lit,1);z-index:-1}
 .vlamp{--bulb:32%} .vtube{--bulb:42%}
-.valve[data-kind=light] .vlamp{--lc:rgba(255,176,70,.55)} .valve[data-kind=light].is-night .vlamp{--lc:rgba(120,175,255,.6)}
-.valve[data-kind=flow] .vtube{--lc:rgba(70,228,255,.5)} .valve[data-kind=flow].is-green .vtube{--lc:rgba(130,255,80,.5)}
+
 
 /* the footer: the same pair in the middle of the wood, in place of the old lamp plate, with room either
    side for the shelves */
