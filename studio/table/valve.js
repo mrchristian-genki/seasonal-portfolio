@@ -1,32 +1,34 @@
-/* STUDIO VALVES: the header's two handwheels, LIGHT (day or night) and FLOW (blue or green). Turning one
-   turns the river: the wheel goes round in step with the change (river.js reports how far it has got),
-   clockwise towards night or green and back the other way, and it can't be turned again until the change
-   is done (the button is disabled meanwhile). Its tag says what it's set to, or what it's turning to. */
+/* STUDIO VALVES: the header's two bypass valves, LIGHT (day or night) and FLOW (blue or green). Throwing a
+   lever turns the river: it swings across in step with the change (river.js reports how far it has got),
+   from pointing at one setting to pointing at the other, starting heavy and settling at the end, and it
+   can't be thrown again until the change is done (the button is disabled meanwhile). */
 (function () {
   'use strict';
   var calm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var SWING = 68;                                  // degrees either side of upright
   var valves = {};
   [].forEach.call(document.querySelectorAll('.valve'), function (b) {
-    var v = { b: b, wheel: b.querySelector('.vw'), tag: b.querySelector('.vtag b'), angle: 0, from: 0, to: 0, goal: 0, live: false, timer: null };
+    var v = { b: b, lever: b.querySelector('.lever'), angle: 0, from: 0, to: 0, goal: 0, live: false, timer: null };
     v.on = function () { return b.classList.contains(b.id === 'flow' ? 'is-green' : 'is-night'); };
     valves[b.getAttribute('data-kind')] = v;
-    label(v, false);
+    v.angle = v.goal = v.on() ? SWING : -SWING; draw(v); mark(v);
     b.addEventListener('click', function () {
-      // the switch's own handler (switch.js, river.js) has already flipped it; turn towards the new setting
-      v.from = v.angle; v.to = v.angle + (v.on() ? 360 : -360); v.goal = v.from; v.live = false;
-      b.classList.add('turning'); label(v, true); kick(v);
+      // the switch's own handler (switch.js, river.js) has already flipped it; swing towards the new setting
+      v.from = v.angle; v.to = v.on() ? SWING : -SWING; v.live = false;
+      b.classList.add('turning'); mark(v);
       clearTimeout(v.timer);
-      // no change clip to follow (reduced motion, or the video isn't running): turn on our own
+      // no change clip to follow (reduced motion, or the video isn't running): swing on its own
       v.timer = setTimeout(function () { if (!v.live) glide(v, calm ? 300 : 1100); }, 250);
     });
   });
-  function label(v, moving) {
-    var t = v.tag; if (!t) return;
-    t.textContent = (moving ? '→ ' : '') + t.getAttribute(v.on() ? 'data-b' : 'data-a');
+  // the setting it's set to (or heading for) lights; switch.js keeps is-night in step for LIGHT
+  function mark(v) {
     v.b.classList.toggle('is-on', v.on());
+    var a = v.b.querySelector('.vside.a'), z = v.b.querySelector('.vside.b');
+    a.classList.toggle('going', !v.on()); z.classList.toggle('going', v.on());
   }
-  function draw(v) { v.wheel.style.transform = 'rotate(' + v.angle.toFixed(2) + 'deg)'; }
-  // ease towards the goal, so the wheel never jumps even if the reports come in steps
+  function draw(v) { v.lever.style.transform = 'rotate(' + v.angle.toFixed(2) + 'deg)'; }
+  // ease towards the goal, so the lever never jumps even if the reports come in steps
   function kick(v) {
     if (v.raf) return;
     (function step() {
@@ -42,11 +44,11 @@
       if (p < 1) requestAnimationFrame(step);
     })(t0);
   }
-  // a heavy wheel: it starts slowly, as if it took some effort, and settles into place
+  // a stiff lever: it starts slowly, as if it took some effort, and settles into place
   function ease(p) { return p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2; }
   function progress(v, p) {
     v.goal = v.from + (v.to - v.from) * ease(p); kick(v);
-    if (p >= 1) { v.b.classList.remove('turning'); label(v, false); }
+    if (p >= 1) v.b.classList.remove('turning');
   }
   document.addEventListener('river:turn', function (e) {
     var v = valves[e.detail.kind]; if (!v) return;

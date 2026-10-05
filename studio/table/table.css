@@ -316,32 +316,37 @@ button.st-lamps:focus-visible{outline:2px solid #e6c983;outline-offset:4px;borde
 @keyframes holo-glitch{0%{opacity:1;translate:-47% -62%;filter:hue-rotate(40deg)}25%{opacity:.3;translate:-54% -62%}50%{opacity:.05;translate:-50% -62%}75%{opacity:.5;translate:-46% -62%;filter:hue-rotate(-30deg)}100%{opacity:1;translate:-50% -62%}}
 @media (prefers-reduced-motion:reduce){.shelf-prop .holo,.shelf-prop .beam,.shelf-prop .holo .scan{animation:none}}
 
-/* the two handwheels on the rock in the river (78.5% across, 60% down the strip), LIGHT and FLOW: no
-   panel, just the brass wheels on their spindles with a stamped tag under each */
-.defs{position:absolute;width:0;height:0;overflow:hidden}
-.st-valves{position:absolute;z-index:50;display:flex;gap:clamp(8px,1.2vw,16px);align-items:flex-start;translate:-50% -50%;
-  left:min(calc(var(--rv-x,0px) + var(--rv-w,100%) * .785),calc(100% - 90px));top:min(calc(var(--rv-y,0px) + var(--rv-h,100%) * .55),calc(100% - 62px))}
-.valve{position:relative;display:flex;flex-direction:column;align-items:center;gap:0;padding:0;border:0;background:none;cursor:pointer;
-  width:clamp(58px,5vw,76px);-webkit-tap-highlight-color:transparent}
-.valve .vw{width:100%;height:auto;aspect-ratio:1;display:block;filter:drop-shadow(4px 7px 5px rgba(8,4,0,.7));will-change:transform}
-/* a glass jewel in the hub, lit in the colour of what the wheel is set to */
-.valve .jewel{fill:#ffae3a;filter:drop-shadow(0 0 3px #ffae3a);transition:fill .8s ease}
-.valve#dayNight.is-on .jewel{fill:#5aa8ff;filter:drop-shadow(0 0 3px #5aa8ff)}
-.valve#flow .jewel{fill:#3ce4ff;filter:drop-shadow(0 0 3px #3ce4ff)}
-.valve#flow.is-on .jewel{fill:#7dff4a;filter:drop-shadow(0 0 3px #7dff4a)}
-.valve .jewel-hi{fill:rgba(255,255,255,.75)}
-.valve .vtag{margin-top:-6%;display:flex;flex-direction:column;align-items:center;gap:1px;padding:3px 8px 3px;border-radius:3px;min-width:84%;
-  font-family:"Special Elite","Courier New",monospace;color:#2a1c0a;letter-spacing:.12em;line-height:1;
-  background:radial-gradient(circle at 5px 50%,#fff1c8 0 1.2px,#6b4a1c 1.8px,transparent 2.4px),radial-gradient(circle at calc(100% - 5px) 50%,#fff1c8 0 1.2px,#6b4a1c 1.8px,transparent 2.4px),
+/* the two bypass valves on the rock in the river (78.5% across, 55% down the strip), LIGHT and FLOW: a cast
+   valve body with its lever on the hex boss, the two settings stamped over its pipe ends (the lever points
+   at the one it's set to) and a brass tag beneath. By day and by night the photos swap. */
+.st-valves{position:absolute;z-index:50;display:flex;gap:clamp(6px,1vw,14px);align-items:flex-end;translate:-50% -50%;
+  left:min(calc(var(--rv-x,0px) + var(--rv-w,100%) * .785),calc(100% - 130px));top:min(calc(var(--rv-y,0px) + var(--rv-h,100%) * .56),calc(100% - 52px))}
+.valve{position:relative;display:block;padding:0;border:0;background:none;cursor:pointer;width:clamp(96px,8.4vw,126px);-webkit-tap-highlight-color:transparent}
+.vbody{position:relative;display:block;aspect-ratio:400/268;filter:drop-shadow(4px 8px 6px rgba(8,4,0,.7))}
+.vbody > img{position:absolute;inset:0;width:100%;height:100%;display:block}
+/* the lever: its pivot eye (50%, 87.3% of the lever photo) sits on the body's hex boss (49.8%, 48.2%) */
+.lever{position:absolute;left:42.35%;top:-28.23%;width:14.91%;aspect-ratio:60/235;transform-origin:50% 87.3%;will-change:transform;
+  filter:drop-shadow(3px 5px 3px rgba(8,4,0,.6))}
+.lever img{position:absolute;inset:0;width:100%;height:100%;display:block}
+.valve .n{opacity:0;transition:opacity 1.2s ease}
+.st-hero:has(.table.night) .valve .n{opacity:1}
+/* the two settings, stamped over the pipe ends; the one the lever points at glows */
+.vside{position:absolute;top:-6%;font:400 clamp(7px,.62vw,9.5px)/1 "Special Elite","Courier New",monospace;letter-spacing:.1em;
+  color:rgba(240,220,170,.55);text-shadow:0 1px 2px rgba(0,0,0,.9);transition:color .6s ease,text-shadow .6s ease;pointer-events:none}
+.vside.a{left:2%} .vside.b{right:2%}
+#dayNight:not(.is-on) .vside.a{color:#ffcf7a;text-shadow:0 0 6px rgba(255,160,40,.8),0 1px 2px #000}
+#dayNight.is-on .vside.b{color:#9fcbff;text-shadow:0 0 6px rgba(80,150,255,.85),0 1px 2px #000}
+#flow:not(.is-on) .vside.a{color:#8ef0ff;text-shadow:0 0 6px rgba(40,220,255,.85),0 1px 2px #000}
+#flow.is-on .vside.b{color:#b6ff8a;text-shadow:0 0 6px rgba(110,255,70,.85),0 1px 2px #000}
+.valve .vtag{display:block;width:max-content;margin:-2px auto 0;padding:3px 9px;border-radius:3px;
+  font:400 clamp(7px,.6vw,9px)/1 "Special Elite","Courier New",monospace;color:#2a1c0a;letter-spacing:.16em;
+  background:radial-gradient(circle at 4px 50%,#fff1c8 0 1px,#6b4a1c 1.6px,transparent 2.2px),radial-gradient(circle at calc(100% - 4px) 50%,#fff1c8 0 1px,#6b4a1c 1.6px,transparent 2.2px),
     linear-gradient(180deg,#ecd291,#bf9a52 50%,#a07c3c);box-shadow:inset 0 0 0 1px rgba(60,38,10,.6),inset 0 1px 0 rgba(255,245,210,.6),2px 4px 5px rgba(0,0,0,.55)}
-.valve .vtag small{font-size:clamp(6px,.5vw,8px);opacity:.75}
-.valve .vtag b{font-weight:400;font-size:clamp(9px,.8vw,12px);white-space:nowrap}
-.valve:hover:not(:disabled) .vw{filter:drop-shadow(4px 7px 5px rgba(8,4,0,.7)) brightness(1.12)}
+.valve:hover:not(:disabled) .vbody{filter:drop-shadow(4px 8px 6px rgba(8,4,0,.7)) brightness(1.1)}
 .valve:focus-visible{outline:3px solid #f6d58a;outline-offset:4px;border-radius:8px}
-/* while it turns it can't be turned again; the tag shows where it's going */
+/* while it's thrown it can't be thrown again; the setting it's heading for blinks */
 .valve:disabled{cursor:progress;opacity:1}
-.valve:disabled:not(.turning){opacity:.75}
-.valve.turning .vtag b{animation:vt-blink 1.1s ease-in-out infinite}
-@keyframes vt-blink{50%{opacity:.45}}
-.st-hero:has(.table.night) .valve .vw{filter:drop-shadow(4px 7px 5px rgba(0,0,0,.75)) brightness(.82)}
-@media (max-width:640px){.st-valves{left:min(calc(var(--rv-x,0px) + var(--rv-w,100%) * .785),calc(100% - 64px));gap:8px}.valve{width:50px}.valve .vtag{padding:2px 5px}.valve .vtag small{font-size:5.5px}.valve .vtag b{font-size:8.5px;letter-spacing:.06em}}
+.valve:disabled:not(.turning) .vbody{filter:drop-shadow(4px 8px 6px rgba(8,4,0,.7)) brightness(.7) saturate(.7)}
+.valve.turning .vside.going{animation:vt-blink 1.1s ease-in-out infinite}
+@keyframes vt-blink{50%{opacity:.4}}
+@media (max-width:640px){.st-valves{left:min(calc(var(--rv-x,0px) + var(--rv-w,100%) * .785),calc(100% - 92px));gap:4px}.valve{width:84px}.vside{font-size:6.5px;letter-spacing:.04em}.valve .vtag{font-size:6.5px;padding:2px 6px}}
