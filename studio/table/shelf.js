@@ -1,7 +1,7 @@
-/* STUDIO SHELVES: three bits of open wood, each showing one prop at a time. The header's plank band to the
-   right of the STUDIO panel (above the river), and the footer either side of the valves. Every so often a
-   prop leaves a shelf and another arrives (dropping in from the top in the header, sliding in from the side
-   in the footer), picked at random from the ones not already out, so a page left open long enough shows the
+/* STUDIO SHELVES: open wood showing one prop at a time: the header's plank band to the right of the STUDIO
+   panel (above the river). (The footer had two, either side of its valves, until it became the pipe; the
+   code still takes side shelves, sliding in from the left or right, should a platform over the pipe come
+   along.) Every so often a prop leaves a shelf and another arrives (dropping in from the top), picked at random from the ones not already out, so a page left open long enough shows the
    whole collection. A hand brings each one in and takes it away. Tap one to collect it and another takes
    its place.
    Works on the login page too. Marley (in the table layer) passes over all of them. */
@@ -56,9 +56,7 @@
 
   function el(cls, parent) { var d = document.createElement('div'); d.className = cls; parent.appendChild(d); return d; }
   var shelves = [
-    { box: el('shelf shelf-top', HERO), from: 'top' },
-    { box: el('shelf shelf-left', FOOT), from: 'left' },
-    { box: el('shelf shelf-right', FOOT), from: 'right' }
+    { box: el('shelf shelf-top', HERO), from: 'top' }
   ];
 
   // the header shelf: the wood between the STUDIO panel and the right edge (or the buttons), above the river

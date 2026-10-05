@@ -354,6 +354,6 @@
 
 /* the footer: the same pair in the middle of the wood, in place of the old lamp plate, with room either
    side for the shelves */
-.ft-valves{position:absolute;z-index:2;left:50%;top:50%;translate:-50% -50%;display:flex;gap:clamp(44px,4.4vw,64px);align-items:flex-end}
+.ft-valves{position:absolute;z-index:2;left:50%;top:50%;translate:-50% -50%;display:flex;gap:clamp(18px,2vw,30px);align-items:flex-end}
 .ft-valves .valve{position:relative;left:auto;top:auto;translate:none;width:clamp(52px,5vw,72px)}
 .st-foot.night .valve .n{opacity:1}
