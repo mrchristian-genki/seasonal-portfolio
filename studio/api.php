@@ -17,8 +17,15 @@ $action = $_GET['a'] ?? '';
 $method = $_SERVER['REQUEST_METHOD'];
 if ($method === 'POST') {
     if (!hash_equals(studio_csrf(), $_SERVER['HTTP_X_CSRF'] ?? '')) json_fail('This page is out of date. Reload it and try again.', 403);
-    $body = json_decode((string) file_get_contents('php://input'), true);
-    if (!is_array($body)) json_fail('Bad request.');
+    // Files come up as raw bytes (their few fields in the query string), not base64 in JSON: DreamHost's
+    // firewall scans JSON fields, and now and then a run of base64 looks like an attack to it (a 418).
+    $raw = null;
+    if (str_starts_with((string) ($_SERVER['CONTENT_TYPE'] ?? ''), 'application/octet-stream')) {
+        $raw = (string) file_get_contents('php://input'); $body = $_GET;
+    } else {
+        $body = json_decode((string) file_get_contents('php://input'), true);
+        if (!is_array($body)) json_fail('Bad request.');
+    }
 }
 
 $cfg = studio_config();
@@ -127,7 +134,7 @@ try {
         // A new photo (already resized and stripped of location data in the browser) goes up one
         // at a time as a Git blob, so no request is large; the save then commits it by its id.
         case 'POST blob':
-            $bytes = base64_decode((string) ($body['b64'] ?? ''), true);
+            $bytes = $raw ?? base64_decode((string) ($body['b64'] ?? ''), true);
             if ($bytes === false || substr($bytes, 0, 3) !== "\xFF\xD8\xFF" || strlen($bytes) > 4_000_000) json_fail("That photo isn't a usable JPEG.");
             json_out(['sha' => $gh->blob(base64_encode($bytes))]);
 
@@ -136,14 +143,14 @@ try {
         case 'POST audiopart':
             $up = (string) ($body['up'] ?? ''); $i = (int) ($body['i'] ?? -1);
             if (!preg_match('/^[0-9a-f]{16}$/', $up) || $i < 0) json_fail('Bad upload.');
-            $bytes = base64_decode((string) ($body['b64'] ?? ''), true);
+            $bytes = $raw ?? base64_decode((string) ($body['b64'] ?? ''), true);
             if ($bytes === false || strlen($bytes) > 3_000_000) json_fail('Bad upload piece.');
             $part = studio_private_dir() . "/audio-$up.part";
             if ($i === 0) { if (!is_mp3($bytes)) json_fail("That isn't an MP3. Export the episode as MP3 and try again."); file_put_contents($part, $bytes); }
             else { if (!is_file($part)) json_fail('The upload was interrupted. Try again.'); file_put_contents($part, $bytes, FILE_APPEND); }
             clearstatcache(true, $part);
             if (filesize($part) > AUDIO_MAX) { @unlink($part); json_fail('That audio file is too big (40 MB at most).'); }
-            if (empty($body['last'])) json_out(['ok' => true]);
+            if (empty($body['last']) || $body['last'] === '0') json_out(['ok' => true]);
             $all = (string) file_get_contents($part); @unlink($part);
             json_out(['sha' => $gh->blob(base64_encode($all)), 'bytes' => strlen($all)]);
 

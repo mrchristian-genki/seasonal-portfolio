@@ -27,8 +27,10 @@
   // Read as text, not r.json(): a reply that isn't clean JSON (a PHP warning printed before it, or a host's
   // error page) then still works, or at least says what came back (Safari's own message for a bad reply is
   // only "The string did not match the expected pattern").
+  // A Blob body goes up as raw bytes (the host's firewall can take base64 in JSON for an attack).
   function api(a, body, q) {
-    var opt = body ? { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRF': CSRF }, body: JSON.stringify(body) } : {};
+    var raw = body instanceof Blob;
+    var opt = body ? { method: 'POST', headers: { 'Content-Type': raw ? 'application/octet-stream' : 'application/json', 'X-CSRF': CSRF }, body: raw ? body : JSON.stringify(body) } : {};
     return fetch('api.php?a=' + a + (q || ''), opt).then(function (r) {
       if (r.status === 401) { location.reload(); throw new Error('Logged out'); }
       return r.text().then(function (t) {
@@ -37,6 +39,7 @@
           var k = t.search(/[{\[]/);   // JSON after something printed before it
           try { if (k >= 0) { j = JSON.parse(t.slice(k)); if (window.console) console.warn('Studio: the server printed this before its reply:', t.slice(0, k)); } } catch (e2) { j = null; }
         }
+        if (j === null && r.status === 418) throw new Error('The web host\'s firewall blocked the ' + a + ' request (418). Reload the Studio and try again; if it keeps happening, tell me.');
         if (j === null) {
           var said = t.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 140);
           throw new Error('The server\'s reply to ' + a + ' wasn\'t readable (' + r.status + (said ? ': ' + said : ', empty') + ')');
@@ -1412,8 +1415,7 @@
     var CH = 1500000, n = Math.ceil(file.size / CH), chain = Promise.resolve(), res = null, box = $('#audio');
     box.innerHTML = '<p class="muted aup">Uploading ' + esc(name) + '… <b>0%</b></p>';
     for (var i = 0; i < n; i++) (function (i) {
-      chain = chain.then(function () { return blobToB64(file.slice(i * CH, (i + 1) * CH)); })
-        .then(function (b64) { return api('audiopart', { up: up, i: i, last: i === n - 1, b64: b64 }); })
+      chain = chain.then(function () { return api('audiopart', file.slice(i * CH, (i + 1) * CH), '&up=' + up + '&i=' + i + '&last=' + (i === n - 1 ? 1 : 0)); })
         .then(function (r) { res = r; var b = $('#audio .aup b'); if (b) b.textContent = Math.round((i + 1) / n * 100) + '%'; });
     })(i);
     chain.then(function () {
@@ -1554,7 +1556,7 @@
     names.forEach(function (n, i) {
       chain = chain.then(function () {
         btn.textContent = 'Uploading photo ' + (i + 1) + ' of ' + names.length + '…'; L.at(0, (i + 1) + ' of ' + names.length);
-        return blobToB64((fresh[n] || posterNew[n]).blob).then(function (b64) { return api('blob', { b64: b64 }); }).then(function (r) { uploaded.push({ name: n, sha: r.sha }); });
+        return api('blob', (fresh[n] || posterNew[n]).blob).then(function (r) { uploaded.push({ name: n, sha: r.sha }); });
       });
     });
     chain.then(function () {
