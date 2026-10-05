@@ -58,8 +58,8 @@ $in = studio_logged_in();
   <div class="river" id="river" aria-hidden="true">
     <img class="rv-still day" src="table/a/river-day.webp?v=4" alt="">
     <img class="rv-still night" src="table/a/river-night.webp?v=4" alt="">
-    <img class="rv-still bday" src="table/a/river-blue-day.webp?v=1" alt="">
-    <img class="rv-still bnight" src="table/a/river-blue-night.webp?v=1" alt="">
+    <img class="rv-still bday" src="table/a/river-blue-day.webp?v=2" alt="">
+    <img class="rv-still bnight" src="table/a/river-blue-night.webp?v=2" alt="">
   </div>
   <div class="table" id="table" data-set="header" data-base="table/">
     <div class="layer" id="layer"></div>
@@ -138,7 +138,7 @@ $in = studio_logged_in();
 <script src="assets/studio.js?v=<?= STUDIO_VERSION ?>-34"></script>
 <?php endif; ?>
 <script src="table/table.js?v=23"></script>
-<script src="table/river.js?v=13"></script>
+<script src="table/river.js?v=14"></script>
 <script src="table/switch.js?v=7"></script>
 <script src="table/toggle.js?v=1"></script>
 <script src="table/foot.js?v=1"></script>
