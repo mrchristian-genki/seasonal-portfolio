@@ -1,0 +1,110 @@
+{
+ "id": "2026-10-05-the-studio-river",
+ "title": "A river through the Studio",
+ "date": "2026-10-05",
+ "kind": "make",
+ "place": "The workshop",
+ "status": "draft",
+ "summary": "A case study of the Studio's header: a glowing river with three liquids, day and night, two small toggles, 36 clips that hand off cleanly, and a liquid that now runs through the whole page.",
+ "trailhead": null,
+ "links": [
+  {
+   "label": "The Studio",
+   "url": "https://www.christiangehrke.com/studio/?look=night-green"
+  }
+ ],
+ "track": null,
+ "photos": [
+  {
+   "src": "data/photos/2026-10-05-the-studio-river/cover.jpg",
+   "caption": "One of the Studio's six share cards: green at night, with the brass panel over the river.",
+   "w": 1200,
+   "h": 630,
+   "use": "post",
+   "cover": true
+  },
+  {
+   "src": "data/photos/2026-10-05-the-studio-river/panel.mp4",
+   "poster": "data/photos/2026-10-05-the-studio-river/panel.jpg",
+   "video": true,
+   "ai": false,
+   "caption": "The panel up close: CHANGE LIQUID thrown, the green lamp breathing while the river turns, then STUDIO draining and filling green.",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false
+  },
+  {
+   "src": "data/photos/2026-10-05-the-studio-river/dusk.mp4",
+   "poster": "data/photos/2026-10-05-the-studio-river/dusk.jpg",
+   "video": true,
+   "ai": false,
+   "caption": "DAY/NIGHT: the dusk clip plays once, the tube on the bank flickers on, and the dial turns to the moon.",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false
+  },
+  {
+   "src": "data/photos/2026-10-05-the-studio-river/blue-green.mp4",
+   "poster": "data/photos/2026-10-05-the-studio-river/blue-green.jpg",
+   "video": true,
+   "ai": false,
+   "caption": "Blue to green at night. The page skin goes from steel to verdigris once the river has changed.",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false
+  },
+  {
+   "src": "data/photos/2026-10-05-the-studio-river/green-orange.mp4",
+   "poster": "data/photos/2026-10-05-the-studio-river/green-orange.jpg",
+   "video": true,
+   "ai": false,
+   "caption": "Green to orange at night, the rivets in the rails refilling with the new colour.",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false
+  },
+  {
+   "src": "data/photos/2026-10-05-the-studio-river/orange-blue.mp4",
+   "poster": "data/photos/2026-10-05-the-studio-river/orange-blue.jpg",
+   "video": true,
+   "ai": false,
+   "caption": "Orange back to blue by day, closing the loop.",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false
+  },
+  {
+   "src": "data/photos/2026-10-05-the-studio-river/before.jpg",
+   "caption": "Where it started: the earlier header, with a bigger nameplate and a switch on the river bank.",
+   "w": 1200,
+   "h": 630,
+   "use": "post",
+   "cover": false
+  },
+  {
+   "src": "data/photos/2026-10-05-the-studio-river/cards.jpg",
+   "caption": "Six share cards, one for each look, so a shared link's preview matches what was on screen.",
+   "w": 1200,
+   "h": 945,
+   "use": "post",
+   "cover": false
+  }
+ ],
+ "fieldNotes": "Case study of the Studio header, built over Oct 2026 (PRs #77 to #103 in seasonal-portfolio). Facts from the commit history: liquids blue (1080p renders), green (4K), orange; one-way change cycle; 18 header + 18 footer clips, 124 files across sizes; tube light model learned from blue-night footage and re-applied to every clip; ends of each change graded to the loops; per-look share cards via ?look=; page skin, rivets and liquid-filled STUDIO letters (CSS text-filling technique); glowing buttons. Clips are screen recordings of the login page.",
+ "post": {
+  "title": "A river through the Studio",
+  "body": "The Studio is the private side of this site, where a day out becomes a Field Note. It deserved a front door that felt like a workshop, so its header became a glowing river running through a crack in an old workbench, with a brass STUDIO panel bolted on above it.\n\nIt began green, from rendered 4K footage. Then I wanted a blue river, and the best I could render was 1080p. That turned out fine: the header is a short, wide strip, so 1920 pixels across is all it ever needs. The first version jumped when you switched. Every change now plays its own clip and crossfades in, and the buttons wait until it's done.\n\nThe controls took the longest. I tried handwheels, then bypass valves with lit windows, then valves down in the footer, then lamps beside them. It was all too much. What stuck is the smallest version: two little toggles on the panel, each between jewel pilot lamps. DAY/NIGHT plays dusk or dawn. CHANGE LIQUID only goes one way round, blue to green to orange and back to blue, so every change has exactly one clip.\n\nThat one-way rule is what made it buildable. Three liquids, day and night, each with a loop, a dusk and dawn, and a change to the next liquid: 18 clips for the river and 18 more for the glowing pipe in the footer. With each one in a few sizes for different screens, that's 124 video files behind one header.\n\nThe renders never quite agreed with each other. A glass tube on the river bank was lit in one clip and dark in the next, and a new render would arrive with the lamps glowing green when the loop it hands over to has them orange. So every clip goes through the same light model before it's used. The tube's glow is measured once from the blue night footage, then painted back in the colour of the liquid, scaled by how dark the scene is. Both ends of each change are graded to match the loops they meet, so the hand-offs don't show.\n\nThen the liquid started spreading. The rivets in the brass rails fill with its colour. The page itself shifts: gold on walnut for orange, steel on slate for blue, verdigris on bronze for green. The STUDIO letters fill with it too, a slow wave running through them, borrowed from an old CSS trick for text filling with water. On every change they drain and fill again.\n\nEven the links remember. The address carries the look, so a link shared at night with the orange liquid opens that way, and its preview card shows it.\n\nWhat I learned: less is more, again. The valves were fun to build and wrong to keep. And it only feels like one machine when the light agrees everywhere, so measure the light once and paint it back the same way in every clip."
+ },
+ "episode": {
+  "title": "A river through the Studio",
+  "script": "Christian wanted the private side of his website to feel like a workshop. So the Studio got a header: a glowing river running through a crack in an old workbench, with a brass nameplate bolted on above it.\n\n***\n\nIt started green. Then came a blue river, rendered at the only size he could get, which was plenty for a strip that wide. Then orange.\n\nThe first switch jumped. Now every change plays its own short film and fades in, and the buttons wait their turn.\n\n***\n\nThe controls went through handwheels, valves with lit windows, valves in the footer, lamps beside the valves. All of it went. What stayed is two small toggles between little jewel lamps. Day and night. And change liquid, which only ever goes one way: blue, green, orange, and round again.\n\nThat one rule made it possible. Thirty-six clips cover every change, a hundred and twenty-four files counting the sizes.\n\n***\n\nThe hardest part was the light. Every render lit the little glass tube differently. So the tube's glow was measured once and painted back into every clip, in the liquid's colour, as bright as the night allows.\n\n***\n\nNow the liquid runs through the whole page. The rivets fill with it. The page shifts from gold to steel to verdigris. The letters of the nameplate fill like a glass, and drain, and fill again.\n\nLess is more, it turns out. And light that agrees everywhere is what makes it one machine.",
+  "audio": null
+ },
+ "questions": [],
+ "consent": "Marley: the family dog, seen briefly on her visits along the river in some clips."
+}

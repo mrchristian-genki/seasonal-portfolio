@@ -49,7 +49,7 @@
   // done: the old lamp fades out as the new one comes up to a steady glow, and the slot empties
   function settle(t) {
     t.lamps.forEach(function (l) { l.classList.remove('go'); });
-    if (t.kind === 'flow') ring();
+    if (t.kind === 'flow') ring(true);
     var from = t.lit.slice(), to = t.at(), t0 = performance.now();
     (function step(now) {
       var p = Math.min(1, (now - t0) / (calm ? 200 : GLOW)), e = p * p * (3 - 2 * p);
@@ -58,7 +58,17 @@
     })(t0);
   }
   // the dial's ring takes the liquid's colour
-  function ring() { var p = document.querySelector('.st-dn'); if (p && ts.flow) p.style.setProperty('--liq', COL.flow[ts.flow.at()]); }
+  // and so does the whole page (table.css): the rails' rivets fill with it, the login plate catches its light
+  function ring(fill) {
+    if (!ts.flow) return;
+    var c = COL.flow[ts.flow.at()], p = document.querySelector('.st-dn'), root = document.documentElement, v = c.split(',');
+    if (p) p.style.setProperty('--liq', c);
+    LIQ.forEach(function (l, i) { root.classList.toggle('liq-' + l, i === ts.flow.at()); });
+    if (!fill) root.style.transition = 'none';             // on opening, straight to it
+    root.style.setProperty('--lr', v[0]); root.style.setProperty('--lg', v[1]); root.style.setProperty('--lb', v[2]);
+    if (!fill) { void root.offsetWidth; root.style.transition = ''; }
+    if (fill && !calm) { root.classList.remove('liq-fill'); void root.offsetWidth; root.classList.add('liq-fill'); }
+  }
   ring();
   document.addEventListener('river:turn', function (e) {
     var t = ts[e.detail.kind]; if (!t) return;
