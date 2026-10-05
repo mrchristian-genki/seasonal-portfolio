@@ -1144,7 +1144,7 @@
     var audio = !!(audioNew || (E.episode.audio && !audioGone));
     var videos = (DRIVEVID || []).length, loops = E.photos.some(function (p) { return p.video && p.from; });
     var out = [];
-    if (vn && !E.voiceNotesDone) out.push({ t: 'Listen to your voice notes', d: 'Add what matters to Your notes: Claude can only use what\'s written there.', b: 'Listen', go: '#voiceNotes', done: 'voice' });
+    if (vn && !E.voiceNotesDone) out.push({ t: 'Paste in your voice notes', d: 'Claude only reads Your notes. In Voice Memos, tap ••• then Copy Transcript, and Paste it here.', b: 'Go to them', go: '#voiceNotes', done: 'voice' });
     if (!drafted) out.push({ t: 'Draft with Claude', d: 'Claude writes the post, the captions and the episode script from your notes, track and photos.', b: 'Draft', run: function () { draft(); } });
     if (q) out.push({ t: 'Answer Claude\'s ' + (q === 1 ? 'question' : q + ' questions'), d: 'The script isn\'t final until they\'re answered. Answer them one by one, then send them all at once.', b: 'Answer', go: '#questions' });
     if (drafted && !q && !val('epScript')) out.push({ t: 'Write the episode script', d: 'The episode is read from it. Draft with Claude writes one from the post, or write your own.', b: 'Go to the script', go: '#epScript' });
@@ -1318,12 +1318,38 @@
       };
     });
   }
+  // Each voice note's words come from the iPhone's own transcript (Voice Memos: ••• then Copy Transcript):
+  // Paste reads the clipboard (or takes a typed paste) and adds it to Your notes, which is all Claude reads.
   function renderVoiceNotes() {
     var box = $('#voiceNotes'); if (!box) return;
-    var vn = (DRIVEAUD || []).filter(function (f) { return roleOf(f.name) === 'notes'; });
-    box.innerHTML = vn.length ? '<div class="vnotes"><b>Your voice notes</b> <span class="muted">Listen while you write them up below.</span>' + vn.map(function (f) {
-      return '<div class="vn"><small>' + esc(f.name.split('/').pop()) + '</small><audio controls preload="metadata" src="' + driveUrl(f.name) + '"></audio></div>';
+    var vn = (DRIVEAUD || []).filter(function (f) { return roleOf(f.name) === 'notes'; }), had = E.voiceAdded || {};
+    box.innerHTML = vn.length ? '<div class="vnotes"><b>Your voice notes</b> <span class="muted">Claude only reads Your notes, so paste each one\'s transcript in. In Voice Memos, tap ••• on the recording, then Copy Transcript.</span>' + vn.map(function (f, i) {
+      var n = f.name.split('/').pop();
+      return '<div class="vn"><small>' + esc(n) + '</small><audio controls preload="metadata" src="' + driveUrl(f.name) + '"></audio>' +
+        '<div class="row"><button type="button" class="small" data-vp="' + i + '">' + (had[f.name] ? 'Paste again' : 'Paste transcript') + '</button>' +
+        (had[f.name] ? '<span class="muted">In Your notes ✓</span>' : '') + '</div>' +
+        '<div class="vpaste" hidden><textarea rows="4" placeholder="Paste the transcript here"></textarea><div class="row"><button type="button" class="small">Add to Your notes</button><button type="button" class="link">Cancel</button></div></div></div>';
     }).join('') + '</div>' : '';
+    $$('button[data-vp]', box).forEach(function (b) {
+      var f = vn[+b.getAttribute('data-vp')], vnBox = b.closest('.vn'), pane = $('.vpaste', vnBox), ta = $('textarea', pane), bs = $$('button', pane);
+      function manual() { pane.hidden = false; ta.focus(); }
+      b.onclick = function () {
+        if (!navigator.clipboard || !navigator.clipboard.readText) { manual(); return; }
+        navigator.clipboard.readText().then(function (t) { if (t && t.trim()) addTranscript(f.name, t); else manual(); }, manual);
+      };
+      bs[0].onclick = function () { if (ta.value.trim()) addTranscript(f.name, ta.value); else ta.focus(); };
+      bs[1].onclick = function () { pane.hidden = true; };
+    });
+  }
+  function addTranscript(name, text) {
+    var ta = $('#fieldNotes'), t = String(text).replace(/\r\n?/g, '\n').replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
+    var label = 'From my voice note (' + name.split('/').pop().replace(/\.[^.]+$/, '') + '):';
+    ta.value = (ta.value.trim() ? ta.value.trim() + '\n\n' : '') + label + '\n' + t;
+    E.voiceAdded = E.voiceAdded || {}; E.voiceAdded[name] = true;
+    var vn = (DRIVEAUD || []).filter(function (f) { return roleOf(f.name) === 'notes'; });
+    if (vn.every(function (f) { return E.voiceAdded[f.name]; })) E.voiceNotesDone = true;
+    markDirty(); renderVoiceNotes(); renderNext();
+    toast('Added to Your notes (' + t.split(/\s+/).length + ' words). Draft again to use it.');
   }
 
   // Mastering, in the browser, to match the show: mono, 44.1 kHz, levelled to -16 LUFS (measured the
