@@ -4,7 +4,7 @@
  "date": "2026-10-05",
  "kind": "make",
  "place": "The workshop",
- "status": "draft",
+ "status": "published",
  "summary": "A case study of the Studio's header: a glowing river with three liquids, day and night, two small toggles, 36 clips that hand off cleanly, and a liquid that now runs through the whole page.",
  "trailhead": null,
  "links": [
@@ -103,7 +103,7 @@
  "episode": {
   "title": "A river through the Studio",
   "script": "Christian wanted the private side of his website to feel like a workshop. So the Studio got a header: a glowing river running through a crack in an old workbench, with a brass nameplate bolted on above it.\n\n***\n\nIt started green. Then came a blue river, rendered at the only size he could get, which was plenty for a strip that wide. Then orange.\n\nThe first switch jumped. Now every change plays its own short film and fades in, and the buttons wait their turn.\n\n***\n\nThe controls went through handwheels, valves with lit windows, valves in the footer, lamps beside the valves. All of it went. What stayed is two small toggles between little jewel lamps. Day and night. And change liquid, which only ever goes one way: blue, green, orange, and round again.\n\nThat one rule made it possible. Thirty-six clips cover every change, a hundred and twenty-four files counting the sizes.\n\n***\n\nThe hardest part was the light. Every render lit the little glass tube differently. So the tube's glow was measured once and painted back into every clip, in the liquid's colour, as bright as the night allows.\n\n***\n\nNow the liquid runs through the whole page. The rivets fill with it. The page shifts from gold to steel to verdigris. The letters of the nameplate fill like a glass, and drain, and fill again.\n\nLess is more, it turns out. And light that agrees everywhere is what makes it one machine.",
-  "audio": null
+  "audio": "data/audio/2026-10-05-the-studio-river.mp3"
  },
  "questions": [],
  "consent": "Marley: the family dog, seen briefly on her visits along the river in some clips."
