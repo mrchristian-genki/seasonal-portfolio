@@ -10,7 +10,9 @@
   var SWING = 47;                                  // the windows sit 47° either side of upright
   var valves = {};
   [].forEach.call(document.querySelectorAll('.valve'), function (b) {
+    var lt = b.querySelector('.light');
     var v = { b: b, lever: b.querySelector('.lever'), ga: b.querySelector('.ga'), gb: b.querySelector('.gb'),
+      light: lt, la: lt && lt.querySelector('.ca'), lb: lt && lt.querySelector('.cb'),
       angle: 0, from: 0, to: 0, goal: 0, live: false, timer: null };
     v.on = function () { return b.classList.contains(b.id === 'flow' ? 'is-green' : 'is-night'); };
     valves[b.getAttribute('data-kind')] = v;
@@ -31,6 +33,14 @@
     var t = (v.angle + SWING) / (2 * SWING);       // 0: over the left window, 1: over the right one
     v.ga.style.opacity = Math.max(0, Math.min(1, t)).toFixed(3);
     v.gb.style.opacity = Math.max(0, Math.min(1, 1 - t)).toFixed(3);
+    // the light beside it: out as the lever crosses the middle, then back in the new colour, flickering
+    // while it's being thrown
+    if (v.light) {
+      var flick = v.b.classList.contains('turning') && !calm ? 0.7 + 0.3 * Math.random() : 1;
+      var a = Math.max(0, Math.min(1, (t - 0.5) * 2.5)), z = Math.max(0, Math.min(1, (0.5 - t) * 2.5));
+      v.la.style.opacity = (a * flick).toFixed(3); v.lb.style.opacity = (z * flick).toFixed(3);
+      v.light.style.setProperty('--lit', (Math.max(a, z) * flick).toFixed(3));
+    }
   }
   // ease towards the goal, so the lever never jumps even if the reports come in steps
   function kick(v) {
