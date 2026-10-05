@@ -4,7 +4,7 @@
  "date": "2026-03-14",
  "kind": "ride",
  "place": "Skunk Harbor",
- "status": "script",
+ "status": "published",
  "summary": "A short ride on March 14, 2026, about three miles, with most of a two-hour morning spent above the clear water and snowy boulders of a Lake Tahoe shoreline.",
  "trailhead": null,
  "links": [],
@@ -1466,7 +1466,7 @@
    "w": 960,
    "h": 540,
    "use": "post",
-   "cover": false,
+   "cover": true,
    "from": "6B1B8305-0BB1-4F93-88FB-B3B4FA7DE8CC.MP4",
    "range": [
     8.75,
@@ -1482,7 +1482,7 @@
  "episode": {
   "title": "Three miles and a long look down",
   "script": "Just before nine on a March morning, Christian set off on a ride by Lake Tahoe.\n\nIt was not a long one. About three miles. A little under six hundred feet of climbing, and the same back down. The moving part of it took twenty-two minutes.\n\nThe whole morning took a little over two hours.\n\n***\n\nThe photos say where the time went. They start at half past nine, and they're all taken from above.\n\nStraight down, the lake is so clear the boulders under the surface look like they're sitting in air. Brown and green stones, one beside the next, and the water around them turning from turquoise to deep blue.\n\nThere was still snow that morning. Patches of it under the pines, and white pockets between the granite on the shore. The trees threw long shadows right out across the water.\n\nLooking along the shore, the forest runs all the way down to the rocks. Across the lake, far off, the mountains were still white.\n\n***\n\nThe last picture comes a little after ten. A small cove. A couple of old buildings back in the trees. And standing in the shallows, a line of old posts, leading out into the water.\n\nWhat they once held up, the photo doesn't say.\n\n***\n\nThen it was back on the bike. The top speed that day was about twenty-six miles an hour. On a three-mile ride, that's most of the story of the way down.\n\nThree miles of riding. Nearly two hours of looking. Some mornings the ratio is exactly right.",
-  "audio": null
+  "audio": "data/audio/2026-03-14-clear-water-in-march.mp3"
  },
  "questions": [],
  "consent": "Christian and Marley",
