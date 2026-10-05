@@ -32,17 +32,22 @@
   });
   if (lamps) lamps.addEventListener('click', function () { sw.click(); });
 
-  // The address keeps up: #day or #night at the end, after the Studio's own view once logged in
-  // (#notes/night, #note/<id>/day, #new/day). Flipping day and night rewrites the address in place;
-  // a change of view (studio.js, through StudioHash) adds a step, so Back and Forward walk the views.
-  // Opening an address with a hash restores both (the time of day only on opening).
-  var view = '', onview = null;
+  // The address keeps up: the time of day and the river's colour at the end (day-blue, night-green…),
+  // after the Studio's own view once logged in (#notes/night-blue, #note/<id>/day-green, #new/day-blue).
+  // Flipping either rewrites the address in place; a change of view (studio.js, through StudioHash) adds a
+  // step, so Back and Forward walk the views. Opening an address with a hash restores all three (the time
+  // of day and colour only on opening). A bare #…/day or #…/night still works.
+  var view = '', onview = null, river = window.StudioRiver;
   function parse() {
-    var parts = decodeURIComponent(location.hash.slice(1)).split('/'), mode = null;
-    if (parts[parts.length - 1] === 'day' || parts[parts.length - 1] === 'night') mode = parts.pop();
-    return { view: parts.join('/'), mode: mode };
+    var parts = decodeURIComponent(location.hash.slice(1)).split('/'), mode = null, colour = null;
+    var m = /^(day|night)(?:-(blue|green))?$/.exec(parts[parts.length - 1]);
+    if (m) { parts.pop(); mode = m[1]; colour = m[2] || null; }
+    return { view: parts.join('/'), mode: mode, colour: colour };
   }
-  function address() { return location.pathname + '#' + (view ? view + '/' : '') + (isNight() ? 'night' : 'day'); }
+  function address() {
+    return location.pathname + '#' + (view ? view + '/' : '') + (isNight() ? 'night' : 'day') +
+      (river ? (river.blue() ? '-blue' : '-green') : '');
+  }
   function write(push) {
     var to = address();
     if (location.pathname + location.search + location.hash === to) return;
@@ -51,7 +56,10 @@
   var first = parse();
   view = first.view;
   if (first.mode && (first.mode === 'night') !== isNight()) set(first.mode === 'night');
+  if (first.colour && river && (first.colour === 'blue') !== river.blue()) river.colour(first.colour === 'blue');
   sw.addEventListener('click', function () { write(false); });
+  var fl = document.getElementById('flow');
+  if (fl) fl.addEventListener('click', function () { write(false); });
   // Back and Forward change the view only: the time of day stays as it is, and the address follows it
   addEventListener('popstate', function () {
     var h = parse(), moved = h.view !== view;
