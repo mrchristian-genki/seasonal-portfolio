@@ -32,15 +32,27 @@ $in = studio_logged_in();
 <meta name="robots" content="noindex, nofollow">
 <title>Studio · Field Notes</title>
 <meta name="description" content="Field Notes, behind the scenes: the private workshop where rides become posts and episodes, on a glowing river desk that turns from day to night.">
-<link rel="canonical" href="https://www.christiangehrke.com/studio/">
+<?php
+// the share card follows the look in the link (?look=night-orange; the page keeps it in the address as it
+// changes, see switch.js), since a link preview never sees the #… part
+$asked = is_string($_GET['look'] ?? null) && preg_match('/^(day|night)-(blue|green|orange)$/', $_GET['look']);
+$look = $asked ? $_GET['look'] : 'night-green';
+[$tod, $liq] = explode('-', $look);
+$site = 'https://www.christiangehrke.com/studio/';
+$share = $asked ? $site . '?look=' . $look : $site;
+$card = $site . 'assets/og-studio-' . $look . '.jpg?v=1';
+$alt = 'The Studio by ' . $tod . ': a brass STUDIO panel with its day/night dial and two toggles over a glowing ' . $liq .
+    ' river, and the ' . $liq . ' liquid running through a glass pipe below.';
+?>
+<link rel="canonical" href="<?= $site ?>">
 <meta property="og:site_name" content="Christian Gehrke"><meta property="og:locale" content="en_US"><meta property="og:type" content="website">
-<meta property="og:title" content="Studio · Field Notes"><meta property="og:url" content="https://www.christiangehrke.com/studio/">
+<meta property="og:title" content="Studio · Field Notes"><meta property="og:url" content="<?= h($share) ?>">
 <meta property="og:description" content="Field Notes, behind the scenes: the private workshop where rides become posts and episodes.">
-<meta property="og:image" content="https://www.christiangehrke.com/studio/assets/og-studio.jpg?v=1"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="The Studio at night: a brass STUDIO nameplate over a glowing green river, and on the wood below a brass projector casting a squid hologram beside a glowing compass.">
+<meta property="og:image" content="<?= h($card) ?>"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="<?= h($alt) ?>">
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Studio · Field Notes">
 <meta name="twitter:description" content="Field Notes, behind the scenes: the private workshop where rides become posts and episodes.">
-<meta name="twitter:image" content="https://www.christiangehrke.com/studio/assets/og-studio.jpg?v=1">
+<meta name="twitter:image" content="<?= h($card) ?>"><meta name="twitter:image:alt" content="<?= h($alt) ?>">
 <link rel="icon" href="/favicon.ico?v=2" sizes="any"><link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml"><link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2"><meta name="theme-color" content="#2a1d14">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&family=Special+Elite&display=swap">
@@ -142,7 +154,7 @@ $in = studio_logged_in();
 <?php endif; ?>
 <script src="table/table.js?v=25"></script>
 <script src="table/river.js?v=18"></script>
-<script src="table/switch.js?v=8"></script>
+<script src="table/switch.js?v=9"></script>
 <script src="table/toggle.js?v=3"></script>
 <script src="table/foot.js?v=2"></script>
 <script src="table/shelf.js?v=22"></script>

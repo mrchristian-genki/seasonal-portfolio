@@ -42,11 +42,17 @@
     var parts = decodeURIComponent(location.hash.slice(1)).split('/'), mode = null, colour = null;
     var m = /^(day|night)(?:-(blue|green|orange))?$/.exec(parts[parts.length - 1]);
     if (m) { parts.pop(); mode = m[1]; colour = m[2] || null; }
+    else {                                                // no look in the #…: the ?look= of a shared link
+      var q = /^(day|night)-(blue|green|orange)$/.exec(new URLSearchParams(location.search).get('look') || '');
+      if (q) { mode = q[1]; colour = q[2]; }
+    }
     return { view: parts.join('/'), mode: mode, colour: colour };
   }
+  // the look goes in the query too (?look=night-orange), so a shared link's preview card shows it
   function address() {
-    return location.pathname + '#' + (view ? view + '/' : '') + (isNight() ? 'night' : 'day') +
-      (river ? '-' + river.liquid() : '');
+    var look = (isNight() ? 'night' : 'day') + (river ? '-' + river.liquid() : ''), q = new URLSearchParams(location.search);
+    if (river) q.set('look', look);
+    return location.pathname + '?' + q.toString() + '#' + (view ? view + '/' : '') + look;
   }
   function write(push) {
     var to = address();
