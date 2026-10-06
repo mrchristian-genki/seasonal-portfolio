@@ -2865,6 +2865,7 @@ function _bootInner() {
   function writeLink() {
     const words = [seasonNames[SEASON], NIGHT_MODE ? 'night' : 'day']
       .concat(linkWords.filter(w => LINK_KEEP.includes(w)))
+      .concat(window.__lakeWord ? window.__lakeWord() : [])   // the lake shown or closed (lake.js), as it is now
       // On the Play tab, keep its section/series words (play-inline.js owns them).
       .concat(SEASON === 1 && window.__playWords ? window.__playWords() : []);
     try { history.replaceState(null, '', location.pathname + '?' + words.join('+') + location.hash); } catch (e) { /* file:// */ }
