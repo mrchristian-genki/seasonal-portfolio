@@ -25,11 +25,11 @@
  "track": null,
  "photos": [
   {
-   "src": "data/photos/2026-10-06-the-narrator-gets-a-face/talking.mp4",
-   "poster": "data/photos/2026-10-06-the-narrator-gets-a-face/talking.jpg",
+   "src": "data/photos/2026-10-06-the-narrator-gets-a-face/talking-v2.mp4",
+   "poster": "data/photos/2026-10-06-the-narrator-gets-a-face/talking-v2.jpg",
    "video": true,
    "ai": true,
-   "caption": "The narrator at her desk, talking: her torso is one of Christian's renders, her head is cut into layers, and her jaw opens with the loudness of the voice.",
+   "caption": "GlazyArray at her desk, talking, in the library backdrop and grad cap the case studies give her: her torso is one of Christian's renders, her head is cut into layers, and her jaw opens with the loudness of the voice.",
    "w": 1280,
    "h": 720,
    "use": "post",
