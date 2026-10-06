@@ -4,6 +4,10 @@
  "date": "2026-10-05",
  "kind": "make",
  "place": "The workshop",
+ "tags": [
+  "case-study",
+  "behind-the-scenes"
+ ],
  "status": "published",
  "summary": "A case study of the Studio's header: a glowing river with three liquids, day and night, two small toggles, 36 clips that hand off cleanly, and a liquid that now runs through the whole page.",
  "trailhead": null,

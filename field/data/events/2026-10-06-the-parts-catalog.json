@@ -4,6 +4,10 @@
  "date": "2026-10-06",
  "kind": "make",
  "place": "The workshop",
+ "tags": [
+  "case-study",
+  "automaton"
+ ],
  "status": "published",
  "summary": "A case study of the Parts Catalog: 60 pieces of the lake scene, each running live on its own card, with 15 rigged origami creatures and a deep-sea header.",
  "trailhead": null,

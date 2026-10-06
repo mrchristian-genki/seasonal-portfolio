@@ -4,6 +4,10 @@
  "date": "2026-10-06",
  "kind": "make",
  "place": "The workshop",
+ "tags": [
+  "case-study",
+  "automaton"
+ ],
  "status": "published",
  "summary": "A case study of the main site, V2: one hand-built lake where every tab is a season, with night, weather, wildlife, a hidden beach and links that remember it all.",
  "trailhead": null,

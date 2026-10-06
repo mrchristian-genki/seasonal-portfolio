@@ -4,6 +4,11 @@
  "date": "2026-10-06",
  "kind": "make",
  "place": "The workshop",
+ "tags": [
+  "case-study",
+  "automaton",
+  "coloring-books"
+ ],
  "status": "published",
  "summary": "A case study of ProPre Engine, the browser tool that takes a coloring book from first prompt to print-ready cover, and the project that brought me back to web development.",
  "trailhead": null,

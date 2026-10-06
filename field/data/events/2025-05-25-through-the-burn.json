@@ -4,6 +4,10 @@
  "date": "2025-05-25",
  "kind": "ride",
  "place": "",
+ "tags": [
+  "lake-tahoe",
+  "with-marley"
+ ],
  "status": "published",
  "summary": "Christian rides the Corral Trail Loop from the Corral trailhead on May 24, 2025, up to the first lookout above Lake Tahoe, where he turns around. He goes from green pine forest into a burned area and ends at a creek. Marley is with him the whole way.",
  "trailhead": null,

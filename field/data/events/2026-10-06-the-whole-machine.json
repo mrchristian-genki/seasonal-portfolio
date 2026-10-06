@@ -4,6 +4,10 @@
  "date": "2026-10-06",
  "kind": "make",
  "place": "The workshop",
+ "tags": [
+  "case-study",
+  "automaton"
+ ],
  "status": "published",
  "summary": "The capstone: how the lake, the Parts Catalog, the Workshop, the Studio and ProPre fit together as one machine, told as a brass automaton coming to life.",
  "trailhead": null,
