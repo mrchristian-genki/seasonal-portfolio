@@ -2,8 +2,17 @@
  "looks": [
   { "name": "bob", "file": "bob.webp", "rotate": true },
   { "name": "ponytail", "file": "ponytail.webp", "rotate": true },
-  { "name": "halloween", "file": "witch.webp", "from": "10-20", "to": "10-31", "bulb": false },
+  { "name": "perm", "file": "perm.webp", "rotate": true },
+  { "name": "crimp", "file": "crimp.webp", "rotate": true },
+  { "name": "headband", "file": "headband.webp", "rotate": true },
+  { "name": "updo", "file": "updo.webp", "rotate": true },
+  { "name": "tahoe-winter", "file": "beanie.webp", "from": "01-02", "to": "01-31", "bulb": false },
+  { "name": "valentines", "file": "valentine.webp", "from": "02-10", "to": "02-14" },
+  { "name": "st-patricks", "file": "stpatrick.webp", "from": "03-15", "to": "03-17", "bulb": false },
+  { "name": "spring", "file": "bunny.webp", "from": "03-20", "to": "04-20", "bulb": false },
   { "name": "fourth-of-july", "file": "stars.webp", "from": "07-01", "to": "07-04" },
-  { "name": "tahoe-winter", "file": "beanie.webp", "from": "01-02", "to": "02-28", "bulb": false }
+  { "name": "halloween", "file": "witch.webp", "from": "10-20", "to": "10-31", "bulb": false },
+  { "name": "thanksgiving", "file": "autumn.webp", "from": "11-20", "to": "11-28" },
+  { "name": "winter-holidays", "file": "santa.webp", "from": "12-01", "to": "12-30", "bulb": false }
  ]
 }
