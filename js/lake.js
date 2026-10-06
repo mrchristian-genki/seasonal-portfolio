@@ -20,11 +20,52 @@
     if (on) hero.removeAttribute('aria-hidden'); else hero.setAttribute('aria-hidden', 'true');
     if (byHand) {
       set(on ? '1' : '0');
-      if (on) { dispatchEvent(new Event('resize')); window.scrollTo({ top: 0, behavior: 'smooth' }); hide.focus({ preventScroll: true }); }
+      if (on) { dispatchEvent(new Event('resize')); window.scrollTo({ top: 0 }); hide.focus({ preventScroll: true }); }
       else band.querySelector('button').focus({ preventScroll: true });
     }
   }
-  band.querySelector('button').onclick = function () { apply(true, true); };
-  hide.onclick = function () { apply(false, true); };
+  // Closing and opening, by hand: the scene folds away like a pop-up book. The page under it slides up over the
+  // lake like a drawer (the hero's bottom edge, its white shoreline with it, rises), while the plates fold up and
+  // fade, nearest first: plants and rocks, then the shores and pines, the mountains, the clouds, the sky last.
+  // Then the band eases open. Opening runs it backwards, the sky first. Only transforms, opacity and a clip move,
+  // so the scene itself never re-lays out. With reduced motion it simply switches.
+  var EASE = 'cubic-bezier(.65,0,.35,1)', MS = 1150, busy = false;
+  var FOLD = [   // plate, start (share of the time), how far up it folds (share of its height)
+    ['.plate-ui', 0, 0.06], ['.plate-foreground', 0.02, 0.34], ['.plate-fx', 0.02, 0.3], ['.plate-midground', 0.12, 0.26], ['.plate-birds', 0.14, 0.22],
+    ['.plate-background', 0.24, 0.2], ['.plate-clouds', 0.3, 0.16], ['.plate-aurora', 0.34, 0.12], ['.plate-celestial', 0.34, 0.12], ['.plate-sky', 0.42, 0.06]];
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function animate(on, done) {
+    if (reduce || !hero.animate) return done();
+    busy = true;
+    var H = hero.offsetHeight, swell = hero.querySelector('.hero-swell'), anims = [];
+    var shut = { clipPath: 'inset(0 0 ' + H + 'px 0)', marginBottom: -H + 'px' }, open = { clipPath: 'inset(0 0 0px 0)', marginBottom: '0px' };
+    var opt = function (delay, dur, ease) { return { duration: dur, delay: delay, easing: ease || EASE, fill: 'both' }; };
+    anims.push(hero.animate(on ? [shut, open] : [open, shut], opt(0, MS)));
+    if (swell) anims.push(swell.animate(on ? [{ transform: 'translateY(' + -H + 'px)' }, { transform: 'none' }] : [{ transform: 'none' }, { transform: 'translateY(' + -H + 'px)' }], opt(0, MS)));
+    FOLD.forEach(function (f) {
+      var el = hero.querySelector(f[0]); if (!el) return;
+      var sky = f[0] === '.plate-sky';   // the sky only folds: fading it would show the night layer behind
+      var folded = { transform: 'translateY(' + (-f[2] * 100) + '%) scaleY(' + (1 - f[2]) + ')', opacity: sky ? 1 : 0 }, flat = { transform: 'none', opacity: 1 };
+      if (on) anims.push(el.animate([folded, flat], opt(MS * (0.5 - f[1]) * 0.9, MS * 0.55, 'cubic-bezier(.2,.8,.3,1)')));    // the sky first, the plants last
+      else anims.push(el.animate([flat, folded], opt(MS * f[1], MS * 0.55, 'cubic-bezier(.55,0,.75,.4)')));                  // the plants first, the sky last
+    });
+    Promise.all(anims.map(function (a) { return a.finished; })).then(function () { done(); anims.forEach(function (a) { a.cancel(); }); busy = false; }, function () { busy = false; });
+  }
+  function bandIn(show) {   // the band eases open (or shut) on its own
+    if (reduce || !band.animate) return;
+    band.animate(show ? [{ maxHeight: '0px', opacity: 0, padding: '0 16px' }, { maxHeight: '60px', opacity: 1 }] : [{ maxHeight: '60px', opacity: 1 }, { maxHeight: '0px', opacity: 0, padding: '0 16px' }],
+      { duration: 380, easing: EASE });
+  }
+  band.querySelector('button').onclick = function () {
+    if (busy) return;
+    if (reduce || !hero.animate) return apply(true, true);
+    bandIn(false);
+    setTimeout(function () { apply(true, true); animate(true, function () {}); }, reduce ? 0 : 220);
+  };
+  hide.onclick = function () {
+    if (busy) return;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    animate(false, function () { apply(false, true); bandIn(true); });
+  };
   apply(wanted(), false);
 })();

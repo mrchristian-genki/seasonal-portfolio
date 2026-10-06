@@ -1,7 +1,8 @@
 /* THE NARRATOR (js/narrator.js): the robot sits at the left of the Listen bar. Its torso fills the bar's lower
    left, sitting on the bar's bottom edge like a desk; its head stands up out of the top. --nb is its width. */
 section.listen.has-nb{--nb:210px;position:relative;min-height:calc(var(--nb) * .5208 + 34px);padding-left:calc(var(--nb) + 18px);margin-top:calc(var(--nb) * .36 + 22px);align-content:center}
-.nb{position:absolute;left:0;bottom:0;width:var(--nb);height:calc(var(--nb) * .5208);pointer-events:none}
+.nb{position:absolute;left:0;bottom:0;width:var(--nb);height:calc(var(--nb) * .5208);pointer-events:none;
+  clip-path:inset(-100vh -100vw 0 0 round 0 0 0 16px)}   /* nothing below the bar's bottom edge: before play it sits a little lower, inside the bar */
 .nb-rise{position:absolute;inset:0;transform:translateY(14%);transition:transform .7s cubic-bezier(.3,1.35,.5,1)}
 .nb.on .nb-rise{transform:none}
 .nb-body{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:0 0 0 16px;background:#0f4d47 url(/assets/narrator/rest.jpg?v=3) center/cover;   /* the rest pose behind the video, in case a frame is ever missing */
