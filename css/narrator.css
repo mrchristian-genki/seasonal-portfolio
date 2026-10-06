@@ -5,9 +5,11 @@ section.listen.has-nb{--nb:210px;position:relative;min-height:calc(var(--nb) * .
 .nb-rise{position:absolute;inset:0;transform:translateY(14%);transition:transform .7s cubic-bezier(.3,1.35,.5,1)}
 .nb.on .nb-rise{transform:none}
 .nb-body{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:0 0 0 16px;background:#0f4d47;
-  -webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent)}   /* the desk fades out to the right */
-/* the head: its neck goes into the torso's collar (13% down the torso), its width 42% of the robot's */
-.nb-head{position:absolute;left:29%;width:42%;bottom:87%;aspect-ratio:300/375;transform-origin:50% 92%;z-index:1;
+  /* the desk fades out to the right, and the top edge softens into the bar */
+  -webkit-mask-image:linear-gradient(90deg,#000 88%,transparent),linear-gradient(180deg,transparent,#000 6%);-webkit-mask-composite:source-in;
+  mask-image:linear-gradient(90deg,#000 88%,transparent),linear-gradient(180deg,transparent,#000 6%);mask-composite:intersect}
+/* the head: its jaw rests on the torso's collar (the collar's top is 9.8% down the torso), its width 42% of the robot's */
+.nb-head{position:absolute;left:29%;width:42%;bottom:81.5%;aspect-ratio:300/375;transform-origin:50% 92%;z-index:1;
   filter:drop-shadow(0 3px 5px rgba(0,0,0,.35))}
 .nb-head img{position:absolute;inset:0;width:100%;height:100%;display:block}
 .nb-jaw{will-change:transform}
