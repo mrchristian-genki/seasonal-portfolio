@@ -26,9 +26,11 @@
  "backdrops": [
   { "name": "library", "file": "library.webp", "about": "", "v": "tmia4z", "scene": "an old library with tall wooden bookshelves, brass reading lamps and a long study table" },
   { "name": "bike-shop", "file": "bike-shop.webp", "about": "", "v": "tmiacs", "scene": "a small bike shop garage with mountain bikes hanging on a wall rack, tools on a pegboard and a wooden workbench" },
-  { "name": "trailhead", "file": "trailhead.webp", "about": "", "v": "tmiah5", "scene": "a pine forest trailhead with a wooden trail sign and a dirt path in late light" }
+  { "name": "trailhead", "file": "trailhead.webp", "about": "", "v": "tmiah5", "scene": "a pine forest trailhead with a wooden trail sign and a dirt path in late light" },
+  { "name": "clockmaker", "file": "clockmaker.webp", "about": "", "v": "tmiako", "scene": "a clockmaker's workshop full of brass gears, cogs and glass jars on wooden shelves" }
  ],
  "categoryBackdrops": {
+  "automaton": "clockmaker",
   "case-study": "library",
   "hike": "trailhead",
   "ride": "bike-shop"
