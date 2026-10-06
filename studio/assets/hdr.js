@@ -5,7 +5,7 @@
    seams or halos. No raw HDR, no tone-mapping: it looks like a photo, with the sky and the shadows both
    kept. Plain JS on Float32 arrays; about two seconds for three 1600 px shots.
 
-   StudioHDR.merge(blobs, maxEdge) -> Promise of { canvas, w, h, shifts } or null when the shots aren't
+   StudioHDR.merge(blobs, maxEdge) -> Promise of { canvas, w, h, shifts, order } or null when the shots aren't
    one view (they don't line up), so the caller keeps them as separate photos. */
 (function () {
   'use strict';
@@ -171,7 +171,7 @@
       var mx = Math.max.apply(0, shifts.map(function (s) { return Math.abs(s[0]); })), my = Math.max.apply(0, shifts.map(function (s) { return Math.abs(s[1]); }));
       var F = fuse(ims), c = toCanvas(F, w, h, 1.15);
       if (mx || my) { var c2 = document.createElement('canvas'); c2.width = w - 2 * mx; c2.height = h - 2 * my; c2.getContext('2d').drawImage(c, mx, my, c2.width, c2.height, 0, 0, c2.width, c2.height); c = c2; }
-      return { canvas: c, w: c.width, h: c.height, shifts: shifts };
+      return { canvas: c, w: c.width, h: c.height, shifts: shifts, order: order.map(function (o) { return o[1]; }) };   // order: the shots from darkest to brightest
     });
   }
 

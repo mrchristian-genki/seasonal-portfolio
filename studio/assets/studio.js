@@ -81,6 +81,28 @@
       return null;
     }).catch(function () { return null; });
   }
+  // a shot's exposure compensation in EV (EXIF ExposureBiasValue), or null: a drone bracket's shots carry
+  // their step (-2, 0, +2 or so), which labels the bracket strip
+  function exifBias(file) {
+    return file.slice(0, 131072).arrayBuffer().then(function (buf) {
+      var v = new DataView(buf), o = 2;
+      if (v.getUint16(0) !== 0xFFD8) return null;
+      while (o < v.byteLength - 4) {
+        var mk = v.getUint16(o), len = v.getUint16(o + 2);
+        if (mk === 0xFFE1 && v.getUint32(o + 4) === 0x45786966) {
+          var t = o + 10, le = v.getUint16(t) === 0x4949;
+          var u16 = function (p) { return v.getUint16(t + p, le); }, u32 = function (p) { return v.getUint32(t + p, le); };
+          var find = function (ifd, tag) { var n = u16(ifd); for (var i = 0; i < n; i++) { var e = ifd + 2 + i * 12; if (u16(e) === tag) return e; } return 0; };
+          var ex = find(u32(4), 0x8769); if (!ex) return null;
+          var d = find(u32(ex + 8), 0x9204); if (!d) return null;
+          var at = u32(d + 8), num = v.getInt32(t + at, le), den = v.getInt32(t + at + 4, le);
+          return den ? num / den : null;
+        }
+        o += 2 + len;
+      }
+      return null;
+    }).catch(function () { return null; });
+  }
   // Draws the photo upright into a canvas at most `max` px on the long edge and re-encodes it as a
   // JPEG: the canvas carries no EXIF, so GPS, camera serial and the rest are gone.
   function shrink(src, max, q) {
@@ -289,7 +311,10 @@
     else {
       badge = '<span class="st st-' + esc(note.status || 'notes') + '">' + esc(st[note.status] || note.status || 'Note') + '</span>';
       if (f.since) badge += '<span class="st st-updated">' + f.since + ' new since</span>';
-      act = '<button class="link open" data-id="' + esc(note.id) + '">Open “' + esc(note.title || note.id) + '”</button>' +
+      // matched only by its date (no note was made from this folder): it may well be a different day out
+      // that shares the date, so it can also start a note of its own
+      act = (!f.note ? '<button class="process" data-src="' + esc(f.source) + '">Process as a new note</button>' : '') +
+        '<button class="link open" data-id="' + esc(note.id) + '">Open “' + esc(note.title || note.id) + '”</button>' +
         (f.since ? '<button class="process add" data-src="' + esc(f.source) + '" data-id="' + esc(note.id) + '" data-at="' + ((f.note && f.note.at) || 0) + '">Add ' + f.since + ' new</button>' : '');
     }
     if (owner()) act += '<button class="link ignore" data-src="' + esc(f.source) + '" data-dir="' + (f.dir ? 1 : '') + '" title="Hide it here for good">Ignore</button>';
@@ -808,7 +833,7 @@
       var n = photoName(p), clip = !!p.video;
       return '<div class="ph' + (p.use === 'skip' ? ' off' : '') + '" data-i="' + i + '">' +
         (clip ? clipView(p, n) : '<img src="' + esc(photoUrl(p)) + '" alt="" loading="lazy">') +
-        '<div class="meta"><small>' + esc(n) + (p.hdr ? ' · HDR of ' + p.hdr : '') + (p.table ? ' · on the table' : '') + (p.takenAt ? ' · ' + esc(String(p.takenAt).slice(11, 16)) : '') + (fresh[n] || clipsNew[n] ? ' · new' : '') + '</small>' +
+        '<div class="meta"><small>' + esc(n) + (p.hdr ? ' · HDR of ' + p.hdr : '') + (p.strip ? ' · its ' + p.strip + ' exposures' : '') + (p.table ? ' · on the table' : '') + (p.takenAt ? ' · ' + esc(String(p.takenAt).slice(11, 16)) : '') + (fresh[n] || clipsNew[n] ? ' · new' : '') + '</small>' +
         '<textarea rows="2" placeholder="Caption">' + esc(p.caption) + '</textarea>' +
         '<div class="opts"><label><input type="checkbox" class="use"' + (p.use !== 'skip' ? ' checked' : '') + '> Use</label>' +
         '<label><input type="radio" name="cover" class="cover"' + (p.cover ? ' checked' : '') + '> Cover</label>' + (clip ? '<button type="button" class="link pfBtn">Poster frame</button>' : '') +
@@ -930,8 +955,31 @@
     var inSet = grouped.reduce(function (a, u) { return a.concat(u); }, []);
     return { sets: grouped, singles: list.filter(function (f) { return inSet.indexOf(f) < 0; }) };
   }
+  // The bracket behind an HDR photo, as one picture: its shots side by side, darkest to brightest, each
+  // labelled with its exposure. Kept beside the merge, switched off (tick Use to show it, e.g. for a write-up).
+  function bracketStrip(set, order, bias) {
+    return Promise.all(set.map(function (f) { return createImageBitmap(f, { imageOrientation: 'from-image' }); })).then(function (bms) {
+      var H = 400, gap = 8, ws = order.map(function (i) { return Math.round(bms[i].width * H / bms[i].height); });
+      var c = document.createElement('canvas'); c.width = ws.reduce(function (a, b) { return a + b; }, 0) + gap * (order.length - 1); c.height = H;
+      var g = c.getContext('2d'), x = 0;
+      g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, H);
+      order.forEach(function (i, k) {
+        g.drawImage(bms[i], x, 0, ws[k], H);
+        var b = bias[i], label = b == null ? ['Darkest', 'Middle', 'Brightest'][Math.round(k * 2 / Math.max(1, order.length - 1))] || ''
+          : (b > 0.05 ? '+' : b < -0.05 ? '\u2212' : '') + (Math.abs(b) < 0.05 ? '0' : Math.abs(b).toFixed(1).replace(/\.0$/, '')) + ' EV';
+        g.font = '600 24px system-ui,-apple-system,Segoe UI,sans-serif';
+        var tw = g.measureText(label).width;
+        g.fillStyle = 'rgba(0,0,0,.62)'; g.beginPath(); if (g.roundRect) g.roundRect(x + 14, H - 52, tw + 24, 36, 18); else g.rect(x + 14, H - 52, tw + 24, 36); g.fill();
+        g.fillStyle = '#fff'; g.fillText(label, x + 26, H - 26);
+        x += ws[k] + gap;
+      });
+      bms.forEach(function (bm) { if (bm.close) bm.close(); });
+      return new Promise(function (ok) { c.toBlob(function (b) { ok({ blob: b, w: c.width, h: H }); }, 'image/jpeg', 0.86); });
+    });
+  }
   function mergeBracket(set) {
-    return Promise.all(set.map(exifDate)).then(function (ts) {
+    return Promise.all([Promise.all(set.map(exifDate)), Promise.all(set.map(exifBias))]).then(function (meta) {
+      var ts = meta[0], bias = meta[1];
       return window.StudioHDR.merge(set, 1600).then(function (r) {
         if (!r) return false;
         return new Promise(function (ok) { r.canvas.toBlob(ok, 'image/jpeg', 0.86); }).then(function (big) {
@@ -941,7 +989,17 @@
               fresh[n] = { blob: big, thumb: 'data:image/jpeg;base64,' + tb64 };
               E.photos.push({ src: 'data/photos/' + (E.id || 'new') + '/' + n, caption: '', takenAt: ts.filter(Boolean).sort()[0] || null, w: r.w, h: r.h, use: 'post',
                 cover: !E.photos.some(function (p) { return p.cover; }), from: set.map(function (f) { return f.name; }).join(' + '), hdr: set.length });
-              return true;
+              var taken = ts.filter(Boolean).sort()[0] || null;
+              return bracketStrip(set, r.order, bias).then(function (st) {
+                return Promise.all([shrink(st.blob, 640, 0.7), Promise.resolve(st)]);
+              }).then(function (two) {
+                return blobToB64(two[0].blob).then(function (sb64) {
+                  var n2 = nextName();
+                  fresh[n2] = { blob: two[1].blob, thumb: 'data:image/jpeg;base64,' + sb64 };
+                  E.photos.push({ src: 'data/photos/' + (E.id || 'new') + '/' + n2, caption: 'The ' + set.length + ' exposures behind the HDR photo, darkest to brightest.', takenAt: taken, w: two[1].w, h: two[1].h,
+                    use: 'skip', cover: false, from: set.map(function (f) { return f.name; }).join(' + '), strip: set.length });
+                });
+              }).catch(function () { /* the merge stands without its strip */ }).then(function () { return true; });
             });
           });
         });
