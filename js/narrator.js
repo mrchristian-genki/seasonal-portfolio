@@ -1,4 +1,4 @@
-/* THE NARRATOR: a little brass robot in each Listen bar (section.listen with an <audio>) that tells the episode.
+/* THE NARRATOR, GlazyArray: a little brass robot in each Listen bar (section.listen with an <audio>) that tells the episode.
    Its torso and hands are one video (assets/narrator/narrator.mp4, green screen keyed onto the bar's colour) in five
    8-second parts, every one starting and ending in the same rest pose: the fingers tapping, a storyteller's gesture
    and the same played backwards, drawing a shape in the air and that backwards. The robot moves only by jumping
@@ -16,7 +16,7 @@
    - Now and then it blinks. With reduced motion it stays still, and only the mouth moves. */
 (function () {
   'use strict';
-  var A = '/assets/narrator/', V = '?v=11', DROP = 0.0448;   // the chin plate's drop, as a share of the head layer's height (the side plates go half as far)
+  var A = '/assets/narrator/', V = '?v=12', DROP = 0.0448;   // the chin plate's drop, as a share of the head layer's height (the side plates go half as far)
   var D = 193 / 24, IDLE = 0, GESTURES = [{ f: 1, r: 2 }, { f: 3, r: 4 }];   // the parts of narrator.mp4: forward and backwards copies
   // the hints, parts 5 to 7, with what the head does when (seconds into the part): look toward Play, wink, the bulb glows
   var HINTS = [
@@ -79,9 +79,11 @@
     bar.classList.add('has-nb');
     var nb = document.createElement('div'); nb.className = 'nb'; nb.setAttribute('aria-hidden', 'true');
     nb.innerHTML = '<div class="nb-rise"><div class="nb-head"><img class="nb-base" src="' + A + 'head-base.webp' + V + '" alt=""><img class="nb-jaw-s" src="' + A + 'head-jaw-sides.webp' + V + '" alt=""><img class="nb-jaw" src="' + A + 'head-jaw.webp' + V + '" alt="">' +
-      '<img class="nb-lids" src="' + A + 'head-lids.webp' + V + '" alt=""><i class="nb-bulb"></i><b class="nb-hit" title="Change her hair"></b></div>' +
+      '<img class="nb-lids" src="' + A + 'head-lids.webp' + V + '" alt=""><i class="nb-bulb"></i><b class="nb-hit" title="GlazyArray\u2019s Style Array: click for another look"></b></div>' +
       '<video class="nb-body" muted playsinline preload="none" poster="' + A + 'rest.jpg' + V + '"></video></div>';
     bar.insertBefore(nb, bar.firstChild);
+    var lbl = bar.querySelector('.listen-label');   // her name, under the Listen label: "Narrated by GlazyArray"
+    if (lbl && !bar.querySelector('.nb-by')) { var by = document.createElement('span'); by.className = 'nb-by'; by.textContent = 'Narrated by GlazyArray'; lbl.parentNode.appendChild(by); }
     wear(nb);
     nb.querySelector('.nb-hit').addEventListener('click', function () { restyle(nb); });
     var body = nb.querySelector('.nb-body'), head = nb.querySelector('.nb-head'), jaw = nb.querySelector('.nb-jaw'), jawS = nb.querySelector('.nb-jaw-s');

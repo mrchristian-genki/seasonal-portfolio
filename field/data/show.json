@@ -1,8 +1,8 @@
 {
  "showTitle": "Field Notes",
  "byline": "Following Christian Gehrke outside",
- "narrator": "Christian's biggest fan and publicist: a warm woman's voice looking back on his rides, hikes, foraging walks and builds, like a grown-up remembering a good season, proud, gently funny and specific.",
- "audioPrompt": "Read the script below as a podcast narrator.\n\nVoice: a warm, mature woman's voice, American, mid-to-low pitch; a nostalgic coming-of-age voice-over, looking back fondly on a good season; proud of him, gently amused on the light lines, never salesy, never over the top.\nPace: unhurried, about 140 words a minute, with a short pause at each paragraph break and a longer, reflective one at each ***. Let the last line of each section land softly.\nDelivery: third person, intimate and conversational, like someone telling you about a summer she still thinks about. Smile on the funny lines, slow down on the quiet ones; no announcer or movie-trailer voice.\nPronunciation: Gehrke = GUR-kee. Ha-Leen-Ah (Helena) = ha-LEEN-ah, one smooth name, no pauses (never HELL-en-ah). Carnelian = car-NEEL-yun. Pinyon = PIN-yun. Marlette = mar-LET. ProPre = PRO-pree.\nOutput: mono, 44.1 kHz WAV or high-bitrate MP3, no music or effects. (Mastered afterwards to -16 LUFS integrated, -1 dBTP.)\n\nTITLE: {{title}}\n\n{{script}}",
+ "narrator": "GlazyArray, Christian's biggest fan and publicist: a warm woman's voice looking back on his rides, hikes, foraging walks and builds, like a grown-up remembering a good season, proud, gently funny and specific.",
+ "audioPrompt": "Read the script below as a podcast narrator. Begin every episode with the tag line \"Narrated by GlazyArray.\" (say it GLAY-zee uh-RAY), then a short pause, then the title and script.\n\nVoice: a warm, mature woman's voice, American, mid-to-low pitch; a nostalgic coming-of-age voice-over, looking back fondly on a good season; proud of him, gently amused on the light lines, never salesy, never over the top.\nPace: unhurried, about 140 words a minute, with a short pause at each paragraph break and a longer, reflective one at each ***. Let the last line of each section land softly.\nDelivery: third person, intimate and conversational, like someone telling you about a summer she still thinks about. Smile on the funny lines, slow down on the quiet ones; no announcer or movie-trailer voice.\nPronunciation: Gehrke = GUR-kee. Ha-Leen-Ah (Helena) = ha-LEEN-ah, one smooth name, no pauses (never HELL-en-ah). Carnelian = car-NEEL-yun. Pinyon = PIN-yun. Marlette = mar-LET. ProPre = PRO-pree. GlazyArray = GLAY-zee uh-RAY.\nOutput: mono, 44.1 kHz WAV or high-bitrate MP3, no music or effects. (Mastered afterwards to -16 LUFS integrated, -1 dBTP.)\n\nTITLE: {{title}}\n\n{{script}}",
  "statuses": [
   {
    "id": "notes",
@@ -34,5 +34,6 @@
  "listed": false,
  "_listed": "false = the Notes pages ask search engines not to index them (live but unlisted). Set true when ready to share.",
  "about": "Rides, hikes and foraging walks in the high desert and the Sierra, written up by Christian Gehrke and told as short episodes by a narrator who came along.",
- "narrationNote": "Episodes are narrated by an AI voice, reading a script written from Christian's own notes, track and photos."
+ "narrationNote": "Episodes are narrated by GlazyArray, an AI voice, reading a script written from Christian's own notes, track and photos.",
+ "narratorName": "GlazyArray"
 }
