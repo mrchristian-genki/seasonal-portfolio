@@ -115,7 +115,7 @@ ${ICONS}
 <link rel="stylesheet" href="${rel}play.css?v=${V}">
 <link rel="stylesheet" href="${rel}../css/logo.css?v=11">
 <link rel="stylesheet" href="${rel}../css/lake.css?v=1">
-<link rel="stylesheet" href="${rel}../css/narrator.css?v=16">
+<link rel="stylesheet" href="${rel}../css/narrator.css?v=17">
 <script>/* Logo season from the calendar, as on About. */document.documentElement.dataset.season=["winter","winter","spring","spring","spring","summer","summer","summer","fall","fall","fall","winter"][new Date().getMonth()];</script>
 <link rel="stylesheet" href="${rel}../css/route-dash.css?v=${V}">
 </head>
