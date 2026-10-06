@@ -490,3 +490,11 @@ dialog.pfp::backdrop{background:rgba(20,12,6,.7)}
 .drive details.ignored ul{margin:6px 0 0;padding-left:18px} .drive details.ignored li{margin:3px 0}
 .panel.people .pw-l{display:flex;gap:10px;align-items:baseline} .panel.people .pw-l span{width:76px;font-size:13px;color:var(--ink3)}
 .panel.people .ppl code{font-size:13px;padding:1px 6px}
+
+/* GlazyArray's look (studio.js renderLook): her template to copy, the look she wears, a render coming back */
+.ga-tpl{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:12px 0}
+.ga-tpl img{width:180px;max-width:40%;border-radius:8px}
+.ga-made{display:block;height:110px;width:auto;max-width:100%;background:#0f4d47;border-radius:10px;padding:4px;margin:4px 0 10px}
+.ga-drop{display:block;margin-top:10px;cursor:pointer}
+.ga-prev{display:block;width:100%;max-width:560px;border-radius:10px;margin:8px 0}
+.ga-check{display:flex;gap:8px;align-items:center;margin:4px 0;font-size:14px} .ga-check input{width:auto;flex:none}

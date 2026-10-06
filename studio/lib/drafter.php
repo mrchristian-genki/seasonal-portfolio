@@ -57,11 +57,11 @@ final class Drafter
      * $facts: the entry fields the browser sends (title, date, kind, place, notes, figures, photo list,
      * any current draft, and an optional instruction). $thumbs: [['name' => '01.jpg', 'b64' => ...]].
      */
-    public function draft(array $facts, array $thumbs): array
+    public function draft(array $facts, array $thumbs, array $looks = []): array
     {
         $client = new Client(apiKey: $this->cfg['anthropic_api_key'], baseUrl: $this->cfg['anthropic_base_url'] ?? null);   // base URL: local testing only
 
-        $content = [['type' => 'text', 'text' => "GlazyArray's looks, as JSON (pick from these first):\n" . json_encode(self::looks(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)],
+        $content = [['type' => 'text', 'text' => "GlazyArray's looks, as JSON (pick from these first):\n" . json_encode(self::looks($looks), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)],
                     ['type' => 'text', 'text' => "The entry, as JSON:\n" . json_encode($facts, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)]];
         foreach (array_slice($thumbs, 0, 12) as $t) {
             $content[] = ['type' => 'text', 'text' => 'Photo ' . $t['name'] . ($t['takenAt'] ? ', taken ' . $t['takenAt'] : '') . ':'];
@@ -133,12 +133,12 @@ final class Drafter
     }
 
     /** Her looks as the site has them (assets/narrator/looks.json): name, what it is, and whether it's a holiday or hair day. */
-    private static function looks(): array
+    /** Her looks as the site has them (assets/narrator/looks.json): name, and what it is. */
+    private static function looks(array $looks): array
     {
-        $j = json_decode((string) @file_get_contents(dirname(__DIR__, 2) . '/assets/narrator/looks.json'), true);
         $out = [['name' => 'curls', 'about' => 'her own curls']];
-        foreach ((array) ($j['looks'] ?? []) as $l) {
-            $out[] = ['name' => $l['name'], 'about' => $l['about'] ?? ($l['to'] ?? null ? 'holiday look, ' . $l['from'] . ' to ' . $l['to'] : ($l['rotate'] ?? false ? 'hair style' : $l['name']))];
+        foreach ($looks as $l) {
+            $out[] = ['name' => $l['name'] ?? '', 'about' => $l['about'] ?? (isset($l['to']) ? 'holiday look, ' . ($l['from'] ?? '') . ' to ' . $l['to'] : (!empty($l['rotate']) ? 'hair style' : ($l['name'] ?? '')))];
         }
         return $out;
     }
