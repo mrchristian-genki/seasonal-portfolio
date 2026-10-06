@@ -60,7 +60,17 @@ function list_row(array $e): array {
     return ['id' => $e['id'], 'title' => $e['title'] ?? '', 'date' => $e['date'] ?? '', 'kind' => $e['kind'] ?? '',
         'status' => $e['status'] ?? 'notes', 'photos' => count($e['photos'] ?? []) - $loops, 'loops' => $loops, 'summary' => $e['summary'] ?? '',
         'place' => trim(explode(',', (string) ($e['place'] ?? ''))[0]), 'audio' => !empty($e['episode']['audio']),
-        'cover' => preg_match('/^[a-z0-9-]{1,40}\.jpg$/', $cover) ? $cover : ''];
+        'cover' => preg_match('/^[a-z0-9-]{1,40}\.jpg$/', $cover) ? $cover : '', 'cats' => note_cats($e), 'look' => (string) ($e['narratorLook']['look'] ?? '')];
+}
+/** A Note's categories, as Play's filters have them (field/tools/publish.mjs tagsOf, without the year): its own tags, then its kind. */
+function note_cats(array $e): array {
+    $kind = ['ride' => 'ride', 'hike' => 'hike', 'forage' => 'foraging', 'make' => 'mini-cast'][$e['kind'] ?? ''] ?? (string) ($e['kind'] ?? '');
+    $out = [];
+    foreach (array_merge((array) ($e['tags'] ?? []), [$kind]) as $t) {
+        $t = trim(preg_replace('/[^a-z0-9]+/', '-', strtolower(trim((string) $t))), '-');
+        if ($t !== '' && !preg_match('/^\d{4}$/', $t) && !in_array($t, $out, true)) $out[] = $t;
+    }
+    return $out;
 }
 
 function valid_id(string $id): bool { return (bool) preg_match('/^\d{4}-\d{2}-\d{2}-[a-z0-9-]{1,60}$/', $id); }
@@ -84,6 +94,57 @@ function looks_json(array $list, array $cats = []): string
     // the looks given to whole categories (Play's filter tags: ride, case-study, with-marley...), one per line
     if ($cats) { ksort($cats); $out .= ",\n \"categories\": {\n  " . implode(",\n  ", array_map(fn($k) => json_encode((string) $k) . ': ' . json_encode($cats[$k]), array_keys($cats))) . "\n }"; }
     return $out . "\n}\n";
+}
+/** GlazyArray's looks (Studio, "GlazyArray's look" and Categories), all in looks.json, written once into $files: a Note
+ * look taken off the site ($rl), a new or replaced look ($nl: name, ext, sha of an uploaded image, about, bulb), and the
+ * looks given to whole categories ($cl: category => look, '' for none). Holiday looks and hair styles are never
+ * replaced or removed from here. */
+function apply_looks(GitHub $gh, array &$files, string $rl, $nl, $cl): void
+{
+    // GlazyArray's looks (Studio, "GlazyArray's look"), all in looks.json, written once: a Note look taken off the
+    // site, a new or replaced Note look, and the looks given to whole categories. Holiday looks and hair styles
+    // are never replaced or removed from here.
+    if ($rl !== '' || is_array($nl) || is_array($cl)) {
+        $lj = json_decode($gh->read(LOOKS_JSON) ?? '{"looks":[]}', true);
+        $list = array_values((array) ($lj['looks'] ?? [])); $cats = (array) ($lj['categories'] ?? []);
+        $fixed = fn(array $l) => isset($l['to']) || !empty($l['rotate']);
+        if ($rl !== '') {
+            if (!preg_match('/^[a-z0-9-]{1,40}$/', $rl)) json_fail('Bad look.');
+            foreach ($list as $k => $l) {
+                if (($l['name'] ?? '') !== $rl) continue;
+                if ($fixed($l)) json_fail("\"$rl\" is one of her holiday looks or hair styles; those aren't removed from the Studio.");
+                if (preg_match('/^[a-z0-9-]{1,40}\.(webp|png)$/', (string) ($l['file'] ?? ''))) $files['assets/narrator/looks/' . $l['file']] = null;
+                unset($list[$k]);
+            }
+            $cats = array_filter($cats, fn($n) => $n !== $rl);   // a category that wore it goes back to the holiday look
+        }
+        if (is_array($nl)) {
+            $name = (string) ($nl['name'] ?? ''); $ext = (string) ($nl['ext'] ?? ''); $lsha = (string) ($nl['sha'] ?? '');
+            if (!preg_match('/^[a-z0-9-]{1,40}$/', $name) || $name === 'curls' || !in_array($ext, ['webp', 'png'], true) || !preg_match('/^[0-9a-f]{40}$/', $lsha)) json_fail('Bad look.');
+            foreach ($list as $k => $l) {
+                if (($l['name'] ?? '') !== $name) continue;
+                if ($fixed($l)) json_fail("\"$name\" is one of her holiday looks or hair styles. Pick another name for this one.");
+                if (($l['file'] ?? '') !== "$name.$ext" && preg_match('/^[a-z0-9-]{1,40}\.(webp|png)$/', (string) ($l['file'] ?? ''))) $files['assets/narrator/looks/' . $l['file']] = null;   // the old file, if it changes type
+                unset($list[$k]);
+            }
+            // v: changes with every version, so a replaced image isn't served from a cache
+            $look = ['name' => $name, 'file' => "$name.$ext", 'about' => mb_substr(trim((string) ($nl['about'] ?? '')), 0, 120), 'v' => base_convert((string) time(), 10, 36)];
+            if (($nl['bulb'] ?? true) === false) $look['bulb'] = false;
+            $list[] = $look;
+            $files["assets/narrator/looks/$name.$ext"] = ['sha' => $lsha];
+        }
+        if (is_array($cl)) {
+            $names = array_merge(['curls'], array_map(fn($l) => (string) ($l['name'] ?? ''), $list));
+            foreach ($cl as $cat => $look) {
+                $cat = (string) $cat; $look = (string) $look;
+                if (!preg_match('/^[a-z0-9-]{1,40}$/', $cat) || preg_match('/^\d{4}$/', $cat)) json_fail('Bad category.');
+                if ($look === '') { unset($cats[$cat]); continue; }
+                if (!in_array($look, $names, true)) json_fail("There's no look called \"$look\" yet. Make it first, then give it to the category.");
+                $cats[$cat] = $look;
+            }
+        }
+        $files[LOOKS_JSON] = ['text' => looks_json(array_values($list), $cats)];
+    }
 }
 function owner_only(): void { if (!studio_is_owner()) json_fail('Only the owner can do that.', 403); }
 // a file of an entry: from its review copy when there is one, else the live one
@@ -238,51 +299,7 @@ try {
             } elseif (!empty($body['removeAudio']) && $audio === null) {
                 $files[AUDIO . "/$id.mp3"] = null;
             }
-            // GlazyArray's looks (Studio, "GlazyArray's look"), all in looks.json, written once: a Note look taken off the
-            // site, a new or replaced Note look, and the looks given to whole categories. Holiday looks and hair styles
-            // are never replaced or removed from here.
-            $rl = (string) ($body['removeLook'] ?? ''); $nl = $body['newLook'] ?? null; $cl = $body['categoryLooks'] ?? null;
-            if ($rl !== '' || is_array($nl) || is_array($cl)) {
-                $lj = json_decode($gh->read(LOOKS_JSON) ?? '{"looks":[]}', true);
-                $list = array_values((array) ($lj['looks'] ?? [])); $cats = (array) ($lj['categories'] ?? []);
-                $fixed = fn(array $l) => isset($l['to']) || !empty($l['rotate']);
-                if ($rl !== '') {
-                    if (!preg_match('/^[a-z0-9-]{1,40}$/', $rl)) json_fail('Bad look.');
-                    foreach ($list as $k => $l) {
-                        if (($l['name'] ?? '') !== $rl) continue;
-                        if ($fixed($l)) json_fail("\"$rl\" is one of her holiday looks or hair styles; those aren't removed from the Studio.");
-                        if (preg_match('/^[a-z0-9-]{1,40}\.(webp|png)$/', (string) ($l['file'] ?? ''))) $files['assets/narrator/looks/' . $l['file']] = null;
-                        unset($list[$k]);
-                    }
-                    $cats = array_filter($cats, fn($n) => $n !== $rl);   // a category that wore it goes back to the holiday look
-                }
-                if (is_array($nl)) {
-                    $name = (string) ($nl['name'] ?? ''); $ext = (string) ($nl['ext'] ?? ''); $lsha = (string) ($nl['sha'] ?? '');
-                    if (!preg_match('/^[a-z0-9-]{1,40}$/', $name) || $name === 'curls' || !in_array($ext, ['webp', 'png'], true) || !preg_match('/^[0-9a-f]{40}$/', $lsha)) json_fail('Bad look.');
-                    foreach ($list as $k => $l) {
-                        if (($l['name'] ?? '') !== $name) continue;
-                        if ($fixed($l)) json_fail("\"$name\" is one of her holiday looks or hair styles. Pick another name for this one.");
-                        if (($l['file'] ?? '') !== "$name.$ext" && preg_match('/^[a-z0-9-]{1,40}\.(webp|png)$/', (string) ($l['file'] ?? ''))) $files['assets/narrator/looks/' . $l['file']] = null;   // the old file, if it changes type
-                        unset($list[$k]);
-                    }
-                    // v: changes with every version, so a replaced image isn't served from a cache
-                    $look = ['name' => $name, 'file' => "$name.$ext", 'about' => mb_substr(trim((string) ($nl['about'] ?? '')), 0, 120), 'v' => base_convert((string) time(), 10, 36)];
-                    if (($nl['bulb'] ?? true) === false) $look['bulb'] = false;
-                    $list[] = $look;
-                    $files["assets/narrator/looks/$name.$ext"] = ['sha' => $lsha];
-                }
-                if (is_array($cl)) {
-                    $names = array_merge(['curls'], array_map(fn($l) => (string) ($l['name'] ?? ''), $list));
-                    foreach ($cl as $cat => $look) {
-                        $cat = (string) $cat; $look = (string) $look;
-                        if (!preg_match('/^[a-z0-9-]{1,40}$/', $cat) || preg_match('/^\d{4}$/', $cat)) json_fail('Bad category.');
-                        if ($look === '') { unset($cats[$cat]); continue; }
-                        if (!in_array($look, $names, true)) json_fail("There's no look called \"$look\" yet. Make it first, then give it to the category.");
-                        $cats[$cat] = $look;
-                    }
-                }
-                $files[LOOKS_JSON] = ['text' => looks_json(array_values($list), $cats)];
-            }
+            apply_looks($gh, $files, (string) ($body['removeLook'] ?? ''), $body['newLook'] ?? null, $body['categoryLooks'] ?? null);
             $me = studio_me();
             if (!studio_is_owner()) {
                 // An editor can't change what's live: a published note stays published (its update waits
@@ -409,6 +426,14 @@ try {
         case 'GET users':
             owner_only();
             json_out(['users' => array_map(fn($u) => ['name' => $u['name'], 'user' => $u['user'] ?? studio_username($u['name']), 'added' => $u['added'] ?? null], studio_users())]);
+
+        // the Studio's Categories area: give categories a look, or add a look (owner only)
+        case 'POST looks':
+            owner_only();
+            $files = [];
+            apply_looks($gh, $files, '', $body['newLook'] ?? null, $body['categoryLooks'] ?? null);
+            if (!$files) json_fail('Nothing to save.');
+            json_out(['ok' => true, 'commit' => $gh->commit($files, "Studio: GlazyArray's looks")]);
 
         case 'POST useradd':
             owner_only();
