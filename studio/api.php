@@ -101,6 +101,7 @@ try {
                 'trailheads' => $trail['trailheads'] ?? [],
                 'statuses' => $show['statuses'] ?? [],
                 'audioPrompt' => $show['audioPrompt'] ?? '',
+                'siteUrl' => $show['siteUrl'] ?? '',
                 'me' => studio_me(),
             ]);
 
@@ -251,6 +252,12 @@ try {
             $guide = $gh->read('field/SHOW-GUIDE.md') ?? '';
             $draft = (new Drafter($cfg, $guide))->draft($body['facts'] ?? [], $body['thumbs'] ?? []);
             json_out(['draft' => $draft]);
+
+        // The Social panel's captions (Instagram and Facebook), from the written Note.
+        case 'POST social':
+            @set_time_limit(120);
+            $guide = $gh->read('field/SHOW-GUIDE.md') ?? '';
+            json_out(['social' => (new Drafter($cfg, $guide))->social((array) ($body['note'] ?? []))]);
 
         // Google Drive to the server: what's arrived so far, and the button that fetches new files.
         case 'GET drive':
