@@ -4,6 +4,10 @@
  "date": "2026-03-14",
  "kind": "ride",
  "place": "Skunk Harbor",
+ "tags": [
+  "lake-tahoe",
+  "with-marley"
+ ],
  "status": "published",
  "summary": "A short ride on March 14, 2026, about three miles, with most of a two-hour morning spent above the clear water and snowy boulders of a Lake Tahoe shoreline.",
  "trailhead": null,

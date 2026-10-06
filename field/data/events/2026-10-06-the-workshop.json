@@ -4,6 +4,10 @@
  "date": "2026-10-06",
  "kind": "make",
  "place": "The workshop",
+ "tags": [
+  "case-study",
+  "automaton"
+ ],
  "status": "published",
  "summary": "A case study of the Workshop: a prompt builder for new parts and a tracer that turns a picture into the scene's origami format in under a second.",
  "trailhead": null,

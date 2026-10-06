@@ -27,6 +27,11 @@ const V = Date.now().toString(36);   // cache tag for the shared css/js
 
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const KIND = { ride: 'Ride', hike: 'Hike', forage: 'Foraging walk', make: 'Mini-Cast' };
+// a Note's tags, for Play's filters and its address words: what kind it is, its own tags (field/data/events, "tags"),
+// and its year. Lowercase words with dashes, so they read well in a link (?spring+notes+grid+with-marley).
+const KIND_TAG = { ride: 'ride', hike: 'hike', forage: 'foraging', make: 'mini-cast' };
+const tagsOf = (e) => [...new Set([KIND_TAG[e.kind] || e.kind, ...(e.tags || []), String(e.date || '').slice(0, 4)]
+  .map((t) => String(t || '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')).filter(Boolean))];
 const day = (d, long) => new Date(d + 'T12:00:00Z').toLocaleDateString('en-US', { timeZone: 'UTC', weekday: long ? 'long' : 'short', month: long ? 'long' : 'short', day: 'numeric', year: 'numeric' });
 const mi = (km) => (km * 0.621371).toFixed(km * 0.621371 < 10 ? 1 : 0) + ' mi';
 const ft = (m) => Math.round(m * 3.28084).toLocaleString('en-US') + ' ft';
@@ -314,7 +319,7 @@ fs.writeFileSync(path.join(OUT, 'hub.json'), JSON.stringify({
   totals: { miles: Math.round(totalKm * 0.621371), feet: Math.round(totalM * 3.28084), episodes: pages.filter((p) => p.audio).length,
     photos: MAN ? MAN.above.length : 0, daydreams: series.length },
   episodes: pages.map(({ e, cover, audio }) => ({ id: e.id, url: R(e.id + '/'), title: e.post && e.post.title || e.title, kind: KIND[e.kind] || e.kind, date: day(e.date),
-    place: e.place || '', summary: e.summary || '', cover: cover ? { src: R(still(cover)), w: cover.w, h: cover.h } : null,
+    place: e.place || '', summary: e.summary || '', tags: tagsOf(e), cover: cover ? { src: R(still(cover)), w: cover.w, h: cover.h } : null,
     audio: audio ? { src: R(audio.src.replace('../', '')), time: mmss(audio.sec) } : null,
     stats: e.track && e.track.stats ? `${mi(e.track.stats.distanceKm)} · ↑ ${ft(e.track.stats.gainM)}` : '' })),
   fieldNotes: { title: show.showTitle, about: show.about, note: show.narrationNote },
