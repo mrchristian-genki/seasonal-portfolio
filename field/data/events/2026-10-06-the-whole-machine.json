@@ -4,7 +4,7 @@
  "date": "2026-10-06",
  "kind": "make",
  "place": "The workshop",
- "status": "draft",
+ "status": "published",
  "summary": "The capstone: how the lake, the Parts Catalog, the Workshop, the Studio and ProPre fit together as one machine, told as a brass automaton coming to life.",
  "trailhead": null,
  "links": [
@@ -80,15 +80,6 @@
    "h": 448,
    "use": "post",
    "cover": false
-  },
-  {
-   "src": "data/photos/2026-10-06-the-whole-machine/at-rest.jpg",
-   "ai": true,
-   "caption": "The whole machine at rest: a head of drawers with the lake in a porthole and a prism for an eye, the heart behind glass, the veins of liquid running out to its hands.",
-   "w": 1600,
-   "h": 893,
-   "use": "post",
-   "cover": false
   }
  ],
  "fieldNotes": "Capstone of the case-study series (Oct 6, 2026). The parable is Christian's: a brass automaton built on the same bench as the Studio's heart, each tool one part of it: ProPre = the prism eye (Christian: a coloring book is beauty broken down to lines and built back up), the main site V2 = the face, the Parts Catalog = the memory (head of drawers), the Workshop = the hands, the Studio = the heart (the liquid as the site's blood, Christian's metaphor). All loops are Christian's AI renders from the prompts. Facts from the other case studies: ProPre started May 2026 and brought him back to web development; the main site's tabs open the other parts (Books: Browse the catalog -> the Coloring Book Catalog; Workshop: Open the workshop; Play: the Field Notes the Studio publishes); Catalog parts run on the same code as the lake; the Workshop traces new parts into the Catalog's format; Marley appears in all of them (asleep on the Workshop bench, in a jellyfish in the Catalog header, visiting the lake, along the Studio's river).",
@@ -99,7 +90,7 @@
  "episode": {
   "title": "The whole machine",
   "script": "Right, pull up a chair, because this is the big finish. We've had the drawers, the hands, the lake, the heart and the prism. Today we put the whole thing together.\n\nChristian had this picture in his head. All his tools, sitting on a workbench, built into one brass automaton, a wee mechanical man, one piece at a time. So he had it made. And when it wakes up, God, it's gorgeous. Go hálainn. Beautiful.\n\n***\n\nThe eye came first. That's ProPre, his coloring book press, the thing that brought him back to building websites in the first place. A prism, he calls it. A beautiful picture goes in, and out come clean black lines, waiting for someone to colour them back in.\n\nThe face is the lake. The front of his website. Every tab a season, and every tab a door into another part of the machine. Books takes you to his library. Workshop takes you to the bench. And Play is where these very stories live. Sure you're listening to one now.\n\n***\n\nThe memory is the Catalog. A drawer for every single piece of that lake, each one working on its own, so he can open one drawer without upsetting the rest. Tidy. Like a good hot press, only with deer in it. That's the airing cupboard, for anyone not from home.\n\nThe hands are the Workshop. Hand them a picture and they shape it into a brand new part, ready to go out onto the lake with the others.\n\nAnd the heart. The Studio. A day out comes in, all tracks and photos, and out it goes as a story, with a wee voice telling it. That glowing liquid running through it? He'll tell you it's the blood of the website. The content is what keeps it alive, and the Studio pumps it round.\n\n***\n\nAnd here's a thing I love. Marley is in every one of them. Asleep at the end of the Workshop bench. Floating in a jellyfish in the Catalog. Visiting the lake. Strolling along the Studio's river. Sure she's the real heart of the operation, and she knows it.\n\n***\n\nSo watch the automaton wake up. The heart beats. The light runs out through the veins. The hands shape a wee bird out of light. And the bird flies straight into the lake.\n\nThat's the whole machine. Every part good on its own, fair play. But it's the pipes between them that bring it to life. Ar fheabhas, Christian. Brilliant. Now go and put the kettle on.",
-  "audio": null
+  "audio": "data/audio/2026-10-06-the-whole-machine.mp3"
  },
  "questions": [],
  "consent": "Marley: the family dog, mentioned in the script. The automaton and all loops are AI renders, no people."
