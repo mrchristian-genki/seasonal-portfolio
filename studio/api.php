@@ -237,21 +237,34 @@ try {
             }
             // A new look for GlazyArray made from this Note (Studio, "GlazyArray's look"): the image and its line in
             // looks.json. It never replaces one of her holiday looks or hair styles.
+            // ...or a Note look taken off the site: its image and its line (holiday looks and hair styles stay).
+            $rl = (string) ($body['removeLook'] ?? '');
+            if ($rl !== '') {
+                if (!preg_match('/^[a-z0-9-]{1,40}$/', $rl)) json_fail('Bad look.');
+                $lj = json_decode($gh->read(LOOKS_JSON) ?? '{"looks":[]}', true); $list = [];
+                foreach ((array) ($lj['looks'] ?? []) as $l) {
+                    if (($l['name'] ?? '') !== $rl) { $list[] = $l; continue; }
+                    if (isset($l['to']) || !empty($l['rotate'])) json_fail("\"$rl\" is one of her holiday looks or hair styles; those aren't removed from the Studio.");
+                    if (preg_match('/^[a-z0-9-]{1,40}\.(webp|png)$/', (string) ($l['file'] ?? ''))) $files['assets/narrator/looks/' . $l['file']] = null;
+                }
+                $files[LOOKS_JSON] = ['text' => looks_json($list)];
+            }
             $nl = $body['newLook'] ?? null;
             if (is_array($nl)) {
                 $name = (string) ($nl['name'] ?? ''); $ext = (string) ($nl['ext'] ?? ''); $lsha = (string) ($nl['sha'] ?? '');
                 if (!preg_match('/^[a-z0-9-]{1,40}$/', $name) || $name === 'curls' || !in_array($ext, ['webp', 'png'], true) || !preg_match('/^[0-9a-f]{40}$/', $lsha)) json_fail('Bad look.');
-                $lj = json_decode($gh->read(LOOKS_JSON) ?? '{"looks":[]}', true);
+                $lj = isset($files[LOOKS_JSON]) ? json_decode($files[LOOKS_JSON]['text'], true) : json_decode($gh->read(LOOKS_JSON) ?? '{"looks":[]}', true);
                 $list = [];
                 foreach ((array) ($lj['looks'] ?? []) as $l) {
                     if (($l['name'] ?? '') === $name) {
                         if (isset($l['to']) || !empty($l['rotate'])) json_fail("\"$name\" is one of her holiday looks or hair styles. Pick another name for this one.");
-                        if (($l['file'] ?? '') !== "$name.$ext") $files['assets/narrator/looks/' . $l['file']] = null;   // the old file, if it changes type
+                        if (($l['file'] ?? '') !== "$name.$ext" && preg_match('/^[a-z0-9-]{1,40}\.(webp|png)$/', (string) ($l['file'] ?? ''))) $files['assets/narrator/looks/' . $l['file']] = null;   // the old file, if it changes type
                         continue;
                     }
                     $list[] = $l;
                 }
-                $look = ['name' => $name, 'file' => "$name.$ext", 'about' => mb_substr(trim((string) ($nl['about'] ?? '')), 0, 120)];
+                // v: changes with every version, so a replaced image isn't served from a cache
+                $look = ['name' => $name, 'file' => "$name.$ext", 'about' => mb_substr(trim((string) ($nl['about'] ?? '')), 0, 120), 'v' => base_convert((string) time(), 10, 36)];
                 if (($nl['bulb'] ?? true) === false) $look['bulb'] = false;
                 $list[] = $look;
                 $files["assets/narrator/looks/$name.$ext"] = ['sha' => $lsha];
