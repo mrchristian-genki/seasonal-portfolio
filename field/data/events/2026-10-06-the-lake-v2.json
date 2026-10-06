@@ -76,5 +76,11 @@
  },
  "questions": [],
  "consent": "Marley: the family dog, one of the lake's visitors.",
- "publishedAt": "2026-10-06T02:48:22Z"
+ "publishedAt": "2026-10-06T02:48:22Z",
+ "narratorBackdrop": {
+  "backdrop": "library",
+  "fit": "category",
+  "from": "case-study",
+  "scene": ""
+ }
 }
