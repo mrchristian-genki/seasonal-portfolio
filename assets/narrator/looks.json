@@ -14,6 +14,7 @@
   { "name": "halloween", "file": "witch.webp", "from": "10-20", "to": "10-31", "bulb": false },
   { "name": "thanksgiving", "file": "autumn.webp", "from": "11-20", "to": "11-28" },
   { "name": "winter-holidays", "file": "santa.webp", "from": "12-01", "to": "12-30", "bulb": false },
-  { "name": "bike-helmet", "file": "bike-helmet.webp", "about": "a brass bike helmet with a little headlamp" }
+  { "name": "bike-helmet", "file": "bike-helmet.webp", "about": "a brass bike helmet with a little headlamp" },
+  { "name": "trail-cap", "file": "trail-cap.webp", "about": "a turquoise and cream trucker cap, like Helena's on the trail", "v": "tmi4s1" }
  ]
 }
