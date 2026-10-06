@@ -154,8 +154,9 @@ already give it one; **new** only when the Note clearly happens somewhere partic
 phrase: "a small bike shop garage with bikes on a wall rack"); **none** otherwise, the usual answer. Only real,
 tasteful places from the Note: no people, no text or brands, nothing that hints at where home is.
 
-The Studio turns the phrase into the image prompt (soft focus everywhere, warm low light, quiet at the left where
-she sits, even and a little darker at the right under the player) for the 21:9 backdrop template in her kit.
+The Studio turns the phrase into the image prompt for the 2016 x 864 (21:9) backdrop template in her kit: soft focus
+everywhere, warm low light, and the quiet areas given as pixels (the left 600, and x 660 to 1960 by y 250 to 580),
+never as what sits over them: a word like robot or music player gets drawn into the picture.
 
 ## The audio
 
