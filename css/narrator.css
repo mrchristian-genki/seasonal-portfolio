@@ -98,9 +98,10 @@ section.listen.has-bd::before{z-index:1}
   section.listen.has-nb .nb-glass{flex:none;width:100%;box-sizing:border-box;min-width:0}
 }
 
-/* over a backdrop her body is keyed (no teal edge to blend into the desk), so her hands keep their whole reach:
-   no fade at the video's right edge */
-.nb-keyed{-webkit-mask-image:none;mask-image:none}
+/* her widest gestures (the storyteller's open arms, the shape she draws) reach past the sides of the video itself for
+   about a second; both side edges fade out softly so a hand there trails off instead of stopping at a hard line */
+.nb-body,.nb-keyed{-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent),linear-gradient(180deg,transparent,#000 6%);-webkit-mask-composite:source-in;
+  mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent),linear-gradient(180deg,transparent,#000 6%);mask-composite:intersect}
 /* on a phone she sits in the middle of the bar under the card, the nameplate just to her right, and nothing clips
    her sides, so her hands move their full width */
 @media (max-width:560px){
