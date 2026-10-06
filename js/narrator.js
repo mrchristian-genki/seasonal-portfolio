@@ -1,15 +1,18 @@
 /* THE NARRATOR: a little brass robot in each Listen bar (section.listen with an <audio>) that tells the episode.
-   Its torso and hands are short video loops (assets/narrator/talk-*.mp4: green screen keyed onto the bar's colour),
-   its head three cut-out layers on top: the head with the mouth open inside, the jaw, and the shut eyelids.
-   - Playing: it rises so its head stands up out of the bar, the hands gesture (the loops in a shuffled order,
-     each ending in the same rest pose so they cut together), and the jaw opens with the loudness of the voice,
-     measured from the episode itself (Web Audio). The head nods a little with it.
-   - Not talking (before play, paused, done): the gesture finishes, then the fingers tap on the desk
-     (assets/narrator/idle.mp4), from when the bar comes into view.
+   Its torso and hands are one video (assets/narrator/narrator.mp4, green screen keyed onto the bar's colour) in five
+   8-second parts, every one starting and ending in the same rest pose: the fingers tapping, a storyteller's gesture
+   and the same played backwards, drawing a shape in the air and that backwards. The robot moves only by jumping
+   within this one file (switching files blanked the frame for a moment). Its head is three cut-out layers on top:
+   the head with the mouth open inside, the jaw, and the shut eyelids.
+   - Playing: it rises so its head stands up out of the bar, the jaw opens with the loudness of the voice (measured
+     from the episode with Web Audio) and the head nods a little. The hands make a gesture, all of it, or part of it
+     and back again (it jumps to the same frame in the backwards copy), so it never looks like the same 8 seconds.
+   - When the voice stops it heads for the nearer rest pose, a little quicker, then the fingers tap on the desk.
    - Now and then it blinks. With reduced motion it stays still, and only the mouth moves. */
 (function () {
   'use strict';
-  var A = '/assets/narrator/', V = '?v=2', CLIPS = ['talk-1.mp4' + V, 'talk-2.mp4' + V, 'talk-3.mp4' + V], DROP = 0.0747;   // the jaw's drop, as a share of the head's height
+  var A = '/assets/narrator/', V = '?v=3', DROP = 0.0747;   // the jaw's drop, as a share of the head's height
+  var D = 193 / 24, IDLE = 0, GESTURES = [{ f: 1, r: 2 }, { f: 3, r: 4 }];   // the parts of narrator.mp4: forward and backwards copies
   var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var ctx = null;
 
@@ -23,18 +26,41 @@
       '<video class="nb-body" muted playsinline preload="none" poster="' + A + 'rest.jpg' + V + '"></video></div>';
     bar.insertBefore(nb, bar.firstChild);
     var body = nb.querySelector('.nb-body'), head = nb.querySelector('.nb-head'), jaw = nb.querySelector('.nb-jaw');
-    var talking = false, order = [], an = null, buf = null, level = 0, raf = 0;
+    var talking = false, an = null, buf = null, level = 0, raf = 0, plan = null, lastG = -1;
+    body.src = A + 'narrator.mp4' + V;
 
-    // the hands: a shuffled round of the loops, a new round when it's used up; never the same one twice running
-    function next() {
-      if (!order.length) { order = CLIPS.slice().sort(function () { return Math.random() - 0.5; }); if (order[0] === body._last) order.push(order.shift()); }
-      body._last = order.shift(); body.src = A + body._last; body.play().catch(function () {});
+    // the hands: a plan is a stretch of the video to play to, and what to do when it gets there
+    function go(at, end, then, rate) { body.playbackRate = rate || 1; if (Math.abs(body.currentTime - at) > 0.06) body.currentTime = at; plan = { end: end, then: then }; body.play().catch(function () {}); drive(); }
+    function idle() { if (talking) return gesture(); go(IDLE * D, IDLE * D + D, idle); }
+    body.addEventListener('ended', function () { if (plan) { var t = plan.then; plan = null; t(); } });   // the last part runs to the end of the file
+    function gesture() {
+      var k = lastG < 0 ? Math.floor(Math.random() * GESTURES.length) : (lastG + 1) % GESTURES.length, g = GESTURES[k], r = Math.random(); lastG = k;   // never the same gesture twice running
+      var after = function () { talking ? gesture() : idle(); };
+      if (r < 0.45) go(g.f * D, g.f * D + D, after);                                       // the whole gesture
+      else if (r < 0.85) {                                                                  // part of it, and back
+        var p = D * (0.3 + Math.random() * 0.45);
+        go(g.f * D, g.f * D + p, function () { go(g.r * D + (D - p), g.r * D + D, after); });
+      } else go(g.r * D, g.r * D + D, after);                                               // the whole of it, backwards
     }
-    function idle() { body._last = null; body.src = A + 'idle.mp4' + V; body.play().catch(function () {}); }
-    // every loop ends in the same rest pose, so the next one (a gesture while talking, else tapping) cuts in cleanly
-    body.addEventListener('ended', function () { if (still) return; if (talking) next(); else idle(); });
-    if (!still && 'IntersectionObserver' in window) {
-      var io = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { io.disconnect(); if (body.paused && !talking) idle(); } });
+    // the voice stopped: to the nearer rest pose, the end of this part or (by the backwards copy) its start
+    function settle() {
+      var t = body.currentTime, part = Math.floor((t + 0.02) / D), local = Math.max(0, t - part * D);   // a hair of margin: a jump lands right on a part's first frame
+      if (part === IDLE || !plan) return;
+      var g = GESTURES.filter(function (x) { return x.f === part || x.r === part; })[0]; if (!g) return;
+      var other = part === g.f ? g.r : g.f;
+      if (local < D / 2) go(other * D + (D - local), other * D + D, idle, 1.35); else go(part * D + local, part * D + D, idle, 1.35);
+    }
+    var driving = false;
+    function drive() {   // checks the playhead every frame: rAF, so it doesn't overrun into the next part
+      if (driving) return; driving = true;
+      (function step() {
+        if (!nb.isConnected) { driving = false; return; }
+        if (plan && body.currentTime >= plan.end - 0.05) { var t = plan.then; plan = null; t(); }
+        if (!body.paused) requestAnimationFrame(step); else driving = false;
+      })();
+    }
+    if (!still && 'IntersectionObserver' in window) {   // starts tapping when it comes into view
+      var io = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { io.disconnect(); body.preload = 'auto'; if (!talking && !plan) idle(); } });
       io.observe(nb);
     }
 
@@ -60,10 +86,10 @@
     audio.addEventListener('play', function () {
       listen(); if (ctx && ctx.state === 'suspended') ctx.resume();
       talking = true; nb.classList.add('on');
-      if (!still && (body.paused || body.ended || !body._last)) next();   // from tapping or rest, straight into a gesture
+      if (!still) { var part = Math.floor((body.currentTime + 0.02) / D); if (!plan || part === IDLE) gesture(); }   // from tapping or rest, straight into a gesture
       if (!raf) raf = requestAnimationFrame(tick);
     });
-    ['pause', 'ended'].forEach(function (t) { audio.addEventListener(t, function () { talking = false; }); });
+    ['pause', 'ended'].forEach(function (t) { audio.addEventListener(t, function () { talking = false; if (!still) settle(); }); });
 
     // a blink every few seconds
     (function blink() {

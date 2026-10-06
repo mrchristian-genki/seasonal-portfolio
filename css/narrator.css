@@ -4,7 +4,8 @@ section.listen.has-nb{--nb:210px;position:relative;min-height:calc(var(--nb) * .
 .nb{position:absolute;left:0;bottom:0;width:var(--nb);height:calc(var(--nb) * .5208);pointer-events:none}
 .nb-rise{position:absolute;inset:0;transform:translateY(14%);transition:transform .7s cubic-bezier(.3,1.35,.5,1)}
 .nb.on .nb-rise{transform:none}
-.nb-body{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:0 0 0 16px;background:#0f4d47;
+.nb-body{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:0 0 0 16px;background:#0f4d47 url(/assets/narrator/rest.jpg?v=3) center/cover;   /* the rest pose behind the video, in case a frame is ever missing */
+  
   /* the desk fades out to the right, and the top edge softens into the bar */
   -webkit-mask-image:linear-gradient(90deg,#000 88%,transparent),linear-gradient(180deg,transparent,#000 6%);-webkit-mask-composite:source-in;
   mask-image:linear-gradient(90deg,#000 88%,transparent),linear-gradient(180deg,transparent,#000 6%);mask-composite:intersect}
