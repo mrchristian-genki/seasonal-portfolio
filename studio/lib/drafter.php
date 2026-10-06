@@ -44,8 +44,19 @@ final class Drafter
                 'required' => ['fit', 'look', 'about', 'why', 'prompt', 'bulb'],
                 'additionalProperties' => false,
             ],
+            'narrator_backdrop' => [
+                'type' => 'object',
+                'description' => "The softly blurred scene behind this Note's Listen bar (the show guide's section \"The backdrop\").",
+                'properties' => [
+                    'fit' => ['type' => 'string', 'enum' => ['existing', 'new', 'none'], 'description' => 'existing: one of the backdrops fits. new: a new one would. none: its categories already give it one, or nothing calls for one.'],
+                    'backdrop' => ['type' => 'string', 'description' => 'An existing backdrop\'s name, or a new one in lowercase-with-hyphens named for the place (bike-shop). Empty for none.'],
+                    'scene' => ['type' => 'string', 'description' => 'For new: the place in one short phrase, for the image prompt (a small bike shop garage with bikes on a wall rack). Empty otherwise.'],
+                ],
+                'required' => ['fit', 'backdrop', 'scene'],
+                'additionalProperties' => false,
+            ],
         ],
-        'required' => ['summary', 'post_title', 'post_body', 'episode_title', 'episode_script', 'captions', 'cover', 'questions', 'narrator_look'],
+        'required' => ['summary', 'post_title', 'post_body', 'episode_title', 'episode_script', 'captions', 'cover', 'questions', 'narrator_look', 'narrator_backdrop'],
         'additionalProperties' => false,
     ];
 
@@ -140,6 +151,8 @@ final class Drafter
         // the looks whole categories wear (Play's filter tags): a Note in one already has that look
         if (!empty($looks['_categories'])) $out[] = ['categoryLooks' => $looks['_categories']];
         unset($looks['_categories']);
+        if (!empty($looks['_backdrops'])) $out[] = ['backdrops' => $looks['_backdrops']];
+        unset($looks['_backdrops']);
         foreach ($looks as $l) {
             $out[] = ['name' => $l['name'] ?? '', 'about' => $l['about'] ?? (isset($l['to']) ? 'holiday look, ' . ($l['from'] ?? '') . ' to ' . $l['to'] : (!empty($l['rotate']) ? 'hair style' : ($l['name'] ?? '')))];
         }
@@ -158,6 +171,7 @@ How to work:
 - Other people stay anonymous unless the entry says they agreed to be named.
 - Write captions for every photo listed: short, plain, only what is visible, with the time when it helps the story.
 - If there is a current draft, revise it rather than starting over, unless the instruction asks for a new one.
+- GlazyArray's backdrop: follow the show guide's section "The backdrop".
 - GlazyArray's look: follow the show guide's section "GlazyArray's look". Prefer one of her looks when it fits; suggest a new one only when the Note clearly calls for it; "none" is the usual answer.
 - Questions: list what Christian should confirm or add before this is published. Keep them short and specific. An empty list is fine when nothing is open.
 

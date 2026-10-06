@@ -55,3 +55,38 @@ section.listen.has-nb::before{content:"";position:absolute;left:0;right:0;bottom
 .nb-plate b{font:600 8px/1.15 system-ui,-apple-system,"Segoe UI",sans-serif;letter-spacing:.02em;color:#a8acaf;text-shadow:0 -.5px 0 rgba(0,0,0,.7)}
 .nb-plate small{font:500 5.5px/1.2 system-ui,-apple-system,"Segoe UI",sans-serif;letter-spacing:.03em;color:#8c9093}
 @media (max-width:560px){.nb-plate{left:calc(var(--nb) + 4px);padding:1px 6px}.nb-plate b{font-size:7px}.nb-plate small{font-size:5px}}
+
+/* HER BACKDROP (narrator.js backdrop()): a scene behind the whole bar, softly blurred and dimmed so the card stays
+   easy to read; the desk strip and GlazyArray stay in front of it, and her body is keyed off its teal (.nb-keyed) */
+.nb-bd{position:absolute;inset:0;border-radius:inherit;overflow:hidden;pointer-events:none;z-index:0}
+.nb-bd i{position:absolute;inset:-16px;background:center/cover no-repeat;filter:blur(5px) saturate(.95) brightness(.7)}
+.nb-bd::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(8,30,28,.05) 0,rgba(8,30,28,.35) 100%)}
+section.listen.has-bd::before{z-index:1}
+.nb-keying .nb-body{opacity:0}
+.nb-keyed{position:absolute;inset:0;width:100%;height:100%;border-radius:0 0 0 16px;
+  -webkit-mask-image:linear-gradient(90deg,#000 95%,transparent);mask-image:linear-gradient(90deg,#000 95%,transparent)}
+
+/* THE PLAYER (narrator.js player()): the title, her name and the controls on one glass card, after the sample
+   Christian liked: a frosted gradient, a thin light edge, white type; the plain audio element is hidden */
+.nb-glass{position:relative;z-index:2;display:flex;flex-direction:column;gap:10px;padding:14px 18px 12px;border-radius:20px;color:#fff;
+  background:linear-gradient(to right top,rgba(40,44,44,.62),rgba(239,239,239,.2));-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  border:1px solid rgba(240,240,240,.16);box-shadow:0 10px 26px rgba(0,0,0,.18)}
+.nb-glass>div:first-child{display:flex;flex-direction:column}
+/* out of sight but still on the page: the site's audio rules pause a track whose player can't be seen (audio-rules.js) */
+.nb-glass .nb-audio{display:block;position:absolute;left:0;top:0;width:1px;height:1px;opacity:0;pointer-events:none}
+.nb-player{display:flex;flex-direction:column;gap:6px}
+.nb-row{display:flex;align-items:center;gap:10px;font:600 12px/1 system-ui,-apple-system,"Segoe UI",sans-serif;color:#e8eeee;font-variant-numeric:tabular-nums}
+.nb-row span{min-width:32px;text-align:center}
+.nb-seek{--p:0%;-webkit-appearance:none;appearance:none;flex:1;height:6px;border-radius:6px;margin:0;cursor:pointer;
+  background:linear-gradient(90deg,#fff var(--p),rgba(255,255,255,.22) var(--p))}
+.nb-seek::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.35)}
+.nb-seek::-moz-range-thumb{width:14px;height:14px;border:0;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.35)}
+.nb-seek:focus-visible{outline:2px solid #9fd8d0;outline-offset:3px}
+.nb-ctl{display:flex;align-items:center;justify-content:center;gap:14px}
+.nb-ctl button{display:grid;place-items:center;width:38px;height:38px;padding:7px;border:0;border-radius:50%;background:none;color:#e8eeee;cursor:pointer;transition:background .2s}
+.nb-ctl button:hover{background:rgba(255,255,255,.12)}
+.nb-ctl button:focus-visible{outline:2px solid #9fd8d0;outline-offset:2px}
+.nb-ctl .nb-pp{width:48px;height:48px;padding:12px;background:rgba(30,32,32,.62)}
+.nb-ctl .nb-pp:hover{background:rgba(30,32,32,.8)}
+.nb-glass .nb-ctl svg{position:static;inset:auto;width:100%;height:100%;display:block}   /* (pages that style every svg, like the catalog's scenes, leave these be) */
+@media (max-width:560px){.nb-glass{padding:12px 12px 10px;border-radius:16px}.nb-ctl{gap:8px}}

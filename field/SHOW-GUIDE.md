@@ -142,6 +142,21 @@ Christian renders it from the template in the Studio's look panel and brings it 
 puts her face back and adds it on Save; the Workshop's Style Array does the same by hand). It goes into looks.json with an
 `about` line and no dates or rotate, so it only appears on the Notes that wear it (and with ?look-name).
 
+## The backdrop (Christian, Oct 6, 2026)
+
+Behind GlazyArray's Listen bar can sit a softly blurred scene that sets the place: a library for the case studies,
+a bike shop garage for the rides. Most come from a category (set in the Studio's Categories tab); a Note can have
+its own. Which shows: the Note's own, else its categories' (when they give it one; two different ones are picked by
+its editor, and unpicked it's none), else the bar's plain teal.
+
+When drafting, pick one like her look: **existing** when one of the backdrops fits and the Note's categories don't
+already give it one; **new** only when the Note clearly happens somewhere particular (say the place in one short
+phrase: "a small bike shop garage with bikes on a wall rack"); **none** otherwise, the usual answer. Only real,
+tasteful places from the Note: no people, no text or brands, nothing that hints at where home is.
+
+The Studio turns the phrase into the image prompt (soft focus everywhere, warm low light, quiet at the left where
+she sits, even and a little darker at the right under the player) for the 21:9 backdrop template in her kit.
+
 ## The audio
 
 The audio prompt template is in `data/show.json` (`audioPrompt`), with voice, pace and

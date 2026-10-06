@@ -522,3 +522,11 @@ dialog.pfp::backdrop{background:rgba(20,12,6,.7)}
 .head .tabs+.me{margin-left:auto}
 @media (max-width:640px){.head .tabs{order:3;width:100%;justify-content:space-between}.head .tabs button{flex:1}}
 #list[hidden],#drive[hidden],#queue[hidden],#catsBox[hidden],#peopleBox[hidden]{display:none!important}
+
+/* GlazyArray's style: her look and the backdrop (Note panel, Categories tab) */
+.ga-h{margin:6px 0 8px;font-size:1rem} .ga-h+div{margin-bottom:14px}
+.ga-bdimg{display:block;width:100%;max-width:560px;aspect-ratio:21/9;object-fit:cover;border-radius:10px;margin:4px 0 10px;filter:blur(2px) brightness(.8)}
+.panel.cats .catl .catc{display:flex;flex-direction:column;gap:2px;flex:1 1 220px} .panel.cats .catl .catc small{color:var(--ink3);font-size:12px}
+.panel.cats .catl .catc>span{display:flex;gap:8px;align-items:center} .panel.cats .catl .catc select{flex:1}
+.panel.cats .catl img.bd,.panel.cats .catl .noimg.bd{width:96px;height:41px;object-fit:cover}
+.panel.cats .bdg{grid-template-columns:repeat(auto-fill,minmax(180px,1fr))} .panel.cats .bdg img{aspect-ratio:21/9;object-fit:cover;filter:blur(1.5px)}

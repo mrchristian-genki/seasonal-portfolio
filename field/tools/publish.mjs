@@ -36,14 +36,16 @@ const day = (d, long) => new Date(d + 'T12:00:00Z').toLocaleDateString('en-US', 
 const mi = (km) => (km * 0.621371).toFixed(km * 0.621371 < 10 ? 1 : 0) + ' mi';
 const ft = (m) => Math.round(m * 3.28084).toLocaleString('en-US') + ' ft';
 const dur = (s) => { const t = Math.round(s / 60), h = Math.floor(t / 60), m = t % 60; return h ? `${h} h ${String(m).padStart(2, '0')} m` : `${m} min`; };
-const mmss = (s) => `${Math.floor(s / 60)}:${String(Math.round(s % 60)).padStart(2, '0')}`;
+const mmss = (s) => { const t = Math.round(s); return `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`; };   // 119.6 s is 2:00, not 1:60
 // GlazyArray's look for this Note, picked when it was drafted (SHOW-GUIDE.md, "GlazyArray's look"): her default on
 // this Note's Listen bar once that look has been made; until then narrator.js keeps the holiday look
 const lookAttr = (e) => {
   const l = e.narratorLook && e.narratorLook.look, own = l && /^[a-z0-9-]{1,40}$/.test(l) ? ` data-look="${l}"` : '';
   // and its categories, for the looks whole categories wear (looks.json "categories"): its own tags first, its kind last
   const cats = tagsOf(e).filter((t) => !/^\d{4}$/.test(t)), kind = cats.shift();
-  return own + ` data-cats="${esc(cats.concat(kind ? [kind] : []).join(' '))}"`;
+  // and its own backdrop, if it has one (narratorBackdrop: the scene behind its Listen bar)
+  const b = e.narratorBackdrop && e.narratorBackdrop.backdrop, bd = b && /^[a-z0-9-]{1,40}$/.test(b) ? ` data-backdrop="${b}"` : '';
+  return own + bd + ` data-cats="${esc(cats.concat(kind ? [kind] : []).join(' '))}"`;
 };
 const paras = (t) => String(t || '').split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
 
@@ -120,7 +122,7 @@ ${ICONS}
 <link rel="stylesheet" href="${rel}play.css?v=${V}">
 <link rel="stylesheet" href="${rel}../css/logo.css?v=11">
 <link rel="stylesheet" href="${rel}../css/lake.css?v=1">
-<link rel="stylesheet" href="${rel}../css/narrator.css?v=17">
+<link rel="stylesheet" href="${rel}../css/narrator.css?v=18">
 <script>/* Logo season from the calendar, as on About. */document.documentElement.dataset.season=["winter","winter","spring","spring","spring","summer","summer","summer","fall","fall","fall","winter"][new Date().getMonth()];</script>
 <link rel="stylesheet" href="${rel}../css/route-dash.css?v=${V}">
 </head>
@@ -137,7 +139,7 @@ const foot = (rel) => `<footer class="foot"><p>${esc(show.narrationNote)}</p>
 <script src="${rel}../js/audio-rules.js?v=1" defer></script>
 <script src="${rel}play.js?v=${V}" defer></script>
 <script src="${rel}../js/lake.js?v=3" defer></script>
-<script src="${rel}../js/narrator.js?v=21" defer></script>
+<script src="${rel}../js/narrator.js?v=22" defer></script>
 </body>
 </html>
 `;
