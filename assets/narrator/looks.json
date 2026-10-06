@@ -28,12 +28,13 @@
   { "name": "bike-shop", "file": "bike-shop.webp", "about": "", "v": "tmiacs", "scene": "a small bike shop garage with mountain bikes hanging on a wall rack, tools on a pegboard and a wooden workbench" },
   { "name": "trailhead", "file": "trailhead.webp", "about": "", "v": "tmiah5", "scene": "a pine forest trailhead with a wooden trail sign and a dirt path in late light" },
   { "name": "clockmaker", "file": "clockmaker.webp", "about": "", "v": "tmiako", "scene": "a clockmaker's workshop full of brass gears, cogs and glass jars on wooden shelves" },
-  { "name": "workshop", "file": "workshop.webp", "about": "", "v": "tmiaob", "scene": "a sunny pine meadow with a dog's ball and leash resting on a log" }
+  { "name": "workshop", "file": "workshop.webp", "about": "", "v": "tmiav4", "scene": "a cozy maker's workshop with a workbench, tools on the wall and warm hanging lamps" }
  ],
  "categoryBackdrops": {
   "automaton": "clockmaker",
   "case-study": "library",
   "hike": "trailhead",
+  "mini-cast": "workshop",
   "ride": "bike-shop"
  }
 }
