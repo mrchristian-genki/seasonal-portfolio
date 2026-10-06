@@ -82,5 +82,14 @@
   "fit": "category",
   "from": "case-study",
   "scene": ""
+ },
+ "narratorLook": {
+  "look": "grad-cap",
+  "fit": "category",
+  "from": "case-study",
+  "about": "a brass mortarboard with a chain tassel",
+  "why": "Picked from Case study.",
+  "prompt": "",
+  "bulb": false
  }
 }
