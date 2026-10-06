@@ -16,7 +16,7 @@
    - Now and then it blinks. With reduced motion it stays still, and only the mouth moves. */
 (function () {
   'use strict';
-  var A = '/assets/narrator/', V = '?v=19', DROP = 0.0448;   // the chin plate's drop, as a share of the head layer's height (the side plates go half as far)
+  var A = '/assets/narrator/', V = '?v=20', DROP = 0.0448;   // the chin plate's drop, as a share of the head layer's height (the side plates go half as far)
   var D = 193 / 24, IDLE = 0, GESTURES = [{ f: 1, r: 2 }, { f: 3, r: 4 }];   // the parts of narrator.mp4: forward and backwards copies
   // the hints, parts 5 to 7, with what the head does when (seconds into the part): look toward Play, wink, the bulb glows
   var HINTS = [
@@ -36,10 +36,10 @@
   // covers the antenna (its glow stays off).
   var LOOKRX = /(^|[?&+,;\s])look[-=]([a-z0-9-]+)/i;
   function urlLook() { var m = LOOKRX.exec(decodeURIComponent(location.search)); return m ? m[2].toLowerCase() : null; }
-  var WARDROBE = [], ALL = {}, CURLS = A + 'head-base.webp' + V;
+  var WARDROBE = [], ALL = {}, CATS = {}, CURLS = A + 'head-base.webp' + V;
   var looks = fetch(A + 'looks.json' + V, { cache: 'no-cache' }).then(function (r) { return r.ok ? r.json() : { looks: [] }; }).catch(function () { return { looks: [] }; }).then(function (j) {
     var list = (j && j.looks) || [], d = new Date();
-    ALL = { curls: { name: 'curls' } }; list.forEach(function (l) { ALL[l.name] = l; });
+    ALL = { curls: { name: 'curls' } }; list.forEach(function (l) { ALL[l.name] = l; }); CATS = (j && j.categories) || {};
     var hol = list.filter(function (l) { return l.to; }).sort(function (a, b) { return a.to < b.to ? -1 : 1; });
     var mmdd = ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
     var up = hol.filter(function (l) { return l.to >= mmdd; })[0] || hol[0];   // after the year's last holiday, the first again
@@ -59,7 +59,15 @@
   }
   // a Note's own look (data-look on its Listen bar, picked when it was drafted: a bike helmet for a ride) is what she
   // wears there, once it has been made, whatever the address says (Christian, Oct 6, 2026)
-  function own(nb) { var bar = nb.closest('section.listen'), n = bar && bar.getAttribute('data-look'); return n && ALL[n] || null; }
+  // ...and failing that, the look of the first of its categories that has one (looks.json "categories": every case
+  // study in her mortarboard). Which look shows: the Note's own, else its category's, else the holiday look.
+  function own(nb) {
+    var bar = nb.closest('section.listen'); if (!bar) return null;
+    var n = bar.getAttribute('data-look'); if (n && ALL[n]) return ALL[n];
+    var cats = (bar.getAttribute('data-cats') || '').split(' ');
+    for (var i = 0; i < cats.length; i++) if (CATS[cats[i]] && ALL[CATS[cats[i]]]) return ALL[CATS[cats[i]]];
+    return null;
+  }
   function wear(nb) { looks.then(function (l) { put(nb, own(nb) || l); }); }   // a Note's own look always wins
   // a click on her head: the next look in her wardrobe loads, then fades in over the old one while her head gives a
   // little shake (that bar only; nothing is kept)

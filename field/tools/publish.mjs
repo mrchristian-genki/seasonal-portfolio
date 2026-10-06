@@ -39,7 +39,12 @@ const dur = (s) => { const t = Math.round(s / 60), h = Math.floor(t / 60), m = t
 const mmss = (s) => `${Math.floor(s / 60)}:${String(Math.round(s % 60)).padStart(2, '0')}`;
 // GlazyArray's look for this Note, picked when it was drafted (SHOW-GUIDE.md, "GlazyArray's look"): her default on
 // this Note's Listen bar once that look has been made; until then narrator.js keeps the holiday look
-const lookAttr = (e) => { const l = e.narratorLook && e.narratorLook.look; return l && /^[a-z0-9-]{1,40}$/.test(l) ? ` data-look="${l}"` : ''; };
+const lookAttr = (e) => {
+  const l = e.narratorLook && e.narratorLook.look, own = l && /^[a-z0-9-]{1,40}$/.test(l) ? ` data-look="${l}"` : '';
+  // and its categories, for the looks whole categories wear (looks.json "categories"): its own tags first, its kind last
+  const cats = tagsOf(e).filter((t) => !/^\d{4}$/.test(t)), kind = cats.shift();
+  return own + ` data-cats="${esc(cats.concat(kind ? [kind] : []).join(' '))}"`;
+};
 const paras = (t) => String(t || '').split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
 
 // MP3 length from its frames (CBR): bytes after any ID3 tag × 8 / bitrate.
@@ -132,7 +137,7 @@ const foot = (rel) => `<footer class="foot"><p>${esc(show.narrationNote)}</p>
 <script src="${rel}../js/audio-rules.js?v=1" defer></script>
 <script src="${rel}play.js?v=${V}" defer></script>
 <script src="${rel}../js/lake.js?v=3" defer></script>
-<script src="${rel}../js/narrator.js?v=19" defer></script>
+<script src="${rel}../js/narrator.js?v=20" defer></script>
 </body>
 </html>
 `;
