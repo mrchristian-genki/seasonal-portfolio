@@ -67,8 +67,10 @@
       (g.caption ? '<figcaption>' + esc(g.caption) + '</figcaption>' : '') + '</figure>';
   }
   function episode(e) {
-    return '<article class="pi-ep pi-in">' + (e.cover ? '<img src="' + esc(e.cover.src) + '" alt="" width="' + e.cover.w + '" height="' + e.cover.h + '" loading="lazy">' : '') +
-      '<div><p class="pi-kick">' + esc(e.kind) + ' · ' + esc(e.date) + (e.stats ? ' · ' + esc(e.stats) : '') + '</p><h4>' + esc(e.title) + '</h4><p class="pi-sum">' + esc(e.summary) + '</p>' +
+    // the cover and the title open the Note too, like the link at the bottom
+    var open = '<a href="' + esc(e.url) + '" data-pi-story="' + esc(e.id) + '"';
+    return '<article class="pi-ep pi-in">' + (e.cover ? open + ' class="pi-ep-cover" tabindex="-1" aria-hidden="true"><img src="' + esc(e.cover.src) + '" alt="" width="' + e.cover.w + '" height="' + e.cover.h + '" loading="lazy"></a>' : '') +
+      '<div><p class="pi-kick">' + esc(e.kind) + ' · ' + esc(e.date) + (e.stats ? ' · ' + esc(e.stats) : '') + '</p><h4>' + open + '>' + esc(e.title) + '</a></h4><p class="pi-sum">' + esc(e.summary) + '</p>' +
       (state.view === 'notes' && e.tags && e.tags.length ? '<p class="pi-tags">' + e.tags.map(function (t) { return '<button type="button" data-pi-tag="' + esc(t) + '"' + (state.tags.indexOf(t) >= 0 ? ' class="on"' : '') + '>' + esc(tagName(t)) + '</button>'; }).join('') + '</p>' : '') +
       (e.audio ? '<audio controls preload="none" src="' + esc(e.audio.src) + '"></audio>' : '') +
       '<p class="pi-more"><a href="' + esc(e.url) + '" data-pi-story="' + esc(e.id) + '">' + (e.stats ? 'The story, the map and the photos' : 'The story and the pictures') + ' →</a></p></div></article>';

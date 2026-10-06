@@ -488,38 +488,57 @@
     }).catch(function (err) { toast(err.message, true); showList(); });
   }
 
+  // a section of the editor that folds: open or closed by the note's stage, unless you've toggled it on this note
+  var FOLD = {};
+  function fold(key, title, hint, open, inner) {
+    var mine = (FOLD[E.id || '_new'] || {})[key];
+    return '<details class="panel fold" data-fold="' + key + '" id="f-' + key + '"' + ((mine == null ? open : mine) ? ' open' : '') + '><summary><h2>' + esc(title) + '</h2>' +
+      (hint ? '<small>' + esc(hint) + '</small>' : '') + '</summary><div class="fold-in">' + inner + '</div></details>';
+  }
   function field(label, html, hint) { return '<label class="f"><span>' + label + '</span>' + html + (hint ? '<small>' + hint + '</small>' : '') + '</label>'; }
   function render() {
     // a note made from a Drive folder, or already saved, has its content: the drop zones wait at the bottom
     var later = !!(E.id || E.source), trackTop = !later || !!E.track;
     var dropPhotos = '<div id="drop-photos" class="drop">Drop photos here, or <label class="pick">choose<input type="file" accept="image/*" multiple hidden id="pickPhotos"></label>. They\'re resized and their location data removed before upload.</div>';
     var kOpts = ['ride', 'hike', 'forage', 'make'].map(function (k) { return '<option' + (E.kind === k ? ' selected' : '') + '>' + k + '</option>'; }).join('');
+    // The page follows the note's stage: what's needed now sits open near the top, the rest folds away (one
+    // click opens it). Once the script is final, the audio prompt and the audio file come up under the summary;
+    // the notes and Claude's drafting fold away unless questions are still open; once it's live, the parts that
+    // are done fold too. Whatever you open or close stays that way for this note while you're here.
+    var qs = (E.questions || []).length, hasScript = !!E.episode.script && !qs, isLive = savedStatus === 'published', isNew = !E.id && !E.source;
+    var nPh = E.photos.filter(function (p) { return !p.video; }).length, nLoop = E.photos.length - nPh;
+    var audioPanel = fold('audio', 'Episode audio', E.episode.audio ? 'attached' : hasScript ? 'next: record it' : '', hasScript,
+      '<div class="row"><button id="copyPrompt" class="primary">Copy the audio prompt</button><span class="muted">Paste it into your voice tool, then drop the file here.</span></div><div id="audio"></div><div id="driveFiles"></div>');
     app.innerHTML =
       '<section class="panel sum" id="sum"><div class="sum-top"><button class="back" id="back">← Entries</button><h1 id="sumTitle">' + esc(E.title || 'New entry') + '</h1><span id="sumLive"></span></div>' +
         '<div class="sum-meta" id="sumMeta"></div><ol class="stages" id="stages"></ol>' +
         '<div class="sum-next" id="next" aria-live="polite"></div><div class="sum-left" id="left"></div>' + inboxHint() + '<div id="revBar"></div></section>' +
-      '<section class="panel grid2">' +
+      (hasScript ? audioPanel : '') +
+      fold('details', 'Details', [E.date, E.kind, E.place].filter(Boolean).join(' · '), isNew || !E.post.body, '<div class="grid2">' +
         field('Title', '<input id="title" value="' + esc(E.title) + '">') +
         field('Date', '<input id="date" type="date" value="' + esc(E.date) + '"' + (E.id ? ' disabled' : '') + '>', E.id ? 'The address is <code>' + esc(E.id) + '</code>' : 'Sets the address with the title, on first save') +
         field('Kind', '<select id="kind">' + kOpts + '</select>') +
         field('Place', '<input id="place" value="' + esc(E.place) + '" placeholder="Trailhead or public land, never closer to home">') +
         '<input type="hidden" id="status" value="' + esc(E.status) + '">' +
         field('Who appears', '<input id="consent" value="' + esc(E.consent || '') + '" placeholder="e.g. Christian and Marley only">') +
-      '</section>' +
-      (trackTop ? '<section class="panel"><h2>Track</h2><div id="track"></div></section>' : '') +
-      '<section class="panel"><h2>Photos</h2>' + (later ? '' : dropPhotos) + '<div id="photos" class="photos"></div>' + (later && !E.photos.length ? '<p class="muted">No photos yet. Add some at the bottom of the page.</p>' : '') + '</section>' +
-      (E.source ? '<section class="panel" id="loops"><h2>Video loops</h2><div id="loopBox"></div></section>' : '') +
-      '<section class="panel"><h2>Your notes</h2><div id="voiceNotes"></div>' + field('', '<textarea id="fieldNotes" rows="8" placeholder="What happened, in your words: who came, what you saw, what to leave out.">' + esc(E.fieldNotes) + '</textarea>') + '</section>' +
-      '<section class="panel draft"><h2>Draft with Claude</h2><div class="row"><input id="instr" placeholder="Optional: e.g. shorter, or add the bit about the hammock"><button id="draft" class="primary">Draft with Claude</button></div>' +
-        '<div id="questions"></div></section>' +
-      '<section class="panel">' + field('Card summary', '<textarea id="summary" rows="2">' + esc(E.summary) + '</textarea>') + '</section>' +
-      '<section class="panel"><h2>Post</h2>' + field('Title', '<input id="postTitle" value="' + esc(E.post.title) + '">') + field('Text', '<textarea id="postBody" rows="14">' + esc(E.post.body) + '</textarea>', 'First person. A blank line between paragraphs. End with "What I learned: …" when there is something real.') + '</section>' +
-      '<section class="panel"><h2>Episode</h2>' + field('Title', '<input id="epTitle" value="' + esc(E.episode.title) + '">') + field('Script', '<textarea id="epScript" rows="16">' + esc(E.episode.script) + '</textarea>', '<span id="epCount"></span>') +
-        '<div class="row"><button id="copyPrompt">Copy the audio prompt</button><span class="muted">Render it with your voice tool, then drop the file below.</span></div>' +
-        '<h3>Audio</h3><div id="audio"></div><div id="driveFiles"></div></section>' +
-      (later ? '<section class="panel more"><h2>Add more</h2><p class="muted">Only if you want to add to what\'s here.</p>' + (trackTop ? '' : '<h3>Track</h3><div id="track"></div>') + '<h3>Photos</h3>' + dropPhotos + '</section>' : '') +
+      '</div>') +
+      fold('drafting', 'Notes and drafting', qs ? qs + ' open question' + (qs > 1 ? 's' : '') : hasScript ? 'done' : '', !hasScript || qs > 0,
+        '<h3>Your notes</h3><div id="voiceNotes"></div>' + field('', '<textarea id="fieldNotes" rows="8" placeholder="What happened, in your words: who came, what you saw, what to leave out.">' + esc(E.fieldNotes) + '</textarea>') +
+        '<div class="draft"><h3>Draft with Claude</h3><div class="row"><input id="instr" placeholder="Optional: e.g. shorter, or add the bit about the hammock"><button id="draft" class="primary">Draft with Claude</button></div>' +
+        '<div id="questions"></div></div>') +
+      fold('post', 'Post', E.post.title || '', !isLive, field('Card summary', '<textarea id="summary" rows="2">' + esc(E.summary) + '</textarea>') +
+        field('Title', '<input id="postTitle" value="' + esc(E.post.title) + '">') + field('Text', '<textarea id="postBody" rows="14">' + esc(E.post.body) + '</textarea>', 'First person. A blank line between paragraphs. End with "What I learned: …" when there is something real.')) +
+      fold('episode', 'Episode script', E.episode.title || '', !isLive, field('Title', '<input id="epTitle" value="' + esc(E.episode.title) + '">') + field('Script', '<textarea id="epScript" rows="16">' + esc(E.episode.script) + '</textarea>', '<span id="epCount"></span>')) +
+      (hasScript ? '' : audioPanel) +
+      fold('photos', 'Photos', [nPh ? nPh + ' photo' + (nPh > 1 ? 's' : '') : '', nLoop ? nLoop + ' loop' + (nLoop > 1 ? 's' : '') : ''].filter(Boolean).join(' · '), !isLive,
+        (later ? '' : dropPhotos) + '<div id="photos" class="photos"></div>' + (later && !E.photos.length ? '<p class="muted">No photos yet. Add some under Add more.</p>' : '')) +
+      (trackTop ? fold('track', 'Track', E.track ? 'on the map' : '', !isLive, '<div id="track"></div>') : '') +
+      (E.source ? fold('loops', 'Video loops', '', false, '<div id="loopBox"></div>') : '') +
+      (later ? fold('more', 'Add more', 'photos' + (trackTop ? '' : ', a track'), false, '<p class="muted">Only if you want to add to what\'s here.</p>' + (trackTop ? '' : '<h3>Track</h3><div id="track"></div>') + '<h3>Photos</h3>' + dropPhotos) : '') +
       '<footer class="savebar"><span id="saveState" class="muted">' + (E.id ? 'Saved' : 'Not saved yet') + '</span>' +
         '<button type="button" id="publish" class="pub"><span class="pub-t">Publish</span><small class="pub-n"></small></button><button id="save" class="primary">' + (owner() ? 'Save' : 'Save for review') + '</button></footer>';
+    // remember what's opened or closed on this note
+    $$('details.fold', app).forEach(function (d) { d.addEventListener('toggle', function () { (FOLD[E.id || '_new'] = FOLD[E.id || '_new'] || {})[d.getAttribute('data-fold')] = d.open; if (d.open) setTimeout(function () { dispatchEvent(new Event('resize')); }, 30); }); });   // a map drawn while folded needs to measure itself again
 
     $('#back').onclick = showList;
     ['title', 'place', 'consent', 'fieldNotes', 'summary', 'postTitle', 'postBody', 'epTitle', 'epScript'].forEach(function (k) { $('#' + k).addEventListener('input', markDirty); });
@@ -1138,6 +1157,7 @@
   var savedStatus = null;
   function go(sel) {
     var el = $(sel); if (!el) return;
+    for (var d = el.closest('details'); d; d = d.parentElement && d.parentElement.closest('details')) d.open = true;
     el.scrollIntoView({ behavior: 'smooth', block: 'center' });
     var f = el.matches('input,textarea,select,button') ? el : $('textarea,input,select,button', el);
     if (f) setTimeout(function () { f.focus({ preventScroll: true }); }, 400);
