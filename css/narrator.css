@@ -8,7 +8,7 @@ section.listen.has-nb::before{content:"";position:absolute;left:0;right:0;bottom
 .nb{position:absolute;left:0;bottom:0;width:var(--nb);height:calc(var(--nb) * .5208);pointer-events:none;
   clip-path:inset(-100vh -100vw 0 0 round 0 0 0 16px);z-index:1}   /* nothing below the bar's bottom edge */
 .nb-rise{position:absolute;inset:0}   /* in place from the start: hands on the desk, in view */
-.nb-body{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:0 0 0 16px;background:url(/assets/narrator/rest.jpg?v=5) center/cover,url(data:image/webp;base64,UklGRkICAABXRUJQVlA4IDYCAAAQDACdASpQACoAPtFYokyoJSMiLNVeMQAaCWgAw+YA4kBk92VqC4eOuJlf3d12P2s6XpNnAgTMjtM0jYiHYqw723yjPXYlHTXQlKA8hUYkNmhSE/0Qpz+g1LFEGJGN62W5Abmj8R/CRJgA/vFMZ7uXjf6tfJimiPp9Xd+v5ftN6dM+nqMruM0k8Rd15brer/mfZFYKwUL7Y/V0qqURX0JbHHmdgnE7OcN3RuQLSrYWwonNMCIvDcxvBJuJzMGyVMctllAKSU2ZA7R1eR97s1EkBFtglwMy+aPfms7wpE1cd1UpNR6UOBiRYrLKebJ/t7b7XA0GPo6UKTeATckWjW0YXZkV4emkNEzUc6Hs/zahGoc/l3ih72diRP28u2ejCnu63zEM+3EV4g0hcT+Ad8w7TlXDlDpo/2HFT5zMKEuOylM6DtLJ8ZGPNX/3RB/ZRGfmQt6cCXOiGSLSrwprOu69D68gbegDHgC3loSkqFBkZ6+xE5RQQ9LUbl9CN4U10UsI/cd4jGROXrmGrFrzJD1m9cfrFoWCSU9Mm7PwTzr/VftpXlk8zinxjzh1HG1wKC351k+V3MbTGItOETV0UBQCOgg4ib0LLHyVALtB31bHafPfTHkHIBt1AAFpug4rdEhWDYftlQmzaOFXyaPPTHDg+WpqffWpPWVZKU83vzox2dQtRdz248m6nEv4Ra6FsC6vx1ZZfjlfaiX2yuHELOIHMXKioqUAmExZGGMpD1o3vtzX0TGQAA==) center/cover,#0f4d47;   /* the rest pose behind the video, in case a frame is ever missing; under it a tiny copy (80 x 42, inline) so her body is there the moment the bar is, before anything else loads */
+.nb-body{position:absolute;top:0;left:-34.72%;width:169.44%;height:100%;object-fit:cover;border-radius:0 0 0 16px;background:url(/assets/narrator/rest.jpg?v=6) center/cover,url(data:image/webp;base64,UklGRoQCAABXRUJQVlA4IHgCAADwDgCdASqCACgAPrVSoEwnJKaiKrVbGOAWiWIAz9oNP8vwzrm3g55nTM96GRuE44VXd2kTU14W4BR6I26vfLOm3ThBQoHGvcwxzBz4VpbgtaUy59Xw6F1BWvNJFWDERV1jixpT25hBibdx3QfoYebO/MxXqlVgz5Eb/VazJKRiAAD+8iHc+/T7o8md12qpHabjT2iyHnSYHd/jZ9M+a0DnyvZhjnVVBObhhE8kRnmZMUtgw4ItMsoK6Er/Xyzk2Oyct7Q1wvSj4HszlDmSIDVHW+0mcHFLHu24GwnPcJ+aR9xmgWwGwjOsWEbDVk6O1Avd3O1NzEu3X7iDwCBB0ybcaak5LWVcmmUaeBy9PcfiA8iTbW1u34lbFMEBDVQ2gD6NZ7ilveY1dJr8e1564nBZNoIGN1MuTxmvfScte8jAGRjiiYHHoQsbi5dQtNuCW3F6jtQwQc/FwEwDN+UrcnMvao4tvarJIvWqvFW7fv+deMZ6PLv4XdEi9K9xtqmR2p0lWspwiZ/zD87xVIWboYlu6Ivnl9qVnkHLxMpDwwxVR/kEweYvWsKWJBx46WX8k6Fke5hogJFaKUSQjD6fdQ7jL2UOLtX2xjJ+i28F4rwpHYap7W+lbyYu5y2zUWTa9M38Gl5+Ty8SlImRKBKFgw6xX4Vr+RKvVh2kFz6f2mnnTLI+LtDv/tS5ev4ito8HSxHUCFgZnyIswj1SyQbGYWsWnoW4tmkWtYnLVUZF7Y8uwxJhd1xCB33Nq5MDI+dSQRgrIJD2BYOA8u0lG8UT2DK9dJdpxv3LKBLS0kaaS+2rQvYYoUw65iKhBv5O4wkW1chL4TNRKAAAAA==) center/cover,#0f4d47;   /* the rest pose behind the video, in case a frame is ever missing; under it a tiny copy (80 x 42, inline) so her body is there the moment the bar is, before anything else loads */
   /* its right edge blends into the desk strip, and its top edge softens into the bar */
   -webkit-mask-image:linear-gradient(90deg,#000 95%,transparent),linear-gradient(180deg,transparent,#000 6%);-webkit-mask-composite:source-in;
   mask-image:linear-gradient(90deg,#000 95%,transparent),linear-gradient(180deg,transparent,#000 6%);mask-composite:intersect}
@@ -63,7 +63,7 @@ section.listen.has-nb::before{content:"";position:absolute;left:0;right:0;bottom
 .nb-bd::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(8,30,28,.05) 0,rgba(8,30,28,.35) 100%)}
 section.listen.has-bd::before{z-index:1}
 .nb-keying .nb-body{opacity:0}
-.nb-keyed{position:absolute;inset:0;width:100%;height:100%;border-radius:0 0 0 16px;
+.nb-keyed{position:absolute;top:0;left:-34.72%;width:169.44%;height:100%;border-radius:0 0 0 16px;
   -webkit-mask-image:linear-gradient(90deg,#000 95%,transparent);mask-image:linear-gradient(90deg,#000 95%,transparent)}
 
 /* THE PLAYER (narrator.js player()): the title, her name and the controls on one glass card, after the sample
@@ -98,10 +98,10 @@ section.listen.has-bd::before{z-index:1}
   section.listen.has-nb .nb-glass{flex:none;width:100%;box-sizing:border-box;min-width:0}
 }
 
-/* her widest gestures (the storyteller's open arms, the shape she draws) reach past the sides of the video itself for
-   about a second; both side edges fade out softly so a hand there trails off instead of stopping at a hard line */
-.nb-body,.nb-keyed{-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent),linear-gradient(180deg,transparent,#000 6%);-webkit-mask-composite:source-in;
-  mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent),linear-gradient(180deg,transparent,#000 6%);mask-composite:intersect}
+/* her video is wider than her box (976 x 300 against the box's 576 x 300: 200px of room each side, about a third of
+   --nb), so her open arms and the heart she draws stay whole; its side edges just fade into the bar */
+.nb-body,.nb-keyed{-webkit-mask-image:linear-gradient(90deg,transparent,#000 3%,#000 97%,transparent),linear-gradient(180deg,transparent,#000 6%);-webkit-mask-composite:source-in;
+  mask-image:linear-gradient(90deg,transparent,#000 3%,#000 97%,transparent),linear-gradient(180deg,transparent,#000 6%);mask-composite:intersect}
 /* on a phone she sits in the middle of the bar under the card, the nameplate just to her right, and nothing clips
    her sides, so her hands move their full width */
 @media (max-width:560px){
@@ -109,11 +109,12 @@ section.listen.has-bd::before{z-index:1}
   section.listen.has-nb .nb-body,section.listen.has-nb .nb-keyed{border-radius:0}
   section.listen.has-nb .nb-plate{left:calc(50% + var(--nb) / 2 - 6px)}
 }
-/* on a wider screen she sits a little in from the bar's left edge, with nothing clipping her sides, so her hands
-   swing their full width both ways; the card and the nameplate move over with her */
+/* on a wider screen she sits in from the bar's left edge by her reach (--nbx, the video's extra width each side), with
+   nothing clipping her sides, so her hands swing their full width both ways; the card starts past her right hand's
+   reach, and the nameplate sits on the desk just past it */
 @media (min-width:561px){
-  section.listen.has-nb{--nbx:28px;padding-left:calc(var(--nb) + var(--nbx) + 18px)}
+  section.listen.has-nb{--nbx:calc(var(--nb) * .3472);padding-left:calc(var(--nb) + var(--nbx) * 2 + 10px)}
   section.listen.has-nb .nb{left:var(--nbx);clip-path:inset(-100vh -100vw 0 -100vw)}
   section.listen.has-nb .nb-body,section.listen.has-nb .nb-keyed{border-radius:0}
-  section.listen.has-nb .nb-plate{left:calc(var(--nb) + var(--nbx) + 6px)}
+  section.listen.has-nb .nb-plate{left:calc(var(--nb) + var(--nbx) * 2 - 20px)}
 }
