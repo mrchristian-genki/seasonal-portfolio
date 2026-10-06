@@ -25,7 +25,7 @@
  },
  "backdrops": [
   { "name": "library", "file": "library.webp", "about": "", "v": "tmia4z", "scene": "an old library with tall wooden bookshelves, brass reading lamps and a long study table" },
-  { "name": "bike-shop", "file": "bike-shop.webp", "about": "", "v": "tmiabj", "scene": "a small bike shop garage with mountain bikes hanging on a wall rack, tools on a pegboard and a wooden workbench" }
+  { "name": "bike-shop", "file": "bike-shop.webp", "about": "", "v": "tmiacs", "scene": "a small bike shop garage with mountain bikes hanging on a wall rack, tools on a pegboard and a wooden workbench" }
  ],
  "categoryBackdrops": {
   "case-study": "library",
