@@ -105,5 +105,11 @@
   "why": "Picked from Case study.",
   "prompt": "",
   "bulb": false
+ },
+ "narratorBackdrop": {
+  "backdrop": "library",
+  "fit": "category",
+  "from": "case-study",
+  "scene": ""
  }
 }
