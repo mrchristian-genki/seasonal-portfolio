@@ -131,7 +131,7 @@ for (const e of events) {
       return { src: `../media/${e.id}/${base}.mp4${tag}`, poster: `../media/${e.id}/${base}.jpg${tag}`, abs: `${show.siteUrl}media/${e.id}/${base}.jpg${tag}`, caption: p.caption || '', w: p.w, h: p.h, cover: !!p.cover, video: true, ai: !!p.ai, table: p.table || null, after: p.after };
     }
     fs.copyFileSync(path.join(FIELD, p.src), path.join(media, name));
-    return { src: `../media/${e.id}/${name}`, abs: `${show.siteUrl}media/${e.id}/${name}`, caption: p.caption || '', w: p.w, h: p.h, cover: !!p.cover, ai: !!p.ai };
+    return { src: `../media/${e.id}/${name}`, abs: `${show.siteUrl}media/${e.id}/${name}`, caption: p.caption || '', w: p.w, h: p.h, cover: !!p.cover, ai: !!p.ai, strip: p.strip || 0 };
   });
   // the cover heads the post: a photo, or a loop playing silently (its poster frame stands in for it on cards and shares)
   const cover = photos.find((p) => p.cover) || photos.find((p) => !p.video) || null;
@@ -148,11 +148,15 @@ for (const e of events) {
   // "after" (0-based); its caption is the first clip's tableCaption. Others spread evenly.
   // Tall photos and loops that come one after another pair up side by side, so a run of phone videos
   // doesn't stack into a long column. Each pair (or a lone picture) is one unit spread through the text.
-  const ps = paras(e.post && e.post.body), table = photos.filter((p) => p.table), loose = photos.filter((p) => p !== cover && !p.table);
+  // An HDR photo's exposure strip (made by the Studio's merge) always sits right under the photo it made,
+  // the cover's included.
+  const coverStrip = cover && photos[photos.indexOf(cover) + 1] && photos[photos.indexOf(cover) + 1].strip ? photos[photos.indexOf(cover) + 1] : null;
+  const ps = paras(e.post && e.post.body), table = photos.filter((p) => p.table), loose = photos.filter((p) => p !== cover && p !== coverStrip && !p.table);
   const tall = (p) => p.w && p.h && p.h > p.w * 1.1;
   const inline = [];
   for (let k = 0; k < loose.length; k++) {
-    if (tall(loose[k]) && loose[k + 1] && tall(loose[k + 1])) { inline.push([loose[k], loose[k + 1]]); k++; }
+    if (!loose[k].strip && loose[k + 1] && loose[k + 1].strip) { const u = [loose[k], loose[k + 1]]; u.stack = true; inline.push(u); k++; }
+    else if (tall(loose[k]) && loose[k + 1] && tall(loose[k + 1])) { inline.push([loose[k], loose[k + 1]]); k++; }
     else inline.push([loose[k]]);
   }
   const slots = inline.map((_, i) => Math.min(ps.length - 1, Math.round((i + 1) * ps.length / (inline.length + 1)) - 1));
@@ -167,7 +171,7 @@ for (const e of events) {
   ps.forEach((p, i) => {
     const m = /^What I learned:\s*/i.exec(p);
     body += m ? `<p class="learned"><b>What I learned:</b> ${esc(p.slice(m[0].length))}</p>\n` : `<p>${esc(p)}</p>\n`;
-    inline.forEach((u, k) => { if (slots[k] === i) body += (u.length > 1 ? `<div class="duo">${u.map((ph) => fig(ph)).join('')}</div>` : fig(u[0], tall(u[0]) ? 'photo tall' : '')) + '\n'; });
+    inline.forEach((u, k) => { if (slots[k] === i) body += (u.stack ? u.map((ph) => fig(ph, ph.strip ? 'photo strip' : '')).join('\n') : u.length > 1 ? `<div class="duo">${u.map((ph) => fig(ph)).join('')}</div>` : fig(u[0], tall(u[0]) ? 'photo tall' : '')) + '\n'; });
     if (i === tableSlot) body += tableFig() + '\n';
   });
 
@@ -188,7 +192,7 @@ for (const e of events) {
 ${e.summary ? `<p class="lede">${esc(e.summary)}</p>` : ''}
 ${audio ? `<section class="listen" aria-label="Listen to the episode"><div><span class="listen-label">Listen · ${mmss(audio.sec)}</span><b>${esc(e.episode.title || e.title)}</b></div>
 <audio controls preload="metadata" src="${esc(audio.src)}"></audio></section>` : ''}
-${cover ? fig(cover, 'cover') : ''}
+${cover ? fig(cover, 'cover') : ''}${coverStrip ? '\n' + fig(coverStrip, 'photo strip') : ''}
 ${t ? `<section class="route" aria-label="The route"><h2>The route</h2>
 <div class="route-grid"><div class="map" id="map" role="img" aria-label="Map of the route"></div><div class="stats" id="stats">
 <div class="stat"><b>${mi(s.distanceKm)}</b><span>Distance</span></div><div class="stat"><b>${ft(s.maxEleM)}</b><span>High point</span></div></div></div>
