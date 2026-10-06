@@ -9,7 +9,7 @@
    - Now and then it blinks. With reduced motion it stays still, and only the mouth moves. */
 (function () {
   'use strict';
-  var A = '/assets/narrator/', CLIPS = ['talk-1.mp4', 'talk-2.mp4', 'talk-3.mp4'], DROP = 0.0747;   // the jaw's drop, as a share of the head's height
+  var A = '/assets/narrator/', V = '?v=2', CLIPS = ['talk-1.mp4' + V, 'talk-2.mp4' + V, 'talk-3.mp4' + V], DROP = 0.0747;   // the jaw's drop, as a share of the head's height
   var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var ctx = null;
 
@@ -20,7 +20,7 @@
     var nb = document.createElement('div'); nb.className = 'nb'; nb.setAttribute('aria-hidden', 'true');
     nb.innerHTML = '<div class="nb-rise"><div class="nb-head"><img class="nb-base" src="' + A + 'head-base.webp" alt=""><img class="nb-jaw" src="' + A + 'head-jaw.webp" alt="">' +
       '<img class="nb-lids" src="' + A + 'head-lids.webp" alt=""></div>' +
-      '<video class="nb-body" muted playsinline preload="none" poster="' + A + 'rest.jpg"></video></div>';
+      '<video class="nb-body" muted playsinline preload="none" poster="' + A + 'rest.jpg' + V + '"></video></div>';
     bar.insertBefore(nb, bar.firstChild);
     var body = nb.querySelector('.nb-body'), head = nb.querySelector('.nb-head'), jaw = nb.querySelector('.nb-jaw');
     var talking = false, order = [], an = null, buf = null, level = 0, raf = 0;
@@ -30,7 +30,7 @@
       if (!order.length) { order = CLIPS.slice().sort(function () { return Math.random() - 0.5; }); if (order[0] === body._last) order.push(order.shift()); }
       body._last = order.shift(); body.src = A + body._last; body.play().catch(function () {});
     }
-    function idle() { body._last = null; body.src = A + 'idle.mp4'; body.play().catch(function () {}); }
+    function idle() { body._last = null; body.src = A + 'idle.mp4' + V; body.play().catch(function () {}); }
     // every loop ends in the same rest pose, so the next one (a gesture while talking, else tapping) cuts in cleanly
     body.addEventListener('ended', function () { if (still) return; if (talking) next(); else idle(); });
     if (!still && 'IntersectionObserver' in window) {
