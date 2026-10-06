@@ -599,29 +599,34 @@
   // default on this Note's Listen bar once it's made (published as data-look); a new one is made in the Workshop.
   // Her template is always here to copy or download, so any image tool on any device can use it; a rendered look
   // comes back here too (look.js keys it, cuts it and puts her face back), and Save adds it to her looks.
-  var LOOKS = null, LOOKNEW = null, LOOKSAVED = {};   // LOOKSAVED: name -> this session's image, shown until the site has it   // LOOKNEW: { name, blob, ext, url } waiting for Save
+  var LOOKS = null, LOOKNEW = null, LOOKSAVED = {}, LOOKDEL = null;   // LOOKNEW: { name, blob, ext, url } waiting for Save;
+  // LOOKSAVED: name -> this session's image, shown until the site has it; LOOKDEL: a look to take off the site on Save
+  function lookSrc(l) { return LOOKSAVED[l.name] || '/assets/narrator/looks/' + esc(l.file) + (l.v ? '?r=' + esc(l.v) : ''); }
   function renderLook() {
     var box = $('#lookBox'); if (!box) return;
     if (!LOOKS) { LOOKS = fetch('/assets/narrator/looks.json', { cache: 'no-cache' }).then(function (r) { return r.json(); }).then(function (j) { return j.looks || []; }).catch(function () { return []; }); }
     LOOKS.then(function (list) {
-      var L = E.narratorLook, made = L && (L.look === 'curls' || list.some(function (l) { return l.name === L.look; }));
+      var L = E.narratorLook, entry = L && list.filter(function (l) { return l.name === L.look; })[0];
+      var made = L && (L.look === 'curls' || !!entry), own = !!entry && !entry.to && !entry.rotate;   // own: a Note look (not a holiday or hair style)
       var waiting = LOOKNEW && L && LOOKNEW.name === L.look;
-      var opts = '<option value="">None: her holiday look</option><option value="curls">curls</option>' + list.map(function (l) { return '<option value="' + esc(l.name) + '">' + esc(l.name + (l.about ? ' · ' + l.about : '')) + '</option>'; }).join('') +
+      var opts = '<option value="">None: her holiday look</option><option value="curls">curls</option>' + list.filter(function (l) { return l.name !== LOOKDEL; }).map(function (l) { return '<option value="' + esc(l.name) + '">' + esc(l.name + (l.about ? ' · ' + l.about : '')) + '</option>'; }).join('') +
         (L && !made ? '<option value="' + esc(L.look) + '">' + esc(L.look) + (waiting ? ' (new: saves with the Note)' : ' (not made yet)') + '</option>' : '');
-      var file = made && L.look !== 'curls' && (list.filter(function (l) { return l.name === L.look; })[0] || {}).file;
       var tpl = '<div class="ga-tpl"><img alt="Her template" src="/assets/narrator/kit/her-template.png">' +
         '<span><b>Her template</b><br><span class="muted">Start every look from this image.</span><br>' +
         '<button type="button" id="copyTpl">Copy the image</button> <a href="/assets/narrator/kit/her-template.png" download>Download</a> · ' +
         '<a href="/assets/narrator/kit/her-edit-mask.png" download>Mask</a> · <a href="/assets/narrator/kit/her-contact-sheet.jpg" target="_blank" rel="noopener">Rules</a></span></div>';
+      var canMake = L && (!made || own);   // a new look, or a Note look being replaced
       box.innerHTML = '<p class="muted">Her look on this Note\'s Listen bar. Claude picks it when drafting; a click on her head still changes it.</p>' +
+        (LOOKDEL ? '<p class="warn"><b>' + esc(LOOKDEL) + '</b> comes off the site when you Save (its image and its line). Notes that wore it go back to her holiday look. <button type="button" id="lookUndel">Keep it</button></p>' : '') +
         field('Look', '<select id="lookPick">' + opts + '</select>', L && L.why ? esc(L.why) : '') +
-        (file ? '<img class="ga-made" alt="" src="' + (LOOKSAVED[L.look] || '/assets/narrator/looks/' + esc(file)) + '">' : '') +
-        (L && !made ? (waiting ? '' : '<p><b>Not made yet.</b> Copy the prompt and her template into your image tool, render it, and bring the image back here. Until then she wears her holiday look.</p>') +
-          field('Image prompt', '<textarea id="lookPrompt" rows="5">' + esc(L.prompt || '') + '</textarea>') +
-          '<div class="row"><button type="button" id="copyLook">Copy the image prompt</button></div>' + tpl +
-          '<label class="drop ga-drop" id="lookDrop">' +
-          '<input type="file" id="lookFile" accept="image/png,image/jpeg,image/webp" hidden><b>' + (waiting ? 'Choose a different render' : 'Bring the rendered image back') + '</b> <span class="muted">or drop it here</span></label>' +
-          '<div id="lookOut"></div>' : tpl);
+        (made && entry && !waiting ? '<img class="ga-made" alt="" src="' + lookSrc(entry) + '">' : '') +
+        (L && !made && !waiting ? '<p><b>Not made yet.</b> Copy the prompt and her template into your image tool, render it, and bring the image back here. Until then she wears her holiday look.</p>' : '') +
+        (canMake ? field('Image prompt', '<textarea id="lookPrompt" rows="5">' + esc(L.prompt || '') + '</textarea>') + (L.prompt ? '<div class="row"><button type="button" id="copyLook">Copy the image prompt</button></div>' : '') : '') +
+        tpl +
+        (canMake ? '<label class="drop ga-drop" id="lookDrop"><input type="file" id="lookFile" accept="image/png,image/jpeg,image/webp" hidden><b>' +
+          (waiting ? 'Choose a different render' : made ? 'Replace it with a new render' : 'Bring the rendered image back') + '</b> <span class="muted">or drop it here</span></label><div id="lookOut"></div>' : '') +
+        (own && !waiting ? '<div class="row"><button type="button" class="danger" id="lookDel">Remove ' + esc(entry.name) + ' from the site</button></div>' : '') +
+        (waiting ? '<div class="row"><button type="button" id="lookCancel">Don\'t use this render</button></div>' : '');
       $('#lookPick').value = L ? L.look : '';
       $('#lookPick').onchange = function () {
         var v = this.value, l = list.filter(function (x) { return x.name === v; })[0];
@@ -631,24 +636,32 @@
       $('#copyTpl').onclick = function () { GALook.copyTemplate().then(function () { toast('Her template is on the clipboard: paste it into your image tool.'); }, function (e) { toast(e.message, true); }); };
       var lp = $('#lookPrompt'); if (lp) lp.oninput = function () { E.narratorLook.prompt = lp.value; markDirty(); };
       var cb = $('#copyLook'); if (cb) cb.onclick = function () { navigator.clipboard.writeText($('#lookPrompt').value).then(function () { toast('Image prompt copied.'); }); };
+      var del = $('#lookDel'); if (del) del.onclick = function () {
+        if (!confirm('Take ' + entry.name + ' off the site when you Save? Its image and its line go; any Note that wore it goes back to her holiday look.')) return;
+        LOOKDEL = entry.name; E.narratorLook = null; markDirty(); renderLook();
+      };
+      var und = $('#lookUndel'); if (und) und.onclick = function () { LOOKDEL = null; renderLook(); };
+      var cn = $('#lookCancel'); if (cn) cn.onclick = function () { URL.revokeObjectURL(LOOKNEW.url); LOOKNEW = null; renderLook(); };
       var drop = $('#lookDrop'); if (!drop) return;
       function take(f) {
         if (!f) return;
         $('#lookOut').innerHTML = '<p class="muted">Working…</p>';
         GALook.make(f).then(function (r) {
           if (LOOKNEW && LOOKNEW.url) URL.revokeObjectURL(LOOKNEW.url);
-          LOOKNEW = { name: L.look, blob: r.blob, ext: r.ext, url: URL.createObjectURL(r.blob) }; markDirty();
-          var out = $('#lookOut'); out.innerHTML = (r.warn ? '<p class="warn">' + esc(r.warn) + '</p>' : '') +
-            '<p class="muted">At rest, talking and blinking. It goes live as <code>' + esc(L.look) + '</code> when you Save.</p>' +
-            '<label class="ga-check"><input type="checkbox" id="lookBulb"' + (L.bulb !== false ? ' checked' : '') + '> Her antenna bulb shows (untick if the look covers it)</label>';
-          r.preview.className = 'ga-prev';
-          out.insertBefore(r.preview, out.firstChild);
-          $('#lookBulb').onchange = function () { E.narratorLook.bulb = this.checked; markDirty(); };
+          LOOKNEW = { name: L.look, blob: r.blob, ext: r.ext, url: URL.createObjectURL(r.blob), preview: r.preview, warn: r.warn }; markDirty();
+          renderLook();
         }).catch(function (e) { $('#lookOut').innerHTML = ''; toast(e.message, true); });
       }
       $('#lookFile').onchange = function () { take(this.files[0]); this.value = ''; };
       ['dragover', 'dragenter'].forEach(function (t) { drop.addEventListener(t, function (ev) { ev.preventDefault(); }); });
       drop.addEventListener('drop', function (ev) { ev.preventDefault(); take(ev.dataTransfer.files[0]); });
+      if (waiting) {
+        var out = $('#lookOut'); out.innerHTML = (LOOKNEW.warn ? '<p class="warn">' + esc(LOOKNEW.warn) + '</p>' : '') +
+          '<p class="muted">At rest, talking and blinking. It goes live as <code>' + esc(L.look) + '</code> when you Save' + (made ? ', in place of the one there now' : '') + '.</p>' +
+          '<label class="ga-check"><input type="checkbox" id="lookBulb"' + (L.bulb !== false ? ' checked' : '') + '> Her antenna bulb shows (untick if the look covers it)</label>';
+        LOOKNEW.preview.className = 'ga-prev'; out.insertBefore(LOOKNEW.preview, out.firstChild);
+        $('#lookBulb').onchange = function () { E.narratorLook.bulb = this.checked; markDirty(); };
+      }
     });
   }
   // what the Social panel (social.js) needs from here
@@ -1815,13 +1828,14 @@
       if (audioNew) E.episode.audio = 'data/audio/' + E.id + '.mp3'; else if (audioGone) E.episode.audio = null;
       var clips = Object.keys(clipsNew).map(function (n) { return { name: n.replace(/\.mp4$/, ''), loop: clipsNew[n].token }; });
       if (clips.length) L.at(1, clips.length + ' video loop' + (clips.length > 1 ? 's' : ''));
-      return api('save', { entry: E, newPhotos: uploaded, newClips: clips, removePhotos: removed, newAudio: audioNew ? audioNew.sha : '', removeAudio: audioGone && !!hadAudio, newLook: lookUp })
+      return api('save', { entry: E, newPhotos: uploaded, newClips: clips, removePhotos: removed, newAudio: audioNew ? audioNew.sha : '', removeAudio: audioGone && !!hadAudio, newLook: lookUp, removeLook: LOOKDEL })
         .catch(function (err) { E.episode.audio = hadAudio; throw err; });
     }).then(function () {
       var hadNew = !!audioNew;
       var hadClips = Object.keys(clipsNew).length + Object.keys(posterNew).length;
       if (Object.keys(posterNew).length) posterBust = '&v=' + Date.now().toString(36);
       if (lookUp) { LOOKSAVED[lookUp.name] = LOOKNEW.url; LOOKNEW = null; LOOKS = LOOKS.then(function (l) { return l.filter(function (x) { return x.name !== lookUp.name; }).concat([{ name: lookUp.name, file: lookUp.name + '.' + lookUp.ext, about: lookUp.about }]); }); setTimeout(renderLook, 0); }
+      if (LOOKDEL) { var gone = LOOKDEL; LOOKDEL = null; delete LOOKSAVED[gone]; LOOKS = LOOKS.then(function (l) { return l.filter(function (x) { return x.name !== gone; }); }); setTimeout(renderLook, 0); }
       fresh = {}; removed = []; clipsNew = {}; posterNew = {}; dirty = false; audioNew = null; audioGone = false; savedStatus = E.status;
       setTimeout(renderNext, 0); DRIVEAUD = null;
       if (hadNew && !first) renderAudio();

@@ -498,3 +498,5 @@ dialog.pfp::backdrop{background:rgba(20,12,6,.7)}
 .ga-drop{display:block;margin-top:10px;cursor:pointer}
 .ga-prev{display:block;width:100%;max-width:560px;border-radius:10px;margin:8px 0}
 .ga-check{display:flex;gap:8px;align-items:center;margin:4px 0;font-size:14px} .ga-check input{width:auto;flex:none}
+#lookBox .warn{color:var(--warn);font-weight:600} #lookBox .warn button{margin-left:8px}
+#lookBox .danger{color:var(--bad);border-color:var(--bad);margin-top:10px}
