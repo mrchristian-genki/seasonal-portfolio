@@ -17,6 +17,10 @@
   { "name": "bike-helmet", "file": "bike-helmet.webp", "about": "a brass bike helmet with a little headlamp" },
   { "name": "trail-cap", "file": "trail-cap.webp", "about": "a turquoise and cream trucker cap, like Helena's on the trail", "v": "tmi4s1" },
   { "name": "beach-shades", "file": "beach-shades.webp", "about": "sunglasses pushed up in her curls, with a carnelian clip", "v": "tmi58m" },
-  { "name": "workshop-goggles", "file": "workshop-goggles.webp", "about": "brass workshop goggles pushed up on her forehead", "v": "tmi5ap" }
- ]
+  { "name": "workshop-goggles", "file": "workshop-goggles.webp", "about": "brass workshop goggles pushed up on her forehead", "v": "tmi5ap" },
+  { "name": "grad-cap", "file": "grad-cap.webp", "about": "a brass mortarboard with a chain tassel", "v": "tmi70z", "bulb": false }
+ ],
+ "categories": {
+  "case-study": "grad-cap"
+ }
 }

@@ -554,7 +554,7 @@
       fold('post', 'Post', E.post.title || '', !isLive, field('Card summary', '<textarea id="summary" rows="2">' + esc(E.summary) + '</textarea>') +
         field('Title', '<input id="postTitle" value="' + esc(E.post.title) + '">') + field('Text', '<textarea id="postBody" rows="14">' + esc(E.post.body) + '</textarea>', 'First person. A blank line between paragraphs. End with "What I learned: …" when there is something real.')) +
       fold('episode', 'Episode script', E.episode.title || '', !isLive, field('Title', '<input id="epTitle" value="' + esc(E.episode.title) + '">') + field('Script', '<textarea id="epScript" rows="16">' + esc(E.episode.script) + '</textarea>', '<span id="epCount"></span>')) +
-      fold('look', 'GlazyArray\'s look', E.narratorLook ? E.narratorLook.look : 'her holiday look', false, '<div id="lookBox"></div>') +
+      fold('look', 'GlazyArray\'s look', E.narratorLook ? E.narratorLook.look : 'from her category or the holiday', false, '<div id="lookBox"></div>') +
       (hasScript ? '' : audioPanel) +
       fold('photos', 'Photos', [nPh ? nPh + ' photo' + (nPh > 1 ? 's' : '') : '', nLoop ? nLoop + ' loop' + (nLoop > 1 ? 's' : '') : ''].filter(Boolean).join(' · '), !isLive,
         (later ? '' : dropPhotos) + '<div id="photos" class="photos"></div>' + (later ? '<p class="muted" id="noPhotos">No photos yet. Add some under Add more.</p>' : '')) +
@@ -599,17 +599,40 @@
   // default on this Note's Listen bar once it's made (published as data-look); a new one is made in the Workshop.
   // Her template is always here to copy or download, so any image tool on any device can use it; a rendered look
   // comes back here too (look.js keys it, cuts it and puts her face back), and Save adds it to her looks.
-  var LOOKS = null, LOOKNEW = null, LOOKSAVED = {}, LOOKDEL = null;   // LOOKNEW: { name, blob, ext, url } waiting for Save;
+  var LOOKS = null, LOOKCATS = null, CATNEW = {}, LOOKNEW = null, LOOKSAVED = {}, LOOKDEL = null;   // CATNEW: category -> look ('' for none), waiting for Save   // LOOKNEW: { name, blob, ext, url } waiting for Save;
   // LOOKSAVED: name -> this session's image, shown until the site has it; LOOKDEL: a look to take off the site on Save
   function lookSrc(l) { return LOOKSAVED[l.name] || '/assets/narrator/looks/' + esc(l.file) + (l.v ? '?r=' + esc(l.v) : ''); }
+  // this Note's categories (Play's filter tags, as field/tools/publish.mjs makes them): its own tags, then its kind
+  var KIND_TAG = { ride: 'ride', hike: 'hike', forage: 'foraging', make: 'mini-cast' };
+  function noteCats() {
+    var slug = function (t) { return String(t || '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); };
+    var out = []; (E.tags || []).concat([KIND_TAG[E.kind] || E.kind]).forEach(function (t) { t = slug(t); if (t && !/^\d{4}$/.test(t) && out.indexOf(t) < 0) out.push(t); });
+    return out;
+  }
+  function catName(t) { return t === 'mini-cast' ? 'Mini-Cast' : t.replace(/^with-/, 'with ').replace(/-/g, ' ').replace(/^./, function (c) { return c.toUpperCase(); }); }
+  // which look this Note shows, and why: its own, else its first category's, else the holiday look; then a picker per
+  // category (every Note in it wears that look, unless the Note has its own)
+  function lookCats(list, cats, L) {
+    var nc = noteCats(), has = function (n) { return n === 'curls' || list.some(function (l) { return l.name === n; }); };
+    var from = L && has(L.look) ? ['<b>' + esc(L.look) + '</b>', 'this Note\'s own look'] : null;
+    if (!from) nc.some(function (c) { if (cats[c] && has(cats[c])) { from = ['<b>' + esc(cats[c]) + '</b>', 'the look for <b>' + esc(catName(c)) + '</b>']; return true; } });
+    var opts = '<option value="">None</option><option value="curls">curls</option>' + list.map(function (l) { return '<option value="' + esc(l.name) + '">' + esc(l.name) + '</option>'; }).join('');
+    return '<p class="ga-shows">On this Note she wears ' + (from ? from[0] + ': ' + from[1] : '<b>her holiday look</b>') + (Object.keys(CATNEW).length ? ' (once you Save)' : '') + '.</p>' +
+      (nc.length ? '<div class="ga-cats"><span class="ga-cats-h">Categories</span><small>A look for a whole category: every Note in it wears it, unless the Note has its own. It beats the holiday look.</small>' +
+        nc.map(function (c) { return '<label class="ga-cat"><span>' + esc(catName(c)) + '</span><select data-cat="' + esc(c) + '">' + opts + '</select></label>'; }).join('') + '</div>' : '');
+  }
   function renderLook() {
     var box = $('#lookBox'); if (!box) return;
-    if (!LOOKS) { LOOKS = fetch('/assets/narrator/looks.json', { cache: 'no-cache' }).then(function (r) { return r.json(); }).then(function (j) { return j.looks || []; }).catch(function () { return []; }); }
-    LOOKS.then(function (list) {
+    if (!LOOKS) {
+      var lj = fetch('/assets/narrator/looks.json', { cache: 'no-cache' }).then(function (r) { return r.json(); }).catch(function () { return {}; });
+      LOOKS = lj.then(function (j) { return j.looks || []; }); LOOKCATS = lj.then(function (j) { return j.categories || {}; });
+    }
+    Promise.all([LOOKS, LOOKCATS]).then(function (r) {
+      var list = r[0], cats = {}; Object.keys(r[1]).concat(Object.keys(CATNEW)).forEach(function (k) { var v = k in CATNEW ? CATNEW[k] : r[1][k]; if (v) cats[k] = v; });
       var L = E.narratorLook, entry = L && list.filter(function (l) { return l.name === L.look; })[0];
       var made = L && (L.look === 'curls' || !!entry), own = !!entry && !entry.to && !entry.rotate;   // own: a Note look (not a holiday or hair style)
       var waiting = LOOKNEW && L && LOOKNEW.name === L.look;
-      var opts = '<option value="">None: her holiday look</option><option value="curls">curls</option>' + list.filter(function (l) { return l.name !== LOOKDEL; }).map(function (l) { return '<option value="' + esc(l.name) + '">' + esc(l.name + (l.about ? ' · ' + l.about : '')) + '</option>'; }).join('') +
+      var opts = '<option value="">None: her category or holiday look</option><option value="curls">curls</option>' + list.filter(function (l) { return l.name !== LOOKDEL; }).map(function (l) { return '<option value="' + esc(l.name) + '">' + esc(l.name + (l.about ? ' · ' + l.about : '')) + '</option>'; }).join('') +
         (L && !made ? '<option value="' + esc(L.look) + '">' + esc(L.look) + (waiting ? ' (new: saves with the Note)' : ' (not made yet)') + '</option>' : '');
       var tpl = '<div class="ga-tpl"><img alt="Her template" src="/assets/narrator/kit/her-template.png">' +
         '<span><b>Her template</b><br><span class="muted">Start every look from this image.</span><br>' +
@@ -618,7 +641,8 @@
       var canMake = L && (!made || own);   // a new look, or a Note look being replaced
       box.innerHTML = '<p class="muted">Her look on this Note\'s Listen bar. Claude picks it when drafting; a click on her head still changes it.</p>' +
         (LOOKDEL ? '<p class="warn"><b>' + esc(LOOKDEL) + '</b> comes off the site when you Save (its image and its line). Notes that wore it go back to her holiday look. <button type="button" id="lookUndel">Keep it</button></p>' : '') +
-        field('Look', '<select id="lookPick">' + opts + '</select>', L && L.why ? esc(L.why) : '') +
+        field('This Note\'s own look', '<select id="lookPick">' + opts + '</select>', L && L.why ? esc(L.why) : '') +
+        lookCats(list, cats, L) +
         (made && entry && !waiting ? '<img class="ga-made" alt="" src="' + lookSrc(entry) + '">' : '') +
         (L && !made && !waiting ? '<p><b>Not made yet.</b> Copy the prompt and her template into your image tool, render it, and bring the image back here. Until then she wears her holiday look.</p>' : '') +
         (canMake ? field('Image prompt', '<textarea id="lookPrompt" rows="5">' + esc(L.prompt || '') + '</textarea>') + (L.prompt ? '<div class="row"><button type="button" id="copyLook">Copy the image prompt</button></div>' : '') : '') +
@@ -628,6 +652,10 @@
         (own && !waiting ? '<div class="row"><button type="button" class="danger" id="lookDel">Remove ' + esc(entry.name) + ' from the site</button></div>' : '') +
         (waiting ? '<div class="row"><button type="button" id="lookCancel">Don\'t use this render</button></div>' : '');
       $('#lookPick').value = L ? L.look : '';
+      box.querySelectorAll('.ga-cat select').forEach(function (sel) {
+        sel.value = cats[sel.getAttribute('data-cat')] || '';
+        sel.onchange = function () { CATNEW[sel.getAttribute('data-cat')] = sel.value; markDirty(); renderLook(); };
+      });
       $('#lookPick').onchange = function () {
         var v = this.value, l = list.filter(function (x) { return x.name === v; })[0];
         E.narratorLook = !v ? null : L && L.look === v ? L : { look: v, fit: 'existing', about: (l && l.about) || '', why: '', prompt: '', bulb: !(l && l.bulb === false) };
@@ -1831,13 +1859,14 @@
       if (audioNew) E.episode.audio = 'data/audio/' + E.id + '.mp3'; else if (audioGone) E.episode.audio = null;
       var clips = Object.keys(clipsNew).map(function (n) { return { name: n.replace(/\.mp4$/, ''), loop: clipsNew[n].token }; });
       if (clips.length) L.at(1, clips.length + ' video loop' + (clips.length > 1 ? 's' : ''));
-      return api('save', { entry: E, newPhotos: uploaded, newClips: clips, removePhotos: removed, newAudio: audioNew ? audioNew.sha : '', removeAudio: audioGone && !!hadAudio, newLook: lookUp, removeLook: LOOKDEL })
+      return api('save', { entry: E, newPhotos: uploaded, newClips: clips, removePhotos: removed, newAudio: audioNew ? audioNew.sha : '', removeAudio: audioGone && !!hadAudio, newLook: lookUp, removeLook: LOOKDEL, categoryLooks: Object.keys(CATNEW).length ? CATNEW : null })
         .catch(function (err) { E.episode.audio = hadAudio; throw err; });
     }).then(function () {
       var hadNew = !!audioNew;
       var hadClips = Object.keys(clipsNew).length + Object.keys(posterNew).length;
       if (Object.keys(posterNew).length) posterBust = '&v=' + Date.now().toString(36);
       if (lookUp) { LOOKSAVED[lookUp.name] = LOOKNEW.url; LOOKNEW = null; LOOKS = LOOKS.then(function (l) { return l.filter(function (x) { return x.name !== lookUp.name; }).concat([{ name: lookUp.name, file: lookUp.name + '.' + lookUp.ext, about: lookUp.about }]); }); setTimeout(renderLook, 0); }
+      if (Object.keys(CATNEW).length) { var sent = CATNEW; CATNEW = {}; LOOKCATS = LOOKCATS.then(function (c) { c = Object.assign({}, c); Object.keys(sent).forEach(function (k) { if (sent[k]) c[k] = sent[k]; else delete c[k]; }); return c; }); setTimeout(renderLook, 0); }
       if (LOOKDEL) { var gone = LOOKDEL; LOOKDEL = null; delete LOOKSAVED[gone]; LOOKS = LOOKS.then(function (l) { return l.filter(function (x) { return x.name !== gone; }); }); setTimeout(renderLook, 0); }
       fresh = {}; removed = []; clipsNew = {}; posterNew = {}; dirty = false; audioNew = null; audioGone = false; savedStatus = E.status;
       setTimeout(renderNext, 0); DRIVEAUD = null;

@@ -137,6 +137,9 @@ final class Drafter
     private static function looks(array $looks): array
     {
         $out = [['name' => 'curls', 'about' => 'her own curls']];
+        // the looks whole categories wear (Play's filter tags): a Note in one already has that look
+        if (!empty($looks['_categories'])) $out[] = ['categoryLooks' => $looks['_categories']];
+        unset($looks['_categories']);
         foreach ($looks as $l) {
             $out[] = ['name' => $l['name'] ?? '', 'about' => $l['about'] ?? (isset($l['to']) ? 'holiday look, ' . ($l['from'] ?? '') . ' to ' . $l['to'] : (!empty($l['rotate']) ? 'hair style' : ($l['name'] ?? '')))];
         }
