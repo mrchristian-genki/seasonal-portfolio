@@ -2,8 +2,9 @@
    Its torso and hands are one video (assets/narrator/narrator.mp4, green screen keyed onto the bar's colour) in five
    8-second parts, every one starting and ending in the same rest pose: the fingers tapping, a storyteller's gesture
    and the same played backwards, drawing a shape in the air and that backwards. The robot moves only by jumping
-   within this one file (switching files blanked the frame for a moment). Its head is three cut-out layers on top:
-   the head with the mouth open inside, the jaw, and the shut eyelids.
+   within this one file (switching files blanked the frame for a moment). Her head is cut-out layers on top:
+   the head with the mouth open inside, the jaw (her chin plate, and the side plates that swing half as far), and
+   the shut eyelids.
    - It sits at its desk from the start, its head standing up out of the bar. Playing: the jaw opens with the loudness of the voice (measured
      from the episode with Web Audio) and the head nods a little. The hands make a gesture, all of it, or part of it
      and back again (it jumps to the same frame in the backwards copy), so it never looks like the same 8 seconds.
@@ -15,7 +16,7 @@
    - Now and then it blinks. With reduced motion it stays still, and only the mouth moves. */
 (function () {
   'use strict';
-  var A = '/assets/narrator/', V = '?v=5', DROP = 0.0747;   // the jaw's drop, as a share of the head's height
+  var A = '/assets/narrator/', V = '?v=6', DROP = 0.054;   // the chin plate's drop, as a share of the head's height (the side plates go half as far)
   var D = 193 / 24, IDLE = 0, GESTURES = [{ f: 1, r: 2 }, { f: 3, r: 4 }];   // the parts of narrator.mp4: forward and backwards copies
   // the hints, parts 5 to 7, with what the head does when (seconds into the part): look toward Play, wink, the bulb glows
   var HINTS = [
@@ -30,11 +31,11 @@
     if (!audio || bar.querySelector('.nb')) return;
     bar.classList.add('has-nb');
     var nb = document.createElement('div'); nb.className = 'nb'; nb.setAttribute('aria-hidden', 'true');
-    nb.innerHTML = '<div class="nb-rise"><div class="nb-head"><img class="nb-base" src="' + A + 'head-base.webp" alt=""><img class="nb-jaw" src="' + A + 'head-jaw.webp" alt="">' +
-      '<img class="nb-lids" src="' + A + 'head-lids.webp" alt=""><i class="nb-bulb"></i></div>' +
+    nb.innerHTML = '<div class="nb-rise"><div class="nb-head"><img class="nb-base" src="' + A + 'head-base.webp' + V + '" alt=""><img class="nb-jaw-s" src="' + A + 'head-jaw-sides.webp' + V + '" alt=""><img class="nb-jaw" src="' + A + 'head-jaw.webp' + V + '" alt="">' +
+      '<img class="nb-lids" src="' + A + 'head-lids.webp' + V + '" alt=""><i class="nb-bulb"></i></div>' +
       '<video class="nb-body" muted playsinline preload="none" poster="' + A + 'rest.jpg' + V + '"></video></div>';
     bar.insertBefore(nb, bar.firstChild);
-    var body = nb.querySelector('.nb-body'), head = nb.querySelector('.nb-head'), jaw = nb.querySelector('.nb-jaw');
+    var body = nb.querySelector('.nb-body'), head = nb.querySelector('.nb-head'), jaw = nb.querySelector('.nb-jaw'), jawS = nb.querySelector('.nb-jaw-s');
     var talking = false, an = null, buf = null, level = 0, raf = 0, plan = null, lastG = -1;
     var played = false, taps = 0, wait = 1, lastH = -1, hint = null;   // hints only until the first play, after a round or two of tapping
     body.src = A + 'narrator.mp4' + V;
@@ -106,8 +107,9 @@
       else if (talking) v = 0.35 + 0.35 * Math.sin(performance.now() / 90) * Math.sin(performance.now() / 233);   // no Web Audio: a gentle chatter
       level += (v - level) * (v > level ? 0.6 : 0.25);                       // opens quickly, closes a little slower
       jaw.style.transform = 'translateY(' + (level * DROP * 100).toFixed(2) + '%)';
+      jawS.style.transform = 'translateY(' + (level * DROP * 55).toFixed(2) + '%)';
       if (!still) head.style.transform = 'rotate(' + (Math.sin(performance.now() / 700) * 1.5 * level).toFixed(2) + 'deg) translateY(' + (-level * 2).toFixed(2) + '%)';
-      if (talking || level > 0.01) raf = requestAnimationFrame(tick); else { raf = 0; jaw.style.transform = ''; head.style.transform = ''; }
+      if (talking || level > 0.01) raf = requestAnimationFrame(tick); else { raf = 0; jaw.style.transform = ''; jawS.style.transform = ''; head.style.transform = ''; }
     }
     audio.addEventListener('play', function () {
       listen(); if (ctx && ctx.state === 'suspended') ctx.resume();
