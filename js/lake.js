@@ -4,7 +4,19 @@
 (function () {
   var KEY = 'cg-lake', root = document.documentElement, hero = document.getElementById('hero');
   function set(v) { try { localStorage.setItem(KEY, v); } catch (e) { /* private window */ } }
-  function wanted() { try { return localStorage.getItem(KEY) !== '0'; } catch (e) { return true; } }
+  // The address can say it too, for a link to send: ?spring+day+nlake opens with the lake closed, ylake with it
+  // shown, whatever this browser chose before (and without changing that choice). Showing or hiding it by hand
+  // writes the word, so the address is always ready to share.
+  function urlWords() { return decodeURIComponent(location.search.slice(1)).toLowerCase().split(/[+&,;\s]+/).map(function (w) { return w.split('=')[0]; }).filter(Boolean); }
+  var linkWord = urlWords().filter(function (w) { return w === 'ylake' || w === 'nlake'; }).pop() || null;
+  function wanted() { if (linkWord) return linkWord === 'ylake'; try { return localStorage.getItem(KEY) !== '0'; } catch (e) { return true; } }
+  function writeWord(on) {
+    linkWord = on ? 'ylake' : 'nlake';
+    var ws = decodeURIComponent(location.search.slice(1)).split(/[+&,;\s]+/).filter(function (w) { return w && !/^(ylake|nlake)$/i.test(w); });
+    ws.push(linkWord);
+    try { history.replaceState(history.state, '', location.pathname + '?' + ws.join('+') + location.hash); } catch (e) { /* file:// */ }
+  }
+  window.__lakeWord = function () { return linkWord ? [linkWord] : []; };   // scene.js keeps it when it rewrites the address
   if (!hero) {   // a Play page: the band's link remembers the choice, then goes
     document.addEventListener('click', function (ev) { var a = ev.target.closest && ev.target.closest('a[data-lake]'); if (a) set(a.getAttribute('data-lake')); });
     return;
@@ -19,7 +31,7 @@
     root.classList.toggle('lake-off', !on); band.hidden = on;
     if (on) hero.removeAttribute('aria-hidden'); else hero.setAttribute('aria-hidden', 'true');
     if (byHand) {
-      set(on ? '1' : '0');
+      set(on ? '1' : '0'); writeWord(on);
       if (on) { dispatchEvent(new Event('resize')); window.scrollTo({ top: 0 }); hide.focus({ preventScroll: true }); }
       else band.querySelector('button').focus({ preventScroll: true });
     }

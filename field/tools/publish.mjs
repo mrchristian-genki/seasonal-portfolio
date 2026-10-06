@@ -93,7 +93,7 @@ const LOGO = (() => {
 })();
 // The pages here are the lake-less version of the homepage: a band under the header opens the same thing with
 // the lake (js/lake.js remembers the choice, so the homepage opens with it shown or hidden).
-const lakeBand = (words) => `<nav class="lake-band" aria-label="The lake scene"><a href="/?${esc(words)}" data-lake="1">Show the lake <span aria-hidden="true">▾</span></a></nav>`;
+const lakeBand = (words) => `<nav class="lake-band" aria-label="The lake scene"><a href="/?${esc(words)}+ylake" data-lake="1">Show the lake <span aria-hidden="true">▾</span></a></nav>`;
 const robots = show.listed ? '' : '<meta name="robots" content="noindex">\n';
 // Every page carries the main site's tabs (each opens that tab on the homepage) and Play's own bar.
 const PLAYBAR = [['field-notes', 'Field Notes', '#field-notes'], ['daily-dose', 'Daily Dose', '#daily-dose'], ['above', 'From Above', 'above/'], ['daydreams', 'Daydreams', '#daydreams']];
@@ -128,7 +128,7 @@ const foot = (rel) => `<footer class="foot"><p>${esc(show.narrationNote)}</p>
 <script src="${rel}../js/route-view.js?v=${V}" defer></script>
 <script src="${rel}../js/audio-rules.js?v=1" defer></script>
 <script src="${rel}play.js?v=${V}" defer></script>
-<script src="${rel}../js/lake.js?v=2" defer></script>
+<script src="${rel}../js/lake.js?v=3" defer></script>
 <script src="${rel}../js/narrator.js?v=6" defer></script>
 </body>
 </html>
