@@ -117,11 +117,18 @@
  "consent": "Two people in 07, tiny and not the subject (a swimmer and someone by a rock). No one else.",
  "source": "Rides/October 6 2026",
  "publishedAt": "2026-10-06T14:21:07Z",
- "narratorLook": null,
- "narratorBackdrop": {
-  "backdrop": "workshop",
+ "narratorLook": {
+  "look": "grad-cap",
   "fit": "category",
-  "from": "mini-cast",
-  "scene": ""
+  "from": "case-study",
+  "about": "a brass mortarboard with a chain tassel",
+  "why": "Picked from Case study.",
+  "prompt": "",
+  "bulb": false
+ },
+ "narratorBackdrop": {
+  "backdrop": "library",
+  "fit": "existing",
+  "scene": "an old library with tall wooden bookshelves, brass reading lamps and a long study table"
  }
 }
