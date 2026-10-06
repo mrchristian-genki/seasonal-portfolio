@@ -16,7 +16,7 @@
    - Now and then it blinks. With reduced motion it stays still, and only the mouth moves. */
 (function () {
   'use strict';
-  var A = '/assets/narrator/', V = '?v=10', DROP = 0.0448;   // the chin plate's drop, as a share of the head layer's height (the side plates go half as far)
+  var A = '/assets/narrator/', V = '?v=11', DROP = 0.0448;   // the chin plate's drop, as a share of the head layer's height (the side plates go half as far)
   var D = 193 / 24, IDLE = 0, GESTURES = [{ f: 1, r: 2 }, { f: 3, r: 4 }];   // the parts of narrator.mp4: forward and backwards copies
   // the hints, parts 5 to 7, with what the head does when (seconds into the part): look toward Play, wink, the bulb glows
   var HINTS = [
@@ -31,27 +31,45 @@
   // holiday look that's coming up next. A holiday look ("from"/"to", month-day) joins the pool the day after the
   // holiday before it ends, and stays in it until its own last day; then the next holiday's look takes its place.
   // ?look=name in the address shows any look; ?look=curls her own. "bulb": false for a look whose hat or bow covers
-  // the antenna (its glow stays off).
+  // the antenna (its glow stays off). A click on her head changes it: another look from the same wardrobe,
+  // cross-faded with a little shake of the head.
   var looks = fetch(A + 'looks.json' + V, { cache: 'no-cache' }).then(function (r) { return r.ok ? r.json() : { looks: [] }; }).catch(function () { return { looks: [] }; }).then(function (j) {
     var list = (j && j.looks) || [], m = /[?&+]look=([a-z0-9-]+)/i.exec(location.search), d = new Date();
-    if (m) return list.filter(function (l) { return l.name === m[1].toLowerCase(); })[0] || null;
-    var md = ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
     var hol = list.filter(function (l) { return l.to; }).sort(function (a, b) { return a.to < b.to ? -1 : 1; });
-    var next = hol.filter(function (l) { return l.to >= md; })[0] || hol[0];   // after the year's last holiday, the first one again
-    var pool = [{ name: 'curls' }].concat(list.filter(function (l) { return l.rotate; }), next ? [next] : []);
+    var mmdd = ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
+    var up = hol.filter(function (l) { return l.to >= mmdd; })[0] || hol[0];
+    WARDROBE = [{ name: 'curls' }].concat(list.filter(function (l) { return l.rotate; }), up ? [up] : []);
+    if (m) return list.filter(function (l) { return l.name === m[1].toLowerCase(); })[0] || { name: 'curls' };
+    var pool = WARDROBE.slice();   // the holiday is the next one to come (after the year's last, the first again)
     var last = null; try { last = localStorage.getItem('cg-look'); } catch (e) {}
     var fresh = pool.filter(function (l) { return l.name !== last; }); if (fresh.length) pool = fresh;
     var pick = pool[Math.floor(Math.random() * pool.length)];
     try { localStorage.setItem('cg-look', pick.name); } catch (e) {}
-    return pick.file ? pick : null;
+    return pick;
   });
-  function wear(nb) {
-    looks.then(function (l) {
-      if (!l || !l.file) return;
-      nb.querySelector('.nb-base').src = A + 'looks/' + l.file + V;
-      nb.classList.toggle('nb-nobulb', l.bulb === false);
-      nb.setAttribute('data-look', l.name);
-    });
+  var WARDROBE = [], CURLS = A + 'head-base.webp' + V;
+  function src(l) { return l && l.file ? A + 'looks/' + l.file + V : CURLS; }
+  function put(nb, l) {
+    nb.querySelector('.nb-base').src = src(l);
+    nb.classList.toggle('nb-nobulb', !!l && l.bulb === false);
+    if (l && l.file) nb.setAttribute('data-look', l.name); else nb.removeAttribute('data-look');
+    nb._look = l ? l.name : 'curls';
+  }
+  function wear(nb) { looks.then(function (l) { if (l && l.file) put(nb, l); else nb._look = 'curls'; }); }
+  // a click on her head: the next look loads, then fades in over the old one while her head gives a little shake
+  function restyle(nb) {
+    if (nb._busy || WARDROBE.length < 2) return;
+    var others = WARDROBE.filter(function (l) { return l.name !== nb._look; }), l = others[Math.floor(Math.random() * others.length)];
+    var base = nb.querySelector('.nb-base'), img = new Image(); nb._busy = true;
+    img.onload = img.onerror = function () {
+      var old = base.cloneNode(); old.className = 'nb-base nb-old'; base.parentNode.insertBefore(old, base.nextSibling);
+      put(nb, l);
+      try { localStorage.setItem('cg-look', nb._look); } catch (e) {}
+      nb.classList.remove('nb-swap'); void nb.offsetWidth; if (!still) nb.classList.add('nb-swap');
+      requestAnimationFrame(function () { old.style.opacity = '0'; });
+      setTimeout(function () { old.remove(); nb.classList.remove('nb-swap'); nb._busy = false; }, still ? 0 : 520);
+    };
+    img.src = src(l);
   }
   var ctx = null;
 
@@ -61,10 +79,11 @@
     bar.classList.add('has-nb');
     var nb = document.createElement('div'); nb.className = 'nb'; nb.setAttribute('aria-hidden', 'true');
     nb.innerHTML = '<div class="nb-rise"><div class="nb-head"><img class="nb-base" src="' + A + 'head-base.webp' + V + '" alt=""><img class="nb-jaw-s" src="' + A + 'head-jaw-sides.webp' + V + '" alt=""><img class="nb-jaw" src="' + A + 'head-jaw.webp' + V + '" alt="">' +
-      '<img class="nb-lids" src="' + A + 'head-lids.webp' + V + '" alt=""><i class="nb-bulb"></i></div>' +
+      '<img class="nb-lids" src="' + A + 'head-lids.webp' + V + '" alt=""><i class="nb-bulb"></i><b class="nb-hit" title="Change her hair"></b></div>' +
       '<video class="nb-body" muted playsinline preload="none" poster="' + A + 'rest.jpg' + V + '"></video></div>';
     bar.insertBefore(nb, bar.firstChild);
     wear(nb);
+    nb.querySelector('.nb-hit').addEventListener('click', function () { restyle(nb); });
     var body = nb.querySelector('.nb-body'), head = nb.querySelector('.nb-head'), jaw = nb.querySelector('.nb-jaw'), jawS = nb.querySelector('.nb-jaw-s');
     var talking = false, an = null, buf = null, level = 0, raf = 0, plan = null, lastG = -1;
     var played = false, taps = 0, wait = 1, lastH = -1, hint = null;   // hints only until the first play, after a round or two of tapping
