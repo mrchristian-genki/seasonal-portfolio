@@ -126,7 +126,7 @@ for (const e of events) {
       return { src: `../media/${e.id}/${base}.mp4${tag}`, poster: `../media/${e.id}/${base}.jpg${tag}`, abs: `${show.siteUrl}media/${e.id}/${base}.jpg${tag}`, caption: p.caption || '', w: p.w, h: p.h, cover: !!p.cover, video: true, ai: !!p.ai, table: p.table || null, after: p.after };
     }
     fs.copyFileSync(path.join(FIELD, p.src), path.join(media, name));
-    return { src: `../media/${e.id}/${name}`, abs: `${show.siteUrl}media/${e.id}/${name}`, caption: p.caption || '', w: p.w, h: p.h, cover: !!p.cover };
+    return { src: `../media/${e.id}/${name}`, abs: `${show.siteUrl}media/${e.id}/${name}`, caption: p.caption || '', w: p.w, h: p.h, cover: !!p.cover, ai: !!p.ai };
   });
   // the cover heads the post: a photo, or a loop playing silently (its poster frame stands in for it on cards and shares)
   const cover = photos.find((p) => p.cover) || photos.find((p) => !p.video) || null;
@@ -157,7 +157,7 @@ for (const e of events) {
     `<a class="print p${k + 1}" href="${esc(p.src)}" data-lightbox data-video title="${esc(p.caption)}"><video src="${esc(p.src)}" poster="${esc(p.poster)}" width="${p.w}" height="${p.h}" muted loop playsinline autoplay preload="metadata" aria-label="${esc(p.caption)}"></video><span class="print-cap">${esc(p.caption)}</span></a>`).join('')}</div>${tableCap ? `<figcaption><span class="ai-badge">Animated with AI</span> ${esc(tableCap.tableCaption)}</figcaption>` : ''}</figure>`;
   const fig = (p, cls) => p.video
     ? `<figure class="${cls || 'photo'} clip"><a href="${esc(p.src)}" data-lightbox data-video><video src="${esc(p.src)}" poster="${esc(p.poster)}" width="${p.w}" height="${p.h}" muted loop playsinline autoplay preload="metadata"></video></a>${p.caption ? `<figcaption>${p.ai ? '<span class="ai-badge">Made with AI</span> ' : ''}${esc(p.caption)}</figcaption>` : ''}</figure>`
-    : `<figure class="${cls || 'photo'}"><a href="${esc(p.src)}" data-lightbox><img src="${esc(p.src)}" alt="${esc(p.caption)}" width="${p.w}" height="${p.h}" loading="lazy"></a>${p.caption ? `<figcaption>${esc(p.caption)}</figcaption>` : ''}</figure>`;
+    : `<figure class="${cls || 'photo'}"><a href="${esc(p.src)}" data-lightbox><img src="${esc(p.src)}" alt="${esc(p.caption)}" width="${p.w}" height="${p.h}" loading="lazy"></a>${p.caption ? `<figcaption>${p.ai ? '<span class="ai-badge">Made with AI</span> ' : ''}${esc(p.caption)}</figcaption>` : ''}</figure>`;
   let body = '';
   ps.forEach((p, i) => {
     const m = /^What I learned:\s*/i.exec(p);
