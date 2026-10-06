@@ -1,0 +1,5 @@
+# ProPre Engine is private: every page here opens through the Studio login (studio/propre.php), which
+# serves the engine with its AI calls going through the Studio. modules/ (no secrets) still loads.
+RewriteEngine On
+RewriteRule ^$ /studio/propre.php [R=302,L]
+RewriteRule \.html?$ /studio/propre.php [R=302,L]
