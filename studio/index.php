@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $act = $_POST['act'] ?? '';
     if ($act === 'login') {
         if (studio_locked_out()) $error = 'Too many tries. Wait 15 minutes and try again.';
-        elseif (studio_login((string) ($_POST['username'] ?? ''), (string) ($_POST['password'] ?? ''))) { header('Location: ./'); exit; }
+        elseif (studio_login((string) ($_POST['username'] ?? ''), (string) ($_POST['password'] ?? ''))) { header('Location: ' . (($_GET['then'] ?? '') === 'propre' ? 'propre.php' : './')); exit; }
         else $error = 'That username and password don\'t match.';
     } elseif ($act === 'logout' && hash_equals(studio_csrf(), (string) ($_POST['csrf'] ?? ''))) {
         $_SESSION = [];
@@ -24,6 +24,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $in = studio_logged_in();
+// back to ProPre Engine after logging in from there (propre.php sends visitors here with ?then=propre)
+if ($in && ($_GET['then'] ?? '') === 'propre' && studio_is_owner()) { header('Location: propre.php'); exit; }
 ?><!doctype html>
 <html lang="en"<?= isset($_GET['look']) && is_string($_GET['look']) && preg_match('/^(day|night)-(blue|green|orange)$/', $_GET['look'], $hl) ? ' class="liq-' . $hl[2] . '"' : '' ?>>
 <head>
