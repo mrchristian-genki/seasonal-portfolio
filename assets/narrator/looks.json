@@ -13,6 +13,7 @@
   { "name": "fourth-of-july", "file": "stars.webp", "from": "07-01", "to": "07-04" },
   { "name": "halloween", "file": "witch.webp", "from": "10-20", "to": "10-31", "bulb": false },
   { "name": "thanksgiving", "file": "autumn.webp", "from": "11-20", "to": "11-28" },
-  { "name": "winter-holidays", "file": "santa.webp", "from": "12-01", "to": "12-30", "bulb": false }
+  { "name": "winter-holidays", "file": "santa.webp", "from": "12-01", "to": "12-30", "bulb": false },
+  { "name": "bike-helmet", "file": "bike-helmet.webp", "about": "a brass bike helmet with a little headlamp" }
  ]
 }
