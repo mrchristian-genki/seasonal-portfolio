@@ -9,7 +9,7 @@
   "automaton",
   "behind-the-scenes"
  ],
- "status": "script",
+ "status": "published",
  "summary": "A case study of the Field Notes narrator becoming a little brass robot in every Listen bar: a talking head, hands from one video, cheeky hints to press play, and fourteen looks.",
  "trailhead": null,
  "links": [
@@ -41,7 +41,8 @@
    "caption": "The first head, and hers. The voice is a woman's, so the robot became her too.",
    "w": 1600,
    "h": 900,
-   "use": "post"
+   "use": "post",
+   "cover": false
   },
   {
    "src": "data/photos/2026-10-06-the-narrator-gets-a-face/one-video.jpg",
@@ -49,7 +50,8 @@
    "caption": "Her hands are one video in eight parts. Every part starts and ends in the same pose, so she can jump from any one to any other without a gap.",
    "w": 2334,
    "h": 688,
-   "use": "post"
+   "use": "post",
+   "cover": false
   },
   {
    "src": "data/photos/2026-10-06-the-narrator-gets-a-face/hints.jpg",
@@ -57,7 +59,8 @@
    "caption": "Before anyone presses play: psst, over there; boop, boop; and a little wave toward the Play button.",
    "w": 2324,
    "h": 400,
-   "use": "post"
+   "use": "post",
+   "cover": false
   },
   {
    "src": "data/photos/2026-10-06-the-narrator-gets-a-face/wardrobe.mp4",
@@ -67,7 +70,8 @@
    "caption": "Her wardrobe: her own curls, six hair styles and eight holiday looks.",
    "w": 1280,
    "h": 720,
-   "use": "post"
+   "use": "post",
+   "cover": false
   },
   {
    "src": "data/photos/2026-10-06-the-narrator-gets-a-face/wardrobe-grid.jpg",
@@ -75,7 +79,8 @@
    "caption": "All fifteen. Her eyes, jaw and neck are the same in every one, so she talks and blinks whatever she's wearing.",
    "w": 1600,
    "h": 675,
-   "use": "post"
+   "use": "post",
+   "cover": false
   },
   {
    "src": "data/photos/2026-10-06-the-narrator-gets-a-face/workshop-looks.jpg",
@@ -83,7 +88,8 @@
    "caption": "The Workshop's Narrator looks: drop in an edited head and it fits her own face back over it, then shows her at rest, talking, blinking and live in a Listen bar.",
    "w": 972,
    "h": 836,
-   "use": "post"
+   "use": "post",
+   "cover": false
   },
   {
    "src": "data/photos/2026-10-06-the-narrator-gets-a-face/catalog-card.jpg",
@@ -91,7 +97,8 @@
    "caption": "Her card in the Parts Catalog, under a new Characters shelf.",
    "w": 560,
    "h": 470,
-   "use": "post"
+   "use": "post",
+   "cover": false
   }
  ],
  "fieldNotes": "Case study of the narrator robot (Oct 6, 2026). Facts from this session: Helena didn't like the earlier narrator voice, so the voice became a warm woman narrator (promoter, fan, publicist; a nostalgic voice-over). Christian asked for a little robot narrator in the Listen bar: a head with a mouth that moves with the audio, and a torso whose hands gesture while talking and tap the desk when idle. Claude wrote the prompts; Christian rendered the torso clips (green screen, storyteller, counting, drawing a shape, idle tapping) and the head stills. The counting clip was dropped. Built: green screen keyed onto the bar's teal with a key that keeps the cyan tubes; head cut into base, jaw and eyelid layers; jaw driven by loudness via Web Audio; blinks. Fixes: head seated on the collar; a colour line from untagged video fixed; the torso blinked between clips, so all moves became one file with backwards copies; desk extended across the bar; robot visible from load. Christian's idea: idle hints to press play (point, boop-boop and thumbs up, wave), rendered from a shared rest-pose frame; head turns, winks, bulb glows. Christian: the robot looked male but the voice is female, so a new head. Look kit: template, mask, contact sheet; Workshop tool; Catalog Characters card. Christian made fourteen looks (six hair styles, eight holidays). Rules from Christian: every reload a different look, never the one just shown; only the next holiday's look joins the pool; click her head to change it smoothly.",
@@ -101,8 +108,10 @@
  },
  "episode": {
   "title": "The narrator gets a face",
-  "script": "It began with a voice. A new narrator had just taken over the Field Notes: warm, a little nostalgic, the kind of voice that looks back on a good season. And Christian had an idea about her.\n\nWhat if the voice had a body? Not a big one. A little brass robot, rising out of the Listen bar, her head above the edge and her hands on a desk inside it, talking when the episode talked.\n\nSo the parts were made. A torso at a desk, on a green screen. Four short loops of the hands. A head, as still pictures. The green came out, and the robot sat on the bar's own teal as if she'd always been there. The first attempt took the glowing blue tubes in her chest away with the green, so a narrower one was written that left them alone.\n\nThe head became three layers. The head itself. The jaw. And the eyelids. The jaw drops with the loudness of the voice, moment by moment, so the mouth keeps time with every word. Every few seconds, she blinks.\n\n***\n\nThe first version had one flaw, and Christian saw it straight away. Every time the hands changed, the torso blinked out for a moment. Each move was its own little video, and changing videos left a gap.\n\nThe answer was to make it one video. Eight parts, back to back, every one starting and ending in the same pose, hands resting on the desk. She never leaves that one file now. She just jumps inside it. And since each gesture has a copy that plays backwards, she can stop halfway and come back, so she never looks like she's reading from a script. When the voice stops, she heads for the nearest rest. Knowing what not to show, the gap, the seam, is half of good animation.\n\n***\n\nThen Christian had a better idea. She shouldn't just wait. She should be cheeky about it.\n\nSo now, before anyone presses play, she taps her fingers on the desk. And every so often, she leans in. Psst. Over there. Boop, boop, a thumbs up. A little wave toward the Play button. Her head turns to look. She winks. The little bulb on her antenna glows.\n\n***\n\nThere was one more thing. The first head was a boy's. And the voice was not.\n\nSo she got her own. Rose-gold brass. Finger waves that curl at the ends. Lashes on her eyelids, a clip with a blue gem, and a flower bud where the bulb had been.\n\nAnd then she got a wardrobe. A template, a mask, a page of rules about what could change and what had to stay. Fourteen new looks: a spiral perm, a crimp with pink clips, a ponytail with a scrunchie, and a holiday for every season. A witch's hat in October. A Santa hat in December. Her eyes and her smile stay her own in every one, so she still talks and blinks under all of them.\n\nEvery time the page loads, she's wearing something different. And if you click on her head, she'll change right there in front of you, with a little shake.\n\n***\n\nShe has her own card in the Parts Catalog now, on a shelf called Characters. New looks for her are made in the Workshop.\n\nIt's funny how it goes. A voice tells you about the trails and the workshop and the lake. And one day the voice turns out to have a face, and a desk, and a different hat for every holiday."
+  "script": "It began with a voice. A new narrator had just taken over the Field Notes: warm, a little nostalgic, the kind of voice that looks back on a good season. And Christian had an idea about her.\n\nWhat if the voice had a body? Not a big one. A little brass robot, rising out of the Listen bar, her head above the edge and her hands on a desk inside it, talking when the episode talked.\n\nSo the parts were made. A torso at a desk, on a green screen. Four short loops of the hands. A head, as still pictures. The green came out, and the robot sat on the bar's own teal as if she'd always been there. The first attempt took the glowing blue tubes in her chest away with the green, so a narrower one was written that left them alone.\n\nThe head became three layers. The head itself. The jaw. And the eyelids. The jaw drops with the loudness of the voice, moment by moment, so the mouth keeps time with every word. Every few seconds, she blinks.\n\n***\n\nThe first version had one flaw, and Christian saw it straight away. Every time the hands changed, the torso blinked out for a moment. Each move was its own little video, and changing videos left a gap.\n\nThe answer was to make it one video. Eight parts, back to back, every one starting and ending in the same pose, hands resting on the desk. She never leaves that one file now. She just jumps inside it. And since each gesture has a copy that plays backwards, she can stop halfway and come back, so she never looks like she's reading from a script. When the voice stops, she heads for the nearest rest. Knowing what not to show, the gap, the seam, is half of good animation.\n\n***\n\nThen Christian had a better idea. She shouldn't just wait. She should be cheeky about it.\n\nSo now, before anyone presses play, she taps her fingers on the desk. And every so often, she leans in. Psst. Over there. Boop, boop, a thumbs up. A little wave toward the Play button. Her head turns to look. She winks. The little bulb on her antenna glows.\n\n***\n\nThere was one more thing. The first head was a boy's. And the voice was not.\n\nSo she got her own. Rose-gold brass. Finger waves that curl at the ends. Lashes on her eyelids, a clip with a blue gem, and a flower bud where the bulb had been.\n\nAnd then she got a wardrobe. A template, a mask, a page of rules about what could change and what had to stay. Fourteen new looks: a spiral perm, a crimp with pink clips, a ponytail with a scrunchie, and a holiday for every season. A witch's hat in October. A Santa hat in December. Her eyes and her smile stay her own in every one, so she still talks and blinks under all of them.\n\nEvery time the page loads, she's wearing something different. And if you click on her head, she'll change right there in front of you, with a little shake.\n\n***\n\nShe has her own card in the Parts Catalog now, on a shelf called Characters. New looks for her are made in the Workshop.\n\nIt's funny how it goes. A voice tells you about the trails and the workshop and the lake. And one day the voice turns out to have a face, and a desk, and a different hat for every holiday.",
+  "audio": "data/audio/2026-10-06-the-narrator-gets-a-face.mp3"
  },
  "questions": [],
- "consent": "No people: the narrator and her parts are AI renders from Christian's prompts."
+ "consent": "No people: the narrator and her parts are AI renders from Christian's prompts.",
+ "publishedAt": "2026-10-06T18:05:06Z"
 }
