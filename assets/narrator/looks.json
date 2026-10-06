@@ -1,3 +1,9 @@
 {
- "looks": []
+ "looks": [
+  { "name": "bob", "file": "bob.webp", "rotate": true },
+  { "name": "ponytail", "file": "ponytail.webp", "rotate": true },
+  { "name": "halloween", "file": "witch.webp", "from": "10-20", "to": "10-31", "bulb": false },
+  { "name": "fourth-of-july", "file": "stars.webp", "from": "07-01", "to": "07-04" },
+  { "name": "tahoe-winter", "file": "beanie.webp", "from": "01-02", "to": "02-28", "bulb": false }
+ ]
 }
