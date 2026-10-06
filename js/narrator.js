@@ -16,7 +16,7 @@
    - Now and then it blinks. With reduced motion it stays still, and only the mouth moves. */
 (function () {
   'use strict';
-  var A = '/assets/narrator/', V = '?v=12', DROP = 0.0448;   // the chin plate's drop, as a share of the head layer's height (the side plates go half as far)
+  var A = '/assets/narrator/', V = '?v=13', DROP = 0.0448;   // the chin plate's drop, as a share of the head layer's height (the side plates go half as far)
   var D = 193 / 24, IDLE = 0, GESTURES = [{ f: 1, r: 2 }, { f: 3, r: 4 }];   // the parts of narrator.mp4: forward and backwards copies
   // the hints, parts 5 to 7, with what the head does when (seconds into the part): look toward Play, wink, the bulb glows
   var HINTS = [
@@ -82,6 +82,8 @@
       '<img class="nb-lids" src="' + A + 'head-lids.webp' + V + '" alt=""><i class="nb-bulb"></i><b class="nb-hit" title="GlazyArray\u2019s Style Array: click for another look"></b></div>' +
       '<video class="nb-body" muted playsinline preload="none" poster="' + A + 'rest.jpg' + V + '"></video></div>';
     bar.insertBefore(nb, bar.firstChild);
+    // her nameplate, standing on the desk to her right
+    if (!bar.querySelector('.nb-plate')) { var pl = document.createElement('div'); pl.className = 'nb-plate'; pl.innerHTML = '<b>GlazyArray</b><small>Narrator \u00b7 Field Notes</small>'; bar.appendChild(pl); }
     var lbl = bar.querySelector('.listen-label');   // her name, under the Listen label: "Narrated by GlazyArray"
     if (lbl && !bar.querySelector('.nb-by')) { var by = document.createElement('span'); by.className = 'nb-by'; by.textContent = 'Narrated by GlazyArray'; lbl.parentNode.appendChild(by); }
     wear(nb);
