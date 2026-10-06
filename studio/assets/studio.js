@@ -1773,6 +1773,7 @@
       var facts = { title: E.title, date: E.date, kind: E.kind, place: E.place, whoAppears: E.consent, notes: E.fieldNotes, figures: figures(),
         photos: E.photos.filter(function (p) { return p.use !== 'skip'; }).map(function (p) { return { file: photoName(p), takenAt: p.takenAt || null, video: !!p.video, caption: p.caption || '' }; }),
         currentDraft: (E.post.body || E.episode.script) ? { summary: E.summary, post: E.post, episode: { title: E.episode.title, script: E.episode.script } } : null,
+        narratorLook: E.narratorLook ? E.narratorLook.look : null,   // her look already chosen: Claude keeps it (fit existing) unless asked
         instruction: opts.instruction || $('#instr').value.trim() };
       return api('draft', { facts: facts, thumbs: thumbs });
     }).then(function (j) {
@@ -1783,8 +1784,10 @@
       (d.captions || []).forEach(function (c) { E.photos.forEach(function (p) { if (photoName(p) === c.photo && !p.caption) p.caption = c.caption; }); });
       if (d.cover && E.photos.some(function (p) { return photoName(p) === d.cover; }) && !E.photos.some(function (p) { return p.cover; })) E.photos.forEach(function (p) { p.cover = photoName(p) === d.cover; });
       E.questions = d.questions || [];
-      var nl = d.narrator_look;   // her look for this Note: Claude's pick replaces the old one unless it says none
-      if (nl && nl.fit !== 'none' && /^[a-z0-9-]{1,40}$/.test(nl.look || '')) E.narratorLook = { look: nl.look, fit: nl.fit, about: nl.about || '', why: nl.why || '', prompt: nl.prompt || '', bulb: nl.bulb !== false };
+      // her look for this Note: Claude's pick goes in only when the Note has none yet, so a redraft (answering its
+      // questions, say) never undoes a look that was chosen or already made; change it in her look panel
+      var nl = d.narrator_look;
+      if (!E.narratorLook && nl && nl.fit !== 'none' && /^[a-z0-9-]{1,40}$/.test(nl.look || '')) E.narratorLook = { look: nl.look, fit: nl.fit, about: nl.about || '', why: nl.why || '', prompt: nl.prompt || '', bulb: nl.bulb !== false };
       renderLook();
       if (!E.title && d.post_title) { E.title = d.post_title; $('#title').value = d.post_title; }
       markDirty(); renderPhotos(); renderQuestions(); toast('Draft ready. Read it through, then Save.');

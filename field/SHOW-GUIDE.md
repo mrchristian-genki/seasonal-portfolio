@@ -125,7 +125,8 @@ through her wardrobe. When drafting, pick one:
   open-crown cap: hair up, at work) unless something in the Note fits better.
 - **none:** nothing in the Note calls for one. This is the usual answer; a look is a wink, not a costume per Note.
 
-Only what fits the Note's real activity, place or season, and only what's tasteful: gear, a hat, a flower, a
+If the entry already has a narratorLook, keep it (fit existing, the same name) unless the instruction asks for a
+new one. Only what fits the Note's real activity, place or season, and only what's tasteful: gear, a hat, a flower, a
 headlamp. Never a person, a team, a brand, a logo or any text; nothing that teases anyone; nothing that hints at
 where home is. A holiday look is only for a Note about that holiday.
 
