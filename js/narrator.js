@@ -16,7 +16,7 @@
    - Now and then it blinks. With reduced motion it stays still, and only the mouth moves. */
 (function () {
   'use strict';
-  var A = '/assets/narrator/', V = '?v=18', DROP = 0.0448;   // the chin plate's drop, as a share of the head layer's height (the side plates go half as far)
+  var A = '/assets/narrator/', V = '?v=19', DROP = 0.0448;   // the chin plate's drop, as a share of the head layer's height (the side plates go half as far)
   var D = 193 / 24, IDLE = 0, GESTURES = [{ f: 1, r: 2 }, { f: 3, r: 4 }];   // the parts of narrator.mp4: forward and backwards copies
   // the hints, parts 5 to 7, with what the head does when (seconds into the part): look toward Play, wink, the bulb glows
   var HINTS = [
@@ -28,14 +28,15 @@
   // HER LOOKS (assets/narrator/looks.json): new hair and accessories over the same face, jaw, eyes and neck, so only
   // the head's base layer changes (made in the Workshop's Style Array). She wears the holiday look that's coming up
   // next (a look with "from"/"to", month-day: it's hers from the day after the holiday before it ends, through its own
-  // last day). A click on her head moves her on to the next look in her wardrobe (the holiday's, her curls, the hair
-  // styles, then the other holidays), cross-faded with a little shake. The look picked goes into the address
-  // ("look-perm"), every bar on the page follows, and the links to the rest of the site carry it, so she keeps it
-  // as you move around; for the rest of the visit (this tab) she keeps it too. ?look-name or ?look=name shows any
-  // look; look-curls her own. "bulb": false for a look whose hat or bow covers the antenna (its glow stays off).
+  // last day), unless the Note has its own look (data-look on its Listen bar). A click on her head moves her on to the
+  // next look in her wardrobe (the Note's, the holiday's, her curls, the hair styles, then the other holidays),
+  // cross-faded with a little shake: just for fun, on that bar, for as long as the page is open (Christian, Oct 6,
+  // 2026: the Notes' own looks are the theme, so a click is never kept or carried to other pages). ?look-name or
+  // ?look=name in a link previews any look on a page whose Note has none of its own; look-curls her own. "bulb": false for a look whose hat or bow
+  // covers the antenna (its glow stays off).
   var LOOKRX = /(^|[?&+,;\s])look[-=]([a-z0-9-]+)/i;
   function urlLook() { var m = LOOKRX.exec(decodeURIComponent(location.search)); return m ? m[2].toLowerCase() : null; }
-  var WARDROBE = [], ALL = {}, CHOSEN = null, CURLS = A + 'head-base.webp' + V;
+  var WARDROBE = [], ALL = {}, CURLS = A + 'head-base.webp' + V;
   var looks = fetch(A + 'looks.json' + V, { cache: 'no-cache' }).then(function (r) { return r.ok ? r.json() : { looks: [] }; }).catch(function () { return { looks: [] }; }).then(function (j) {
     var list = (j && j.looks) || [], d = new Date();
     ALL = { curls: { name: 'curls' } }; list.forEach(function (l) { ALL[l.name] = l; });
@@ -44,9 +45,9 @@
     var up = hol.filter(function (l) { return l.to >= mmdd; })[0] || hol[0];   // after the year's last holiday, the first again
     var rest = hol.slice(hol.indexOf(up) + 1).concat(hol.slice(0, hol.indexOf(up)));   // the other holidays, in the order they come
     WARDROBE = (up ? [up] : []).concat([{ name: 'curls' }], list.filter(function (l) { return l.rotate; }), rest);
-    var want = urlLook(); if (!want) try { want = sessionStorage.getItem('cg-look'); } catch (e) {}
+    var want = urlLook();
+    try { sessionStorage.removeItem('cg-look'); } catch (e) {}   // a look kept from a click before Oct 6, 2026: let it go
     var pick = want && ALL[want];
-    if (pick) CHOSEN = pick.name;
     return pick || WARDROBE[0] || { name: 'curls' };
   });
   function src(l) { return l && l.file ? A + 'looks/' + l.file + V + (l.v ? '.' + l.v : '') : CURLS; }   // v: a look replaced in the Studio
@@ -56,36 +57,19 @@
     if (l && l.file) nb.setAttribute('data-look', l.name); else nb.removeAttribute('data-look');
     nb._look = l ? l.name : 'curls';
   }
-  // a Note's own look (data-look on its Listen bar, picked when it was drafted: a bike helmet for a ride) is her default
-  // there, once it has been made; a look picked by a click still wins
+  // a Note's own look (data-look on its Listen bar, picked when it was drafted: a bike helmet for a ride) is what she
+  // wears there, once it has been made, whatever the address says (Christian, Oct 6, 2026)
   function own(nb) { var bar = nb.closest('section.listen'), n = bar && bar.getAttribute('data-look'); return n && ALL[n] || null; }
-  function wear(nb) { looks.then(function (l) { put(nb, CHOSEN ? l : own(nb) || l); }); }
-  // the look picked, in the address (replacing any look word already there)
-  function writeLook(name) {
-    var q = decodeURIComponent(location.search.slice(1)).split(/[+&,;\s]+/).filter(function (w) { return w && !/^look[-=]/i.test(w); });
-    q.push('look-' + name);
-    try { history.replaceState(history.state, '', location.pathname + '?' + q.join('+') + location.hash); } catch (e) { /* file:// */ }
-  }
-  window.__lookWord = function () { return CHOSEN ? ['look-' + CHOSEN] : []; };   // scene.js keeps it when it rewrites the address
-  // the links to the rest of the site carry the look picked, so she keeps it on the next page
-  document.addEventListener('click', function (ev) {
-    var a = ev.target.closest && ev.target.closest('a[href]'); if (!a || !CHOSEN) return;
-    var u; try { u = new URL(a.href, location.href); } catch (e) { return; }
-    if (u.origin !== location.origin || /^\/(studio|catalog|propre|books)\//.test(u.pathname) || (u.pathname === location.pathname && u.hash && !u.search)) return;
-    var q = decodeURIComponent(u.search.slice(1)).split(/[+&,;\s]+/).filter(function (w) { return w && !/^look[-=]/i.test(w); });
-    q.push('look-' + CHOSEN); a.href = u.pathname + '?' + q.join('+') + u.hash;
-  }, true);
+  function wear(nb) { looks.then(function (l) { put(nb, own(nb) || l); }); }   // a Note's own look always wins
   // a click on her head: the next look in her wardrobe loads, then fades in over the old one while her head gives a
-  // little shake; every bar on the page follows
+  // little shake (that bar only; nothing is kept)
   function restyle(nb) {
     if (nb._busy || WARDROBE.length < 2) return;
     var mine = own(nb), list = mine && WARDROBE.indexOf(mine) < 0 ? [mine].concat(WARDROBE) : WARDROBE;   // a Note's own look leads its round
     var at = list.map(function (l) { return l.name; }).indexOf(nb._look), l = list[(at + 1) % list.length];
-    CHOSEN = l.name; writeLook(l.name);
-    try { sessionStorage.setItem('cg-look', l.name); } catch (e) {}
     var img = new Image();
     img.onload = img.onerror = function () {
-      document.querySelectorAll('.nb').forEach(function (n) {
+      [nb].forEach(function (n) {
         if (n._look === l.name) return;
         var base = n.querySelector('.nb-base'), old = base.cloneNode(); n._busy = true;
         old.className = 'nb-base nb-old'; base.parentNode.insertBefore(old, base.nextSibling);
