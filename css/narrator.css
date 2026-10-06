@@ -12,17 +12,18 @@ section.listen.has-nb::before{content:"";position:absolute;left:0;right:0;bottom
   /* its right edge blends into the desk strip, and its top edge softens into the bar */
   -webkit-mask-image:linear-gradient(90deg,#000 95%,transparent),linear-gradient(180deg,transparent,#000 6%);-webkit-mask-composite:source-in;
   mask-image:linear-gradient(90deg,#000 95%,transparent),linear-gradient(180deg,transparent,#000 6%);mask-composite:intersect}
-/* the head: its jaw rests on the torso's collar (the collar's top is 9.8% down the torso), its width 42% of the robot's */
-.nb-head{position:absolute;left:29%;width:42%;bottom:81.5%;aspect-ratio:300/375;transform-origin:50% 92%;z-index:1;transition:rotate .5s cubic-bezier(.3,1.4,.5,1),translate .5s cubic-bezier(.3,1.4,.5,1);
+/* her head: her chin rests on the torso's collar (the collar's top is 9.8% down the torso); her curls make it
+   wide, 50% of the robot's width */
+.nb-head{position:absolute;left:25%;width:50%;bottom:79.8%;aspect-ratio:300/363;transform-origin:50% 92%;z-index:1;transition:rotate .5s cubic-bezier(.3,1.4,.5,1),translate .5s cubic-bezier(.3,1.4,.5,1);
   filter:drop-shadow(0 3px 5px rgba(0,0,0,.35))}
 .nb-head img{position:absolute;inset:0;width:100%;height:100%;display:block}
-.nb-jaw{will-change:transform}
+.nb-jaw,.nb-jaw-s{will-change:transform}
 .nb-lids{opacity:0}
 .nb.wink .nb-lids{opacity:1;clip-path:inset(0 0 0 50%)}   /* a wink: the eye nearer the Play button */
 .nb.blink .nb-lids{opacity:1;clip-path:none}
 /* the hints: the head turns toward the Play button, and the antenna bulb glows and flickers */
 .nb.look .nb-head{rotate:7deg;translate:5% 0}
-.nb-bulb{position:absolute;left:49.6%;top:4.8%;width:26%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;pointer-events:none;opacity:0;transition:opacity .15s;
+.nb-bulb{position:absolute;left:49.6%;top:5.2%;width:26%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;pointer-events:none;opacity:0;transition:opacity .15s;
   background:radial-gradient(circle,rgba(235,255,255,.95) 0,rgba(130,240,255,.6) 22%,rgba(80,220,255,0) 68%);mix-blend-mode:screen}
 .nb.glow .nb-bulb{opacity:1;animation:nb-flick .36s steps(2,jump-none) infinite}
 @keyframes nb-flick{50%{opacity:.45}}
