@@ -16,7 +16,7 @@
    - Now and then it blinks. With reduced motion it stays still, and only the mouth moves. */
 (function () {
   'use strict';
-  var A = '/assets/narrator/', V = '?v=7', DROP = 0.054;   // the chin plate's drop, as a share of the head's height (the side plates go half as far)
+  var A = '/assets/narrator/', V = '?v=8', DROP = 0.0535;   // the chin plate's drop, as a share of the head layer's height (the side plates go half as far)
   var D = 193 / 24, IDLE = 0, GESTURES = [{ f: 1, r: 2 }, { f: 3, r: 4 }];   // the parts of narrator.mp4: forward and backwards copies
   // the hints, parts 5 to 7, with what the head does when (seconds into the part): look toward Play, wink, the bulb glows
   var HINTS = [
@@ -27,9 +27,9 @@
 
   // HER LOOKS (assets/narrator/looks.json): new hair and accessories over the same face, jaw, eyes and neck, so only
   // the head's base layer changes (made in the Workshop's "Narrator looks"). A look with dates ("10-20" to "10-31",
-  // which may wrap the new year) wears on those days; looks marked "rotate" take turns, a day each, with her own curls,
-  // on the days in between. ?look=name in the address shows any look; ?look=curls her own. "bulb": false for a look
-  // whose hat or bow covers the antenna (its glow stays off).
+  // which may wrap the new year) wears on those days; on other days she picks one at random on each page load from
+  // her own curls and the looks marked "rotate" (the same one in every bar on the page). ?look=name in the address
+  // shows any look; ?look=curls her own. "bulb": false for a look whose hat or bow covers the antenna.
   var looks = fetch(A + 'looks.json' + V, { cache: 'no-cache' }).then(function (r) { return r.ok ? r.json() : { looks: [] }; }).catch(function () { return { looks: [] }; }).then(function (j) {
     var list = (j && j.looks) || [], m = /[?&+]look=([a-z0-9-]+)/i.exec(location.search), d = new Date();
     if (m) return list.filter(function (l) { return l.name === m[1].toLowerCase(); })[0] || null;
@@ -37,7 +37,7 @@
     var on = list.filter(function (l) { return l.from && l.to && (l.from <= l.to ? md >= l.from && md <= l.to : md >= l.from || md <= l.to); })[0];
     if (on) return on;
     var turns = [null].concat(list.filter(function (l) { return l.rotate; }));
-    return turns[Math.floor((d - new Date(d.getFullYear(), 0, 0)) / 864e5) % turns.length];
+    return turns[Math.floor(Math.random() * turns.length)];
   });
   function wear(nb) {
     looks.then(function (l) {
