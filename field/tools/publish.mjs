@@ -104,6 +104,7 @@ const foot = (rel) => `<footer class="foot"><p>${esc(show.narrationNote)}</p>
 <p><a href="${rel}">Play</a> · <a href="${rel}feed.xml">Field Notes RSS</a> · <a href="${rel}../">christiangehrke.com</a></p></footer>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" defer></script>
 <script src="${rel}../js/route-view.js?v=${V}" defer></script>
+<script src="${rel}../js/audio-rules.js?v=1" defer></script>
 <script src="${rel}play.js?v=${V}" defer></script>
 </body>
 </html>
