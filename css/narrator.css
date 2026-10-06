@@ -97,3 +97,14 @@ section.listen.has-bd::before{z-index:1}
   section.listen.has-nb{flex-direction:column;align-items:stretch;padding:12px 12px calc(var(--nb) * 1.05 + 10px);margin-top:12px}
   section.listen.has-nb .nb-glass{flex:none;width:100%;box-sizing:border-box;min-width:0}
 }
+
+/* over a backdrop her body is keyed (no teal edge to blend into the desk), so her hands keep their whole reach:
+   no fade at the video's right edge */
+.nb-keyed{-webkit-mask-image:none;mask-image:none}
+/* on a phone she sits in the middle of the bar under the card, the nameplate just to her right, and nothing clips
+   her sides, so her hands move their full width */
+@media (max-width:560px){
+  section.listen.has-nb .nb{left:calc(50% - var(--nb) / 2);clip-path:inset(-100vh -100vw 0 -100vw)}
+  section.listen.has-nb .nb-body,section.listen.has-nb .nb-keyed{border-radius:0}
+  section.listen.has-nb .nb-plate{left:calc(50% + var(--nb) / 2 - 6px)}
+}
