@@ -1,0 +1,83 @@
+{
+ "id": "2026-10-06-the-propre-engine",
+ "title": "The press in the browser",
+ "date": "2026-10-06",
+ "kind": "make",
+ "place": "The workshop",
+ "status": "draft",
+ "summary": "A case study of ProPre Engine, the browser tool that takes a coloring book from first prompt to print-ready cover, and the project that brought me back to web development.",
+ "trailhead": null,
+ "links": [
+  {
+   "label": "The Coloring Book Catalog",
+   "url": "https://www.christiangehrke.com/books/"
+  }
+ ],
+ "track": null,
+ "photos": [
+  {
+   "src": "data/photos/2026-10-06-the-propre-engine/books-library.mp4",
+   "poster": "data/photos/2026-10-06-the-propre-engine/books-library.jpg",
+   "video": true,
+   "ai": false,
+   "caption": "The Coloring Book Catalog: every title, published or in progress. Tap a cover and the line art fills with colour.",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": true
+  },
+  {
+   "src": "data/photos/2026-10-06-the-propre-engine/pp-prompts.mp4",
+   "poster": "data/photos/2026-10-06-the-propre-engine/pp-prompts.jpg",
+   "video": true,
+   "ai": false,
+   "caption": "Prompt Generator: an object, a lens and an edition become the brief for a 40-page prompt catalog.",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false
+  },
+  {
+   "src": "data/photos/2026-10-06-the-propre-engine/pp-cover.mp4",
+   "poster": "data/photos/2026-10-06-the-propre-engine/pp-cover.jpg",
+   "video": true,
+   "ai": false,
+   "caption": "Cover: seven colour pages tile the strips, and the spine is worked out from the page count, 0.090 inches for 40 pages on white paper.",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false
+  },
+  {
+   "src": "data/photos/2026-10-06-the-propre-engine/cover-pdf.jpg",
+   "caption": "What the Cover tab builds: the full wraparound PDF, back, spine and front, 17.34 by 8.75 inches with bleed.",
+   "w": 1400,
+   "h": 706,
+   "use": "post",
+   "cover": false
+  },
+  {
+   "src": "data/photos/2026-10-06-the-propre-engine/pp-kindle.mp4",
+   "poster": "data/photos/2026-10-06-the-propre-engine/pp-kindle.jpg",
+   "video": true,
+   "ai": false,
+   "caption": "Kindle Cover: two images, a title, and a live preview of the 1,600 by 2,560 ebook cover.",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false
+  }
+ ],
+ "fieldNotes": "Case study of ProPre Engine (repo propre, live at /propre/ behind the Studio login) and the Coloring Book Catalog (/books/). Facts from Drive dates and the docs: manifesto and first feedback note May 20, 2026; eight single-page prototypes built with Gemini May 22; first full working version (about 100 KB) May 23-24, with a backup before the edition selector; documentation suite (PRD, SRS, technical docs, user manual, handoff) May 26, covering v1.0.0 to v1.0.4; split into modules with build.py May 25-28 (README and build.py May 25, modules May 28); Claude proxy (Cloudflare Worker) June; later KDP warnings, series builder, Kindle covers as JPG, mandala structure, page-range runs (1-20, 21-40); Books tab and the catalog site July 13-17. Catalog sheet: 101 titles, 8 published, 93 in progress (Oct 2026). About 50 books carry the 'Exported from ProPre MegaData' footer. Oct 6: sources rebuilt from the live page into the repo (byte-for-byte build), the AI calls moved behind the Studio login. Christian: this is the project that brought him back to web development after a long break. Clips recorded locally with the real engine and the real catalog data and covers; the AI tabs aren't shown generating because that needs a live call. Brand names of the book line kept out.",
+ "post": {
+  "title": "The press in the browser",
+  "body": "This is the project that brought me back to web development after a long break. I'd started making adult coloring books, and every one of them meant the same pile of jobs: prompts for 40 illustrations, a listing with titles and keywords, an interior PDF with the right bleed, a wraparound cover whose spine depends on the page count, and a separate cover for the ebook. I wanted one place that did all of it.\n\nSo I wrote down what it should be. The first notes are dated May 20. Two days later there were eight single-page prototypes. By May 24 there was a working tool of about 100 KB. Within the week I'd split it into modules with a small build script, because one file had become too big to change safely, and written a full set of documents for it: a product spec, a requirements spec, technical docs and a user manual.\n\nI called it ProPre, for pre-press. It has five tabs. The Prompt Generator takes an object, a lens like Through the Seasons or Underwater, and an edition for adults or kids, and writes the brief for a prompt catalog. Long books run in two halves, pages 1 to 20 and 21 to 40. MegaData writes the listing in one go: titles, subtitles, back copy, seven keywords, an HTML description and the series copy. Interior turns a zip of line art into the print PDF, in double-sided, right-handed or left-handed editions. Cover builds the wraparound PDF and works out the spine from the page count. Kindle Cover makes the ebook cover with a live preview.\n\nEvery one of those steps has a rule I learned the hard way. Text stays inside the safe zone. Art is scaled a little past the page so it really fills the bleed. Interiors are black and white only. Covers are cropped, never stretched. Prompts stay clear of anything trademarked.\n\nThen the books needed a home, so I built the Coloring Book Catalog. It reads a spreadsheet, so adding a book is adding a row. 101 titles so far, 8 in print and 93 on the way. Each card shows the line art, and a tap fills it with colour.\n\nThis week I gave it a proper repository. The live page had drifted ahead of its own source files, so the sources were rebuilt from it until a build matched the live page byte for byte. Its AI calls now go through the Studio's login instead of a token in the page.\n\nWhat I learned: build the tool before the hundredth book, not after. Every rule I wrote into ProPre is a mistake I only had to make once."
+ },
+ "episode": {
+  "title": "The press in the browser",
+  "script": "Right, pull up a chair, because this is where it all started.\n\nChristian had been away from web development for a good long while. And what brought him back? Coloring books. Adult coloring books, the lovely detailed kind. Go hálainn. Beautiful.\n\nNow every book is a mountain of jobs. Forty illustrations, each needing its own prompt. A listing with titles and keywords. The inside pages built just so for printing. A cover that wraps round the whole book, with a spine that changes width depending on how many pages are in it. And another cover again for the ebook. Most people would just suffer through it. Not this man.\n\n***\n\nOn the twentieth of May he wrote down what he wanted. Two days later, eight little prototypes. By the twenty-fourth, a working tool. And within the week, a full set of proper documents, specs and a user manual and all. Holy God. I've had kettles take longer to boil.\n\nThat same week he split the whole thing into tidy modules, because one big file had got too big to change safely. Sound man. That's the kind of sense that saves you a fortune later.\n\n***\n\nHe called it ProPre. Short for pre-press. Five tabs. One writes the prompts for the pictures. One writes the whole listing in one go, titles, keywords, the lot. One builds the inside of the book. One builds the cover and works out the spine from the page count, so the maths is never wrong. And one makes the cover for the ebook, with a wee live preview so you can see it as you go.\n\nAnd every step has a rule built in that he learned the hard way. Keep the words inside the safe edge. Make the art fill right to the trim. Never stretch a cover. Fair play. Every rule in there is a mistake he only had to make the once.\n\n***\n\nThen the books needed a home. So he built a library. A hundred and one titles. Eight in print, ninety-three on the way. Every card shows the line art, and you tap it, and it fills with colour. Like magic. Like a wee miracle on your phone.\n\n***\n\nAnd this week, he tidied the whole lot into a proper home of its own, and locked the clever bits behind the Studio's door, where they belong.\n\nSo here's the lesson. Build the tool before the hundredth book, not after. That's not notions. That's wisdom. Ar fheabhas. Brilliant.",
+  "audio": null
+ },
+ "questions": [],
+ "consent": "No people appear. The covers and pages are Christian's own books."
+}
