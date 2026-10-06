@@ -1,0 +1,125 @@
+{
+ "id": "2026-10-06-granite-in-clear-water",
+ "title": "Granite in clear water",
+ "date": "2026-10-06",
+ "kind": "ride",
+ "place": "",
+ "status": "draft",
+ "summary": "Four aerial photos from the morning of September 12, 2026, of a small cove where granite boulders sit in clear turquoise water below a pine-covered shore. The notes are empty, so this draft is limited to what the photos show.",
+ "trailhead": null,
+ "links": [],
+ "track": null,
+ "photos": [
+  {
+   "src": "data/photos/2026-10-06-granite-in-clear-water/01.jpg",
+   "caption": "10:03. The cove from above: pines, a strip of sand, and boulders scattered through clear shallows.",
+   "takenAt": "2026:09:12 10:03:09",
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20260912_100308_762_1789232943644_aeb.jpg + dji_fly_20260912_100310_763_1789232945707_aeb.jpg + dji_fly_20260912_100310_764_1789232947787_aeb.jpg",
+   "hdr": 3
+  },
+  {
+   "src": "data/photos/2026-10-06-granite-in-clear-water/02.jpg",
+   "caption": "The 3 exposures behind the HDR photo, darkest to brightest.",
+   "takenAt": "2026:09:12 10:03:09",
+   "w": 2149,
+   "h": 400,
+   "use": "skip",
+   "cover": false,
+   "from": "dji_fly_20260912_100308_762_1789232943644_aeb.jpg + dji_fly_20260912_100310_763_1789232945707_aeb.jpg + dji_fly_20260912_100310_764_1789232947787_aeb.jpg",
+   "strip": 3
+  },
+  {
+   "src": "data/photos/2026-10-06-granite-in-clear-water/03.jpg",
+   "caption": "Closer in, a few seconds later. The shallows run turquoise before dropping off to deep blue.",
+   "takenAt": "2026:09:12 10:03:32",
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20260912_100332_765_1789232938105_aeb.jpg + dji_fly_20260912_100332_766_1789232939761_aeb.jpg + dji_fly_20260912_100334_767_1789232941580_aeb.jpg",
+   "hdr": 3
+  },
+  {
+   "src": "data/photos/2026-10-06-granite-in-clear-water/04.jpg",
+   "caption": "The 3 exposures behind the HDR photo, darkest to brightest.",
+   "takenAt": "2026:09:12 10:03:32",
+   "w": 2149,
+   "h": 400,
+   "use": "skip",
+   "cover": false,
+   "from": "dji_fly_20260912_100332_765_1789232938105_aeb.jpg + dji_fly_20260912_100332_766_1789232939761_aeb.jpg + dji_fly_20260912_100334_767_1789232941580_aeb.jpg",
+   "strip": 3
+  },
+  {
+   "src": "data/photos/2026-10-06-granite-in-clear-water/05.jpg",
+   "caption": "10:04. Sun on the water at the lower right, and the sharpest boulders of the set in the middle.",
+   "takenAt": "2026:09:12 10:04:57",
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20260912_100458_770_1789232802800_aeb.jpg + dji_fly_20260912_100458_771_1789232804403_aeb.jpg + dji_fly_20260912_100458_772_1789232806125_aeb.jpg",
+   "hdr": 3
+  },
+  {
+   "src": "data/photos/2026-10-06-granite-in-clear-water/06.jpg",
+   "caption": "The 3 exposures behind the HDR photo, darkest to brightest.",
+   "takenAt": "2026:09:12 10:04:57",
+   "w": 2149,
+   "h": 400,
+   "use": "skip",
+   "cover": false,
+   "from": "dji_fly_20260912_100458_770_1789232802800_aeb.jpg + dji_fly_20260912_100458_771_1789232804403_aeb.jpg + dji_fly_20260912_100458_772_1789232806125_aeb.jpg",
+   "strip": 3
+  },
+  {
+   "src": "data/photos/2026-10-06-granite-in-clear-water/07.jpg",
+   "caption": "11:16. Straight down: white granite tops in green water, with a swimmer at the upper right.",
+   "takenAt": "2026:09:12 11:16:14",
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": true,
+   "from": "dji_fly_20260912_111614_777_1789237735956_aeb.jpg + dji_fly_20260912_111614_778_1789237737552_aeb.jpg + dji_fly_20260912_111614_779_1789237739246_aeb.jpg",
+   "hdr": 3
+  },
+  {
+   "src": "data/photos/2026-10-06-granite-in-clear-water/08.jpg",
+   "caption": "The 3 exposures behind the HDR photo, darkest to brightest.",
+   "takenAt": "2026:09:12 11:16:14",
+   "w": 2149,
+   "h": 400,
+   "use": "skip",
+   "cover": false,
+   "from": "dji_fly_20260912_111614_777_1789237735956_aeb.jpg + dji_fly_20260912_111614_778_1789237737552_aeb.jpg + dji_fly_20260912_111614_779_1789237739246_aeb.jpg",
+   "strip": 3
+  }
+ ],
+ "fieldNotes": "This was a test of the auto HDR process that merges 3 images loaded into Google Drive and merges them and then only uses the new image for the Note. It's a case study of this process itself. The images are just the test. The note is about what happened. ",
+ "post": {
+  "title": "Granite in clear water",
+  "body": "These are from the morning of September 12, a little after ten.\n\nThe first three were taken within two minutes of each other, looking down on a small cove. Pines come right down to a strip of pale sand. Granite boulders are scattered through the shallows, some sitting high and dry and bleached white on top, others just under the surface. The water is clear enough that you can follow the rocks out until the turquoise shallows drop off into deep blue.\n\nIn the third shot the sun is catching the water in the lower right corner and washing it out. I kept it anyway, because the boulders in the middle are the sharpest of the set.\n\nThe last photo is from about an hour later and looks straight down. From directly overhead the boulders turn into simple shapes: white tops, darker rims of submerged rock, and the green-brown of everything under the water. Two people are in the frame, small enough that they are just part of the pattern: one swimming at the upper right, one near a rock in the middle.\n\nThe straight-down view was the one worth waiting for. From an angle the cove looks like a postcard. From directly above it looks like a map."
+ },
+ "episode": {
+  "title": "Straight down",
+  "script": "September twelfth, just after ten in the morning, high above a small cove where the pines come all the way down to the water.\n\nThe first pictures came quickly, three of them in under two minutes. A strip of pale sand. Granite boulders scattered through the shallows, their tops bleached almost white. And water so clear you could follow the rocks out, one after another, until the turquoise gave way to deep blue.\n\nIn one of them the sun had caught the surface and washed out a corner of the frame. Christian kept it anyway. The boulders in the middle were the sharpest of the morning, and he could tell a flaw in the corner from a flaw in the picture. That's an eye, not luck.\n\n***\n\nThen came a long pause. About an hour of it.\n\nWhen the last picture came, it looked straight down. From directly overhead, the cove stopped looking like a postcard and started looking like a map. White tops. Dark rims of rock just under the surface. The green and brown of everything below the water. Somewhere in all of it, two people so small they became part of the pattern, one of them swimming.\n\nFour pictures, out of a whole morning. He knew which angle mattered, and he waited for it.\n\n***\n\nSome mornings tell you everything from the ground. This one needed a little height.",
+  "audio": null
+ },
+ "questions": [
+  "The notes, title, place and figures are all empty. Where is this, and can it be named at the trailhead or public-land level? Is it Lake Tahoe, and if so, which beach or cove?",
+  "The entry is marked 'ride', but the photos show no riding. Was there a ride, and if so, do you have a track and stats? If there was no ride, should the kind change?",
+  "The photos are dated September 12, 2026, the same day as the Clear Creek evening ride with your brother and nephew. Was this the same day out, and should it connect to that episode? The entry date is October 6. Which date should the post use?",
+  "Were these taken with a drone? I avoided saying so. If it was a drone, I can mention it, and it would be worth confirming that flying was allowed there.",
+  "Who are the two small figures in 07.jpg, the swimmer and the person near the rock in the middle? Was it you, family, Marley, or strangers? They are tiny and not the subject, but please confirm they're fine to leave in.",
+  "What happened in the hour between 10:04 and 11:16? Swimming, riding, Marley? The photo files are numbered 01, 03, 05 and 07. Are there other photos or videos you want to add?",
+  "Did anything get collected? I left collecting out entirely.",
+  "Did the outing start or end at home? Nothing suggests it did, but please confirm.",
+  "Both drafts are short because there are no notes. Add a few lines about the day and I can bring them up to full length."
+ ],
+ "consent": "",
+ "source": "Rides/October 6 2026"
+}
