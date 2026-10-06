@@ -1,0 +1,10 @@
+# BEGIN note-share
+# A homepage address that opens a Field Note, a Daydreams series or From Above (the address a visitor
+# shares) is served by share.php: the same homepage, with that item's own share card.
+# The deploy merges this block into the site's root .htaccess and leaves the rest of that file alone.
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteCond %{QUERY_STRING} (^|[+&])(\d{4}-\d\d-\d\d-[a-z0-9-]+|daydreams|above)([+&=]|$) [NC]
+RewriteRule ^(index\.html)?$ /share.php [L]
+</IfModule>
+# END note-share

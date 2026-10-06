@@ -79,3 +79,15 @@ jobs:
             --exclude='field/' \
             --exclude='studio/composer.*' \
             ./ "$DH_USER@$DH_HOST:$DH_PATH/"
+
+      # Shared homepage addresses that open a Note get that Note's share card (share.php). The rule lives in
+      # the root .htaccess, which may already hold the host's own settings, so only our marked block is
+      # replaced (or added at the end) and the rest is left as it is.
+      - name: Route shared Note addresses to their share card
+        if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.dry_run) }}
+        env:
+          DH_HOST: ${{ secrets.DH_HOST }}
+          DH_USER: ${{ secrets.DH_USER }}
+          DH_PATH: ${{ secrets.DH_PATH }}
+        run: |
+          ssh -i ~/.ssh/deploy_key "$DH_USER@$DH_HOST" "cd '$DH_PATH' && touch .htaccess && awk '/^# BEGIN note-share/{s=1} !s{print} /^# END note-share/{s=0}' .htaccess > .htaccess.new && cat >> .htaccess.new && chmod 644 .htaccess.new && mv .htaccess.new .htaccess && grep -c 'note-share' .htaccess" < .github/share.htaccess
