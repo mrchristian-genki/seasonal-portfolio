@@ -76,5 +76,14 @@
  },
  "questions": [],
  "consent": "Marley: the family dog, drawn into the header in her jellyfish.",
- "publishedAt": "2026-10-06T02:26:03Z"
+ "publishedAt": "2026-10-06T02:26:03Z",
+ "narratorLook": {
+  "look": "grad-cap",
+  "fit": "category",
+  "from": "case-study",
+  "about": "a brass mortarboard with a chain tassel",
+  "why": "Picked from Case study.",
+  "prompt": "",
+  "bulb": false
+ }
 }
