@@ -21,9 +21,10 @@
   { "name": "grad-cap", "file": "grad-cap.webp", "about": "a brass mortarboard with a chain tassel", "v": "tmi70z", "bulb": false }
  ],
  "categories": {
-  "automaton": "updo",
+  "automaton": "workshop-goggles",
   "case-study": "grad-cap",
   "hike": "trail-cap",
+  "mini-cast": "workshop-goggles",
   "ride": "bike-helmet"
  },
  "backdrops": [
