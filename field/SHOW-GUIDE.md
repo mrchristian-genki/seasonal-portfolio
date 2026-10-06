@@ -112,6 +112,29 @@ plus the captions. Instagram is @gehrkegram; Facebook is the mrchristianphotos P
 - **Facebook:** the same story, can be a little longer, no hashtag block, and ends with the Note's link.
 - All the hard rules above apply: only what happened, anonymous people, no trail home, no day job.
 
+## GlazyArray's look (Christian, Oct 6, 2026)
+
+Each Note can dress GlazyArray for its story: a bike helmet on a ride, a sun hat at the beach, safety goggles
+pushed up in her curls for a workshop build. It's her default on that Note's Listen bar; a click still moves her
+through her wardrobe. When drafting, pick one:
+
+- **existing:** one of her looks already fits (a beanie for a snowy ride). Prefer this.
+- **new:** the Note clearly calls for something she doesn't have. Name it (lowercase-with-hyphens, by the thing,
+  not the Note: `bike-helmet`, so other Notes can wear it too), and write the image-edit prompt below.
+- **none:** nothing in the Note calls for one. This is the usual answer; a look is a wink, not a costume per Note.
+
+Only what fits the Note's real activity, place or season, and only what's tasteful: gear, a hat, a flower, a
+headlamp. Never a person, a team, a brand, a logo or any text; nothing that teases anyone; nothing that hints at
+where home is. A holiday look is only for a Note about that holiday.
+
+The prompt edits her template (assets/narrator/kit/her-template.png, with her-edit-mask.png where a tool takes a
+mask) and always opens with: "Same image, same camera, same face, same eyes, same jaw, same neck and the same flat
+chroma green background (#00B140). Change only the hair and accessories:". Then the look in one or two sentences, in
+her style: polished brass and rose-gold, chunky sculpted shapes that read at about 105 px wide, nothing crossing her
+face below the brows, everything inside the crop box. Say whether it covers her flower-bud antenna (bulb false).
+Christian renders it, the Workshop's Style Array turns it into a look, and it goes into looks.json with an
+`about` line and no dates or rotate, so it only appears on the Notes that wear it (and with ?look-name).
+
 ## The audio
 
 The audio prompt template is in `data/show.json` (`audioPrompt`), with voice, pace and

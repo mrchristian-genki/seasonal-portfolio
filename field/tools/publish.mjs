@@ -37,6 +37,9 @@ const mi = (km) => (km * 0.621371).toFixed(km * 0.621371 < 10 ? 1 : 0) + ' mi';
 const ft = (m) => Math.round(m * 3.28084).toLocaleString('en-US') + ' ft';
 const dur = (s) => { const t = Math.round(s / 60), h = Math.floor(t / 60), m = t % 60; return h ? `${h} h ${String(m).padStart(2, '0')} m` : `${m} min`; };
 const mmss = (s) => `${Math.floor(s / 60)}:${String(Math.round(s % 60)).padStart(2, '0')}`;
+// GlazyArray's look for this Note, picked when it was drafted (SHOW-GUIDE.md, "GlazyArray's look"): her default on
+// this Note's Listen bar once that look has been made; until then narrator.js keeps the holiday look
+const lookAttr = (e) => { const l = e.narratorLook && e.narratorLook.look; return l && /^[a-z0-9-]{1,40}$/.test(l) ? ` data-look="${l}"` : ''; };
 const paras = (t) => String(t || '').split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
 
 // MP3 length from its frames (CBR): bytes after any ID3 tag × 8 / bitrate.
@@ -129,7 +132,7 @@ const foot = (rel) => `<footer class="foot"><p>${esc(show.narrationNote)}</p>
 <script src="${rel}../js/audio-rules.js?v=1" defer></script>
 <script src="${rel}play.js?v=${V}" defer></script>
 <script src="${rel}../js/lake.js?v=3" defer></script>
-<script src="${rel}../js/narrator.js?v=16" defer></script>
+<script src="${rel}../js/narrator.js?v=17" defer></script>
 </body>
 </html>
 `;
@@ -209,7 +212,7 @@ for (const e of events) {
 <p class="kicker"><span class="kind ${esc(e.kind)}">${KIND[e.kind] || esc(e.kind)}</span> · <time datetime="${esc(e.date)}">${day(e.date, true)}</time>${e.place ? ` · ${esc(e.place)}` : ''}</p>
 <h1>${esc(e.post && e.post.title || e.title)}</h1>
 ${e.summary ? `<p class="lede">${esc(e.summary)}</p>` : ''}
-${audio ? `<section class="listen" aria-label="Listen to the episode"><div><span class="listen-label">Listen · ${mmss(audio.sec)}</span><b>${esc(e.episode.title || e.title)}</b></div>
+${audio ? `<section class="listen" aria-label="Listen to the episode"${lookAttr(e)}><div><span class="listen-label">Listen · ${mmss(audio.sec)}</span><b>${esc(e.episode.title || e.title)}</b></div>
 <audio controls preload="metadata" src="${esc(audio.src)}"></audio></section>` : ''}
 ${cover ? fig(cover, 'cover') : ''}${coverStrip ? '\n' + fig(coverStrip, 'photo strip') : ''}
 ${t ? `<section class="route" aria-label="The route"><h2>The route</h2>

@@ -16,7 +16,7 @@
    - Now and then it blinks. With reduced motion it stays still, and only the mouth moves. */
 (function () {
   'use strict';
-  var A = '/assets/narrator/', V = '?v=16', DROP = 0.0448;   // the chin plate's drop, as a share of the head layer's height (the side plates go half as far)
+  var A = '/assets/narrator/', V = '?v=17', DROP = 0.0448;   // the chin plate's drop, as a share of the head layer's height (the side plates go half as far)
   var D = 193 / 24, IDLE = 0, GESTURES = [{ f: 1, r: 2 }, { f: 3, r: 4 }];   // the parts of narrator.mp4: forward and backwards copies
   // the hints, parts 5 to 7, with what the head does when (seconds into the part): look toward Play, wink, the bulb glows
   var HINTS = [
@@ -35,16 +35,17 @@
   // look; look-curls her own. "bulb": false for a look whose hat or bow covers the antenna (its glow stays off).
   var LOOKRX = /(^|[?&+,;\s])look[-=]([a-z0-9-]+)/i;
   function urlLook() { var m = LOOKRX.exec(decodeURIComponent(location.search)); return m ? m[2].toLowerCase() : null; }
-  var WARDROBE = [], CHOSEN = null, CURLS = A + 'head-base.webp' + V;
+  var WARDROBE = [], ALL = {}, CHOSEN = null, CURLS = A + 'head-base.webp' + V;
   var looks = fetch(A + 'looks.json' + V, { cache: 'no-cache' }).then(function (r) { return r.ok ? r.json() : { looks: [] }; }).catch(function () { return { looks: [] }; }).then(function (j) {
     var list = (j && j.looks) || [], d = new Date();
+    ALL = { curls: { name: 'curls' } }; list.forEach(function (l) { ALL[l.name] = l; });
     var hol = list.filter(function (l) { return l.to; }).sort(function (a, b) { return a.to < b.to ? -1 : 1; });
     var mmdd = ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
     var up = hol.filter(function (l) { return l.to >= mmdd; })[0] || hol[0];   // after the year's last holiday, the first again
     var rest = hol.slice(hol.indexOf(up) + 1).concat(hol.slice(0, hol.indexOf(up)));   // the other holidays, in the order they come
     WARDROBE = (up ? [up] : []).concat([{ name: 'curls' }], list.filter(function (l) { return l.rotate; }), rest);
     var want = urlLook(); if (!want) try { want = sessionStorage.getItem('cg-look'); } catch (e) {}
-    var pick = want && WARDROBE.filter(function (l) { return l.name === want; })[0];
+    var pick = want && ALL[want];
     if (pick) CHOSEN = pick.name;
     return pick || WARDROBE[0] || { name: 'curls' };
   });
@@ -55,7 +56,10 @@
     if (l && l.file) nb.setAttribute('data-look', l.name); else nb.removeAttribute('data-look');
     nb._look = l ? l.name : 'curls';
   }
-  function wear(nb) { looks.then(function (l) { put(nb, l); }); }
+  // a Note's own look (data-look on its Listen bar, picked when it was drafted: a bike helmet for a ride) is her default
+  // there, once it has been made; a look picked by a click still wins
+  function own(nb) { var bar = nb.closest('section.listen'), n = bar && bar.getAttribute('data-look'); return n && ALL[n] || null; }
+  function wear(nb) { looks.then(function (l) { put(nb, CHOSEN ? l : own(nb) || l); }); }
   // the look picked, in the address (replacing any look word already there)
   function writeLook(name) {
     var q = decodeURIComponent(location.search.slice(1)).split(/[+&,;\s]+/).filter(function (w) { return w && !/^look[-=]/i.test(w); });
@@ -75,7 +79,8 @@
   // little shake; every bar on the page follows
   function restyle(nb) {
     if (nb._busy || WARDROBE.length < 2) return;
-    var at = WARDROBE.map(function (l) { return l.name; }).indexOf(nb._look), l = WARDROBE[(at + 1) % WARDROBE.length];
+    var mine = own(nb), list = mine && WARDROBE.indexOf(mine) < 0 ? [mine].concat(WARDROBE) : WARDROBE;   // a Note's own look leads its round
+    var at = list.map(function (l) { return l.name; }).indexOf(nb._look), l = list[(at + 1) % list.length];
     CHOSEN = l.name; writeLook(l.name);
     try { sessionStorage.setItem('cg-look', l.name); } catch (e) {}
     var img = new Image();

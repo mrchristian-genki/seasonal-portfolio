@@ -554,6 +554,7 @@
       fold('post', 'Post', E.post.title || '', !isLive, field('Card summary', '<textarea id="summary" rows="2">' + esc(E.summary) + '</textarea>') +
         field('Title', '<input id="postTitle" value="' + esc(E.post.title) + '">') + field('Text', '<textarea id="postBody" rows="14">' + esc(E.post.body) + '</textarea>', 'First person. A blank line between paragraphs. End with "What I learned: …" when there is something real.')) +
       fold('episode', 'Episode script', E.episode.title || '', !isLive, field('Title', '<input id="epTitle" value="' + esc(E.episode.title) + '">') + field('Script', '<textarea id="epScript" rows="16">' + esc(E.episode.script) + '</textarea>', '<span id="epCount"></span>')) +
+      fold('look', 'GlazyArray\'s look', E.narratorLook ? E.narratorLook.look : 'her holiday look', false, '<div id="lookBox"></div>') +
       (hasScript ? '' : audioPanel) +
       fold('photos', 'Photos', [nPh ? nPh + ' photo' + (nPh > 1 ? 's' : '') : '', nLoop ? nLoop + ' loop' + (nLoop > 1 ? 's' : '') : ''].filter(Boolean).join(' · '), !isLive,
         (later ? '' : dropPhotos) + '<div id="photos" class="photos"></div>' + (later ? '<p class="muted" id="noPhotos">No photos yet. Add some under Add more.</p>' : '')) +
@@ -584,6 +585,7 @@
     dp.addEventListener('drop', function (ev) { ev.preventDefault(); dp.classList.remove('on'); addPhotos(ev.dataTransfer.files); });
     $('#pickPhotos').onchange = function () { addPhotos(this.files); this.value = ''; };
     $('#draft').onclick = function () { draft(); };
+    renderLook();
     $('#save').onclick = save;
     $('#publish').onclick = publish;
     $('#copyPrompt').onclick = function () {
@@ -591,6 +593,36 @@
       var p = (CFG.audioPrompt || '').replace('{{title}}', E.episode.title || E.title).replace('{{script}}', E.episode.script);
       navigator.clipboard.writeText(p).then(function () { toast('Audio prompt copied.'); });
     };
+  }
+  // ---------- GlazyArray's look for this Note (SHOW-GUIDE.md, "GlazyArray's look") ----------
+  // Claude picks it when drafting: one of her looks, a new one (with the image prompt to render it), or none. It's her
+  // default on this Note's Listen bar once it's made (published as data-look); a new one is made in the Workshop.
+  var LOOKS = null;
+  function renderLook() {
+    var box = $('#lookBox'); if (!box) return;
+    if (!LOOKS) { LOOKS = fetch('/assets/narrator/looks.json', { cache: 'no-cache' }).then(function (r) { return r.json(); }).then(function (j) { return j.looks || []; }).catch(function () { return []; }); }
+    LOOKS.then(function (list) {
+      var L = E.narratorLook, made = L && (L.look === 'curls' || list.some(function (l) { return l.name === L.look; }));
+      var opts = '<option value="">None: her holiday look</option><option value="curls">curls</option>' + list.map(function (l) { return '<option value="' + esc(l.name) + '">' + esc(l.name + (l.about ? ' · ' + l.about : '')) + '</option>'; }).join('') +
+        (L && !made ? '<option value="' + esc(L.look) + '">' + esc(L.look) + ' (not made yet)</option>' : '');
+      var file = made && L.look !== 'curls' && (list.filter(function (l) { return l.name === L.look; })[0] || {}).file;
+      box.innerHTML = '<p class="muted">Her look on this Note\'s Listen bar. Claude picks it when drafting; a click on her head still changes it.</p>' +
+        field('Look', '<select id="lookPick">' + opts + '</select>', L && L.why ? esc(L.why) : '') +
+        (file ? '<img alt="" src="/assets/narrator/looks/' + esc(file) + '" style="height:110px;background:#0f4d47;border-radius:10px;padding:4px">' : '') +
+        (L && !made ? '<p><b>Not made yet.</b> Render this prompt on <a href="/assets/narrator/kit/her-template.png" download>her template</a>' +
+          ' (<a href="/assets/narrator/kit/her-edit-mask.png" download>mask</a>), then turn it into a look in the <a href="/catalog/workshop.html#looks" target="_blank" rel="noopener">Style Array</a>' +
+          ' named <code>' + esc(L.look) + '</code>' + (L.bulb === false ? ', with the antenna bulb off' : '') + '. Until then she wears her holiday look.</p>' +
+          field('Image prompt', '<textarea id="lookPrompt" rows="5">' + esc(L.prompt || '') + '</textarea>') +
+          '<div class="row"><button id="copyLook">Copy the image prompt</button></div>' : '');
+      $('#lookPick').value = L ? L.look : '';
+      $('#lookPick').onchange = function () {
+        var v = this.value, l = list.filter(function (x) { return x.name === v; })[0];
+        E.narratorLook = !v ? null : L && L.look === v ? L : { look: v, fit: 'existing', about: (l && l.about) || '', why: '', prompt: '', bulb: !(l && l.bulb === false) };
+        markDirty(); renderLook();
+      };
+      var lp = $('#lookPrompt'); if (lp) lp.oninput = function () { E.narratorLook.prompt = lp.value; markDirty(); };
+      var cb = $('#copyLook'); if (cb) cb.onclick = function () { navigator.clipboard.writeText($('#lookPrompt').value).then(function () { toast('Image prompt copied.'); }); };
+    });
   }
   // what the Social panel (social.js) needs from here
   var socialHelpers = {
@@ -1711,6 +1743,9 @@
       (d.captions || []).forEach(function (c) { E.photos.forEach(function (p) { if (photoName(p) === c.photo && !p.caption) p.caption = c.caption; }); });
       if (d.cover && E.photos.some(function (p) { return photoName(p) === d.cover; }) && !E.photos.some(function (p) { return p.cover; })) E.photos.forEach(function (p) { p.cover = photoName(p) === d.cover; });
       E.questions = d.questions || [];
+      var nl = d.narrator_look;   // her look for this Note: Claude's pick replaces the old one unless it says none
+      if (nl && nl.fit !== 'none' && /^[a-z0-9-]{1,40}$/.test(nl.look || '')) E.narratorLook = { look: nl.look, fit: nl.fit, about: nl.about || '', why: nl.why || '', prompt: nl.prompt || '', bulb: nl.bulb !== false };
+      renderLook();
       if (!E.title && d.post_title) { E.title = d.post_title; $('#title').value = d.post_title; }
       markDirty(); renderPhotos(); renderQuestions(); toast('Draft ready. Read it through, then Save.');
       if (own) { L.at(2); L.done(); }

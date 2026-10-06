@@ -30,8 +30,22 @@ final class Drafter
             ],
             'cover' => ['type' => 'string', 'description' => 'File name of the photo that best opens the post.'],
             'questions' => ['type' => 'array', 'items' => ['type' => 'string'], 'description' => "Things to ask Christian before publishing: missing facts, privacy concerns, anything guessed."],
+            'narrator_look' => [
+                'type' => 'object',
+                'description' => "GlazyArray's look on this Note's Listen bar (the show guide's section \"GlazyArray's look\").",
+                'properties' => [
+                    'fit' => ['type' => 'string', 'enum' => ['existing', 'new', 'none'], 'description' => 'existing: one of her looks already fits. new: a new look would. none: nothing in this Note calls for one (the usual answer).'],
+                    'look' => ['type' => 'string', 'description' => 'The look\'s name: an existing one exactly as listed, or a new one in lowercase-with-hyphens (bike-helmet). Empty for none.'],
+                    'about' => ['type' => 'string', 'description' => 'A few words on what she wears (a bike helmet with a little headlamp). Empty for none.'],
+                    'why' => ['type' => 'string', 'description' => 'One short line tying it to the Note.'],
+                    'prompt' => ['type' => 'string', 'description' => 'For new: the image-edit prompt for her template, following the guide. Empty otherwise.'],
+                    'bulb' => ['type' => 'boolean', 'description' => 'false when the look covers her flower-bud antenna (its glow is switched off).'],
+                ],
+                'required' => ['fit', 'look', 'about', 'why', 'prompt', 'bulb'],
+                'additionalProperties' => false,
+            ],
         ],
-        'required' => ['summary', 'post_title', 'post_body', 'episode_title', 'episode_script', 'captions', 'cover', 'questions'],
+        'required' => ['summary', 'post_title', 'post_body', 'episode_title', 'episode_script', 'captions', 'cover', 'questions', 'narrator_look'],
         'additionalProperties' => false,
     ];
 
@@ -47,7 +61,8 @@ final class Drafter
     {
         $client = new Client(apiKey: $this->cfg['anthropic_api_key'], baseUrl: $this->cfg['anthropic_base_url'] ?? null);   // base URL: local testing only
 
-        $content = [['type' => 'text', 'text' => "The entry, as JSON:\n" . json_encode($facts, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)]];
+        $content = [['type' => 'text', 'text' => "GlazyArray's looks, as JSON (pick from these first):\n" . json_encode(self::looks(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)],
+                    ['type' => 'text', 'text' => "The entry, as JSON:\n" . json_encode($facts, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)]];
         foreach (array_slice($thumbs, 0, 12) as $t) {
             $content[] = ['type' => 'text', 'text' => 'Photo ' . $t['name'] . ($t['takenAt'] ? ', taken ' . $t['takenAt'] : '') . ':'];
             $content[] = ['type' => 'image', 'source' => ['type' => 'base64', 'mediaType' => 'image/jpeg', 'data' => $t['b64']]];
@@ -117,6 +132,17 @@ final class Drafter
         throw new RuntimeException('Claude sent back something that was not a set of captions.');
     }
 
+    /** Her looks as the site has them (assets/narrator/looks.json): name, what it is, and whether it's a holiday or hair day. */
+    private static function looks(): array
+    {
+        $j = json_decode((string) @file_get_contents(dirname(__DIR__, 2) . '/assets/narrator/looks.json'), true);
+        $out = [['name' => 'curls', 'about' => 'her own curls']];
+        foreach ((array) ($j['looks'] ?? []) as $l) {
+            $out[] = ['name' => $l['name'], 'about' => $l['about'] ?? ($l['to'] ?? null ? 'holiday look, ' . $l['from'] . ' to ' . $l['to'] : ($l['rotate'] ?? false ? 'hair style' : $l['name']))];
+        }
+        return $out;
+    }
+
     private function system(): string
     {
         return <<<TXT
@@ -129,6 +155,7 @@ How to work:
 - Other people stay anonymous unless the entry says they agreed to be named.
 - Write captions for every photo listed: short, plain, only what is visible, with the time when it helps the story.
 - If there is a current draft, revise it rather than starting over, unless the instruction asks for a new one.
+- GlazyArray's look: follow the show guide's section "GlazyArray's look". Prefer one of her looks when it fits; suggest a new one only when the Note clearly calls for it; "none" is the usual answer.
 - Questions: list what Christian should confirm or add before this is published. Keep them short and specific. An empty list is fine when nothing is open.
 
 The show guide:

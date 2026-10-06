@@ -4295,5 +4295,13 @@
  },
  "questions": [],
  "consent": "Wife, brother and nephew OK with appearing on the site (Christian, Oct 1). Not named.",
- "publishedAt": "2026-10-01T15:54:50Z"
+ "publishedAt": "2026-10-01T15:54:50Z",
+ "narratorLook": {
+  "look": "bike-helmet",
+  "fit": "new",
+  "about": "a brass bike helmet with a little headlamp",
+  "why": "An evening ride on Clear Creek that finished with the lights on for the last stretch.",
+  "prompt": "Same image, same camera, same face, same eyes, same jaw, same neck and the same flat chroma green background (#00B140). Change only the hair and accessories: a sleek, rounded mountain-bike helmet in polished brass with rose-gold trim and small rivets, sitting snugly on top of her head with a short visor at the brow line, three chunky vent slots across the top, and her flower-bud antenna poking up through the middle vent exactly where it is now. Her side curls still show below the helmet. A small round brass headlamp with a warm glowing lens is clipped to the front of the helmet above the visor. Bold, chunky shapes; nothing crosses her face below the brows; everything stays inside the crop box.",
+  "bulb": true
+ }
 }
