@@ -4,7 +4,7 @@
  "date": "2026-10-06",
  "kind": "make",
  "place": "The workshop",
- "status": "draft",
+ "status": "audio",
  "summary": "A case study of the Workshop: a prompt builder for new parts and a tracer that turns a picture into the scene's origami format in under a second.",
  "trailhead": null,
  "links": [
@@ -46,7 +46,7 @@
  "episode": {
   "title": "Teaching the bench new parts",
   "script": "Right, pull up a chair. If the Catalog is where the parts live, the Workshop is where new ones are born.\n\nAnd Christian had one rule for it. Make the picture anywhere you like, with whatever tool you like, but when it comes home, it comes home in the lake's own language, ready to move. Grand. Simple. And not one bit easy.\n\n***\n\nSo it goes in steps. Step one, he'll write your prompt for you. Pick what you're making, thirteen kinds of it, from a four-legged animal to a bit of shoreline. Pick a style. One piece, or a whole kit of pieces on one sheet. And the prompt asks for flat colours on plain white, so it'll trace clean. Thinking two steps ahead, that's him all over.\n\n***\n\nStep two, bring it home. Now the tracer used to be a wee script on his laptop. Now it's right there in the browser. It boils the picture down to a few colours, sweeps up the crumbs, and tidies every outline. The doe comes out in seven colours in under a second. The fox you see in the clip? Five colours, five shapes, seven kilobytes, and done in under seven tenths of a second. Holy God. I can't find my keys that fast.\n\nThen it stands your new animal next to one from the lake, so you can see if she fits in with the family. Or if she's a bit of a blow-in. A blow-in, for anyone not from home, is someone not from round here.\n\n***\n\nAnd here's what I love. The kit sheet came out of a mistake. He tried tracing a whole beach scene as one picture, and it was a mess. A scene isn't one shape. So now you ask for the pieces separate. Turning a mess into a feature? Fair play.\n\nStep three, cutting the animals at the joints so they can move, that's coming next.\n\n***\n\nThen there's the header. A workbench, with a hologram cycling through animals still to come. An eagle, an owl, a hawk, a squirrel. The buck and the doe and the elk and the bear standing on glowing discs. And Marley, asleep at the end of the bench, little z's floating up. Living the dream, that dog.\n\nHe even took out a soldering iron that had no business being there. And fixed the colour of his own hair, which the first try got wrong. Vanity? Ah no. Accuracy.\n\n***\n\nSo here's the lesson. Make the way back in the easy part. A picture takes seconds. Making it belong is the work. Maith thú, Christian. Good on you.",
-  "audio": null
+  "audio": "data/audio/2026-10-06-the-workshop.mp3"
  },
  "questions": [],
  "consent": "Marley: the family dog, asleep in the header. Christian: drawn at the bench."
