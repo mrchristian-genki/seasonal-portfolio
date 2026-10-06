@@ -108,3 +108,11 @@ section.listen.has-bd::before{z-index:1}
   section.listen.has-nb .nb-body,section.listen.has-nb .nb-keyed{border-radius:0}
   section.listen.has-nb .nb-plate{left:calc(50% + var(--nb) / 2 - 6px)}
 }
+/* on a wider screen she sits a little in from the bar's left edge, with nothing clipping her sides, so her hands
+   swing their full width both ways; the card and the nameplate move over with her */
+@media (min-width:561px){
+  section.listen.has-nb{--nbx:28px;padding-left:calc(var(--nb) + var(--nbx) + 18px)}
+  section.listen.has-nb .nb{left:var(--nbx);clip-path:inset(-100vh -100vw 0 -100vw)}
+  section.listen.has-nb .nb-body,section.listen.has-nb .nb-keyed{border-radius:0}
+  section.listen.has-nb .nb-plate{left:calc(var(--nb) + var(--nbx) + 6px)}
+}
