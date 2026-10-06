@@ -47,6 +47,22 @@ function repo_json(array $e): string {
     return preg_replace_callback('/^( +)/m', fn($m) => str_repeat(' ', intdiv(strlen($m[1]), 4)), $j) . "\n";
 }
 
+// One note on the list (the grid): what the cards show and the filters and sorting use. The cover is picked the
+// way the share cards pick it (field/tools/cards.py): the one marked cover, else the first photo; a loop's poster.
+function list_row(array $e): array {
+    $ph = array_values(array_filter($e['photos'] ?? [], fn($p) => is_array($p) && ($p['use'] ?? '') !== 'skip'));
+    $c = null;
+    foreach ($ph as $p) if (!empty($p['cover'])) { $c = $p; break; }
+    if (!$c) foreach ($ph as $p) if (empty($p['video'])) { $c = $p; break; }
+    if (!$c && $ph) $c = $ph[0];
+    $cover = $c ? basename((string) (!empty($c['video']) ? ($c['poster'] ?? '') : ($c['src'] ?? ''))) : '';
+    $loops = count(array_filter($e['photos'] ?? [], fn($p) => is_array($p) && !empty($p['video'])));
+    return ['id' => $e['id'], 'title' => $e['title'] ?? '', 'date' => $e['date'] ?? '', 'kind' => $e['kind'] ?? '',
+        'status' => $e['status'] ?? 'notes', 'photos' => count($e['photos'] ?? []) - $loops, 'loops' => $loops, 'summary' => $e['summary'] ?? '',
+        'place' => trim(explode(',', (string) ($e['place'] ?? ''))[0]), 'audio' => !empty($e['episode']['audio']),
+        'cover' => preg_match('/^[a-z0-9-]{1,40}\.jpg$/', $cover) ? $cover : ''];
+}
+
 function valid_id(string $id): bool { return (bool) preg_match('/^\d{4}-\d{2}-\d{2}-[a-z0-9-]{1,60}$/', $id); }
 
 /* Review. An editor's save goes to the branch review/<id>, never to the live branch, so nothing they do
@@ -94,8 +110,7 @@ try {
                 if (!str_ends_with($name, '.json') || str_starts_with($name, 'sample')) continue;
                 $e = json_decode($gh->read(EVENTS . "/$name") ?? 'null', true);
                 if (!$e) continue;
-                $out[] = ['id' => $e['id'], 'title' => $e['title'] ?? '', 'date' => $e['date'] ?? '', 'kind' => $e['kind'] ?? '',
-                    'status' => $e['status'] ?? 'notes', 'photos' => count($e['photos'] ?? []), 'summary' => $e['summary'] ?? ''];
+                $out[] = list_row($e);
             }
             // notes waiting for review: their review copy stands in for the live one (or is new)
             $byId = []; foreach ($out as $k => $x) $byId[$x['id']] = $k;
@@ -103,9 +118,7 @@ try {
                 if (!valid_id((string) $rid)) continue;
                 $e = json_decode($gh->read(EVENTS . "/$rid.json", rb($rid)) ?? 'null', true);
                 if (!$e) { set_review((string) $rid, null); continue; }   // the branch is gone
-                $row = ['id' => $e['id'], 'title' => $e['title'] ?? '', 'date' => $e['date'] ?? '', 'kind' => $e['kind'] ?? '',
-                    'status' => $e['status'] ?? 'notes', 'photos' => count($e['photos'] ?? []), 'summary' => $e['summary'] ?? '',
-                    'review' => $r + ['isNew' => !isset($byId[$rid])]];
+                $row = list_row($e) + ['review' => $r + ['isNew' => !isset($byId[$rid])]];
                 if (isset($byId[$rid])) $out[$byId[$rid]] = $row; else $out[] = $row;
             }
             usort($out, fn($a, $b) => strcmp($b['date'], $a['date']));

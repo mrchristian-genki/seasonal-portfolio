@@ -144,12 +144,66 @@
         }).join('') + '</ul>';
         $$('button[data-id]', q).forEach(function (b) { b.onclick = function () { edit(b.getAttribute('data-id')); }; });
       }
-      $('#list').innerHTML = j.entries.length ? j.entries.map(function (e) {
-        return '<button class="card" data-id="' + esc(e.id) + '"><span class="st st-' + esc(e.status) + '">' + esc(st[e.status] || e.status) + '</span>' + (e.review ? '<span class="st st-review">' + (e.review.state === 'returned' ? 'Sent back' : 'In review') + '</span>' : '') +
-          '<b>' + esc(e.title || e.id) + '</b><small>' + esc(e.date) + ' · ' + esc(e.kind) + ' · ' + e.photos + ' photos</small><span class="sum">' + esc(e.summary) + '</span></button>';
-      }).join('') : '<p class="muted">No entries yet.</p>';
-      $$('.card', $('#list')).forEach(function (b) { b.onclick = function () { edit(b.getAttribute('data-id')); }; });
+      renderGrid(j.entries, st);
     }).catch(function (err) { $('#list').innerHTML = '<p class="err">' + esc(err.message) + '</p>'; });
+  }
+
+  // ---------- the notes, as a grid of covers (or a compact list), with search, filters and sorting ----------
+  var KIND_NAMES = { ride: 'Ride', hike: 'Hike', forage: 'Foraging walk', make: 'Mini-Cast' };
+  var LV = (function () { try { return JSON.parse(localStorage.getItem('studio-list') || '{}'); } catch (e) { return {}; } })();
+  function saveLV() { try { localStorage.setItem('studio-list', JSON.stringify(LV)); } catch (e) { /* private window */ } }
+  function renderGrid(all, st) {
+    var list = $('#list'); if (!list) return;
+    if (!all.length) { list.className = 'cards'; list.innerHTML = '<p class="muted">No entries yet.</p>'; return; }
+    var kinds = all.map(function (e) { return e.kind; }).filter(function (k, i, a) { return k && a.indexOf(k) === i; }).sort();
+    var years = all.map(function (e) { return (e.date || '').slice(0, 4); }).filter(function (y, i, a) { return y && a.indexOf(y) === i; }).sort().reverse();
+    var opt = function (v, t, cur) { return '<option value="' + esc(v) + '"' + (v === cur ? ' selected' : '') + '>' + esc(t) + '</option>'; };
+    var tools = document.createElement('div'); tools.className = 'ltools';
+    tools.innerHTML = '<input id="lq" type="search" placeholder="Search titles, places, summaries" value="' + esc(LV.q || '') + '" aria-label="Search notes">' +
+      '<select id="lstat" aria-label="Status">' + opt('', 'Any status', LV.stat) + opt('published', 'Published', LV.stat) + opt('working', 'Not published yet', LV.stat) + opt('review', 'In review', LV.stat) + opt('noaudio', 'Needs audio', LV.stat) + '</select>' +
+      '<select id="lkind" aria-label="Kind">' + opt('', 'Every kind', LV.kind) + kinds.map(function (k) { return opt(k, KIND_NAMES[k] || k, LV.kind); }).join('') + '</select>' +
+      '<select id="lyear" aria-label="Year">' + opt('', 'Every year', LV.year) + years.map(function (y) { return opt(y, y, LV.year); }).join('') + '</select>' +
+      '<select id="lsort" aria-label="Sort">' + opt('new', 'Newest first', LV.sort) + opt('old', 'Oldest first', LV.sort) + opt('title', 'Title A to Z', LV.sort) + opt('status', 'By status', LV.sort) + opt('media', 'Most photos and loops', LV.sort) + '</select>' +
+      '<span class="lview" role="group" aria-label="View"><button type="button" data-v="grid" aria-pressed="' + (LV.view !== 'list') + '">Grid</button><button type="button" data-v="list" aria-pressed="' + (LV.view === 'list') + '">List</button></span>' +
+      '<small id="lcount"></small>';
+    list.parentNode.insertBefore(tools, list);
+    var order = { notes: 0, draft: 1, script: 2, audio: 3, published: 4 };
+    var draw = function () {
+      var q = (LV.q || '').trim().toLowerCase();
+      var rows = all.filter(function (e) {
+        if (q && (e.title + ' ' + e.place + ' ' + e.summary + ' ' + e.id).toLowerCase().indexOf(q) < 0) return false;
+        if (LV.stat === 'published' && e.status !== 'published') return false;
+        if (LV.stat === 'working' && e.status === 'published') return false;
+        if (LV.stat === 'review' && !e.review) return false;
+        if (LV.stat === 'noaudio' && e.audio) return false;
+        if (LV.kind && e.kind !== LV.kind) return false;
+        if (LV.year && (e.date || '').slice(0, 4) !== LV.year) return false;
+        return true;
+      });
+      var by = LV.sort || 'new';
+      rows.sort(function (a, b) {
+        if (by === 'old') return a.date < b.date ? -1 : a.date > b.date ? 1 : 0;
+        if (by === 'title') return (a.title || a.id).localeCompare(b.title || b.id);
+        if (by === 'status') return (order[a.status] || 0) - (order[b.status] || 0) || (a.date < b.date ? 1 : -1);
+        if (by === 'media') return (b.photos + b.loops) - (a.photos + a.loops);
+        return a.date < b.date ? 1 : a.date > b.date ? -1 : 0;
+      });
+      list.className = 'cards' + (LV.view === 'list' ? '' : ' grid');
+      $('#lcount').textContent = rows.length === all.length ? all.length + ' notes' : rows.length + ' of ' + all.length + ' notes';
+      list.innerHTML = rows.length ? rows.map(function (e) {
+        var img = LV.view !== 'list' ? '<span class="cv">' + (e.cover ? '<img loading="lazy" alt="" src="api.php?a=photo&id=' + encodeURIComponent(e.id) + '&n=' + encodeURIComponent(e.cover) + '">' : '<i>' + esc(KIND_NAMES[e.kind] || e.kind || 'Note') + '</i>') + '</span>' : '';
+        var media = [e.photos ? e.photos + ' photo' + (e.photos === 1 ? '' : 's') : '', e.loops ? e.loops + ' loop' + (e.loops === 1 ? '' : 's') : '', e.audio ? 'audio' : ''].filter(Boolean).join(' · ');
+        return '<button class="card" data-id="' + esc(e.id) + '">' + img + '<span class="cb"><span class="tags"><span class="st st-' + esc(e.status) + '">' + esc(st[e.status] || e.status) + '</span>' + (e.review ? '<span class="st st-review">' + (e.review.state === 'returned' ? 'Sent back' : 'In review') + '</span>' : '') + '</span>' +
+          '<b>' + esc(e.title || e.id) + '</b><small>' + esc(e.date) + ' · ' + esc(KIND_NAMES[e.kind] || e.kind) + (e.place ? ' · ' + esc(e.place) : '') + '</small>' +
+          (media ? '<small class="md">' + esc(media) + '</small>' : '') + '<span class="sum">' + esc(e.summary) + '</span></span></button>';
+      }).join('') : '<p class="muted">No notes match. <button type="button" class="link" id="lclear">Clear the filters</button></p>';
+      $$('.card', list).forEach(function (b) { b.onclick = function () { edit(b.getAttribute('data-id')); }; });
+      var c = $('#lclear'); if (c) c.onclick = function () { LV.q = LV.stat = LV.kind = LV.year = ''; saveLV(); $('#lq').value = ''; ['lstat', 'lkind', 'lyear'].forEach(function (i) { $('#' + i).value = ''; }); draw(); };
+    };
+    $('#lq').oninput = function () { LV.q = this.value; saveLV(); draw(); };
+    [['lstat', 'stat'], ['lkind', 'kind'], ['lyear', 'year'], ['lsort', 'sort']].forEach(function (x) { $('#' + x[0]).onchange = function () { LV[x[1]] = this.value; saveLV(); draw(); }; });
+    $$('.lview button', tools).forEach(function (b) { b.onclick = function () { LV.view = b.getAttribute('data-v'); saveLV(); $$('.lview button', tools).forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); }); draw(); }; });
+    draw();
   }
 
   // ---------- People (owner only): editors can work on notes; their saves wait for review ----------
@@ -1126,6 +1180,7 @@
     b.disabled = !r.able && !live;
     $('.pub-t', b).textContent = live ? (dirty ? 'Live: Save updates it' : 'Live on Play') : r.score === 1 ? 'Ready to publish' : 'Publish';
     $('.pub-n', b).textContent = live ? '' : r.done + ' of ' + r.list.length;
+    var sv = $('#save'); if (sv) sv.classList.toggle('dirty', !!dirty);   // the Save button's ring lights while there's something to save
     b.title = r.list.map(function (x) { return (x.ok ? '✓ ' : '○ ') + x.t; }).join('\n');
   }
   function publish() {

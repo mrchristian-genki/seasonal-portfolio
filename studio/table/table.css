@@ -589,3 +589,99 @@ body.login .login-box button:hover,body.login .login-box button:focus-visible{tr
 /* the heart's clips (heart.js), over the stills: the one playing fades in over the last */
 .about-studio .heart video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .6s ease}
 .about-studio .heart video.show{opacity:1}
+
+/* THE LIQUID IN THE WORK: the notes themselves take the skin too. The paper, its ink and its rules shift with
+   the liquid (warm parchment and walnut ink for orange, cool steel-grey paper and slate for blue, pale verdigris
+   and bronze-green for green), and everything that shows progress is lit with the liquid: the finished stages,
+   the stage you're on, the ready bar, the chips. Registered so they ease over with the river (2.2s). */
+@property --paper{syntax:"<color>";inherits:true;initial-value:#e9eef0}
+@property --card{syntax:"<color>";inherits:true;initial-value:#eef2f3}
+@property --ink{syntax:"<color>";inherits:true;initial-value:#1c2a31}
+@property --ink2{syntax:"<color>";inherits:true;initial-value:#3f5560}
+@property --ink3{syntax:"<color>";inherits:true;initial-value:#6e8590}
+@property --line{syntax:"<color>";inherits:true;initial-value:#cfdbe0}
+@property --soft{syntax:"<color>";inherits:true;initial-value:#dce7ec}
+:root{--paper:#e9eef0;--card:#eef2f3;--ink:#1c2a31;--ink2:#3f5560;--ink3:#6e8590;--line:#cfdbe0;--soft:#dce7ec;
+  --liq:rgb(var(--lr) var(--lg) var(--lb));--liq-d:color-mix(in srgb,var(--liq),#000 45%)}
+:root.liq-green{--paper:#ebeedd;--card:#eff1e3;--ink:#232a1a;--ink2:#4c5a35;--ink3:#77845c;--line:#d5dcc0;--soft:#e1e8c9}
+:root.liq-orange{--paper:#f4ead6;--card:#f6efe2;--ink:#2b2118;--ink2:#5a4a3a;--ink3:#8a7763;--line:#e2d6c0;--soft:#f3e3c8}
+:root{transition:--lr 2.2s ease,--lg 2.2s ease,--lb 2.2s ease,--sk-bg 2.2s ease,--sk-acc 2.2s ease,--sk-ink 2.2s ease,--sk-dim 2.2s ease,
+  --sk-line 2.2s ease,--sk-m1 2.2s ease,--sk-m2 2.2s ease,--sk-m3 2.2s ease,--sk-m4 2.2s ease,
+  --paper 2.2s ease,--card 2.2s ease,--ink 2.2s ease,--ink2 2.2s ease,--ink3 2.2s ease,--line 2.2s ease,--soft 2.2s ease}
+.panel,.card{box-shadow:6px 9px 14px rgba(8,4,0,.45),inset 0 0 40px color-mix(in srgb,var(--sk-m2) 16%,transparent)}
+input,select,textarea{background:color-mix(in srgb,var(--paper),#fff 62%);border-color:color-mix(in srgb,var(--line),var(--ink3) 25%);color:var(--ink)}
+input:focus,select:focus,textarea:focus{outline:2px solid color-mix(in srgb,var(--liq) 70%,transparent);border-color:transparent}
+button{background:color-mix(in srgb,var(--paper),#fff 62%);border-color:color-mix(in srgb,var(--line),var(--ink3) 35%);color:var(--ink)}
+code,.st{background:color-mix(in srgb,var(--paper),var(--ink3) 16%)}
+.st-published{background:color-mix(in srgb,var(--liq) 26%,var(--paper));color:var(--liq-d)}
+.drop{background:color-mix(in srgb,var(--paper) 60%,transparent);border-color:color-mix(in srgb,var(--line),var(--ink3) 35%)}
+.drop.on{border-color:var(--liq);background:color-mix(in srgb,var(--liq) 14%,var(--paper))}
+.ph{background:color-mix(in srgb,var(--paper),#fff 62%);border-color:var(--line)}
+main>.head h1{color:var(--sk-ink)} .head .me{color:var(--sk-dim)}
+.muted{color:var(--sk-dim)} .panel .muted,.card .muted{color:var(--ink3)}
+.head .back{color:var(--sk-ink);border-color:color-mix(in srgb,var(--sk-ink) 40%,transparent);background:transparent}
+.sum-top .back{color:var(--ink);border-color:var(--line)}
+/* progress: done stages hold the liquid, the current one is the skin's metal, lit at the edge */
+.stages li{background:color-mix(in srgb,var(--ink) 5%,transparent)}
+.stages li.done{color:var(--liq-d);background:color-mix(in srgb,var(--liq) 22%,var(--paper))}
+.stages li.done span{background:var(--liq-d);color:#fff;box-shadow:0 0 6px color-mix(in srgb,var(--liq) 70%,transparent)}
+.stages li.now{color:color-mix(in srgb,var(--sk-bg),#000 40%);background:linear-gradient(180deg,var(--sk-m1),var(--sk-m3))}
+.stages li.now span{background:var(--sk-m4);color:#fff;box-shadow:0 0 0 2px var(--liq),0 0 8px var(--liq)}
+.rbar{background:color-mix(in srgb,var(--ink) 9%,transparent)}
+.rbar i{background:linear-gradient(90deg,var(--liq-d),var(--liq));box-shadow:0 0 8px color-mix(in srgb,var(--liq) 60%,transparent)}
+#sumLive .live{color:var(--liq-d)}
+#sumLive .live::first-letter{text-shadow:0 0 6px var(--liq)}
+.sum .chip{background:color-mix(in srgb,var(--paper),#fff 45%);border-color:var(--line);color:var(--ink2)}
+.sum .chip:hover{border-color:var(--liq);color:var(--ink)}
+.sum-next small{color:var(--sk-m2)}
+.qdot{border-color:var(--sk-m2)} .qdot.done{background:var(--liq-d);border-color:var(--liq-d)}
+.panel.more{border-top-color:color-mix(in srgb,var(--ink) 18%,transparent)}
+.savebar{background:color-mix(in srgb,var(--sk-bg) 92%,transparent);border-top:1px solid color-mix(in srgb,var(--liq) 30%,transparent)}
+.savebar .muted{color:var(--sk-dim)}
+
+/* THE TWO BUTTONS AT THE BOTTOM, in the skin's metal with the liquid's glowing rim showing ready or not.
+   Publish: the rim brightens as the note fills in (studio.js sets --g, 0 to 1); when every part is there it
+   runs and the glow breathes; once live it holds steady. Save: the rim lights while there's something to save. */
+button.primary,.pub{position:relative;border:0;color:color-mix(in srgb,var(--sk-bg),#000 45%);filter:none;
+  background:linear-gradient(180deg,var(--sk-m1),var(--sk-m3) 45%,var(--sk-m2));
+  box-shadow:0 3px 6px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.55);transition:box-shadow .5s ease,translate .2s ease}
+button.primary:hover,.pub:not(:disabled):hover{background:linear-gradient(180deg,var(--sk-m1),var(--sk-m1) 30%,var(--sk-m3));translate:0 -1px}
+button.primary::before,.pub::before{content:"";position:absolute;inset:-2px;border-radius:inherit;padding:2px;pointer-events:none;
+  background:linear-gradient(45deg,var(--liq),color-mix(in srgb,var(--liq),#fff 55%),color-mix(in srgb,var(--liq),#000 35%),var(--liq),
+    color-mix(in srgb,var(--liq),#fff 55%),color-mix(in srgb,var(--liq),#000 35%),var(--liq)) 0 0/400% 100%;
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);
+  animation:fit-drift 20s linear infinite paused;opacity:0;transition:opacity .5s ease}
+.pub::before{opacity:calc(.2 + var(--g) * .8)}
+.pub{box-shadow:0 3px 6px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.55),0 0 calc(var(--g) * 20px) calc(var(--g) * 3px) color-mix(in srgb,var(--liq) calc(var(--g) * 70%),transparent)}
+.pub.full::before,.pub.live::before{opacity:1;animation-play-state:running}
+.pub.full{animation:pub-breathe 2.4s ease-in-out infinite}
+@keyframes pub-breathe{50%{box-shadow:0 3px 6px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.55),0 0 30px 7px color-mix(in srgb,var(--liq) 85%,transparent)}}
+.pub.live{animation:none;box-shadow:0 3px 6px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.55),0 0 16px 3px color-mix(in srgb,var(--liq) 55%,transparent)}
+.pub:disabled{filter:grayscale(.7) brightness(.8);box-shadow:none}
+.pub:disabled::before{opacity:0}
+#save.dirty::before{opacity:1;animation-play-state:running}
+#save.dirty{box-shadow:0 3px 6px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.55),0 0 16px 3px color-mix(in srgb,var(--liq) 55%,transparent)}
+@media (prefers-reduced-motion:reduce){button.primary::before,.pub::before{animation:none}.pub.full{animation:none}}
+
+/* THE NOTES AS A GRID: a cover for each, with search, filters and sorting above (studio.js renderGrid) */
+.ltools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 14px}
+.ltools input{flex:1 1 220px;width:auto}
+.ltools select{width:auto;flex:0 1 auto;padding:8px 10px}
+.ltools .lview{display:inline-flex;border-radius:999px;overflow:hidden;box-shadow:0 0 0 1px color-mix(in srgb,var(--line),var(--ink3) 35%)}
+.ltools .lview button{border:0;border-radius:0;padding:8px 14px}
+.ltools .lview button[aria-pressed="true"]{background:linear-gradient(180deg,var(--sk-m1),var(--sk-m3));color:color-mix(in srgb,var(--sk-bg),#000 45%);box-shadow:inset 0 -2px 0 var(--liq)}
+.ltools #lcount{margin-left:auto;color:var(--sk-dim)}
+.cards.grid{grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px}
+.cards.grid .card{padding:0;overflow:hidden;gap:0;rotate:0deg}
+.cards.grid .card .cv{display:block;width:100%;aspect-ratio:16/9;background:color-mix(in srgb,var(--paper),var(--ink3) 22%);position:relative}
+.cards.grid .card .cv img{display:block;width:100%;height:100%;object-fit:cover}
+.cards.grid .card .cv i{position:absolute;inset:0;display:grid;place-items:center;font:700 13px/1 "Cinzel",Georgia,serif;letter-spacing:.12em;text-transform:uppercase;font-style:normal;color:var(--ink3)}
+.card .cb{display:flex;flex-direction:column;gap:4px;padding:12px 14px 14px;width:100%}
+.cards:not(.grid) .card .cb{padding:0}
+.card .tags{display:flex;gap:6px}
+.cards.grid .card b{font-size:16.5px;line-height:1.25}
+.card small.md{color:var(--ink3);font-size:12.5px}
+.cards.grid .card .sum{font-size:13.5px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.cards.grid .card:hover{box-shadow:8px 12px 18px rgba(8,4,0,.5),0 0 0 2px color-mix(in srgb,var(--liq) 65%,transparent),0 0 16px 2px color-mix(in srgb,var(--liq) 35%,transparent)}
+@media (max-width:640px){.ltools select{flex:1 1 40%}.ltools #lcount{margin-left:0}.cards.grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}}
