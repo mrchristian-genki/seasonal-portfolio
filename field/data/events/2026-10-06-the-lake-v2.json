@@ -4,7 +4,7 @@
  "date": "2026-10-06",
  "kind": "make",
  "place": "The workshop",
- "status": "draft",
+ "status": "published",
  "summary": "A case study of the main site, V2: one hand-built lake where every tab is a season, with night, weather, wildlife, a hidden beach and links that remember it all.",
  "trailhead": null,
  "links": [
@@ -57,7 +57,7 @@
  "episode": {
   "title": "One lake, four seasons",
   "script": "Right, pull up a chair, because this is the big one. The front door. The face of the whole operation.\n\nChristian's website is one painted lake, and every tab on it is a season. Books is summer. Web is fall. Workshop is winter. Play is spring. Click a tab and the lake turns, about seven seconds of it, and the switch happens in the darkest moment so you never see the joins. Like a magician. Like a man who's done this before.\n\nThis is version two, by the way. The first one worked, but it wasn't built to last. So he built it again, properly. That's not notions, that's standards.\n\n***\n\nEvery bit of it is drawn in code. The trees, the mountains, the water, the moon. There's night, with stars and fireflies. And there's weather. Six levels of it. Drizzle, shower, tempest. Flurries, snow, blizzard. A proper Donegal selection. The rain even drips off the big headline, and the snow settles on it. Go hálainn. Beautiful.\n\n***\n\nAnd the visitors! Thirty-three kinds of them. A buck walking out of the trees. A bear on the shore. A wolf howling on a winter's night. A fox sniffing at the headline like he's reading it. And Marley, of course, with her very own rig, because she's the star and she knows it.\n\nSome of them are rare. Some come if you tap the right rock. An eagle dives for a fish. And tap the fisherman's wee boat and he'll sail you away to a hidden beach. A beach. In a portfolio. Sure why wouldn't you.\n\n***\n\nAnd every view has its own link. Put winter and night and blizzard in the address and the lake opens just like that. Fifty-five of them, listed at the bottom of the page.\n\n***\n\nNow here's the bit I'm proudest of, and nobody ever sees it. He tested the whole thing on an iPhone. The winter night was crawling along at twelve frames a second. He found the one wee line slowing it down, took it out, and it flew at fifty-six. He trimmed the first load down by about a quarter. Gave Safari its own fix. And if you've told your phone you'd like less motion, fifteen different files are listening. That's manners, that is.\n\n***\n\nSo here's the lesson. The scene is the portfolio. Anyone can say they care about the detail. A lake that keeps going smooth in a blizzard, on a phone? That shows it. Ar fheabhas. Brilliant.",
-  "audio": null
+  "audio": "data/audio/2026-10-06-the-lake-v2.mp3"
  },
  "questions": [],
  "consent": "Marley: the family dog, one of the lake's visitors."
