@@ -16,7 +16,7 @@
    - Now and then it blinks. With reduced motion it stays still, and only the mouth moves. */
 (function () {
   'use strict';
-  var A = '/assets/narrator/', V = '?v=13', DROP = 0.0448;   // the chin plate's drop, as a share of the head layer's height (the side plates go half as far)
+  var A = '/assets/narrator/', V = '?v=14', DROP = 0.0448;   // the chin plate's drop, as a share of the head layer's height (the side plates go half as far)
   var D = 193 / 24, IDLE = 0, GESTURES = [{ f: 1, r: 2 }, { f: 3, r: 4 }];   // the parts of narrator.mp4: forward and backwards copies
   // the hints, parts 5 to 7, with what the head does when (seconds into the part): look toward Play, wink, the bulb glows
   var HINTS = [
@@ -26,28 +26,28 @@
   var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // HER LOOKS (assets/narrator/looks.json): new hair and accessories over the same face, jaw, eyes and neck, so only
-  // the head's base layer changes (made in the Workshop's "Narrator looks"). Each page load she picks at random from
-  // a pool, never the look she wore last time in this browser: her own curls, every hair style ("rotate"), and the one
-  // holiday look that's coming up next. A holiday look ("from"/"to", month-day) joins the pool the day after the
-  // holiday before it ends, and stays in it until its own last day; then the next holiday's look takes its place.
-  // ?look=name in the address shows any look; ?look=curls her own. "bulb": false for a look whose hat or bow covers
-  // the antenna (its glow stays off). A click on her head changes it: another look from the same wardrobe,
-  // cross-faded with a little shake of the head.
+  // the head's base layer changes (made in the Workshop's Style Array). She wears the holiday look that's coming up
+  // next (a look with "from"/"to", month-day: it's hers from the day after the holiday before it ends, through its own
+  // last day). A click on her head moves her on to the next look in her wardrobe (the holiday's, her curls, the hair
+  // styles, then the other holidays), cross-faded with a little shake. The look picked goes into the address
+  // ("look-perm"), every bar on the page follows, and the links to the rest of the site carry it, so she keeps it
+  // as you move around; for the rest of the visit (this tab) she keeps it too. ?look-name or ?look=name shows any
+  // look; look-curls her own. "bulb": false for a look whose hat or bow covers the antenna (its glow stays off).
+  var LOOKRX = /(^|[?&+,;\s])look[-=]([a-z0-9-]+)/i;
+  function urlLook() { var m = LOOKRX.exec(decodeURIComponent(location.search)); return m ? m[2].toLowerCase() : null; }
+  var WARDROBE = [], CHOSEN = null, CURLS = A + 'head-base.webp' + V;
   var looks = fetch(A + 'looks.json' + V, { cache: 'no-cache' }).then(function (r) { return r.ok ? r.json() : { looks: [] }; }).catch(function () { return { looks: [] }; }).then(function (j) {
-    var list = (j && j.looks) || [], m = /[?&+]look=([a-z0-9-]+)/i.exec(location.search), d = new Date();
+    var list = (j && j.looks) || [], d = new Date();
     var hol = list.filter(function (l) { return l.to; }).sort(function (a, b) { return a.to < b.to ? -1 : 1; });
     var mmdd = ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
-    var up = hol.filter(function (l) { return l.to >= mmdd; })[0] || hol[0];
-    WARDROBE = [{ name: 'curls' }].concat(list.filter(function (l) { return l.rotate; }), up ? [up] : []);
-    if (m) return list.filter(function (l) { return l.name === m[1].toLowerCase(); })[0] || { name: 'curls' };
-    var pool = WARDROBE.slice();   // the holiday is the next one to come (after the year's last, the first again)
-    var last = null; try { last = localStorage.getItem('cg-look'); } catch (e) {}
-    var fresh = pool.filter(function (l) { return l.name !== last; }); if (fresh.length) pool = fresh;
-    var pick = pool[Math.floor(Math.random() * pool.length)];
-    try { localStorage.setItem('cg-look', pick.name); } catch (e) {}
-    return pick;
+    var up = hol.filter(function (l) { return l.to >= mmdd; })[0] || hol[0];   // after the year's last holiday, the first again
+    var rest = hol.slice(hol.indexOf(up) + 1).concat(hol.slice(0, hol.indexOf(up)));   // the other holidays, in the order they come
+    WARDROBE = (up ? [up] : []).concat([{ name: 'curls' }], list.filter(function (l) { return l.rotate; }), rest);
+    var want = urlLook(); if (!want) try { want = sessionStorage.getItem('cg-look'); } catch (e) {}
+    var pick = want && WARDROBE.filter(function (l) { return l.name === want; })[0];
+    if (pick) CHOSEN = pick.name;
+    return pick || WARDROBE[0] || { name: 'curls' };
   });
-  var WARDROBE = [], CURLS = A + 'head-base.webp' + V;
   function src(l) { return l && l.file ? A + 'looks/' + l.file + V : CURLS; }
   function put(nb, l) {
     nb.querySelector('.nb-base').src = src(l);
@@ -55,19 +55,40 @@
     if (l && l.file) nb.setAttribute('data-look', l.name); else nb.removeAttribute('data-look');
     nb._look = l ? l.name : 'curls';
   }
-  function wear(nb) { looks.then(function (l) { if (l && l.file) put(nb, l); else nb._look = 'curls'; }); }
-  // a click on her head: the next look loads, then fades in over the old one while her head gives a little shake
+  function wear(nb) { looks.then(function (l) { put(nb, l); }); }
+  // the look picked, in the address (replacing any look word already there)
+  function writeLook(name) {
+    var q = decodeURIComponent(location.search.slice(1)).split(/[+&,;\s]+/).filter(function (w) { return w && !/^look[-=]/i.test(w); });
+    q.push('look-' + name);
+    try { history.replaceState(history.state, '', location.pathname + '?' + q.join('+') + location.hash); } catch (e) { /* file:// */ }
+  }
+  window.__lookWord = function () { return CHOSEN ? ['look-' + CHOSEN] : []; };   // scene.js keeps it when it rewrites the address
+  // the links to the rest of the site carry the look picked, so she keeps it on the next page
+  document.addEventListener('click', function (ev) {
+    var a = ev.target.closest && ev.target.closest('a[href]'); if (!a || !CHOSEN) return;
+    var u; try { u = new URL(a.href, location.href); } catch (e) { return; }
+    if (u.origin !== location.origin || /^\/(studio|catalog|propre|books)\//.test(u.pathname) || (u.pathname === location.pathname && u.hash && !u.search)) return;
+    var q = decodeURIComponent(u.search.slice(1)).split(/[+&,;\s]+/).filter(function (w) { return w && !/^look[-=]/i.test(w); });
+    q.push('look-' + CHOSEN); a.href = u.pathname + '?' + q.join('+') + u.hash;
+  }, true);
+  // a click on her head: the next look in her wardrobe loads, then fades in over the old one while her head gives a
+  // little shake; every bar on the page follows
   function restyle(nb) {
     if (nb._busy || WARDROBE.length < 2) return;
-    var others = WARDROBE.filter(function (l) { return l.name !== nb._look; }), l = others[Math.floor(Math.random() * others.length)];
-    var base = nb.querySelector('.nb-base'), img = new Image(); nb._busy = true;
+    var at = WARDROBE.map(function (l) { return l.name; }).indexOf(nb._look), l = WARDROBE[(at + 1) % WARDROBE.length];
+    CHOSEN = l.name; writeLook(l.name);
+    try { sessionStorage.setItem('cg-look', l.name); } catch (e) {}
+    var img = new Image();
     img.onload = img.onerror = function () {
-      var old = base.cloneNode(); old.className = 'nb-base nb-old'; base.parentNode.insertBefore(old, base.nextSibling);
-      put(nb, l);
-      try { localStorage.setItem('cg-look', nb._look); } catch (e) {}
-      nb.classList.remove('nb-swap'); void nb.offsetWidth; if (!still) nb.classList.add('nb-swap');
-      requestAnimationFrame(function () { old.style.opacity = '0'; });
-      setTimeout(function () { old.remove(); nb.classList.remove('nb-swap'); nb._busy = false; }, still ? 0 : 520);
+      document.querySelectorAll('.nb').forEach(function (n) {
+        if (n._look === l.name) return;
+        var base = n.querySelector('.nb-base'), old = base.cloneNode(); n._busy = true;
+        old.className = 'nb-base nb-old'; base.parentNode.insertBefore(old, base.nextSibling);
+        put(n, l);
+        n.classList.remove('nb-swap'); void n.offsetWidth; if (!still) n.classList.add('nb-swap');
+        requestAnimationFrame(function () { old.style.opacity = '0'; });
+        setTimeout(function () { old.remove(); n.classList.remove('nb-swap'); n._busy = false; }, still ? 0 : 520);
+      });
     };
     img.src = src(l);
   }
@@ -79,7 +100,7 @@
     bar.classList.add('has-nb');
     var nb = document.createElement('div'); nb.className = 'nb'; nb.setAttribute('aria-hidden', 'true');
     nb.innerHTML = '<div class="nb-rise"><div class="nb-head"><img class="nb-base" src="' + A + 'head-base.webp' + V + '" alt=""><img class="nb-jaw-s" src="' + A + 'head-jaw-sides.webp' + V + '" alt=""><img class="nb-jaw" src="' + A + 'head-jaw.webp' + V + '" alt="">' +
-      '<img class="nb-lids" src="' + A + 'head-lids.webp' + V + '" alt=""><i class="nb-bulb"></i><b class="nb-hit" title="GlazyArray\u2019s Style Array: click for another look"></b></div>' +
+      '<img class="nb-lids" src="' + A + 'head-lids.webp' + V + '" alt=""><i class="nb-bulb"></i><b class="nb-hit" title="GlazyArray\u2019s Style Array: click for her next look"></b></div>' +
       '<video class="nb-body" muted playsinline preload="none" poster="' + A + 'rest.jpg' + V + '"></video></div>';
     bar.insertBefore(nb, bar.firstChild);
     // her nameplate, standing on the desk to her right
