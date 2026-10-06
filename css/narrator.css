@@ -18,10 +18,10 @@ section.listen.has-nb::before{content:"";position:absolute;left:0;right:0;bottom
   filter:drop-shadow(0 3px 5px rgba(0,0,0,.35))}
 .nb-head img{position:absolute;inset:0;width:100%;height:100%;display:block}
 .nb-jaw,.nb-jaw-s{will-change:transform}
-/* her eyes (Christian, Oct 6, 2026): Lake Tahoe blue, deep cobalt into turquoise, with a small dark pupil and two
+/* her eyes (Christian, Oct 6, 2026): Lake Tahoe blue, tucked under her brass upper lid and lashes, deep cobalt into turquoise, with a small dark pupil and two
    catchlights, laid over the glass of every look. The iris sits in the lens (head-lens.png), so it can glance toward
    the Play button in the hints; the catchlights stay put, the way a reflection does. */
-.nb-eyes{position:absolute;inset:0;-webkit-mask:url(/assets/narrator/head-lens.png?v=1) 0 0/100% 100% no-repeat;mask:url(/assets/narrator/head-lens.png?v=1) 0 0/100% 100% no-repeat}
+.nb-eyes{position:absolute;inset:0;-webkit-mask:url(/assets/narrator/head-lens.png?v=2) 0 0/100% 100% no-repeat;mask:url(/assets/narrator/head-lens.png?v=2) 0 0/100% 100% no-repeat}
 .nb-iris{transition:translate .45s cubic-bezier(.3,1.3,.5,1)}
 .nb.look .nb-iris{translate:.7% 0}
 .nb-lids{opacity:0}
