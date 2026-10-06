@@ -122,5 +122,20 @@
  },
  "questions": [],
  "consent": "No people: the narrator and her parts are AI renders from Christian's prompts.",
- "publishedAt": "2026-10-06T18:05:06Z"
+ "publishedAt": "2026-10-06T18:05:06Z",
+ "narratorLook": {
+  "look": "grad-cap",
+  "fit": "category",
+  "from": "case-study",
+  "about": "a brass mortarboard with a chain tassel",
+  "why": "Picked from Case study.",
+  "prompt": "",
+  "bulb": false
+ },
+ "narratorBackdrop": {
+  "backdrop": "library",
+  "fit": "category",
+  "from": "case-study",
+  "scene": ""
+ }
 }
