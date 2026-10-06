@@ -1,7 +1,8 @@
 /* THE NARRATOR, GlazyArray: a little brass robot in each Listen bar (section.listen with an <audio>) that tells the episode.
-   Its torso and hands are one video (assets/narrator/narrator.mp4, green screen keyed onto the bar's colour) in five
-   8-second parts, every one starting and ending in the same rest pose: the fingers tapping, a storyteller's gesture
-   and the same played backwards, drawing a shape in the air and that backwards. The robot moves only by jumping
+   Its torso and hands are one video (assets/narrator/narrator.mp4, green screen keyed onto the bar's colour) in twelve
+   8-second parts, every one starting and ending in the same rest pose: the fingers tapping; four gestures, each
+   followed by the same played backwards (her arms opened wide like a storyteller, a glowing heart drawn around her
+   face, a little seated hand dance, a brass ball that appears in her hand); and three hints. The robot moves only by jumping
    within this one file (switching files blanked the frame for a moment). Her head is cut-out layers on top:
    the head with the mouth open inside, the jaw (her chin plate, and the side plates that swing half as far), and
    the shut eyelids.
@@ -16,8 +17,8 @@
    - Now and then it blinks. With reduced motion it stays still, and only the mouth moves. */
 (function () {
   'use strict';
-  var A = '/assets/narrator/', V = '?v=23', DROP = 0.0448;   // the chin plate's drop, as a share of the head layer's height (the side plates go half as far)
-  var D = 193 / 24, IDLE = 0, GESTURES = [{ f: 1, r: 2 }, { f: 3, r: 4 }];   // the parts of narrator.mp4: forward and backwards copies
+  var A = '/assets/narrator/', V = '?v=24', DROP = 0.0448;   // the chin plate's drop, as a share of the head layer's height (the side plates go half as far)
+  var D = 193 / 24, IDLE = 0, GESTURES = [{ f: 1, r: 2 }, { f: 3, r: 4 }, { f: 8, r: 9 }, { f: 10, r: 11 }];   // the parts of narrator.mp4: forward and backwards copies
   // the hints, parts 5 to 7, with what the head does when (seconds into the part): look toward Play, wink, the bulb glows
   var HINTS = [
     { p: 5, cues: [[1.2, 5.6, 'look'], [2.3, 3.1, 'wink']] },                          // psst, over there
@@ -228,10 +229,11 @@
         go(g.f * D, g.f * D + p, function () { go(g.r * D + (D - p), g.r * D + D, after); });
       } else go(g.r * D, g.r * D + D, after);                                               // the whole of it, backwards
     }
+    function inGesture(part) { return GESTURES.some(function (x) { return x.f === part || x.r === part; }); }
     // the voice stopped: to the nearer rest pose, the end of this part or (by the backwards copy) its start
     function settle() {
       var t = body.currentTime, part = Math.floor((t + 0.02) / D), local = Math.max(0, t - part * D);   // a hair of margin: a jump lands right on a part's first frame
-      if (part === IDLE || part >= HINTS[0].p || !plan) return;
+      if (!inGesture(part) || !plan) return;
       var g = GESTURES.filter(function (x) { return x.f === part || x.r === part; })[0]; if (!g) return;
       var other = part === g.f ? g.r : g.f;
       if (local < D / 2) go(other * D + (D - local), other * D + D, idle, 1.35); else go(part * D + local, part * D + D, idle, 1.35);
@@ -275,7 +277,7 @@
       listen(); if (ctx && ctx.state === 'suspended') ctx.resume();
       talking = true; nb.classList.add('on');
       played = true;
-      if (!still) { var part = Math.floor((body.currentTime + 0.02) / D); if (hint) endHint(); if (!plan || part === IDLE || part >= HINTS[0].p) gesture(); }   // from tapping, a hint or rest, straight into a gesture
+      if (!still) { var part = Math.floor((body.currentTime + 0.02) / D); if (hint) endHint(); if (!plan || !inGesture(part)) gesture(); }   // from tapping, a hint or rest, straight into a gesture
       if (!raf) raf = requestAnimationFrame(tick);
     });
     ['pause', 'ended'].forEach(function (t) { audio.addEventListener(t, function () { talking = false; if (!still) settle(); }); });
