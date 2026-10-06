@@ -16,6 +16,17 @@
  "track": null,
  "photos": [
   {
+   "src": "data/photos/2026-10-06-the-parts-catalog/automaton-memory.mp4",
+   "poster": "data/photos/2026-10-06-the-parts-catalog/automaton-memory.jpg",
+   "video": true,
+   "ai": true,
+   "caption": "The memory: a head of tiny drawers on the workbench, each one opening to show a paper figure stirring inside. The Catalog is where the site keeps every part it knows how to build.",
+   "w": 1280,
+   "h": 720,
+   "use": "post",
+   "cover": true
+  },
+  {
    "src": "data/photos/2026-10-06-the-parts-catalog/cat-header.mp4",
    "poster": "data/photos/2026-10-06-the-parts-catalog/cat-header.jpg",
    "video": true,
@@ -24,7 +35,7 @@
    "w": 960,
    "h": 540,
    "use": "post",
-   "cover": true
+   "cover": false
   },
   {
    "src": "data/photos/2026-10-06-the-parts-catalog/cat-animals.mp4",

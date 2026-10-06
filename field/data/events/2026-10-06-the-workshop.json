@@ -16,6 +16,17 @@
  "track": null,
  "photos": [
   {
+   "src": "data/photos/2026-10-06-the-workshop/automaton-hands.mp4",
+   "poster": "data/photos/2026-10-06-the-workshop/automaton-hands.jpg",
+   "video": true,
+   "ai": true,
+   "caption": "The hands: brass hands shaping a glowing eagle out of light, the way the Workshop turns a picture into a new part for the lake.",
+   "w": 1280,
+   "h": 720,
+   "use": "post",
+   "cover": true
+  },
+  {
    "src": "data/photos/2026-10-06-the-workshop/ws-header.mp4",
    "poster": "data/photos/2026-10-06-the-workshop/ws-header.jpg",
    "video": true,
@@ -24,7 +35,7 @@
    "w": 960,
    "h": 540,
    "use": "post",
-   "cover": true
+   "cover": false
   },
   {
    "src": "data/photos/2026-10-06-the-workshop/ws-trace.mp4",

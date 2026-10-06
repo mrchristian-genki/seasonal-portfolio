@@ -16,6 +16,17 @@
  "track": null,
  "photos": [
   {
+   "src": "data/photos/2026-10-06-the-lake-v2/automaton-face.mp4",
+   "poster": "data/photos/2026-10-06-the-lake-v2/automaton-face.jpg",
+   "video": true,
+   "ai": true,
+   "caption": "The face: a brass porthole with the lake inside, turning through the seasons. The main site is what everyone sees.",
+   "w": 1280,
+   "h": 720,
+   "use": "post",
+   "cover": true
+  },
+  {
    "src": "data/photos/2026-10-06-the-lake-v2/v2-seasons.mp4",
    "poster": "data/photos/2026-10-06-the-lake-v2/v2-seasons.jpg",
    "video": true,
@@ -24,7 +35,7 @@
    "w": 960,
    "h": 540,
    "use": "post",
-   "cover": true
+   "cover": false
   },
   {
    "src": "data/photos/2026-10-06-the-lake-v2/v2-winter.mp4",
