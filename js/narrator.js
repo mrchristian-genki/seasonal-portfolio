@@ -4,7 +4,7 @@
    and the same played backwards, drawing a shape in the air and that backwards. The robot moves only by jumping
    within this one file (switching files blanked the frame for a moment). Its head is three cut-out layers on top:
    the head with the mouth open inside, the jaw, and the shut eyelids.
-   - Playing: it rises so its head stands up out of the bar, the jaw opens with the loudness of the voice (measured
+   - It sits at its desk from the start, its head standing up out of the bar. Playing: the jaw opens with the loudness of the voice (measured
      from the episode with Web Audio) and the head nods a little. The hands make a gesture, all of it, or part of it
      and back again (it jumps to the same frame in the backwards copy), so it never looks like the same 8 seconds.
    - When the voice stops it heads for the nearer rest pose, a little quicker, then the fingers tap on the desk.
@@ -15,7 +15,7 @@
    - Now and then it blinks. With reduced motion it stays still, and only the mouth moves. */
 (function () {
   'use strict';
-  var A = '/assets/narrator/', V = '?v=4', DROP = 0.0747;   // the jaw's drop, as a share of the head's height
+  var A = '/assets/narrator/', V = '?v=5', DROP = 0.0747;   // the jaw's drop, as a share of the head's height
   var D = 193 / 24, IDLE = 0, GESTURES = [{ f: 1, r: 2 }, { f: 3, r: 4 }];   // the parts of narrator.mp4: forward and backwards copies
   // the hints, parts 5 to 7, with what the head does when (seconds into the part): look toward Play, wink, the bulb glows
   var HINTS = [

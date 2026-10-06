@@ -1,15 +1,17 @@
-/* THE NARRATOR (js/narrator.js): the robot sits at the left of the Listen bar. Its torso fills the bar's lower
-   left, sitting on the bar's bottom edge like a desk; its head stands up out of the top. --nb is its width. */
-section.listen.has-nb{--nb:210px;position:relative;min-height:calc(var(--nb) * .5208 + 34px);padding-left:calc(var(--nb) + 18px);margin-top:calc(var(--nb) * .36 + 22px);align-content:center}
+/* THE NARRATOR (js/narrator.js): the robot sits at the left of the Listen bar, at a desk that runs the bar's whole
+   width along its bottom edge; its head stands up out of the top. --nb is its width, --desk the desk's height
+   (7.7% of the robot's video, where its own desk is). */
+section.listen.has-nb{--nb:210px;--desk:calc(var(--nb) * .5208 * .0767);position:relative;min-height:calc(var(--nb) * .5208 + 34px);
+  padding-left:calc(var(--nb) + 18px);padding-bottom:calc(var(--desk) + 12px);margin-top:calc(var(--nb) * .36 + 22px);align-content:center}
+section.listen.has-nb::before{content:"";position:absolute;left:0;right:0;bottom:0;height:var(--desk);border-radius:0 0 16px 16px;pointer-events:none;
+  background:url(/assets/narrator/desk.jpg?v=1) left bottom/auto 100% repeat-x}   /* the same walnut, mirrored so it runs on without a seam */
 .nb{position:absolute;left:0;bottom:0;width:var(--nb);height:calc(var(--nb) * .5208);pointer-events:none;
-  clip-path:inset(-100vh -100vw 0 0 round 0 0 0 16px)}   /* nothing below the bar's bottom edge: before play it sits a little lower, inside the bar */
-.nb-rise{position:absolute;inset:0;transform:translateY(14%);transition:transform .7s cubic-bezier(.3,1.35,.5,1)}
-.nb.on .nb-rise{transform:none}
-.nb-body{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:0 0 0 16px;background:#0f4d47 url(/assets/narrator/rest.jpg?v=4) center/cover;   /* the rest pose behind the video, in case a frame is ever missing */
-  
-  /* the desk fades out to the right, and the top edge softens into the bar */
-  -webkit-mask-image:linear-gradient(90deg,#000 88%,transparent),linear-gradient(180deg,transparent,#000 6%);-webkit-mask-composite:source-in;
-  mask-image:linear-gradient(90deg,#000 88%,transparent),linear-gradient(180deg,transparent,#000 6%);mask-composite:intersect}
+  clip-path:inset(-100vh -100vw 0 0 round 0 0 0 16px);z-index:1}   /* nothing below the bar's bottom edge */
+.nb-rise{position:absolute;inset:0}   /* in place from the start: hands on the desk, in view */
+.nb-body{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:0 0 0 16px;background:#0f4d47 url(/assets/narrator/rest.jpg?v=5) center/cover;   /* the rest pose behind the video, in case a frame is ever missing */
+  /* its right edge blends into the desk strip, and its top edge softens into the bar */
+  -webkit-mask-image:linear-gradient(90deg,#000 95%,transparent),linear-gradient(180deg,transparent,#000 6%);-webkit-mask-composite:source-in;
+  mask-image:linear-gradient(90deg,#000 95%,transparent),linear-gradient(180deg,transparent,#000 6%);mask-composite:intersect}
 /* the head: its jaw rests on the torso's collar (the collar's top is 9.8% down the torso), its width 42% of the robot's */
 .nb-head{position:absolute;left:29%;width:42%;bottom:81.5%;aspect-ratio:300/375;transform-origin:50% 92%;z-index:1;transition:rotate .5s cubic-bezier(.3,1.4,.5,1),translate .5s cubic-bezier(.3,1.4,.5,1);
   filter:drop-shadow(0 3px 5px rgba(0,0,0,.35))}
@@ -25,4 +27,4 @@ section.listen.has-nb{--nb:210px;position:relative;min-height:calc(var(--nb) * .
 .nb.glow .nb-bulb{opacity:1;animation:nb-flick .36s steps(2,jump-none) infinite}
 @keyframes nb-flick{50%{opacity:.45}}
 @media (max-width:560px){section.listen.has-nb{--nb:150px;padding-left:calc(var(--nb) + 12px)}}
-@media (prefers-reduced-motion:reduce){.nb-rise{transition:none;transform:none}.nb-head{transition:none}.nb.glow .nb-bulb{animation:none}}
+@media (prefers-reduced-motion:reduce){.nb-head{transition:none}.nb.glow .nb-bulb{animation:none}}
