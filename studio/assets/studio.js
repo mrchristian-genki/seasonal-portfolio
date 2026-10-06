@@ -130,6 +130,7 @@
     var m = /^note\/(.+)$/.exec(v || '');
     if (m) return edit(m[1]);
     if (v === 'new') return edit(null);
+    if ((v === 'categories' || v === 'people') && owner()) return showList(v);
     return showList();
   }
   function listen() {                    // Back and Forward (switch.js loads after this file, so at start)
@@ -141,20 +142,26 @@
   }
 
   // ---------- list ----------
-  function showList() {
+  // the list's tabs: the Notes, their Categories (GlazyArray's looks) and People (owner only)
+  function showList(tab) {
+    tab = tab === 'categories' || tab === 'people' ? tab : 'notes';
     if (dirty && !confirm('Leave without saving?')) return;
     dirty = false; E = null; fresh = {}; removed = []; INBOX = null; audioNew = null; audioGone = false; DRIVEAUD = null; DRIVETRK = null; trackRaw = null; trackSwap = false; clipsNew = {}; posterNew = {}; DRIVEVID = null; stopTrim();
-    route('notes');
-    app.innerHTML = '<div class="head"><h1>Field Notes</h1><span class="me">' + esc(CFG.me ? CFG.me.name : '') + (owner() ? '' : ' · editor') + '</span>' +
-      (owner() ? '<button id="cats" class="small">Categories</button><button id="people" class="small">People</button>' : '') + '<button id="new" class="primary">New entry</button></div>' +
-      '<section id="queue" class="panel queue" hidden></section><section id="peopleBox" class="panel people" hidden></section><section id="catsBox" class="panel cats" hidden></section>' +
-      '<section id="drive" class="panel drive"><p class="muted">Checking Google Drive…</p></section><div id="list" class="cards"><p class="muted">Loading entries…</p></div>';
-    $('#new').onclick = function () { edit(null); };
-    if (owner()) $('#people').onclick = function () { var b = $('#peopleBox'); b.hidden = !b.hidden; if (!b.hidden) renderPeople(); };
-    if (owner()) $('#cats').onclick = function () { var b = $('#catsBox'); b.hidden = !b.hidden; if (!b.hidden) renderCats(); };
+    route(tab);
+    var tabs = owner() ? '<nav class="tabs" role="tablist">' + [['notes', 'Notes'], ['categories', 'Categories'], ['people', 'People']].map(function (t) {
+      return '<button type="button" role="tab" data-tab="' + t[0] + '" aria-selected="' + (t[0] === tab) + '">' + t[1] + '</button>'; }).join('') + '</nav>' : '';
+    app.innerHTML = '<div class="head"><h1>Field Notes</h1>' + tabs + '<span class="me">' + esc(CFG.me ? CFG.me.name : '') + (owner() ? '' : ' · editor') + '</span>' +
+      (tab === 'notes' ? '<button id="new" class="primary">New entry</button>' : '') + '</div>' +
+      '<section id="queue" class="panel queue" hidden></section><section id="peopleBox" class="panel people"' + (tab === 'people' ? '' : ' hidden') + '></section><section id="catsBox" class="panel cats"' + (tab === 'categories' ? '' : ' hidden') + '></section>' +
+      '<section id="drive" class="panel drive"' + (tab === 'notes' ? '' : ' hidden') + '><p class="muted">Checking Google Drive…</p></section><div id="list" class="cards"' + (tab === 'notes' ? '' : ' hidden') + '><p class="muted">Loading entries…</p></div>';
+    if ($('#new')) $('#new').onclick = function () { edit(null); };
+    $$('.tabs [data-tab]').forEach(function (b) { b.onclick = function () { showList(b.getAttribute('data-tab')); }; });
+    if (tab === 'people') renderPeople();
     driveStatus();
     api('list').then(function (j) {
       ENTRIES = j.entries; if (lastDrive) renderDrive(lastDrive);
+      if (tab === 'categories') renderCats();
+      if (tab !== 'notes') return;   // the other tabs only needed the list for their counts
       var st = {}; (CFG.statuses || []).forEach(function (s) { st[s.id] = s.label; });
       // notes waiting for the owner's review, first
       var waiting = j.entries.filter(function (e) { return e.review; }), q = $('#queue');
