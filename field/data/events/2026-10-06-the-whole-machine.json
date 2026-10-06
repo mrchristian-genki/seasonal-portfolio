@@ -80,6 +80,15 @@
    "h": 448,
    "use": "post",
    "cover": false
+  },
+  {
+   "src": "data/photos/2026-10-06-the-whole-machine/at-rest.jpg",
+   "ai": true,
+   "caption": "The whole machine at rest: a head of drawers with the lake in a porthole and a prism for an eye, the heart behind glass, the veins of liquid running out to its hands.",
+   "w": 1600,
+   "h": 893,
+   "use": "post",
+   "cover": false
   }
  ],
  "fieldNotes": "Capstone of the case-study series (Oct 6, 2026). The parable is Christian's: a brass automaton built on the same bench as the Studio's heart, each tool one part of it: ProPre = the prism eye (Christian: a coloring book is beauty broken down to lines and built back up), the main site V2 = the face, the Parts Catalog = the memory (head of drawers), the Workshop = the hands, the Studio = the heart (the liquid as the site's blood, Christian's metaphor). All loops are Christian's AI renders from the prompts. Facts from the other case studies: ProPre started May 2026 and brought him back to web development; the main site's tabs open the other parts (Books: Browse the catalog -> the Coloring Book Catalog; Workshop: Open the workshop; Play: the Field Notes the Studio publishes); Catalog parts run on the same code as the lake; the Workshop traces new parts into the Catalog's format; Marley appears in all of them (asleep on the Workshop bench, in a jellyfish in the Catalog header, visiting the lake, along the Studio's river).",
