@@ -1,0 +1,64 @@
+{
+ "id": "2026-10-06-the-lake-v2",
+ "title": "One lake, four seasons",
+ "date": "2026-10-06",
+ "kind": "make",
+ "place": "The workshop",
+ "status": "draft",
+ "summary": "A case study of the main site, V2: one hand-built lake where every tab is a season, with night, weather, wildlife, a hidden beach and links that remember it all.",
+ "trailhead": null,
+ "links": [
+  {
+   "label": "The main site",
+   "url": "https://www.christiangehrke.com/"
+  }
+ ],
+ "track": null,
+ "photos": [
+  {
+   "src": "data/photos/2026-10-06-the-lake-v2/v2-seasons.mp4",
+   "poster": "data/photos/2026-10-06-the-lake-v2/v2-seasons.jpg",
+   "video": true,
+   "ai": false,
+   "caption": "Books to Web: the change from summer to fall, with the swap hidden in the dark of the turn.",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": true
+  },
+  {
+   "src": "data/photos/2026-10-06-the-lake-v2/v2-winter.mp4",
+   "poster": "data/photos/2026-10-06-the-lake-v2/v2-winter.jpg",
+   "video": true,
+   "ai": false,
+   "caption": "The Workshop tab is winter: night, the moon over the lake and snow falling.",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false
+  },
+  {
+   "src": "data/photos/2026-10-06-the-lake-v2/v2-beach.mp4",
+   "poster": "data/photos/2026-10-06-the-lake-v2/v2-beach.jpg",
+   "video": true,
+   "ai": false,
+   "caption": "The getaway: the hidden beach at sunset, reached by tapping the fisherman's boat.",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false
+  }
+ ],
+ "fieldNotes": "Case study of the main site V2 (seasonal-portfolio; V1 was less robust). Facts from the commit history and code: each tab is a season (Books summer, Web fall, Workshop winter, Play spring); a 7-second change hides the swap in darkness; night mode; 6 weather levels (drizzle, shower, tempest; flurries, snow, blizzard) with the headline dripping in rain and holding snow; 33 wildlife visit types, 14 shapes plus the Marley rig; scene.js about 2,876 lines; 105 commits touch the main site; performance work on an iPhone/Safari bench: dropping will-change took winter night from 12 to 56 fps, first load from 319 KB to 238 KB; a Safari SVG filter fix; a spyglass camera for phones replaced a gyro; the getaway beach; the year started in summer; Lab became Play; 55 share links via URL words (?winter+night, ?beach, ?blizzard); hidden taps: trigger rocks, fish jump, eagle; reduced motion respected in 15 files. Clips are screen recordings of the live page. No place names. In the automaton parable the site is the face; that render goes at the top when it arrives.",
+ "post": {
+  "title": "One lake, four seasons",
+  "body": "The front of this site is one painted lake, and every tab is a season. Books is summer, Web is fall, Workshop is winter, Play is spring. Click a tab and the lake turns: about seven seconds, with the swap hidden in the darkest moment, so the change feels like time passing rather than a page loading. This is version two. The first one worked, but it wasn't robust enough to keep building on.\n\nEverything is SVG and code. The trees, the mountains, the water, the moon. There's a night mode with stars and fireflies, and six levels of weather, from drizzle to a tempest and from flurries to a blizzard. Rain drips off the headline and snow settles on it.\n\nThen the visitors. There are 33 kinds of wildlife visit, built from 14 animal shapes plus Marley, who has her own rig: a buck walking out of the trees, a bear on the shore, a wolf howling on winter nights, a fox sniffing at the headline. Some are rare. Some come when you tap the right rock. An eagle dives for a fish, and if you tap the fisherman's boat he sails you to a hidden beach.\n\nEvery view has a link. Add words to the address, like winter, night or blizzard, and the lake opens that way. There are 55 of them in the trigger guide at the bottom of the page.\n\nMost of the work nobody sees. I tested on an iPhone the whole way, and the winter night scene ran at 12 frames a second. Dropping one CSS performance hint, will-change, took it to 56. The first load went from 319 KB to 238. Safari needed its own fix for the SVG filters, and on phones a spyglass replaced the tilt camera. If you've asked your device for less motion, 15 different files listen.\n\nWhat I learned: the scene is the portfolio. Anyone can say they care about detail; a lake that keeps its frame rate in a blizzard on a phone shows it."
+ },
+ "episode": {
+  "title": "One lake, four seasons",
+  "script": "Right, pull up a chair, because this is the big one. The front door. The face of the whole operation.\n\nChristian's website is one painted lake, and every tab on it is a season. Books is summer. Web is fall. Workshop is winter. Play is spring. Click a tab and the lake turns, about seven seconds of it, and the switch happens in the darkest moment so you never see the joins. Like a magician. Like a man who's done this before.\n\nThis is version two, by the way. The first one worked, but it wasn't built to last. So he built it again, properly. That's not notions, that's standards.\n\n***\n\nEvery bit of it is drawn in code. The trees, the mountains, the water, the moon. There's night, with stars and fireflies. And there's weather. Six levels of it. Drizzle, shower, tempest. Flurries, snow, blizzard. A proper Donegal selection. The rain even drips off the big headline, and the snow settles on it. Go hálainn. Beautiful.\n\n***\n\nAnd the visitors! Thirty-three kinds of them. A buck walking out of the trees. A bear on the shore. A wolf howling on a winter's night. A fox sniffing at the headline like he's reading it. And Marley, of course, with her very own rig, because she's the star and she knows it.\n\nSome of them are rare. Some come if you tap the right rock. An eagle dives for a fish. And tap the fisherman's wee boat and he'll sail you away to a hidden beach. A beach. In a portfolio. Sure why wouldn't you.\n\n***\n\nAnd every view has its own link. Put winter and night and blizzard in the address and the lake opens just like that. Fifty-five of them, listed at the bottom of the page.\n\n***\n\nNow here's the bit I'm proudest of, and nobody ever sees it. He tested the whole thing on an iPhone. The winter night was crawling along at twelve frames a second. He found the one wee line slowing it down, took it out, and it flew at fifty-six. He trimmed the first load down by about a quarter. Gave Safari its own fix. And if you've told your phone you'd like less motion, fifteen different files are listening. That's manners, that is.\n\n***\n\nSo here's the lesson. The scene is the portfolio. Anyone can say they care about the detail. A lake that keeps going smooth in a blizzard, on a phone? That shows it. Ar fheabhas. Brilliant.",
+  "audio": null
+ },
+ "questions": [],
+ "consent": "Marley: the family dog, one of the lake's visitors."
+}

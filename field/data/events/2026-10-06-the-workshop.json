@@ -1,0 +1,53 @@
+{
+ "id": "2026-10-06-the-workshop",
+ "title": "Teaching the bench new parts",
+ "date": "2026-10-06",
+ "kind": "make",
+ "place": "The workshop",
+ "status": "draft",
+ "summary": "A case study of the Workshop: a prompt builder for new parts and a tracer that turns a picture into the scene's origami format in under a second.",
+ "trailhead": null,
+ "links": [
+  {
+   "label": "The Workshop",
+   "url": "https://www.christiangehrke.com/catalog/workshop.html"
+  }
+ ],
+ "track": null,
+ "photos": [
+  {
+   "src": "data/photos/2026-10-06-the-workshop/ws-header.mp4",
+   "poster": "data/photos/2026-10-06-the-workshop/ws-header.jpg",
+   "video": true,
+   "ai": false,
+   "caption": "The bench header: a hologram cycling through new animals, the live buck, doe, elk and bear on glowing discs, and Marley asleep.",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": true
+  },
+  {
+   "src": "data/photos/2026-10-06-the-workshop/ws-trace.mp4",
+   "poster": "data/photos/2026-10-06-the-workshop/ws-trace.jpg",
+   "video": true,
+   "ai": false,
+   "caption": "Import & trace: a cast fox traced to 5 colours and 5 paths, 7 KB, in 693 ms, then set next to the doe to check it belongs.",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false
+  }
+ ],
+ "fieldNotes": "Case study of the Workshop page in parts-catalog (workshop.html). Facts from the commit history: step 1 Prompt builds a prompt for 13 kinds of part, 2 styles, a kit sheet or a single piece; step 2 Import & trace is an in-browser port of trace.py (k-means colour reduction, cleanup, Douglas-Peucker simplification); the doe traces to 7 colours in under a second; the recorded fox traced to 5 colours, 5 paths, 7 KB in 693 ms; the kit-sheet output came from a beach trace that failed; step 3 Cut & rig is marked next; bench header built Oct 2: hologram cycling eagle, owl, hawk and squirrel, the live engine's buck, doe, elk and bear on glowing discs, Marley asleep with z's; a soldering iron was removed and the hair colour fixed. In the automaton parable the Workshop is the hands; that render goes at the top when it arrives.",
+ "post": {
+  "title": "Teaching the bench new parts",
+  "body": "The Catalog shows the parts the lake already has. The Workshop is where new ones get made, and it's built around a simple idea: whatever image tool I use, the result should come back in the scene's own format, ready to move.\n\nIt works in steps. Step 1 is a prompt builder. Pick the kind of part (13 of them, from four-legged animals to shoreline pieces), a style, and whether you want one piece or a kit sheet of separate parts. It writes a prompt that asks for flat colours on plain white, so the result traces cleanly. Then generate it anywhere.\n\nStep 2 brings the picture back. The tracer used to be a Python script on my laptop. Now it runs in the browser: it reduces the image to a few colours, cleans up the specks, and simplifies every outline. The doe traces to 7 colours in under a second. The fox in the clip came out as 5 colours and 5 paths, 7 KB, in 693 milliseconds. Then it sits next to an animal from the lake, so you can see straight away whether it belongs.\n\nThe kit-sheet option came from a failure. I traced a beach scene as one picture and got a mess, because a scene isn't one shape. Asking for separate pieces on one sheet fixed it.\n\nStep 3, cut and rig, is next: splitting a traced animal at the joints so it can move like the others.\n\nThe header is the bench itself. A hologram above it cycles through animals that don't exist yet: an eagle, an owl, a hawk, a squirrel. On glowing discs stand the buck, doe, elk and bear from the live engine, and Marley sleeps at the end of the bench. I took out a soldering iron that didn't belong and fixed my hair colour, which the first render got wrong.\n\nWhat I learned: make the way back in the easy part. Generating a picture takes seconds anywhere. Turning it into something the scene can use is the work, so that's what the Workshop does."
+ },
+ "episode": {
+  "title": "Teaching the bench new parts",
+  "script": "Right, pull up a chair. If the Catalog is where the parts live, the Workshop is where new ones are born.\n\nAnd Christian had one rule for it. Make the picture anywhere you like, with whatever tool you like, but when it comes home, it comes home in the lake's own language, ready to move. Grand. Simple. And not one bit easy.\n\n***\n\nSo it goes in steps. Step one, he'll write your prompt for you. Pick what you're making, thirteen kinds of it, from a four-legged animal to a bit of shoreline. Pick a style. One piece, or a whole kit of pieces on one sheet. And the prompt asks for flat colours on plain white, so it'll trace clean. Thinking two steps ahead, that's him all over.\n\n***\n\nStep two, bring it home. Now the tracer used to be a wee script on his laptop. Now it's right there in the browser. It boils the picture down to a few colours, sweeps up the crumbs, and tidies every outline. The doe comes out in seven colours in under a second. The fox you see in the clip? Five colours, five shapes, seven kilobytes, and done in under seven tenths of a second. Holy God. I can't find my keys that fast.\n\nThen it stands your new animal next to one from the lake, so you can see if she fits in with the family. Or if she's a bit of a blow-in. A blow-in, for anyone not from home, is someone not from round here.\n\n***\n\nAnd here's what I love. The kit sheet came out of a mistake. He tried tracing a whole beach scene as one picture, and it was a mess. A scene isn't one shape. So now you ask for the pieces separate. Turning a mess into a feature? Fair play.\n\nStep three, cutting the animals at the joints so they can move, that's coming next.\n\n***\n\nThen there's the header. A workbench, with a hologram cycling through animals still to come. An eagle, an owl, a hawk, a squirrel. The buck and the doe and the elk and the bear standing on glowing discs. And Marley, asleep at the end of the bench, little z's floating up. Living the dream, that dog.\n\nHe even took out a soldering iron that had no business being there. And fixed the colour of his own hair, which the first try got wrong. Vanity? Ah no. Accuracy.\n\n***\n\nSo here's the lesson. Make the way back in the easy part. A picture takes seconds. Making it belong is the work. Maith thú, Christian. Good on you.",
+  "audio": null
+ },
+ "questions": [],
+ "consent": "Marley: the family dog, asleep in the header. Christian: drawn at the bench."
+}
