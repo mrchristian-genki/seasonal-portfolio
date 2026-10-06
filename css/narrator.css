@@ -1,0 +1,17 @@
+/* THE NARRATOR (js/narrator.js): the robot sits at the left of the Listen bar. Its torso fills the bar's lower
+   left, sitting on the bar's bottom edge like a desk; its head stands up out of the top. --nb is its width. */
+section.listen.has-nb{--nb:210px;position:relative;min-height:calc(var(--nb) * .5208 + 34px);padding-left:calc(var(--nb) + 18px);margin-top:calc(var(--nb) * .36 + 22px);align-content:center}
+.nb{position:absolute;left:0;bottom:0;width:var(--nb);height:calc(var(--nb) * .5208);pointer-events:none}
+.nb-rise{position:absolute;inset:0;transform:translateY(14%);transition:transform .7s cubic-bezier(.3,1.35,.5,1)}
+.nb.on .nb-rise{transform:none}
+.nb-body{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:0 0 0 16px;background:#0f4d47;
+  -webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent)}   /* the desk fades out to the right */
+/* the head: its neck goes into the torso's collar (13% down the torso), its width 42% of the robot's */
+.nb-head{position:absolute;left:29%;width:42%;bottom:87%;aspect-ratio:300/375;transform-origin:50% 92%;z-index:1;
+  filter:drop-shadow(0 3px 5px rgba(0,0,0,.35))}
+.nb-head img{position:absolute;inset:0;width:100%;height:100%;display:block}
+.nb-jaw{will-change:transform}
+.nb-lids{opacity:0}
+.nb.blink .nb-lids{opacity:1}
+@media (max-width:560px){section.listen.has-nb{--nb:150px;padding-left:calc(var(--nb) + 12px)}}
+@media (prefers-reduced-motion:reduce){.nb-rise{transition:none;transform:none}}
