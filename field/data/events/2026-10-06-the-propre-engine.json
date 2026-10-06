@@ -4,7 +4,7 @@
  "date": "2026-10-06",
  "kind": "make",
  "place": "The workshop",
- "status": "draft",
+ "status": "published",
  "summary": "A case study of ProPre Engine, the browser tool that takes a coloring book from first prompt to print-ready cover, and the project that brought me back to web development.",
  "trailhead": null,
  "links": [
@@ -87,7 +87,7 @@
  "episode": {
   "title": "The press in the browser",
   "script": "Right, pull up a chair, because this is where it all started.\n\nChristian had been away from web development for a good long while. And what brought him back? Coloring books. Adult coloring books, the lovely detailed kind. Go hálainn. Beautiful.\n\nNow every book is a mountain of jobs. Forty illustrations, each needing its own prompt. A listing with titles and keywords. The inside pages built just so for printing. A cover that wraps round the whole book, with a spine that changes width depending on how many pages are in it. And another cover again for the ebook. Most people would just suffer through it. Not this man.\n\nAnd here's the bit I love. He says a coloring book is beauty broken right down to its bones. Every page starts as a gorgeous picture, crafted, nearly, into the prompt. Then it's taken apart, like light through a prism, till there's nothing left but black and white lines. And then you come along with your markers, and you build the beauty back up yourself. Now isn't that a lovely way to look at it. Tá sé go hálainn. It's beautiful.\n\n***\n\nOn the twentieth of May he wrote down what he wanted. Two days later, eight little prototypes. By the twenty-fourth, a working tool. And within the week, a full set of proper documents, specs and a user manual and all. Holy God. I've had kettles take longer to boil.\n\nThat same week he split the whole thing into tidy modules, because one big file had got too big to change safely. Sound man. That's the kind of sense that saves you a fortune later.\n\n***\n\nHe called it ProPre. Short for pre-press. Five tabs. One writes the prompts for the pictures. One writes the whole listing in one go, titles, keywords, the lot. One builds the inside of the book. One builds the cover and works out the spine from the page count, so the maths is never wrong. And one makes the cover for the ebook, with a wee live preview so you can see it as you go.\n\nAnd every step has a rule built in that he learned the hard way. Keep the words inside the safe edge. Make the art fill right to the trim. Never stretch a cover. Fair play. Every rule in there is a mistake he only had to make the once.\n\n***\n\nThen the books needed a home. So he built a library. A hundred and one titles. Eight in print, ninety-three on the way. Every card shows the line art, and you tap it, and it fills with colour. Like magic. Like a wee miracle on your phone.\n\n***\n\nAnd this week, he tidied the whole lot into a proper home of its own, and locked the clever bits behind the Studio's door, where they belong.\n\nSo here's the lesson. Build the tool before the hundredth book, not after. That's not notions. That's wisdom. Ar fheabhas. Brilliant.",
-  "audio": null
+  "audio": "data/audio/2026-10-06-the-propre-engine.mp3"
  },
  "questions": [],
  "consent": "No people appear. The covers and pages are Christian's own books."
