@@ -124,7 +124,8 @@ through her wardrobe. When drafting, pick one:
 - **Category looks** (Christian, Oct 6, 2026): a whole category can wear a look, set in the Studio's look panel
   (case studies wear `grad-cap`, her brass mortarboard). A Note in a category with a look already has it: answer
   none unless this Note clearly calls for its own, which then wins over the category's. Which look shows: the Note's
-  own, else its category's, else the holiday look.
+  own, else its category's, else the holiday look. When a Note's categories give it two different looks,
+  the editor picks one in the Studio (it becomes the Note's own); unpicked, she wears the holiday look.
 - **none:** nothing in the Note calls for one. This is the usual answer; a look is a wink, not a costume per Note.
 
 If the entry already has a narratorLook, keep it (fit existing, the same name) unless the instruction asks for a

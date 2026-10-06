@@ -16,7 +16,7 @@
    - Now and then it blinks. With reduced motion it stays still, and only the mouth moves. */
 (function () {
   'use strict';
-  var A = '/assets/narrator/', V = '?v=20', DROP = 0.0448;   // the chin plate's drop, as a share of the head layer's height (the side plates go half as far)
+  var A = '/assets/narrator/', V = '?v=21', DROP = 0.0448;   // the chin plate's drop, as a share of the head layer's height (the side plates go half as far)
   var D = 193 / 24, IDLE = 0, GESTURES = [{ f: 1, r: 2 }, { f: 3, r: 4 }];   // the parts of narrator.mp4: forward and backwards copies
   // the hints, parts 5 to 7, with what the head does when (seconds into the part): look toward Play, wink, the bulb glows
   var HINTS = [
@@ -59,14 +59,16 @@
   }
   // a Note's own look (data-look on its Listen bar, picked when it was drafted: a bike helmet for a ride) is what she
   // wears there, once it has been made, whatever the address says (Christian, Oct 6, 2026)
-  // ...and failing that, the look of the first of its categories that has one (looks.json "categories": every case
-  // study in her mortarboard). Which look shows: the Note's own, else its category's, else the holiday look.
+  // ...and failing that, the look its categories give it (looks.json "categories": every case study in her
+  // mortarboard). Which look shows: the Note's own, else its category's, else the holiday look.
   function own(nb) {
     var bar = nb.closest('section.listen'); if (!bar) return null;
     var n = bar.getAttribute('data-look'); if (n && ALL[n]) return ALL[n];
-    var cats = (bar.getAttribute('data-cats') || '').split(' ');
-    for (var i = 0; i < cats.length; i++) if (CATS[cats[i]] && ALL[CATS[cats[i]]]) return ALL[CATS[cats[i]]];
-    return null;
+    // two categories with different looks and none picked for the Note: the holiday look (Christian, Oct 6, 2026:
+    // the editor picks one in the Studio while drafting)
+    var cats = (bar.getAttribute('data-cats') || '').split(' '), found = [];
+    cats.forEach(function (c) { var l = CATS[c] && ALL[CATS[c]]; if (l && found.indexOf(l) < 0) found.push(l); });
+    return found.length === 1 ? found[0] : null;
   }
   function wear(nb) { looks.then(function (l) { put(nb, own(nb) || l); }); }   // a Note's own look always wins
   // a click on her head: the next look in her wardrobe loads, then fades in over the old one while her head gives a
