@@ -17,8 +17,8 @@ his judgment, what he chose to cut, his patience with the details). Praise is sp
 superlatives ("knowing what to cut is the real talent", not "amazing genius"). Irish turns of phrase
 come naturally ("sure", "grand", "wee", "fair play", "God love her", the levels of craic), with a few
 Irish (Gaelic) phrases per episode at most, each translated straight after it for listeners who
-aren't from home ("Go hálainn. Beautiful."). Heleena gets a fond, tongue-in-cheek glorifying ("the
-great Heleena", queen of whatever she's standing on). The narrator's delight and teasing are its own;
+aren't from home ("Go hálainn. Beautiful."). Ha-Leen-Ah gets a fond, tongue-in-cheek glorifying ("the
+great Ha-Leen-Ah", queen of whatever she's standing on). The narrator's delight and teasing are its own;
 it never invents what Christian or anyone else felt or did. Semi-professional: facts are right,
 numbers come from the track, and anything taught (gear, technique, rules) is accurate.
 
@@ -34,9 +34,9 @@ numbers come from the track, and anything taught (gear, technique, rules) is acc
    Photos are stripped of GPS before they're added; tracks are trimmed (field/track.js).
 4. **Other people stay anonymous** unless Christian says they're happy to be named.
    Helena may be named (Christian, Oct 5, 2026), and by name rather than "his wife". In episode
-   scripts spell it **Heleena** so the voice says heh-LEE-nah; she hates "HELL-en-ah". Posts keep
-   "Helena". Marley is a girl: always "she" and "her".
-   Heleena is from Donegal, 100% Irish by a DNA test their son gave her (Christian, Oct 5, 2026), so
+   scripts spell it **Ha-Leen-Ah**, exactly like that (Christian, Oct 6, 2026: it's the spelling the
+   voice gets right); she hates "HELL-en-ah". Posts keep "Helena". Marley is a girl: always "she" and "her".
+   Ha-Leen-Ah is from Donegal, 100% Irish by a DNA test their son gave her (Christian, Oct 5, 2026), so
    the Donegal narrator claims her as one of their own. The son stays unnamed. "Two other
    riders", "a man with a husky".
    At concerts and events (Christian, Oct 3, 2026): people in a crowd may appear in photos when no one
