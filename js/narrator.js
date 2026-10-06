@@ -16,7 +16,7 @@
    - Now and then it blinks. With reduced motion it stays still, and only the mouth moves. */
 (function () {
   'use strict';
-  var A = '/assets/narrator/', V = '?v=21', DROP = 0.0448;   // the chin plate's drop, as a share of the head layer's height (the side plates go half as far)
+  var A = '/assets/narrator/', V = '?v=22', DROP = 0.0448;   // the chin plate's drop, as a share of the head layer's height (the side plates go half as far)
   var D = 193 / 24, IDLE = 0, GESTURES = [{ f: 1, r: 2 }, { f: 3, r: 4 }];   // the parts of narrator.mp4: forward and backwards copies
   // the hints, parts 5 to 7, with what the head does when (seconds into the part): look toward Play, wink, the bulb glows
   var HINTS = [
@@ -36,10 +36,11 @@
   // covers the antenna (its glow stays off).
   var LOOKRX = /(^|[?&+,;\s])look[-=]([a-z0-9-]+)/i;
   function urlLook() { var m = LOOKRX.exec(decodeURIComponent(location.search)); return m ? m[2].toLowerCase() : null; }
-  var WARDROBE = [], ALL = {}, CATS = {}, CURLS = A + 'head-base.webp' + V;
+  var WARDROBE = [], ALL = {}, CATS = {}, BDS = {}, CATBD = {}, CURLS = A + 'head-base.webp' + V;
   var looks = fetch(A + 'looks.json' + V, { cache: 'no-cache' }).then(function (r) { return r.ok ? r.json() : { looks: [] }; }).catch(function () { return { looks: [] }; }).then(function (j) {
     var list = (j && j.looks) || [], d = new Date();
     ALL = { curls: { name: 'curls' } }; list.forEach(function (l) { ALL[l.name] = l; }); CATS = (j && j.categories) || {};
+    ((j && j.backdrops) || []).forEach(function (b) { BDS[b.name] = b; }); CATBD = (j && j.categoryBackdrops) || {};
     var hol = list.filter(function (l) { return l.to; }).sort(function (a, b) { return a.to < b.to ? -1 : 1; });
     var mmdd = ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
     var up = hol.filter(function (l) { return l.to >= mmdd; })[0] || hol[0];   // after the year's last holiday, the first again
@@ -93,6 +94,92 @@
   }
   var ctx = null;
 
+  // HER BACKDROP (looks.json "backdrops", made in the Studio): a softly blurred scene behind the whole bar, a library for
+  // a case study, a bike shop for a ride. Chosen like her look: the Note's own (data-backdrop), else the one its
+  // categories give it (a single one; two different and none picked: none), else the bar's plain teal.
+  function ownBd(bar) {
+    var n = bar.getAttribute('data-backdrop'); if (n && BDS[n]) return BDS[n];
+    var found = [];
+    (bar.getAttribute('data-cats') || '').split(' ').forEach(function (c) { var b = CATBD[c] && BDS[CATBD[c]]; if (b && found.indexOf(b) < 0) found.push(b); });
+    return found.length === 1 ? found[0] : null;
+  }
+  function backdrop(bar, nb) {
+    looks.then(function () {
+      var b = ownBd(bar); if (!b || bar.querySelector('.nb-bd')) return;
+      var w = document.createElement('div'), i = document.createElement('i'); w.className = 'nb-bd'; w.setAttribute('aria-hidden', 'true');
+      i.style.backgroundImage = 'url(' + A + 'backdrops/' + b.file + V + (b.v ? '.' + b.v : '') + ')';
+      w.appendChild(i); bar.insertBefore(w, bar.firstChild); bar.classList.add('has-bd');
+      keyer(nb);   // over a scene, her body's teal comes out
+    });
+  }
+  // her body's video is on the bar's teal (#0f4d47); over a backdrop a little WebGL pass keys the teal out (alpha from
+  // the distance to it, the teal unmixed from the edges) and draws her into a canvas over the hidden video
+  var LQ = 'data:image/webp;base64,UklGRkICAABXRUJQVlA4IDYCAAAQDACdASpQACoAPtFYokyoJSMiLNVeMQAaCWgAw+YA4kBk92VqC4eOuJlf3d12P2s6XpNnAgTMjtM0jYiHYqw723yjPXYlHTXQlKA8hUYkNmhSE/0Qpz+g1LFEGJGN62W5Abmj8R/CRJgA/vFMZ7uXjf6tfJimiPp9Xd+v5ftN6dM+nqMruM0k8Rd15brer/mfZFYKwUL7Y/V0qqURX0JbHHmdgnE7OcN3RuQLSrYWwonNMCIvDcxvBJuJzMGyVMctllAKSU2ZA7R1eR97s1EkBFtglwMy+aPfms7wpE1cd1UpNR6UOBiRYrLKebJ/t7b7XA0GPo6UKTeATckWjW0YXZkV4emkNEzUc6Hs/zahGoc/l3ih72diRP28u2ejCnu63zEM+3EV4g0hcT+Ad8w7TlXDlDpo/2HFT5zMKEuOylM6DtLJ8ZGPNX/3RB/ZRGfmQt6cCXOiGSLSrwprOu69D68gbegDHgC3loSkqFBkZ6+xE5RQQ9LUbl9CN4U10UsI/cd4jGROXrmGrFrzJD1m9cfrFoWCSU9Mm7PwTzr/VftpXlk8zinxjzh1HG1wKC351k+V3MbTGItOETV0UBQCOgg4ib0LLHyVALtB31bHafPfTHkHIBt1AAFpug4rdEhWDYftlQmzaOFXyaPPTHDg+WpqffWpPWVZKU83vzox2dQtRdz248m6nEv4Ra6FsC6vx1ZZfjlfaiX2yuHELOIHMXKioqUAmExZGGMpD1o3vtzX0TGQAA==';
+  function keyer(nb) {
+    var v = nb.querySelector('.nb-body'), c = document.createElement('canvas'); c.width = 576; c.height = 300; c.className = 'nb-keyed';
+    var gl = c.getContext('webgl', { premultipliedAlpha: true, alpha: true }); if (!gl) return;
+    function sh(t, src) { var o = gl.createShader(t); gl.shaderSource(o, src); gl.compileShader(o); return o; }
+    var pr = gl.createProgram();
+    gl.attachShader(pr, sh(gl.VERTEX_SHADER, 'attribute vec2 p;varying vec2 v;void main(){v=vec2(p.x*.5+.5,.5-p.y*.5);gl_Position=vec4(p,0.,1.);}'));
+    gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, 'precision mediump float;uniform sampler2D t;varying vec2 v;const vec3 T=vec3(15.,77.,71.)/255.;' +
+      'void main(){vec3 c=texture2D(t,v).rgb;float a=clamp((distance(c,T)*255.-14.)/40.,0.,1.);vec3 o=clamp((c-(1.-a)*T)/max(a,.001),0.,1.);gl_FragColor=vec4(o*a,a);}'));
+    gl.linkProgram(pr); if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) return;
+    gl.useProgram(pr);
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer()); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+    var loc = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    gl.bindTexture(gl.TEXTURE_2D, gl.createTexture());
+    [gl.TEXTURE_WRAP_S, gl.TEXTURE_WRAP_T].forEach(function (k) { gl.texParameteri(gl.TEXTURE_2D, k, gl.CLAMP_TO_EDGE); });
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    var rest = new Image(), lq = new Image(), last = null;
+    rest.src = A + 'rest.jpg' + V; lq.src = LQ;
+    function draw(src) { try { gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, src); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); } catch (e) {} }
+    v.parentNode.insertBefore(c, v.nextSibling); nb.classList.add('nb-keying');
+    (function tick() {
+      if (!c.isConnected) return;
+      // the video's frame once it has one; until then the rest pose, or its tiny copy
+      if (v.readyState >= 2) { if (last !== v.currentTime) { last = v.currentTime; draw(v); } }
+      else if (rest.complete && rest.naturalWidth) { if (last !== 'rest') { last = 'rest'; draw(rest); } }
+      else if (lq.complete && lq.naturalWidth && last !== 'lq') { last = 'lq'; draw(lq); }
+      requestAnimationFrame(tick);
+    })();
+  }
+
+  // THE PLAYER: the bar's title and her name sit on a glass card with its own controls (play, a scrubber with the
+  // times, 15 seconds back and on), over the plain audio element, which stays for the sound and the narrator
+  var IC = {
+    play: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.4-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z" fill="currentColor"/></svg>',
+    pause: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="5" width="4" height="14" rx="1.2" fill="currentColor"/><rect x="13.5" y="5" width="4" height="14" rx="1.2" fill="currentColor"/></svg>',
+    back: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.6-5.9M4 4v4h4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><text x="12" y="15.2" text-anchor="middle" font-size="7" font-weight="700" fill="currentColor">15</text></svg>',
+    fwd: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.6-5.9M20 4v4h-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><text x="12" y="15.2" text-anchor="middle" font-size="7" font-weight="700" fill="currentColor">15</text></svg>' };
+  function clock(t) { t = Math.max(0, Math.round(t || 0)); return Math.floor(t / 60) + ':' + ('0' + t % 60).slice(-2); }
+  function player(bar, audio) {
+    if (bar.querySelector('.nb-glass')) return;
+    var g = document.createElement('div'); g.className = 'nb-glass';
+    [].slice.call(bar.children).forEach(function (k) { if (!k.matches('.nb,.nb-plate,.nb-bd')) g.appendChild(k); });
+    var p = document.createElement('div'); p.className = 'nb-player';
+    p.innerHTML = '<div class="nb-row"><span class="nb-t0">0:00</span><input class="nb-seek" type="range" min="0" max="1000" step="1" value="0" aria-label="Where in the episode"><span class="nb-t1">' +
+      (/(\d+:\d\d)/.exec((bar.querySelector('.listen-label') || {}).textContent || '') || [, '0:00'])[1] + '</span></div>' +
+      '<div class="nb-ctl"><button type="button" class="nb-b15" aria-label="Back 15 seconds">' + IC.back + '</button><button type="button" class="nb-pp" aria-label="Play">' + IC.play + '</button>' +
+      '<button type="button" class="nb-f15" aria-label="On 15 seconds">' + IC.fwd + '</button></div>';
+    g.appendChild(p); bar.appendChild(g);
+    audio.classList.add('nb-audio');   // its own controls stay on but out of sight (an audio without them can't be shown at all)
+    var seek = p.querySelector('.nb-seek'), pp = p.querySelector('.nb-pp'), t0 = p.querySelector('.nb-t0'), t1 = p.querySelector('.nb-t1'), dragging = false;
+    function show() {
+      var d = audio.duration || 0, f = d ? audio.currentTime / d : 0;
+      if (!dragging) seek.value = Math.round(f * 1000);
+      seek.style.setProperty('--p', (seek.value / 10) + '%');
+      t0.textContent = clock(audio.currentTime); if (d && isFinite(d)) t1.textContent = clock(d);
+      var on = !audio.paused; pp.innerHTML = on ? IC.pause : IC.play; pp.setAttribute('aria-label', on ? 'Pause' : 'Play'); g.classList.toggle('nb-on', on);
+    }
+    ['timeupdate', 'play', 'pause', 'loadedmetadata', 'durationchange', 'ended'].forEach(function (e) { audio.addEventListener(e, show); });
+    pp.addEventListener('click', function () { if (audio.paused) audio.play().catch(function () {}); else audio.pause(); });
+    p.querySelector('.nb-b15').addEventListener('click', function () { audio.currentTime = Math.max(0, audio.currentTime - 15); });
+    p.querySelector('.nb-f15').addEventListener('click', function () { audio.currentTime = Math.min(audio.duration || 0, audio.currentTime + 15); });
+    seek.addEventListener('input', function () { dragging = true; seek.style.setProperty('--p', (seek.value / 10) + '%'); if (audio.duration) t0.textContent = clock(seek.value / 1000 * audio.duration); });
+    seek.addEventListener('change', function () { dragging = false; if (audio.duration) audio.currentTime = seek.value / 1000 * audio.duration; show(); });
+    show();
+  }
+
   function build(bar) {
     var audio = bar.querySelector('audio');
     if (!audio || bar.querySelector('.nb')) return;
@@ -106,7 +193,7 @@
     if (!bar.querySelector('.nb-plate')) { var pl = document.createElement('div'); pl.className = 'nb-plate'; pl.innerHTML = '<b>GlazyArray</b><small>Narrator \u00b7 Field Notes</small>'; bar.appendChild(pl); }
     var lbl = bar.querySelector('.listen-label');   // her name, under the Listen label: "Narrated by GlazyArray"
     if (lbl && !bar.querySelector('.nb-by')) { var by = document.createElement('span'); by.className = 'nb-by'; by.textContent = 'Narrated by GlazyArray'; lbl.parentNode.appendChild(by); }
-    wear(nb);
+    wear(nb); backdrop(bar, nb); player(bar, audio);
     nb.querySelector('.nb-hit').addEventListener('click', function () { restyle(nb); });
     var body = nb.querySelector('.nb-body'), head = nb.querySelector('.nb-head'), jaw = nb.querySelector('.nb-jaw'), jawS = nb.querySelector('.nb-jaw-s');
     var talking = false, an = null, buf = null, level = 0, raf = 0, plan = null, lastG = -1;

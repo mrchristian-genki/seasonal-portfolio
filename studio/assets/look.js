@@ -76,5 +76,51 @@
     if (!window.ClipboardItem || !navigator.clipboard || !navigator.clipboard.write) return Promise.reject(new Error('This browser can\'t copy images. Download it instead.'));
     return navigator.clipboard.write([new ClipboardItem({ 'image/png': fetch(A + 'kit/her-template.png').then(function (r) { return r.blob(); }) })]);
   }
-  window.GALook = { make: make, copyTemplate: copyTemplate };
+  // ---------- HER BACKDROPS: the scene behind the Listen bar, shown softly blurred (narrator.css .nb-bd). The prompt
+  // asks for a soft-focus room to begin with; the site blurs it a little more and dims it under the glass card ----------
+  var BDW = 1344, BDH = 576;   // 21:9, the backdrop template's shape
+  function bdPrompt(scene) {
+    scene = String(scene || '').trim().replace(/\.$/, '') || 'a cozy, warmly lit room';
+    return 'A wide 21:9 photograph of ' + scene + '. Shot like a cinematic film still with a very shallow depth of field: ' +
+      'the whole scene softly out of focus, with gentle bokeh and nothing sharp. Warm, low, late-afternoon light; calm, tidy ' +
+      'and uncluttered. Straight-on at eye level, as if seen from behind a desk. Use the attached template for the framing ' +
+      '(21:9); the image is shown as a wide strip, so keep the middle band the most interesting. Keep the left quarter quiet ' +
+      'and simple (a small brass robot sits there at a desk) and the right two thirds evenly lit and a little darker (white ' +
+      'text and a music player sit over it). No people, no animals, no text, signs, logos or brands. Natural colors, nothing neon.';
+  }
+  // a render of any shape, cropped to fill 21:9 and made small (it's shown blurred), with a preview of it in the bar
+  function backdrop(file) {
+    var url = URL.createObjectURL(file);
+    return img(url).then(function (src) {
+      URL.revokeObjectURL(url);
+      var c = canvas(BDW, BDH), g = c.getContext('2d'), sw = src.naturalWidth, sh = src.naturalHeight, k = Math.max(BDW / sw, BDH / sh);
+      g.imageSmoothingQuality = 'high'; g.drawImage(src, (BDW - sw * k) / 2, (BDH - sh * k) / 2, sw * k, sh * k);
+      var warn = Math.abs(sw / sh - BDW / BDH) > 0.15 ? 'It isn\'t 21:9 like the template, so it was cropped to fit.' : '';
+      return new Promise(function (ok) { c.toBlob(ok, 'image/webp', 0.82); }).then(function (b) {
+        if (b && b.type === 'image/webp') return b;
+        return new Promise(function (ok) { c.toBlob(ok, 'image/jpeg', 0.85); });
+      }).then(function (blob) { return { blob: blob, ext: blob.type === 'image/webp' ? 'webp' : 'jpg', preview: bdPreview(c), warn: warn }; });
+    });
+  }
+  // as the bar shows it: a wide strip, blurred and dimmed, her at the left and a glass card on the right
+  function bdPreview(c) {
+    var W = 900, H = 230, p = canvas(W, H), g = p.getContext('2d'), k = Math.max(W / BDW, H / BDH);
+    g.filter = 'blur(4px) saturate(.95) brightness(.7)';
+    g.drawImage(c, (W - BDW * k) / 2 - 8, (H - BDH * k) / 2 - 8, BDW * k + 16, BDH * k + 16);
+    g.filter = 'none';
+    var r = function (x, y, w, h, rad) { g.beginPath(); g.moveTo(x + rad, y); g.arcTo(x + w, y, x + w, y + h, rad); g.arcTo(x + w, y + h, x, y + h, rad); g.arcTo(x, y + h, x, y, rad); g.arcTo(x, y, x + w, y, rad); g.closePath(); };
+    g.fillStyle = 'rgba(40,44,44,.45)'; r(250, 22, 626, 150, 18); g.fill(); g.strokeStyle = 'rgba(240,240,240,.25)'; g.stroke();
+    g.fillStyle = '#fff'; g.font = '700 22px system-ui,sans-serif'; g.fillText('The Note’s title', 274, 70);
+    g.fillStyle = '#9fd8d0'; g.font = '600 14px system-ui,sans-serif'; g.fillText('Narrated by GlazyArray', 274, 96);
+    g.fillStyle = 'rgba(255,255,255,.3)'; g.fillRect(274, 124, 570, 5);
+    load().then(function (P) { g.drawImage(P[0], 10, 18, 190, 133); });   // her head, for scale
+    var d = new Image(); d.onload = function () { for (var x = 0; x < W; x += d.width * 16 / d.height) g.drawImage(d, x, H - 16, d.width * 16 / d.height, 16); }; d.src = A + 'desk.jpg';
+    return p;
+  }
+  function copyImage(url) {
+    if (!window.ClipboardItem || !navigator.clipboard || !navigator.clipboard.write) return Promise.reject(new Error('This browser can\'t copy images. Download it instead.'));
+    return navigator.clipboard.write([new ClipboardItem({ 'image/png': fetch(url).then(function (r) { return r.blob(); }) })]);
+  }
+  window.GALook = { make: make, copyTemplate: copyTemplate, bdPrompt: bdPrompt, backdrop: backdrop, copyImage: copyImage,
+    BD_TEMPLATE: A + 'kit/backdrop-template.png', BD_GUIDE: A + 'kit/backdrop-guide.jpg' };
 })();

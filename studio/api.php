@@ -87,26 +87,68 @@ function set_review(string $id, ?array $r): void {
 }
 const LOOKS_JSON = 'assets/narrator/looks.json';
 /** looks.json the way it's kept: one look per line. */
-function looks_json(array $list, array $cats = []): string
+function looks_json(array $list, array $cats = [], array $bds = [], array $bcats = []): string
 {
     $line = fn(array $l) => '{ ' . implode(', ', array_map(fn($k) => json_encode($k) . ': ' . json_encode($l[$k], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), array_keys($l))) . ' }';
     $out = "{\n \"looks\": [\n  " . implode(",\n  ", array_map($line, $list)) . "\n ]";
     // the looks given to whole categories (Play's filter tags: ride, case-study, with-marley...), one per line
-    if ($cats) { ksort($cats); $out .= ",\n \"categories\": {\n  " . implode(",\n  ", array_map(fn($k) => json_encode((string) $k) . ': ' . json_encode($cats[$k]), array_keys($cats))) . "\n }"; }
+    $map = function (string $key, array $m): string {
+        if (!$m) return '';
+        ksort($m);
+        return ",\n \"$key\": {\n  " . implode(",\n  ", array_map(fn($k) => json_encode((string) $k) . ': ' . json_encode($m[$k]), array_keys($m))) . "\n }";
+    };
+    $out .= $map('categories', $cats);
+    // her backdrops and the ones whole categories have, the same way
+    if ($bds) $out .= ",\n \"backdrops\": [\n  " . implode(",\n  ", array_map($line, $bds)) . "\n ]";
+    $out .= $map('categoryBackdrops', $bcats);
     return $out . "\n}\n";
 }
 /** GlazyArray's looks (Studio, "GlazyArray's look" and Categories), all in looks.json, written once into $files: a Note
  * look taken off the site ($rl), a new or replaced look ($nl: name, ext, sha of an uploaded image, about, bulb), and the
  * looks given to whole categories ($cl: category => look, '' for none). Holiday looks and hair styles are never
  * replaced or removed from here. */
-function apply_looks(GitHub $gh, array &$files, string $rl, $nl, $cl): void
+function apply_looks(GitHub $gh, array &$files, array $body): void
 {
+    $rl = (string) ($body['removeLook'] ?? ''); $nl = $body['newLook'] ?? null; $cl = $body['categoryLooks'] ?? null;
+    $rb = (string) ($body['removeBackdrop'] ?? ''); $nb = $body['newBackdrop'] ?? null; $cb = $body['categoryBackdrops'] ?? null;
     // GlazyArray's looks (Studio, "GlazyArray's look"), all in looks.json, written once: a Note look taken off the
     // site, a new or replaced Note look, and the looks given to whole categories. Holiday looks and hair styles
     // are never replaced or removed from here.
-    if ($rl !== '' || is_array($nl) || is_array($cl)) {
+    if ($rl !== '' || is_array($nl) || is_array($cl) || $rb !== '' || is_array($nb) || is_array($cb)) {
         $lj = json_decode($gh->read(LOOKS_JSON) ?? '{"looks":[]}', true);
         $list = array_values((array) ($lj['looks'] ?? [])); $cats = (array) ($lj['categories'] ?? []);
+        $bds = array_values((array) ($lj['backdrops'] ?? [])); $bcats = (array) ($lj['categoryBackdrops'] ?? []);
+        // her backdrops: the scene behind the Listen bar (assets/narrator/backdrops/<name>.webp), the same way
+        if ($rb !== '') {
+            if (!preg_match('/^[a-z0-9-]{1,40}$/', $rb)) json_fail('Bad backdrop.');
+            foreach ($bds as $k => $b) if (($b['name'] ?? '') === $rb) {
+                if (preg_match('/^[a-z0-9-]{1,40}\.(webp|png|jpg)$/', (string) ($b['file'] ?? ''))) $files['assets/narrator/backdrops/' . $b['file']] = null;
+                unset($bds[$k]);
+            }
+            $bcats = array_filter($bcats, fn($n) => $n !== $rb);
+        }
+        if (is_array($nb)) {
+            $name = (string) ($nb['name'] ?? ''); $ext = (string) ($nb['ext'] ?? ''); $bsha = (string) ($nb['sha'] ?? '');
+            if (!preg_match('/^[a-z0-9-]{1,40}$/', $name) || !in_array($ext, ['webp', 'png', 'jpg'], true) || !preg_match('/^[0-9a-f]{40}$/', $bsha)) json_fail('Bad backdrop.');
+            foreach ($bds as $k => $b) if (($b['name'] ?? '') === $name) {
+                if (($b['file'] ?? '') !== "$name.$ext" && preg_match('/^[a-z0-9-]{1,40}\.(webp|png|jpg)$/', (string) ($b['file'] ?? ''))) $files['assets/narrator/backdrops/' . $b['file']] = null;
+                unset($bds[$k]);
+            }
+            $bd = ['name' => $name, 'file' => "$name.$ext", 'about' => mb_substr(trim((string) ($nb['about'] ?? '')), 0, 120), 'v' => base_convert((string) time(), 10, 36)];
+            $scene = mb_substr(trim((string) ($nb['scene'] ?? '')), 0, 400); if ($scene !== '') $bd['scene'] = $scene;
+            $bds[] = $bd;
+            $files["assets/narrator/backdrops/$name.$ext"] = ['sha' => $bsha];
+        }
+        if (is_array($cb)) {
+            $bnames = array_map(fn($b) => (string) ($b['name'] ?? ''), $bds);
+            foreach ($cb as $cat => $b) {
+                $cat = (string) $cat; $b = (string) $b;
+                if (!preg_match('/^[a-z0-9-]{1,40}$/', $cat) || preg_match('/^\d{4}$/', $cat)) json_fail('Bad category.');
+                if ($b === '') { unset($bcats[$cat]); continue; }
+                if (!in_array($b, $bnames, true)) json_fail("There's no backdrop called \"$b\" yet. Make it first, then give it to the category.");
+                $bcats[$cat] = $b;
+            }
+        }
         $fixed = fn(array $l) => isset($l['to']) || !empty($l['rotate']);
         if ($rl !== '') {
             if (!preg_match('/^[a-z0-9-]{1,40}$/', $rl)) json_fail('Bad look.');
@@ -143,7 +185,7 @@ function apply_looks(GitHub $gh, array &$files, string $rl, $nl, $cl): void
                 $cats[$cat] = $look;
             }
         }
-        $files[LOOKS_JSON] = ['text' => looks_json(array_values($list), $cats)];
+        $files[LOOKS_JSON] = ['text' => looks_json(array_values($list), $cats, array_values($bds), $bcats)];
     }
 }
 function owner_only(): void { if (!studio_is_owner()) json_fail('Only the owner can do that.', 403); }
@@ -227,8 +269,8 @@ try {
         case 'POST lookblob':
             $bytes = $raw ?? base64_decode((string) ($body['b64'] ?? ''), true);
             $webp = is_string($bytes) && substr($bytes, 0, 4) === 'RIFF' && substr($bytes, 8, 4) === 'WEBP';
-            $png = is_string($bytes) && substr($bytes, 0, 8) === "\x89PNG\r\n\x1a\n";
-            if (!$webp && !$png || strlen($bytes) > 1_500_000) json_fail("That look isn't a usable image.");
+            $png = is_string($bytes) && substr($bytes, 0, 8) === "\x89PNG\r\n\x1a\n"; $jpg = is_string($bytes) && substr($bytes, 0, 3) === "\xFF\xD8\xFF";
+            if (!$webp && !$png && !$jpg || strlen($bytes) > 1_500_000) json_fail("That isn't a usable image.");
             json_out(['sha' => $gh->blob(base64_encode($bytes))]);
 
         // The episode's MP3 comes up in pieces (so no request is large), gathered in a private file on
@@ -299,7 +341,7 @@ try {
             } elseif (!empty($body['removeAudio']) && $audio === null) {
                 $files[AUDIO . "/$id.mp3"] = null;
             }
-            apply_looks($gh, $files, (string) ($body['removeLook'] ?? ''), $body['newLook'] ?? null, $body['categoryLooks'] ?? null);
+            apply_looks($gh, $files, $body);
             $me = studio_me();
             if (!studio_is_owner()) {
                 // An editor can't change what's live: a published note stays published (its update waits
@@ -337,6 +379,7 @@ try {
             $guide = $gh->read('field/SHOW-GUIDE.md') ?? '';
             $lj = (array) json_decode($gh->read(LOOKS_JSON) ?? '', true);
             $looks = (array) ($lj['looks'] ?? []); $looks['_categories'] = (array) ($lj['categories'] ?? []);
+            $looks['_backdrops'] = ['backdrops' => array_map(fn($b) => ['name' => $b['name'] ?? '', 'about' => $b['about'] ?? ''], (array) ($lj['backdrops'] ?? [])), 'categoryBackdrops' => (array) ($lj['categoryBackdrops'] ?? [])];
             $draft = (new Drafter($cfg, $guide))->draft($body['facts'] ?? [], $body['thumbs'] ?? [], $looks);
             json_out(['draft' => $draft]);
 
@@ -431,7 +474,8 @@ try {
         case 'POST looks':
             owner_only();
             $files = [];
-            apply_looks($gh, $files, '', $body['newLook'] ?? null, $body['categoryLooks'] ?? null);
+            apply_looks($gh, $files, ['newLook' => $body['newLook'] ?? null, 'categoryLooks' => $body['categoryLooks'] ?? null,
+                'newBackdrop' => $body['newBackdrop'] ?? null, 'categoryBackdrops' => $body['categoryBackdrops'] ?? null]);
             if (!$files) json_fail('Nothing to save.');
             json_out(['ok' => true, 'commit' => $gh->commit($files, "Studio: GlazyArray's looks")]);
 
