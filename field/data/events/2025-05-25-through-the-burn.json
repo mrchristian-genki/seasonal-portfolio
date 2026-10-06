@@ -1820,5 +1820,13 @@
  ],
  "consent": "",
  "source": "Rides/May 25 2025",
- "publishedAt": "2026-10-04T05:05:41Z"
+ "publishedAt": "2026-10-04T05:05:41Z",
+ "narratorLook": {
+  "look": "bike-helmet",
+  "fit": "existing",
+  "about": "a brass bike helmet with a little headlamp",
+  "prompt": "",
+  "bulb": true,
+  "why": "A ride through the burn on the Corral Trail Loop."
+ }
 }

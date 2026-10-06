@@ -1495,5 +1495,13 @@
   "facts": false,
   "speed": false
  },
- "publishedAt": "2026-10-05T03:17:27Z"
+ "publishedAt": "2026-10-05T03:17:27Z",
+ "narratorLook": {
+  "look": "tahoe-winter",
+  "fit": "existing",
+  "about": "a cable-knit beanie",
+  "prompt": "",
+  "bulb": false,
+  "why": "Snow on the boulders at Skunk Harbor in March."
+ }
 }
