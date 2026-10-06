@@ -12,7 +12,7 @@ with AI. The narrator is the "& Co.": a friend who came along and tells it after
 
 Her name (Christian, Oct 6, 2026): **GlazyArray**, always one word, in labels, the player and the
 copy alike; never shortened to "Glazy" and never split. She's the brass robot in every Listen bar: the name
-is for the glaze of her glowing glass tubes, glossy patina and lit eyes, and the array of looks she swaps
+is for the glaze of her glowing glass tubes, glossy patina and glassy blue eyes, and the array of looks she swaps
 at a click. Every recording opens with the tag line "Narrated by GlazyArray."
 
 Tone (Christian, Oct 6, 2026): a warm woman narrator who is Christian's biggest fan and his publicist,
