@@ -1,0 +1,97 @@
+{
+ "id": "2026-10-06-the-whole-machine",
+ "title": "The whole machine",
+ "date": "2026-10-06",
+ "kind": "make",
+ "place": "The workshop",
+ "status": "draft",
+ "summary": "The capstone: how the lake, the Parts Catalog, the Workshop, the Studio and ProPre fit together as one machine, told as a brass automaton coming to life.",
+ "trailhead": null,
+ "links": [
+  {
+   "label": "The main site",
+   "url": "https://www.christiangehrke.com/"
+  }
+ ],
+ "track": null,
+ "photos": [
+  {
+   "src": "data/photos/2026-10-06-the-whole-machine/alive.mp4",
+   "poster": "data/photos/2026-10-06-the-whole-machine/alive.jpg",
+   "video": true,
+   "ai": true,
+   "caption": "The whole automaton on the bench: the heart lights, a pulse runs through the glass veins, the hands shape a bird out of light, and it flies into the lake.",
+   "w": 1280,
+   "h": 720,
+   "use": "post",
+   "cover": true
+  },
+  {
+   "src": "data/photos/2026-10-06-the-whole-machine/prism.mp4",
+   "poster": "data/photos/2026-10-06-the-whole-machine/prism.jpg",
+   "video": true,
+   "ai": true,
+   "caption": "The eye: ProPre, where a beautiful picture is broken down into lines for someone to colour back in.",
+   "w": 1280,
+   "h": 720,
+   "use": "post",
+   "cover": false
+  },
+  {
+   "src": "data/photos/2026-10-06-the-whole-machine/face.mp4",
+   "poster": "data/photos/2026-10-06-the-whole-machine/face.jpg",
+   "video": true,
+   "ai": true,
+   "caption": "The face: the lake on the front of the site, turning through the seasons.",
+   "w": 1280,
+   "h": 720,
+   "use": "post",
+   "cover": false
+  },
+  {
+   "src": "data/photos/2026-10-06-the-whole-machine/memory.mp4",
+   "poster": "data/photos/2026-10-06-the-whole-machine/memory.jpg",
+   "video": true,
+   "ai": true,
+   "caption": "The memory: the Parts Catalog, a drawer for every piece the lake is built from.",
+   "w": 1280,
+   "h": 720,
+   "use": "post",
+   "cover": false
+  },
+  {
+   "src": "data/photos/2026-10-06-the-whole-machine/hands.mp4",
+   "poster": "data/photos/2026-10-06-the-whole-machine/hands.jpg",
+   "video": true,
+   "ai": true,
+   "caption": "The hands: the Workshop, where a picture becomes a new part.",
+   "w": 1280,
+   "h": 720,
+   "use": "post",
+   "cover": false
+  },
+  {
+   "src": "data/photos/2026-10-06-the-whole-machine/heart.mp4",
+   "poster": "data/photos/2026-10-06-the-whole-machine/heart.jpg",
+   "video": true,
+   "ai": true,
+   "caption": "The heart: the Studio, pumping each day through to a Field Note in the liquid of the moment.",
+   "w": 1600,
+   "h": 448,
+   "use": "post",
+   "cover": false
+  }
+ ],
+ "fieldNotes": "Capstone of the case-study series (Oct 6, 2026). The parable is Christian's: a brass automaton built on the same bench as the Studio's heart, each tool one part of it: ProPre = the prism eye (Christian: a coloring book is beauty broken down to lines and built back up), the main site V2 = the face, the Parts Catalog = the memory (head of drawers), the Workshop = the hands, the Studio = the heart (the liquid as the site's blood, Christian's metaphor). All loops are Christian's AI renders from the prompts. Facts from the other case studies: ProPre started May 2026 and brought him back to web development; the main site's tabs open the other parts (Books: Browse the catalog -> the Coloring Book Catalog; Workshop: Open the workshop; Play: the Field Notes the Studio publishes); Catalog parts run on the same code as the lake; the Workshop traces new parts into the Catalog's format; Marley appears in all of them (asleep on the Workshop bench, in a jellyfish in the Catalog header, visiting the lake, along the Studio's river).",
+ "post": {
+  "title": "The whole machine",
+  "body": "Over the past few weeks I've written up each of the tools behind this site on its own. This one is about how they fit together. I kept picturing them as parts of one machine on a workbench, so I had them rendered that way: a brass automaton, built a piece at a time.\n\nThe eye came first. ProPre, the press for my coloring books, is the project that brought me back to web development in May. It's a prism: a beautiful picture goes in and comes out as clean black and white lines, ready for someone to fill with colour.\n\nThe face is the lake on the front of the site. Every tab is a season, and every tab opens another part of the machine. Books leads to the catalog of everything ProPre has made. Workshop leads to the bench. Play is where the Field Notes live.\n\nThe memory is the Parts Catalog: a drawer for every piece the lake is built from, each one running on its own with the same code the lake uses, so I can open one drawer without disturbing the rest.\n\nThe hands are the Workshop. Give them a picture and they shape a new part in the Catalog's own format, ready to join the others on the lake.\n\nThe heart is the Studio. A day out comes in as a track and a pile of photos, and goes out as a Field Note, with its post, its episode and its share card. The liquid in its pipes is the same idea as blood: the content is what keeps the whole thing alive, and the Studio is what moves it around.\n\nIn the render, the heart beats once, the light runs out through the glass veins, the hands shape a bird, and the bird flies into the lake. That's the whole machine. A day comes in, it's shaped, it's kept, and it ends up somewhere you can see it.\n\nWhat I learned: none of these parts is the portfolio on its own. Each one is good alone, but it's the pipes between them that make it feel alive."
+ },
+ "episode": {
+  "title": "The whole machine",
+  "script": "Right, pull up a chair, because this is the big finish. We've had the drawers, the hands, the lake, the heart and the prism. Today we put the whole thing together.\n\nChristian had this picture in his head. All his tools, sitting on a workbench, built into one brass automaton, a wee mechanical man, one piece at a time. So he had it made. And when it wakes up, God, it's gorgeous. Go hálainn. Beautiful.\n\n***\n\nThe eye came first. That's ProPre, his coloring book press, the thing that brought him back to building websites in the first place. A prism, he calls it. A beautiful picture goes in, and out come clean black lines, waiting for someone to colour them back in.\n\nThe face is the lake. The front of his website. Every tab a season, and every tab a door into another part of the machine. Books takes you to his library. Workshop takes you to the bench. And Play is where these very stories live. Sure you're listening to one now.\n\n***\n\nThe memory is the Catalog. A drawer for every single piece of that lake, each one working on its own, so he can open one drawer without upsetting the rest. Tidy. Like a good hot press, only with deer in it. That's the airing cupboard, for anyone not from home.\n\nThe hands are the Workshop. Hand them a picture and they shape it into a brand new part, ready to go out onto the lake with the others.\n\nAnd the heart. The Studio. A day out comes in, all tracks and photos, and out it goes as a story, with a wee voice telling it. That glowing liquid running through it? He'll tell you it's the blood of the website. The content is what keeps it alive, and the Studio pumps it round.\n\n***\n\nAnd here's a thing I love. Marley is in every one of them. Asleep at the end of the Workshop bench. Floating in a jellyfish in the Catalog. Visiting the lake. Strolling along the Studio's river. Sure she's the real heart of the operation, and she knows it.\n\n***\n\nSo watch the automaton wake up. The heart beats. The light runs out through the veins. The hands shape a wee bird out of light. And the bird flies straight into the lake.\n\nThat's the whole machine. Every part good on its own, fair play. But it's the pipes between them that bring it to life. Ar fheabhas, Christian. Brilliant. Now go and put the kettle on.",
+  "audio": null
+ },
+ "questions": [],
+ "consent": "Marley: the family dog, mentioned in the script. The automaton and all loops are AI renders, no people."
+}
