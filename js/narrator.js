@@ -8,11 +8,20 @@
      from the episode with Web Audio) and the head nods a little. The hands make a gesture, all of it, or part of it
      and back again (it jumps to the same frame in the backwards copy), so it never looks like the same 8 seconds.
    - When the voice stops it heads for the nearer rest pose, a little quicker, then the fingers tap on the desk.
+   - Until someone first presses play, it drops cheeky hints between rounds of tapping (three more parts of the
+     file): "psst, over there" pointing at the Play button, miming "boop, boop, press it" with a thumbs-up, and
+     twiddling its thumbs with a little wave. The head turns toward the button, winks, and the antenna bulb glows
+     in time with them.
    - Now and then it blinks. With reduced motion it stays still, and only the mouth moves. */
 (function () {
   'use strict';
-  var A = '/assets/narrator/', V = '?v=3', DROP = 0.0747;   // the jaw's drop, as a share of the head's height
+  var A = '/assets/narrator/', V = '?v=4', DROP = 0.0747;   // the jaw's drop, as a share of the head's height
   var D = 193 / 24, IDLE = 0, GESTURES = [{ f: 1, r: 2 }, { f: 3, r: 4 }];   // the parts of narrator.mp4: forward and backwards copies
+  // the hints, parts 5 to 7, with what the head does when (seconds into the part): look toward Play, wink, the bulb glows
+  var HINTS = [
+    { p: 5, cues: [[1.2, 5.6, 'look'], [2.3, 3.1, 'wink']] },                          // psst, over there
+    { p: 6, cues: [[2.0, 6.3, 'look'], [2.8, 4.4, 'glow'], [5.0, 6.0, 'glow']] },      // boop, boop, and a thumbs-up
+    { p: 7, cues: [[3.2, 5.8, 'look'], [3.8, 5.2, 'glow']] }];                          // thumbs twiddled, a little wave
   var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var ctx = null;
 
@@ -22,16 +31,32 @@
     bar.classList.add('has-nb');
     var nb = document.createElement('div'); nb.className = 'nb'; nb.setAttribute('aria-hidden', 'true');
     nb.innerHTML = '<div class="nb-rise"><div class="nb-head"><img class="nb-base" src="' + A + 'head-base.webp" alt=""><img class="nb-jaw" src="' + A + 'head-jaw.webp" alt="">' +
-      '<img class="nb-lids" src="' + A + 'head-lids.webp" alt=""></div>' +
+      '<img class="nb-lids" src="' + A + 'head-lids.webp" alt=""><i class="nb-bulb"></i></div>' +
       '<video class="nb-body" muted playsinline preload="none" poster="' + A + 'rest.jpg' + V + '"></video></div>';
     bar.insertBefore(nb, bar.firstChild);
     var body = nb.querySelector('.nb-body'), head = nb.querySelector('.nb-head'), jaw = nb.querySelector('.nb-jaw');
     var talking = false, an = null, buf = null, level = 0, raf = 0, plan = null, lastG = -1;
+    var played = false, taps = 0, wait = 1, lastH = -1, hint = null;   // hints only until the first play, after a round or two of tapping
     body.src = A + 'narrator.mp4' + V;
 
     // the hands: a plan is a stretch of the video to play to, and what to do when it gets there
     function go(at, end, then, rate) { body.playbackRate = rate || 1; if (Math.abs(body.currentTime - at) > 0.06) body.currentTime = at; plan = { end: end, then: then }; body.play().catch(function () {}); drive(); }
-    function idle() { if (talking) return gesture(); go(IDLE * D, IDLE * D + D, idle); }
+    function idle() {
+      if (talking) return gesture();
+      if (!played && taps >= wait) {
+        taps = 0; wait = 1 + Math.floor(Math.random() * 2);
+        var k = (lastH + 1 + Math.floor(Math.random() * (HINTS.length - 1))) % HINTS.length; lastH = k; hint = HINTS[k];
+        return go(hint.p * D, hint.p * D + D, function () { endHint(); idle(); });
+      }
+      taps++; go(IDLE * D, IDLE * D + D, idle);
+    }
+    function endHint() { hint = null; nb.classList.remove('look', 'wink', 'glow'); }
+    function cues() {   // the head's part in a hint, by the playhead
+      if (!hint) return;
+      var t = body.currentTime - hint.p * D, on = {};
+      hint.cues.forEach(function (c) { if (t >= c[0] && t < c[1]) on[c[2]] = true; });
+      ['look', 'wink', 'glow'].forEach(function (c) { nb.classList.toggle(c, !!on[c]); });
+    }
     body.addEventListener('ended', function () { if (plan) { var t = plan.then; plan = null; t(); } });   // the last part runs to the end of the file
     function gesture() {
       var k = lastG < 0 ? Math.floor(Math.random() * GESTURES.length) : (lastG + 1) % GESTURES.length, g = GESTURES[k], r = Math.random(); lastG = k;   // never the same gesture twice running
@@ -45,7 +70,7 @@
     // the voice stopped: to the nearer rest pose, the end of this part or (by the backwards copy) its start
     function settle() {
       var t = body.currentTime, part = Math.floor((t + 0.02) / D), local = Math.max(0, t - part * D);   // a hair of margin: a jump lands right on a part's first frame
-      if (part === IDLE || !plan) return;
+      if (part === IDLE || part >= HINTS[0].p || !plan) return;
       var g = GESTURES.filter(function (x) { return x.f === part || x.r === part; })[0]; if (!g) return;
       var other = part === g.f ? g.r : g.f;
       if (local < D / 2) go(other * D + (D - local), other * D + D, idle, 1.35); else go(part * D + local, part * D + D, idle, 1.35);
@@ -55,6 +80,7 @@
       if (driving) return; driving = true;
       (function step() {
         if (!nb.isConnected) { driving = false; return; }
+        cues();
         if (plan && body.currentTime >= plan.end - 0.05) { var t = plan.then; plan = null; t(); }
         if (!body.paused) requestAnimationFrame(step); else driving = false;
       })();
@@ -86,7 +112,8 @@
     audio.addEventListener('play', function () {
       listen(); if (ctx && ctx.state === 'suspended') ctx.resume();
       talking = true; nb.classList.add('on');
-      if (!still) { var part = Math.floor((body.currentTime + 0.02) / D); if (!plan || part === IDLE) gesture(); }   // from tapping or rest, straight into a gesture
+      played = true;
+      if (!still) { var part = Math.floor((body.currentTime + 0.02) / D); if (hint) endHint(); if (!plan || part === IDLE || part >= HINTS[0].p) gesture(); }   // from tapping, a hint or rest, straight into a gesture
       if (!raf) raf = requestAnimationFrame(tick);
     });
     ['pause', 'ended'].forEach(function (t) { audio.addEventListener(t, function () { talking = false; if (!still) settle(); }); });
