@@ -30,3 +30,11 @@ section.listen.has-nb::before{content:"";position:absolute;left:0;right:0;bottom
 @keyframes nb-flick{50%{opacity:.45}}
 @media (max-width:560px){section.listen.has-nb{--nb:150px;padding-left:calc(var(--nb) + 12px)}}
 @media (prefers-reduced-motion:reduce){.nb-head{transition:none}.nb.glow .nb-bulb{animation:none}}
+
+/* changing her hair on a click (narrator.js restyle): the old look fades out over the new one, her head gives a
+   little shake; the click target is her face and hair only, not the whole wide layer */
+.nb-hit{position:absolute;left:31%;width:38%;top:8%;height:70%;border-radius:50%;pointer-events:auto;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.nb-old{transition:opacity .48s ease}
+.nb.nb-swap .nb-head{animation:nb-shake .5s cubic-bezier(.3,1.6,.5,1)}
+@keyframes nb-shake{0%{scale:1}25%{scale:1.04 .97;rotate:-3deg}55%{scale:.98 1.03;rotate:2.5deg}100%{scale:1;rotate:0deg}}
+@media (prefers-reduced-motion:reduce){.nb-old{transition:none}}
