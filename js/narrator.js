@@ -16,7 +16,7 @@
    - Now and then it blinks. With reduced motion it stays still, and only the mouth moves. */
 (function () {
   'use strict';
-  var A = '/assets/narrator/', V = '?v=6', DROP = 0.054;   // the chin plate's drop, as a share of the head's height (the side plates go half as far)
+  var A = '/assets/narrator/', V = '?v=7', DROP = 0.054;   // the chin plate's drop, as a share of the head's height (the side plates go half as far)
   var D = 193 / 24, IDLE = 0, GESTURES = [{ f: 1, r: 2 }, { f: 3, r: 4 }];   // the parts of narrator.mp4: forward and backwards copies
   // the hints, parts 5 to 7, with what the head does when (seconds into the part): look toward Play, wink, the bulb glows
   var HINTS = [
@@ -24,6 +24,29 @@
     { p: 6, cues: [[2.0, 6.3, 'look'], [2.8, 4.4, 'glow'], [5.0, 6.0, 'glow']] },      // boop, boop, and a thumbs-up
     { p: 7, cues: [[3.2, 5.8, 'look'], [3.8, 5.2, 'glow']] }];                          // thumbs twiddled, a little wave
   var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // HER LOOKS (assets/narrator/looks.json): new hair and accessories over the same face, jaw, eyes and neck, so only
+  // the head's base layer changes (made in the Workshop's "Narrator looks"). A look with dates ("10-20" to "10-31",
+  // which may wrap the new year) wears on those days; looks marked "rotate" take turns, a day each, with her own curls,
+  // on the days in between. ?look=name in the address shows any look; ?look=curls her own. "bulb": false for a look
+  // whose hat or bow covers the antenna (its glow stays off).
+  var looks = fetch(A + 'looks.json' + V, { cache: 'no-cache' }).then(function (r) { return r.ok ? r.json() : { looks: [] }; }).catch(function () { return { looks: [] }; }).then(function (j) {
+    var list = (j && j.looks) || [], m = /[?&+]look=([a-z0-9-]+)/i.exec(location.search), d = new Date();
+    if (m) return list.filter(function (l) { return l.name === m[1].toLowerCase(); })[0] || null;
+    var md = ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
+    var on = list.filter(function (l) { return l.from && l.to && (l.from <= l.to ? md >= l.from && md <= l.to : md >= l.from || md <= l.to); })[0];
+    if (on) return on;
+    var turns = [null].concat(list.filter(function (l) { return l.rotate; }));
+    return turns[Math.floor((d - new Date(d.getFullYear(), 0, 0)) / 864e5) % turns.length];
+  });
+  function wear(nb) {
+    looks.then(function (l) {
+      if (!l || !l.file) return;
+      nb.querySelector('.nb-base').src = A + 'looks/' + l.file + V;
+      nb.classList.toggle('nb-nobulb', l.bulb === false);
+      nb.setAttribute('data-look', l.name);
+    });
+  }
   var ctx = null;
 
   function build(bar) {
@@ -35,6 +58,7 @@
       '<img class="nb-lids" src="' + A + 'head-lids.webp' + V + '" alt=""><i class="nb-bulb"></i></div>' +
       '<video class="nb-body" muted playsinline preload="none" poster="' + A + 'rest.jpg' + V + '"></video></div>';
     bar.insertBefore(nb, bar.firstChild);
+    wear(nb);
     var body = nb.querySelector('.nb-body'), head = nb.querySelector('.nb-head'), jaw = nb.querySelector('.nb-jaw'), jawS = nb.querySelector('.nb-jaw-s');
     var talking = false, an = null, buf = null, level = 0, raf = 0, plan = null, lastG = -1;
     var played = false, taps = 0, wait = 1, lastH = -1, hint = null;   // hints only until the first play, after a round or two of tapping

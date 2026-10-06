@@ -25,6 +25,7 @@ section.listen.has-nb::before{content:"";position:absolute;left:0;right:0;bottom
 .nb.look .nb-head{rotate:7deg;translate:5% 0}
 .nb-bulb{position:absolute;left:49.6%;top:5.2%;width:26%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;pointer-events:none;opacity:0;transition:opacity .15s;
   background:radial-gradient(circle,rgba(235,255,255,.95) 0,rgba(130,240,255,.6) 22%,rgba(80,220,255,0) 68%);mix-blend-mode:screen}
+.nb.nb-nobulb .nb-bulb{display:none}   /* a look whose hat or bow covers the antenna */
 .nb.glow .nb-bulb{opacity:1;animation:nb-flick .36s steps(2,jump-none) infinite}
 @keyframes nb-flick{50%{opacity:.45}}
 @media (max-width:560px){section.listen.has-nb{--nb:150px;padding-left:calc(var(--nb) + 12px)}}
