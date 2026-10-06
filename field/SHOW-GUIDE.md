@@ -121,6 +121,8 @@ through her wardrobe. When drafting, pick one:
 - **existing:** one of her looks already fits (a beanie for a snowy ride). Prefer this.
 - **new:** the Note clearly calls for something she doesn't have. Name it (lowercase-with-hyphens, by the thing,
   not the Note: `bike-helmet`, so other Notes can wear it too), and write the image-edit prompt below.
+- **Case studies** (tagged case-study) wear `pulled-up` (Christian, Oct 6, 2026: a pineapple updo bursting from an
+  open-crown cap: hair up, at work) unless something in the Note fits better.
 - **none:** nothing in the Note calls for one. This is the usual answer; a look is a wink, not a costume per Note.
 
 Only what fits the Note's real activity, place or season, and only what's tasteful: gear, a hat, a flower, a

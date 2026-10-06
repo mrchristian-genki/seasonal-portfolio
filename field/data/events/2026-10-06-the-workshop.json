@@ -65,5 +65,13 @@
  },
  "questions": [],
  "consent": "Marley: the family dog, asleep in the header. Christian: drawn at the bench.",
- "publishedAt": "2026-10-06T02:24:04Z"
+ "publishedAt": "2026-10-06T02:24:04Z",
+ "narratorLook": {
+  "look": "pulled-up",
+  "fit": "new",
+  "about": "a pineapple updo bursting from an open-crown cap",
+  "why": "Case studies wear her pulled-up look: hair up, sleeves rolled, at work.",
+  "prompt": "Same image, same camera, same face, same eyes, same jaw, same neck and the same flat chroma green background (#00B140). Change only the hair and accessories: her hair pulled up into a massive, crown-like pineapple updo of sculpted brass coils bursting out of the top of a snug open-crown cap in dark rose-gold, the coils piled high and full, with a few chunky ringlets falling at her temples. Her flower-bud antenna rises from the middle of the coils exactly where it is now. Polished brass and rose-gold; the tallest coils still stay inside the crop box. Bold, chunky shapes; nothing crosses her face below the brows; everything stays inside the crop box.",
+  "bulb": true
+ }
 }
