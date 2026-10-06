@@ -49,10 +49,13 @@ function mp3Seconds(file) {
   return (b.length - i) * 8 / (rates[idx] * 1000);
 }
 
+// when a Note went live: the Studio stamps the moment (2026-10-06T14:20:07Z); older ones carry a day, or nothing
+const pubTime = (e) => { const t = Date.parse(/T/.test(e.publishedAt || '') ? e.publishedAt : (e.publishedAt || e.date) + 'T16:00:00Z'); return isNaN(t) ? 0 : t; };
 const events = fs.readdirSync(path.join(FIELD, 'data/events')).filter((f) => f.endsWith('.json'))
   .map((f) => readJSON(path.join(FIELD, 'data/events', f)))
   .filter((e) => e.status === 'published' && !e.sample)
-  .sort((a, b) => (a.date < b.date ? 1 : -1));
+  // newest first: by the day, and on a day with more than one, by when each was published
+  .sort((a, b) => (a.date !== b.date ? (a.date < b.date ? 1 : -1) : pubTime(b) - pubTime(a)));
 
 // Clear out anything from earlier runs that isn't published any more (keeps the hand-written files).
 fs.mkdirSync(OUT, { recursive: true });
@@ -82,6 +85,15 @@ const shareMeta = (title, desc, url, image, m) => {
     `<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${esc(title)}"><meta name="twitter:description" content="${esc(desc)}"><meta name="twitter:image" content="${esc(img)}"><meta name="twitter:image:alt" content="${esc(alt)}">`
   ].filter(Boolean).join('\n');
 };
+// The site's logo (Marley holding Christian by the hood), as the homepage and About show it: taken from About's
+// header so there's one copy, with its images from the site root.
+const LOGO = (() => {
+  const m = /<span class="mark logo"[\s\S]*?<\/span><\/span>(?=Christian Gehrke<\/a>)/.exec(fs.readFileSync(path.join(SITE, 'about/index.html'), 'utf8'));
+  return m ? m[0].replace(/\.\.\/assets\//g, '/assets/') : '<span class="dot" aria-hidden="true"></span>';
+})();
+// The pages here are the lake-less version of the homepage: a band under the header opens the same thing with
+// the lake (js/lake.js remembers the choice, so the homepage opens with it shown or hidden).
+const lakeBand = (words) => `<nav class="lake-band" aria-label="The lake scene"><a href="/?${esc(words)}" data-lake="1">Show the lake <span aria-hidden="true">▾</span></a></nav>`;
 const robots = show.listed ? '' : '<meta name="robots" content="noindex">\n';
 // Every page carries the main site's tabs (each opens that tab on the homepage) and Play's own bar.
 const PLAYBAR = [['field-notes', 'Field Notes', '#field-notes'], ['daily-dose', 'Daily Dose', '#daily-dose'], ['above', 'From Above', 'above/'], ['daydreams', 'Daydreams', '#daydreams']];
@@ -98,12 +110,16 @@ ${shareMeta(title, desc, url, image, meta)}
 ${ICONS}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <link rel="stylesheet" href="${rel}play.css?v=${V}">
+<link rel="stylesheet" href="${rel}../css/logo.css?v=11">
+<link rel="stylesheet" href="${rel}../css/lake.css?v=1">
+<script>/* Logo season from the calendar, as on About. */document.documentElement.dataset.season=["winter","winter","spring","spring","spring","summer","summer","summer","fall","fall","fall","winter"][new Date().getMonth()];</script>
 <link rel="stylesheet" href="${rel}../css/route-dash.css?v=${V}">
 </head>
 <body>
-<header class="bar"><a class="brand" href="${rel}../"><span class="dot" aria-hidden="true"></span>Christian Gehrke</a>
+<header class="bar"><a class="brand" href="${rel}../">${LOGO}Christian Gehrke</a>
 <nav class="site" aria-label="Site"><a href="${rel}../?books">Books</a><a href="${rel}../?web">Web</a><a href="${rel}../?workshop">Workshop</a><a class="on" href="${rel}" aria-current="page">Play</a></nav></header>
 <nav class="playbar" aria-label="Play">${PLAYBAR.map(([id, label, href]) => `<a href="${rel}${href}"${id === sub ? ' class="on" aria-current="page"' : ''}>${label}</a>`).join('')}<button type="button" class="chip" id="units" hidden>mi · ft</button></nav>
+${lakeBand(meta.lake || 'notes')}
 `;
 const foot = (rel) => `<footer class="foot"><p>${esc(show.narrationNote)}</p>
 <p><a href="${rel}">Play</a> · <a href="${rel}feed.xml">Field Notes RSS</a> · <a href="${rel}../">christiangehrke.com</a></p></footer>
@@ -111,6 +127,7 @@ const foot = (rel) => `<footer class="foot"><p>${esc(show.narrationNote)}</p>
 <script src="${rel}../js/route-view.js?v=${V}" defer></script>
 <script src="${rel}../js/audio-rules.js?v=1" defer></script>
 <script src="${rel}play.js?v=${V}" defer></script>
+<script src="${rel}../js/lake.js?v=1" defer></script>
 </body>
 </html>
 `;
@@ -185,7 +202,7 @@ for (const e of events) {
     share = { abs: `${show.siteUrl}media/${e.id}/card.jpg?v=${fs.statSync(cardSrc).size.toString(36)}`, w: 1200, h: 630,
       alt: `${e.post && e.post.title || e.title}: the title on a brass nameplate over the Note's cover picture` };
   }
-  const html = head(title, desc, url, share && share.abs, '../', 'field-notes', { type: 'article', published: e.date,
+  const html = head(title, desc, url, share && share.abs, '../', 'field-notes', { type: 'article', lake: 'notes+' + e.id, published: e.date,
     w: share && share.w, h: share && share.h, alt: share && share.alt, audio: audio && audio.abs }) + `<main class="article"${t ? ` data-route="../data/${esc(e.id)}.json"` : ''}>
 <p class="kicker"><span class="kind ${esc(e.kind)}">${KIND[e.kind] || esc(e.kind)}</span> · <time datetime="${esc(e.date)}">${day(e.date, true)}</time>${e.place ? ` · ${esc(e.place)}` : ''}</p>
 <h1>${esc(e.post && e.post.title || e.title)}</h1>
@@ -251,7 +268,7 @@ if (MAN) {
     } else if (s.key === 'under-the-surface') body = `<div class="grid">${m.picks.map((g, i) => tile(g, '../../', 'Scene ' + (i + 1))).join('')}</div>`;
     else body = `<div class="grid">${m.picks.map((g) => tile(g, '../../')).join('')}</div>`;
     const dir = path.join(OUT, 'daydreams', s.key); fs.mkdirSync(dir, { recursive: true });
-    fs.writeFileSync(path.join(dir, 'index.html'), head(`${s.title} · Daydreams · Play`, s.about, `${show.siteUrl}daydreams/${s.key}/`, `${show.siteUrl}gallery/${cover.poster || cover.file}`, '../../', 'daydreams') +
+    fs.writeFileSync(path.join(dir, 'index.html'), head(`${s.title} · Daydreams · Play`, s.about, `${show.siteUrl}daydreams/${s.key}/`, `${show.siteUrl}gallery/${cover.poster || cover.file}`, '../../', 'daydreams', { lake: 'daydreams+' + s.key }) +
       `<main class="gallery-page"><p class="kicker"><a href="../../#daydreams">Daydreams</a> · ${m.real ? 'Real and imagined' : AI}</p><h1>${esc(s.title)}</h1><p class="lede">${esc(s.about)}</p>
 ${body}
 <p class="note tools">${esc(G.tools)}</p>
@@ -265,7 +282,7 @@ ${body}
     fs.writeFileSync(f, fs.readFileSync(f, 'utf8').replace(`<nav class="pager" data-series-pager="${s.key}"></nav>`, `<nav class="pager">${link(prev, '← Previous', 'prev')}${link(next, 'Next →', 'next')}</nav>`));
   });
   const dir = path.join(OUT, 'above'); fs.mkdirSync(dir, { recursive: true });
-  fs.writeFileSync(path.join(dir, 'index.html'), head(`${G.above.title} · Play`, G.above.about, `${show.siteUrl}above/`, `${show.siteUrl}gallery/${MAN.above[0].file}`, '../', 'above') +
+  fs.writeFileSync(path.join(dir, 'index.html'), head(`${G.above.title} · Play`, G.above.about, `${show.siteUrl}above/`, `${show.siteUrl}gallery/${MAN.above[0].file}`, '../', 'above', { lake: 'above' }) +
     `<main class="gallery-page"><p class="kicker"><a href="../#above">Play</a> · <span class="real-badge">Real photographs</span></p><h1>${esc(G.above.title)}</h1><p class="lede">${esc(G.above.about)}</p>
 <div class="grid">${MAN.above.map((g) => tile(g, '../')).join('')}</div>
 <nav class="pager"><a href="../#above"><span>← Back</span>Play</a><span></span></nav></main>
@@ -353,7 +370,7 @@ ${pages.map(({ e, audio, url, desc }) => `<item>
 <title>${esc(e.episode && e.episode.title || e.title)}</title>
 <link>${esc(url)}</link>
 <guid isPermaLink="true">${esc(url)}</guid>
-<pubDate>${new Date((e.publishedAt || e.date) + 'T16:00:00Z').toUTCString()}</pubDate>
+<pubDate>${new Date(pubTime(e)).toUTCString()}</pubDate>
 <description>${esc(desc)}</description>
 ${audio ? `<enclosure url="${esc(audio.abs)}" length="${audio.bytes}" type="audio/mpeg"/>\n<itunes:duration>${Math.round(audio.sec)}</itunes:duration>` : ''}
 </item>`).join('\n')}

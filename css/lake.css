@@ -1,0 +1,18 @@
+/* The lake scene, shown or hidden (js/lake.js). Hidden, the homepage opens with a clean top: a thin band of sky,
+   water and shore under the header, with a button that brings the lake back. The Play pages (play/) always show
+   the band, and their button opens the same thing on the homepage with the lake. */
+.lake-band{display:flex;justify-content:center;align-items:center;min-height:42px;padding:6px 16px;box-sizing:border-box;
+  background:linear-gradient(180deg,#cfe7f8 0%,#8cc0ea 38%,#4f8fd0 62%,#6fb4e4 74%,#86c25c 76%,#5e9a3c 100%)}
+.lake-band[hidden]{display:none}
+.lake-band a,.lake-band button,.lake-hide{appearance:none;border:0;cursor:pointer;font:600 14px/1 system-ui,-apple-system,"Segoe UI",sans-serif;
+  color:#0f3d5c;background:rgba(255,255,255,.88);border-radius:999px;padding:8px 15px;text-decoration:none;box-shadow:0 1px 5px rgba(10,40,70,.22)}
+.lake-band a:hover,.lake-band button:hover,.lake-hide:hover{background:#fff}
+.lake-band a:focus-visible,.lake-band button:focus-visible,.lake-hide:focus-visible{outline:3px solid #0f4d47;outline-offset:2px}
+html.night-page .lake-band{background:linear-gradient(180deg,#0d1a3d 0%,#1f2b52 55%,#22406e 70%,#1c3a2a 76%,#12261a 100%)}
+html.night-page .lake-band a,html.night-page .lake-band button,html.night-page .lake-hide{color:#e6ecf8;background:rgba(20,30,60,.85)}
+/* on the homepage: the button that hides it sits on the scene, and the hidden scene keeps its size off screen so
+   it's ready (and measured) the moment it comes back */
+.lake-hide{position:absolute;right:clamp(12px,3vw,40px);top:clamp(14px,2.5vw,26px);z-index:6;opacity:.9}
+@media (max-width:640px){.lake-hide{top:auto;bottom:96px;right:12px;font-size:13px;padding:7px 12px}}
+html.lake-off #hero{position:absolute;left:-300vw;top:0;width:100vw;visibility:hidden;pointer-events:none}
+@media print{.lake-band,.lake-hide{display:none}}
