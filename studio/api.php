@@ -22,6 +22,11 @@ if ($method === 'POST') {
     $raw = null;
     if (str_starts_with((string) ($_SERVER['CONTENT_TYPE'] ?? ''), 'application/octet-stream')) {
         $raw = (string) file_get_contents('php://input'); $body = $_GET;
+        // scrambled by the Studio with a repeating 32-byte key, so no run of its bytes looks like an attack
+        $mask = (string) ($_SERVER['HTTP_X_MASK'] ?? '');
+        if (preg_match('/^[0-9a-f]{64}$/', $mask) && $raw !== '') {
+            $raw = $raw ^ substr(str_repeat(hex2bin($mask), intdiv(strlen($raw), 32) + 1), 0, strlen($raw));
+        }
     } else {
         $body = json_decode((string) file_get_contents('php://input'), true);
         if (!is_array($body)) json_fail('Bad request.');

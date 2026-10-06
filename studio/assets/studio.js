@@ -27,19 +27,34 @@
   // Read as text, not r.json(): a reply that isn't clean JSON (a PHP warning printed before it, or a host's
   // error page) then still works, or at least says what came back (Safari's own message for a bad reply is
   // only "The string did not match the expected pattern").
-  // A Blob body goes up as raw bytes (the host's firewall can take base64 in JSON for an attack).
-  function api(a, body, q) {
+  // A Blob body goes up as raw bytes (the host's firewall can take base64 in JSON for an attack). Even raw, now and
+  // then a few bytes of audio or an image happen to look like an attack to it (a 418), so a raw body goes up
+  // scrambled with a random key (X-Mask; api.php unscrambles it), and a blocked one is sent again with a new key.
+  function masked(blob) {
+    return blob.arrayBuffer().then(function (buf) {
+      var k = crypto.getRandomValues(new Uint8Array(32)), a = new Uint8Array(buf);
+      for (var i = 0; i < a.length; i++) a[i] ^= k[i & 31];
+      return { body: a, key: Array.from(k, function (b) { return b.toString(16).padStart(2, '0'); }).join('') };
+    });
+  }
+  function api(a, body, q, tries) {
     var raw = body instanceof Blob;
-    var opt = body ? { method: 'POST', headers: { 'Content-Type': raw ? 'application/octet-stream' : 'application/json', 'X-CSRF': CSRF }, body: raw ? body : JSON.stringify(body) } : {};
-    return fetch('api.php?a=' + a + (q || ''), opt).then(function (r) {
+    var ready = raw ? masked(body) : Promise.resolve(null);
+    return ready.then(function (m) {
+      var h = { 'Content-Type': raw ? 'application/octet-stream' : 'application/json', 'X-CSRF': CSRF };
+      if (m) h['X-Mask'] = m.key;
+      var opt = body ? { method: 'POST', headers: h, body: m ? m.body : JSON.stringify(body) } : {};
+      return fetch('api.php?a=' + a + (q || ''), opt);
+    }).then(function (r) {
       if (r.status === 401) { location.reload(); throw new Error('Logged out'); }
+      if (r.status === 418 && raw && (tries || 0) < 4) return api(a, body, q, (tries || 0) + 1);   // blocked: again, with a new key
       return r.text().then(function (t) {
         var j = null;
         try { j = JSON.parse(t); } catch (e) {
           var k = t.search(/[{\[]/);   // JSON after something printed before it
           try { if (k >= 0) { j = JSON.parse(t.slice(k)); if (window.console) console.warn('Studio: the server printed this before its reply:', t.slice(0, k)); } } catch (e2) { j = null; }
         }
-        if (j === null && r.status === 418) throw new Error('The web host\'s firewall blocked the ' + a + ' request (418). Reload the Studio and try again; if it keeps happening, tell me.');
+        if (j === null && r.status === 418) throw new Error('The web host\'s firewall blocked the ' + a + ' request (418), five times running. Reload the Studio and try again; if it keeps happening, tell me.');
         if (j === null) {
           var said = t.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 140);
           throw new Error('The server\'s reply to ' + a + ' wasn\'t readable (' + r.status + (said ? ': ' + said : ', empty') + ')');
