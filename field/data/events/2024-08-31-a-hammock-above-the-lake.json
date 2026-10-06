@@ -2265,5 +2265,13 @@
   "speed": false,
   "facts": false
  },
- "publishedAt": "2026-10-04T18:30:47Z"
+ "publishedAt": "2026-10-04T18:30:47Z",
+ "narratorLook": {
+  "look": "bike-helmet",
+  "fit": "existing",
+  "about": "a brass bike helmet with a little headlamp",
+  "prompt": "",
+  "bulb": true,
+  "why": "A ride on the Flume Trail above the lake."
+ }
 }

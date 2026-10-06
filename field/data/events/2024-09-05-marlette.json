@@ -2001,5 +2001,13 @@
   "IMG_6874.MOV: waiting on a trimmed copy under 10 MB for the post."
  ],
  "consent": "Christian and Marley only.",
- "publishedAt": "2026-10-03T15:23:35Z"
+ "publishedAt": "2026-10-03T15:23:35Z",
+ "narratorLook": {
+  "look": "bike-helmet",
+  "fit": "existing",
+  "about": "a brass bike helmet with a little headlamp",
+  "prompt": "",
+  "bulb": true,
+  "why": "A morning ride up North Canyon to Marlette Lake."
+ }
 }
