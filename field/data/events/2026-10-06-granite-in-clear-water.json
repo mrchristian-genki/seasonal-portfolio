@@ -8,7 +8,7 @@
   "case-study",
   "behind-the-scenes"
  ],
- "status": "draft",
+ "status": "published",
  "summary": "A case study of the Studio's HDR merge, tested on twelve real drone shots: four brackets of three exposures become four photos, with the sky and the shadows both kept.",
  "trailhead": null,
  "links": [],
@@ -111,7 +111,7 @@
  "episode": {
   "title": "Three exposures, one photo",
   "script": "It started with twelve pictures from a September morning, high above a cove where granite boulders sat in clear water.\n\nThey weren't twelve different pictures, though. They were four, taken three times each. Christian's drone can do that. One a little dark. One just right. One a little bright. A second or two apart.\n\nNone of them is right on its own. The dark one keeps the white tops of the rocks and the sun on the water. The bright one opens up the shadows under the pines. The trick is putting them together.\n\n***\n\nThat used to mean a desktop app. Now his Studio does it on its own, right in the browser, as the photos come in.\n\nIt reads when each shot was taken, and anything within three seconds becomes a set. It checks that the set really is one view at different brightness, so a quick burst, or three different views, stay as they are. It lines the shots up, because a drone drifts. And then every little piece of the picture takes the most from whichever shot got it right.\n\nOnly the merged photo is kept. The originals never leave the folder.\n\n***\n\nBefore he trusted it with the real thing, he tested it on made-up shots, darkened and brightened and nudged a few pixels apart. It found the drift exactly. It said no to the burst. That's the kind of patience I admire.\n\nThen the real folder went in. Four photos came out. The drone had held so still that every set lined up to the pixel. In the one with the sun on the water, the normal shot was more than four percent pure white. The merge was under one.\n\n***\n\nAnd the real folder did something the made-up one couldn't. It found two places where the Studio got in his way. Both were fixed the same morning.\n\nI think about that a lot. You can prove the math on paper. But it's the real thing that tells you where it still needs work.",
-  "audio": null
+  "audio": "data/audio/2026-10-06-granite-in-clear-water.mp3"
  },
  "questions": [],
  "consent": "Two people in 07, tiny and not the subject (a swimmer and someone by a rock). No one else.",
