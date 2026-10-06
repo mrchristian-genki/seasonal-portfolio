@@ -21,7 +21,10 @@
   { "name": "grad-cap", "file": "grad-cap.webp", "about": "a brass mortarboard with a chain tassel", "v": "tmi70z", "bulb": false }
  ],
  "categories": {
-  "case-study": "grad-cap"
+  "automaton": "updo",
+  "case-study": "grad-cap",
+  "hike": "trail-cap",
+  "ride": "bike-helmet"
  },
  "backdrops": [
   { "name": "library", "file": "library.webp", "about": "", "v": "tmia4z", "scene": "an old library with tall wooden bookshelves, brass reading lamps and a long study table" },
