@@ -239,6 +239,11 @@ try {
             if (isset(reviews()[$id])) {
                 if (!$gh->mergeIn(rb($id), "Studio: take in the review of $id")) json_fail('The review copy and the live note both changed the same thing. Ask for it in a Claude Code session to merge by hand.', 409);
             }
+            // the moment it first goes live: Play orders the Notes of one day by it, newest first
+            if (($e['status'] ?? '') === 'published' && !preg_match('/T/', (string) ($e['publishedAt'] ?? ''))) {
+                $live = json_decode($gh->read(EVENTS . "/$id.json") ?? 'null', true);
+                $e['publishedAt'] = (($live['status'] ?? '') === 'published' && preg_match('/T/', (string) ($live['publishedAt'] ?? ''))) ? $live['publishedAt'] : gmdate('Y-m-d\TH:i:s\Z');
+            }
             $files[EVENTS . "/$id.json"] = ['text' => repo_json($e)];
             $what = ($e['status'] ?? '') === 'published' ? 'Publish' : 'Save';
             $sha = $gh->commit($files, "Studio: $what $id");

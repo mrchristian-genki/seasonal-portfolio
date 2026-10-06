@@ -1494,5 +1494,6 @@
  "dashboard": {
   "facts": false,
   "speed": false
- }
+ },
+ "publishedAt": "2026-10-05T03:17:27Z"
 }

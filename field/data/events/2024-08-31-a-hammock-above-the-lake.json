@@ -2264,5 +2264,6 @@
  "dashboard": {
   "speed": false,
   "facts": false
- }
+ },
+ "publishedAt": "2026-10-04T18:30:47Z"
 }
