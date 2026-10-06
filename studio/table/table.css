@@ -702,3 +702,9 @@ details.fold .fold-in{padding:0 18px 18px}
 details.fold .fold-in>h3:first-child{margin-top:0}
 #f-audio{box-shadow:6px 9px 14px rgba(8,4,0,.45),0 0 0 2px color-mix(in srgb,var(--liq) 45%,transparent),0 0 18px color-mix(in srgb,var(--liq) 25%,transparent)}
 @media (max-width:640px){details.fold>summary{padding:13px 14px}details.fold .fold-in{padding:0 14px 14px}}
+
+/* a bracket's exposure strip: the whole row, all of it shown (studio.js renderPhotos) */
+.photos .ph.strip{grid-column:1/-1}
+.photos .ph.strip img{aspect-ratio:auto;height:auto;object-fit:contain;background:transparent}
+.photos .ph.strip.off{opacity:.8}
+.photos .ph.strip .meta small b{color:var(--ink)}

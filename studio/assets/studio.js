@@ -556,7 +556,7 @@
       fold('episode', 'Episode script', E.episode.title || '', !isLive, field('Title', '<input id="epTitle" value="' + esc(E.episode.title) + '">') + field('Script', '<textarea id="epScript" rows="16">' + esc(E.episode.script) + '</textarea>', '<span id="epCount"></span>')) +
       (hasScript ? '' : audioPanel) +
       fold('photos', 'Photos', [nPh ? nPh + ' photo' + (nPh > 1 ? 's' : '') : '', nLoop ? nLoop + ' loop' + (nLoop > 1 ? 's' : '') : ''].filter(Boolean).join(' · '), !isLive,
-        (later ? '' : dropPhotos) + '<div id="photos" class="photos"></div>' + (later && !E.photos.length ? '<p class="muted">No photos yet. Add some under Add more.</p>' : '')) +
+        (later ? '' : dropPhotos) + '<div id="photos" class="photos"></div>' + (later ? '<p class="muted" id="noPhotos">No photos yet. Add some under Add more.</p>' : '')) +
       (trackTop ? fold('track', 'Track', E.track ? 'on the map' : '', !isLive, '<div id="track"></div>') : '') +
       (E.source ? fold('loops', 'Video loops', '', false, '<div id="loopBox"></div>') : '') +
       (later ? fold('more', 'Add more', 'photos' + (trackTop ? '' : ', a track'), false, '<p class="muted">Only if you want to add to what\'s here.</p>' + (trackTop ? '' : '<h3>Track</h3><div id="track"></div>') + '<h3>Photos</h3>' + dropPhotos) : '') +
@@ -828,9 +828,21 @@
 
   // ---------- photos ----------
   function renderPhotos() {
-    var box = $('#photos');
+    var box = $('#photos'), none = $('#noPhotos');
+    if (none) none.hidden = E.photos.length > 0;   // photos brought in after the page was drawn
     box.innerHTML = E.photos.map(function (p, i) {
       var n = photoName(p), clip = !!p.video;
+      // a bracket's exposure strip spans the row, whole, right under its HDR photo, so it reads as the three shots it is
+      if (p.strip) {
+        var hd = E.photos[i - 1] && E.photos[i - 1].hdr ? photoName(E.photos[i - 1]) : '';
+        return '<div class="ph strip' + (p.use === 'skip' ? ' off' : '') + '" data-i="' + i + '">' +
+          '<img src="' + esc(photoUrl(p)) + '" alt="" loading="lazy">' +
+          '<div class="meta"><small><b>Exposure strip</b>' + (hd ? ' for ' + esc(hd) : '') + ' · its ' + p.strip + ' shots, darkest to brightest, as they came off the camera · ' + esc(n) + (fresh[n] ? ' · new' : '') + '</small>' +
+          '<textarea rows="1" placeholder="Caption">' + esc(p.caption) + '</textarea>' +
+          '<div class="opts"><label><input type="checkbox" class="use"' + (p.use !== 'skip' ? ' checked' : '') + '> Show in the post</label>' +
+          '<input type="radio" name="cover" class="cover" hidden' + (p.cover ? ' checked' : '') + '>' +
+          '<button class="link rm">Remove</button></div></div></div>';
+      }
       return '<div class="ph' + (p.use === 'skip' ? ' off' : '') + '" data-i="' + i + '">' +
         (clip ? clipView(p, n) : '<img src="' + esc(photoUrl(p)) + '" alt="" loading="lazy">') +
         '<div class="meta"><small>' + esc(n) + (p.hdr ? ' · HDR of ' + p.hdr : '') + (p.strip ? ' · its ' + p.strip + ' exposures' : '') + (p.table ? ' · on the table' : '') + (p.takenAt ? ' · ' + esc(String(p.takenAt).slice(11, 16)) : '') + (fresh[n] || clipsNew[n] ? ' · new' : '') + '</small>' +
