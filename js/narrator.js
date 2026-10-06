@@ -16,7 +16,7 @@
    - Now and then it blinks. With reduced motion it stays still, and only the mouth moves. */
 (function () {
   'use strict';
-  var A = '/assets/narrator/', V = '?v=8', DROP = 0.0535;   // the chin plate's drop, as a share of the head layer's height (the side plates go half as far)
+  var A = '/assets/narrator/', V = '?v=9', DROP = 0.0448;   // the chin plate's drop, as a share of the head layer's height (the side plates go half as far)
   var D = 193 / 24, IDLE = 0, GESTURES = [{ f: 1, r: 2 }, { f: 3, r: 4 }];   // the parts of narrator.mp4: forward and backwards copies
   // the hints, parts 5 to 7, with what the head does when (seconds into the part): look toward Play, wink, the bulb glows
   var HINTS = [
