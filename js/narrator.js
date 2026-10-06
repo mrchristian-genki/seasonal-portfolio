@@ -16,7 +16,7 @@
    - Now and then it blinks. With reduced motion it stays still, and only the mouth moves. */
 (function () {
   'use strict';
-  var A = '/assets/narrator/', V = '?v=9', DROP = 0.0448;   // the chin plate's drop, as a share of the head layer's height (the side plates go half as far)
+  var A = '/assets/narrator/', V = '?v=10', DROP = 0.0448;   // the chin plate's drop, as a share of the head layer's height (the side plates go half as far)
   var D = 193 / 24, IDLE = 0, GESTURES = [{ f: 1, r: 2 }, { f: 3, r: 4 }];   // the parts of narrator.mp4: forward and backwards copies
   // the hints, parts 5 to 7, with what the head does when (seconds into the part): look toward Play, wink, the bulb glows
   var HINTS = [
@@ -26,18 +26,24 @@
   var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // HER LOOKS (assets/narrator/looks.json): new hair and accessories over the same face, jaw, eyes and neck, so only
-  // the head's base layer changes (made in the Workshop's "Narrator looks"). A look with dates ("10-20" to "10-31",
-  // which may wrap the new year) wears on those days; on other days she picks one at random on each page load from
-  // her own curls and the looks marked "rotate" (the same one in every bar on the page). ?look=name in the address
-  // shows any look; ?look=curls her own. "bulb": false for a look whose hat or bow covers the antenna.
+  // the head's base layer changes (made in the Workshop's "Narrator looks"). Each page load she picks at random from
+  // a pool, never the look she wore last time in this browser: her own curls, every hair style ("rotate"), and the one
+  // holiday look that's coming up next. A holiday look ("from"/"to", month-day) joins the pool the day after the
+  // holiday before it ends, and stays in it until its own last day; then the next holiday's look takes its place.
+  // ?look=name in the address shows any look; ?look=curls her own. "bulb": false for a look whose hat or bow covers
+  // the antenna (its glow stays off).
   var looks = fetch(A + 'looks.json' + V, { cache: 'no-cache' }).then(function (r) { return r.ok ? r.json() : { looks: [] }; }).catch(function () { return { looks: [] }; }).then(function (j) {
     var list = (j && j.looks) || [], m = /[?&+]look=([a-z0-9-]+)/i.exec(location.search), d = new Date();
     if (m) return list.filter(function (l) { return l.name === m[1].toLowerCase(); })[0] || null;
     var md = ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
-    var on = list.filter(function (l) { return l.from && l.to && (l.from <= l.to ? md >= l.from && md <= l.to : md >= l.from || md <= l.to); })[0];
-    if (on) return on;
-    var turns = [null].concat(list.filter(function (l) { return l.rotate; }));
-    return turns[Math.floor(Math.random() * turns.length)];
+    var hol = list.filter(function (l) { return l.to; }).sort(function (a, b) { return a.to < b.to ? -1 : 1; });
+    var next = hol.filter(function (l) { return l.to >= md; })[0] || hol[0];   // after the year's last holiday, the first one again
+    var pool = [{ name: 'curls' }].concat(list.filter(function (l) { return l.rotate; }), next ? [next] : []);
+    var last = null; try { last = localStorage.getItem('cg-look'); } catch (e) {}
+    var fresh = pool.filter(function (l) { return l.name !== last; }); if (fresh.length) pool = fresh;
+    var pick = pool[Math.floor(Math.random() * pool.length)];
+    try { localStorage.setItem('cg-look', pick.name); } catch (e) {}
+    return pick.file ? pick : null;
   });
   function wear(nb) {
     looks.then(function (l) {
