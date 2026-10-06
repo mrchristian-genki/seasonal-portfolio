@@ -79,14 +79,19 @@
   // ---------- HER BACKDROPS: the scene behind the Listen bar, shown softly blurred (narrator.css .nb-bd). The prompt
   // asks for a soft-focus room to begin with; the site blurs it a little more and dims it under the glass card ----------
   var BDW = 1344, BDH = 576;   // 21:9, the backdrop template's shape
+  // The prompt says only the place, never what goes over it (a word like robot or music player gets drawn): the quiet
+  // areas are given as pixels on the 2016 x 864 template, measured from backdrop-guide.jpg (her at x 0-597, the glass
+  // card at x 657-1956, y 254-581, a wide screen's strip at y 198-666, a phone's middle at x 317-1699)
   function bdPrompt(scene) {
     scene = String(scene || '').trim().replace(/\.$/, '') || 'a cozy, warmly lit room';
-    return 'A wide 21:9 photograph of ' + scene + '. Shot like a cinematic film still with a very shallow depth of field: ' +
-      'the whole scene softly out of focus, with gentle bokeh and nothing sharp. Warm, low, late-afternoon light; calm, tidy ' +
-      'and uncluttered. Straight-on at eye level, as if seen from behind a desk. Use the attached template for the framing ' +
-      '(21:9); the image is shown as a wide strip, so keep the middle band the most interesting. Keep the left quarter quiet ' +
-      'and simple (a small brass robot sits there at a desk) and the right two thirds evenly lit and a little darker (white ' +
-      'text and a music player sit over it). No people, no animals, no text, signs, logos or brands. Natural colors, nothing neon.';
+    return 'A 2016 x 864 pixel (21:9) photograph of ' + scene + ', the same size and shape as the attached template. ' +
+      'Shot like a cinematic film still with a very shallow depth of field: the whole scene softly out of focus, with gentle ' +
+      'bokeh and nothing sharp. Warm, low, late-afternoon light; calm, tidy and uncluttered; straight-on at eye level. ' +
+      'Composition, in pixels from the top-left corner: put the most interesting part of the scene in the band from y 200 to ' +
+      'y 665, centered between x 320 and x 1700. Keep the left 600 pixels (x 0 to x 600) plain and calm: soft even tones, no ' +
+      'bright lights, no strong shapes. Keep the area from x 660 to x 1960 and y 250 to y 580 evenly lit, low in contrast and ' +
+      'slightly darker than the rest. Empty of people and animals. No writing, signs, logos or brands anywhere. Natural ' +
+      'colors, nothing neon.';
   }
   // a render of any shape, cropped to fill 21:9 and made small (it's shown blurred), with a preview of it in the bar
   function backdrop(file) {
