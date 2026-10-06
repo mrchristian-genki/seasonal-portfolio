@@ -557,6 +557,7 @@
       (hasScript ? '' : audioPanel) +
       fold('photos', 'Photos', [nPh ? nPh + ' photo' + (nPh > 1 ? 's' : '') : '', nLoop ? nLoop + ' loop' + (nLoop > 1 ? 's' : '') : ''].filter(Boolean).join(' · '), !isLive,
         (later ? '' : dropPhotos) + '<div id="photos" class="photos"></div>' + (later ? '<p class="muted" id="noPhotos">No photos yet. Add some under Add more.</p>' : '')) +
+      (E.id ? fold('social', 'Social', E.social && E.social.instagram ? 'captions written' : isLive ? 'next: share it' : 'Instagram and Facebook', false, '<div id="socialBox"></div>') : '') +
       (trackTop ? fold('track', 'Track', E.track ? 'on the map' : '', !isLive, '<div id="track"></div>') : '') +
       (E.source ? fold('loops', 'Video loops', '', false, '<div id="loopBox"></div>') : '') +
       (later ? fold('more', 'Add more', 'photos' + (trackTop ? '' : ', a track'), false, '<p class="muted">Only if you want to add to what\'s here.</p>' + (trackTop ? '' : '<h3>Track</h3><div id="track"></div>') + '<h3>Photos</h3>' + dropPhotos) : '') +
@@ -565,6 +566,9 @@
     // remember what's opened or closed on this note
     $$('details.fold', app).forEach(function (d) { d.addEventListener('toggle', function () { (FOLD[E.id || '_new'] = FOLD[E.id || '_new'] || {})[d.getAttribute('data-fold')] = d.open; if (d.open) setTimeout(function () { dispatchEvent(new Event('resize')); }, 30); }); });   // a map drawn while folded needs to measure itself again
 
+    // the Social panel is drawn from full-size photos, so only once it's opened
+    var sf = $('#f-social');
+    if (sf) { var socialOn = function () { if (!sf.open || sf._on) return; sf._on = true; StudioSocial.mount($('#socialBox'), socialHelpers); }; sf.addEventListener('toggle', socialOn); socialOn(); }
     $('#back').onclick = showList;
     ['title', 'place', 'consent', 'fieldNotes', 'summary', 'postTitle', 'postBody', 'epTitle', 'epScript'].forEach(function (k) { $('#' + k).addEventListener('input', markDirty); });
     ['kind', 'date'].forEach(function (k) { $('#' + k).addEventListener('change', markDirty); });
@@ -588,6 +592,14 @@
       navigator.clipboard.writeText(p).then(function () { toast('Audio prompt copied.'); });
     };
   }
+  // what the Social panel (social.js) needs from here
+  var socialHelpers = {
+    entry: function () { return E; }, cfg: function () { return CFG; }, esc: esc, toast: toast, api: api, name: photoName,
+    dirty: markDirty,
+    still: function (p) { return p.video ? 'api.php?a=photo&id=' + encodeURIComponent(E.id) + '&n=' + encodeURIComponent(p.poster.split('/').pop()) : photoUrl(p); },
+    clip: function (p) { return 'api.php?a=clip&id=' + encodeURIComponent(E.id) + '&n=' + encodeURIComponent(photoName(p)); },
+    audio: function () { return 'api.php?a=audio&id=' + encodeURIComponent(E.id); }
+  };
   function count() { var n = words($('#epScript').value); $('#epCount').textContent = n + ' words, about ' + (Math.round(n / 150 * 10) / 10) + ' minutes at the show\'s pace.'; }
 
   function collect() {

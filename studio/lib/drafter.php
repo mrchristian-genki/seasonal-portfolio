@@ -83,6 +83,40 @@ final class Drafter
         throw new RuntimeException('Claude sent back something that was not a draft.');
     }
 
+    private const SOCIAL = [
+        'type' => 'object',
+        'properties' => [
+            'instagram' => ['type' => 'string', 'description' => 'The Instagram caption without the hashtags. Ends with "Full story and the episode: link in bio."'],
+            'hashtags' => ['type' => 'array', 'items' => ['type' => 'string'], 'description' => '4 to 8 hashtags, each starting with #.'],
+            'facebook' => ['type' => 'string', 'description' => 'The Facebook post, ending with the link given.'],
+        ],
+        'required' => ['instagram', 'hashtags', 'facebook'],
+        'additionalProperties' => false,
+    ];
+
+    /** The captions for the Social panel, from a Note that's already written (its post, summary and link). */
+    public function social(array $note): array
+    {
+        $client = new Client(apiKey: $this->cfg['anthropic_api_key'], baseUrl: $this->cfg['anthropic_base_url'] ?? null);
+        $message = $client->beta->messages->create(
+            model: self::MODEL,
+            maxTokens: 4000,
+            system: "You write the social captions for one Field Note on christiangehrke.com, from the Note itself. Follow the show guide below, above all its hard rules and its section \"Social posts\". Use only what is in the Note. If there's an instruction, follow it.\n\nThe show guide:\n\n" . $this->showGuide,
+            messages: [['role' => 'user', 'content' => "The Note, as JSON:\n" . json_encode($note, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)]],
+            outputConfig: ['effort' => 'low', 'format' => ['type' => 'json_schema', 'schema' => self::SOCIAL]],
+            fallbacks: 'default',
+            betas: ['server-side-fallback-2026-07-01'],
+        );
+        if ($message->stopReason === 'refusal') throw new RuntimeException('Claude declined to write these captions.');
+        foreach ($message->content as $block) {
+            if ($block->type === 'text') {
+                $out = json_decode($block->text, true);
+                if (is_array($out)) return $out;
+            }
+        }
+        throw new RuntimeException('Claude sent back something that was not a set of captions.');
+    }
+
     private function system(): string
     {
         return <<<TXT

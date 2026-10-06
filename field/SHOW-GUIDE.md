@@ -94,6 +94,19 @@ First person, Christian's voice, 150 to 600 words. Plain and specific. End with
 **What I learned** when there's something real to say. Photos go in order with their captions.
 Gear and how-to details (LED parts, wiring, resin prep) belong here, not in the episode.
 
+## Social posts (Instagram and Facebook)
+
+Made in the Studio's Social panel from a Note that's already written: a carousel, a Story and a Reel,
+plus the captions. Instagram is @gehrkegram; Facebook is the mrchristianphotos Page.
+
+- **Voice:** Christian's, first person, like the post, but shorter: a hook line that makes someone stop,
+  two to four short lines of what happened, then where to find the rest. Under 120 words.
+- **Instagram:** links don't work in a caption, so it ends with "Full story and the episode: link in bio."
+  Then 4 to 8 plain hashtags on their own line (places at the public-land level, the activity, the craft).
+  No brand names, no hashtags for people, no location tag or hashtag closer to home than the trailhead.
+- **Facebook:** the same story, can be a little longer, no hashtag block, and ends with the Note's link.
+- All the hard rules above apply: only what happened, anonymous people, no trail home, no day job.
+
 ## The audio
 
 The audio prompt template is in `data/show.json` (`audioPrompt`), with voice, pace and
