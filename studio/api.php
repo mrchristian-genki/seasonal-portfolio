@@ -75,6 +75,13 @@ function set_review(string $id, ?array $r): void {
     $all = reviews(); if ($r === null) unset($all[$id]); else $all[$id] = $r;
     file_put_contents(reviews_file(), json_encode($all, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
 }
+const LOOKS_JSON = 'assets/narrator/looks.json';
+/** looks.json the way it's kept: one look per line. */
+function looks_json(array $list): string
+{
+    $line = fn(array $l) => '{ ' . implode(', ', array_map(fn($k) => json_encode($k) . ': ' . json_encode($l[$k], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), array_keys($l))) . ' }';
+    return "{\n \"looks\": [\n  " . implode(",\n  ", array_map($line, $list)) . "\n ]\n}\n";
+}
 function owner_only(): void { if (!studio_is_owner()) json_fail('Only the owner can do that.', 403); }
 // a file of an entry: from its review copy when there is one, else the live one
 function read_either(GitHub $gh, string $id, string $path): ?string {
@@ -152,6 +159,14 @@ try {
             if ($bytes === false || substr($bytes, 0, 3) !== "\xFF\xD8\xFF" || strlen($bytes) > 4_000_000) json_fail("That photo isn't a usable JPEG.");
             json_out(['sha' => $gh->blob(base64_encode($bytes))]);
 
+        // GlazyArray's new look, made in the browser (assets/look.js): a WebP or PNG of her head layer, 623 x 437.
+        case 'POST lookblob':
+            $bytes = $raw ?? base64_decode((string) ($body['b64'] ?? ''), true);
+            $webp = is_string($bytes) && substr($bytes, 0, 4) === 'RIFF' && substr($bytes, 8, 4) === 'WEBP';
+            $png = is_string($bytes) && substr($bytes, 0, 8) === "\x89PNG\r\n\x1a\n";
+            if (!$webp && !$png || strlen($bytes) > 1_500_000) json_fail("That look isn't a usable image.");
+            json_out(['sha' => $gh->blob(base64_encode($bytes))]);
+
         // The episode's MP3 comes up in pieces (so no request is large), gathered in a private file on
         // this server; the last piece checks it's an MP3 and turns it into a Git blob for the save.
         case 'POST audiopart':
@@ -220,6 +235,28 @@ try {
             } elseif (!empty($body['removeAudio']) && $audio === null) {
                 $files[AUDIO . "/$id.mp3"] = null;
             }
+            // A new look for GlazyArray made from this Note (Studio, "GlazyArray's look"): the image and its line in
+            // looks.json. It never replaces one of her holiday looks or hair styles.
+            $nl = $body['newLook'] ?? null;
+            if (is_array($nl)) {
+                $name = (string) ($nl['name'] ?? ''); $ext = (string) ($nl['ext'] ?? ''); $lsha = (string) ($nl['sha'] ?? '');
+                if (!preg_match('/^[a-z0-9-]{1,40}$/', $name) || $name === 'curls' || !in_array($ext, ['webp', 'png'], true) || !preg_match('/^[0-9a-f]{40}$/', $lsha)) json_fail('Bad look.');
+                $lj = json_decode($gh->read(LOOKS_JSON) ?? '{"looks":[]}', true);
+                $list = [];
+                foreach ((array) ($lj['looks'] ?? []) as $l) {
+                    if (($l['name'] ?? '') === $name) {
+                        if (isset($l['to']) || !empty($l['rotate'])) json_fail("\"$name\" is one of her holiday looks or hair styles. Pick another name for this one.");
+                        if (($l['file'] ?? '') !== "$name.$ext") $files['assets/narrator/looks/' . $l['file']] = null;   // the old file, if it changes type
+                        continue;
+                    }
+                    $list[] = $l;
+                }
+                $look = ['name' => $name, 'file' => "$name.$ext", 'about' => mb_substr(trim((string) ($nl['about'] ?? '')), 0, 120)];
+                if (($nl['bulb'] ?? true) === false) $look['bulb'] = false;
+                $list[] = $look;
+                $files["assets/narrator/looks/$name.$ext"] = ['sha' => $lsha];
+                $files[LOOKS_JSON] = ['text' => looks_json($list)];
+            }
             $me = studio_me();
             if (!studio_is_owner()) {
                 // An editor can't change what's live: a published note stays published (its update waits
@@ -255,7 +292,8 @@ try {
         case 'POST draft':
             @set_time_limit(240);
             $guide = $gh->read('field/SHOW-GUIDE.md') ?? '';
-            $draft = (new Drafter($cfg, $guide))->draft($body['facts'] ?? [], $body['thumbs'] ?? []);
+            $looks = (array) (json_decode($gh->read(LOOKS_JSON) ?? '', true)['looks'] ?? []);
+            $draft = (new Drafter($cfg, $guide))->draft($body['facts'] ?? [], $body['thumbs'] ?? [], $looks);
             json_out(['draft' => $draft]);
 
         // The Social panel's captions (Instagram and Facebook), from the written Note.
