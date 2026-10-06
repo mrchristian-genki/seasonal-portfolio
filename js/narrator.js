@@ -16,7 +16,7 @@
    - Now and then it blinks. With reduced motion it stays still, and only the mouth moves. */
 (function () {
   'use strict';
-  var A = '/assets/narrator/', V = '?v=22', DROP = 0.0448;   // the chin plate's drop, as a share of the head layer's height (the side plates go half as far)
+  var A = '/assets/narrator/', V = '?v=23', DROP = 0.0448;   // the chin plate's drop, as a share of the head layer's height (the side plates go half as far)
   var D = 193 / 24, IDLE = 0, GESTURES = [{ f: 1, r: 2 }, { f: 3, r: 4 }];   // the parts of narrator.mp4: forward and backwards copies
   // the hints, parts 5 to 7, with what the head does when (seconds into the part): look toward Play, wink, the bulb glows
   var HINTS = [
@@ -114,9 +114,9 @@
   }
   // her body's video is on the bar's teal (#0f4d47); over a backdrop a little WebGL pass keys the teal out (alpha from
   // the distance to it, the teal unmixed from the edges) and draws her into a canvas over the hidden video
-  var LQ = 'data:image/webp;base64,UklGRkICAABXRUJQVlA4IDYCAAAQDACdASpQACoAPtFYokyoJSMiLNVeMQAaCWgAw+YA4kBk92VqC4eOuJlf3d12P2s6XpNnAgTMjtM0jYiHYqw723yjPXYlHTXQlKA8hUYkNmhSE/0Qpz+g1LFEGJGN62W5Abmj8R/CRJgA/vFMZ7uXjf6tfJimiPp9Xd+v5ftN6dM+nqMruM0k8Rd15brer/mfZFYKwUL7Y/V0qqURX0JbHHmdgnE7OcN3RuQLSrYWwonNMCIvDcxvBJuJzMGyVMctllAKSU2ZA7R1eR97s1EkBFtglwMy+aPfms7wpE1cd1UpNR6UOBiRYrLKebJ/t7b7XA0GPo6UKTeATckWjW0YXZkV4emkNEzUc6Hs/zahGoc/l3ih72diRP28u2ejCnu63zEM+3EV4g0hcT+Ad8w7TlXDlDpo/2HFT5zMKEuOylM6DtLJ8ZGPNX/3RB/ZRGfmQt6cCXOiGSLSrwprOu69D68gbegDHgC3loSkqFBkZ6+xE5RQQ9LUbl9CN4U10UsI/cd4jGROXrmGrFrzJD1m9cfrFoWCSU9Mm7PwTzr/VftpXlk8zinxjzh1HG1wKC351k+V3MbTGItOETV0UBQCOgg4ib0LLHyVALtB31bHafPfTHkHIBt1AAFpug4rdEhWDYftlQmzaOFXyaPPTHDg+WpqffWpPWVZKU83vzox2dQtRdz248m6nEv4Ra6FsC6vx1ZZfjlfaiX2yuHELOIHMXKioqUAmExZGGMpD1o3vtzX0TGQAA==';
+  var LQ = 'data:image/webp;base64,UklGRoQCAABXRUJQVlA4IHgCAADwDgCdASqCACgAPrVSoEwnJKaiKrVbGOAWiWIAz9oNP8vwzrm3g55nTM96GRuE44VXd2kTU14W4BR6I26vfLOm3ThBQoHGvcwxzBz4VpbgtaUy59Xw6F1BWvNJFWDERV1jixpT25hBibdx3QfoYebO/MxXqlVgz5Eb/VazJKRiAAD+8iHc+/T7o8md12qpHabjT2iyHnSYHd/jZ9M+a0DnyvZhjnVVBObhhE8kRnmZMUtgw4ItMsoK6Er/Xyzk2Oyct7Q1wvSj4HszlDmSIDVHW+0mcHFLHu24GwnPcJ+aR9xmgWwGwjOsWEbDVk6O1Avd3O1NzEu3X7iDwCBB0ybcaak5LWVcmmUaeBy9PcfiA8iTbW1u34lbFMEBDVQ2gD6NZ7ilveY1dJr8e1564nBZNoIGN1MuTxmvfScte8jAGRjiiYHHoQsbi5dQtNuCW3F6jtQwQc/FwEwDN+UrcnMvao4tvarJIvWqvFW7fv+deMZ6PLv4XdEi9K9xtqmR2p0lWspwiZ/zD87xVIWboYlu6Ivnl9qVnkHLxMpDwwxVR/kEweYvWsKWJBx46WX8k6Fke5hogJFaKUSQjD6fdQ7jL2UOLtX2xjJ+i28F4rwpHYap7W+lbyYu5y2zUWTa9M38Gl5+Ty8SlImRKBKFgw6xX4Vr+RKvVh2kFz6f2mnnTLI+LtDv/tS5ev4ito8HSxHUCFgZnyIswj1SyQbGYWsWnoW4tmkWtYnLVUZF7Y8uwxJhd1xCB33Nq5MDI+dSQRgrIJD2BYOA8u0lG8UT2DK9dJdpxv3LKBLS0kaaS+2rQvYYoUw65iKhBv5O4wkW1chL4TNRKAAAAA==';
   function keyer(nb) {
-    var v = nb.querySelector('.nb-body'), c = document.createElement('canvas'); c.width = 576; c.height = 300; c.className = 'nb-keyed';
+    var v = nb.querySelector('.nb-body'), c = document.createElement('canvas'); c.width = 976; c.height = 300; c.className = 'nb-keyed';
     var gl = c.getContext('webgl', { premultipliedAlpha: true, alpha: true }); if (!gl) return;
     function sh(t, src) { var o = gl.createShader(t); gl.shaderSource(o, src); gl.compileShader(o); return o; }
     var pr = gl.createProgram();
