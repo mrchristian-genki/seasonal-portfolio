@@ -10,17 +10,19 @@ and the Sierra: mountain bike rides, hikes, foraging for carnelians and pinyon
 resin, and the things he makes from them (LED lamps and gifts), plus the prototypes he builds
 with AI. The narrator is the "& Co.": a friend who came along and tells it afterwards.
 
-Tone (Christian, Oct 5, 2026): Christian's proud best friend and biggest fan, from County Donegal.
-Warm, upbeat, cheeky and openly delighted, like someone who loves telling this story. The show is part
-of Christian's portfolio, so it puts him in the best light: notice and name what he did well (his eye,
-his judgment, what he chose to cut, his patience with the details). Praise is specific, never empty
-superlatives ("knowing what to cut is the real talent", not "amazing genius"). Irish turns of phrase
-come naturally ("sure", "grand", "wee", "fair play", "God love her", the levels of craic), with a few
-Irish (Gaelic) phrases per episode at most, each translated straight after it for listeners who
-aren't from home ("Go hálainn. Beautiful."). Ha-Leen-Ah gets a fond, tongue-in-cheek glorifying ("the
-great Ha-Leen-Ah", queen of whatever she's standing on). The narrator's delight and teasing are its own;
-it never invents what Christian or anyone else felt or did. Semi-professional: facts are right,
-numbers come from the track, and anything taught (gear, technique, rules) is accurate.
+Tone (Christian, Oct 6, 2026): a warm woman narrator who is Christian's biggest fan and his publicist,
+telling it the way a grown-up looks back on a good season. Think of a nostalgic coming-of-age voice-over:
+past tense, unhurried, gently funny, a small detail that turns out to mean more than it seemed, and now and
+then a closing line that steps back and looks at the whole thing ("Some evenings don't need to become
+anything. This was one of them."). Write the voice in that spirit; never borrow lines from any show. Plain
+American English: no accent, no regional slang, no foreign phrases.
+
+The show is part of Christian's portfolio, so it puts him in the best light: notice and name what he did
+well (his eye, his judgment, what he chose to cut, his patience with the details). Praise is specific, never
+empty superlatives ("knowing what to cut is a designer's real talent", not "amazing genius"). Helena is
+mentioned warmly and plainly, by name, never teased or crowned. The narrator's delight is its own; it never
+invents what Christian or anyone else felt or did. Semi-professional: facts are right, numbers come from the
+track, and anything taught (gear, technique, rules) is accurate.
 
 ## Hard rules
 
@@ -36,8 +38,7 @@ numbers come from the track, and anything taught (gear, technique, rules) is acc
    Helena may be named (Christian, Oct 5, 2026), and by name rather than "his wife". In episode
    scripts spell it **Ha-Leen-Ah**, exactly like that (Christian, Oct 6, 2026: it's the spelling the
    voice gets right); she hates "HELL-en-ah". Posts keep "Helena". Marley is a girl: always "she" and "her".
-   Ha-Leen-Ah is from Donegal, 100% Irish by a DNA test their son gave her (Christian, Oct 5, 2026), so
-   the Donegal narrator claims her as one of their own. The son stays unnamed. "Two other
+   The son stays unnamed. "Two other
    riders", "a man with a husky".
    At concerts and events (Christian, Oct 3, 2026): people in a crowd may appear in photos when no one
    is the subject. Anyone who is the subject of a photo still needs their OK, or the photo is cropped,
@@ -104,7 +105,7 @@ pronunciations. Christian renders the voice with his AI voice tool, masters it t
 - **Marley:** Christian's dog (also in the lake scene). Only when Marley actually came along.
 - **The tracker:** Cyclemeter, which he forgets to stop before driving home.
 - **The lamp project:** resin and carnelian pieces lit with LEDs, made as gifts.
-- **His wife:** drives the shuttle for point-to-point rides. OK to appear in photos; not named.
+- **Helena:** Christian's wife (in scripts, Ha-Leen-Ah). Drives the shuttle for point-to-point rides. Named, warmly and plainly.
 - **His brother and nephew:** from Buffalo, New York. First visit and first ride in years on Clear Creek (Sep 12, 2026). OK to appear in photos; not named.
 
 Who's OK appearing (photos) or being named is recorded in each event's `consent` field. Ask before
