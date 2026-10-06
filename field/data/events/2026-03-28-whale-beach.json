@@ -1509,5 +1509,13 @@
  },
  "consent": "Wife: OK to appear in photos, not named (Oct 1). Marley: the family dog.",
  "questions": [],
- "publishedAt": "2026-10-01T20:39:54Z"
+ "publishedAt": "2026-10-01T20:39:54Z",
+ "narratorLook": {
+  "look": "beach-shades",
+  "fit": "new",
+  "about": "sunglasses pushed up in her curls, with a carnelian clip",
+  "why": "A sunset hour on Whale Beach, with polished carnelian in the sand.",
+  "prompt": "Same image, same camera, same face, same eyes, same jaw, same neck and the same flat chroma green background (#00B140). Change only the hair and accessories: a pair of chunky round sunglasses with polished brass rims and warm amber lenses, pushed up on top of her head and resting in her curls well above her brows, plus a small hair clip set with a polished carnelian-orange stone tucked into the curls at one side. Her flower-bud antenna stays exactly where it is now, standing up behind the sunglasses. Bold, chunky shapes; nothing crosses her face below the brows; everything stays inside the crop box.",
+  "bulb": true
+ }
 }

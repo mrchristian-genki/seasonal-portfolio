@@ -66,5 +66,13 @@
  },
  "consent": "Marley: the family dog. Christian appears as himself (AI illustrations).",
  "questions": [],
- "publishedAt": "2026-10-02T21:05:51Z"
+ "publishedAt": "2026-10-02T21:05:51Z",
+ "narratorLook": {
+  "look": "workshop-goggles",
+  "fit": "new",
+  "about": "brass workshop goggles pushed up on her forehead",
+  "why": "A day at the workbench building the site's animated scenes.",
+  "prompt": "Same image, same camera, same face, same eyes, same jaw, same neck and the same flat chroma green background (#00B140). Change only the hair and accessories: a pair of chunky brass workshop goggles with round amber-tinted lenses and riveted rims, on a thick dark leather strap, pushed up so they sit on her forehead just above her brows and across her curls, with the strap running around the back of her head. Her flower-bud antenna stays exactly where it is now, above the goggles. Bold, chunky shapes; nothing crosses her face below the brows; everything stays inside the crop box.",
+  "bulb": true
+ }
 }
