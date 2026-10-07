@@ -65,7 +65,8 @@ def head(look, pal):
         for k, c in zip('ab', pal):
             if k not in (look.get('flair') or ''): continue
             m = rgba(f'looks/{stem}.flair-{k}.png')[..., 3:] * float(look.get('flairK', .45))   # its strength: 45% on brass, more on fabric
-            out[..., :3] = out[..., :3] * (1 - m) + color_blend(out[..., :3], hexrgb(c)) * m
+            mix = out[..., :3] * hexrgb(c) if k in (look.get('flairDye') or '') else color_blend(out[..., :3], hexrgb(c))   # white parts dyed (multiply), the rest tinted
+            out[..., :3] = out[..., :3] * (1 - m) + mix * m
     eye = rgba('head-iris.webp'); eye[..., 3:] *= rgba('head-lens.png')[..., 3:]
     for lay in (eye, rgba('head-shine.webp'), rgba('head-jaw-sides.webp'), rgba('head-jaw.webp')): over(out, lay)
     return out

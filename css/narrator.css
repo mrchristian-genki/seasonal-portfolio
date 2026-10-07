@@ -126,6 +126,7 @@ section.listen.has-bd::before{z-index:1}
 .nb-flair{position:absolute;inset:0;display:block;mix-blend-mode:color;opacity:var(--fk,.45);background:var(--ga1,transparent);pointer-events:none;
   -webkit-mask:var(--fm) 0 0/100% 100% no-repeat;mask:var(--fm) 0 0/100% 100% no-repeat}
 .nb-flair[data-k="b"]{background:var(--ga2,transparent)}
+.nb-flair.dye{mix-blend-mode:multiply}   /* white or pale parts (looks.json flairDye): dyed the colour itself, so white trim turns the colour, and white stays white */
 .nb-flair[hidden]{display:none}
 section.listen:not(.has-pal) .nb-flair{display:none}
 /* the shine: now and then a band of light sweeps across the scene behind her (the backdrop) and on over the glass player;

@@ -103,7 +103,7 @@
   // As her share card (field/tools/gacard.py) and her Listen bar: the Note's backdrop with its colours over it, the
   // site's nameplate with the title, the glass player, and her at her desk in the Note's look, its flair tinted 45%
   // in the Note's two colours. Built once per size from the same parts the site stacks.
-  var NA = '/assets/narrator/', gaParts = null, gaCards = {}, gaK = .45;   // gaK: how strongly her flair takes the colours (looks.json flairK)
+  var NA = '/assets/narrator/', gaParts = null, gaCards = {}, gaK = .45, gaDye = '';   // gaK: how strongly her flair takes the colours (looks.json flairK)
   function pic(u) { return new Promise(function (ok) { var i = new Image(); i.onload = function () { ok(i); }; i.onerror = function () { ok(null); }; i.src = u; }); }
   function gaStyle() {   // her look and backdrop on this Note, as the site picks them: its own, else its categories'
     var kt = { ride: 'ride', hike: 'hike', forage: 'foraging', make: 'mini-cast' };
@@ -125,7 +125,7 @@
     return (gaParts = gaStyle().then(function (st) {
       var v = st.look && st.look.v ? '?r=' + st.look.v : '', stem = st.look ? NA + 'looks/' + st.look.file.replace(/\.[a-z]+$/, '') + '.flair-' : '';
       var fl = st.look ? (st.look.flair || '') : '';
-      gaK = st.look && st.look.flairK ? st.look.flairK : .45;
+      gaK = st.look && st.look.flairK ? st.look.flairK : .45; gaDye = st.look ? (st.look.flairDye || '') : '';
       return Promise.all([st.look ? pic(NA + 'looks/' + st.look.file + v) : pic(NA + 'head-base.webp'), pic(NA + 'head-iris.webp'), pic(NA + 'head-lens.png'), pic(NA + 'head-shine.webp'),
         pic(NA + 'head-jaw-sides.webp'), pic(NA + 'head-jaw.webp'), pic(NA + 'kit/rest-body.webp'), pic(NA + 'desk.jpg'),
         st.bd ? pic(NA + 'backdrops/' + st.bd.file + (st.bd.v ? '?r=' + st.bd.v : '')) : Promise.resolve(null),
@@ -144,7 +144,7 @@
     if (p) [P[9], P[10]].forEach(function (mk, k) {
       if (!mk) return;
       var t = canvas(W, H), tg = t.getContext('2d'); tg.drawImage(mk, 0, 0, W, H); tg.globalCompositeOperation = 'source-in'; tg.fillStyle = p[k]; tg.fillRect(0, 0, W, H);
-      g.save(); g.globalCompositeOperation = 'color'; g.globalAlpha = gaK; g.drawImage(t, 0, 0); g.restore();
+      g.save(); g.globalCompositeOperation = gaDye.indexOf('ab'[k]) >= 0 ? 'multiply' : 'color'; g.globalAlpha = gaK; g.drawImage(t, 0, 0); g.restore();
     });
     var e = canvas(W, H), eg = e.getContext('2d');
     if (P[1]) eg.drawImage(P[1], 0, 0, W, H); if (P[2]) { eg.globalCompositeOperation = 'destination-in'; eg.drawImage(P[2], 0, 0, W, H); }

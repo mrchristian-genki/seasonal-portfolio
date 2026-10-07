@@ -13,7 +13,7 @@
   { "name": "fourth-of-july", "file": "stars.webp", "from": "07-01", "to": "07-04", "flair": "ab", "flairK": 0.8 },
   { "name": "halloween", "file": "witch.webp", "from": "10-20", "to": "10-31", "bulb": false, "flair": "ab", "flairK": 0.8 },
   { "name": "thanksgiving", "file": "autumn.webp", "from": "11-20", "to": "11-28", "flair": "a", "flairK": 0.8 },
-  { "name": "winter-holidays", "file": "santa.webp", "from": "12-01", "to": "12-30", "bulb": false, "flair": "a", "flairK": 0.8 },
+  { "name": "winter-holidays", "file": "santa.webp", "from": "12-01", "to": "12-30", "bulb": false, "v": "tmk9sw", "flair": "ab", "flairK": 0.8, "flairDye": "b" },
   { "name": "bike-helmet", "file": "bike-helmet.webp", "about": "a brass bike helmet with a little headlamp", "flair": "ab" },
   { "name": "trail-cap", "file": "trail-cap.webp", "about": "a turquoise and cream trucker cap, like Helena's on the trail", "v": "tmk2f9", "flair": "ab", "flairK": 0.8 },
   { "name": "beach-shades", "file": "beach-shades.webp", "about": "sunglasses pushed up in her curls, with a carnelian clip", "v": "tmi58m", "flair": "ab", "flairK": 0.8 },
