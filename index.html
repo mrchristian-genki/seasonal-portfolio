@@ -269,7 +269,7 @@ document.documentElement.classList.add('night-page');})();</script>
 <script src="js/footer.js?v=1793430000" defer></script>
 <!-- Wildlife (animals + hidden tap spots): loaded after the page has finished loading, so it
      never delays the first paint. -->
-<script>addEventListener('load',function(){setTimeout(function(){['creature-shapes','origami-art','creatures','wildlife','getaway'].reduce(function(p,n){return p.then(function(){return new Promise(function(r){var s=document.createElement('script');s.src='js/'+n+'.js?v=1793270000';s.onload=s.onerror=r;document.body.appendChild(s)})})},Promise.resolve())},1500)})</script>
+<script>addEventListener('load',function(){setTimeout(function(){['creature-shapes','origami-art','creatures','wildlife','getaway'].reduce(function(p,n){return p.then(function(){return new Promise(function(r){var s=document.createElement('script');s.src='js/'+n+'.js?v=1793280000';s.onload=s.onerror=r;document.body.appendChild(s)})})},Promise.resolve())},1500)})</script>
 <script>
 /* Crash breadcrumbs. Safari's "This webpage was reloaded because a problem occurred" gives no
    details, so every 5 s the page notes what it is doing (season, night, animals, uptime). A clean

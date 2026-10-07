@@ -10,7 +10,7 @@
 (function () {
   const core = document.getElementById('sceneCore');
   if (!core) return;
-  const V = '?v=1793250000', A = (f) => 'assets/getaway/' + f + V;
+  const V = '?v=1793260000', A = (f) => 'assets/getaway/' + f + V;
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const SEA = 'hue-rotate(38deg) saturate(.7) brightness(.72)', BACKLIT = 'sepia(.35) hue-rotate(-25deg) saturate(.9) brightness(.55)';
   const SCENE = {
