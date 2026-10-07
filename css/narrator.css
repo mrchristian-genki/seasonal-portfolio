@@ -24,6 +24,7 @@ section.listen.has-nb::before{content:"";position:absolute;left:0;right:0;bottom
 .nb-eyes{position:absolute;inset:0;-webkit-mask:url(/assets/narrator/head-lens.png?v=2) 0 0/100% 100% no-repeat;mask:url(/assets/narrator/head-lens.png?v=2) 0 0/100% 100% no-repeat}
 .nb-iris{translate:var(--gx,0%) var(--gy,0%);transition:translate .45s cubic-bezier(.3,1.3,.5,1)}   /* her gaze (narrator.js gaze()) */
 .nb.look .nb-iris{translate:.7% 0}
+.nb.follow .nb-iris,.nb.follow.look .nb-iris{translate:var(--fx,0%) var(--fy,0%);transition:translate .16s ease-out}   /* following the mouse at rest (narrator.js follow()) */
 .nb-lids{opacity:0}
 .nb.wink .nb-lids{opacity:1;clip-path:inset(0 0 0 50%)}   /* a wink: the eye nearer the Play button */
 .nb.blink .nb-lids{opacity:1;clip-path:none}

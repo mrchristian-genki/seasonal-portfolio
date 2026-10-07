@@ -313,7 +313,9 @@
     })();
     // her gaze: mostly on you, now and then a short, unhurried glance aside or down and back, the way people look
     // while they talk (a fixed, unblinking stare reads as cold); a hint's look toward Play takes over while it lasts
+    follow(bar, nb, audio);
     (function gaze() {
+      if (nb.classList.contains('follow')) { setTimeout(function () { if (nb.isConnected) gaze(); }, 1500); return; }   // she's watching the pointer
       var away = !still && Math.random() < 0.45;
       if (away) {
         var r = Math.random(), x = r < 0.4 ? -0.4 : r < 0.8 ? 0.4 : (Math.random() - 0.5) * 0.3, y = r < 0.8 ? (Math.random() - 0.3) * 0.25 : 0.4;
@@ -321,6 +323,24 @@
       } else { nb.style.removeProperty('--gx'); nb.style.removeProperty('--gy'); }
       setTimeout(function () { if (nb.isConnected) gaze(); }, away ? 700 + Math.random() * 900 : 2200 + Math.random() * 3300);
     })();
+  }
+
+  // while she isn't telling the episode (at rest or paused), her eyes follow the mouse over her Listen bar, kept inside
+  // her lenses; when it leaves, or she starts talking, they go back to her own gaze. Mouse and pen only, not touch.
+  function follow(bar, nb, audio) {
+    var head = nb.querySelector('.nb-head'), on = false;
+    function off() { if (!on) return; on = false; nb.classList.remove('follow'); nb.style.removeProperty('--fx'); nb.style.removeProperty('--fy'); }
+    bar.addEventListener('pointermove', function (ev) {
+      if (ev.pointerType === 'touch' || !head || (audio && !audio.paused)) { off(); return; }
+      var r = head.getBoundingClientRect(); if (!r.width) return;
+      var cx = r.left + r.width * 310.4 / 623, cy = r.top + r.height * 218.7 / 437;   // between her eyes, in the head layer
+      var dx = (ev.clientX - cx) / (r.width * 1.1), dy = (ev.clientY - cy) / (r.height * 1.1), d = Math.hypot(dx, dy);
+      if (d > 1) { dx /= d; dy /= d; }
+      on = true; nb.classList.add('follow');
+      nb.style.setProperty('--fx', (dx * 0.9).toFixed(2) + '%'); nb.style.setProperty('--fy', (dy * 0.6).toFixed(2) + '%');
+    });
+    bar.addEventListener('pointerleave', off);
+    if (audio) audio.addEventListener('play', off);
   }
 
   function scan(root) { (root.querySelectorAll ? root : document).querySelectorAll('section.listen').forEach(build); }

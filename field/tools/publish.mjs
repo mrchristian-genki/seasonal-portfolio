@@ -16,6 +16,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const FIELD = path.resolve(here, '..');
@@ -125,7 +126,7 @@ ${ICONS}
 <link rel="stylesheet" href="${rel}play.css?v=${V}">
 <link rel="stylesheet" href="${rel}../css/logo.css?v=11">
 <link rel="stylesheet" href="${rel}../css/lake.css?v=1">
-<link rel="stylesheet" href="${rel}../css/narrator.css?v=27">
+<link rel="stylesheet" href="${rel}../css/narrator.css?v=28">
 <script>/* Logo season from the calendar, as on About. */document.documentElement.dataset.season=["winter","winter","spring","spring","spring","summer","summer","summer","fall","fall","fall","winter"][new Date().getMonth()];</script>
 <link rel="stylesheet" href="${rel}../css/route-dash.css?v=${V}">
 </head>
@@ -142,7 +143,7 @@ const foot = (rel) => `<footer class="foot"><p>${esc(show.narrationNote)}</p>
 <script src="${rel}../js/audio-rules.js?v=1" defer></script>
 <script src="${rel}play.js?v=${V}" defer></script>
 <script src="${rel}../js/lake.js?v=3" defer></script>
-<script src="${rel}../js/narrator.js?v=35" defer></script>
+<script src="${rel}../js/narrator.js?v=36" defer></script>
 </body>
 </html>
 `;
@@ -209,13 +210,15 @@ for (const e of events) {
 
   const url = `${show.siteUrl}${e.id}/`, title = `${e.post && e.post.title || e.title} · ${show.showTitle}`;
   const desc = e.summary || paras(e.post && e.post.body)[0] || '';
-  // its share card: the nameplate card cards.py made from the cover (the title on brass), else the cover itself
+  // its share card: the one cards.py made (GlazyArray's, with an episode; else the title on brass over the cover), else the cover itself
   const cardSrc = path.join(FIELD, 'data', 'cards', e.id + '.jpg');
   let share = cover && { abs: cover.abs, w: cover.w, h: cover.h, alt: cover.caption };
   if (fs.existsSync(cardSrc)) {
     fs.copyFileSync(cardSrc, path.join(media, 'card.jpg'));
-    share = { abs: `${show.siteUrl}media/${e.id}/card.jpg?v=${fs.statSync(cardSrc).size.toString(36)}`, w: 1200, h: 630,
-      alt: `${e.post && e.post.title || e.title}: the title on a brass nameplate over the Note's cover picture` };
+    // v: from the card's own bytes, so any change to it (a new look, colours, backdrop, title) is a new link for caches
+    const cv = createHash('sha1').update(fs.readFileSync(cardSrc)).digest('hex').slice(0, 8);
+    share = { abs: `${show.siteUrl}media/${e.id}/card.jpg?v=${cv}`, w: 1200, h: 630,
+      alt: audio ? `${e.post && e.post.title || e.title}: GlazyArray, the narrator, at her desk with the episode's player` : `${e.post && e.post.title || e.title}: the title on a brass nameplate over the Note's cover picture` };
   }
   const html = head(title, desc, url, share && share.abs, '../', 'field-notes', { type: 'article', lake: 'notes+' + e.id, published: e.date,
     w: share && share.w, h: share && share.h, alt: share && share.alt, audio: audio && audio.abs }) + `<main class="article"${t ? ` data-route="../data/${esc(e.id)}.json"` : ''}>
