@@ -46,9 +46,9 @@
   // covers the antenna (its glow stays off).
   var LOOKRX = /(^|[?&+,;\s])look[-=]([a-z0-9-]+)/i;
   function urlLook() { var m = LOOKRX.exec(decodeURIComponent(location.search)); return m ? m[2].toLowerCase() : null; }
-  var WARDROBE = [], ALL = {}, CATS = {}, BDS = {}, CATBD = {}, CURLS = A + 'head-base.webp' + V;
+  var WARDROBE = [], ALL = {}, CATS = {}, BDS = {}, CATBD = {}, LJ = {}, CURLS = A + 'head-base.webp' + V;
   var looks = fetch(A + 'looks.json' + V, { cache: 'no-cache' }).then(function (r) { return r.ok ? r.json() : { looks: [] }; }).catch(function () { return { looks: [] }; }).then(function (j) {
-    var list = (j && j.looks) || [], d = new Date();
+    var list = (j && j.looks) || [], d = new Date(); LJ = j || {};
     ALL = { curls: { name: 'curls' } }; list.forEach(function (l) { ALL[l.name] = l; }); CATS = (j && j.categories) || {};
     ((j && j.backdrops) || []).forEach(function (b) { BDS[b.name] = b; }); CATBD = (j && j.categoryBackdrops) || {};
     var hol = list.filter(function (l) { return l.to; }).sort(function (a, b) { return a.to < b.to ? -1 : 1; });
@@ -86,8 +86,19 @@
   // wears there, once it has been made, whatever the address says (Christian, Oct 6, 2026)
   // ...and failing that, the look its categories give it (looks.json "categories": every case study in her
   // mortarboard). Which look shows: the Note's own, else its category's, else the holiday look.
+  // Now one rule decides (assets/narrator/resolve.js, Christian, Oct 7, 2026): a holiday on its dates, unless the Note
+  // ignores holidays; the Note's own; its categories by the ticked one, then priority, then the latest changed; the default.
+  function noteOf(bar) {
+    return { look: bar.getAttribute('data-look'), backdrop: bar.getAttribute('data-backdrop'), cats: (bar.getAttribute('data-cats') || '').split(' '),
+      prefer: bar.getAttribute('data-prefer'), ignoreHolidays: bar.hasAttribute('data-noholiday') };
+  }
   function own(nb) {
     var bar = nb.closest('section.listen'); if (!bar) return null;
+    if (window.GAResolve) {
+      var r = GAResolve.pick(LJ, noteOf(bar)), want = urlLook();
+      if (want && ALL[want] && r.look.from !== 'note' && r.look.from !== 'holiday') return ALL[want];   // ?look-name previews one
+      return ALL[r.look.name] || null;
+    }
     var n = bar.getAttribute('data-look'); if (n && ALL[n]) return ALL[n];
     // two categories with different looks and none picked for the Note: the holiday look (Christian, Oct 6, 2026:
     // the editor picks one in the Studio while drafting)
@@ -122,6 +133,7 @@
   // a case study, a bike shop for a ride. Chosen like her look: the Note's own (data-backdrop), else the one its
   // categories give it (a single one; two different and none picked: none), else the bar's plain teal.
   function ownBd(bar) {
+    if (window.GAResolve) { var r = GAResolve.pick(LJ, noteOf(bar)).backdrop; return r ? BDS[r.name] || null : null; }
     var n = bar.getAttribute('data-backdrop'); if (n && BDS[n]) return BDS[n];
     var found = [];
     (bar.getAttribute('data-cats') || '').split(' ').forEach(function (c) { var b = CATBD[c] && BDS[CATBD[c]]; if (b && found.indexOf(b) < 0) found.push(b); });

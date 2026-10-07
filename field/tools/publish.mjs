@@ -17,6 +17,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
+import { createRequire } from 'node:module';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const FIELD = path.resolve(here, '..');
@@ -40,16 +41,22 @@ const dur = (s) => { const t = Math.round(s / 60), h = Math.floor(t / 60), m = t
 const mmss = (s) => { const t = Math.round(s); return `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`; };   // 119.6 s is 2:00, not 1:60
 // GlazyArray's look for this Note, picked when it was drafted (SHOW-GUIDE.md, "GlazyArray's look"): her default on
 // this Note's Listen bar once that look has been made; until then narrator.js keeps the holiday look
+// Which one she wears is decided on the page by one rule (assets/narrator/resolve.js): a look or backdrop the Note took
+// from a category isn't its own, so the category's current one shows (never a stale copy); the category it took is
+// "data-prefer", the one its categories try first. "ignoreHolidays": holidays don't dress this Note.
+const mine = (x) => x && x.fit !== 'category' && x.fit !== 'none';
 const lookAttr = (e) => {
-  const l = e.narratorLook && e.narratorLook.look, own = l && /^[a-z0-9-]{1,40}$/.test(l) ? ` data-look="${l}"` : '';
+  const l = mine(e.narratorLook) && e.narratorLook.look, own = l && /^[a-z0-9-]{1,40}$/.test(l) ? ` data-look="${l}"` : '';
+  const pf = (e.narratorLook && e.narratorLook.fit === 'category' && e.narratorLook.from) || (e.narratorBackdrop && e.narratorBackdrop.fit === 'category' && e.narratorBackdrop.from);
+  const prefer = pf && /^[a-z0-9-]{1,40}$/.test(pf) ? ` data-prefer="${pf}"` : '', noh = e.ignoreHolidays ? ' data-noholiday' : '';
   // and its categories, for the looks whole categories wear (looks.json "categories"): its own tags first, its kind last
   const cats = tagsOf(e).filter((t) => !/^\d{4}$/.test(t)), kind = cats.shift();
   // and its own backdrop, if it has one (narratorBackdrop: the scene behind its Listen bar)
-  const b = e.narratorBackdrop && e.narratorBackdrop.backdrop, bd = b && /^[a-z0-9-]{1,40}$/.test(b) ? ` data-backdrop="${b}"` : '';
+  const b = mine(e.narratorBackdrop) && e.narratorBackdrop.backdrop, bd = b && /^[a-z0-9-]{1,40}$/.test(b) ? ` data-backdrop="${b}"` : '';
   // and its palette (two accent colours pulled from its hero in the Studio): her flair, the glass card and the backdrop take them
   const pal = (Array.isArray(e.palette) ? e.palette : []).filter((c) => /^#[0-9a-f]{6}$/i.test(c)).slice(0, 2);
   const pa = pal.length ? ` data-palette="${pal.join(' ')}"` : '';
-  return own + bd + pa + ` data-cats="${esc(cats.concat(kind ? [kind] : []).join(' '))}"`;
+  return own + bd + prefer + noh + pa + ` data-cats="${esc(cats.concat(kind ? [kind] : []).join(' '))}"`;
 };
 const paras = (t) => String(t || '').split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
 
@@ -143,7 +150,8 @@ const foot = (rel) => `<footer class="foot"><p>${esc(show.narrationNote)}</p>
 <script src="${rel}../js/audio-rules.js?v=1" defer></script>
 <script src="${rel}play.js?v=${V}" defer></script>
 <script src="${rel}../js/lake.js?v=3" defer></script>
-<script src="${rel}../js/narrator.js?v=40" defer></script>
+<script src="${rel}../assets/narrator/resolve.js?v=1" defer></script>
+<script src="${rel}../js/narrator.js?v=41" defer></script>
 </body>
 </html>
 `;
@@ -396,4 +404,24 @@ ${audio ? `<enclosure url="${esc(audio.abs)}" length="${audio.bytes}" type="audi
 </rss>
 `;
 fs.writeFileSync(path.join(OUT, 'feed.xml'), rss);
+// THE WARDROBE CHECK: every Note resolves to a look and a backdrop that exist on disk (resolve.js, the same rule as
+// the page), today and through the coming year's holidays; anything missing is listed here and the page shows the default
+{
+  const R = createRequire(import.meta.url)('../../assets/narrator/resolve.js'), J = readJSON(path.join(SITE, 'assets/narrator/looks.json'));
+  const has = (dir, f) => !!f && fs.existsSync(path.join(SITE, 'assets/narrator', dir, f));
+  const lk = Object.fromEntries((J.looks || []).map((l) => [l.name, l])), bk = Object.fromEntries((J.backdrops || []).map((b) => [b.name, b]));
+  const bad = [];
+  for (const l of J.looks || []) if (!has('looks', l.file)) bad.push(`look ${l.name}: no file ${l.file}`);
+  for (const b of J.backdrops || []) if (!has('backdrops', b.file)) bad.push(`backdrop ${b.name}: no file ${b.file}`);
+  for (const [c, n] of Object.entries(J.categories || {})) if (!lk[n] && n !== 'curls') bad.push(`category ${c}: no look called ${n}`);
+  for (const [c, n] of Object.entries(J.categoryBackdrops || {})) if (!bk[n]) bad.push(`category ${c}: no backdrop called ${n}`);
+  for (const { e } of pages) {
+    const cats = tagsOf(e).filter((t) => !/^\d{4}$/.test(t)), kind = cats.shift(); if (kind) cats.push(kind);
+    const r = R.pick(J, { look: mine(e.narratorLook) && e.narratorLook.look, backdrop: mine(e.narratorBackdrop) && e.narratorBackdrop.backdrop, cats,
+      prefer: (e.narratorLook && e.narratorLook.from) || (e.narratorBackdrop && e.narratorBackdrop.from), ignoreHolidays: !!e.ignoreHolidays });
+    if (!r.backdrop) bad.push(`${e.id}: no backdrop (and no default)`);
+    console.log(`  ${e.id}: ${r.look.name} (${r.look.why}) · ${r.backdrop ? r.backdrop.name + ' (' + r.backdrop.why + ')' : 'none'}`);
+  }
+  console.log(bad.length ? 'Wardrobe check:\n  ' + bad.join('\n  ') : 'Wardrobe check: every Note is dressed.');
+}
 console.log(`play/: ${pages.length} published (${pages.map((p) => p.e.id).join(', ') || 'none'})${show.listed ? '' : ', unlisted (noindex)'}`);
