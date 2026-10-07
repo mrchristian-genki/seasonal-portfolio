@@ -70,9 +70,6 @@
       var k = f.getAttribute('data-k'), on = !!stem && (l.flair || '').indexOf(k) >= 0;
       f.style.setProperty('--fm', on ? 'url(' + stem + k + '.png' + V + (l.v ? '.' + l.v : '') + ')' : 'none'); f.hidden = !on;
     });
-    // and a glint of light that runs across all of it now and then (.nb-glint, through both masks)
-    var ms = [].filter.call(nb.querySelectorAll('.nb-flair'), function (f) { return !f.hidden; }).map(function (f) { return f.style.getPropertyValue('--fm'); });
-    var g = nb.querySelector('.nb-glint'); if (g) { g.style.setProperty('--gm', ms.join(', ') || 'none'); g.hidden = !ms.length; }
   }
   function put(nb, l) {
     nb.querySelector('.nb-base').src = src(l); flair(nb, l);
@@ -207,7 +204,7 @@
     if (!audio || bar.querySelector('.nb')) return;
     bar.classList.add('has-nb');
     var nb = document.createElement('div'); nb.className = 'nb'; nb.setAttribute('aria-hidden', 'true');
-    nb.innerHTML = '<div class="nb-rise"><div class="nb-head"><img class="nb-base" src="' + A + 'head-base.webp' + V + '" alt=""><i class="nb-flair" data-k="a" hidden></i><i class="nb-flair" data-k="b" hidden></i><i class="nb-glint" hidden></i><span class="nb-eyes"><img class="nb-iris" src="' + A + 'head-iris.webp' + V + '" alt=""></span><img class="nb-shine" src="' + A + 'head-shine.webp' + V + '" alt=""><img class="nb-jaw-s" src="' + A + 'head-jaw-sides.webp' + V + '" alt=""><img class="nb-jaw" src="' + A + 'head-jaw.webp' + V + '" alt="">' +
+    nb.innerHTML = '<div class="nb-rise"><div class="nb-head"><img class="nb-base" src="' + A + 'head-base.webp' + V + '" alt=""><i class="nb-flair" data-k="a" hidden></i><i class="nb-flair" data-k="b" hidden></i><span class="nb-eyes"><img class="nb-iris" src="' + A + 'head-iris.webp' + V + '" alt=""></span><img class="nb-shine" src="' + A + 'head-shine.webp' + V + '" alt=""><img class="nb-jaw-s" src="' + A + 'head-jaw-sides.webp' + V + '" alt=""><img class="nb-jaw" src="' + A + 'head-jaw.webp' + V + '" alt="">' +
       '<img class="nb-lids" src="' + A + 'head-lids.webp' + V + '" alt=""><i class="nb-bulb"></i><b class="nb-hit" title="GlazyArray\u2019s Style Array: click for her next look"></b></div>' +
       '<video class="nb-body" muted playsinline preload="none" poster="' + A + 'rest.jpg' + V + '"></video></div>';
     bar.insertBefore(nb, bar.firstChild);
