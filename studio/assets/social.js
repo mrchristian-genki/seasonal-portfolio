@@ -191,7 +191,7 @@
       g.save(); g.shadowColor = 'rgba(0,0,0,.45)'; g.shadowBlur = 14; g.shadowOffsetY = 6; g.drawImage(pl, (w - pl.width) / 2, top); g.restore();
       var py = top + pl.height + 34 * k / 1.5, pw = w - 140 * k / 1.5, ph = player(g, (w - pw) / 2, py, pw, pw / 500, p);
       // her desk across the card, and her at it, sized to the room under the player
-      var s = Math.max(.4, Math.min(w / 976 * (h / w > 1.5 ? 1.4 : 1.15), (deskY - (py + ph + 30 * k)) / 590.9))   // bigger on the tall Story, dh = Math.round(26 * s);
+      var s = Math.max(.4, Math.min(w / 976 * (h / w > 1.5 ? 1.4 : 1.15), (deskY - (py + ph + 30 * k)) / 590.9)), dh = Math.round(26 * s);   // bigger on the tall Story
       if (P[7]) { var dw = P[7].width * dh / P[7].height; for (var x = 0; x < w; x += dw) g.drawImage(P[7], x, deskY - dh, dw, dh); }
       if (deskY < h) { g.fillStyle = 'rgba(8,12,12,.55)'; g.fillRect(0, deskY, w, h - deskY); }
       var bw = 976 * s, bh = 300 * s, bx = (w - bw) / 2 + 10 * s, bot = deskY + 2;
