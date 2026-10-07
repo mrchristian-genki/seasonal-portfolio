@@ -36,7 +36,8 @@
   { "name": "lake-tahoe-beach", "file": "lake-tahoe-beach.webp", "about": "", "v": "tmjrp2", "scene": "a Lake Tahoe shoreline with clear turquoise water, smooth granite boulders and pines at golden hour" },
   { "name": "biking-forest", "file": "biking-forest.jpg", "about": "", "v": "tmk2vr", "scene": "a Lake Tahoe shoreline with clear turquoise water, smooth granite boulders and pines at golden hour" },
   { "name": "hiking-1", "file": "hiking-1.jpg", "about": "", "v": "tmk36o", "scene": "a Lake Tahoe shoreline with clear turquoise water, smooth granite boulders and pines at golden hour" },
-  { "name": "hiking-yosemite-1", "file": "hiking-yosemite-1.jpg", "about": "", "v": "tmk3qx", "scene": "a Lake Tahoe shoreline with clear turquoise water, smooth granite boulders and pines at golden hour" }
+  { "name": "hiking-yosemite-1", "file": "hiking-yosemite-1.jpg", "about": "", "v": "tmk3qx", "scene": "a Lake Tahoe shoreline with clear turquoise water, smooth granite boulders and pines at golden hour" },
+  { "name": "hiking-yosemite-2", "file": "hiking-yosemite-2.jpg", "about": "", "v": "tmk3x1", "scene": "a Lake Tahoe shoreline with clear turquoise water, smooth granite boulders and pines at golden hour" }
  ],
  "categoryBackdrops": {
   "automaton": "clockmaker",
