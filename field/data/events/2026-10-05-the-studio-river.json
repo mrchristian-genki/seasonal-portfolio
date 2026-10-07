@@ -120,5 +120,6 @@
   "why": "Picked from Case study.",
   "prompt": "",
   "bulb": false
- }
+ },
+ "palette": ["#b8692d", "#d6d257"]
 }

@@ -45,7 +45,10 @@ const lookAttr = (e) => {
   const cats = tagsOf(e).filter((t) => !/^\d{4}$/.test(t)), kind = cats.shift();
   // and its own backdrop, if it has one (narratorBackdrop: the scene behind its Listen bar)
   const b = e.narratorBackdrop && e.narratorBackdrop.backdrop, bd = b && /^[a-z0-9-]{1,40}$/.test(b) ? ` data-backdrop="${b}"` : '';
-  return own + bd + ` data-cats="${esc(cats.concat(kind ? [kind] : []).join(' '))}"`;
+  // and its palette (two accent colours pulled from its hero in the Studio): her flair, the glass card and the backdrop take them
+  const pal = (Array.isArray(e.palette) ? e.palette : []).filter((c) => /^#[0-9a-f]{6}$/i.test(c)).slice(0, 2);
+  const pa = pal.length ? ` data-palette="${pal.join(' ')}"` : '';
+  return own + bd + pa + ` data-cats="${esc(cats.concat(kind ? [kind] : []).join(' '))}"`;
 };
 const paras = (t) => String(t || '').split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
 
@@ -122,7 +125,7 @@ ${ICONS}
 <link rel="stylesheet" href="${rel}play.css?v=${V}">
 <link rel="stylesheet" href="${rel}../css/logo.css?v=11">
 <link rel="stylesheet" href="${rel}../css/lake.css?v=1">
-<link rel="stylesheet" href="${rel}../css/narrator.css?v=24">
+<link rel="stylesheet" href="${rel}../css/narrator.css?v=25">
 <script>/* Logo season from the calendar, as on About. */document.documentElement.dataset.season=["winter","winter","spring","spring","spring","summer","summer","summer","fall","fall","fall","winter"][new Date().getMonth()];</script>
 <link rel="stylesheet" href="${rel}../css/route-dash.css?v=${V}">
 </head>
@@ -139,7 +142,7 @@ const foot = (rel) => `<footer class="foot"><p>${esc(show.narrationNote)}</p>
 <script src="${rel}../js/audio-rules.js?v=1" defer></script>
 <script src="${rel}play.js?v=${V}" defer></script>
 <script src="${rel}../js/lake.js?v=3" defer></script>
-<script src="${rel}../js/narrator.js?v=31" defer></script>
+<script src="${rel}../js/narrator.js?v=32" defer></script>
 </body>
 </html>
 `;

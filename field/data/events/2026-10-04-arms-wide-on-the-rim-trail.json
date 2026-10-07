@@ -113,5 +113,6 @@
   "why": "Helena wore a turquoise and cream trucker cap on the Rim Trail that evening.",
   "prompt": "Same image, same camera, same face, same eyes, same jaw, same neck and the same flat chroma green background (#00B140). Change only the hair and accessories: a trucker cap in polished enamel and brass, with a turquoise front panel and a curved turquoise brim, a cream mesh back, and a small plain coral-orange patch on the front with no logo or text. It's worn tipped slightly back so the brim stays above her brows, her curls spill out at the sides, and her flower-bud antenna pokes up through the button on top of the cap exactly where it is now. Bold, chunky shapes; nothing crosses her face below the brows; everything stays inside the crop box.",
   "bulb": true
- }
+ },
+ "palette": ["#96b234", "#d38869"]
 }

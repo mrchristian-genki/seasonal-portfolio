@@ -22,7 +22,7 @@
    - Now and then it blinks. With reduced motion it stays still, and only the mouth moves. */
 (function () {
   'use strict';
-  var A = '/assets/narrator/', V = '?v=31', DROP = 0.0448;   // the chin plate's drop, as a share of the head layer's height (the side plates go half as far)
+  var A = '/assets/narrator/', V = '?v=32', DROP = 0.0448;   // the chin plate's drop, as a share of the head layer's height (the side plates go half as far)
   var D = 193 / 24, IDLE = 0;
   // the gestures (parts of narrator.mp4: forward and backwards copies), taken in this order from a random start: the
   // six conversational ones (parts 20 to 31) come round twice for each of the bigger moves, so mostly she talks with her hands
@@ -61,8 +61,17 @@
     return pick || WARDROBE[0] || { name: 'curls' };
   });
   function src(l) { return l && l.file ? A + 'looks/' + l.file + V + (l.v ? '.' + l.v : '') : CURLS; }   // v: a look replaced in the Studio
+  // her flair: the parts of a look that take the Note's palette (looks.json "flair": which masks it has, a and/or b;
+  // looks/<file>.flair-a.png), tinted in CSS (.nb-flair); a look without them just shows as it is
+  function flair(nb, l) {
+    var stem = l && l.file ? A + 'looks/' + l.file.replace(/\.[a-z]+$/, '') + '.flair-' : '';
+    nb.querySelectorAll('.nb-flair').forEach(function (f) {
+      var k = f.getAttribute('data-k'), on = !!stem && (l.flair || '').indexOf(k) >= 0;
+      f.style.setProperty('--fm', on ? 'url(' + stem + k + '.png' + V + (l.v ? '.' + l.v : '') + ')' : 'none'); f.hidden = !on;
+    });
+  }
   function put(nb, l) {
-    nb.querySelector('.nb-base').src = src(l);
+    nb.querySelector('.nb-base').src = src(l); flair(nb, l);
     nb.classList.toggle('nb-nobulb', !!l && l.bulb === false);
     if (l && l.file) nb.setAttribute('data-look', l.name); else nb.removeAttribute('data-look');
     nb._look = l ? l.name : 'curls';
@@ -194,7 +203,7 @@
     if (!audio || bar.querySelector('.nb')) return;
     bar.classList.add('has-nb');
     var nb = document.createElement('div'); nb.className = 'nb'; nb.setAttribute('aria-hidden', 'true');
-    nb.innerHTML = '<div class="nb-rise"><div class="nb-head"><img class="nb-base" src="' + A + 'head-base.webp' + V + '" alt=""><span class="nb-eyes"><img class="nb-iris" src="' + A + 'head-iris.webp' + V + '" alt=""></span><img class="nb-shine" src="' + A + 'head-shine.webp' + V + '" alt=""><img class="nb-jaw-s" src="' + A + 'head-jaw-sides.webp' + V + '" alt=""><img class="nb-jaw" src="' + A + 'head-jaw.webp' + V + '" alt="">' +
+    nb.innerHTML = '<div class="nb-rise"><div class="nb-head"><img class="nb-base" src="' + A + 'head-base.webp' + V + '" alt=""><i class="nb-flair" data-k="a" hidden></i><i class="nb-flair" data-k="b" hidden></i><span class="nb-eyes"><img class="nb-iris" src="' + A + 'head-iris.webp' + V + '" alt=""></span><img class="nb-shine" src="' + A + 'head-shine.webp' + V + '" alt=""><img class="nb-jaw-s" src="' + A + 'head-jaw-sides.webp' + V + '" alt=""><img class="nb-jaw" src="' + A + 'head-jaw.webp' + V + '" alt="">' +
       '<img class="nb-lids" src="' + A + 'head-lids.webp' + V + '" alt=""><i class="nb-bulb"></i><b class="nb-hit" title="GlazyArray\u2019s Style Array: click for her next look"></b></div>' +
       '<video class="nb-body" muted playsinline preload="none" poster="' + A + 'rest.jpg' + V + '"></video></div>';
     bar.insertBefore(nb, bar.firstChild);
@@ -202,6 +211,8 @@
     if (!bar.querySelector('.nb-plate')) { var pl = document.createElement('div'); pl.className = 'nb-plate'; pl.innerHTML = '<b>GlazyArray</b><small>Narrator \u00b7 Field Notes</small>'; bar.appendChild(pl); }
     var lbl = bar.querySelector('.listen-label');   // her name, under the Listen label: "Narrated by GlazyArray"
     if (lbl && !bar.querySelector('.nb-by')) { var by = document.createElement('span'); by.className = 'nb-by'; by.textContent = 'Narrated by GlazyArray'; lbl.parentNode.appendChild(by); }
+    var pal = (bar.getAttribute('data-palette') || '').split(' ').filter(function (c) { return /^#[0-9a-f]{6}$/i.test(c); });
+    if (pal.length) { bar.style.setProperty('--ga1', pal[0]); bar.style.setProperty('--ga2', pal[1] || pal[0]); bar.classList.add('has-pal'); }   // the Note's palette, from its hero
     wear(nb); backdrop(bar, nb); player(bar, audio);
     nb.querySelector('.nb-hit').addEventListener('click', function () { restyle(nb); });
     var body = nb.querySelector('.nb-body'), head = nb.querySelector('.nb-head'), jaw = nb.querySelector('.nb-jaw'), jawS = nb.querySelector('.nb-jaw-s');

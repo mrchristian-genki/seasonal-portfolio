@@ -1503,5 +1503,6 @@
   "prompt": "",
   "bulb": false,
   "why": "Snow on the boulders at Skunk Harbor in March."
- }
+ },
+ "palette": ["#1c97c9", "#4762e5"]
 }

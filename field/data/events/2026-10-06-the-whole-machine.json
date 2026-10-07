@@ -122,5 +122,6 @@
   "fit": "category",
   "from": "case-study",
   "scene": ""
- }
+ },
+ "palette": ["#25c0ad", "#b26e34"]
 }
