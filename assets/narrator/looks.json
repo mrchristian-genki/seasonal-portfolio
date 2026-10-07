@@ -1,24 +1,24 @@
 {
  "looks": [
-  { "name": "bob", "file": "bob.webp", "rotate": true, "flair": "ab", "flairK": 1, "v": "tw2g", "flairDye": "ab", "flairBase": ["#a8327a", "#2fb5ad"] },
-  { "name": "ponytail", "file": "ponytail.webp", "rotate": true, "v": "tw2b", "flair": "ab", "flairDye": "ab", "flairK": 1, "flairBase": ["#2fb5ad", "#e8735a"] },
-  { "name": "perm", "file": "perm.webp", "rotate": true, "v": "tw2b", "flair": "ab", "flairDye": "ab", "flairK": 1, "flairBase": ["#d4627a", "#2fb5ad"] },
-  { "name": "crimp", "file": "crimp.webp", "rotate": true, "v": "tw2b", "flair": "ab", "flairDye": "ab", "flairK": 1, "flairBase": ["#e0559a", "#f4efe6"] },
-  { "name": "headband", "file": "headband.webp", "rotate": true, "v": "tw2c", "flair": "ab", "flairDye": "ab", "flairK": 1, "flairBase": ["#9c2a35", "#e9c46a"] },
-  { "name": "updo", "file": "updo.webp", "rotate": true, "v": "tw2c", "flair": "ab", "flairDye": "ab", "flairK": 1, "flairBase": ["#c9506a", "#f4efe6"] },
-  { "name": "tahoe-winter", "file": "beanie.webp", "from": "01-02", "to": "01-31", "bulb": false, "v": "tw2d", "flair": "ab", "flairK": 1, "flairDye": "ab", "flairBase": ["#3fb7c0", "#f2ede4"] },
-  { "name": "valentines", "file": "valentine.webp", "from": "02-10", "to": "02-14", "flair": "ab", "flairK": 1, "v": "tw2g", "flairDye": "ab", "flairBase": ["#d8344f", "#f4c6d0"] },
-  { "name": "st-patricks", "file": "stpatrick.webp", "from": "03-15", "to": "03-17", "bulb": false, "flair": "ab", "flairK": 1, "v": "tw2h", "flairDye": "ab", "flairBase": ["#1f7a3a", "#e9c46a"] },
-  { "name": "spring", "file": "bunny.webp", "from": "03-20", "to": "04-20", "bulb": false, "flair": "ab", "flairK": 1, "v": "tw2i", "flairDye": "ab", "flairBase": ["#f2ede4", "#e6a3c4"] },
-  { "name": "fourth-of-july", "file": "stars.webp", "from": "07-01", "to": "07-04", "flair": "ab", "flairK": 1, "v": "tw2f", "flairDye": "ab", "flairBase": ["#c8262c", "#2f4fa0"] },
-  { "name": "halloween", "file": "witch.webp", "from": "10-20", "to": "10-31", "bulb": false, "flair": "ab", "flairK": 1, "v": "tw2d", "flairDye": "ab", "flairBase": ["#3a2a4a", "#e07b2a"] },
-  { "name": "thanksgiving", "file": "autumn.webp", "from": "11-20", "to": "11-28", "flair": "ab", "flairK": 1, "v": "tw2i", "flairDye": "ab", "flairBase": ["#c46a2a", "#7a2a3a"] },
-  { "name": "winter-holidays", "file": "santa.webp", "from": "12-01", "to": "12-30", "bulb": false, "v": "tw2f", "flair": "ab", "flairK": 1, "flairDye": "ab", "flairBase": ["#c8262c", "#f4efe6"] },
-  { "name": "bike-helmet", "file": "bike-helmet.webp", "bulb": false, "about": "a glossy hard-shell bike helmet with a little brass headlamp, its shell in one colour and its rim band in the other", "flair": "ab", "v": "tw2a", "flairDye": "ab", "flairK": 1, "flairBase": ["#1f9e96", "#e8735a"] },
-  { "name": "trail-cap", "file": "trail-cap.webp", "bulb": false, "about": "a trucker cap with a GA leather patch, its front and brim in one colour and its mesh back in the other", "v": "tw2a", "flair": "ab", "flairK": 1, "flairDye": "ab", "flairBase": ["#2fb5ad", "#efe7d6"] },
-  { "name": "beach-shades", "file": "beach-shades.webp", "about": "round sunglasses pushed up in her curls, with a gem clip: the frames in one colour and the gem in the other", "v": "tw2e", "flair": "ab", "flairK": 1, "flairDye": "ab", "flairBase": ["#e0533d", "#2fb5ad"] },
-  { "name": "workshop-goggles", "file": "workshop-goggles.webp", "about": "brass workshop goggles pushed up on her forehead: the leather strap in one colour and the padded rims in the other", "v": "tw2e", "flair": "ab", "flairDye": "ab", "flairK": 1, "flairBase": ["#7a4a2a", "#2fb5ad"] },
-  { "name": "grad-cap", "file": "grad-cap.webp", "about": "a mortarboard, its board in one colour and its tassel in the other", "v": "tw2a", "bulb": false, "flair": "ab", "flairDye": "ab", "flairK": 1, "flairBase": ["#26355e", "#d4a23c"] }
+  { "name": "bob", "file": "bob.webp", "rotate": true, "flair": "ab", "flairK": 1, "v": "tw2g", "flairDye": "ab", "flairBase": ["#a8327a","#2fb5ad"] },
+  { "name": "ponytail", "file": "ponytail.webp", "rotate": true, "v": "tw2b", "flair": "ab", "flairDye": "ab", "flairK": 1, "flairBase": ["#2fb5ad","#e8735a"] },
+  { "name": "perm", "file": "perm.webp", "rotate": true, "v": "tw2b", "flair": "ab", "flairDye": "ab", "flairK": 1, "flairBase": ["#d4627a","#2fb5ad"] },
+  { "name": "crimp", "file": "crimp.webp", "rotate": true, "v": "tw2b", "flair": "ab", "flairDye": "ab", "flairK": 1, "flairBase": ["#e0559a","#f4efe6"] },
+  { "name": "headband", "file": "headband.webp", "rotate": true, "v": "tw2c", "flair": "ab", "flairDye": "ab", "flairK": 1, "flairBase": ["#9c2a35","#e9c46a"] },
+  { "name": "updo", "file": "updo.webp", "rotate": true, "v": "tw2c", "flair": "ab", "flairDye": "ab", "flairK": 1, "flairBase": ["#c9506a","#f4efe6"] },
+  { "name": "tahoe-winter", "file": "beanie.webp", "from": "01-02", "to": "01-31", "bulb": false, "v": "tw2d", "flair": "ab", "flairK": 1, "flairDye": "ab", "flairBase": ["#3fb7c0","#f2ede4"] },
+  { "name": "valentines", "file": "valentine.webp", "from": "02-10", "to": "02-14", "flair": "ab", "flairK": 1, "v": "tw2g", "flairDye": "ab", "flairBase": ["#d8344f","#f4c6d0"] },
+  { "name": "st-patricks", "file": "stpatrick.webp", "from": "03-15", "to": "03-17", "bulb": false, "flair": "ab", "flairK": 1, "v": "tw2h", "flairDye": "ab", "flairBase": ["#1f7a3a","#e9c46a"] },
+  { "name": "spring", "file": "bunny.webp", "from": "03-20", "to": "04-20", "bulb": false, "flair": "ab", "flairK": 1, "v": "tw2i", "flairDye": "ab", "flairBase": ["#f2ede4","#e6a3c4"] },
+  { "name": "fourth-of-july", "file": "stars.webp", "from": "07-01", "to": "07-04", "flair": "ab", "flairK": 1, "v": "tw2f", "flairDye": "ab", "flairBase": ["#c8262c","#2f4fa0"] },
+  { "name": "halloween", "file": "witch.webp", "from": "10-20", "to": "10-31", "bulb": false, "flair": "ab", "flairK": 1, "v": "tw2d", "flairDye": "ab", "flairBase": ["#3a2a4a","#e07b2a"] },
+  { "name": "thanksgiving", "file": "autumn.webp", "from": "11-20", "to": "11-28", "flair": "ab", "flairK": 1, "v": "tw2i", "flairDye": "ab", "flairBase": ["#c46a2a","#7a2a3a"] },
+  { "name": "winter-holidays", "file": "santa.webp", "from": "12-01", "to": "12-30", "bulb": false, "v": "tw2f", "flair": "ab", "flairK": 1, "flairDye": "ab", "flairBase": ["#c8262c","#f4efe6"] },
+  { "name": "bike-helmet", "file": "bike-helmet.webp", "bulb": false, "about": "a glossy hard-shell bike helmet with a little brass headlamp, its shell in one colour and its rim band in the other", "flair": "ab", "v": "tw2a", "flairDye": "ab", "flairK": 1, "flairBase": ["#1f9e96","#e8735a"] },
+  { "name": "trail-cap", "file": "trail-cap.webp", "bulb": false, "about": "a trucker cap with a GA leather patch, its front and brim in one colour and its mesh back in the other", "v": "tw2a", "flair": "ab", "flairK": 1, "flairDye": "ab", "flairBase": ["#2fb5ad","#efe7d6"] },
+  { "name": "beach-shades", "file": "beach-shades.webp", "about": "round sunglasses pushed up in her curls, with a gem clip: the frames in one colour and the gem in the other", "v": "tw2e", "flair": "ab", "flairK": 1, "flairDye": "ab", "flairBase": ["#e0533d","#2fb5ad"] },
+  { "name": "workshop-goggles", "file": "workshop-goggles.webp", "about": "brass workshop goggles pushed up on her forehead: the leather strap in one colour and the padded rims in the other", "v": "tw2e", "flair": "ab", "flairDye": "ab", "flairK": 1, "flairBase": ["#7a4a2a","#2fb5ad"] },
+  { "name": "grad-cap", "file": "grad-cap.webp", "about": "a mortarboard, its board in one colour and its tassel in the other", "v": "tw2a", "bulb": false, "flair": "ab", "flairDye": "ab", "flairK": 1, "flairBase": ["#26355e","#d4a23c"] }
  ],
  "categories": {
   "automaton": "workshop-goggles",
@@ -33,7 +33,8 @@
   { "name": "trailhead", "file": "trailhead.webp", "about": "", "v": "tmiah5", "scene": "a pine forest trailhead with a wooden trail sign and a dirt path in late light" },
   { "name": "clockmaker", "file": "clockmaker.webp", "about": "", "v": "tmiako", "scene": "a clockmaker's workshop full of brass gears, cogs and glass jars on wooden shelves" },
   { "name": "workshop", "file": "workshop.webp", "about": "", "v": "tmiav4", "scene": "a cozy maker's workshop with a workbench, tools on the wall and warm hanging lamps" },
-  { "name": "lake-tahoe-beach", "file": "lake-tahoe-beach.webp", "about": "", "v": "tmjrp2", "scene": "a Lake Tahoe shoreline with clear turquoise water, smooth granite boulders and pines at golden hour" }
+  { "name": "lake-tahoe-beach", "file": "lake-tahoe-beach.webp", "about": "", "v": "tmjrp2", "scene": "a Lake Tahoe shoreline with clear turquoise water, smooth granite boulders and pines at golden hour" },
+  { "name": "biking-forest", "file": "biking-forest.jpg", "about": "", "v": "tmk2vr", "scene": "a Lake Tahoe shoreline with clear turquoise water, smooth granite boulders and pines at golden hour" }
  ],
  "categoryBackdrops": {
   "automaton": "clockmaker",
