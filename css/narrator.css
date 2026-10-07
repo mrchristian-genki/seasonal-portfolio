@@ -126,18 +126,17 @@ section.listen.has-bd::before{z-index:1}
   -webkit-mask:var(--fm) 0 0/100% 100% no-repeat;mask:var(--fm) 0 0/100% 100% no-repeat}
 .nb-flair[data-k="b"]{background:var(--ga2,transparent)}
 .nb-flair[hidden]{display:none}
-section.listen:not(.has-pal) .nb-flair,section.listen:not(.has-pal) .nb-glint{display:none}
-/* the shine: a band of light that sweeps across her flair every few seconds, like it caught the light (and a sheen on the glass) */
-.nb-glint{position:absolute;inset:0;display:block;pointer-events:none;mix-blend-mode:screen;
-  background:linear-gradient(105deg,transparent 40%,rgba(255,250,235,0) 45%,rgba(255,250,235,.5) 50%,rgba(255,250,235,0) 55%,transparent 60%) no-repeat;
-  background-size:300% 100%;background-position:100% 0;animation:nb-glint 6.5s 1.2s ease-in-out infinite;
-  -webkit-mask:var(--gm) 0 0/100% 100% no-repeat;mask:var(--gm) 0 0/100% 100% no-repeat}
-.nb-glint[hidden]{display:none}
+section.listen:not(.has-pal) .nb-flair{display:none}
+/* the shine: now and then a band of light sweeps across the scene behind her (the backdrop) and on over the glass player;
+   not over her, where it showed the edges of the video layer */
 @keyframes nb-glint{0%{background-position:100% 0}22%,100%{background-position:0 0}}
 section.has-pal .nb-glass::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
   background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.13) 50%,transparent 65%) no-repeat;background-size:300% 100%;background-position:100% 0;
   animation:nb-glint 6.5s 1.35s ease-in-out infinite}
-@media (prefers-reduced-motion:reduce){.nb-glint,section.has-pal .nb-glass::before{animation:none;opacity:0}}
+section.has-pal .nb-bd::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(105deg,transparent 38%,rgba(255,248,230,.16) 50%,transparent 62%) no-repeat;background-size:300% 100%;background-position:100% 0;
+  animation:nb-glint 6.5s 1.2s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){section.has-pal .nb-bd::before,section.has-pal .nb-glass::before{animation:none;opacity:0}}
 section.has-pal .nb-glass{background:linear-gradient(to right top,color-mix(in srgb,var(--ga1) 26%,rgba(30,34,34,.66)),color-mix(in srgb,var(--ga2) 20%,rgba(239,239,239,.18)));
   border-color:color-mix(in srgb,var(--ga2) 40%,rgba(240,240,240,.22))}
 section.has-pal .nb-seek{background:linear-gradient(90deg,var(--ga1) var(--p),rgba(255,255,255,.22) var(--p))}
