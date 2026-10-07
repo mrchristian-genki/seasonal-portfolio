@@ -2273,5 +2273,6 @@
   "prompt": "",
   "bulb": true,
   "why": "A ride on the Flume Trail above the lake."
- }
+ },
+ "palette": ["#698dd3", "#a798e1"]
 }

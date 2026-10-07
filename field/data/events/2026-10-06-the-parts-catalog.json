@@ -91,5 +91,6 @@
   "fit": "category",
   "from": "case-study",
   "scene": ""
- }
+ },
+ "palette": ["#34a3b2", "#b26934"]
 }

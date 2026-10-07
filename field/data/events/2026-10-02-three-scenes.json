@@ -79,5 +79,6 @@
   "backdrop": "workshop",
   "fit": "new",
   "scene": "a sunny pine meadow with a dog's ball and leash resting on a log"
- }
+ },
+ "palette": ["#5fcdd1", "#b26d34"]
 }

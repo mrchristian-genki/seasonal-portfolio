@@ -118,3 +118,19 @@ section.listen.has-bd::before{z-index:1}
   section.listen.has-nb .nb-body,section.listen.has-nb .nb-keyed{border-radius:0}
   section.listen.has-nb .nb-plate{left:calc(var(--nb) + var(--nbx) * 2 - 20px)}
 }
+
+/* THE NOTE'S PALETTE (data-palette on the bar: two accent colours from its hero, --ga1 and --ga2). Her flair: the parts
+   of whatever look she wears that take it (narrator.js flair(): a mask per colour), tinted with a "color" blend so
+   the brass, folds and shading show through; then the glass card, its seek bar and Play, and the backdrop's shade */
+.nb-flair{position:absolute;inset:0;display:block;mix-blend-mode:color;background:var(--ga1,transparent);pointer-events:none;
+  -webkit-mask:var(--fm) 0 0/100% 100% no-repeat;mask:var(--fm) 0 0/100% 100% no-repeat}
+.nb-flair[data-k="b"]{background:var(--ga2,transparent)}
+.nb-flair[hidden]{display:none}
+section.listen:not(.has-pal) .nb-flair{display:none}
+section.has-pal .nb-glass{background:linear-gradient(to right top,color-mix(in srgb,var(--ga1) 26%,rgba(30,34,34,.66)),color-mix(in srgb,var(--ga2) 20%,rgba(239,239,239,.18)));
+  border-color:color-mix(in srgb,var(--ga2) 40%,rgba(240,240,240,.22))}
+section.has-pal .nb-seek{background:linear-gradient(90deg,var(--ga1) var(--p),rgba(255,255,255,.22) var(--p))}
+section.has-pal .nb-ctl .nb-pp{background:color-mix(in srgb,var(--ga1) 45%,rgba(24,26,26,.7))}
+section.has-pal .nb-ctl .nb-pp:hover{background:color-mix(in srgb,var(--ga1) 62%,rgba(24,26,26,.7))}
+section.has-pal .nb-bd::after{background:linear-gradient(90deg,color-mix(in srgb,var(--ga2) 14%,rgba(8,30,28,.05)) 0,color-mix(in srgb,var(--ga1) 22%,rgba(8,30,28,.35)) 100%)}
+section.has-pal .nb-by{color:color-mix(in srgb,var(--ga2) 55%,#fff)}

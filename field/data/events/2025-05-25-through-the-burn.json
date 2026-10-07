@@ -1828,5 +1828,6 @@
   "prompt": "",
   "bulb": true,
   "why": "A ride through the burn on the Corral Trail Loop."
- }
+ },
+ "palette": ["#5f9edd", "#9592e8"]
 }
