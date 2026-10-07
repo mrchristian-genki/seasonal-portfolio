@@ -1,8 +1,8 @@
 /* THE NARRATOR (js/narrator.js): the robot sits at the left of the Listen bar, at a desk that runs the bar's whole
    width along its bottom edge; its head stands up out of the top. --nb is its width, --desk the desk's height
    (7.7% of the robot's video, where its own desk is). */
-section.listen.has-nb{--nb:210px;--desk:calc(var(--nb) * .5208 * .0767);position:relative;min-height:calc(var(--nb) * .5208 + 34px);
-  padding-left:calc(var(--nb) + 18px);padding-bottom:calc(var(--desk) + 48px);margin-top:calc(var(--nb) * .36 + 22px);align-content:center}
+section.listen.has-nb{--nb:210px;--desk:calc(var(--nb) * .5208 * .0767);position:relative;min-height:calc(var(--nb) * 1.04);
+  padding-left:calc(var(--nb) + 18px);padding-bottom:calc(var(--desk) + 48px);margin-top:22px;align-content:center}   /* tall enough that her head (about 1.03 x --nb from the bar's bottom) stays inside it, so no room is kept above
 section.listen.has-nb::before{content:"";position:absolute;left:0;right:0;bottom:0;height:var(--desk);border-radius:0 0 16px 16px;pointer-events:none;
   background:url(/assets/narrator/desk.jpg?v=1) left bottom/auto 100% repeat-x}   /* the same walnut, mirrored so it runs on without a seam */
 .nb{position:absolute;left:0;bottom:0;width:var(--nb);height:calc(var(--nb) * .5208);pointer-events:none;
