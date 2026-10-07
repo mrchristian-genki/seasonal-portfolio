@@ -15,7 +15,7 @@
   { "name": "thanksgiving", "file": "autumn.webp", "from": "11-20", "to": "11-28", "flair": "a", "flairK": 0.8 },
   { "name": "winter-holidays", "file": "santa.webp", "from": "12-01", "to": "12-30", "bulb": false, "v": "tmk9sw", "flair": "ab", "flairK": 0.8, "flairDye": "b" },
   { "name": "bike-helmet", "file": "bike-helmet.webp", "about": "a brass bike helmet with a little headlamp", "flair": "ab" },
-  { "name": "trail-cap", "file": "trail-cap.webp", "about": "a turquoise and cream trucker cap, like Helena's on the trail", "v": "tmk2f9", "flair": "ab", "flairK": 0.8 },
+  { "name": "trail-cap", "file": "trail-cap.webp", "about": "a turquoise and cream trucker cap, like Helena's on the trail", "v": "tmkd4g", "flair": "ab", "flairK": 0.8 },
   { "name": "beach-shades", "file": "beach-shades.webp", "about": "sunglasses pushed up in her curls, with a carnelian clip", "v": "tmi58m", "flair": "ab", "flairK": 0.8 },
   { "name": "workshop-goggles", "file": "workshop-goggles.webp", "about": "brass workshop goggles pushed up on her forehead", "v": "tmi5ap", "flair": "ab" },
   { "name": "grad-cap", "file": "grad-cap.webp", "about": "a brass mortarboard with a chain tassel", "v": "tmi70z", "bulb": false, "flair": "ab" }
