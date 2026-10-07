@@ -17,12 +17,15 @@ $action = $_GET['a'] ?? '';
 $method = $_SERVER['REQUEST_METHOD'];
 if ($method === 'POST') {
     if (!hash_equals(studio_csrf(), $_SERVER['HTTP_X_CSRF'] ?? '')) json_fail('This page is out of date. Reload it and try again.', 403);
-    // Files come up as raw bytes (their few fields in the query string), not base64 in JSON: DreamHost's
-    // firewall scans JSON fields, and now and then a run of base64 looks like an attack to it (a 418).
+    // Files come up as a file in a form post (their few fields in the query string), not base64 in JSON or a raw
+    // body: DreamHost's firewall scans JSON fields, and now and then a run of base64 looks like an attack to it,
+    // and it blocks any raw binary body outright (a 418). Uploads are scrambled with a repeating 32-byte key (X-Mask).
     $raw = null;
-    if (str_starts_with((string) ($_SERVER['CONTENT_TYPE'] ?? ''), 'application/octet-stream')) {
-        $raw = (string) file_get_contents('php://input'); $body = $_GET;
-        // scrambled by the Studio with a repeating 32-byte key, so no run of its bytes looks like an attack
+    if (isset($_FILES['f'])) {
+        $err = (int) ($_FILES['f']['error'] ?? UPLOAD_ERR_NO_FILE);
+        if ($err === UPLOAD_ERR_INI_SIZE || $err === UPLOAD_ERR_FORM_SIZE) json_fail('That piece is bigger than the server takes (' . ini_get('upload_max_filesize') . ').');
+        if ($err !== UPLOAD_ERR_OK || !is_uploaded_file($_FILES['f']['tmp_name'])) json_fail('The upload didn\'t arrive. Try again.');
+        $raw = (string) file_get_contents($_FILES['f']['tmp_name']); $body = $_GET;
         $mask = (string) ($_SERVER['HTTP_X_MASK'] ?? '');
         if (preg_match('/^[0-9a-f]{64}$/', $mask) && $raw !== '') {
             $raw = $raw ^ substr(str_repeat(hex2bin($mask), intdiv(strlen($raw), 32) + 1), 0, strlen($raw));
