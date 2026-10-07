@@ -25,7 +25,7 @@
 <link rel="stylesheet" href="css/logo.css?v=11">
 <link rel="stylesheet" href="css/lake.css?v=1">
 <link rel="stylesheet" href="css/narrator.css?v=32">
-<link rel="stylesheet" href="css/shelf.css?v=2">
+<link rel="stylesheet" href="css/shelf.css?v=3">
 <script>/* The lake closed by the link (nlake) or last time (js/lake.js): start with the clean top, no flash of the scene. */try{var w=decodeURIComponent(location.search).toLowerCase(),n=/(^|[?+&,;\s])nlake([+&,;\s=]|$)/.test(w),y=/(^|[?+&,;\s])ylake([+&,;\s=]|$)/.test(w);if(n||(!y&&localStorage.getItem("cg-lake")==="0"))document.documentElement.classList.add("lake-off")}catch(e){}</script>
 <link rel="stylesheet" href="css/footer.css?v=1793360000">
 <script>/* Night links (?night, ?nightmode, ?darkmode) open with the page already dark: no white flash, no fade. */
@@ -113,12 +113,14 @@ document.documentElement.classList.add('night-page');})();</script>
       <p class="season-line">Fall, time to harvest what grew</p>
       <h2>The day job, and the ones before it</h2>
       <p class="lede">Over twenty-five years of web development, digital strategy, and customer care, in Ireland and Hawaii. I like making the place I work better for customers and for the people around me, and I build practical tools to do it.</p>
+      <div class="shelf web-shelf" data-webshelf role="region" aria-label="A few of the websites: hover one to scroll it"></div>
       <ul class="works">
         <li><b>Customer care and product data</b><i>2019&ndash;now</i><p>For a global tech brand: top-tier satisfaction scores, product data for new-product launches, and a triage runbook that cut handle time.</p></li>
         <li><b>123 ADAPT</b><i>2018&ndash;now</i><p>Marketing, media, and development for local businesses, including Manoa Valley Theatre and Hawaii Realty Group.</p></li>
         <li><b>Agencies and enterprise</b><i>2009&ndash;2018</i><p>Front-end systems for Prudential Financial at Pramerica in Ireland, First Hawaiian Bank's brand launch at MVNP, and Hawaii Pacific Health with Anthology's experience design team.</p></li>
       </ul>
       <a class="btn solid" href="https://www.linkedin.com/in/christiangehrke/" target="_blank" rel="noopener">Recommendations on LinkedIn</a>
+      <br><button type="button" class="up-next" data-next="t-workshop">Up next: <span>the workshop &rarr;</span></button>
     </div>
     <div class="view" data-view="workshop">
       <p class="season-line">Winter, the quiet work underneath</p>
@@ -255,7 +257,7 @@ document.documentElement.classList.add('night-page');})();</script>
 <script src="js/tg-links.js?v=1793270000"></script>
 <!-- Live book count: the Books copy reads the catalog's Google Sheet, so the number always matches the catalog. -->
 <script src="js/books-count.js?v=1793260000"></script>
-<script src="js/books-shelf.js?v=2" defer></script>
+<script src="js/books-shelf.js?v=3" defer></script>
 <!-- Play tab: loads its content only when the tab is opened. -->
 <script src="js/audio-rules.js?v=1" defer></script>
 <script src="js/play-inline.js?v=1794600000" defer></script>

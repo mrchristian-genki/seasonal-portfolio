@@ -34,3 +34,23 @@ html.night-page .up-next{color:var(--night-text)}
   .bk-art .b{transition:none}.bk.lit .bk-art::after{animation:none}
 }
 @media (max-width:640px){.shelf-track{gap:14px;animation-duration:70s}.shelf{margin-bottom:26px}}
+
+/* THE WEB SHELF (Web tab, same file's script): real pages in little browser windows, two rows drifting opposite ways;
+   one at a time scrolls down through its whole page and back, as a visitor would; a hover scrolls one */
+.web-shelf .shelf-track{gap:26px}
+.win{position:relative;display:block;width:clamp(220px,24vw,300px);flex:none;text-decoration:none;outline:none;border-radius:9px;overflow:hidden;
+  background:#fff;box-shadow:0 1px 2px rgba(15,77,71,.16),0 14px 28px -14px rgba(15,77,71,.5);transform:rotate(var(--tilt,0deg));
+  transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s}
+.win-bar{display:flex;align-items:center;gap:5px;height:22px;padding:0 9px;background:linear-gradient(#f3f1ec,#e9e6df);border-bottom:1px solid rgba(0,0,0,.06)}
+.win-bar i{width:7px;height:7px;border-radius:50%;background:#e2786b}
+.win-bar i+i{background:#e8c25a}.win-bar i+i+i{background:#7cbd6b}
+.win-bar span{flex:1;margin-left:6px;height:12px;border-radius:6px;background:rgba(255,255,255,.85)}
+.win-view{position:relative;display:block;aspect-ratio:16/10;overflow:hidden;background:#f4f1ea}
+.win-view img{display:block;width:100%;height:auto;transform:translateY(0);transition:transform 5.5s cubic-bezier(.45,0,.3,1)}
+.win.lit .win-view img{transform:translateY(var(--to,0))}
+.win:hover,.win:focus-visible{transform:translateY(-8px) rotate(0deg);box-shadow:0 2px 4px rgba(15,77,71,.2),0 22px 34px -14px rgba(15,77,71,.6)}
+.win:focus-visible{outline:3px solid rgb(var(--accent));outline-offset:3px}
+html.night-page .win{background:#1b2a36;box-shadow:0 14px 28px -14px rgba(0,0,0,.75)}
+html.night-page .win-bar{background:linear-gradient(#22313d,#1b2833);border-color:rgba(255,255,255,.05)}
+html.night-page .win-bar span{background:rgba(255,255,255,.08)}
+@media (prefers-reduced-motion:reduce){.win-view img{transition:none}}

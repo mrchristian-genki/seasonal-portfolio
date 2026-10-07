@@ -1,0 +1,58 @@
+[
+ {
+  "id": "home",
+  "host": "christiangehrke.com",
+  "url": "https://www.christiangehrke.com/",
+  "title": "The lake homepage",
+  "h": 1011
+ },
+ {
+  "id": "books",
+  "host": "christiangehrke.com/books",
+  "url": "https://www.christiangehrke.com/books/",
+  "title": "The Coloring Book Catalog",
+  "h": 1138
+ },
+ {
+  "id": "whale",
+  "host": "christiangehrke.com/play",
+  "url": "https://www.christiangehrke.com/play/2026-03-28-whale-beach/",
+  "title": "A Field Note: Whale Beach",
+  "h": 1138
+ },
+ {
+  "id": "catalog",
+  "host": "christiangehrke.com/catalog",
+  "url": "https://www.christiangehrke.com/catalog/",
+  "title": "The Parts Catalog",
+  "h": 1138
+ },
+ {
+  "id": "mvt",
+  "host": "manoavalleytheatre.com",
+  "url": "https://www.manoavalleytheatre.com/",
+  "title": "Manoa Valley Theatre",
+  "h": 1138
+ },
+ {
+  "id": "play",
+  "host": "christiangehrke.com/play",
+  "url": "https://www.christiangehrke.com/play/",
+  "title": "Play: the Field Notes",
+  "h": 1138
+ },
+ {
+  "id": "workshop",
+  "host": "christiangehrke.com/catalog/workshop",
+  "url": "https://www.christiangehrke.com/catalog/workshop",
+  "title": "The Workshop",
+  "h": 1109
+ },
+ {
+  "id": "about",
+  "host": "christiangehrke.com/about",
+  "url": "https://www.christiangehrke.com/about/",
+  "title": "About and résumé",
+  "h": 1138
+ }
+]
