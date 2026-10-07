@@ -59,7 +59,7 @@ $alt = 'The Studio by ' . $tod . ': a brass STUDIO panel with its day/night dial
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&family=Special+Elite&display=swap">
 <link rel="stylesheet" href="../css/route-dash.css?v=<?= STUDIO_VERSION ?>-3">
-<link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>-48">
+<link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>-49">
 <link rel="stylesheet" href="table/table.css?v=79">
 </head>
 <?php if (!$in): ?>
@@ -161,7 +161,7 @@ $alt = 'The Studio by ' . $tod . ': a brass STUDIO panel with its day/night dial
 <script src="/assets/narrator/resolve.js?v=1"></script>
 <script src="assets/social.js?v=<?= STUDIO_VERSION ?>-7"></script>
 <script src="assets/look.js?v=<?= STUDIO_VERSION ?>-7"></script>
-<script src="assets/studio.js?v=<?= STUDIO_VERSION ?>-56"></script>
+<script src="assets/studio.js?v=<?= STUDIO_VERSION ?>-57"></script>
 <?php endif; ?>
 <script src="../js/audio-rules.js?v=1"></script>
 <script src="table/table.js?v=25"></script>
