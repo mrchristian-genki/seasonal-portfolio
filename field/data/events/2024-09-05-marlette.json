@@ -2002,18 +2002,11 @@
  ],
  "consent": "Christian and Marley only.",
  "publishedAt": "2026-10-03T15:23:35Z",
- "narratorLook": {
-  "look": "bike-helmet",
-  "fit": "category",
-  "about": "a brass bike helmet with a little headlamp",
-  "prompt": "",
-  "bulb": true,
-  "why": "A morning ride up North Canyon to Marlette Lake.",
-  "from": "ride"
- },
+ "narratorLook": null,
  "palette": [
   "#74a7ff",
   "#012f7b"
  ],
- "paletteBy": "hand"
+ "paletteBy": "hand",
+ "narratorBackdrop": null
 }
