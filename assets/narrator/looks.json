@@ -38,7 +38,8 @@
   { "name": "hiking-1", "file": "hiking-1.jpg", "about": "", "v": "tmk36o", "scene": "a Lake Tahoe shoreline with clear turquoise water, smooth granite boulders and pines at golden hour" },
   { "name": "hiking-yosemite-1", "file": "hiking-yosemite-1.jpg", "about": "", "v": "tmk3qx", "scene": "a Lake Tahoe shoreline with clear turquoise water, smooth granite boulders and pines at golden hour" },
   { "name": "hiking-yosemite-2", "file": "hiking-yosemite-2.jpg", "about": "", "v": "tmk3x1", "scene": "a Lake Tahoe shoreline with clear turquoise water, smooth granite boulders and pines at golden hour" },
-  { "name": "hiking-yosemite-3", "file": "hiking-yosemite-3.jpg", "about": "", "v": "tmk3zg", "scene": "a Lake Tahoe shoreline with clear turquoise water, smooth granite boulders and pines at golden hour" }
+  { "name": "hiking-yosemite-3", "file": "hiking-yosemite-3.jpg", "about": "", "v": "tmk3zg", "scene": "a Lake Tahoe shoreline with clear turquoise water, smooth granite boulders and pines at golden hour" },
+  { "name": "workshop-with-robots", "file": "workshop-with-robots.jpg", "about": "", "v": "tmk4bm", "scene": "a sunny pine meadow with a dog's ball and leash resting on a log" }
  ],
  "categoryBackdrops": {
   "automaton": "clockmaker",
