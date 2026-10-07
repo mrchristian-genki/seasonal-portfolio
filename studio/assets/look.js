@@ -12,7 +12,7 @@
   var parts = null;   // base, jaw, jaw sides, lids, face lock, iris, shine, lens
   function load() {
     return parts || (parts = Promise.all(['head-base.webp', 'head-jaw.webp', 'head-jaw-sides.webp', 'head-lids.webp', 'look-lock.png', 'head-iris.webp', 'head-shine.webp', 'head-lens.png']
-      .map(function (f) { return img(A + f + '?v=17'); })));
+      .map(function (f) { return img(A + f + '?v=18'); })));
   }
   // the key: background where green clearly beats both red and blue, soft at the edges, green spill pulled down
   function key(c) {
