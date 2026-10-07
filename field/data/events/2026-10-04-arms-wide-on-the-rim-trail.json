@@ -119,5 +119,10 @@
   "#83c1c2",
   "#fff2d5"
  ],
- "paletteBy": "hand"
+ "paletteBy": "hand",
+ "narratorBackdrop": {
+  "backdrop": "hiking-1",
+  "fit": "new",
+  "scene": "a Lake Tahoe shoreline with clear turquoise water, smooth granite boulders and pines at golden hour"
+ }
 }

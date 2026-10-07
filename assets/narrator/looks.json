@@ -34,7 +34,8 @@
   { "name": "clockmaker", "file": "clockmaker.webp", "about": "", "v": "tmiako", "scene": "a clockmaker's workshop full of brass gears, cogs and glass jars on wooden shelves" },
   { "name": "workshop", "file": "workshop.webp", "about": "", "v": "tmiav4", "scene": "a cozy maker's workshop with a workbench, tools on the wall and warm hanging lamps" },
   { "name": "lake-tahoe-beach", "file": "lake-tahoe-beach.webp", "about": "", "v": "tmjrp2", "scene": "a Lake Tahoe shoreline with clear turquoise water, smooth granite boulders and pines at golden hour" },
-  { "name": "biking-forest", "file": "biking-forest.jpg", "about": "", "v": "tmk2vr", "scene": "a Lake Tahoe shoreline with clear turquoise water, smooth granite boulders and pines at golden hour" }
+  { "name": "biking-forest", "file": "biking-forest.jpg", "about": "", "v": "tmk2vr", "scene": "a Lake Tahoe shoreline with clear turquoise water, smooth granite boulders and pines at golden hour" },
+  { "name": "hiking-1", "file": "hiking-1.jpg", "about": "", "v": "tmk36o", "scene": "a Lake Tahoe shoreline with clear turquoise water, smooth granite boulders and pines at golden hour" }
  ],
  "categoryBackdrops": {
   "automaton": "clockmaker",
