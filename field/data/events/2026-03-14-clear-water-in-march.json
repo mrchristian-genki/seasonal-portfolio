@@ -1506,11 +1506,12 @@
  },
  "palette": [
   "#1c97c9",
-  "#4762e5"
+  "#caf0fe"
  ],
  "narratorBackdrop": {
   "backdrop": "lake-tahoe-beach-winter",
   "fit": "new",
   "scene": "a Lake Tahoe shoreline with clear turquoise water, smooth granite boulders and pines at golden hour"
- }
+ },
+ "paletteBy": "hand"
 }
