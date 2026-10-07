@@ -1821,15 +1821,23 @@
  "consent": "",
  "source": "Rides/May 25 2025",
  "publishedAt": "2026-10-04T05:05:41Z",
- "narratorLook": null,
+ "narratorLook": {
+  "look": "bike-helmet",
+  "fit": "category",
+  "from": "ride",
+  "about": "a glossy hard-shell bike helmet with a little brass headlamp, its shell in one colour and its rim band in the other",
+  "why": "Picked from Ride.",
+  "prompt": "",
+  "bulb": false
+ },
  "palette": [
   "#5f9edd",
   "#9592e8"
  ],
  "narratorBackdrop": {
-  "backdrop": "lake-tahoe-beach",
+  "backdrop": "biking-forest",
   "fit": "category",
-  "from": "lake-tahoe",
+  "from": "ride",
   "scene": ""
  }
 }
