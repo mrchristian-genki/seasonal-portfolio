@@ -120,13 +120,24 @@ section.listen.has-bd::before{z-index:1}
 }
 
 /* THE NOTE'S PALETTE (data-palette on the bar: two accent colours from its hero, --ga1 and --ga2). Her flair: the parts
-   of whatever look she wears that take it (narrator.js flair(): a mask per colour), tinted with a "color" blend so
+   of whatever look she wears that take it (narrator.js flair(): a mask per colour), tinted with a "color" blend at 45% (a tint over the original, not a repaint) so
    the brass, folds and shading show through; then the glass card, its seek bar and Play, and the backdrop's shade */
-.nb-flair{position:absolute;inset:0;display:block;mix-blend-mode:color;background:var(--ga1,transparent);pointer-events:none;
+.nb-flair{position:absolute;inset:0;display:block;mix-blend-mode:color;opacity:.45;background:var(--ga1,transparent);pointer-events:none;
   -webkit-mask:var(--fm) 0 0/100% 100% no-repeat;mask:var(--fm) 0 0/100% 100% no-repeat}
 .nb-flair[data-k="b"]{background:var(--ga2,transparent)}
 .nb-flair[hidden]{display:none}
-section.listen:not(.has-pal) .nb-flair{display:none}
+section.listen:not(.has-pal) .nb-flair,section.listen:not(.has-pal) .nb-glint{display:none}
+/* the shine: a band of light that sweeps across her flair every few seconds, like it caught the light (and a sheen on the glass) */
+.nb-glint{position:absolute;inset:0;display:block;pointer-events:none;mix-blend-mode:screen;
+  background:linear-gradient(105deg,transparent 40%,rgba(255,250,235,0) 45%,rgba(255,250,235,.5) 50%,rgba(255,250,235,0) 55%,transparent 60%) no-repeat;
+  background-size:300% 100%;background-position:100% 0;animation:nb-glint 6.5s 1.2s ease-in-out infinite;
+  -webkit-mask:var(--gm) 0 0/100% 100% no-repeat;mask:var(--gm) 0 0/100% 100% no-repeat}
+.nb-glint[hidden]{display:none}
+@keyframes nb-glint{0%{background-position:100% 0}22%,100%{background-position:0 0}}
+section.has-pal .nb-glass::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.13) 50%,transparent 65%) no-repeat;background-size:300% 100%;background-position:100% 0;
+  animation:nb-glint 6.5s 1.35s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){.nb-glint,section.has-pal .nb-glass::before{animation:none;opacity:0}}
 section.has-pal .nb-glass{background:linear-gradient(to right top,color-mix(in srgb,var(--ga1) 26%,rgba(30,34,34,.66)),color-mix(in srgb,var(--ga2) 20%,rgba(239,239,239,.18)));
   border-color:color-mix(in srgb,var(--ga2) 40%,rgba(240,240,240,.22))}
 section.has-pal .nb-seek{background:linear-gradient(90deg,var(--ga1) var(--p),rgba(255,255,255,.22) var(--p))}
