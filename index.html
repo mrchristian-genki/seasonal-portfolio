@@ -26,6 +26,7 @@
 <link rel="stylesheet" href="css/lake.css?v=1">
 <link rel="stylesheet" href="css/narrator.css?v=32">
 <link rel="stylesheet" href="css/shelf.css?v=3">
+<link rel="stylesheet" href="css/ws-cards.css?v=1">
 <script>/* The lake closed by the link (nlake) or last time (js/lake.js): start with the clean top, no flash of the scene. */try{var w=decodeURIComponent(location.search).toLowerCase(),n=/(^|[?+&,;\s])nlake([+&,;\s=]|$)/.test(w),y=/(^|[?+&,;\s])ylake([+&,;\s=]|$)/.test(w);if(n||(!y&&localStorage.getItem("cg-lake")==="0"))document.documentElement.classList.add("lake-off")}catch(e){}</script>
 <link rel="stylesheet" href="css/footer.css?v=1793360000">
 <script>/* Night links (?night, ?nightmode, ?darkmode) open with the page already dark: no white flash, no fade. */
@@ -126,6 +127,7 @@ document.documentElement.classList.add('night-page');})();</script>
       <p class="season-line">Winter, the quiet work underneath</p>
       <h2>The workshop</h2>
       <p class="lede">Where the books get made, and the tools behind them. Custom software and generative AI that turn ideas into print-ready files in batches, plus a few side projects that exist because they were fun to build.</p>
+      <div class="wsc" data-wscards role="region" aria-label="The big projects: open one for its clips and story"></div>
       <ul class="works">
         <li><b>ProPre Engine</b><i>tool</i><p>The production pipeline: edition selectors, metadata, prompt generation, and print-ready PDFs.</p></li>
         <li><b>Prompt systems</b><i>ongoing</i><p>Catalog builders for books and shirts, with content-policy-safe phrasing built in.</p></li>
@@ -136,6 +138,7 @@ document.documentElement.classList.add('night-page');})();</script>
       </ul>
       <a class="btn solid" href="https://www.christiangehrke.com/propre/" target="_blank" rel="noopener">Visit the ProPre Engine</a>
       <a class="btn" href="catalog/" target="_blank" rel="noopener">Open the parts catalog</a>
+      <br><button type="button" class="up-next" data-next="t-lab">Up next: <span>out on the trail &rarr;</span></button>
     </div>
     <div class="view" data-view="lab">
       <p class="season-line">Spring, when everything is starting</p>
@@ -258,6 +261,7 @@ document.documentElement.classList.add('night-page');})();</script>
 <!-- Live book count: the Books copy reads the catalog's Google Sheet, so the number always matches the catalog. -->
 <script src="js/books-count.js?v=1793260000"></script>
 <script src="js/books-shelf.js?v=3" defer></script>
+<script src="js/ws-cards.js?v=1" defer></script>
 <!-- Play tab: loads its content only when the tab is opened. -->
 <script src="js/audio-rules.js?v=1" defer></script>
 <script src="js/play-inline.js?v=1794600000" defer></script>

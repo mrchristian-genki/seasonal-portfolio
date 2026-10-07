@@ -1,0 +1,40 @@
+/* THE WORKSHOP'S PROJECTS (Workshop tab, js/ws-cards.js): a card per big project, its own clip looping inside; one at a
+   time plays as a little tour, a hover plays one, and a click opens it in a window with its clips, its story and links */
+.wsc{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin:-6px calc(50% - min(50vw - 20px,560px)) 38px;text-align:left}
+.wsc-card{position:relative;display:block;border:0;padding:0;margin:0;border-radius:14px;overflow:hidden;cursor:pointer;background:#0b2a28;color:#fff;
+  aspect-ratio:16/9;box-shadow:0 1px 2px rgba(15,77,71,.2),0 16px 30px -16px rgba(15,77,71,.6);transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s;font:inherit;text-align:left}
+.wsc-card.wide{grid-column:1/-1;aspect-ratio:21/9}
+.wsc-card img,.wsc-card video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.wsc-card video{opacity:0;transition:opacity .6s}
+.wsc-card.on video{opacity:1}
+.wsc-card img{transform:scale(1.02);transition:transform 6s ease-out}
+.wsc-card.on img{transform:scale(1.08)}
+.wsc-card::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,22,21,0) 45%,rgba(6,22,21,.82));pointer-events:none}
+.wsc-t{position:absolute;left:16px;right:16px;bottom:13px;z-index:1;display:flex;flex-direction:column;gap:2px}
+.wsc-t b{font-family:var(--font-display);font-size:clamp(17px,2vw,22px);line-height:1.15;text-shadow:0 1px 8px rgba(0,0,0,.35)}
+.wsc-t span{font-size:13px;line-height:1.35;color:rgba(255,255,255,.86)}
+.wsc-more{position:absolute;top:12px;right:12px;z-index:1;padding:4px 10px;border-radius:999px;font:700 11px/1.4 var(--font-display);
+  background:rgba(255,255,255,.88);color:#0f4d47;opacity:0;transform:translateY(-4px);transition:opacity .3s,transform .3s}
+.wsc-card:hover,.wsc-card:focus-visible{transform:translateY(-6px);box-shadow:0 2px 4px rgba(15,77,71,.2),0 24px 40px -18px rgba(15,77,71,.7)}
+.wsc-card:hover .wsc-more,.wsc-card:focus-visible .wsc-more{opacity:1;transform:none}
+.wsc-card:focus-visible{outline:3px solid rgb(var(--accent));outline-offset:3px}
+/* the window */
+.wsm{border:0;padding:0;width:min(980px,calc(100vw - 24px));max-height:calc(100vh - 32px);border-radius:16px;background:#fbfaf7;color:#22343c;
+  box-shadow:0 30px 80px -20px rgba(0,0,0,.5);overflow:auto}
+.wsm::backdrop{background:rgba(8,24,30,.62);backdrop-filter:blur(3px)}
+.wsm-stage{position:relative;background:#0b2a28;aspect-ratio:16/9}
+.wsm-stage video,.wsm-stage img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block}
+.wsm-x{position:absolute;top:10px;right:10px;z-index:2;width:36px;height:36px;border-radius:50%;border:0;cursor:pointer;background:rgba(255,255,255,.92);color:#0f4d47;font:700 20px/1 system-ui}
+.wsm-cap{margin:0;padding:10px 20px 0;font-size:14px;color:#56707a;min-height:2.6em}
+.wsm-thumbs{display:flex;gap:8px;padding:10px 20px 4px;overflow-x:auto}
+.wsm-thumbs button{flex:0 0 auto;width:112px;aspect-ratio:16/9;border-radius:8px;overflow:hidden;border:2px solid transparent;padding:0;cursor:pointer;background:#0b2a28;opacity:.72;transition:opacity .2s,border-color .2s}
+.wsm-thumbs button.on,.wsm-thumbs button:hover{opacity:1;border-color:rgb(var(--accent))}
+.wsm-thumbs img{width:100%;height:100%;object-fit:cover;display:block}
+.wsm-body{padding:12px 20px 22px}
+.wsm-body h3{margin:0 0 2px;font-family:var(--font-display);font-size:26px;color:#0f4d47}
+.wsm-body .wsm-tag{margin:0 0 10px;color:rgb(var(--accent));font-weight:600}
+.wsm-body p{margin:0 0 14px;line-height:1.6}
+.wsm-links{display:flex;flex-wrap:wrap;gap:10px}
+html.night-page .wsm{background:#16232f;color:var(--night-text)} html.night-page .wsm-body h3{color:var(--night-text)} html.night-page .wsm-cap{color:var(--night-soft)}
+@media (max-width:640px){.wsc{grid-template-columns:1fr;gap:14px;margin-left:0;margin-right:0}.wsc-card.wide{aspect-ratio:16/9}.wsm-thumbs button{width:88px}}
+@media (prefers-reduced-motion:reduce){.wsc-card,.wsc-card img,.wsc-card video{transition:none}.wsc-card.on img{transform:scale(1.02)}}
