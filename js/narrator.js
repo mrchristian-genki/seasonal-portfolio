@@ -1,8 +1,9 @@
 /* THE NARRATOR, GlazyArray: a little brass robot in each Listen bar (section.listen with an <audio>) that tells the episode.
-   Its torso and hands are one video (assets/narrator/narrator.mp4, green screen keyed onto the bar's colour) in fourteen
-   8-second parts, every one starting and ending in the same rest pose: the fingers tapping; four gestures, each
+   Its torso and hands are one video (assets/narrator/narrator.mp4, green screen keyed onto the bar's colour) in twenty
+   8-second parts, every one starting and ending in the same rest pose: the fingers tapping; seven gestures, each
    followed by the same played backwards (her arms opened wide like a storyteller, a little seated hand dance, a brass
-   ball that appears in her hand, both hands talking along); parts 3 and 4 just hold the rest pose (a heart drawn in
+   ball that appears in her hand, both hands talking along, and three ball tricks low in front of her: a crystal ball
+   balanced from hand to hand, a teal ball passed between her hands, a big glowing orb rolled in and turned); parts 3 and 4 just hold the rest pose (a heart drawn in
    light was there, and came out); and three hints. The robot moves only by jumping
    within this one file (switching files blanked the frame for a moment). Her head is cut-out layers on top:
    the head with the mouth open inside, the jaw (her chin plate, and the side plates that swing half as far), and
@@ -18,8 +19,8 @@
    - Now and then it blinks. With reduced motion it stays still, and only the mouth moves. */
 (function () {
   'use strict';
-  var A = '/assets/narrator/', V = '?v=26', DROP = 0.0448;   // the chin plate's drop, as a share of the head layer's height (the side plates go half as far)
-  var D = 193 / 24, IDLE = 0, GESTURES = [{ f: 1, r: 2 }, { f: 8, r: 9 }, { f: 10, r: 11 }, { f: 12, r: 13 }];   // the parts of narrator.mp4: forward and backwards copies
+  var A = '/assets/narrator/', V = '?v=27', DROP = 0.0448;   // the chin plate's drop, as a share of the head layer's height (the side plates go half as far)
+  var D = 193 / 24, IDLE = 0, GESTURES = [{ f: 1, r: 2 }, { f: 8, r: 9 }, { f: 10, r: 11 }, { f: 12, r: 13 }, { f: 14, r: 15 }, { f: 16, r: 17 }, { f: 18, r: 19 }];   // the parts of narrator.mp4: forward and backwards copies
   // the hints, parts 5 to 7, with what the head does when (seconds into the part): look toward Play, wink, the bulb glows
   var HINTS = [
     { p: 5, cues: [[1.2, 5.6, 'look'], [2.3, 3.1, 'wink']] },                          // psst, over there
