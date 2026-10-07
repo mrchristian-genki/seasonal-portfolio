@@ -5,3 +5,4 @@ studio/vendor/
 studio/assets/track.js
 # share cards, made by field/tools/cards.py on each deploy
 field/data/cards/
+__pycache__/

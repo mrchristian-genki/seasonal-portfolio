@@ -31,14 +31,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Each published Field Note's share card: its cover with the title on a brass nameplate (cards.py),
+      # Each published Field Note's share card (cards.py): GlazyArray at her desk in its look and colours when it has
+      # an episode (gacard.py), else its cover with the title on a brass nameplate,
       # made fresh on every deploy so a Note published from the Studio gets one too.
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
       - name: Make the share cards
         run: |
-          python -m pip install --quiet pillow
+          python -m pip install --quiet pillow numpy
           python field/tools/cards.py
 
       # Play is rebuilt from field/data on every deploy, so an entry saved or published from the
