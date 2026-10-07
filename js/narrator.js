@@ -70,7 +70,10 @@
       var k = f.getAttribute('data-k'), on = !!stem && (l.flair || '').indexOf(k) >= 0;
       f.style.setProperty('--fm', on ? 'url(' + stem + k + '.png' + V + (l.v ? '.' + l.v : '') + ')' : 'none'); f.hidden = !on;
       f.style.setProperty('--fk', l && l.flairK ? l.flairK : .45);
-      f.classList.toggle('dye', !!l && (l.flairDye || '').indexOf(k) >= 0);   // white parts are dyed, not tinted   // how strongly: a gentle 45% on brass, more on fabric and gems (looks.json flairK)
+      f.classList.toggle('dye', !!l && (l.flairDye || '').indexOf(k) >= 0);
+      // a look rendered white where its colours go (looks.json flairBase): its own two colours when the Note has no palette
+      var d = on && l.flairBase ? l.flairBase['ab'.indexOf(k)] : '';
+      if (d) f.style.setProperty('--gd', d); else f.style.removeProperty('--gd'); f.classList.toggle('based', !!d);   // white parts are dyed, not tinted   // how strongly: a gentle 45% on brass, more on fabric and gems (looks.json flairK)
     });
   }
   function put(nb, l) {
