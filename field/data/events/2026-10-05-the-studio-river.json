@@ -113,17 +113,23 @@
  "consent": "Marley: the family dog, seen briefly on her visits along the river in some clips.",
  "publishedAt": "2026-10-05T22:12:04Z",
  "narratorLook": {
-  "look": "grad-cap",
+  "look": "workshop-goggles",
   "fit": "category",
-  "from": "case-study",
-  "about": "a brass mortarboard with a chain tassel",
-  "why": "Picked from Case study.",
+  "from": "mini-cast",
+  "about": "brass workshop goggles pushed up on her forehead: the leather strap in one colour and the padded rims in the other",
+  "why": "Picked from Mini-Cast.",
   "prompt": "",
-  "bulb": false
+  "bulb": true
  },
  "palette": [
   "#00f100",
   "#fe781e"
  ],
- "paletteBy": "hand"
+ "paletteBy": "hand",
+ "narratorBackdrop": {
+  "backdrop": "workshop-with-robots",
+  "fit": "category",
+  "from": "mini-cast",
+  "scene": ""
+ }
 }
