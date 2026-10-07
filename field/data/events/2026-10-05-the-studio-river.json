@@ -121,5 +121,9 @@
   "prompt": "",
   "bulb": false
  },
- "palette": ["#b8692d", "#d6d257"]
+ "palette": [
+  "#00b000",
+  "#00d824"
+ ],
+ "paletteBy": "hand"
 }
