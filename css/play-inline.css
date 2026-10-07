@@ -283,3 +283,25 @@ html.night-page .pi-more a[data-pi-story]{color:#16232f;box-shadow:0 2px 10px rg
 .pi-eps-grid .pi-ep>.pi-ep-cover img{aspect-ratio:16/9;height:auto;min-height:0}
 @media (max-width:640px){.pi-ep>.pi-ep-cover img{max-height:240px}}
 @media (prefers-reduced-motion:reduce){.pi-ep>.pi-ep-cover img{transition:none}}
+
+/* THE PLAY TAB, TIGHTER (Oct 7, 2026): the season line, title and lede sit close together, the hub starts right under
+   them, sections are closer, and on a phone the tag chips run in one row that scrolls sideways instead of stacking */
+.about .view[data-view="lab"] .season-line{margin:0 0 2px}
+.about .view[data-view="lab"] h2{margin:0 0 6px;font-size:clamp(26px,4.4vw,34px);line-height:1.1}
+.about .view[data-view="lab"] .lede{margin:0 auto 4px;font-size:16px;line-height:1.5}
+.play-inline{margin-top:14px}
+.pi-sec{margin-top:28px}
+.pi-stage>.pi-sec:first-child{margin-top:14px}
+.pi-sub{margin:0 0 10px;font-size:15px;line-height:1.5}
+@media (max-width:640px){
+  .about{padding-top:18px}
+  .about .view[data-view="lab"] .lede{font-size:15px}
+  .play-inline{margin-top:10px}
+  .pi-sec{margin-top:22px}
+  .pi-sec h3{font-size:22px}
+  .pi-tools{gap:8px;margin:0 0 8px}
+  .pi-seg button{padding:5px 11px;font-size:13px}
+  .pi-tagbar{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin:0 -16px 12px;padding:0 16px 2px}
+  .pi-tagbar::-webkit-scrollbar{display:none}
+  .pi-tagbar button{flex:none}
+}
