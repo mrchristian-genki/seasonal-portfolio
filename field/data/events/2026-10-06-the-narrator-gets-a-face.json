@@ -140,5 +140,8 @@
   "from": "case-study",
   "scene": ""
  },
- "palette": ["#26bfac", "#b57835"]
+ "palette": [
+  "#26bfac",
+  "#b57835"
+ ]
 }
