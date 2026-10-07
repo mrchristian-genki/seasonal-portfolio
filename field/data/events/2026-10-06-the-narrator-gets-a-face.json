@@ -32,8 +32,8 @@
    "caption": "GlazyArray at her desk, talking, in the library backdrop and grad cap the case studies give her: her torso is one of Christian's renders, her head is cut into layers, and her jaw opens with the loudness of the voice.",
    "w": 1280,
    "h": 720,
-   "use": "post",
-   "cover": true
+   "use": "skip",
+   "cover": false
   },
   {
    "src": "data/photos/2026-10-06-the-narrator-gets-a-face/his-head-her-head.jpg",
@@ -42,7 +42,7 @@
    "w": 1600,
    "h": 900,
    "use": "post",
-   "cover": false
+   "cover": true
   },
   {
    "src": "data/photos/2026-10-06-the-narrator-gets-a-face/one-video.jpg",
