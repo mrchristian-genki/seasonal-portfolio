@@ -2276,13 +2276,14 @@
   "bulb": false
  },
  "palette": [
-  "#698dd3",
-  "#a798e1"
+  "#fffc41",
+  "#ebf38f"
  ],
  "narratorBackdrop": {
   "backdrop": "biking-forest",
   "fit": "category",
   "from": "ride",
   "scene": ""
- }
+ },
+ "paletteBy": "hand"
 }
