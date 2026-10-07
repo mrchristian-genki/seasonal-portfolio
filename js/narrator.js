@@ -129,7 +129,9 @@
   }
   function backdrop(bar, nb) {
     looks.then(function () {
-      var b = ownBd(bar); if (!b || bar.querySelector('.nb-bd')) return;
+      var b = ownBd(bar);
+      if (!b) { keyer(nb); return; }   // no scene: still keyed, so her body sits on the bar's own (palette-tinted) teal with no box around it
+      if (bar.querySelector('.nb-bd')) return;
       var w = document.createElement('div'), i = document.createElement('i'); w.className = 'nb-bd'; w.setAttribute('aria-hidden', 'true');
       i.style.backgroundImage = 'url(' + A + 'backdrops/' + b.file + V + (b.v ? '.' + b.v : '') + ')';
       w.appendChild(i); bar.insertBefore(w, bar.firstChild); bar.classList.add('has-bd');
@@ -140,6 +142,7 @@
   // the distance to it, the teal unmixed from the edges) and draws her into a canvas over the hidden video
   var LQ = 'data:image/webp;base64,UklGRoQCAABXRUJQVlA4IHgCAADwDgCdASqCACgAPrVSoEwnJKaiKrVbGOAWiWIAz9oNP8vwzrm3g55nTM96GRuE44VXd2kTU14W4BR6I26vfLOm3ThBQoHGvcwxzBz4VpbgtaUy59Xw6F1BWvNJFWDERV1jixpT25hBibdx3QfoYebO/MxXqlVgz5Eb/VazJKRiAAD+8iHc+/T7o8md12qpHabjT2iyHnSYHd/jZ9M+a0DnyvZhjnVVBObhhE8kRnmZMUtgw4ItMsoK6Er/Xyzk2Oyct7Q1wvSj4HszlDmSIDVHW+0mcHFLHu24GwnPcJ+aR9xmgWwGwjOsWEbDVk6O1Avd3O1NzEu3X7iDwCBB0ybcaak5LWVcmmUaeBy9PcfiA8iTbW1u34lbFMEBDVQ2gD6NZ7ilveY1dJr8e1564nBZNoIGN1MuTxmvfScte8jAGRjiiYHHoQsbi5dQtNuCW3F6jtQwQc/FwEwDN+UrcnMvao4tvarJIvWqvFW7fv+deMZ6PLv4XdEi9K9xtqmR2p0lWspwiZ/zD87xVIWboYlu6Ivnl9qVnkHLxMpDwwxVR/kEweYvWsKWJBx46WX8k6Fke5hogJFaKUSQjD6fdQ7jL2UOLtX2xjJ+i28F4rwpHYap7W+lbyYu5y2zUWTa9M38Gl5+Ty8SlImRKBKFgw6xX4Vr+RKvVh2kFz6f2mnnTLI+LtDv/tS5ev4ito8HSxHUCFgZnyIswj1SyQbGYWsWnoW4tmkWtYnLVUZF7Y8uwxJhd1xCB33Nq5MDI+dSQRgrIJD2BYOA8u0lG8UT2DK9dJdpxv3LKBLS0kaaS+2rQvYYoUw65iKhBv5O4wkW1chL4TNRKAAAAA==';
   function keyer(nb) {
+    if (nb.classList.contains('nb-keying')) return;
     var v = nb.querySelector('.nb-body'), c = document.createElement('canvas'); c.width = 976; c.height = 300; c.className = 'nb-keyed';
     var gl = c.getContext('webgl', { premultipliedAlpha: true, alpha: true }); if (!gl) return;
     function sh(t, src) { var o = gl.createShader(t); gl.shaderSource(o, src); gl.compileShader(o); return o; }
