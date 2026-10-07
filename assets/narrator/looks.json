@@ -1,9 +1,9 @@
 {
  "looks": [
   { "name": "bob", "file": "bob.webp", "rotate": true, "flair": "a", "flairK": 0.8 },
-  { "name": "ponytail", "file": "ponytail.webp", "rotate": true, "flair": "a", "flairK": 0.8 },
-  { "name": "perm", "file": "perm.webp", "rotate": true, "flair": "ab", "flairK": 0.8 },
-  { "name": "crimp", "file": "crimp.webp", "rotate": true, "flair": "ab", "flairK": 0.8 },
+  { "name": "ponytail", "file": "ponytail.webp", "rotate": true, "v": "tw2b", "flair": "ab", "flairDye": "ab", "flairK": 1, "flairBase": ["#2fb5ad", "#e8735a"] },
+  { "name": "perm", "file": "perm.webp", "rotate": true, "v": "tw2b", "flair": "ab", "flairDye": "ab", "flairK": 1, "flairBase": ["#d4627a", "#2fb5ad"] },
+  { "name": "crimp", "file": "crimp.webp", "rotate": true, "v": "tw2b", "flair": "ab", "flairDye": "ab", "flairK": 1, "flairBase": ["#e0559a", "#f4efe6"] },
   { "name": "headband", "file": "headband.webp", "rotate": true, "v": "tmk7hb", "flair": "ab", "flairK": 0.8 },
   { "name": "updo", "file": "updo.webp", "rotate": true, "flair": "ab", "flairK": 0.8 },
   { "name": "tahoe-winter", "file": "beanie.webp", "from": "01-02", "to": "01-31", "bulb": false, "v": "tmkb2w", "flair": "ab", "flairK": 0.8, "flairDye": "b" },
