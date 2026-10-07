@@ -6,7 +6,7 @@
   { "name": "crimp", "file": "crimp.webp", "rotate": true, "flair": "ab", "flairK": 0.8 },
   { "name": "headband", "file": "headband.webp", "rotate": true, "v": "tmk7hb", "flair": "ab", "flairK": 0.8 },
   { "name": "updo", "file": "updo.webp", "rotate": true, "flair": "ab", "flairK": 0.8 },
-  { "name": "tahoe-winter", "file": "beanie.webp", "from": "01-02", "to": "01-31", "bulb": false, "flair": "a", "flairK": 0.8 },
+  { "name": "tahoe-winter", "file": "beanie.webp", "from": "01-02", "to": "01-31", "bulb": false, "v": "tmkb2w", "flair": "ab", "flairK": 0.8, "flairDye": "b" },
   { "name": "valentines", "file": "valentine.webp", "from": "02-10", "to": "02-14", "flair": "ab", "flairK": 0.8 },
   { "name": "st-patricks", "file": "stpatrick.webp", "from": "03-15", "to": "03-17", "bulb": false, "flair": "ab", "flairK": 0.8 },
   { "name": "spring", "file": "bunny.webp", "from": "03-20", "to": "04-20", "bulb": false, "flair": "a", "flairK": 0.8 },
