@@ -27,9 +27,10 @@
   // Read as text, not r.json(): a reply that isn't clean JSON (a PHP warning printed before it, or a host's
   // error page) then still works, or at least says what came back (Safari's own message for a bad reply is
   // only "The string did not match the expected pattern").
-  // A Blob body goes up as raw bytes (the host's firewall can take base64 in JSON for an attack). Even raw, now and
-  // then a few bytes of audio or an image happen to look like an attack to it (a 418), so a raw body goes up
-  // scrambled with a random key (X-Mask; api.php unscrambles it), and a blocked one is sent again with a new key.
+  // A Blob goes up as a file in a form post (multipart), not a raw request body: the host's firewall blocks any
+  // raw binary body (a 418), and takes base64 in JSON for an attack now and then, but lets file uploads through.
+  // It also goes up scrambled with a random key (X-Mask; api.php unscrambles it), so no run of its bytes looks
+  // like an attack, and a blocked one is sent again with a new key.
   function masked(blob) {
     return blob.arrayBuffer().then(function (buf) {
       var k = crypto.getRandomValues(new Uint8Array(32)), a = new Uint8Array(buf);
@@ -41,9 +42,10 @@
     var raw = body instanceof Blob;
     var ready = raw ? masked(body) : Promise.resolve(null);
     return ready.then(function (m) {
-      var h = { 'Content-Type': raw ? 'application/octet-stream' : 'application/json', 'X-CSRF': CSRF };
-      if (m) h['X-Mask'] = m.key;
-      var opt = body ? { method: 'POST', headers: h, body: m ? m.body : JSON.stringify(body) } : {};
+      var h = { 'X-CSRF': CSRF }, payload;
+      if (m) { h['X-Mask'] = m.key; payload = new FormData(); payload.append('f', new Blob([m.body], { type: 'application/octet-stream' }), 'part.bin'); }
+      else { h['Content-Type'] = 'application/json'; payload = JSON.stringify(body); }
+      var opt = body ? { method: 'POST', headers: h, body: payload } : {};
       return fetch('api.php?a=' + a + (q || ''), opt);
     }).then(function (r) {
       if (r.status === 401) { location.reload(); throw new Error('Logged out'); }
@@ -1934,7 +1936,7 @@
   }
   function upload(file, name) {
     var up = Array.from(crypto.getRandomValues(new Uint8Array(8)), function (b) { return b.toString(16).padStart(2, '0'); }).join('');
-    var CH = 1500000, n = Math.ceil(file.size / CH), chain = Promise.resolve(), res = null, box = $('#audio');
+    var CH = 1000000, n = Math.ceil(file.size / CH), chain = Promise.resolve(), res = null, box = $('#audio');
     box.innerHTML = '<p class="muted aup">Uploading ' + esc(name) + '… <b>0%</b></p>';
     for (var i = 0; i < n; i++) (function (i) {
       chain = chain.then(function () { return api('audiopart', file.slice(i * CH, (i + 1) * CH), '&up=' + up + '&i=' + i + '&last=' + (i === n - 1 ? 1 : 0)); })

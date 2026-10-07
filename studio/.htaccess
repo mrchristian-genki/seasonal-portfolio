@@ -10,7 +10,7 @@ DirectoryIndex index.php
   RewriteRule ^composer\.(json|lock)$ - [F,L]
 </IfModule>
 
-<FilesMatch "\.(md|json|lock|dist)$">
+<FilesMatch "\.(md|json|lock|dist|ini)$">
   Require all denied
 </FilesMatch>
 
