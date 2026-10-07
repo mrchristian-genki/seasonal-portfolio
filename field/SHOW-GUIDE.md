@@ -138,6 +138,9 @@ mask) and always opens with: "Same image, same camera, same face, same eyes, sam
 chroma green background (#00B140). Change only the hair and accessories:". Then the look in one or two sentences, in
 her style: polished brass and rose-gold, chunky sculpted shapes that read at about 105 px wide, nothing crossing her
 face below the brows, everything inside the crop box. Say whether it covers her flower-bud antenna (bulb false).
+It's two prompts (assets/narrator/looks/PROMPTS.md): prompt 1 renders the parts for her first colour in bright magenta
+and the parts for her second in pearl white; prompt 2 edits that same image so only the second colour's parts turn
+bright cyan. Write both, labelled Prompt 1 and Prompt 2, naming which part is which.
 Christian renders it from the template in the Studio's look panel and brings it back there (the Studio keys it,
 puts her face back and adds it on Save; the Workshop's Style Array does the same by hand). It goes into looks.json with an
 `about` line and no dates or rotate, so it only appears on the Notes that wear it (and with ?look-name).
