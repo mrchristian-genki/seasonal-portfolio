@@ -1,10 +1,11 @@
-/* THE BOOK SHELF (Books tab, js/books-shelf.js): real covers from the catalog drift by as line art, and one after
-   another a brush of colour sweeps across, as the catalog's hover does; a hover colours one at once and names it */
-.shelf{position:relative;margin:-8px calc(50% - 50vw) 34px;padding:14px 0 30px;overflow:hidden;
+/* THE BOOK SHELF (Books tab, js/books-shelf.js): real covers from the catalog drift by in two rows, opposite ways, as
+   line art, and one after another a brush of colour sweeps across, as the catalog's hover does; a hover colours one at once */
+.shelf{position:relative;margin:-8px calc(50% - 50vw) 34px;padding:14px 0 18px;overflow:hidden;
   -webkit-mask:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent);mask:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent)}
-.shelf::after{content:"";position:absolute;left:0;right:0;bottom:22px;height:6px;border-radius:3px;   /* the ledge they stand on */
-  background:linear-gradient(180deg,rgba(var(--accent),.35),rgba(var(--accent),.12));transition:background .8s}
-.shelf-track{display:flex;gap:22px;width:max-content;animation:shelfDrift 90s linear infinite;padding:0 11px}
+.shelf-track{display:flex;gap:22px;width:max-content;animation:shelfDrift 110s linear infinite;padding:0 11px 12px;   /* each row on its ledge */
+  background:linear-gradient(180deg,rgba(var(--accent),.32),rgba(var(--accent),.1)) 0 100%/100% 6px no-repeat}
+.shelf-track+.shelf-track{margin-top:22px}
+.shelf-track.rev{animation-direction:reverse;animation-duration:125s}
 .shelf:hover .shelf-track,.shelf:focus-within .shelf-track{animation-play-state:paused}
 @keyframes shelfDrift{to{transform:translateX(-50%)}}
 .bk{position:relative;display:block;width:clamp(120px,15vw,168px);flex:none;text-decoration:none;color:inherit;outline:none}
@@ -20,13 +21,6 @@
 @keyframes shelfGlint{0%{left:-30%;opacity:1}100%{left:105%;opacity:.2}}
 .bk:hover .bk-art,.bk:focus-visible .bk-art{transform:translateY(-8px) rotate(0deg);box-shadow:0 2px 4px rgba(15,77,71,.2),0 18px 30px -12px rgba(15,77,71,.55)}
 .bk:focus-visible .bk-art{outline:3px solid rgb(var(--accent));outline-offset:3px}
-.bk-cap{position:absolute;left:50%;bottom:-6px;width:max-content;max-width:200px;transform:translate(-50%,4px);opacity:0;pointer-events:none;
-  text-align:center;font-size:12px;line-height:1.3;transition:opacity .3s,transform .3s}
-.bk-cap b{display:block;font-family:var(--font-display);color:#0f4d47}
-.bk-cap i{font-style:normal;color:rgb(var(--accent))}
-.bk:hover .bk-cap,.bk:focus-visible .bk-cap{opacity:1;transform:translate(-50%,0)}
-.bk:hover .bk-cap,.bk:focus-visible .bk-cap{bottom:-30px}
-.shelf{padding-bottom:40px}
 .bk-pub{position:absolute;top:6px;left:6px;z-index:2;padding:2px 7px;border-radius:9px;font:700 10px/1.4 var(--font-display);letter-spacing:.02em;
   color:#fff;background:rgba(var(--accent),.92)}
 .up-next{display:inline-flex;align-items:center;gap:6px;margin:18px auto 0;padding:6px 4px;border:0;background:none;cursor:pointer;
@@ -34,7 +28,7 @@
 .up-next span{color:rgb(var(--accent))}
 .up-next:hover span{text-decoration:underline}
 html.night-page .bk-art{background:#1b2a36;box-shadow:0 10px 22px -10px rgba(0,0,0,.7)}
-html.night-page .bk-cap b,html.night-page .up-next{color:var(--night-text)}
+html.night-page .up-next{color:var(--night-text)}
 @media (prefers-reduced-motion:reduce){
   .shelf-track{animation:none;flex-wrap:wrap;justify-content:center;width:auto;padding:0 20px}
   .bk-art .b{transition:none}.bk.lit .bk-art::after{animation:none}

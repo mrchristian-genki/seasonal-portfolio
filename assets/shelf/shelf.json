@@ -110,5 +110,61 @@
   "series": "Pen as Spade",
   "published": false,
   "amazon": ""
+ },
+ {
+  "id": "moebius",
+  "title": "Moebius",
+  "series": "Concept Collection",
+  "published": false,
+  "amazon": ""
+ },
+ {
+  "id": "mandalas-bee-s-and-honey",
+  "title": "Mandalas - Bee's and Honey",
+  "series": "Mandalas",
+  "published": false,
+  "amazon": ""
+ },
+ {
+  "id": "desert-whispers-oasis-nymphs",
+  "title": "Desert Whispers & Oasis Nymphs",
+  "series": "Concept Collection",
+  "published": false,
+  "amazon": ""
+ },
+ {
+  "id": "color-in-the-tap-shack",
+  "title": "Color in The Tap Shack",
+  "series": "Concept Collection",
+  "published": false,
+  "amazon": ""
+ },
+ {
+  "id": "cultured-chameleon-s",
+  "title": "Cultured Chameleon's",
+  "series": "Chameleons",
+  "published": false,
+  "amazon": ""
+ },
+ {
+  "id": "coded-chameleon",
+  "title": "Coded Chameleon",
+  "series": "Chameleons",
+  "published": false,
+  "amazon": ""
+ },
+ {
+  "id": "symmetry-between-the-stations",
+  "title": "Symmetry Between the Stations",
+  "series": "Concept Collection",
+  "published": false,
+  "amazon": ""
+ },
+ {
+  "id": "fairytale-princesses-nature-spirits",
+  "title": "Fairytale Princesses & Nature Spirits",
+  "series": "Concept Collection",
+  "published": false,
+  "amazon": ""
  }
 ]
