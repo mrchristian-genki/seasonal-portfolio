@@ -45,11 +45,13 @@
    "cover": true
   },
   {
-   "src": "data/photos/2026-10-06-the-narrator-gets-a-face/one-video.jpg",
+   "src": "data/photos/2026-10-06-the-narrator-gets-a-face/gestures.mp4",
+   "poster": "data/photos/2026-10-06-the-narrator-gets-a-face/gestures.jpg",
+   "video": true,
    "ai": true,
-   "caption": "Her hands are one video in eight parts. Every part starts and ends in the same pose, so she can jump from any one to any other without a gap.",
-   "w": 2334,
-   "h": 688,
+   "caption": "Every gesture she makes while she talks, one after another: twelve, from making a point and counting it off to the storyteller's open arms and three things she holds. Each starts and ends in the same pose, so she can go from any one to any other without a gap.",
+   "w": 960,
+   "h": 540,
    "use": "post",
    "cover": false
   },
