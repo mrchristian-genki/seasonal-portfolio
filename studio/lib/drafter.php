@@ -38,7 +38,7 @@ final class Drafter
                     'look' => ['type' => 'string', 'description' => 'The look\'s name: an existing one exactly as listed, or a new one in lowercase-with-hyphens (bike-helmet). Empty for none.'],
                     'about' => ['type' => 'string', 'description' => 'A few words on what she wears (a bike helmet with a little headlamp). Empty for none.'],
                     'why' => ['type' => 'string', 'description' => 'One short line tying it to the Note.'],
-                    'prompt' => ['type' => 'string', 'description' => 'For new: the image-edit prompt for her template, following the guide. Empty otherwise.'],
+                    'prompt' => ['type' => 'string', 'description' => 'For new: the two image-edit prompts for her template (Prompt 1, then Prompt 2), following the guide. Empty otherwise.'],
                     'bulb' => ['type' => 'boolean', 'description' => 'false when the look covers her flower-bud antenna (its glow is switched off).'],
                 ],
                 'required' => ['fit', 'look', 'about', 'why', 'prompt', 'bulb'],
