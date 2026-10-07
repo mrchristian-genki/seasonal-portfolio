@@ -1,0 +1,42 @@
+/* THE BOOK SHELF (Books tab, js/books-shelf.js): real covers from the catalog drift by as line art, and one after
+   another a brush of colour sweeps across, as the catalog's hover does; a hover colours one at once and names it */
+.shelf{position:relative;margin:-8px calc(50% - 50vw) 34px;padding:14px 0 30px;overflow:hidden;
+  -webkit-mask:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent);mask:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent)}
+.shelf::after{content:"";position:absolute;left:0;right:0;bottom:22px;height:6px;border-radius:3px;   /* the ledge they stand on */
+  background:linear-gradient(180deg,rgba(var(--accent),.35),rgba(var(--accent),.12));transition:background .8s}
+.shelf-track{display:flex;gap:22px;width:max-content;animation:shelfDrift 90s linear infinite;padding:0 11px}
+.shelf:hover .shelf-track,.shelf:focus-within .shelf-track{animation-play-state:paused}
+@keyframes shelfDrift{to{transform:translateX(-50%)}}
+.bk{position:relative;display:block;width:clamp(120px,15vw,168px);flex:none;text-decoration:none;color:inherit;outline:none}
+.bk-art{position:relative;display:block;aspect-ratio:1;border-radius:6px;overflow:hidden;background:#f4f1ea;
+  box-shadow:0 1px 2px rgba(15,77,71,.18),0 10px 22px -10px rgba(15,77,71,.45);transform:translateY(0) rotate(var(--tilt,0deg));
+  transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s}
+.bk-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.bk-art .b{clip-path:inset(0 0 0 0);transition:clip-path 1.1s cubic-bezier(.5,0,.25,1)}   /* the line art over the colour: wiped away */
+.bk-art::after{content:"";position:absolute;top:-10%;bottom:-10%;left:-30%;width:26%;pointer-events:none;opacity:0;   /* the brush's glint */
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.75),transparent);transform:skewX(-14deg)}
+.bk.lit .bk-art .b{clip-path:inset(0 0 0 100%)}
+.bk.lit .bk-art::after{animation:shelfGlint 1.1s cubic-bezier(.5,0,.25,1)}
+@keyframes shelfGlint{0%{left:-30%;opacity:1}100%{left:105%;opacity:.2}}
+.bk:hover .bk-art,.bk:focus-visible .bk-art{transform:translateY(-8px) rotate(0deg);box-shadow:0 2px 4px rgba(15,77,71,.2),0 18px 30px -12px rgba(15,77,71,.55)}
+.bk:focus-visible .bk-art{outline:3px solid rgb(var(--accent));outline-offset:3px}
+.bk-cap{position:absolute;left:50%;bottom:-6px;width:max-content;max-width:200px;transform:translate(-50%,4px);opacity:0;pointer-events:none;
+  text-align:center;font-size:12px;line-height:1.3;transition:opacity .3s,transform .3s}
+.bk-cap b{display:block;font-family:var(--font-display);color:#0f4d47}
+.bk-cap i{font-style:normal;color:rgb(var(--accent))}
+.bk:hover .bk-cap,.bk:focus-visible .bk-cap{opacity:1;transform:translate(-50%,0)}
+.bk:hover .bk-cap,.bk:focus-visible .bk-cap{bottom:-30px}
+.shelf{padding-bottom:40px}
+.bk-pub{position:absolute;top:6px;left:6px;z-index:2;padding:2px 7px;border-radius:9px;font:700 10px/1.4 var(--font-display);letter-spacing:.02em;
+  color:#fff;background:rgba(var(--accent),.92)}
+.up-next{display:inline-flex;align-items:center;gap:6px;margin:18px auto 0;padding:6px 4px;border:0;background:none;cursor:pointer;
+  font:600 14px var(--font-display);color:#3c5561}
+.up-next span{color:rgb(var(--accent))}
+.up-next:hover span{text-decoration:underline}
+html.night-page .bk-art{background:#1b2a36;box-shadow:0 10px 22px -10px rgba(0,0,0,.7)}
+html.night-page .bk-cap b,html.night-page .up-next{color:var(--night-text)}
+@media (prefers-reduced-motion:reduce){
+  .shelf-track{animation:none;flex-wrap:wrap;justify-content:center;width:auto;padding:0 20px}
+  .bk-art .b{transition:none}.bk.lit .bk-art::after{animation:none}
+}
+@media (max-width:640px){.shelf-track{gap:14px;animation-duration:70s}.shelf{margin-bottom:26px}}
