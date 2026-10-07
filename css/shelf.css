@@ -7,6 +7,10 @@
 .shelf-track+.shelf-track{margin-top:22px}
 .shelf-track.rev{animation-direction:reverse;animation-duration:125s}
 .shelf:hover .shelf-track,.shelf:focus-within .shelf-track{animation-play-state:paused}
+.shelf-js .shelf-track{animation:none;will-change:transform;cursor:grab;user-select:none;-webkit-user-select:none}   /* moved by the script, and by hand */
+.shelf-js .shelf-track:active{cursor:grabbing}
+.shelf-js img{-webkit-user-drag:none;pointer-events:none}
+.shelf-scroll{overflow-x:auto;-webkit-mask:none;mask:none}
 @keyframes shelfDrift{to{transform:translateX(-50%)}}
 .bk{position:relative;display:block;width:clamp(120px,15vw,168px);flex:none;text-decoration:none;color:inherit;outline:none}
 .bk-art{position:relative;display:block;aspect-ratio:1;border-radius:6px;overflow:hidden;background:#f4f1ea;
