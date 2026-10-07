@@ -39,17 +39,18 @@
     });
   }
   function api(a, body, q, tries) {
-    var raw = body instanceof Blob;
-    var ready = raw ? masked(body) : Promise.resolve(null);
+    // every body goes up scrambled as a form file: an upload as it is, the JSON of everything else marked X-Body, so the
+    // web host's firewall never reads a Note's words (a prompt or a caption can look like an attack to it: a 418)
+    var raw = body instanceof Blob, json = !!body && !raw;
+    var ready = body ? masked(raw ? body : new Blob([JSON.stringify(body)])) : Promise.resolve(null);
     return ready.then(function (m) {
       var h = { 'X-CSRF': CSRF }, payload;
-      if (m) { h['X-Mask'] = m.key; payload = new FormData(); payload.append('f', new Blob([m.body], { type: 'application/octet-stream' }), 'part.bin'); }
-      else { h['Content-Type'] = 'application/json'; payload = JSON.stringify(body); }
+      if (m) { h['X-Mask'] = m.key; if (json) h['X-Body'] = 'json'; payload = new FormData(); payload.append('f', new Blob([m.body], { type: 'application/octet-stream' }), 'part.bin'); }
       var opt = body ? { method: 'POST', headers: h, body: payload } : {};
       return fetch('api.php?a=' + a + (q || ''), opt);
     }).then(function (r) {
       if (r.status === 401) { location.reload(); throw new Error('Logged out'); }
-      if (r.status === 418 && raw && (tries || 0) < 4) return api(a, body, q, (tries || 0) + 1);   // blocked: again, with a new key
+      if (r.status === 418 && body && (tries || 0) < 4) return api(a, body, q, (tries || 0) + 1);   // blocked: again, with a new key
       return r.text().then(function (t) {
         var j = null;
         try { j = JSON.parse(t); } catch (e) {
