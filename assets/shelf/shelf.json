@@ -1,0 +1,114 @@
+[
+ {
+  "id": "color-in-a-salad",
+  "title": "Color in a Salad",
+  "series": "Color in a Salad",
+  "published": true,
+  "amazon": "https://a.co/d/0hDRcTSL"
+ },
+ {
+  "id": "color-in-a-cup-book-one",
+  "title": "Color in a Cup - Book One",
+  "series": "Color in a Cup",
+  "published": true,
+  "amazon": "https://a.co/d/0bk6KjT7"
+ },
+ {
+  "id": "color-in-a-jar-deep-south",
+  "title": "Color in a Jar - The Deep South",
+  "series": "Color in a Jar",
+  "published": true,
+  "amazon": "https://a.co/d/0fhpnG8i"
+ },
+ {
+  "id": "color-in-a-jar-the-west",
+  "title": "Color in a Jar - The West",
+  "series": "Color in a Jar",
+  "published": true,
+  "amazon": "https://a.co/d/0d1DFg4g"
+ },
+ {
+  "id": "color-in-a-cup-states-of-america",
+  "title": "Color in a Cup - States of America",
+  "series": "Color in a Cup",
+  "published": true,
+  "amazon": "https://a.co/d/0e9YuHj3"
+ },
+ {
+  "id": "color-in-coffee",
+  "title": "Color in Coffee",
+  "series": "Color in Coffee",
+  "published": true,
+  "amazon": "https://a.co/d/08L6I1Jh"
+ },
+ {
+  "id": "color-in-history-royal-coded-retreats",
+  "title": "Color in History - Royal & Coded Retreats",
+  "series": "Color in History",
+  "published": true,
+  "amazon": "https://a.co/d/03TlhowN"
+ },
+ {
+  "id": "color-in-history-scientific-creative-nooks",
+  "title": "Color in History - Scientific & Creative Nooks",
+  "series": "Color in History",
+  "published": true,
+  "amazon": "https://a.co/d/0hL8PxCI"
+ },
+ {
+  "id": "eureka-unfolded-in-fine-line",
+  "title": "Eureka Unfolded in Fine Line",
+  "series": "Concept Collection",
+  "published": false,
+  "amazon": ""
+ },
+ {
+  "id": "mushrooms-and-chameleons",
+  "title": "Mushrooms and Chameleons",
+  "series": "Chameleons",
+  "published": false,
+  "amazon": ""
+ },
+ {
+  "id": "mandalas-clockwork-ecosystem",
+  "title": "Mandalas - Clockwork Ecosystem",
+  "series": "Mandalas",
+  "published": false,
+  "amazon": ""
+ },
+ {
+  "id": "sorrento-scooters-and-cafe-culture",
+  "title": "Sorrento Sun, Scooters & Espresso",
+  "series": "Color in Italy",
+  "published": false,
+  "amazon": ""
+ },
+ {
+  "id": "aloha-shirts-italy-holland-france-ireland",
+  "title": "Aloha Shirts - Italy Holland France Ireland",
+  "series": "Aloha Shirts",
+  "published": false,
+  "amazon": ""
+ },
+ {
+  "id": "giants-causeway",
+  "title": "Giants Causeway",
+  "series": "Landscape Concepts",
+  "published": false,
+  "amazon": ""
+ },
+ {
+  "id": "legends-and-myths-of-hawaii",
+  "title": "Legends and Myths of Hawaii",
+  "series": "Hawaii",
+  "published": false,
+  "amazon": ""
+ },
+ {
+  "id": "pen-moments-history",
+  "title": "Pen Moments - History",
+  "series": "Pen as Spade",
+  "published": false,
+  "amazon": ""
+ }
+]
