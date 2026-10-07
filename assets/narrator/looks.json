@@ -41,7 +41,8 @@
   { "name": "hiking-yosemite-3", "file": "hiking-yosemite-3.jpg", "about": "", "v": "tmk3zg", "scene": "a Lake Tahoe shoreline with clear turquoise water, smooth granite boulders and pines at golden hour" },
   { "name": "workshop-with-robots", "file": "workshop-with-robots.jpg", "about": "", "v": "tmk4bm", "scene": "a sunny pine meadow with a dog's ball and leash resting on a log" },
   { "name": "library-futuristic-1", "file": "library-futuristic-1.jpg", "about": "", "v": "tmk4fd", "scene": "a sunny pine meadow with a dog's ball and leash resting on a log" },
-  { "name": "lake-tahoe-beach-winter", "file": "lake-tahoe-beach-winter.jpg", "about": "", "v": "tmk675", "scene": "a Lake Tahoe shoreline with clear turquoise water, smooth granite boulders and pines at golden hour" }
+  { "name": "lake-tahoe-beach-winter", "file": "lake-tahoe-beach-winter.jpg", "about": "", "v": "tmk675", "scene": "a Lake Tahoe shoreline with clear turquoise water, smooth granite boulders and pines at golden hour" },
+  { "name": "lake-tahoe-with-snow", "file": "lake-tahoe-with-snow.jpg", "about": "", "v": "tmk6bg", "scene": "Snow on Lake Tahoe." }
  ],
  "categoryBackdrops": {
   "automaton": "library-futuristic-1",
