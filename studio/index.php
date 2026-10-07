@@ -57,7 +57,7 @@ $alt = 'The Studio by ' . $tod . ': a brass STUDIO panel with its day/night dial
 <meta name="twitter:image" content="<?= h($card) ?>"><meta name="twitter:image:alt" content="<?= h($alt) ?>">
 <link rel="icon" href="/favicon.ico?v=2" sizes="any"><link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml"><link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2"><meta name="theme-color" content="#2a1d14">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&family=Special+Elite&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&family=Special+Elite&display=swap">
 <link rel="stylesheet" href="../css/route-dash.css?v=<?= STUDIO_VERSION ?>-3">
 <link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>-47">
 <link rel="stylesheet" href="table/table.css?v=79">
@@ -158,7 +158,7 @@ $alt = 'The Studio by ' . $tod . ': a brass STUDIO panel with its day/night dial
 <script src="assets/track.js?v=<?= STUDIO_VERSION ?>-3"></script>
 <script src="assets/hdr.js?v=<?= STUDIO_VERSION ?>-2"></script>
 <script src="../js/route-view.js?v=<?= STUDIO_VERSION ?>-4"></script>
-<script src="assets/social.js?v=<?= STUDIO_VERSION ?>-1"></script>
+<script src="assets/social.js?v=<?= STUDIO_VERSION ?>-2"></script>
 <script src="assets/look.js?v=<?= STUDIO_VERSION ?>-7"></script>
 <script src="assets/studio.js?v=<?= STUDIO_VERSION ?>-55"></script>
 <?php endif; ?>

@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """Share cards for the Field Notes: each published entry gets its own 1200x630 card (what Messages, Slack and
-social sites show for a link to it), its cover photo with a brass nameplate on it, the title cut in Cinzel as on
+social sites show for a link to it). One with an episode gets GlazyArray's card (gacard.py: her at her desk with
+the glass player, in the Note's look and colours); the rest, its cover photo with a brass nameplate on it, the title cut in Cinzel as on
 the Studio's STUDIO plate, and under it the kind of entry, the day and the place.
 
 Runs before publish.mjs (which uses a card when there is one): python3 field/tools/cards.py
-Writes field/data/cards/<id>.jpg (a build product, not kept in git). Needs Pillow."""
+Writes field/data/cards/<id>.jpg (a build product, not kept in git). Needs Pillow and numpy."""
 import glob, json, os
 from PIL import Image, ImageDraw, ImageFilter, ImageFont, ImageOps
+import gacard
 
 FIELD = os.path.join(os.path.dirname(__file__), '..')
 OUT = os.path.join(FIELD, 'data', 'cards')
@@ -135,6 +137,10 @@ def main():
     for f in sorted(glob.glob(os.path.join(FIELD, 'data', 'events', '*.json'))):
         e = json.load(open(f))
         if e.get('status') != 'published' or e.get('sample'): continue
+        # a Note with an episode: GlazyArray's card (gacard.py), in its look and colours; the rest: the cover card
+        if (e.get('episode') or {}).get('audio'):
+            gacard.card(e).save(os.path.join(OUT, e['id'] + '.jpg'), quality=86, optimize=True, progressive=True)
+            made += 1; continue
         src = cover_of(e)
         if not src: continue
         card(e, src).save(os.path.join(OUT, e['id'] + '.jpg'), quality=86, optimize=True, progressive=True)

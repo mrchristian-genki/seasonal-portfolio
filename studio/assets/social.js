@@ -1,12 +1,13 @@
 /* STUDIO: the Social panel. From a Note that's already written, the pieces for Instagram and Facebook in
-   their sizes: a carousel (1080x1350 slides: the cover with the brass nameplate, the photos, an end card),
-   a Story (1080x1920) and a Reel (1080x1920 video of the photos and loops, with the start of the episode),
+   their sizes: a carousel (1080x1350 slides: the cover with the site's nameplate, the photos, and GlazyArray's
+   card to end on: her at her desk with the glass player, in the Note's look and colours), a Story (1080x1920, her card) and a Reel (1080x1920 video of the photos and loops, with the start of the episode),
    plus the captions, drafted by Claude in the show's rules (field/SHOW-GUIDE.md, "Social posts").
    Everything is drawn in the browser from the Note's own photos, so nothing new is stored but the captions
    (E.social, saved with the Note). Saving hands the files to the phone's share sheet where it can (straight
    to Photos or Instagram), else downloads them. */
 (function () {
   var KIND = { ride: 'Ride', hike: 'Hike', forage: 'Foraging walk', make: 'Mini-Cast' };
+  var NF = 'Nunito, "Avenir Next Rounded", "Avenir Next", "Segoe UI", Arial, sans-serif';   // the site's type, and its fallbacks
   var MONTHS = 'January February March April May June July August September October November December'.split(' ');
   var CW = 1080, CH = 1350, SW = 1080, SH = 1920, FPS = 30;
   var X, E, wrap$;          // the Studio's helpers (mount), the Note, the panel
@@ -23,7 +24,8 @@
   }
   function line() {
     var d = (E.date || '').split('-'), when = d.length === 3 ? MONTHS[+d[1] - 1] + ' ' + (+d[2]) + ', ' + d[0] : '';
-    return [KIND[E.kind] || '', when, (E.place || '').split(',')[0].trim()].filter(Boolean).join(' · ').toUpperCase();
+    var kind = (E.tags || []).indexOf('case-study') >= 0 ? 'Case study' : KIND[E.kind] || '';   // as the share cards say it
+    return [kind, when, (E.place || '').split(',')[0].trim()].filter(Boolean).join(' · ').toUpperCase();
   }
   function link() { return (X.cfg().siteUrl || 'https://www.christiangehrke.com/play/') + E.id + '/'; }
   function img(p) {   // a photo (or a loop's poster frame) as an image, loaded once
@@ -64,41 +66,23 @@
   }
   function vgrad(g, h, stops) { var gr = g.createLinearGradient(0, 0, 0, h); stops.forEach(function (s) { gr.addColorStop(s[0], s[1]); }); return gr; }
   function rr(g, x, y, w, h, r) { g.beginPath(); g.roundRect(x, y, w, h, r); }
-  // the brass nameplate of the share cards (field/tools/cards.py): a bevelled rim, a brushed face, an engraved
-  // border, a rivet each end, the title cut in Cinzel and the kind, day and place under it. k scales it.
+  // the site's nameplate (narrator.css .nb-plate), as on GlazyArray's share cards (field/tools/gacard.py): a dark
+  // charcoal face, silver edges top and bottom, the title in plain bold Nunito on one or two lines, and the kind,
+  // day and place in small grey capitals under it. k scales it.
   function plate(title, sub, maxW, k) {
-    var m = canvas(10, 10).getContext('2d'), tr = .1, px = 54 * k, ls = null;
-    for (var s = 54; s >= 30; s -= 2) { px = s * k; m.font = '700 ' + px + 'px Cinzel'; ls = lines(m, title, px, tr, maxW - 130 * k); if (ls) break; }
+    var m = canvas(10, 10).getContext('2d'), px = 0, ls = null;
+    for (var s = 44; s >= 24; s -= 2) { px = s * k; m.font = '800 ' + px + 'px ' + NF; ls = lines(m, title, px, 0, maxW - 60 * k); if (ls) break; }
     if (!ls) ls = [title];
-    m.font = '700 ' + px + 'px Cinzel';
-    var tw = Math.max.apply(null, ls.map(function (l) { return tlen(m, l, px, tr); }));
-    var spx = 16 * k; m.font = '500 ' + spx + 'px Cinzel'; var sw = sub ? tlen(m, sub, spx, .16) : 0;
-    var lh = px * 1.12, pw = Math.ceil(Math.max(tw, sw) + 130 * k), ph = Math.ceil(ls.length * lh + (sub ? spx : 0) + 60 * k);
-    var c = canvas(pw, ph), g = c.getContext('2d'), r = 16 * k, b = 5 * k, i = 12 * k;
-    g.fillStyle = vgrad(g, ph, [[0, '#f3dc9c'], [.4, '#7d5a24'], [.7, '#e3c47f'], [1, '#6b4a1c']]); rr(g, 0, 0, pw, ph, r); g.fill();
-    g.save(); rr(g, b, b, pw - 2 * b, ph - 2 * b, r - b); g.clip();
-    g.fillStyle = vgrad(g, ph, [[0, '#e2c483'], [.45, '#b8944f'], [.7, '#9a7a3c'], [1, '#caa865']]); g.fillRect(0, 0, pw, ph);
-    g.fillStyle = 'rgba(255,255,255,.063)'; for (var x = b; x < pw; x += 2 * k) g.fillRect(x, 0, k, ph);   // brushed
-    g.restore();
-    g.lineWidth = 2 * k; g.strokeStyle = 'rgba(60,38,10,.59)'; rr(g, i, i, pw - 2 * i, ph - 2 * i, 8 * k); g.stroke();
-    g.lineWidth = k; g.strokeStyle = 'rgba(255,240,200,.35)'; rr(g, i + 2 * k, i + 2 * k, pw - 2 * i - 4 * k, ph - 2 * i - 4 * k, 7 * k); g.stroke();
-    [34 * k, pw - 34 * k].forEach(function (cx) {   // rivets
-      var cy = ph / 2;
-      [[9, '#3d2a10', 0, 0], [7, '#7a5a26', 0, 0], [4.5, '#fff1c8', -1, -2]].forEach(function (d) { g.beginPath(); g.arc(cx + d[2] * k, cy + d[3] * k, d[0] * k, 0, 7); g.fillStyle = d[1]; g.fill(); });
-    });
-    g.textBaseline = 'top'; g.font = '700 ' + px + 'px Cinzel';
-    var y = 22 * k + px * .08;
-    ls.forEach(function (l) {   // cut in: a light edge below, the dark letter on it
-      var x0 = (pw - tlen(g, l, px, tr)) / 2;
-      g.fillStyle = 'rgba(255,236,190,.67)'; ttext(g, l, x0, y + 1.5 * k, px, tr);
-      g.fillStyle = '#2b1806'; ttext(g, l, x0, y, px, tr);
-      y += lh;
-    });
-    if (sub) {
-      g.font = '500 ' + spx + 'px Cinzel'; var x1 = (pw - sw) / 2;
-      g.fillStyle = 'rgba(255,236,190,.5)'; ttext(g, sub, x1, y + 9 * k, spx, .16);
-      g.fillStyle = '#4a3214'; ttext(g, sub, x1, y + 8 * k, spx, .16);
-    }
+    m.font = '800 ' + px + 'px ' + NF;
+    var tw = Math.max.apply(null, ls.map(function (l) { return m.measureText(l).width; }));
+    var spx = 15 * k; m.font = '700 ' + spx + 'px ' + NF; var sw = sub ? tlen(m, sub, spx, .08) : 0;
+    var lh = px * 1.22, pw = Math.ceil(Math.min(maxW, Math.max(tw, sw) + 60 * k)), ph = Math.ceil(ls.length * lh + (sub ? spx * 1.6 : 0) + 26 * k);
+    var c = canvas(pw, ph), g = c.getContext('2d');
+    g.fillStyle = vgrad(g, ph, [[0, 'rgba(44,42,40,.94)'], [1, 'rgba(23,22,21,.94)']]); g.fillRect(0, 0, pw, ph);
+    g.fillStyle = '#c9ccce'; g.fillRect(0, 0, pw, Math.max(2, 2.5 * k)); g.fillStyle = '#b3b6b8'; g.fillRect(0, ph - Math.max(3, 4 * k), pw, Math.max(3, 4 * k));
+    g.textBaseline = 'top'; g.font = '800 ' + px + 'px ' + NF; g.fillStyle = '#e6e8ea';
+    var y = 12 * k; ls.forEach(function (l) { g.fillText(l, (pw - g.measureText(l).width) / 2, y); y += lh; });
+    if (sub) { g.font = '700 ' + spx + 'px ' + NF; g.fillStyle = '#8c9093'; ttext(g, sub, (pw - sw) / 2, y + 2 * k, spx, .08); }
     return c;
   }
   function putPlate(g, p, cx, cy) {
@@ -106,7 +90,7 @@
     g.drawImage(p, Math.round(cx - p.width / 2), Math.round(cy - p.height / 2)); g.restore();
   }
   function kicker(g, text, cx, y, px) {   // small white capitals above the plate
-    g.save(); g.font = '700 ' + px + 'px Cinzel'; g.textBaseline = 'top'; g.fillStyle = '#fff6df';
+    g.save(); g.font = '800 ' + px + 'px ' + NF; g.textBaseline = 'top'; g.fillStyle = '#fff6df';
     g.shadowColor = 'rgba(0,0,0,.7)'; g.shadowBlur = 12; ttext(g, text, cx - tlen(g, text, px, .22) / 2, y, px, .22); g.restore();
   }
   function titleCard(g, im, w, h, plateY, k, kick) {
@@ -115,12 +99,109 @@
     if (kick) kicker(g, kick, w / 2, plateY - p.height / 2 - 22 * k - 26, 24 * k);
     putPlate(g, p, w / 2, plateY);
   }
-  function endCard(g, im, w, h, k) {
-    g.save(); g.filter = 'blur(30px) brightness(.5)'; fill(g, im, -60, -60, w + 120, h + 120); g.restore();
-    var p = plate('The full story', 'AND THE EPISODE · LINK IN BIO', w - 160, k);
-    kicker(g, 'FIELD NOTES', w / 2, h / 2 - p.height / 2 - 22 * k - 26, 24 * k);
-    putPlate(g, p, w / 2, h / 2);
+  // ---------- GlazyArray's card: the end of the carousel, the Story and the Reel's last frame ----------
+  // As her share card (field/tools/gacard.py) and her Listen bar: the Note's backdrop with its colours over it, the
+  // site's nameplate with the title, the glass player, and her at her desk in the Note's look, its flair tinted 45%
+  // in the Note's two colours. Built once per size from the same parts the site stacks.
+  var NA = '/assets/narrator/', gaParts = null, gaCards = {};
+  function pic(u) { return new Promise(function (ok) { var i = new Image(); i.onload = function () { ok(i); }; i.onerror = function () { ok(null); }; i.src = u; }); }
+  function gaStyle() {   // her look and backdrop on this Note, as the site picks them: its own, else its categories'
+    var kt = { ride: 'ride', hike: 'hike', forage: 'foraging', make: 'mini-cast' };
+    return fetch(NA + 'looks.json', { cache: 'no-cache' }).then(function (r) { return r.json(); }).catch(function () { return {}; }).then(function (j) {
+      var slug = function (t) { return String(t || '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); };
+      var cats = (E.tags || []).map(slug).concat([kt[E.kind] || E.kind]), lc = j.categories || {}, bc = j.categoryBackdrops || {};
+      var pick = function (own, m) { return own || (cats.filter(function (c) { return m[c]; }).map(function (c) { return m[c]; })[0]) || null; };
+      var ln = pick(E.narratorLook && E.narratorLook.look, lc), bn = pick(E.narratorBackdrop && E.narratorBackdrop.backdrop, bc);
+      var look = (j.looks || []).filter(function (l) { return l.name === ln && l.file; })[0] || null;
+      if (!look && ln !== lc[cats.filter(function (c) { return lc[c]; })[0]]) {   // a Note look not made yet: her category's
+        var cl = pick(null, lc); look = (j.looks || []).filter(function (l) { return l.name === cl && l.file; })[0] || null;
+      }
+      var bd = (j.backdrops || []).filter(function (b) { return b.name === bn; })[0] || null;
+      return { look: look, bd: bd };
+    });
   }
+  function gaLoad() {
+    if (gaParts) return gaParts;
+    return (gaParts = gaStyle().then(function (st) {
+      var v = st.look && st.look.v ? '?r=' + st.look.v : '', stem = st.look ? NA + 'looks/' + st.look.file.replace(/\.[a-z]+$/, '') + '.flair-' : '';
+      var fl = st.look ? (st.look.flair || '') : '';
+      return Promise.all([st.look ? pic(NA + 'looks/' + st.look.file + v) : pic(NA + 'head-base.webp'), pic(NA + 'head-iris.webp'), pic(NA + 'head-lens.png'), pic(NA + 'head-shine.webp'),
+        pic(NA + 'head-jaw-sides.webp'), pic(NA + 'head-jaw.webp'), pic(NA + 'kit/rest-body.webp'), pic(NA + 'desk.jpg'),
+        st.bd ? pic(NA + 'backdrops/' + st.bd.file + (st.bd.v ? '?r=' + st.bd.v : '')) : Promise.resolve(null),
+        fl.indexOf('a') >= 0 ? pic(stem + 'a.png' + v) : null, fl.indexOf('b') >= 0 ? pic(stem + 'b.png' + v) : null]);
+    }));
+  }
+  function pal() { return Array.isArray(E.palette) && E.palette.length === 2 ? E.palette : null; }
+  function mix(hex, k, base) {   // hex mixed k of the way into base [r,g,b], as rgb()
+    var c = [1, 3, 5].map(function (i) { return parseInt(hex.substr(i, 2), 16); });
+    return c.map(function (v, i) { return Math.round(v * k + base[i] * (1 - k)); });
+  }
+  function css(c, a) { return 'rgba(' + c.join(',') + ',' + (a == null ? 1 : a) + ')'; }
+  function gaHead(P) {   // her head layer, 623 x 437: the look, its flair tinted, her eyes in their lenses, catchlights, chin
+    var W = 623, H = 437, c = canvas(W, H), g = c.getContext('2d'), p = pal();
+    if (P[0]) g.drawImage(P[0], 0, 0, W, H);
+    if (p) [P[9], P[10]].forEach(function (mk, k) {
+      if (!mk) return;
+      var t = canvas(W, H), tg = t.getContext('2d'); tg.drawImage(mk, 0, 0, W, H); tg.globalCompositeOperation = 'source-in'; tg.fillStyle = p[k]; tg.fillRect(0, 0, W, H);
+      g.save(); g.globalCompositeOperation = 'color'; g.globalAlpha = .45; g.drawImage(t, 0, 0); g.restore();
+    });
+    var e = canvas(W, H), eg = e.getContext('2d');
+    if (P[1]) eg.drawImage(P[1], 0, 0, W, H); if (P[2]) { eg.globalCompositeOperation = 'destination-in'; eg.drawImage(P[2], 0, 0, W, H); }
+    g.drawImage(e, 0, 0); [P[3], P[4], P[5]].forEach(function (im) { if (im) g.drawImage(im, 0, 0, W, H); });
+    return c;
+  }
+  function glass(g, x, y, w, h, r, p) {   // the glass player card, tinted in the Note's colours
+    var a = p ? mix(p[0], .26, [30, 34, 34]) : [30, 34, 34], b = p ? mix(p[1], .2, [239, 239, 239]) : [239, 239, 239];
+    var gr = g.createLinearGradient(x, y + h, x + w, y); gr.addColorStop(0, css(a, .66)); gr.addColorStop(1, css(b, .18));
+    g.fillStyle = gr; rr(g, x, y, w, h, r); g.fill();
+    g.lineWidth = Math.max(2, r / 9); g.strokeStyle = css(p ? mix(p[1], .4, [240, 240, 240]) : [240, 240, 240], .45); rr(g, x, y, w, h, r); g.stroke();
+  }
+  function player(g, x, y, w, k, p) {   // the Listen bar's glass player: where to listen, a seek bar and Play; its height
+    var h = 160 * k, c1 = p ? mix(p[0], 1, [0, 0, 0]) : [38, 191, 172], by = p ? mix(p[1], .55, [255, 255, 255]) : [200, 220, 215];
+    glass(g, x, y, w, h, 18 * k, p);
+    g.textBaseline = 'top'; var tx = x + 24 * k, ty = y + 18 * k;
+    g.font = '800 ' + 14 * k + 'px ' + NF; g.fillStyle = '#f4aac8'; g.fillText('CHRISTIANGEHRKE.COM/PLAY', tx, ty); ty += 24 * k;
+    g.font = '800 ' + 26 * k + 'px ' + NF; g.fillStyle = '#fff'; g.fillText('Listen to the episode', tx, ty); ty += 34 * k;
+    g.font = '700 ' + 17 * k + 'px ' + NF; g.fillStyle = css(by); g.fillText('Narrated by GlazyArray', tx, ty); ty += 42 * k;
+    var r = 20 * k, cx = x + w - 24 * k - r, cy = ty, end = cx - r - 16 * k, at = tx + (end - tx) * .18;
+    g.fillStyle = 'rgba(255,255,255,.24)'; rr(g, tx, cy - 3 * k, end - tx, 6 * k, 3 * k); g.fill();
+    g.fillStyle = css(c1); rr(g, tx, cy - 3 * k, at - tx, 6 * k, 3 * k); g.fill();
+    g.fillStyle = '#fff'; g.beginPath(); g.arc(at, cy, 6 * k, 0, 7); g.fill();
+    g.fillStyle = css(p ? mix(p[0], .45, [24, 26, 26]) : [24, 90, 82], .92); g.beginPath(); g.arc(cx, cy, r, 0, 7); g.fill();
+    var t = 8 * k; g.fillStyle = '#fff'; g.beginPath(); g.moveTo(cx - t * .6, cy - t); g.lineTo(cx - t * .6, cy + t); g.lineTo(cx + t, cy); g.closePath(); g.fill();
+    return h;
+  }
+  // GlazyArray's card at w x h; deskY: where her desk's top edge sits (the Story leaves room under it for a link sticker)
+  function gaCard(w, h, deskY) {
+    var key = w + 'x' + h; if (gaCards[key]) return gaCards[key];
+    return (gaCards[key] = gaLoad().then(function (P) {
+      var c = canvas(w, h), g = c.getContext('2d'), p = pal(), k = w / 1080 * 1.5, base = [8, 30, 28];
+      deskY = deskY || h;
+      // the backdrop, blurred and dimmed, the bar's shade across it in the Note's colours
+      g.fillStyle = '#0f4d47'; g.fillRect(0, 0, w, h);
+      if (P[8]) { g.save(); g.filter = 'blur(' + Math.round(w / 180) + 'px) brightness(.7)'; fill(g, P[8], -20, -20, w + 40, h + 40); g.restore(); }
+      var sh = g.createLinearGradient(0, 0, w, 0);
+      sh.addColorStop(0, css(p ? mix(p[1], .14, base) : base, .05)); sh.addColorStop(1, css(p ? mix(p[0], .22, base) : base, .35)); g.fillStyle = sh; g.fillRect(0, 0, w, h);
+      if (p) {   // a soft light behind her, in the first colour
+        var gl = g.createRadialGradient(w / 2, deskY - h * .12, 0, w / 2, deskY - h * .12, w * .5); gl.addColorStop(0, css(mix(p[0], 1, base), .3)); gl.addColorStop(1, css(mix(p[0], 1, base), 0));
+        g.fillStyle = gl; g.fillRect(0, 0, w, h);
+      }
+      // the nameplate and the player
+      var pl = plate((E.post && E.post.title) || E.title || 'Field Notes', line(), w - 140 * k / 1.5, k / 1.25), top = 50 * k / 1.5;
+      g.save(); g.shadowColor = 'rgba(0,0,0,.45)'; g.shadowBlur = 14; g.shadowOffsetY = 6; g.drawImage(pl, (w - pl.width) / 2, top); g.restore();
+      var py = top + pl.height + 34 * k / 1.5, pw = w - 140 * k / 1.5, ph = player(g, (w - pw) / 2, py, pw, pw / 500, p);
+      // her desk across the card, and her at it, sized to the room under the player
+      var s = Math.max(.4, Math.min(w / 976 * (h / w > 1.5 ? 1.4 : 1.15), (deskY - (py + ph + 30 * k)) / 590.9))   // bigger on the tall Story, dh = Math.round(26 * s);
+      if (P[7]) { var dw = P[7].width * dh / P[7].height; for (var x = 0; x < w; x += dw) g.drawImage(P[7], x, deskY - dh, dw, dh); }
+      if (deskY < h) { g.fillStyle = 'rgba(8,12,12,.55)'; g.fillRect(0, deskY, w, h - deskY); }
+      var bw = 976 * s, bh = 300 * s, bx = (w - bw) / 2 + 10 * s, bot = deskY + 2;
+      if (P[6]) g.drawImage(P[6], bx, bot - bh, bw, bh);
+      var hd = gaHead(P), tw = 598.2 * s, th = tw * 437 / 623, hx = bx + 200 * s - 11.06 * s, hy = bot - .5709 * 300 * s - th;
+      g.save(); g.shadowColor = 'rgba(0,0,0,.35)'; g.shadowBlur = 10 * s; g.shadowOffsetY = 3 * s; g.drawImage(hd, hx, hy, tw, th); g.restore();
+      return c;
+    }));
+  }
+  function endCard(g, w, h) { return gaCard(w, h).then(function (c) { g.drawImage(c, 0, 0, w, h); }); }
 
   // ---------- the carousel ----------
   function planSlides() {
@@ -141,7 +222,7 @@
     return img(s.p).then(function (im) {
       g.clearRect(0, 0, CW, CH);
       if (s.kind === 'title') titleCard(g, im, CW, CH, CH * .74, 1.3);
-      else if (s.kind === 'end') endCard(g, im, CW, CH, 1.3);
+      else if (s.kind === 'end') return endCard(g, CW, CH);
       else {
         if (!s.mode) s.mode = s.p.strip || im.width / im.height > 1.15 ? 'fit' : 'fill';   // wide pictures whole, the rest fill the frame
         if (s.mode === 'fit') fit(g, im, CW, CH); else fill(g, im, 0, 0, CW, CH);
@@ -167,12 +248,12 @@
   function drawStory() {
     storyCanvas = storyCanvas || canvas(SW, SH);
     var g = storyCanvas.getContext('2d');
-    return img(coverOf()).then(function (im) { titleCard(g, im, SW, SH, SH * .6, 1.5, 'NEW FIELD NOTE'); });
+    return gaCard(SW, SH, SH - 330).then(function (c) { g.drawImage(c, 0, 0); });   // the bottom left clear for a link sticker
   }
 
   // ---------- the Reel ----------
   // The title card, then each photo and loop in the post's order (photos pan or slowly zoom, loops play),
-  // crossfading, then the end card; the episode's opening under it, fading out at the end. Recorded live
+  // crossfading, then GlazyArray's card; the episode's opening under it, fading out at the end. Recorded live
   // from a canvas, so it takes as long as the Reel runs.
   function reelItems() { return shown().filter(function (p) { return !p.strip; }); }
   function loadClip(p) {
@@ -205,9 +286,10 @@
     var ac = null, audio = null;
     var still = function (p) { return img(p).then(function (im) { return { p: p, im: im }; }); };
     // a loop that won't play here (a browser without its video format) goes in as its poster frame
-    Promise.all([img(cov), drawStory()].concat(items.map(function (p) { return p.video ? loadClip(p).then(function (v) { return { p: p, v: v }; }, function () { return still(p); }) : still(p); })))
+    var intro = canvas(SW, SH);   // it opens on the cover with the title, and closes on GlazyArray's card
+    Promise.all([img(cov).then(function (im) { titleCard(intro.getContext('2d'), im, SW, SH, SH * .6, 1.5, 'NEW FIELD NOTE'); return im; }), gaCard(SW, SH)].concat(items.map(function (p) { return p.video ? loadClip(p).then(function (v) { return { p: p, v: v }; }, function () { return still(p); }) : still(p); })))
       .then(function (r) {
-        var covIm = r[0], segs = r.slice(2), t0 = INTRO;
+        var gaEnd = r[1], segs = r.slice(2), t0 = INTRO;
         segs.forEach(function (s, i) { s.from = t0 + i * per; s.to = s.from + per; s.dir = i % 2 ? -1 : 1; });
         var end = INTRO + segs.length * per + OUTRO;
         // the episode's opening, if there is one, fading out over the last two seconds
@@ -232,7 +314,7 @@
               else fill(g, s.im, 0, 0, SW, SH, 1 + .08 * lt);                                                                // tall: a slow zoom in
               g.globalAlpha = 1;
             };
-            if (t < INTRO + FADE) g.drawImage(storyCanvas, 0, 0);
+            if (t < INTRO + FADE) g.drawImage(intro, 0, 0);
             segs.forEach(function (s, i) {
               if (t >= s.from && t < s.to + FADE) {
                 if (s.v && s.v.paused) s.v.play().catch(function () {});
@@ -240,7 +322,7 @@
               } else if (s.v && !s.v.paused) s.v.pause();
             });
             var eo = end - OUTRO;
-            if (t >= eo) { g.globalAlpha = Math.min(1, (t - eo) / FADE); endCard(g, covIm, SW, SH, 1.5); g.globalAlpha = 1; }
+            if (t >= eo) { g.globalAlpha = Math.min(1, (t - eo) / FADE); g.drawImage(gaEnd, 0, 0); g.globalAlpha = 1; }
             if (gain) gain.gain.value = Math.max(0, Math.min(1, (end - t) / 2));
           };
           return new Promise(function (done) {
@@ -338,7 +420,8 @@
     $('#socReelGo', el).onclick = makeReel;
     $('#socReelSave', el).onclick = function () { if (reelBlob) deliver([new File([reelBlob], E.id + '-reel.' + (/mp4/.test(reelBlob.type) ? 'mp4' : 'webm'), { type: reelBlob.type })]); };
     captions();
-    var fonts = document.fonts ? Promise.all([document.fonts.load('700 40px Cinzel'), document.fonts.load('500 16px Cinzel')]).catch(function () {}) : Promise.resolve();
+    gaParts = null; gaCards = {};   // her look and colours as the Note has them now
+    var fonts = document.fonts ? Promise.all([document.fonts.load('800 40px ' + NF), document.fonts.load('700 16px ' + NF)]).catch(function () {}) : Promise.resolve();
     fonts.then(function () {
       return Promise.all(slides.map(drawSlide)).then(renderSlides).then(drawStory).then(function () { $('#socStory', el).appendChild(storyCanvas); });
     }).catch(function (err) { X.toast(err.message, true); });
