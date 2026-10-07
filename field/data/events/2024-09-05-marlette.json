@@ -2002,11 +2002,24 @@
  ],
  "consent": "Christian and Marley only.",
  "publishedAt": "2026-10-03T15:23:35Z",
- "narratorLook": null,
+ "narratorLook": {
+  "look": "bike-helmet",
+  "fit": "category",
+  "from": "ride",
+  "about": "a glossy hard-shell bike helmet with a little brass headlamp, its shell in one colour and its rim band in the other",
+  "why": "Picked from Ride.",
+  "prompt": "",
+  "bulb": false
+ },
  "palette": [
   "#74a7ff",
   "#012f7b"
  ],
  "paletteBy": "hand",
- "narratorBackdrop": null
+ "narratorBackdrop": {
+  "backdrop": "biking-forest",
+  "fit": "category",
+  "from": "ride",
+  "scene": ""
+ }
 }
