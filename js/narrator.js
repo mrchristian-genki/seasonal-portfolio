@@ -21,7 +21,7 @@
    - Now and then it blinks. With reduced motion it stays still, and only the mouth moves. */
 (function () {
   'use strict';
-  var A = '/assets/narrator/', V = '?v=29', DROP = 0.0448;   // the chin plate's drop, as a share of the head layer's height (the side plates go half as far)
+  var A = '/assets/narrator/', V = '?v=30', DROP = 0.0448;   // the chin plate's drop, as a share of the head layer's height (the side plates go half as far)
   var D = 193 / 24, IDLE = 0;
   // the gestures (parts of narrator.mp4: forward and backwards copies), taken in this order from a random start: the
   // six conversational ones (parts 20 to 31) come round twice for each of the bigger moves, so mostly she talks with her hands
@@ -297,6 +297,16 @@
         if (Math.random() < 0.2) setTimeout(function () { nb.classList.add('blink'); setTimeout(function () { nb.classList.remove('blink'); }, 120); }, 280);   // sometimes twice
         blink();
       }, 2500 + Math.random() * 4500);
+    })();
+    // her gaze: mostly on you, now and then a short, unhurried glance aside or down and back, the way people look
+    // while they talk (a fixed, unblinking stare reads as cold); a hint's look toward Play takes over while it lasts
+    (function gaze() {
+      var away = !still && Math.random() < 0.45;
+      if (away) {
+        var r = Math.random(), x = r < 0.4 ? -0.4 : r < 0.8 ? 0.4 : (Math.random() - 0.5) * 0.3, y = r < 0.8 ? (Math.random() - 0.3) * 0.25 : 0.4;
+        nb.style.setProperty('--gx', x.toFixed(2) + '%'); nb.style.setProperty('--gy', y.toFixed(2) + '%');
+      } else { nb.style.removeProperty('--gx'); nb.style.removeProperty('--gy'); }
+      setTimeout(function () { if (nb.isConnected) gaze(); }, away ? 700 + Math.random() * 900 : 2200 + Math.random() * 3300);
     })();
   }
 
