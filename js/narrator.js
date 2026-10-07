@@ -22,7 +22,7 @@
    - Now and then it blinks. With reduced motion it stays still, and only the mouth moves. */
 (function () {
   'use strict';
-  var A = '/assets/narrator/', V = '?v=32', DROP = 0.0448;   // the chin plate's drop, as a share of the head layer's height (the side plates go half as far)
+  var A = '/assets/narrator/', V = '?v=33', DROP = 0.0448;   // the chin plate's drop, as a share of the head layer's height (the side plates go half as far)
   var D = 193 / 24, IDLE = 0;
   // the gestures (parts of narrator.mp4: forward and backwards copies), taken in this order from a random start: the
   // six conversational ones (parts 20 to 31) come round twice for each of the bigger moves, so mostly she talks with her hands

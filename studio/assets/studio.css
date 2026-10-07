@@ -536,3 +536,17 @@ dialog.pfp::backdrop{background:rgba(20,12,6,.7)}
 .ga-sw{width:30px;height:30px;padding:0;border:2px solid rgba(0,0,0,.12);border-radius:50%;background:none;cursor:pointer;flex:none}
 .ga-sw::-webkit-color-swatch-wrapper{padding:0} .ga-sw::-webkit-color-swatch{border:0;border-radius:50%} .ga-sw::-moz-color-swatch{border:0;border-radius:50%}
 .ga-flair{margin-top:10px}
+/* her style from a category: one row per category of the Note, with the cap and backdrop it gives */
+.ga-stys{margin:6px 0 14px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fafcfc}
+.ga-stys>small{display:block;color:var(--ink3);font-size:13px;margin:2px 0 8px}
+.ga-sty{display:flex;gap:10px;align-items:center;padding:6px 8px;margin:4px 0;border-radius:10px;cursor:pointer;border:2px solid transparent}
+.ga-sty.on{border-color:var(--accent);background:var(--soft)}
+.ga-sty input{width:auto;flex:none;margin:0}
+.ga-sty-n{flex:1;min-width:0;font-size:14px;font-weight:600} .ga-sty-n small{display:block;font-weight:400;color:var(--ink3);font-size:12px}
+.ga-sty-t{flex:none;width:64px;height:45px;border-radius:8px;background:#0f4d47;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.ga-sty-t.bd{width:105px}
+.ga-sty-t img{width:100%;height:100%;object-fit:contain} .ga-sty-t.bd img{object-fit:cover}
+.ga-sty-t i{font-size:11px;color:rgba(255,255,255,.6);font-style:normal;text-align:center}
+.ga-own{margin:4px 0 8px} .ga-own>summary{cursor:pointer;font-weight:600;font-size:14px;padding:6px 0}
+.ga-flair .ga-prev{max-width:380px}
+@media (max-width:560px){.ga-sty-t{width:52px;height:37px}.ga-sty-t.bd{width:80px}}

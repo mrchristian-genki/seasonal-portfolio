@@ -686,7 +686,8 @@
         field('Title', '<input id="postTitle" value="' + esc(E.post.title) + '">') + field('Text', '<textarea id="postBody" rows="14">' + esc(E.post.body) + '</textarea>', 'First person. A blank line between paragraphs. End with "What I learned: …" when there is something real.')) +
       fold('episode', 'Episode script', E.episode.title || '', !isLive, field('Title', '<input id="epTitle" value="' + esc(E.episode.title) + '">') + field('Script', '<textarea id="epScript" rows="16">' + esc(E.episode.script) + '</textarea>', '<span id="epCount"></span>')) +
       fold('look', 'GlazyArray\'s style', [E.narratorLook ? E.narratorLook.look : '', E.narratorBackdrop ? E.narratorBackdrop.backdrop : ''].filter(Boolean).join(' · ') || 'from her categories or the holiday', false,
-        '<h3 class="ga-h">Her look</h3><div id="lookBox"></div><h3 class="ga-h">The backdrop</h3><div id="bdBox"></div>') +
+        '<div id="styleBox"></div><details class="ga-own" id="gaOwn"' + (gaOwnOpen() ? ' open' : '') + '><summary>Or give this Note its own cap or backdrop</summary>' +
+        '<h3 class="ga-h">Her cap</h3><div id="lookBox"></div><h3 class="ga-h">The backdrop</h3><div id="bdBox"></div></details>') +
       (hasScript ? '' : audioPanel) +
       fold('photos', 'Photos', [nPh ? nPh + ' photo' + (nPh > 1 ? 's' : '') : '', nLoop ? nLoop + ' loop' + (nLoop > 1 ? 's' : '') : ''].filter(Boolean).join(' · '), !isLive,
         (later ? '' : dropPhotos) + '<div id="photos" class="photos"></div>' + (later ? '<p class="muted" id="noPhotos">No photos yet. Add some under Add more.</p>' : '')) +
@@ -815,22 +816,53 @@
       return ch.then(function () { return GALook.png(m[k]); }).then(function (b) { return api('lookblob', b); }).then(function (r) { out[k] = r.sha; });
     }, Promise.resolve()).then(function () { return ks.length ? out : null; });
   }
-  function lookCats(list, cats, L) {
-    var nc = noteCats(), has = function (n) { return n === 'curls' || list.some(function (l) { return l.name === n; }); };
-    var from = L && has(L.look) ? ['<b>' + esc(L.look) + '</b>', L.from ? 'picked from <b>' + esc(catName(L.from)) + '</b>' : 'this Note\'s own look'] : null;
-    var offered = nc.filter(function (c) { return cats[c] && has(cats[c]); }), pick = '';
-    var looksOffered = offered.map(function (c) { return cats[c]; }).filter(function (v, i, a) { return a.indexOf(v) === i; });
-    var wasPick = LOOKPICK; LOOKPICK = !L && looksOffered.length > 1; if (wasPick !== LOOKPICK) setTimeout(renderNext, 0);
-    if (!L && looksOffered.length > 1) {   // two categories, two looks: Christian picks which she wears on this Note
-      pick = '<div class="ga-pick"><b>Pick her look for this Note.</b> ' + offered.length + ' of its categories have one:' +
-        offered.map(function (c) { return '<label class="ga-check"><input type="radio" name="gaPick" value="' + esc(c) + '"> <b>' + esc(cats[c]) + '</b> <span class="muted">from ' + esc(catName(c)) + '</span></label>'; }).join('') +
-        '<small>Until you pick, she wears her holiday look.</small></div>';
-    }
-    if (!from && looksOffered.length === 1) from = ['<b>' + esc(cats[offered[0]]) + '</b>', 'the look for <b>' + esc(catName(offered[0])) + '</b>'];
-    var opts = '<option value="">None</option><option value="curls">curls</option>' + list.map(function (l) { return '<option value="' + esc(l.name) + '">' + esc(l.name) + '</option>'; }).join('');
-    return pick + '<p class="ga-shows">On this Note she wears ' + (from ? from[0] + ': ' + from[1] : '<b>her holiday look</b>') + (Object.keys(CATNEW).length ? ' (once you Save)' : '') + '.</p>' +
-      (nc.length ? '<div class="ga-cats"><span class="ga-cats-h">Categories</span><small>A look for a whole category: every Note in it wears it, unless the Note has its own. It beats the holiday look.</small>' +
-        nc.map(function (c) { return '<label class="ga-cat"><span>' + esc(catName(c)) + '</span><select data-cat="' + esc(c) + '">' + opts + '</select></label>'; }).join('') + '</div>' : '');
+  // the own-look section starts open when the Note has its own (not a category's), or one is being made
+  function gaOwnOpen() {
+    var L = E.narratorLook, B = E.narratorBackdrop;
+    return !!((L && L.fit !== 'category') || (B && B.fit !== 'category') || LOOKNEW || (BDNEW && BDNEW.blob));
+  }
+  // ---------- her style on this Note: just its categories, each with the cap and backdrop it gives; tick the one this Note
+  // takes. The categories' own caps and backdrops are set in the Categories tab, not here ----------
+  function renderStyle() {
+    var box = $('#styleBox'); if (!box) return;
+    renderLookData().then(function (r) {
+      var list = r[0], cats = r[1], bds = r[2].list, bcats = r[2].cats, nc = noteCats(), L = E.narratorLook, B = E.narratorBackdrop;
+      var lk = function (n) { return list.filter(function (l) { return l.name === n; })[0]; }, bd = function (n) { return bds.filter(function (b) { return b.name === n; })[0]; };
+      var styled = nc.filter(function (c) { return lk(cats[c]) || bd(bcats[c]); });
+      var ownL = L && L.fit !== 'category', ownB = B && B.fit !== 'category';
+      var chosen = (L && L.fit === 'category' && L.from) || (B && B.fit === 'category' && B.from) || '';
+      var implied = !chosen && !ownL && !ownB && styled.length === 1 ? styled[0] : '';
+      var wasPick = LOOKPICK; LOOKPICK = !chosen && !ownL && !ownB && styled.length > 1; if (wasPick !== LOOKPICK) setTimeout(renderNext, 0);
+      var row = function (c) {
+        var l = lk(cats[c]), b = bd(bcats[c]), on = chosen === c || implied === c;
+        return '<label class="ga-sty' + (on ? ' on' : '') + '"><input type="checkbox" data-c="' + esc(c) + '"' + (on ? ' checked' : '') + (implied === c ? ' disabled' : '') + '>' +
+          '<span class="ga-sty-n">' + esc(catName(c)) + (implied === c ? '<small>its only category with a style</small>' : '') + '</span>' +
+          '<span class="ga-sty-t">' + (l ? '<img alt="" title="' + esc(l.name) + '" src="' + lookSrc(l) + '">' : '<i>no cap</i>') + '</span>' +
+          '<span class="ga-sty-t bd">' + (b ? '<img alt="" title="' + esc(b.name) + '" src="' + bdSrc(b) + '">' : '<i>no backdrop</i>') + '</span></label>';
+      };
+      if (box.getAttribute('data-for') !== (E.id || 'new')) { box.setAttribute('data-for', E.id || 'new'); var ow = $('#gaOwn'); if (ow) ow.open = gaOwnOpen(); }
+      box.innerHTML = palField() +
+        '<div class="ga-stys"><span class="ga-cats-h">Her style from a category</span>' +
+        (nc.length ? '<small>The cap and backdrop each of this Note\'s categories gives her. Tick the one this Note takes. Categories get their styles in the Categories tab.</small>' + nc.map(row).join('') : '<small>This Note has no categories yet.</small>') +
+        (LOOKPICK ? '<p class="warn">Tick one: until then she wears her holiday look.</p>' : '') +
+        (ownL || ownB ? '<p class="ga-shows">This Note has its own ' + [ownL ? 'cap (<b>' + esc(L.look) + '</b>)' : '', ownB ? 'backdrop (<b>' + esc(B.backdrop) + '</b>)' : ''].filter(Boolean).join(' and ') + ', below; ticking a category replaces ' + (ownL && ownB ? 'them' : 'it') + '.</p>' : '') +
+        '</div>';
+      palWire(box);
+      var hs = $('#f-look > summary'), sm = hs && $('small', hs), ht = [L ? L.look : '', B ? B.backdrop : ''].filter(Boolean).join(' · ') || 'from her categories or the holiday';
+      if (hs) { if (!sm) { sm = document.createElement('small'); hs.appendChild(sm); } sm.textContent = ht; }   // the fold's header follows the pick
+      $$('input[data-c]', box).forEach(function (i) { i.onchange = function () {
+        var c = i.getAttribute('data-c');
+        if (i.checked) {
+          var l = lk(cats[c]);
+          E.narratorLook = l ? { look: l.name, fit: 'category', from: c, about: l.about || '', why: 'Picked from ' + catName(c) + '.', prompt: '', bulb: l.bulb !== false } : null;
+          E.narratorBackdrop = bd(bcats[c]) ? { backdrop: bcats[c], fit: 'category', from: c, scene: '' } : null;
+        } else {
+          if (E.narratorLook && E.narratorLook.from === c) E.narratorLook = null;
+          if (E.narratorBackdrop && E.narratorBackdrop.from === c) E.narratorBackdrop = null;
+        }
+        markDirty(); renderLook(); renderBd(); renderNext();
+      }; });
+    });
   }
   function renderLookData() {
     if (!LOOKS) {
@@ -838,7 +870,20 @@
       LOOKS = lj.then(function (j) { return j.looks || []; }); LOOKCATS = lj.then(function (j) { return j.categories || {}; });
       LOOKBD = lj.then(function (j) { return { list: j.backdrops || [], cats: j.categoryBackdrops || {} }; });
     }
-    return Promise.all([LOOKS, LOOKCATS, LOOKBD]);
+    return Promise.all([LOOKS, LOOKCATS, LOOKBD]).then(function (r) { gaNormal(r); return r; });
+  }
+  // a Note whose cap (and backdrop, if any) are just one of its categories' is taking that category's style: it reads as
+  // ticked there, not as a look of its own (the site shows the same either way)
+  function gaNormal(r) {
+    var L = E && E.narratorLook, B = E && E.narratorBackdrop; if (!E || (!L && !B)) return;
+    if ((L && L.fit === 'category') || (B && B.fit === 'category')) return;
+    noteCats().some(function (c) {
+      var lc = r[1][c] || '', bc = r[2].cats[c] || '';
+      if ((L ? L.look === lc : true) && (B ? B.backdrop === bc : true) && (lc || bc)) {
+        if (L) { L.fit = 'category'; L.from = c; } if (B) { B.fit = 'category'; B.from = c; }
+        return true;
+      }
+    });
   }
 
   // ---------- her backdrop for this Note: the scene behind the Listen bar, shown softly blurred. Like her look: the
@@ -867,30 +912,23 @@
   function renderBd() {
     var box = $('#bdBox'); if (!box) return;
     renderLookData().then(function (r) {
-      var bds = r[2].list, bcats = {}, nc = noteCats(), Bk = E.narratorBackdrop;
+      var bds = r[2].list, bcats = {}, nc = noteCats(), Bk = E.narratorBackdrop; if (Bk && Bk.fit === 'category') Bk = null;   // a category's is ticked above
       Object.keys(r[2].cats).concat(Object.keys(CATBDNEW)).forEach(function (k) { var v = k in CATBDNEW ? CATBDNEW[k] : r[2].cats[k]; if (v) bcats[k] = v; });
       var has = function (n) { return bds.filter(function (b) { return b.name === n; })[0]; };
       var own = Bk && has(Bk.backdrop), waiting = BDNEW && Bk && BDNEW.name === Bk.backdrop;
-      var offered = nc.filter(function (c) { return bcats[c] && has(bcats[c]); }), distinct = offered.map(function (c) { return bcats[c]; }).filter(function (v, i, a) { return a.indexOf(v) === i; });
-      var wasPick = BDPICK; BDPICK = !Bk && distinct.length > 1; if (wasPick !== BDPICK) setTimeout(renderNext, 0);
-      var shows = own ? '<b>' + esc(own.name) + '</b>: ' + (Bk.from ? 'picked from <b>' + esc(catName(Bk.from)) + '</b>' : 'this Note\'s own') : distinct.length === 1 ? '<b>' + esc(distinct[0]) + '</b>: the backdrop for <b>' + esc(catName(offered[0])) + '</b>' : 'the plain teal';
+
       var opts = '<option value="">None: her category\'s, or the plain teal</option>' + bds.map(function (b) { return '<option value="' + esc(b.name) + '">' + esc(b.name + (b.about ? ' · ' + b.about : '')) + '</option>'; }).join('') +
         (Bk && !own ? '<option value="' + esc(Bk.backdrop) + '">' + esc(Bk.backdrop) + (waiting ? ' (new: saves with the Note)' : ' (not made yet)') + '</option>' : '') + '<option value="__new">+ A new backdrop just for this Note…</option>';
       var scene = Bk ? (Bk.scene || (own && own.scene) || '') : '';
       var making = Bk && (!own || waiting || BDNEW === 'replace');
-      box.innerHTML = (BDPICK ? '<div class="ga-pick"><b>Pick the backdrop for this Note.</b> ' + offered.length + ' of its categories have one:' + offered.map(function (c) {
-          return '<label class="ga-check"><input type="radio" name="bdPick" value="' + esc(c) + '"> <b>' + esc(bcats[c]) + '</b> <span class="muted">from ' + esc(catName(c)) + '</span></label>'; }).join('') + '<small>Until you pick, the bar stays its plain teal.</small></div>' : '') +
-        '<p class="ga-shows">Behind her on this Note: ' + shows + '.</p>' +
+      box.innerHTML = '<p class="muted">A backdrop just for this Note, in place of its category\'s.</p>' +
         field('This Note\'s own backdrop', '<select id="bdPickSel">' + opts + '</select>') +
         (own && !waiting ? '<img class="ga-bdimg" alt="" src="' + bdSrc(own) + '"><div class="row"><button type="button" id="bdReplace">Replace it with a new render</button></div>' : '') +
         (making ? field('The place', '<textarea id="bdScene" rows="2" placeholder="e.g. ' + esc(sceneFor(nc) || 'a cozy, warmly lit room') + '">' + esc(scene) + '</textarea>', 'A few words; the prompt below is built from them') +
           field('Image prompt', '<textarea id="bdPrompt" rows="5" readonly>' + esc(GALook.bdPrompt(scene || sceneFor(nc))) + '</textarea>') +
           '<div class="row"><button type="button" id="bdCopy">Copy the image prompt</button></div>' + bdTpl() +
-          '<label class="drop ga-drop" id="bdDrop"><input type="file" id="bdFile" accept="image/png,image/jpeg,image/webp" hidden><b>' + (waiting ? 'Choose a different render' : 'Bring the render back') + '</b> <span class="muted">or drop it here</span></label><div id="bdOut"></div>' : '') +
-        (nc.length ? '<div class="ga-cats"><span class="ga-cats-h">Backdrops for its categories</span><small>Every Note in the category gets it, unless the Note has its own. New ones are made in the Categories tab.</small>' +
-          nc.map(function (c) { return '<label class="ga-cat"><span>' + esc(catName(c)) + '</span><select data-catbd="' + esc(c) + '"><option value="">None</option>' + bds.map(function (b) { return '<option value="' + esc(b.name) + '">' + esc(b.name) + '</option>'; }).join('') + '</select></label>'; }).join('') + '</div>' : '');
-      $$('select[data-catbd]', box).forEach(function (sel) { var c = sel.getAttribute('data-catbd'); sel.value = bcats[c] || ''; sel.onchange = function () { CATBDNEW[c] = sel.value; markDirty(); renderBd(); }; });
-      $('#bdPickSel').value = Bk ? Bk.backdrop : '';
+          '<label class="drop ga-drop" id="bdDrop"><input type="file" id="bdFile" accept="image/png,image/jpeg,image/webp" hidden><b>' + (waiting ? 'Choose a different render' : 'Bring the render back') + '</b> <span class="muted">or drop it here</span></label><div id="bdOut"></div>' : '');
+      $('#bdPickSel').value = Bk ? Bk.backdrop : ''; renderStyle();
       $('#bdPickSel').onchange = function () {
         var v = this.value;
         if (v === '__new') {
@@ -901,7 +939,6 @@
         }
         E.narratorBackdrop = v ? { backdrop: v, fit: 'existing', scene: (has(v) || {}).scene || '' } : null; BDNEW = null; markDirty(); renderBd();
       };
-      $$('input[name=bdPick]', box).forEach(function (x) { x.onchange = function () { E.narratorBackdrop = { backdrop: bcats[x.value], fit: 'category', from: x.value, scene: '' }; markDirty(); renderBd(); renderNext(); }; });
       var rp = $('#bdReplace'); if (rp) rp.onclick = function () { BDNEW = 'replace'; renderBd(); };
       var sc = $('#bdScene'); if (sc) sc.oninput = function () { E.narratorBackdrop.scene = sc.value; $('#bdPrompt').value = GALook.bdPrompt(sc.value || sceneFor(nc)); markDirty(); };
       var cp = $('#bdCopy'); if (cp) cp.onclick = function () { navigator.clipboard.writeText($('#bdPrompt').value).then(function () { toast('Image prompt copied.'); }); };
@@ -925,7 +962,8 @@
     var box = $('#lookBox'); if (!box) return;
     renderLookData().then(function (r) {
       var list = r[0], cats = {}; Object.keys(r[1]).concat(Object.keys(CATNEW)).forEach(function (k) { var v = k in CATNEW ? CATNEW[k] : r[1][k]; if (v) cats[k] = v; });
-      var L = E.narratorLook, entry = L && list.filter(function (l) { return l.name === L.look; })[0];
+      var L = E.narratorLook; if (L && L.fit === 'category') L = null;   // a category's cap is ticked above, not here
+      var entry = L && list.filter(function (l) { return l.name === L.look; })[0];
       var made = L && (L.look === 'curls' || !!entry), own = !!entry && !entry.to && !entry.rotate;   // own: a Note look (not a holiday or hair style)
       var waiting = LOOKNEW && L && LOOKNEW.name === L.look;
       var opts = '<option value="">None: her category or holiday look</option><option value="curls">curls</option>' + list.filter(function (l) { return l.name !== LOOKDEL; }).map(function (l) { return '<option value="' + esc(l.name) + '">' + esc(l.name + (l.about ? ' · ' + l.about : '')) + '</option>'; }).join('') +
@@ -936,11 +974,9 @@
         '<button type="button" id="copyTpl">Copy the image</button> <a href="/assets/narrator/kit/her-template.png" download>Download</a> · ' +
         '<a href="/assets/narrator/kit/her-edit-mask.png" download>Mask</a> · <a href="/assets/narrator/kit/her-contact-sheet.jpg" target="_blank" rel="noopener">Rules</a></span></div>';
       var canMake = L && (!made || (own && (LOOKREPL || waiting)));   // a new look, or a Note look being replaced (after Replace)
-      box.innerHTML = '<p class="muted">Her look on this Note\'s Listen bar. Claude picks it when drafting; a click on her head still changes it.</p>' +
+      box.innerHTML = '<p class="muted">A cap just for this Note, in place of its category\'s. Claude may suggest one when drafting.</p>' +
         (LOOKDEL ? '<p class="warn"><b>' + esc(LOOKDEL) + '</b> comes off the site when you Save (its image and its line). Notes that wore it go back to her holiday look. <button type="button" id="lookUndel">Keep it</button></p>' : '') +
-        palField() +
-        field('This Note\'s own look', '<select id="lookPick">' + opts + '</select>', L && L.why ? esc(L.why) : '') +
-        lookCats(list, cats, L) +
+        field('This Note\'s own cap', '<select id="lookPick">' + opts + '</select>', L && L.why ? esc(L.why) : '') +
         (made && entry && !waiting ? '<img class="ga-made" alt="" src="' + lookSrc(entry) + '">' : '') +
         (L && !made && !waiting ? '<p><b>Not made yet.</b> Copy the prompt and her template into your image tool, render it, and bring the image back here. Until then she wears her holiday look.</p>' : '') +
         (canMake ? field('Image prompt', '<textarea id="lookPrompt" rows="5">' + esc(L.prompt || '') + '</textarea>') + (L.prompt ? '<div class="row"><button type="button" id="copyLook">Copy the image prompt</button></div>' : '') : '') +
@@ -949,16 +985,7 @@
           (waiting ? 'Choose a different render' : made ? 'Replace it with a new render' : 'Bring the rendered image back') + '</b> <span class="muted">or drop it here</span></label><div id="lookOut"></div>' : '') +
         (own && !waiting && !LOOKREPL ? '<div class="row"><button type="button" id="lookRepl">Replace it with a new render</button><button type="button" class="danger" id="lookDel">Remove ' + esc(entry.name) + ' from the site</button></div>' : '') +
         (waiting ? '<div class="row"><button type="button" id="lookCancel">Don\'t use this render</button></div>' : '');
-      $('#lookPick').value = L ? L.look : ''; palWire(box);
-      box.querySelectorAll('.ga-cat select').forEach(function (sel) {
-        sel.value = cats[sel.getAttribute('data-cat')] || '';
-        sel.onchange = function () { CATNEW[sel.getAttribute('data-cat')] = sel.value; markDirty(); renderLook(); };
-      });
-      box.querySelectorAll('input[name=gaPick]').forEach(function (r) { r.onchange = function () {
-        var c = r.value, l = list.filter(function (x) { return x.name === cats[c]; })[0];
-        E.narratorLook = { look: cats[c], fit: 'category', from: c, about: (l && l.about) || '', why: 'Picked from ' + catName(c) + '.', prompt: '', bulb: !(l && l.bulb === false) };
-        markDirty(); renderLook(); renderNext();
-      }; });
+      $('#lookPick').value = L && L.fit !== 'category' ? L.look : ''; renderStyle();
       $('#lookPick').onchange = function () {
         if (this.value === '__new') {   // her own look for this Note only: a name, then a render brought back below
           var n = slug(prompt('A name for her new look (lowercase, with dashes), e.g. rain-hood:') || '').slice(0, 40);
@@ -1717,8 +1744,7 @@
     if (!drafted) out.push({ t: 'Draft with Claude', d: 'Claude writes the post, the captions and the episode script from your notes, track and photos.', b: 'Draft', run: function () { draft(); } });
     if (q) out.push({ t: 'Answer Claude\'s ' + (q === 1 ? 'question' : q + ' questions'), d: 'The script isn\'t final until they\'re answered. Answer them one by one, then send them all at once.', b: 'Answer', go: '#questions' });
     if (drafted && !q && !val('epScript')) out.push({ t: 'Write the episode script', d: 'The episode is read from it. Draft with Claude writes one from the post, or write your own.', b: 'Go to the script', go: '#epScript' });
-    if (drafted && !q && BDPICK) out.push({ t: 'Pick the backdrop', d: 'Two of this Note\'s categories give the bar a backdrop. Pick the one for this Note.', b: 'Pick it', go: '#bdBox' });
-    if (drafted && !q && LOOKPICK) out.push({ t: 'Pick GlazyArray\'s look', d: 'Two of this Note\'s categories give her a look. Pick the one she wears here.', b: 'Pick it', go: '#f-look' });
+    if (drafted && !q && LOOKPICK) out.push({ t: 'Pick GlazyArray\'s style', d: 'More than one of this Note\'s categories gives her a cap or backdrop. Tick the one this Note takes.', b: 'Pick it', go: '#f-look' });
     if (drafted && !q && val('epScript') && !audio) out.push({ t: 'Record the episode', d: 'Copy the audio prompt, render it with your voice tool, then drop the audio in or choose it from Drive.', b: 'Go to the audio', go: '#copyPrompt' });
     if (videos && !loops && !E.loopsDone) out.push({ t: 'Trim video loops', d: videos + ' video' + (videos > 1 ? 's' : '') + ' in the Drive folder. Pick the moments worth a short silent loop.', b: 'Trim loops', go: '#loops', done: 'loops' });
     if (dirty) out.push({ t: 'Save', d: 'Keep what you have so far.', b: 'Save', run: save });
