@@ -45,13 +45,44 @@ def over(dst, src):
     a = src[..., 3:]; dst[..., :3] = src[..., :3] * a + dst[..., :3] * (1 - a); dst[..., 3:] = a + dst[..., 3:] * (1 - a)
 
 
+def pick(J, note, today=None):
+    """what she wears, by the site's one rule (assets/narrator/resolve.js, the same order): a holiday on its dates unless
+    the Note ignores holidays; the Note's own; its categories (the ticked one, then priority, then the latest changed);
+    the default (ticked in the Studio; for the look, else the holiday coming up)"""
+    import datetime
+    d = today or datetime.date.today(); md = f'{d.month:02d}-{d.day:02d}'
+    looks = {l['name']: l for l in J.get('looks', [])}; looks['curls'] = {'name': 'curls'}
+    bds = {b['name']: b for b in J.get('backdrops', [])}
+    within = lambda l: (l['from'] <= md <= l['to']) if l['from'] <= l['to'] else (md >= l['from'] or md <= l['to'])
+    hol = sorted([l for l in J.get('looks', []) if l.get('from') and l.get('to')], key=lambda l: l['to'])
+    on = next(iter(sorted([l for l in hol if within(l)], key=lambda l: l['from'], reverse=True)), None)
+    up = next((l for l in hol if l['to'] >= md), hol[0] if hol else None)
+    rank, stamp, cats = J.get('categoryRank', {}), J.get('categoryStamp', {}), [c for c in note.get('cats', []) if c]
+    def by_cats(m, have):
+        c = [(x, m[x], i) for i, x in enumerate(cats) if m.get(x) in have]
+        c.sort(key=lambda t: (t[0] != note.get('prefer'), -rank.get(t[0], 0), ''.join(chr(0x10FFFF - ord(ch)) for ch in stamp.get(t[0], '')), t[2]))
+        return c[0][1] if c else None
+    hon = on if on and not note.get('ignoreHolidays') else None
+    defs = J.get('defaults', {})
+    if hon: lk = hon['name']
+    elif note.get('look') in looks: lk = note['look']
+    else: lk = by_cats(J.get('categories', {}), looks) or (defs.get('look') if defs.get('look') in looks else None) or (up['name'] if up else 'curls')
+    if hon and hon.get('backdrop') in bds: bd = hon['backdrop']
+    elif note.get('backdrop') in bds: bd = note['backdrop']
+    else: bd = by_cats(J.get('categoryBackdrops', {}), bds) or (defs.get('backdrop') if defs.get('backdrop') in bds else None)
+    return lk, bd
+
+
 def style(e):
-    """her look and backdrop on this Note, as the site picks them: its own, else its categories' (tags, then kind)"""
+    """her look and backdrop on this Note, as the site picks them (pick above): its own, else its categories' (tags, then kind)"""
     global LOOKS
     if LOOKS is None: LOOKS = json.load(open(os.path.join(N, 'looks.json')))
     cats = [t for t in (e.get('tags') or [])] + [KIND_TAG.get(e.get('kind'), e.get('kind') or '')]
-    name = (e.get('narratorLook') or {}).get('look') or next((LOOKS.get('categories', {})[c] for c in cats if c in LOOKS.get('categories', {})), None)
-    bd = (e.get('narratorBackdrop') or {}).get('backdrop') or next((LOOKS.get('categoryBackdrops', {})[c] for c in cats if c in LOOKS.get('categoryBackdrops', {})), None)
+    L, B = e.get('narratorLook') or {}, e.get('narratorBackdrop') or {}
+    mine = lambda x: x and x.get('fit') not in ('category', 'none')
+    name, bd = pick(LOOKS, {'look': L.get('look') if mine(L) else None, 'backdrop': B.get('backdrop') if mine(B) else None, 'cats': cats,
+                            'prefer': (L.get('fit') == 'category' and L.get('from')) or (B.get('fit') == 'category' and B.get('from')) or None,
+                            'ignoreHolidays': bool(e.get('ignoreHolidays'))})
     look = next((l for l in LOOKS['looks'] if l.get('name') == name and l.get('file')), None)
     bdf = next((b['file'] for b in LOOKS.get('backdrops', []) if b.get('name') == bd), None)
     return look, bdf

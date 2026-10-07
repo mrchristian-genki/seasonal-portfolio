@@ -550,3 +550,8 @@ dialog.pfp::backdrop{background:rgba(20,12,6,.7)}
 .ga-own{margin:4px 0 8px} .ga-own>summary{cursor:pointer;font-weight:600;font-size:14px;padding:6px 0}
 .ga-flair .ga-prev{max-width:380px}
 @media (max-width:560px){.ga-sty-t{width:52px;height:37px}.ga-sty-t.bd{width:80px}}
+/* the rule's controls (Categories tab and a Note's style): priorities, the default ticks, what she wears now */
+.panel.cats .catl .catr{flex:0 0 76px} .panel.cats .catl .catr input{width:64px}
+.panel.cats .lookg .ga-def{display:flex;gap:4px;justify-content:center;align-items:center;font-size:12px;color:var(--ink3);margin-top:2px}
+.panel.cats .lookg figure.on img{outline:3px solid #c9a14a;outline-offset:2px}
+.ga-now{margin:8px 0 4px;font-size:14px} .ga-now small{color:var(--ink3)}

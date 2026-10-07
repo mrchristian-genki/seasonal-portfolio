@@ -52,5 +52,16 @@
   "lake-tahoe": "lake-tahoe-beach",
   "mini-cast": "workshop-with-robots",
   "ride": "biking-forest"
+ },
+ "categoryRank": {
+  "automaton": 2,
+  "case-study": 3,
+  "hike": 3,
+  "lake-tahoe": 1,
+  "mini-cast": 2,
+  "ride": 3
+ },
+ "defaults": {
+  "backdrop": "lake-tahoe-beach"
  }
 }
