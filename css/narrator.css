@@ -22,7 +22,7 @@ section.listen.has-nb::before{content:"";position:absolute;left:0;right:0;bottom
    catchlights, laid over the glass of every look. The iris sits in the lens (head-lens.png), so it can glance toward
    the Play button in the hints; the catchlights stay put, the way a reflection does. */
 .nb-eyes{position:absolute;inset:0;-webkit-mask:url(/assets/narrator/head-lens.png?v=2) 0 0/100% 100% no-repeat;mask:url(/assets/narrator/head-lens.png?v=2) 0 0/100% 100% no-repeat}
-.nb-iris{transition:translate .45s cubic-bezier(.3,1.3,.5,1)}
+.nb-iris{translate:var(--gx,0%) var(--gy,0%);transition:translate .45s cubic-bezier(.3,1.3,.5,1)}   /* her gaze (narrator.js gaze()) */
 .nb.look .nb-iris{translate:.7% 0}
 .nb-lids{opacity:0}
 .nb.wink .nb-lids{opacity:1;clip-path:inset(0 0 0 50%)}   /* a wink: the eye nearer the Play button */
