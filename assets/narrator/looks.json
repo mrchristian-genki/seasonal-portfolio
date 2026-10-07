@@ -43,10 +43,11 @@
   { "name": "library-futuristic-1", "file": "library-futuristic-1.jpg", "about": "", "v": "tmk4fd", "scene": "a sunny pine meadow with a dog's ball and leash resting on a log" }
  ],
  "categoryBackdrops": {
-  "automaton": "clockmaker",
-  "case-study": "library",
-  "hike": "trailhead",
-  "mini-cast": "clockmaker",
+  "automaton": "library-futuristic-1",
+  "case-study": "library-futuristic-1",
+  "hike": "hiking-yosemite-1",
+  "lake-tahoe": "lake-tahoe-beach",
+  "mini-cast": "workshop-with-robots",
   "ride": "biking-forest"
  }
 }
