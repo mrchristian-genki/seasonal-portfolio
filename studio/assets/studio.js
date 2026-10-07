@@ -354,11 +354,11 @@
       function take(f) {
         if (!f) return; $('#nlOut').innerHTML = '<p class="muted">Working…</p>';
         GALook.make(f).then(function (r) {
-          CATNEWLOOK = r; var o = $('#nlOut'); o.innerHTML = r.warn ? '<p class="warn">' + esc(r.warn) + '</p>' : ''; r.preview.className = 'ga-prev'; o.appendChild(r.preview);
+          CATNEWLOOK = r; var o = $('#nlOut'); o.innerHTML = r.warn ? '<p class="warn">' + esc(r.warn) + '</p>' : ''; r.preview.className = 'ga-prev'; o.appendChild(r.preview); o.appendChild(flairBox(r, PAL_SAMPLE));
           $('#nlAdd').disabled = false; $('#nlDrop b').textContent = 'Choose a different render';
         }).catch(function (e) { $('#nlOut').innerHTML = ''; toast(e.message, true); });
       }
-      if (CATNEWLOOK) { var o = $('#nlOut'); CATNEWLOOK.preview.className = 'ga-prev'; o.appendChild(CATNEWLOOK.preview); if (CATNEWLOOK.warn) o.insertAdjacentHTML('afterbegin', '<p class="warn">' + esc(CATNEWLOOK.warn) + '</p>'); }
+      if (CATNEWLOOK) { var o = $('#nlOut'); CATNEWLOOK.preview.className = 'ga-prev'; o.appendChild(CATNEWLOOK.preview); o.appendChild(flairBox(CATNEWLOOK, PAL_SAMPLE)); if (CATNEWLOOK.warn) o.insertAdjacentHTML('afterbegin', '<p class="warn">' + esc(CATNEWLOOK.warn) + '</p>'); }
       $('#nlFile').onchange = function () { take(this.files[0]); this.value = ''; };
       var d = $('#nlDrop'); ['dragover', 'dragenter'].forEach(function (t) { d.addEventListener(t, function (ev) { ev.preventDefault(); }); });
       d.addEventListener('drop', function (ev) { ev.preventDefault(); take(ev.dataTransfer.files[0]); });
@@ -368,9 +368,10 @@
         if (name === 'curls' || list.some(function (l) { return l.name === name && (l.to || l.rotate); })) { toast('That name is taken by one of her holiday looks or hair styles.', true); return; }
         if (list.some(function (l) { return l.name === name; }) && !confirm(name + ' already exists. Replace its image with this one?')) return;
         b.disabled = true; b.textContent = 'Adding…';
-        api('lookblob', CATNEWLOOK.blob).then(function (r) {
+        var nlSha = null;
+        api('lookblob', CATNEWLOOK.blob).then(function (r) { nlSha = r.sha; return flairUp(CATNEWLOOK); }).then(function (f) {
           var cl = {}; if (cat) cl[cat] = name;
-          return api('looks', { newLook: { name: name, ext: CATNEWLOOK.ext, sha: r.sha, about: about, bulb: $('#nlBulb').checked }, categoryLooks: cat ? cl : null });
+          return api('looks', { newLook: { name: name, ext: CATNEWLOOK.ext, sha: nlSha, about: about, bulb: $('#nlBulb').checked, flair: f }, categoryLooks: cat ? cl : null });
         }).then(function () { CATNEWLOOK = null; LOOKS = null; toast(name + ' added. The site updates in about a minute.'); renderCats(); })
           .catch(function (err) { toast(err.message, true); b.disabled = false; b.textContent = 'Add the look'; });
       };
@@ -745,6 +746,75 @@
   function catName(t) { return t === 'mini-cast' ? 'Mini-Cast' : t.replace(/^with-/, 'with ').replace(/-/g, ' ').replace(/^./, function (c) { return c.toUpperCase(); }); }
   // which look this Note shows, and why: its own, else its first category's, else the holiday look; then a picker per
   // category (every Note in it wears that look, unless the Note has its own)
+  // ---------- her flair: the Note's two colours, from its hero; and on a new look, the parts that take them ----------
+  var PAL_SAMPLE = ['#e0533d', '#2f9fd8'];   // to show a new look's flair before a Note has a palette
+  function heroImg() {
+    var ph = E.photos.filter(function (p) { return p.cover; })[0] || E.photos[0]; if (!ph) return Promise.resolve(null);
+    var n = photoName(ph);
+    if (fresh[n]) return createImageBitmap(fresh[n].blob);
+    if (ph.video) {
+      if (!ph.poster) return Promise.resolve(null);
+      var pn = ph.poster.split('/').pop();
+      if (posterNew[pn]) return imgFromUrl(posterNew[pn].url);
+      if (clipsNew[n]) return imgFromUrl('api.php?a=vfile&t=poster&k=' + clipsNew[n].token);
+      return E.id ? imgFromUrl('api.php?a=photo&id=' + encodeURIComponent(E.id) + '&n=' + encodeURIComponent(pn) + posterBust) : Promise.resolve(null);
+    }
+    return imgFromUrl(photoUrl(ph));
+  }
+  // the hero is the master of the palette: a new cover (or poster frame) picks it again, unless it was set by hand
+  function repalette(force) {
+    if (!E || (E.paletteBy === 'hand' && !force)) return Promise.resolve();
+    var was = JSON.stringify(E.palette || null);
+    return heroImg().then(function (im) {
+      var pal = im ? GALook.palette(im) : null;
+      if (pal) E.palette = pal; else delete E.palette;
+      delete E.paletteBy;
+      if (JSON.stringify(E.palette || null) !== was) { markDirty(); renderLook(); }
+    }).catch(function () {});
+  }
+  function palField() {
+    var p = E.palette;
+    return '<div class="ga-pal"><b>Her colours</b> <span class="muted">' + (p ? (E.paletteBy === 'hand' ? 'set by hand' : 'from the hero') : 'none yet: pick a cover') + '</span>' +
+      (p ? p.map(function (c, k) { return '<input type="color" class="ga-sw" data-k="' + k + '" value="' + esc(c) + '" title="Change this colour">'; }).join('') : '') +
+      ' <button type="button" class="link" id="palAgain">From the hero</button>' + (p ? ' <button type="button" class="link" id="palOff">None</button>' : '') +
+      '<span class="muted ga-pal-n">Her flair (the coloured parts of her look), the glass player and the backdrop take these.</span></div>';
+  }
+  function palWire(box) {
+    box.querySelectorAll('.ga-sw').forEach(function (i) { i.oninput = function () { E.palette = E.palette.slice(); E.palette[+i.getAttribute('data-k')] = i.value; E.paletteBy = 'hand'; markDirty(); }; i.onchange = function () { renderLook(); }; });
+    var a = $('#palAgain', box); if (a) a.onclick = function () { repalette(true).then(function () { if (!E.palette) toast('The hero has no strong colours to take.', true); renderLook(); }); };
+    var o = $('#palOff', box); if (o) o.onclick = function () { delete E.palette; E.paletteBy = 'hand'; markDirty(); renderLook(); };
+  }
+  // a new look's flair: what it adds, in two colour groups; tick which take the palette, or swap them
+  function flairBox(rec, pal, onchange) {
+    var f = rec.flair || {}, st = rec.fl || (rec.fl = { a: !!f.a, b: !!f.b, swap: false, whole: false });
+    var d = document.createElement('div'); d.className = 'ga-flair';
+    if (!f.a && !f.b && !f.whole) { d.innerHTML = '<p class="muted">No coloured accessory to give her flair to: this look shows as it is on every Note.</p>'; return d; }
+    function draw() {
+      var m = flairMasks(rec), c = GALook.flairPreview(rec.out, m, pal); c.className = 'ga-prev';
+      d.innerHTML = '<p class="muted"><b>Her flair.</b> The parts tinted here take each Note\'s colours (shown in ' + (pal === PAL_SAMPLE ? 'two sample colours' : 'this Note\'s') + ').</p>';
+      d.appendChild(c);
+      d.insertAdjacentHTML('beforeend', (st.whole ? [] : ['a', 'b'].filter(function (k) { return f[k]; })).map(function (k) {
+        return '<label class="ga-check"><input type="checkbox" data-k="' + k + '"' + (st[k] ? ' checked' : '') + '> ' + (k === 'a' ? 'The main coloured parts' : 'The second colour\'s parts') + '</label>';
+      }).join('') + (f.a && f.b && !st.whole ? '<button type="button" class="link" data-swap>Swap the two colours</button>' : '') +
+        (f.whole ? '<label class="ga-check"><input type="checkbox" data-k="whole"' + (st.whole ? ' checked' : '') + '> The whole accessory takes the first colour' + (f.a ? '' : ' (it\'s all brass, so nothing else stood out)') + '</label>' : ''));
+      d.querySelectorAll('input[data-k]').forEach(function (i) { i.onchange = function () { st[i.getAttribute('data-k')] = i.checked; draw(); if (onchange) onchange(); }; });
+      var sw = d.querySelector('[data-swap]'); if (sw) sw.onclick = function () { st.swap = !st.swap; draw(); if (onchange) onchange(); };
+    }
+    draw(); return d;
+  }
+  function flairMasks(rec) {
+    var f = rec.flair || {}, st = rec.fl || { a: true, b: true }, a = st.a ? f.a : null, b = st.b ? f.b : null;
+    if (st.whole && f.whole) return { a: f.whole, b: null };
+    return st.swap ? { a: b, b: a } : { a: a, b: b };
+  }
+  function flairUp(rec) {   // the chosen masks up as blobs: { a: sha, b: sha }, or null
+    var m = flairMasks(rec), out = {}, ks = ['a', 'b'].filter(function (k) { return m[k]; });
+    if (!rec.flair) return Promise.resolve(null);
+    if (!m.a && m.b) { m = { a: m.b, b: null }; ks = ['a']; }   // the only colour is always the first
+    return ks.reduce(function (ch, k) {
+      return ch.then(function () { return GALook.png(m[k]); }).then(function (b) { return api('lookblob', b); }).then(function (r) { out[k] = r.sha; });
+    }, Promise.resolve()).then(function () { return ks.length ? out : null; });
+  }
   function lookCats(list, cats, L) {
     var nc = noteCats(), has = function (n) { return n === 'curls' || list.some(function (l) { return l.name === n; }); };
     var from = L && has(L.look) ? ['<b>' + esc(L.look) + '</b>', L.from ? 'picked from <b>' + esc(catName(L.from)) + '</b>' : 'this Note\'s own look'] : null;
@@ -868,6 +938,7 @@
       var canMake = L && (!made || (own && (LOOKREPL || waiting)));   // a new look, or a Note look being replaced (after Replace)
       box.innerHTML = '<p class="muted">Her look on this Note\'s Listen bar. Claude picks it when drafting; a click on her head still changes it.</p>' +
         (LOOKDEL ? '<p class="warn"><b>' + esc(LOOKDEL) + '</b> comes off the site when you Save (its image and its line). Notes that wore it go back to her holiday look. <button type="button" id="lookUndel">Keep it</button></p>' : '') +
+        palField() +
         field('This Note\'s own look', '<select id="lookPick">' + opts + '</select>', L && L.why ? esc(L.why) : '') +
         lookCats(list, cats, L) +
         (made && entry && !waiting ? '<img class="ga-made" alt="" src="' + lookSrc(entry) + '">' : '') +
@@ -878,7 +949,7 @@
           (waiting ? 'Choose a different render' : made ? 'Replace it with a new render' : 'Bring the rendered image back') + '</b> <span class="muted">or drop it here</span></label><div id="lookOut"></div>' : '') +
         (own && !waiting && !LOOKREPL ? '<div class="row"><button type="button" id="lookRepl">Replace it with a new render</button><button type="button" class="danger" id="lookDel">Remove ' + esc(entry.name) + ' from the site</button></div>' : '') +
         (waiting ? '<div class="row"><button type="button" id="lookCancel">Don\'t use this render</button></div>' : '');
-      $('#lookPick').value = L ? L.look : '';
+      $('#lookPick').value = L ? L.look : ''; palWire(box);
       box.querySelectorAll('.ga-cat select').forEach(function (sel) {
         sel.value = cats[sel.getAttribute('data-cat')] || '';
         sel.onchange = function () { CATNEW[sel.getAttribute('data-cat')] = sel.value; markDirty(); renderLook(); };
@@ -915,7 +986,7 @@
         $('#lookOut').innerHTML = '<p class="muted">Working…</p>';
         GALook.make(f).then(function (r) {
           if (LOOKNEW && LOOKNEW.url) URL.revokeObjectURL(LOOKNEW.url);
-          LOOKNEW = { name: L.look, blob: r.blob, ext: r.ext, url: URL.createObjectURL(r.blob), preview: r.preview, warn: r.warn }; markDirty();
+          LOOKNEW = { name: L.look, blob: r.blob, ext: r.ext, url: URL.createObjectURL(r.blob), preview: r.preview, warn: r.warn, out: r.out, flair: r.flair }; markDirty();
           renderLook();
         }).catch(function (e) { $('#lookOut').innerHTML = ''; toast(e.message, true); });
       }
@@ -928,6 +999,7 @@
           '<label class="ga-check"><input type="checkbox" id="lookBulb"' + (L.bulb !== false ? ' checked' : '') + '> Her antenna bulb shows (untick if the look covers it)</label>';
         LOOKNEW.preview.className = 'ga-prev'; out.insertBefore(LOOKNEW.preview, out.firstChild);
         $('#lookBulb').onchange = function () { E.narratorLook.bulb = this.checked; markDirty(); };
+        if (LOOKNEW.out) out.appendChild(flairBox(LOOKNEW, E.palette || PAL_SAMPLE, markDirty));
       }
     });
   }
@@ -1204,7 +1276,7 @@
     }).join('');
     $$('.ph', box).forEach(function (d) {
       $('textarea', d).addEventListener('input', markDirty);
-      $$('input', d).forEach(function (i) { i.addEventListener('change', function () { markDirty(); collect(); d.classList.toggle('off', !$('.use', d).checked); }); });
+      $$('input', d).forEach(function (i) { i.addEventListener('change', function () { markDirty(); collect(); d.classList.toggle('off', !$('.use', d).checked); if (i.classList.contains('cover')) repalette(); }); });
       $('.rm', d).onclick = function () {
         if (!confirm('Remove this photo from the entry?')) return;
         collect();
@@ -1265,6 +1337,7 @@
       cv.toBlob(function (bl) {
         if (posterNew[pn]) URL.revokeObjectURL(posterNew[pn].url);
         posterNew[pn] = { blob: bl, url: URL.createObjectURL(bl) };
+        if (p.cover) repalette();
         close(); markDirty(); renderPhotos(); toast('Poster frame set. Save to keep it.');
       }, 'image/jpeg', 0.86);
     };
@@ -2084,7 +2157,7 @@
     var names = Object.keys(fresh).concat(Object.keys(posterNew)), uploaded = [];
     var L = loader(E.status === 'published' ? 'Saving and publishing' : 'Saving', ['Upload the photos', 'Save the note', E.status === 'published' ? 'Publishing starts (live in about a minute)' : 'Saved']);
     if (!names.length) L.skip(0);
-    var chain = Promise.resolve();
+    var chain = !E.palette && E.paletteBy !== 'hand' ? repalette() : Promise.resolve();   // a Note's first save takes its colours from the hero
     names.forEach(function (n, i) {
       chain = chain.then(function () {
         btn.textContent = 'Uploading photo ' + (i + 1) + ' of ' + names.length + '…'; L.at(0, (i + 1) + ' of ' + names.length);
@@ -2094,7 +2167,8 @@
     var lookUp = null;
     if (LOOKNEW && E.narratorLook && LOOKNEW.name === E.narratorLook.look) chain = chain.then(function () {
       btn.textContent = 'Uploading her new look…';
-      return api('lookblob', LOOKNEW.blob).then(function (r) { lookUp = { name: LOOKNEW.name, ext: LOOKNEW.ext, sha: r.sha, about: E.narratorLook.about || '', bulb: E.narratorLook.bulb !== false }; });
+      return api('lookblob', LOOKNEW.blob).then(function (r) { lookUp = { name: LOOKNEW.name, ext: LOOKNEW.ext, sha: r.sha, about: E.narratorLook.about || '', bulb: E.narratorLook.bulb !== false }; })
+        .then(function () { return flairUp(LOOKNEW); }).then(function (f) { if (f) lookUp.flair = f; });
     });
     var bdUp = null;
     if (BDNEW && BDNEW.blob && E.narratorBackdrop && BDNEW.name === E.narratorBackdrop.backdrop) chain = chain.then(function () {
@@ -2114,7 +2188,7 @@
       var hadNew = !!audioNew;
       var hadClips = Object.keys(clipsNew).length + Object.keys(posterNew).length;
       if (Object.keys(posterNew).length) posterBust = '&v=' + Date.now().toString(36);
-      if (lookUp) { LOOKSAVED[lookUp.name] = LOOKNEW.url; LOOKNEW = null; LOOKREPL = false; LOOKS = LOOKS.then(function (l) { return l.filter(function (x) { return x.name !== lookUp.name; }).concat([{ name: lookUp.name, file: lookUp.name + '.' + lookUp.ext, about: lookUp.about }]); }); setTimeout(renderLook, 0); }
+      if (lookUp) { LOOKSAVED[lookUp.name] = LOOKNEW.url; LOOKNEW = null; LOOKREPL = false; LOOKS = LOOKS.then(function (l) { return l.filter(function (x) { return x.name !== lookUp.name; }).concat([{ name: lookUp.name, file: lookUp.name + '.' + lookUp.ext, about: lookUp.about, flair: lookUp.flair ? Object.keys(lookUp.flair).join('') : undefined }]); }); setTimeout(renderLook, 0); }
       if (bdUp || Object.keys(CATBDNEW).length) {
         if (bdUp) BDSAVED[bdUp.name] = BDNEW.url;
         var sentB = CATBDNEW, up = bdUp; BDNEW = null; CATBDNEW = {};

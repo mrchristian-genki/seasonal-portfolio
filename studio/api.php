@@ -158,12 +158,19 @@ function apply_looks(GitHub $gh, array &$files, array $body): void
             }
         }
         $fixed = fn(array $l) => isset($l['to']) || !empty($l['rotate']);
+        // a look's flair masks go with it (and a replaced look's old ones, unless the new one brings its own)
+        $unflair = function (array $l) use (&$files) {
+            $stem = preg_replace('/\.(webp|png)$/', '', (string) ($l['file'] ?? ''));
+            if (!preg_match('/^[a-z0-9-]{1,40}$/', $stem)) return;
+            foreach (str_split(preg_replace('/[^ab]/', '', (string) ($l['flair'] ?? ''))) as $fk) if ($fk !== '') $files["assets/narrator/looks/$stem.flair-$fk.png"] = null;
+        };
         if ($rl !== '') {
             if (!preg_match('/^[a-z0-9-]{1,40}$/', $rl)) json_fail('Bad look.');
             foreach ($list as $k => $l) {
                 if (($l['name'] ?? '') !== $rl) continue;
                 if ($fixed($l)) json_fail("\"$rl\" is one of her holiday looks or hair styles; those aren't removed from the Studio.");
                 if (preg_match('/^[a-z0-9-]{1,40}\.(webp|png)$/', (string) ($l['file'] ?? ''))) $files['assets/narrator/looks/' . $l['file']] = null;
+                $unflair($l);
                 unset($list[$k]);
             }
             $cats = array_filter($cats, fn($n) => $n !== $rl);   // a category that wore it goes back to the holiday look
@@ -175,11 +182,21 @@ function apply_looks(GitHub $gh, array &$files, array $body): void
                 if (($l['name'] ?? '') !== $name) continue;
                 if ($fixed($l)) json_fail("\"$name\" is one of her holiday looks or hair styles. Pick another name for this one.");
                 if (($l['file'] ?? '') !== "$name.$ext" && preg_match('/^[a-z0-9-]{1,40}\.(webp|png)$/', (string) ($l['file'] ?? ''))) $files['assets/narrator/looks/' . $l['file']] = null;   // the old file, if it changes type
+                $unflair($l);
                 unset($list[$k]);
             }
             // v: changes with every version, so a replaced image isn't served from a cache
             $look = ['name' => $name, 'file' => "$name.$ext", 'about' => mb_substr(trim((string) ($nl['about'] ?? '')), 0, 120), 'v' => base_convert((string) time(), 10, 36)];
             if (($nl['bulb'] ?? true) === false) $look['bulb'] = false;
+            // her flair: the masks of the parts that take the Note's palette (look.js), one per colour
+            $fl = '';
+            foreach (['a', 'b'] as $fk) {
+                $fsha = (string) ($nl['flair'][$fk] ?? '');
+                if ($fsha === '') continue;
+                if (!preg_match('/^[0-9a-f]{40}$/', $fsha)) json_fail('Bad look.');
+                $files["assets/narrator/looks/$name.flair-$fk.png"] = ['sha' => $fsha]; $fl .= $fk;
+            }
+            if ($fl !== '') $look['flair'] = $fl;
             $list[] = $look;
             $files["assets/narrator/looks/$name.$ext"] = ['sha' => $lsha];
         }

@@ -530,3 +530,9 @@ dialog.pfp::backdrop{background:rgba(20,12,6,.7)}
 .panel.cats .catl .catc>span{display:flex;gap:8px;align-items:center} .panel.cats .catl .catc select{flex:1}
 .panel.cats .catl img.bd,.panel.cats .catl .noimg.bd{width:96px;height:41px;object-fit:cover}
 .panel.cats .bdg{grid-template-columns:repeat(auto-fill,minmax(180px,1fr))} .panel.cats .bdg img{aspect-ratio:21/9;object-fit:cover;filter:blur(1.5px)}
+/* her flair: the Note's two colours (from its hero) and a new look's flair parts */
+.ga-pal{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin:8px 0 12px;font-size:14px}
+.ga-pal-n{flex-basis:100%}
+.ga-sw{width:30px;height:30px;padding:0;border:2px solid rgba(0,0,0,.12);border-radius:50%;background:none;cursor:pointer;flex:none}
+.ga-sw::-webkit-color-swatch-wrapper{padding:0} .ga-sw::-webkit-color-swatch{border:0;border-radius:50%} .ga-sw::-moz-color-swatch{border:0;border-radius:50%}
+.ga-flair{margin-top:10px}
