@@ -63,12 +63,13 @@
   });
   function src(l) { return l && l.file ? A + 'looks/' + l.file + V + (l.v ? '.' + l.v : '') : CURLS; }   // v: a look replaced in the Studio
   // her flair: the parts of a look that take the Note's palette (looks.json "flair": which masks it has, a and/or b;
-  // looks/<file>.flair-a.png), tinted in CSS (.nb-flair); a look without them just shows as it is
+  // looks/<file>.flair-a.png), tinted in CSS (.nb-flair) at its flairK strength (45% unless it says); a look without them just shows as it is
   function flair(nb, l) {
     var stem = l && l.file ? A + 'looks/' + l.file.replace(/\.[a-z]+$/, '') + '.flair-' : '';
     nb.querySelectorAll('.nb-flair').forEach(function (f) {
       var k = f.getAttribute('data-k'), on = !!stem && (l.flair || '').indexOf(k) >= 0;
       f.style.setProperty('--fm', on ? 'url(' + stem + k + '.png' + V + (l.v ? '.' + l.v : '') + ')' : 'none'); f.hidden = !on;
+      f.style.setProperty('--fk', l && l.flairK ? l.flairK : .45);   // how strongly: a gentle 45% on brass, more on fabric and gems (looks.json flairK)
     });
   }
   function put(nb, l) {

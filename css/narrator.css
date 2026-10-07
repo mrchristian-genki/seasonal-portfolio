@@ -123,7 +123,7 @@ section.listen.has-bd::before{z-index:1}
 /* THE NOTE'S PALETTE (data-palette on the bar: two accent colours from its hero, --ga1 and --ga2). Her flair: the parts
    of whatever look she wears that take it (narrator.js flair(): a mask per colour), tinted with a "color" blend at 45% (a tint over the original, not a repaint) so
    the brass, folds and shading show through; then the glass card, its seek bar and Play, and the backdrop's shade */
-.nb-flair{position:absolute;inset:0;display:block;mix-blend-mode:color;opacity:.45;background:var(--ga1,transparent);pointer-events:none;
+.nb-flair{position:absolute;inset:0;display:block;mix-blend-mode:color;opacity:var(--fk,.45);background:var(--ga1,transparent);pointer-events:none;
   -webkit-mask:var(--fm) 0 0/100% 100% no-repeat;mask:var(--fm) 0 0/100% 100% no-repeat}
 .nb-flair[data-k="b"]{background:var(--ga2,transparent)}
 .nb-flair[hidden]{display:none}
