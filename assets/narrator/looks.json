@@ -1,13 +1,13 @@
 {
  "looks": [
-  { "name": "bob", "file": "bob.webp", "rotate": true, "flair": "a", "flairK": 0.8 },
+  { "name": "bob", "file": "bob.webp", "rotate": true, "flair": "ab", "flairK": 1, "v": "tw2g", "flairDye": "ab", "flairBase": ["#a8327a", "#2fb5ad"] },
   { "name": "ponytail", "file": "ponytail.webp", "rotate": true, "v": "tw2b", "flair": "ab", "flairDye": "ab", "flairK": 1, "flairBase": ["#2fb5ad", "#e8735a"] },
   { "name": "perm", "file": "perm.webp", "rotate": true, "v": "tw2b", "flair": "ab", "flairDye": "ab", "flairK": 1, "flairBase": ["#d4627a", "#2fb5ad"] },
   { "name": "crimp", "file": "crimp.webp", "rotate": true, "v": "tw2b", "flair": "ab", "flairDye": "ab", "flairK": 1, "flairBase": ["#e0559a", "#f4efe6"] },
   { "name": "headband", "file": "headband.webp", "rotate": true, "v": "tw2c", "flair": "ab", "flairDye": "ab", "flairK": 1, "flairBase": ["#9c2a35", "#e9c46a"] },
   { "name": "updo", "file": "updo.webp", "rotate": true, "v": "tw2c", "flair": "ab", "flairDye": "ab", "flairK": 1, "flairBase": ["#c9506a", "#f4efe6"] },
   { "name": "tahoe-winter", "file": "beanie.webp", "from": "01-02", "to": "01-31", "bulb": false, "v": "tw2d", "flair": "ab", "flairK": 1, "flairDye": "ab", "flairBase": ["#3fb7c0", "#f2ede4"] },
-  { "name": "valentines", "file": "valentine.webp", "from": "02-10", "to": "02-14", "flair": "ab", "flairK": 0.8 },
+  { "name": "valentines", "file": "valentine.webp", "from": "02-10", "to": "02-14", "flair": "ab", "flairK": 1, "v": "tw2g", "flairDye": "ab", "flairBase": ["#d8344f", "#f4c6d0"] },
   { "name": "st-patricks", "file": "stpatrick.webp", "from": "03-15", "to": "03-17", "bulb": false, "flair": "ab", "flairK": 0.8 },
   { "name": "spring", "file": "bunny.webp", "from": "03-20", "to": "04-20", "bulb": false, "flair": "a", "flairK": 0.8 },
   { "name": "fourth-of-july", "file": "stars.webp", "from": "07-01", "to": "07-04", "flair": "ab", "flairK": 1, "v": "tw2f", "flairDye": "ab", "flairBase": ["#c8262c", "#2f4fa0"] },
