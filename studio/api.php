@@ -30,6 +30,11 @@ if ($method === 'POST') {
         if (preg_match('/^[0-9a-f]{64}$/', $mask) && $raw !== '') {
             $raw = $raw ^ substr(str_repeat(hex2bin($mask), intdiv(strlen($raw), 32) + 1), 0, strlen($raw));
         }
+        // the JSON of a request (studio.js api()), scrambled the same way so the firewall never reads a Note's text
+        if (($_SERVER['HTTP_X_BODY'] ?? '') === 'json') {
+            $body = json_decode($raw, true); $raw = null;
+            if (!is_array($body)) json_fail('Bad request.');
+        }
     } else {
         $body = json_decode((string) file_get_contents('php://input'), true);
         if (!is_array($body)) json_fail('Bad request.');
