@@ -40,7 +40,7 @@
   "automaton": "clockmaker",
   "case-study": "library",
   "hike": "trailhead",
-  "mini-cast": "library",
-  "ride": "bike-shop"
+  "mini-cast": "clockmaker",
+  "ride": "biking-forest"
  }
 }
