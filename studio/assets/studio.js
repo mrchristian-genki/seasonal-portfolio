@@ -277,7 +277,7 @@
   // new ones as soon as a Note has them, and the look each one gives GlazyArray (looks.json "categories"). Most have
   // none. A Note's own look beats its category's, which beats the holiday look. Her looks are here too, with a way to
   // add one from a render. ----------
-  var CATP = {}, CATBP = {}, CATRP = {}, DEFP = {}, HOLBP = {}, CATNEWLOOK = null, CATNEWBD = null;   // pending: looks, backdrops, priorities, defaults, holiday backdrops
+  var CATP = {}, CATBP = {}, CATRP = {}, DEFP = {}, HOLBP = {}, NEWCATP = {}, CATNEWLOOK = null, CATNEWBD = null;   // pending: looks, backdrops, priorities, defaults, holiday backdrops
   function renderCats() {
     var box = $('#catsBox'); box.innerHTML = '<p class="muted">Loading…</p>';
     LOOKS = null; renderLookData().then(function (r) {
@@ -286,13 +286,13 @@
       var hols = list.filter(function (l) { return l.from && l.to; }).sort(function (a, b) { return a.from < b.from ? -1 : 1; });
       var hb = function (h) { return h.name in HOLBP ? HOLBP[h.name] : (h.backdrop || ''); };
       (ENTRIES || []).forEach(function (e) { (e.cats || []).forEach(function (c) { count[c] = (count[c] || 0) + 1; }); });
-      Object.keys(cats).concat(Object.keys(bcats)).forEach(function (c) { if (!(c in count)) count[c] = 0; });
+      allCats(J).concat(Object.keys(NEWCATP)).forEach(function (c) { if (!(c in count)) count[c] = 0; });
       var names = Object.keys(count).sort(function (a, b) { return !!(cats[b] || bcats[b]) - !!(cats[a] || bcats[a]) || count[b] - count[a] || (a < b ? -1 : 1); });
       var bdopts = '<option value="">No backdrop</option>' + bds.map(function (b) { return '<option value="' + esc(b.name) + '">' + esc(b.name + (b.about ? ' · ' + b.about : '')) + '</option>'; }).join('');
       var bsrc = function (n) { var b = bds.filter(function (x) { return x.name === n; })[0]; return b ? bdSrc(b) : ''; };
       var opts = '<option value="">No look</option><option value="curls">curls</option>' + list.map(function (l) { return '<option value="' + esc(l.name) + '">' + esc(l.name + (l.about ? ' · ' + l.about : '')) + '</option>'; }).join('');
       var src = function (n) { var l = list.filter(function (x) { return x.name === n; })[0]; return n === 'curls' ? '/assets/narrator/head-base.webp' : l ? '/assets/narrator/looks/' + esc(l.file) + (l.v ? '?r=' + esc(l.v) : '') : ''; };
-      var pending = Object.keys(CATP).length + Object.keys(CATBP).length + Object.keys(CATRP).length + Object.keys(DEFP).length + Object.keys(HOLBP).length;
+      var pending = Object.keys(CATP).length + Object.keys(CATBP).length + Object.keys(CATRP).length + Object.keys(DEFP).length + Object.keys(HOLBP).length + Object.keys(NEWCATP).length;
       box.innerHTML = '<h2>Categories</h2><p class="muted">Every category the Notes use: their kind (Ride, Hike, Mini-Cast) and their own tags. Give one a look and a backdrop and GlazyArray wears them on every Note in it. What she wears is decided in this order: a holiday on its dates (on every Note, unless the Note ignores holidays), the Note\'s own, its categories (the one ticked on the Note, then the highest priority here, then the one changed last), then the defaults ticked below.</p>' +
         '<ul class="catl">' + names.map(function (c) {
           var v = c in CATP ? CATP[c] : (cats[c] || ''), im = v && src(v);
@@ -302,6 +302,7 @@
             '<span class="catc"><small>Backdrop</small><span>' + (bim ? '<img class="bd" alt="" src="' + bim + '">' : '<i class="noimg bd"></i>') + '<select data-catbd="' + esc(c) + '">' + bdopts + '</select></span></span>' +
             '<span class="catc catr"><small>Priority</small><input type="number" min="0" max="9" step="1" data-catr="' + esc(c) + '" value="' + rk(c) + '" title="0 to 9: when a Note\'s categories disagree, the higher wins"></span></li>';
         }).join('') + '</ul>' +
+        '<div class="row"><input id="newCat" placeholder="A new category, e.g. Night ride" maxlength="40"><button type="button" id="newCatAdd">Add the category</button><span class="muted">Then give it a look, a backdrop and a priority above, save, and add it to Notes in their style panel.</span></div>' +
         '<div class="row"><button type="button" class="primary" id="catSave"' + (pending ? '' : ' disabled') + '>Save the categories' + (pending ? ' (' + pending + ')' : '') + '</button><span class="muted">Live in about a minute.</span></div>' +
         '<h3>Holidays</h3><p class="muted">On its dates a holiday dresses every Note, except the ones that ignore holidays. Give one a backdrop and that shows too.</p><ul class="catl">' + hols.map(function (h) {
           var b = hb(h), bim = b && bsrc(b);
@@ -332,6 +333,14 @@
         var c = sel.getAttribute('data-cat'); sel.value = c in CATP ? CATP[c] : (cats[c] || '');
         sel.onchange = function () { if (sel.value === (cats[c] || '')) delete CATP[c]; else CATP[c] = sel.value; renderCats(); };
       });
+      var nca = $('#newCatAdd'), nci = $('#newCat');
+      var addCat = function () {
+        var t = String(nci.value || '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40);
+        if (!t || /^\d{4}$/.test(t)) { toast('Give the category a name.', true); return; }
+        if (t in count) { toast(catName(t) + ' is already here.', true); return; }
+        NEWCATP[t] = nci.value.trim().slice(0, 40); renderCats();
+      };
+      nca.onclick = addCat; nci.onkeydown = function (ev) { if (ev.key === 'Enter') { ev.preventDefault(); addCat(); } };
       $$('.catl input[data-catr]', box).forEach(function (inp) {
         var c = inp.getAttribute('data-catr');
         inp.onchange = function () { var n = Math.max(0, Math.min(9, parseInt(inp.value, 10) || 0)); if (n === (rank[c] || 0)) delete CATRP[c]; else CATRP[c] = n; renderCats(); };
@@ -349,8 +358,8 @@
       $('#catSave').onclick = function () {
         var b = this; b.disabled = true; b.textContent = 'Saving…';
         var ne = function (o) { return Object.keys(o).length ? o : null; };
-        api('looks', { categoryLooks: ne(CATP), categoryBackdrops: ne(CATBP), categoryRank: ne(CATRP), defaults: ne(DEFP), holidayBackdrops: ne(HOLBP) })
-          .then(function () { CATP = {}; CATBP = {}; CATRP = {}; DEFP = {}; HOLBP = {}; LOOKS = null; toast('Saved. The site updates in about a minute.'); renderCats(); })
+        api('looks', { categoryLooks: ne(CATP), categoryBackdrops: ne(CATBP), categoryRank: ne(CATRP), defaults: ne(DEFP), holidayBackdrops: ne(HOLBP), categoryNames: ne(NEWCATP) })
+          .then(function () { CATP = {}; CATBP = {}; CATRP = {}; DEFP = {}; HOLBP = {}; NEWCATP = {}; LOOKS = null; toast('Saved. The site updates in about a minute.'); renderCats(); })
           .catch(function (err) { toast(err.message, true); b.disabled = false; b.textContent = 'Save the categories'; });
       };
       // Add a backdrop
@@ -773,6 +782,13 @@
     var out = []; (E.tags || []).concat([KIND_TAG[E.kind] || E.kind]).forEach(function (t) { t = slug(t); if (t && !/^\d{4}$/.test(t) && out.indexOf(t) < 0) out.push(t); });
     return out;
   }
+  // every category there is: on a Note, styled in looks.json, or made in the Categories tab (looks.json "categoryNames")
+  function allCats(J) {
+    J = J || {}; var out = {};
+    (ENTRIES || []).forEach(function (e) { (e.cats || []).forEach(function (c) { out[c] = 1; }); });
+    ['categories', 'categoryBackdrops', 'categoryRank', 'categoryNames'].forEach(function (k) { Object.keys(J[k] || {}).forEach(function (c) { out[c] = 1; }); });
+    return Object.keys(out).sort();
+  }
   function catName(t) { return t === 'mini-cast' ? 'Mini-Cast' : t.replace(/^with-/, 'with ').replace(/-/g, ' ').replace(/^./, function (c) { return c.toUpperCase(); }); }
   // which look this Note shows, and why: its own, else its first category's, else the holiday look; then a picker per
   // category (every Note in it wears that look, unless the Note has its own)
@@ -872,6 +888,10 @@
       };
       if (box.getAttribute('data-for') !== (E.id || 'new')) { box.setAttribute('data-for', E.id || 'new'); var ow = $('#gaOwn'); if (ow) ow.open = gaOwnOpen(); }
       box.innerHTML = palField() +
+        '<div class="ga-catedit"><span class="ga-cats-h">Categories</span><small>Where this Note is filed on Play, and the categories she can take her style from. Add one, or make a new one by typing its name.</small><span class="chips">' +
+          '<span class="chip fixed" title="Its kind, set by the Note\'s type">' + esc(catName(KIND_TAG[E.kind] || E.kind || '')) + '</span>' +
+          (E.tags || []).map(function (t) { return '<span class="chip">' + esc(catName(t)) + '<button type="button" data-untag="' + esc(t) + '" aria-label="Remove ' + esc(catName(t)) + '">×</button></span>'; }).join('') +
+          '<input id="gaTagIn" list="gaCatList" placeholder="Add a category" maxlength="40"><datalist id="gaCatList">' + allCats(r[3]).filter(function (c) { return nc.indexOf(c) < 0; }).map(function (c) { return '<option value="' + esc(catName(c)) + '">'; }).join('') + '</datalist></span></div>' +
         '<div class="ga-stys"><span class="ga-cats-h">Her style from a category</span>' +
         (nc.length ? '<small>The cap and backdrop each of this Note\'s categories gives her. Tick the one this Note takes. Categories get their styles in the Categories tab.</small>' + nc.map(row).join('') : '<small>This Note has no categories yet.</small>') +
         (now ? '<p class="ga-now"><b>Wearing now:</b> ' + esc(now.look.name.replace(/-/g, ' ')) + ' <small>(' + esc(now.look.why) + ')</small> · ' +
@@ -880,6 +900,16 @@
         (ownL || ownB ? '<p class="ga-shows">This Note has its own ' + [ownL ? 'cap (<b>' + esc(L.look) + '</b>)' : '', ownB ? 'backdrop (<b>' + esc(B.backdrop) + '</b>)' : ''].filter(Boolean).join(' and ') + ', below; ticking a category replaces ' + (ownL && ownB ? 'them' : 'it') + '.</p>' : '') +
         '</div>';
       palWire(box);
+      var tslug = function (t) { return String(t || '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40); };
+      $$('button[data-untag]', box).forEach(function (b) { b.onclick = function () {
+        var t = b.getAttribute('data-untag'); E.tags = (E.tags || []).filter(function (x) { return x !== t; });
+        if (E.narratorLook && E.narratorLook.fit === 'category' && E.narratorLook.from === t) E.narratorLook = null;
+        if (E.narratorBackdrop && E.narratorBackdrop.fit === 'category' && E.narratorBackdrop.from === t) E.narratorBackdrop = null;
+        markDirty(); renderStyle(); renderLook(); renderBd(); };
+      });
+      var ti = $('#gaTagIn', box);
+      if (ti) { var addTag = function () { var t = tslug(ti.value); if (!t || /^\d{4}$/.test(t)) return; if (noteCats().indexOf(t) < 0) { E.tags = (E.tags || []).concat([t]); markDirty(); } renderStyle(); renderLook(); renderBd(); };
+        ti.onkeydown = function (ev) { if (ev.key === 'Enter') { ev.preventDefault(); addTag(); } }; ti.onchange = addTag; }
       var nh = $('#gaNoHol', box); if (nh) nh.onchange = function () { if (nh.checked) E.ignoreHolidays = true; else delete E.ignoreHolidays; markDirty(); renderStyle(); };
       var hs = $('#f-look > summary'), sm = hs && $('small', hs), ht = now ? [now.look.name, now.backdrop ? now.backdrop.name : ''].filter(Boolean).join(' · ') : [L ? L.look : '', B ? B.backdrop : ''].filter(Boolean).join(' · ') || 'from her categories or the holiday';
       if (hs) { if (!sm) { sm = document.createElement('small'); hs.appendChild(sm); } sm.textContent = ht; }   // the fold's header follows the pick
