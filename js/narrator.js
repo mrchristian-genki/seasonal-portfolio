@@ -1,13 +1,14 @@
 /* THE NARRATOR, GlazyArray: a little brass robot in each Listen bar (section.listen with an <audio>) that tells the episode.
-   Its torso and hands are one video (assets/narrator/narrator.mp4, green screen keyed onto the bar's colour) in thirty-two
-   8-second parts, every one starting and ending in the same rest pose: the fingers tapping; twelve gestures, each
+   Its torso and hands are one video (assets/narrator/narrator.mp4, green screen keyed onto the bar's colour) in thirty-four
+   8-second parts, every one starting and ending in the same rest pose: the fingers tapping; thirteen gestures, each
    followed by the same played backwards (six conversational ones, someone who talks with her hands: making a point
    with one hand, counting and explaining with both, shaping the size of an idea, arms open with palms up, hands brought
    together at her chest, a relaxed hand offered to the side; and her arms opened wide like a storyteller, a little seated hand dance, a brass
-   ball that appears in her hand, both hands talking along, and two ball tricks low in front of her: a teal ball passed
+   ball that appears in her hand, both hands talking along, her buffing up a fresh new look, and two ball tricks low in front of her: a teal ball passed
    between her hands, a big glowing orb rolled in and turned; parts 14 and 15 just hold the rest pose (a crystal ball
    raised too high was there, and came out)); parts 3 and 4 just hold the rest pose (a heart drawn in
-   light was there, and came out); and three hints. The robot moves only by jumping
+   light was there, and came out); parts 32 and 33, a fresh new look: she buffs her chest plate with her knuckles,
+   pleased with herself; and three hints. The robot moves only by jumping
    within this one file (switching files blanked the frame for a moment). Her head is cut-out layers on top:
    the head with the mouth open inside, the jaw (her chin plate, and the side plates that swing half as far), and
    the shut eyelids.
@@ -22,11 +23,11 @@
    - Now and then it blinks. With reduced motion it stays still, and only the mouth moves. */
 (function () {
   'use strict';
-  var A = '/assets/narrator/', V = '?v=33', DROP = 0.0448;   // the chin plate's drop, as a share of the head layer's height (the side plates go half as far)
+  var A = '/assets/narrator/', V = '?v=34', DROP = 0.0448;   // the chin plate's drop, as a share of the head layer's height (the side plates go half as far)
   var D = 193 / 24, IDLE = 0;
   // the gestures (parts of narrator.mp4: forward and backwards copies), taken in this order from a random start: the
   // six conversational ones (parts 20 to 31) come round twice for each of the bigger moves, so mostly she talks with her hands
-  var GESTURES = [20, 1, 22, 26, 12, 24, 28, 8, 30, 20, 22, 24, 10, 26, 30, 16, 28, 18].map(function (f) { return { f: f, r: f + 1 }; });
+  var GESTURES = [20, 1, 22, 26, 12, 24, 28, 8, 30, 20, 32, 22, 24, 10, 26, 30, 16, 28, 18].map(function (f) { return { f: f, r: f + 1 }; });
   // the hints, parts 5 to 7, with what the head does when (seconds into the part): look toward Play, wink, the bulb glows
   var HINTS = [
     { p: 5, cues: [[1.2, 5.6, 'look'], [2.3, 3.1, 'wink']] },                          // psst, over there
