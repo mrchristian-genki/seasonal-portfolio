@@ -31,6 +31,7 @@
       box.appendChild(track);
     });
     books = [].slice.call(box.querySelectorAll('.bk'));
+    slide(box);
     if (!still) cycle();
   }
   // the brush: the next cover in view gets coloured, holds, and goes back to line art
@@ -52,6 +53,59 @@
   function start() {
     if (started) return; started = true;
     fetch(A + 'shelf.json?v=2').then(function (r) { return r.json(); }).then(build).catch(function () { box.hidden = true; });
+  }
+  // THE ROWS MOVE BY HAND TOO (Christian, Oct 7, 2026): each row drifts on its own (opposite ways), and a finger or
+  // a mouse can grab it and swipe; it glides on a little after a swipe, then picks the drift back up. Up and down
+  // still scrolls the page. On a phone, the first tap on a cover colours it in (or scrolls a window), the second
+  // opens it; a swipe never opens anything. A hover (mouse) pauses the drift, as before.
+  function slide(shelf) {
+    var tracks = [].slice.call(shelf.querySelectorAll('.shelf-track'));
+    if (still) { shelf.classList.add('shelf-scroll'); return; }   // no drift: the rows just scroll sideways
+    shelf.classList.add('shelf-js');
+    var hover = false;
+    shelf.addEventListener('mouseenter', function () { hover = true; }); shelf.addEventListener('mouseleave', function () { hover = false; });
+    tracks.forEach(function (t, k) {
+      var dir = k ? 1 : -1, secs = (k ? 125 : 110) * (innerWidth < 640 ? 0.64 : 1), x = 0, w = 0, v = 0, rest = 0, drag = null, prev = performance.now();
+      function wrap() { w = t.scrollWidth / 2 || 1; while (x > 0) x -= w; while (x <= -w) x += w; }
+      t.style.touchAction = 'pan-y';
+      t.addEventListener('pointerdown', function (e) {
+        if (e.button) return;
+        drag = { id: e.pointerId, x0: e.clientX, y0: e.clientY, start: x, moved: 0, lx: e.clientX, lt: e.timeStamp, touch: e.pointerType !== 'mouse', side: false }; v = 0;
+      });
+      addEventListener('pointermove', function (e) {
+        if (!drag || e.pointerId !== drag.id) return;
+        var dx = e.clientX - drag.x0, dy = e.clientY - drag.y0;
+        if (!drag.side && Math.abs(dx) < 6) { if (Math.abs(dy) > 10) drag = null; return; }   // up and down: the page scrolls
+        drag.side = true; drag.moved = Math.max(drag.moved, Math.abs(dx));
+        var dt = Math.max(1, e.timeStamp - drag.lt); v = (e.clientX - drag.lx) / dt * 1000; drag.lx = e.clientX; drag.lt = e.timeStamp;
+        x = drag.start + dx; wrap(); t.style.transform = 'translate3d(' + x + 'px,0,0)';
+        if (e.cancelable && drag.touch) e.preventDefault();
+      }, { passive: false });
+      function up(e) {
+        if (!drag || (e && e.pointerId !== drag.id)) return;
+        if (drag.side) { t._swiped = performance.now(); rest = performance.now() + 2200; }
+        drag = null;
+      }
+      addEventListener('pointerup', up); addEventListener('pointercancel', up);
+      // a swipe never opens a cover; on a phone, the first tap colours it in, the second opens it
+      t.addEventListener('click', function (e) {
+        var a = e.target.closest('a'); if (!a) return;
+        if (t._swiped && performance.now() - t._swiped < 400) { e.preventDefault(); return; }
+        if (matchMedia('(hover: none)').matches && !a.classList.contains('tapped')) {
+          e.preventDefault(); [].forEach.call(shelf.querySelectorAll('.tapped'), function (o) { o.classList.remove('tapped', 'lit'); });
+          a.classList.add('tapped', 'lit'); rest = performance.now() + 4000;
+        }
+      });
+      (function step(now) {
+        var dt = Math.min(0.05, (now - prev) / 1000); prev = now;
+        if (!drag) {
+          if (Math.abs(v) > 4) { x += v * dt; v *= Math.pow(0.04, dt); }   // the glide after a swipe
+          else if (!hover && now > rest && !document.hidden) { wrap(); x += dir * (w / secs) * dt; }
+          wrap(); t.style.transform = 'translate3d(' + x + 'px,0,0)';
+        }
+        requestAnimationFrame(step);
+      })(prev);
+    });
   }
   function when(el, fn) {   // fn once el comes near the screen
     if ('IntersectionObserver' in window) new IntersectionObserver(function (es, o) { if (es.some(function (e) { return e.isIntersecting; })) { o.disconnect(); fn(); } }, { rootMargin: '300px' }).observe(el);
@@ -87,6 +141,7 @@
         web.appendChild(track);
       });
       wins = [].slice.call(web.querySelectorAll('.win'));
+      slide(web);
       if (still) return;
       var n = 0;
       (function tour() {
