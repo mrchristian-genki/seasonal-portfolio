@@ -897,7 +897,7 @@
         E.narratorLook = !v ? null : L && L.look === v ? L : { look: v, fit: 'existing', about: (l && l.about) || '', why: '', prompt: '', bulb: !(l && l.bulb === false) };
         markDirty(); renderLook();
       };
-      $('#copyTpl').onclick = function () { GALook.copyTemplate().then(function () { toast('Her template is on the clipboard: paste it into your image tool.'); }, function (e) { toast(e.message, true); }); };
+      var ct = $('#copyTpl'); if (ct) ct.onclick = function () { GALook.copyTemplate().then(function () { toast('Her template is on the clipboard: paste it into your image tool.'); }, function (e) { toast(e.message, true); }); };
       var lp = $('#lookPrompt'); if (lp) lp.oninput = function () { E.narratorLook.prompt = lp.value; markDirty(); };
       var cb = $('#copyLook'); if (cb) cb.onclick = function () { navigator.clipboard.writeText($('#lookPrompt').value).then(function () { toast('Image prompt copied.'); }); };
       var rpl = $('#lookRepl'); if (rpl) rpl.onclick = function () { LOOKREPL = true; renderLook(); };
