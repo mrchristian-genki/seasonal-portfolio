@@ -60,6 +60,7 @@ def style(e):
 def head(look, pal):
     """her head layer (623 x 437): the look (its flair tinted), her eyes in their lenses, the catchlights, the chin"""
     out = rgba('looks/' + look['file']) if look else rgba('head-base.webp')
+    pal = pal or (look or {}).get('flairBase')   # a look rendered white where its colours go: its own two when the Note has none
     if look and pal:
         stem = look['file'].rsplit('.', 1)[0]
         for k, c in zip('ab', pal):

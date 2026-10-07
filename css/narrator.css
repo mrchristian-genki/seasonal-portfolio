@@ -123,12 +123,12 @@ section.listen.has-bd::before{z-index:1}
 /* THE NOTE'S PALETTE (data-palette on the bar: two accent colours from its hero, --ga1 and --ga2). Her flair: the parts
    of whatever look she wears that take it (narrator.js flair(): a mask per colour), tinted with a "color" blend at 45% (a tint over the original, not a repaint) so
    the brass, folds and shading show through; then the glass card, its seek bar and Play, and the backdrop's shade */
-.nb-flair{position:absolute;inset:0;display:block;mix-blend-mode:color;opacity:var(--fk,.45);background:var(--ga1,transparent);pointer-events:none;
+.nb-flair{position:absolute;inset:0;display:block;mix-blend-mode:color;opacity:var(--fk,.45);background:var(--ga1,var(--gd,transparent));pointer-events:none;
   -webkit-mask:var(--fm) 0 0/100% 100% no-repeat;mask:var(--fm) 0 0/100% 100% no-repeat}
-.nb-flair[data-k="b"]{background:var(--ga2,transparent)}
+.nb-flair[data-k="b"]{background:var(--ga2,var(--gd,transparent))}
 .nb-flair.dye{mix-blend-mode:multiply}   /* white or pale parts (looks.json flairDye): dyed the colour itself, so white trim turns the colour, and white stays white */
 .nb-flair[hidden]{display:none}
-section.listen:not(.has-pal) .nb-flair{display:none}
+section.listen:not(.has-pal) .nb-flair:not(.based){display:none}   /* a white-based look (flairBase) wears its own colours */
 /* the shine: now and then a band of light sweeps across the scene behind her (the backdrop) and on over the glass player;
    not over her, where it showed the edges of the video layer */
 @keyframes nb-glint{0%{background-position:100% 0}22%,100%{background-position:0 0}}
