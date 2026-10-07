@@ -1518,5 +1518,13 @@
   "prompt": "Same image, same camera, same face, same eyes, same jaw, same neck and the same flat chroma green background (#00B140). Change only the hair and accessories: a pair of chunky round sunglasses with polished brass rims and warm amber lenses, pushed up on top of her head and resting in her curls well above her brows, plus a small hair clip set with a polished carnelian-orange stone tucked into the curls at one side. Her flower-bud antenna stays exactly where it is now, standing up behind the sunglasses. Bold, chunky shapes; nothing crosses her face below the brows; everything stays inside the crop box.",
   "bulb": true
  },
- "palette": ["#21a7c5", "#4c76e1"]
+ "palette": [
+  "#21a7c5",
+  "#4c76e1"
+ ],
+ "narratorBackdrop": {
+  "backdrop": "lake-tahoe-beach",
+  "fit": "new",
+  "scene": "a Lake Tahoe shoreline with clear turquoise water, smooth granite boulders and pines at golden hour"
+ }
 }
