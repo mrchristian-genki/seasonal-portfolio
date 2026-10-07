@@ -69,7 +69,8 @@
     nb.querySelectorAll('.nb-flair').forEach(function (f) {
       var k = f.getAttribute('data-k'), on = !!stem && (l.flair || '').indexOf(k) >= 0;
       f.style.setProperty('--fm', on ? 'url(' + stem + k + '.png' + V + (l.v ? '.' + l.v : '') + ')' : 'none'); f.hidden = !on;
-      f.style.setProperty('--fk', l && l.flairK ? l.flairK : .45);   // how strongly: a gentle 45% on brass, more on fabric and gems (looks.json flairK)
+      f.style.setProperty('--fk', l && l.flairK ? l.flairK : .45);
+      f.classList.toggle('dye', !!l && (l.flairDye || '').indexOf(k) >= 0);   // white parts are dyed, not tinted   // how strongly: a gentle 45% on brass, more on fabric and gems (looks.json flairK)
     });
   }
   function put(nb, l) {
