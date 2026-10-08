@@ -126,8 +126,34 @@
     root.classList.add('flux'); setTimeout(function () { root.classList.remove('flux'); }, 900);
   }
   // the browsers under glass: a pick falls to the year that browser arrived (before 1997, to the very bottom)
+  // a pick tumbles you down to it: a slow, eased scroll (several seconds, longer the further you go), which a wheel, a touch
+  // or a key stops at once
+  var tumbleRaf = 0;
+  function tumbleTo(top) {
+    cancelAnimationFrame(tumbleRaf);
+    if (still) { scrollTo(0, top); return; }
+    var from = scrollY, d = top - from, dur = Math.min(11000, Math.max(2000, Math.abs(d) / 1.5)), t0 = performance.now();
+    root.style.scrollBehavior = 'auto';
+    var stop = function () { cancelAnimationFrame(tumbleRaf); root.style.scrollBehavior = ''; ['wheel', 'touchstart', 'keydown'].forEach(function (e) { removeEventListener(e, stop); }); };
+    ['wheel', 'touchstart', 'keydown'].forEach(function (e) { addEventListener(e, stop, { passive: true }); });
+    (function step(now) {
+      var k = Math.min(1, (now - t0) / dur), e = k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+      scrollTo(0, from + d * e);
+      if (k < 1) tumbleRaf = requestAnimationFrame(step); else stop();
+    })(t0);
+  }
   [].forEach.call(document.querySelectorAll('[data-go]'), function (b) {
-    b.addEventListener('click', function () { var y = +b.getAttribute('data-go'); if (y < 1997) { if (end) scrollTo({ top: end.getBoundingClientRect().top + scrollY, behavior: still ? 'auto' : 'smooth' }); } else goYear(y, true); });
+    b.addEventListener('click', function () {
+      var y = +b.getAttribute('data-go'), m = marks.filter(function (k) { return k.y === y; })[0];
+      if (y < 1997) { if (end) tumbleTo(end.getBoundingClientRect().top + scrollY); } else if (m) tumbleTo(Math.max(0, m.at + 1));
+    });
+  });
+  // hover or focus a jewel: its up-close render fills the dial's face
+  var close = document.querySelector('.tm-close'), closeImg = close && close.querySelector('img');
+  [].forEach.call(document.querySelectorAll('[data-close]'), function (b) {
+    var src = 'media/closeup/' + b.getAttribute('data-close') + '.webp', pre = new Image();
+    var show = function () { if (!pre.src) pre.src = src; closeImg.src = src; close.classList.add('on'); }, hide = function () { close.classList.remove('on'); };
+    b.addEventListener('mouseenter', show); b.addEventListener('focus', show); b.addEventListener('mouseleave', hide); b.addEventListener('blur', hide);
   });
   // the jewels: all lit, and slow patterns run through them, only while the cockpit is on screen. On shuffle (the
   // default) a new pattern comes up every few seconds; the console's own buttons pick one, set the speed, flash them,

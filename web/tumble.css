@@ -262,10 +262,15 @@ html[data-era="e15"] .tbx-t,html[data-era="e10"] .tbx-t,html[data-era="e05"] .tb
 .tm-jw.off img{object-position:100% 0;filter:brightness(.8) drop-shadow(0 2px 3px rgba(0,0,0,.55))}
 .tm-jw.has{background:none}
 .tm-jw.off{animation:none}
-.tm-jw span{position:absolute;left:50%;top:100%;margin-top:6px;translate:-50% 0;white-space:nowrap;padding:3px 8px;border-radius:6px;background:rgba(10,8,6,.85);color:#f6e3c6;font:700 12px system-ui,sans-serif;opacity:0;pointer-events:none;transition:opacity .2s}
+.tm-jw span{position:absolute;left:50%;top:100%;margin-top:8px;z-index:6;translate:-50% 0;white-space:nowrap;padding:3px 8px;border-radius:6px;background:rgba(10,8,6,.85);color:#f6e3c6;font:700 12px system-ui,sans-serif;opacity:0;pointer-events:none;transition:opacity .2s}
 .tm-jw span i{font:600 11px ui-monospace,Menlo,monospace;font-style:normal;color:#cbb79d}
-.tm-jw:hover,.tm-jw:focus-visible{z-index:5;transform:scale(2.4);outline:none}
-.tm-jw:hover span,.tm-jw:focus-visible span{opacity:1;scale:.42}
+.tm-jw:hover,.tm-jw:focus-visible{z-index:5;transform:scale(1.14);outline:none}
+.tm-jw:hover span,.tm-jw:focus-visible span{opacity:1}
+/* the up-close render of the browser you're pointing at fills the big dial's face, under its needle */
+.tm-close{left:600px;top:299px;width:176px;height:176px;border-radius:50%;overflow:hidden;opacity:0;transform:scale(.92);transition:opacity .35s,transform .35s;pointer-events:none;
+  box-shadow:inset 0 0 18px rgba(0,0,0,.6)}
+.tm-close img{display:block;width:100%;height:100%;object-fit:cover}
+.tm-close.on{opacity:1;transform:none}
 @keyframes tm-jw{15%{box-shadow:0 0 18px 4px var(--c)}40%{box-shadow:0 0 0 0 var(--c)}}
 html.tm-burst .tm-jw{animation:tm-jwb .25s steps(2) 6}
 @keyframes tm-jwb{50%{box-shadow:0 0 26px 8px var(--c);filter:brightness(1.6)}}
