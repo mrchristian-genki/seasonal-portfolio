@@ -57,7 +57,7 @@ help. This is the list, project by project, with prompts ready to copy.
 
 1. **Capture: a deer grazing.** One card, close: the doe lowering her head to graze, then looking up. *Goes:* "The
    animals are the heart of it".
-2. **Render: one drawer open.**
+2. **Done (Oct 8): one drawer open,** twice: a paper buck grazing and a winged fox stretching.
    > [The look.] Close on a single small wooden drawer pulled open from a wall of tiny drawers, a paper origami deer
    > inside standing on a bed of moss, lit from within by a soft cyan glow, the other drawers closed around it.
 
