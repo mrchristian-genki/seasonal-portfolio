@@ -61,3 +61,10 @@
 .pi-story-body .feature .mag-cover{margin-left:-24px;margin-right:-24px;border-radius:0}
 @media (max-width:640px){.pi-story-body .feature .mag-cover{margin-left:-14px;margin-right:-14px}}
 .pi-story-body .feature .mag-img img{border-radius:0}
+/* night mode (the homepage's Night mode, html.night-page): light type on the dark page, a dark Q&A panel */
+html.night-page .feature{--mg-ink:#e6efed;--mg-ink2:#b9c9cc;--mg-ink3:#8fa2a7;--mg-red:#f06d93;--mg-rule:#3a5157}
+html.night-page .feature .mag-qa{background:#16232f;border-top-color:#e6efed}
+html.night-page .feature .mag-qa dt{background:#22313d;border-color:#33475a;color:#e6efed}
+html.night-page .feature .mag-qa dd{background:#1f6d63}
+html.night-page .feature .mag-qa dd::after{box-shadow:0 0 0 2px #16232f,0 0 0 3px #c9a14a}
+html.night-page .feature .mag-spot{border-color:#3a5157}
