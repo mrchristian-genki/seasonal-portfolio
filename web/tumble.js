@@ -33,6 +33,7 @@
     lastY = sy; lastT = t1;
     if (!still && v >= 88) flux();
     needle('speed', Math.min(120, v));
+    zoe();
     if (still) return;
     // the parallax: each prop moves against the scroll by its depth, and turns as it falls
     for (var k = 0; k < props.length; k++) {
@@ -41,6 +42,32 @@
       var d = +p.getAttribute('data-depth'), off = (box.top + box.height / 2 - mid), spin = +(p.getAttribute('data-spin') || 0);
       p.style.transform = 'translate3d(0,' + (off * (d - 0.5) * 0.6).toFixed(1) + 'px,0) rotate(' + (spin * off / vh).toFixed(1) + 'deg)';
     }
+  }
+  // the zoetrope: twelve frames of a paper figure tumbling head over heels, drawn once; as you scroll, each cell shows
+  // the frame a step ahead of the one above it, and the drum's slits turn
+  var zDefs = document.querySelector('[data-zoe-defs]'), zCells = document.querySelector('[data-zoe-cells]'), zSlits = document.querySelector('[data-zoe-slits]'), zN = 12, zLast = -1, zUses = [];
+  if (zDefs) {
+    var zd = '';
+    for (var f = 0; f < zN; f++) {
+      var a = f * 360 / zN, t = Math.sin(f / zN * Math.PI * 2), k = .5 + .5 * Math.cos(f / zN * Math.PI * 2);
+      // a tucked body that opens out once a turn: legs and arms swing with k
+      zd += '<symbol id="zf' + f + '" viewBox="-20 -20 40 40"><g transform="rotate(' + a.toFixed(0) + ')" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">' +
+        '<circle cx="0" cy="-10" r="4.2" fill="currentColor" stroke="none"/><path d="M0 -5 L0 4"/>' +
+        '<path d="M0 -2 L' + (-7 * k - 2).toFixed(1) + ' ' + (3 - 6 * k).toFixed(1) + '"/><path d="M0 -2 L' + (7 * k + 2).toFixed(1) + ' ' + (3 - 6 * k).toFixed(1) + '"/>' +
+        '<path d="M0 4 L' + (-4 - 3 * k).toFixed(1) + ' ' + (9 + 5 * k).toFixed(1) + ' L' + (-2 + 6 * (1 - k)).toFixed(1) + ' ' + (14 + 3 * k - 6 * (1 - k)).toFixed(1) + '"/>' +
+        '<path d="M0 4 L' + (4 + 3 * k).toFixed(1) + ' ' + (9 + 5 * k).toFixed(1) + ' L' + (2 - 6 * (1 - k)).toFixed(1) + ' ' + (14 + 3 * k - 6 * (1 - k)).toFixed(1) + '"/></g></symbol>';
+    }
+    zDefs.innerHTML = zd;
+    var zc = Math.max(6, Math.round((innerHeight - 80) / 46));
+    for (var ci = 0; ci < zc; ci++) zCells.insertAdjacentHTML('beforeend', '<svg viewBox="-20 -20 40 40"><use href="#zf0" x="-20" y="-20" width="40" height="40"/></svg>');
+    zUses = [].slice.call(zCells.querySelectorAll('use'));
+  }
+  function zoe() {
+    if (!zUses.length) return;
+    var step = Math.floor(scrollY / 28);
+    zSlits.style.setProperty('--zs', (-scrollY * .5).toFixed(1) + 'px');
+    if (step === zLast) return; zLast = step;
+    zUses.forEach(function (u, i) { u.setAttribute('href', '#zf' + (((step + i) % zN) + zN) % zN); });
   }
   // the toolbox: each browser badge and each tool fades in once its year comes round, and out again as you fall past it
   var tbx = [].slice.call(document.querySelectorAll('.tbx-g li')), tbxN = document.querySelectorAll('[data-tbx-count]');
