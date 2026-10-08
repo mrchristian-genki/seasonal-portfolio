@@ -134,6 +134,52 @@ Make three: wide, square and tall. *Goes:* the readouts and the chart sit inside
 "no clutter", "no motion blur", "symmetrical", "high detail". **Words that keep it retro:** "1960s and 1970s analog
 science fiction", "brushed copper and brass", "round analog gauges", "amber backlit buttons", "small curved screens".
 
+## J. The browser jewel buttons (clean, readable small)
+
+The nine jewels round the big dial are about 40 px across on screen. The porthole renders look great up close, but
+at that size the fine detail (fur, mosaic tiles, rivets, reflections) turns to mush. These prompts make proper
+buttons instead: one bold, simple shape per browser that still reads at the size of a fingernail.
+
+**What makes them work small:**
+- **One shape, big and centred**, filling about 70% of the jewel. No scenery, no background objects inside.
+- **Two or three colours at most**, flat and saturated, with one clean highlight.
+- **A thick, plain brass bezel**, the same on all nine, so they read as one set on the dial.
+- **Straight on, perfectly round**, no perspective, no tilt, no shadow on the green.
+- **Two states:** lit (glowing from inside) and unlit (the same jewel, dark and dull), so the page can switch them
+  as you fall through the years.
+
+**Size:** square, 1024 × 1024, each jewel about 800 px across, centred. One jewel per image, or all nine on one
+sheet in a 3 × 3 grid with plenty of green between them.
+
+**The button look (paste at the start of every prompt in this part):**
+
+> A single round jewel push button, seen perfectly straight on, centred, isolated on a flat pure chroma green
+> background (#00FF00). A smooth domed cabochon of coloured glass set in a thick, plain, polished brass bezel ring
+> with a clean bevel and no rivets or engraving. Inside the glass, one bold, simple, iconic shape with clean edges,
+> large and centred, made of glowing glass, lit softly from within, with a single crisp white highlight at the top
+> left of the dome. Flat, even studio light, sharp focus, simple and graphic like a game icon, readable at a tiny
+> size. No text, no letters, no numbers, no logos, no scenery, no extra details, no shadow on the green.
+
+Then add the shape and colours:
+
+1. **Mosaic (1993):** a globe of large square tiles, only blue and gold, with a few big tiles for the land.
+2. **Netscape (1994):** a ship's wheel with eight thick spokes, solid teal glass on deep navy.
+3. **Internet Explorer (1995):** a blue glass ball with one thick gold ring crossing it at an angle.
+4. **Opera (1996):** one thick, glossy red glass ring (a torus), with dark red in its centre.
+5. **Safari (2003):** a bold compass star with a red and white needle, on sky-blue glass.
+6. **Firefox (2004):** an orange fox curled in a ring around a purple glass ball, as one simple silhouette.
+7. **Chrome (2008):** a flower of three big petals in red, yellow and green round a bright blue centre.
+8. **Edge (2015):** one bold curling wave, sea-green and teal, curling into a circle.
+9. **Brave (2016):** a simple lion's head, front-on, in coral-orange glass with a few big flat facets.
+
+**The unlit version of each** (same prompt, add this at the end):
+
+> The same button switched off: the glass dark and dull, its colour deep and muted, no inner glow, only the white
+> highlight on the dome.
+
+**Bring them back** as they are (on green). Claude keys out the green, makes each a 128 px sprite with its lit and
+unlit state, and swaps them into the dial.
+
 ---
 
 ## The first look (art deco and glowing glass)
