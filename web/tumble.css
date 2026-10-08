@@ -20,8 +20,7 @@ code{font:.92em ui-monospace,Menlo,Consolas,monospace}
 .tb-hud-l{font:700 11px/1.4 system-ui,sans-serif;letter-spacing:.2em;text-transform:uppercase;opacity:.8}
 
 /* the opening and the end */
-.tb-open,.tb-end{position:relative;min-height:92vh;display:flex;flex-direction:column;justify-content:center;max-width:820px;margin:0 auto;padding:110px 20px 60px}
-.tb-open{background:radial-gradient(ellipse at 50% 30%,rgba(110,231,183,.12),transparent 60%)}
+.tb-end{position:relative;min-height:92vh;display:flex;flex-direction:column;justify-content:center;max-width:820px;margin:0 auto;padding:110px 20px 60px}
 .tb-kick{margin:0;font:800 13px "Nunito","Segoe UI",sans-serif;letter-spacing:.22em;text-transform:uppercase;color:#6ee7b7}
 .tb-open h1{margin:6px 0 14px;font:900 clamp(56px,13vw,140px)/.9 "Nunito","Avenir Next","Segoe UI",sans-serif;letter-spacing:-.04em;background:linear-gradient(180deg,#fff,#9fd8ff);-webkit-background-clip:text;background-clip:text;color:transparent}
 .tb-lede{margin:0;font-size:clamp(18px,2.4vw,22px);color:#c5d3dc;max-width:60ch}
@@ -236,3 +235,93 @@ html[data-era="e15"] .tbx-t,html[data-era="e10"] .tbx-t,html[data-era="e05"] .tb
 .sites-acc p span{padding:2px 9px;border-radius:999px;background:rgba(127,127,127,.14);font-size:14px}
 .e97 .sites-acc p span{border-radius:0;background:#fff;border:1px solid #808080}
 .credit{max-width:62ch;margin:0 auto 12px;font-size:12px;opacity:.7}
+
+/* the top, now: the browser as a time machine. A machine of glass rings and gems (the browsers, glowing in their
+   colours like pressed and uranium glass) turns behind the title, the lamps blink, the colours drift through the
+   whole spectrum, and the readouts and chart say where you're going. Fall fast enough (88) and it flashes. */
+@property --h{syntax:"<angle>";inherits:true;initial-value:0deg}
+.tb-now{position:relative;min-height:100vh;overflow:hidden;isolation:isolate;padding:96px 20px 64px;display:flex;align-items:center;--h:0deg;animation:tm-hue 24s linear infinite}
+@keyframes tm-hue{to{--h:360deg}}
+.tb-now-in{position:relative;z-index:2;max-width:820px;margin:0 auto;width:100%}
+.tm{position:absolute;inset:0;z-index:0;pointer-events:none}
+.tm-sky{position:absolute;inset:-10%;filter:blur(40px) saturate(1.4);opacity:.85;
+  background:radial-gradient(circle at 20% 25%,hsl(calc(var(--h) + 280deg) 90% 55% / .55),transparent 40%),radial-gradient(circle at 80% 30%,hsl(calc(var(--h) + 160deg) 95% 50% / .5),transparent 42%),
+  radial-gradient(circle at 65% 85%,hsl(calc(var(--h) + 40deg) 95% 55% / .45),transparent 45%),radial-gradient(circle at 15% 90%,hsl(calc(var(--h) + 100deg) 90% 50% / .4),transparent 40%),#070b16}
+.tb-now::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(90deg,rgba(7,11,22,.82) 0,rgba(7,11,22,.55) 45%,rgba(7,11,22,.1) 75%),linear-gradient(0deg,#0d1b2a,transparent 22%)}
+.tm-core{position:absolute;right:-6vmin;top:50%;width:min(92vmin,820px);aspect-ratio:1;translate:0 -50%;filter:blur(1.2px)}
+.tm-ring{position:absolute;border-radius:50%;inset:var(--in);animation:tm-spin var(--t) linear infinite}
+.tm-ring.r1{--in:0;--t:60s;background:conic-gradient(from 0deg,#b48a3c,#ffe6a6,#7a5520,#ffd27a,#9c6f2c,#fff1c9,#b48a3c);
+  -webkit-mask:radial-gradient(closest-side,transparent 90%,#000 91%,#000 98%,transparent 99%);mask:radial-gradient(closest-side,transparent 90%,#000 91%,#000 98%,transparent 99%)}
+.tm-ring.r2{--in:7%;--t:40s;animation-direction:reverse;background:repeating-conic-gradient(from 0deg,hsl(calc(var(--h) + 120deg) 100% 60%) 0 2deg,transparent 2deg 10deg);
+  -webkit-mask:radial-gradient(closest-side,transparent 92%,#000 93%,#000 99%,transparent 100%);mask:radial-gradient(closest-side,transparent 92%,#000 93%,#000 99%,transparent 100%);filter:drop-shadow(0 0 6px hsl(calc(var(--h) + 120deg) 100% 60%))}
+.tm-ring.r3{--in:16%;--t:90s;border:2px solid rgba(255,214,140,.55);box-shadow:0 0 30px rgba(120,255,90,.35),inset 0 0 40px rgba(120,255,90,.25);
+  background:radial-gradient(closest-side,transparent 70%,rgba(120,255,90,.10) 85%,transparent 100%)}
+.tm-ring.r4{--in:27%;--t:25s;background:conic-gradient(from 90deg,transparent 0 20%,hsl(calc(var(--h) + 200deg) 100% 65% / .9) 25%,transparent 30% 70%,hsl(calc(var(--h) + 20deg) 100% 65% / .9) 75%,transparent 80%);
+  -webkit-mask:radial-gradient(closest-side,transparent 88%,#000 90%,#000 96%,transparent 98%);mask:radial-gradient(closest-side,transparent 88%,#000 90%,#000 96%,transparent 98%)}
+@keyframes tm-spin{to{rotate:360deg}}
+.tm-heart{position:absolute;inset:36%;border-radius:50%;background:radial-gradient(circle,#fff 0,#d6ffb8 12%,#7dff4a 30%,rgba(60,200,40,.35) 55%,transparent 72%);box-shadow:0 0 80px 20px rgba(120,255,80,.35);animation:tm-pulse 3.2s ease-in-out infinite}
+@keyframes tm-pulse{50%{transform:scale(.9);filter:brightness(1.35) hue-rotate(-20deg)}}
+.tm-gems{list-style:none;margin:0;padding:0;position:absolute;inset:0;animation:tm-spin 120s linear infinite}
+.tm-gems li{position:absolute;left:50%;top:50%;width:13%;aspect-ratio:1;margin:-6.5%;border-radius:50%;
+  transform:rotate(calc(var(--i) * 40deg)) translateY(-205%) rotate(calc(var(--i) * -40deg));
+  background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.75),transparent 30%),radial-gradient(circle,color-mix(in srgb,var(--c) 70%,#fff) 0,var(--c) 45%,color-mix(in srgb,var(--c) 40%,#000) 100%);
+  box-shadow:0 0 0 3px rgba(255,220,150,.75),0 0 0 6px rgba(80,50,15,.8),0 0 28px 6px var(--c);animation:tm-gem 4s ease-in-out infinite;animation-delay:calc(var(--i) * -.45s)}
+.tm-gems img{width:70%;height:70%;margin:15%;display:block;mix-blend-mode:screen;opacity:.9;filter:saturate(1.3) drop-shadow(0 0 6px var(--c));animation:tm-spin 120s linear infinite reverse}
+@keyframes tm-gem{50%{box-shadow:0 0 0 3px rgba(255,220,150,.75),0 0 0 6px rgba(80,50,15,.8),0 0 60px 16px var(--c);filter:brightness(1.25)}}
+.tm-lamps{position:absolute;right:4vw;bottom:10vh;display:grid;grid-template-columns:repeat(6,22px);gap:10px;transform:rotate(-8deg);opacity:.9}
+.tm-lamps i{width:22px;height:22px;border-radius:50%;border:3px solid #6b6f73;background:radial-gradient(circle at 40% 35%,#fff8,transparent 40%),color-mix(in srgb,var(--c) 35%,#111);
+  animation:tm-lamp 2.8s steps(1) infinite;animation-delay:var(--d)}
+.tm-lamps i:nth-child(3n){border-radius:4px}
+@keyframes tm-lamp{0%,55%{background:radial-gradient(circle at 40% 35%,#fff,transparent 45%),var(--c);box-shadow:0 0 14px 3px var(--c)}}
+.tm-flash{position:absolute;inset:0;background:radial-gradient(circle at 70% 50%,#fff,rgba(160,220,255,.6) 30%,transparent 70%);opacity:0}
+html.flux .tm-flash{animation:tm-flash .9s ease-out}
+@keyframes tm-flash{8%{opacity:1}100%{opacity:0}}
+.tb-now h1{background:linear-gradient(100deg,hsl(var(--h) 100% 72%),hsl(calc(var(--h) + 70deg) 100% 70%),hsl(calc(var(--h) + 150deg) 100% 72%),hsl(calc(var(--h) + 230deg) 100% 75%));-webkit-background-clip:text;background-clip:text;filter:drop-shadow(0 0 22px hsl(calc(var(--h) + 120deg) 100% 60% / .45))}
+.tb-now .tb-kick{color:hsl(calc(var(--h) + 140deg) 90% 70%)}
+.tb-now .tb-lede{color:#dfe8ee;text-shadow:0 1px 12px #070b16}
+/* the readouts: three rows of lit digits, red, green and amber */
+.tm-panel{display:grid;grid-template-columns:repeat(3,auto);justify-content:start;gap:8px;margin:26px 0 0;padding:10px;border-radius:12px;background:rgba(10,12,16,.7);border:1px solid rgba(255,214,140,.35);box-shadow:inset 0 0 0 3px rgba(0,0,0,.4);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.tc{margin:0;display:flex;flex-direction:column;gap:3px}
+.tc span{font:800 9px system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#cfd6dc;padding:2px 6px;background:#9a1b1b;border-radius:2px;text-align:center}
+.tc b{padding:4px 10px;border-radius:4px;background:#060606;border:1px solid #222;font:700 clamp(18px,3vw,26px)/1.1 ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;letter-spacing:.08em;white-space:nowrap;font-variant-numeric:tabular-nums}
+.tc-dest b{color:#ff4b3a;text-shadow:0 0 8px #ff3b2a,0 0 18px #ff3b2a88}
+.tc-now b{color:#4dff6a;text-shadow:0 0 8px #3dff5a,0 0 18px #3dff5a88}
+.tc-last b{color:#ffb31f;text-shadow:0 0 8px #ffaa1a,0 0 18px #ffaa1a88}
+/* the chart */
+.tm-chart{margin:22px 0 0;padding:12px 14px 10px;border-radius:14px;background:rgba(7,11,22,.55);border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);max-width:640px}
+.tm-chart figcaption{font:700 11px system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#cfe3ee;margin:0 0 6px}
+.tm-chart svg{display:block;width:100%;height:auto;overflow:visible}
+.tm-chart text{font:600 10px system-ui,sans-serif;fill:#9fb6c4}
+.tm-chart .ar{filter:drop-shadow(0 0 6px var(--c))}
+.tm-key{display:flex;flex-wrap:wrap;gap:4px 12px;margin:6px 0 0;font:600 12px system-ui,sans-serif;color:#dfe8ee}
+.tm-key i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px;background:var(--c);box-shadow:0 0 8px var(--c)}
+html.flux .tb-year{text-shadow:0 0 12px #fff,0 0 30px #7fdfff}
+@media (max-width:760px){
+  .tm-core{right:-30vmin;top:30%;width:110vmin;opacity:.7}
+  .tb-now::after{background:linear-gradient(90deg,rgba(7,11,22,.8),rgba(7,11,22,.45)),linear-gradient(0deg,#0d1b2a,transparent 22%)}
+  .tm-panel{grid-template-columns:1fr}.tc{flex-direction:row;align-items:center;justify-content:space-between}.tc span{width:9.5em}
+  .tm-lamps{display:none}
+}
+
+/* the tape: the whole fall as a measuring tape down the right side. Each year is a mark, each era a band in its colour;
+   the marker is where you are. Click or drag it to go anywhere. */
+.tb-tape{position:fixed;right:10px;top:64px;bottom:150px;z-index:19;width:54px}
+.tp-rail{position:absolute;inset:0 0 0 auto;width:54px;cursor:ns-resize;touch-action:none;outline:none;border-radius:8px;
+  background:linear-gradient(90deg,transparent 0 22px,rgba(10,16,24,.5) 22px);border:1px solid transparent;transition:background .6s}
+.tp-rail:focus-visible{border-color:#6ee7b7}
+.tp-bands{position:absolute;right:0;top:0;bottom:0;width:6px;border-radius:3px;overflow:hidden}
+.tp-bands i{position:absolute;left:0;right:0;background:var(--c);opacity:.9}
+.tp-ticks{position:absolute;inset:0}
+.tp-ticks i{position:absolute;right:8px;width:7px;height:1px;background:currentColor;opacity:.55}
+.tp-ticks i.big{width:14px;opacity:.9}
+.tp-ticks b{position:absolute;right:24px;translate:0 -50%;font:700 10px/1 ui-monospace,Menlo,monospace;opacity:.75;pointer-events:none}
+.tp-mark{position:absolute;right:-4px;left:-8px;height:0;transition:top .12s linear}
+.tp-mark::before{content:"";position:absolute;left:8px;right:0;top:-1px;height:2px;background:#ff4b3a;box-shadow:0 0 8px #ff4b3a}
+.tp-mark b{position:absolute;right:62px;top:0;translate:0 -50%;padding:2px 6px;border-radius:5px;background:#ff4b3a;color:#fff;font:800 12px/1.2 ui-monospace,Menlo,monospace;box-shadow:0 0 12px rgba(255,75,58,.6);white-space:nowrap}
+.tb-tape{color:#e8eef2;transition:color .6s}
+html[data-era="e15"] .tb-tape,html[data-era="e10"] .tb-tape,html[data-era="e05"] .tb-tape,html[data-era="e97"] .tb-tape,html[data-era="end"] .tb-tape{color:#13212b}
+html[data-era="e15"] .tp-rail,html[data-era="e10"] .tp-rail,html[data-era="e05"] .tp-rail,html[data-era="e97"] .tp-rail,html[data-era="end"] .tp-rail{background:linear-gradient(90deg,transparent 0 22px,rgba(255,255,255,.55) 22px)}
+.tp-rail.drag .tp-mark{transition:none}
+@media (max-width:1100px){.tb-tape{top:58px;bottom:175px;width:30px;right:4px}.tp-rail{width:30px;background:linear-gradient(90deg,transparent 0 12px,rgba(10,16,24,.45) 12px)}.tp-ticks b{display:none}.tp-mark b{right:36px}
+  .era-in,.tb-now-in,.tb-end{padding-right:22px}}
+@media (prefers-reduced-motion:reduce){.tb-now,.tm-ring,.tm-gems,.tm-gems img,.tm-heart,.tm-gems li,.tm-lamps i{animation:none}.tm-lamps i:nth-child(odd){background:var(--c);box-shadow:0 0 14px 3px var(--c)}.tp-mark{transition:none}}

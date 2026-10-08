@@ -8,7 +8,8 @@
   var eras = [].slice.call(document.querySelectorAll('.era')), end = document.querySelector('.tb-end');
   var yearEl = document.querySelector('[data-tb-year]'), browserEl = document.querySelector('[data-tb-browser]');
   var props = [].slice.call(document.querySelectorAll('[data-depth]'));
-  var root = document.documentElement, shownYear = 2026, ticking = false;
+  var root = document.documentElement, shownYear = 2026, ticking = false, lastY = scrollY, lastT = performance.now();
+  var now = document.querySelector('[data-now]');
 
   function frame() {
     ticking = false;
@@ -23,8 +24,14 @@
       if (r.bottom <= mid) { year = +eras[i].getAttribute('data-to'); era = eras[i].getAttribute('data-era'); label = eras[i].getAttribute('data-browser'); }
     }
     if (end && end.getBoundingClientRect().top < mid) { year = 1997; era = 'end'; }
+    if (now && now.getBoundingClientRect().bottom > mid) era = 'now';
+    tapeAt(year);
     if (year !== shownYear) { yearEl.textContent = year; shownYear = year; toolbox(year); }
     if (root.getAttribute('data-era') !== era) { root.setAttribute('data-era', era); browserEl.textContent = label; }
+    // 88: fall fast enough and the machine flashes
+    var t1 = performance.now(), sy = scrollY, v = Math.abs(sy - lastY) / Math.max(16, t1 - lastT) * 30;
+    lastY = sy; lastT = t1;
+    if (!still && v >= 88 && !root.classList.contains('flux')) { root.classList.add('flux'); setTimeout(function () { root.classList.remove('flux'); }, 900); }
     if (still) return;
     // the parallax: each prop moves against the scroll by its depth, and turns as it falls
     for (var k = 0; k < props.length; k++) {
@@ -49,6 +56,77 @@
   }
   var tbBtn = document.querySelector('[data-tbx-open]'), tbBox = document.getElementById('tbBox');
   if (tbBtn) tbBtn.addEventListener('click', function () { var o = tbBox.classList.toggle('open'); tbBtn.setAttribute('aria-expanded', String(o)); document.documentElement.classList.toggle('tbx-open', o); });
+  // the tape: each year's mark sits where that year is reached in the scroll, each era is a band in its colour; the
+  // marker follows you, and a click or a drag on the tape takes you there
+  var tape = document.querySelector('[data-tape]'), tMark = document.querySelector('[data-tape-mark]'), tTicks = document.querySelector('[data-tape-ticks]'), tBands = document.querySelector('[data-tape-bands]');
+  var COL = { e26: '#6ee7b7', e15: '#e91e63', e10: '#c8a060', e05: '#3a9bd8', e00: '#7fd1ff', e97: '#800000' }, marks = [], maxY = 1;
+  function eraY(el, y) { var top = el.getBoundingClientRect().top + scrollY, f = +el.getAttribute('data-from'), t = +el.getAttribute('data-to'); return top + el.offsetHeight * (f - y) / (f - t) - innerHeight / 2; }
+  function layTape() {
+    if (!tape) return;
+    maxY = Math.max(1, document.documentElement.scrollHeight - innerHeight); marks = [];
+    var h = '', b = '', pct = function (y) { return (Math.min(1, Math.max(0, y / maxY)) * 100).toFixed(2) + '%'; };
+    eras.forEach(function (el) {
+      var f = +el.getAttribute('data-from'), t = +el.getAttribute('data-to'), y0 = eraY(el, f), y1 = eraY(el, t);
+      b += '<i style="top:' + pct(y0) + ';height:' + ((Math.min(maxY, y1) - Math.max(0, y0)) / maxY * 100).toFixed(2) + '%;--c:' + COL[el.getAttribute('data-era')] + '"></i>';
+      for (var y = f; y >= t; y--) if (!marks.some(function (m) { return m.y === y; })) marks.push({ y: y, at: eraY(el, y) });
+    });
+    marks.forEach(function (m) { var big = m.y % 5 === 0 || m.y === 1997; h += '<i class="' + (big ? 'big' : '') + '" style="top:' + pct(m.at) + '"></i>' + (big ? '<b style="top:' + pct(m.at) + '">' + m.y + '</b>' : ''); });
+    tTicks.innerHTML = h; tBands.innerHTML = b; tapeAt(shownYear, true);
+  }
+  function tapeAt(y) {
+    if (!tape) return;
+    tMark.style.top = (Math.min(1, scrollY / maxY) * 100).toFixed(2) + '%';
+    tMark.firstChild.textContent = scrollY < 40 ? 'Now' : y; tape.setAttribute('aria-valuenow', y); tape.setAttribute('aria-valuetext', scrollY < 40 ? 'Now, 2026' : String(y));
+  }
+  function goYear(y, smooth) { var m = marks.filter(function (k) { return k.y === y; })[0]; if (m) scrollTo({ top: Math.max(0, m.at + 1), behavior: smooth && !still ? 'smooth' : 'auto' }); }
+  if (tape) {
+    var drag = false, sx = 0;
+    var toY = function (e) { var r = tape.getBoundingClientRect(); return Math.min(1, Math.max(0, (e.clientY - r.top) / r.height)) * maxY; };
+    tape.addEventListener('pointerdown', function (e) { drag = true; sx = e.clientY; tape.setPointerCapture(e.pointerId); tape.classList.add('drag'); });
+    tape.addEventListener('pointermove', function (e) { if (drag && Math.abs(e.clientY - sx) > 4) { root.style.scrollBehavior = 'auto'; scrollTo(0, toY(e)); } });
+    tape.addEventListener('pointerup', function (e) {
+      if (!drag) return; drag = false; tape.classList.remove('drag'); root.style.scrollBehavior = '';
+      if (Math.abs(e.clientY - sx) <= 4) scrollTo({ top: toY(e), behavior: still ? 'auto' : 'smooth' });
+    });
+    tape.addEventListener('keydown', function (e) {
+      var d = { ArrowUp: 1, ArrowRight: 1, ArrowDown: -1, ArrowLeft: -1, PageUp: 5, PageDown: -5 }[e.key];
+      if (e.key === 'Home') { e.preventDefault(); scrollTo({ top: 0 }); return; }
+      if (e.key === 'End') { e.preventDefault(); goYear(1997); return; }
+      if (d) { e.preventDefault(); goYear(Math.min(2026, Math.max(1997, shownYear + d)), true); }
+    });
+    addEventListener('resize', layTape); addEventListener('load', layTape); layTape();
+    if ('ResizeObserver' in window) new ResizeObserver(function () { layTape(); }).observe(document.querySelector('main'));
+  }
+
+  // the top: the readouts (where you're headed, today, your last visit) and the chart of what the browser can do
+  var tcNow = document.querySelector('[data-tc-now]'), tcLast = document.querySelector('[data-tc-last]');
+  var MON = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+  var stamp = function (d) { return MON[d.getMonth()] + ' ' + ('0' + d.getDate()).slice(-2) + ' ' + d.getFullYear() + ' ' + ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2); };
+  if (tcNow) {
+    var tick = function () { tcNow.textContent = stamp(new Date()); }; tick(); setInterval(tick, 10000);
+    try { var last = localStorage.getItem('tumble-last'); if (last) tcLast.textContent = stamp(new Date(+last)); localStorage.setItem('tumble-last', String(Date.now())); } catch (e) {}
+  }
+  var chart = document.querySelector('[data-tm-chart]');
+  if (chart) {
+    var GC = ['#7dff4a', '#ff4fd8', '#ffb31f', '#38c8ff', '#b07bff'], groups = [].slice.call(document.querySelectorAll('.tbx-g')), Y0 = 1993, Y1 = 2026, W = 600, H = 150;
+    var x = function (y) { return 24 + (y - Y0) / (Y1 - Y0) * (W - 30); }, yy = function (n) { return H - n / 36 * (H - 10); };
+    var base = []; for (var y = Y0; y <= Y1; y++) base.push(0);
+    var svg = '<defs>' + GC.map(function (c, i) { return '<linearGradient id="tg' + i + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + c + '" stop-opacity=".95"/><stop offset="1" stop-color="' + c + '" stop-opacity=".25"/></linearGradient>'; }).join('') + '</defs>', key = '';
+    groups.forEach(function (g, i) {
+      var ys = [].map.call(g.querySelectorAll('li'), function (li) { return +li.getAttribute('data-y'); }), top = [], d;
+      for (var k = 0; k <= Y1 - Y0; k++) top.push(base[k] + ys.filter(function (v) { return v <= Y0 + k; }).length);
+      d = 'M' + x(Y0) + ',' + yy(base[0]);
+      for (k = 0; k <= Y1 - Y0; k++) d += 'L' + x(Y0 + k) + ',' + yy(top[k]) + (k < Y1 - Y0 ? 'L' + x(Y0 + k + 1) + ',' + yy(top[k]) : '');
+      for (k = Y1 - Y0; k >= 0; k--) d += 'L' + x(Y0 + k + (k < Y1 - Y0 ? 1 : 0)) + ',' + yy(base[k]) + 'L' + x(Y0 + k) + ',' + yy(base[k]);
+      svg += '<path class="ar" style="--c:' + GC[i] + '" d="' + d + 'Z" fill="url(#tg' + i + ')" stroke="' + GC[i] + '" stroke-width="1"/>';
+      key += '<span><i style="--c:' + GC[i] + '"></i>' + g.querySelector('h3').textContent + '</span>';
+      base = top;
+    });
+    [1997, 2005, 2015, 2026].forEach(function (y) { svg += '<text x="' + x(y) + '" y="' + (H + 16) + '" text-anchor="middle">' + y + '</text><line x1="' + x(y) + '" x2="' + x(y) + '" y1="' + H + '" y2="' + (H + 4) + '" stroke="#9fb6c4"/>'; });
+    svg += '<text x="' + (x(Y1) + 4) + '" y="' + (yy(base[Y1 - Y0]) + 4) + '" fill="#fff">' + base[Y1 - Y0] + '</text>';
+    chart.innerHTML = svg; document.querySelector('[data-tm-key]').innerHTML = key;
+  }
+
   function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(frame); } }
   addEventListener('scroll', onScroll, { passive: true }); addEventListener('resize', onScroll); frame();
 
