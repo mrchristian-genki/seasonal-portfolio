@@ -46,6 +46,12 @@
       li.classList.toggle('off', !have);
     });
     [].forEach.call(tbxN, function (e) { e.textContent = n; });
+    // the browsers: lit only in their own lifetimes; before, "not yet"; after, "gone since"
+    [].forEach.call(document.querySelectorAll('[data-tbx-br] li'), function (li) {
+      var b = +li.getAttribute('data-b'), e = +(li.getAttribute('data-e') || 9999), em = li.querySelector('em');
+      li.classList.toggle('off', y < b || y > e); li.classList.toggle('dead', y > e);
+      em.textContent = y < b ? 'not yet (' + b + ')' : y > e ? 'gone since ' + e : 'since ' + b;
+    });
     if (lost) lost.textContent = gone.length ? 'Just lost: ' + gone.slice(-3).join(', ') + (gone.length > 3 ? ' and ' + (gone.length - 3) + ' more' : '') : (n === tbx.length ? '' : lost.textContent);
   }
   var tbBtn = document.querySelector('[data-tbx-open]'), tbBox = document.getElementById('tbBox');

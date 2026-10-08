@@ -211,3 +211,11 @@ html[data-era="e97"] .tb-browser i,html[data-era="end"] .tb-browser i,html[data-
 .before97{max-width:62ch;margin:18px auto 22px;text-align:left;font-size:16px}
 .before97 h3{margin:0 0 8px;font:bold 16px Arial,sans-serif;color:#000080;text-align:center}
 .before97 ul{margin:0;padding-left:0;list-style:none}.before97 li{margin:0 0 6px}.before97 b{display:inline-block;width:3.2em;color:#800000}
+.tb-box .tbx-h{margin:4px 0 4px;font:800 10px system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase;opacity:.7;color:#e8eef2}
+.tbx-br{list-style:none;margin:0 0 8px;padding:0;display:grid;grid-template-columns:1fr;gap:1px}
+.tbx-br li{display:flex;justify-content:space-between;gap:6px;padding:1px 0;transition:opacity .5s}
+.tbx-br li span{font-weight:700}
+.tbx-br li em{font-style:normal;font-size:11px;opacity:.75;white-space:nowrap}
+.tbx-br li.off{opacity:.3}.tbx-br li.off span{text-decoration:line-through}
+.tbx-br li.dead em{color:#ff8a8a;opacity:1}
+@media (max-width:1239px){.tbx-br{grid-template-columns:1fr 1fr;column-gap:14px}}
