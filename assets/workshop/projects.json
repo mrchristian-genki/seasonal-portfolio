@@ -69,6 +69,32 @@
     "src": "play/media/2026-10-06-the-whole-machine/07.jpg",
     "caption": "The whole machine at rest: a head of drawers with the lake in a porthole and a prism for an eye, the heart behind glass, the veins of liquid running out to its hands."
    }
+  ],
+  "pull": "Each one is good alone, but it's the pipes between them that make it feel alive.",
+  "numbers": [
+   [
+    "5",
+    "parts: an eye, a face, a memory, hands and a heart"
+   ],
+   [
+    "7",
+    "renders of the automaton on the bench"
+   ],
+   [
+    "1",
+    "bird of light, flying into the lake"
+   ]
+  ],
+  "title": "The whole machine",
+  "story": [
+   "Over the past few weeks I've written up each of the tools behind this site on its own. This one is about how they fit together. I kept picturing them as parts of one machine on a workbench, so I had them rendered that way: a brass automaton, built a piece at a time.",
+   "The eye came first. ProPre, the press for my coloring books, is the project that brought me back to web development in May. It's a prism: a beautiful picture goes in and comes out as clean black and white lines, ready for someone to fill with colour.",
+   "The face is the lake on the front of the site. Every tab is a season, and every tab opens another part of the machine. Books leads to the catalog of everything ProPre has made. Workshop leads to the bench. Play is where the Field Notes live.",
+   "The memory is the Parts Catalog: a drawer for every piece the lake is built from, each one running on its own with the same code the lake uses, so I can open one drawer without disturbing the rest.",
+   "The hands are the Workshop. Give them a picture and they shape a new part in the Catalog's own format, ready to join the others on the lake.",
+   "The heart is the Studio. A day out comes in as a track and a pile of photos, and goes out as a Field Note, with its post, its episode and its share card. The liquid in its pipes is the same idea as blood: the content is what keeps the whole thing alive, and the Studio is what moves it around.",
+   "In the render, the heart beats once, the light runs out through the glass veins, the hands shape a bird, and the bird flies into the lake. That's the whole machine. A day comes in, it's shaped, it's kept, and it ends up somewhere you can see it.",
+   "What I learned: none of these parts is the portfolio on its own. Each one is good alone, but it's the pipes between them that make it feel alive."
   ]
  },
  {
@@ -123,6 +149,32 @@
     "h": 540,
     "caption": "Orange back to blue by day, closing the loop."
    }
+  ],
+  "pull": "It only feels like one machine when the light agrees everywhere.",
+  "numbers": [
+   [
+    "124",
+    "video files behind one header"
+   ],
+   [
+    "36",
+    "clips: 18 for the river, 18 for the pipe"
+   ],
+   [
+    "3",
+    "liquids, and only one way round"
+   ]
+  ],
+  "title": "A river through the Studio",
+  "story": [
+   "The Studio is the private side of this site, where a day out becomes a Field Note. It deserved a front door that felt like a workshop, so its header became a glowing river running through a crack in an old workbench, with a brass STUDIO panel bolted on above it.",
+   "It began green, from rendered 4K footage. Then I wanted a blue river, and the best I could render was 1080p. That turned out fine: the header is a short, wide strip, so 1920 pixels across is all it ever needs. The first version jumped when you switched. Every change now plays its own clip and crossfades in, and the buttons wait until it's done.",
+   "The controls took the longest. I tried handwheels, then bypass valves with lit windows, then valves down in the footer, then lamps beside them. It was all too much. What stuck is the smallest version: two little toggles on the panel, each between jewel pilot lamps. DAY/NIGHT plays dusk or dawn. CHANGE LIQUID only goes one way round, blue to green to orange and back to blue, so every change has exactly one clip.",
+   "That one-way rule is what made it buildable. Three liquids, day and night, each with a loop, a dusk and dawn, and a change to the next liquid: 18 clips for the river and 18 more for the glowing pipe in the footer. With each one in a few sizes for different screens, that's 124 video files behind one header.",
+   "The renders never quite agreed with each other. A glass tube on the river bank was lit in one clip and dark in the next, and a new render would arrive with the lamps glowing green when the loop it hands over to has them orange. So every clip goes through the same light model before it's used. The tube's glow is measured once from the blue night footage, then painted back in the colour of the liquid, scaled by how dark the scene is. Both ends of each change are graded to match the loops they meet, so the hand-offs don't show.",
+   "Then the liquid started spreading. The rivets in the brass rails fill with its colour. The page itself shifts: gold on walnut for orange, steel on slate for blue, verdigris on bronze for green. The STUDIO letters fill with it too, a slow wave running through them, borrowed from an old CSS trick for text filling with water. On every change they drain and fill again.",
+   "Even the links remember. The address carries the look, so a link shared at night with the orange liquid opens that way, and its preview card shows it.",
+   "What I learned: less is more, again. The valves were fun to build and wrong to keep. And it only feels like one machine when the light agrees everywhere, so measure the light once and paint it back the same way in every clip."
   ]
  },
  {
@@ -190,6 +242,32 @@
     "h": 540,
     "caption": "Kindle Cover: two images, a title, and a live preview of the 1,600 by 2,560 ebook cover."
    }
+  ],
+  "pull": "Build the tool before the hundredth book, not after.",
+  "numbers": [
+   [
+    "4 days",
+    "from the first notes to a working tool"
+   ],
+   [
+    "5",
+    "tabs, from the prompt to the Kindle cover"
+   ],
+   [
+    "101",
+    "titles in the Coloring Book Catalog"
+   ]
+  ],
+  "title": "The press in the browser",
+  "story": [
+   "This is the project that brought me back to web development after a long break. I'd started making adult coloring books, and every one of them meant the same pile of jobs: prompts for 40 illustrations, a listing with titles and keywords, an interior PDF with the right bleed, a wraparound cover whose spine depends on the page count, and a separate cover for the ebook. I wanted one place that did all of it.",
+   "Here's the idea underneath it. A coloring book is beauty broken down to its most basic form, then built back up. Every page starts as a beautiful picture: that picture is the core of each prompt, crafted almost. Then it's taken apart, the way a prism splits light, until only the black and white lines are left. And the person with the markers fills it back in, in their own colours.",
+   "So I wrote down what it should be. The first notes are dated May 20. Two days later there were eight single-page prototypes. By May 24 there was a working tool of about 100 KB. Within the week I'd split it into modules with a small build script, because one file had become too big to change safely, and written a full set of documents for it: a product spec, a requirements spec, technical docs and a user manual.",
+   "I called it ProPre, for pre-press. It has five tabs. The Prompt Generator takes an object, a lens like Through the Seasons or Underwater, and an edition for adults or kids, and writes the brief for a prompt catalog. Long books run in two halves, pages 1 to 20 and 21 to 40. MegaData writes the listing in one go: titles, subtitles, back copy, seven keywords, an HTML description and the series copy. Interior turns a zip of line art into the print PDF, in double-sided, right-handed or left-handed editions. Cover builds the wraparound PDF and works out the spine from the page count. Kindle Cover makes the ebook cover with a live preview.",
+   "Every one of those steps has a rule I learned the hard way. Text stays inside the safe zone. Art is scaled a little past the page so it really fills the bleed. Interiors are black and white only. Covers are cropped, never stretched. Prompts stay clear of anything trademarked.",
+   "Then the books needed a home, so I built the Coloring Book Catalog. It reads a spreadsheet, so adding a book is adding a row. 101 titles so far, 8 in print and 93 on the way. Each card shows the line art, and a tap fills it with colour.",
+   "This week I gave it a proper repository. The live page had drifted ahead of its own source files, so the sources were rebuilt from it until a build matched the live page byte for byte. Its AI calls now go through the Studio's login instead of a token in the page.",
+   "What I learned: build the tool before the hundredth book, not after. Every rule I wrote into ProPre is a mistake I only had to make once, and every one of them protects the same thing: the beautiful picture at the start, so there's something worth building back up at the end."
   ]
  },
  {
@@ -244,6 +322,31 @@
     "h": 540,
     "caption": "Search narrows 60 parts as you type: fox, then snow."
    }
+  ],
+  "pull": "A deer that looks right on its own card looks right on the lake.",
+  "numbers": [
+   [
+    "60",
+    "parts in 9 groups"
+   ],
+   [
+    "15",
+    "origami creatures, rigged at the joints"
+   ],
+   [
+    "1",
+    "animation loop shared by every card"
+   ]
+  ],
+  "title": "A drawer for every part",
+  "story": [
+   "The lake on the front of this site is built from parts: pines, boulders, clouds, a moon, a fisherman in a paper boat, and a cast of animals that wander in. The Parts Catalog is where every one of those pieces lives on its own, running live with the same code the scene uses, so I can find it, check it and change it without opening the whole lake.",
+   "There are 60 parts in 9 groups. 40 run live, 17 are reference pictures of older versions, and 3 are still in progress. A search box narrows them as you type, and every part has its own link.",
+   "The animals are the heart of it. 15 origami creatures are rigged at the joints, so a deer can lower its head to graze, look up when something moves, or walk off the card. Between them there are about 17 behaviours and 9 short stories that chain them together. Each card has the controls the scene has: season, day or night, behaviour, and weather. Pick winter and the coats change; pick a blizzard and snow sticks to their backs. Rain beads on them too.",
+   "Forty live cards could easily melt a phone. They all share one animation loop, and any card that isn't on screen sleeps until it scrolls back.",
+   "I cut something here too. There used to be a toggle between flat silhouettes and origami. The origami won, so the silhouettes went.",
+   "The header came last: a deep-sea scene with Marley floating in a jellyfish, a diver beside her, and two dozen creatures I lifted out of the painting so they could move on their own, down to an anglerfish with a glowing lure. A whale was the first idea and a dead end. A giant paper squid took its place.",
+   "What I learned: build the parts where you can see them alone. A deer that looks right on its own card looks right on the lake, and when something breaks, there's exactly one drawer to open."
   ]
  },
  {
@@ -290,6 +393,31 @@
     "h": 540,
     "caption": "Import & trace: a cast fox traced to 5 colours and 5 paths, 7 KB, in 693 ms, then set next to the doe to check it belongs."
    }
+  ],
+  "pull": "Make the way back in the easy part.",
+  "numbers": [
+   [
+    "13",
+    "kinds of part the prompt builder knows"
+   ],
+   [
+    "693 ms",
+    "to trace the fox: 5 colours, 7 KB"
+   ],
+   [
+    "3",
+    "steps, and the third is next"
+   ]
+  ],
+  "title": "Teaching the bench new parts",
+  "story": [
+   "The Catalog shows the parts the lake already has. The Workshop is where new ones get made, and it's built around a simple idea: whatever image tool I use, the result should come back in the scene's own format, ready to move.",
+   "It works in steps. Step 1 is a prompt builder. Pick the kind of part (13 of them, from four-legged animals to shoreline pieces), a style, and whether you want one piece or a kit sheet of separate parts. It writes a prompt that asks for flat colours on plain white, so the result traces cleanly. Then generate it anywhere.",
+   "Step 2 brings the picture back. The tracer used to be a Python script on my laptop. Now it runs in the browser: it reduces the image to a few colours, cleans up the specks, and simplifies every outline. The doe traces to 7 colours in under a second. The fox in the clip came out as 5 colours and 5 paths, 7 KB, in 693 milliseconds. Then it sits next to an animal from the lake, so you can see straight away whether it belongs.",
+   "The kit-sheet option came from a failure. I traced a beach scene as one picture and got a mess, because a scene isn't one shape. Asking for separate pieces on one sheet fixed it.",
+   "Step 3, cut and rig, is next: splitting a traced animal at the joints so it can move like the others.",
+   "The header is the bench itself. A hologram above it cycles through animals that don't exist yet: an eagle, an owl, a hawk, a squirrel. On glowing discs stand the buck, doe, elk and bear from the live engine, and Marley sleeps at the end of the bench. I took out a soldering iron that didn't belong and fixed my hair colour, which the first render got wrong.",
+   "What I learned: make the way back in the easy part. Generating a picture takes seconds anywhere. Turning it into something the scene can use is the work, so that's what the Workshop does."
   ]
  },
  {
@@ -367,7 +495,34 @@
   "extra": {
    "label": "Read her feature",
    "url": "/play/2026-10-08-glazyarray-will-see-you-now/"
-  }
+  },
+  "pull": "A character is mostly the little things done carefully.",
+  "numbers": [
+   [
+    "1",
+    "video file for every move she makes"
+   ],
+   [
+    "19",
+    "looks in her Style Array"
+   ],
+   [
+    "Oct 6",
+    "the day she got a body"
+   ]
+  ],
+  "title": "The narrator gets a face",
+  "story": [
+   "The Field Notes have a narrator: a warm, nostalgic voice that tells each episode. On October 6 she got a body, and then a name: GlazyArray. I wanted the play button to stop being just a play button: a little robot rising out of the Listen bar, her head above it, her hands on a desk inside it, talking when the episode talks.",
+   "Claude wrote the prompts and I rendered the parts: a torso at a desk on a green screen, with four loops of the hands, and a head as still images. The torso is video, keyed onto the bar's own teal. The first key took the glowing cyan tubes out with the green, so it got a narrower key that keeps them. The head is layers: the head itself, the jaw, and the closed eyelids. The jaw slides open with how loud the voice is at that moment, measured from the episode as it plays, and she blinks every few seconds.",
+   "The first version had a flaw I could see straight away: each move was its own video file, and switching files blanked the torso for a moment. Now all of it is one file in eight parts, and every part starts and ends in the same rest pose. She only ever jumps inside that one file, which keeps the picture on screen. Each gesture has a backwards copy, so she can stop part way through one and come back. When the voice stops, she heads for whichever rest pose is closer.",
+   "Then she got cheeky. Before anyone presses play, she taps her fingers, and every round or two she drops a hint toward the Play button: a \"psst, over there\", a \"boop, boop\" and a thumbs up, a little wave. Her head turns toward the button, she winks, and the bulb on her antenna glows.",
+   "The first head was a boy's, and the voice is a woman's, so I asked for hers: rose-gold brass, finger waves into curls, lashes on her eyelids, a clip with a cyan gem, and a flower bud for a bulb. Her talking and blinking carried straight over.",
+   "Then I wanted her to have fun with her hair. Claude made a template, a mask and a contact sheet that show what can change and what has to stay, and I made fourteen looks: six hair styles, an 80s perm among them, and eight holidays. Her eyes, jaw and neck always come from the original, so she still talks and blinks under a witch hat. She wears whichever holiday is coming up next. Click her head and she changes on the spot, with a little shake, and the pick stays in the link.",
+   "Then her eyes. The glowing cyan lenses felt cold, so I asked for warmer ones: Lake Tahoe blue, with small pupils and two catchlights, under her brass lids and lashes. They glance toward the Play button when she hints.",
+   "Her name came last: GlazyArray, for the glaze of the glowing glass tubes in her chest, her glossy brass and her glassy blue eyes, and the array of looks she swaps at a click. Her hair switcher is her Style Array, and the Listen bars now say \"Narrated by GlazyArray\". New looks are made in the Workshop, and she has her own card in the Parts Catalog.",
+   "What I learned: a character is mostly the little things done carefully: the rest pose that lets the clips meet, the wink at the right second. And she should look like the voice she's speaking with."
+  ]
  },
  {
   "id": "2026-10-06-the-lake-v2",
@@ -421,6 +576,30 @@
     "h": 540,
     "caption": "The getaway: the hidden beach at sunset, reached by tapping the fisherman's boat."
    }
+  ],
+  "pull": "The scene is the portfolio.",
+  "numbers": [
+   [
+    "12 → 56",
+    "frames a second on a winter night, on an iPhone"
+   ],
+   [
+    "33",
+    "kinds of wildlife visit"
+   ],
+   [
+    "55",
+    "links in the trigger guide"
+   ]
+  ],
+  "title": "One lake, four seasons",
+  "story": [
+   "The front of this site is one painted lake, and every tab is a season. Books is summer, Web is fall, Workshop is winter, Play is spring. Click a tab and the lake turns: about seven seconds, with the swap hidden in the darkest moment, so the change feels like time passing rather than a page loading. This is version two. The first one worked, but it wasn't robust enough to keep building on.",
+   "Everything is SVG and code. The trees, the mountains, the water, the moon. There's a night mode with stars and fireflies, and six levels of weather, from drizzle to a tempest and from flurries to a blizzard. Rain drips off the headline and snow settles on it.",
+   "Then the visitors. There are 33 kinds of wildlife visit, built from 14 animal shapes plus Marley, who has her own rig: a buck walking out of the trees, a bear on the shore, a wolf howling on winter nights, a fox sniffing at the headline. Some are rare. Some come when you tap the right rock. An eagle dives for a fish, and if you tap the fisherman's boat he sails you to a hidden beach.",
+   "Every view has a link. Add words to the address, like winter, night or blizzard, and the lake opens that way. There are 55 of them in the trigger guide at the bottom of the page.",
+   "Most of the work nobody sees. I tested on an iPhone the whole way, and the winter night scene ran at 12 frames a second. Dropping one CSS performance hint, will-change, took it to 56. The first load went from 319 KB to 238. Safari needed its own fix for the SVG filters, and on phones a spyglass replaced the tilt camera. If you've asked your device for less motion, 15 different files listen.",
+   "What I learned: the scene is the portfolio. Anyone can say they care about detail; a lake that keeps its frame rate in a blizzard on a phone shows it."
   ]
  }
 ]
