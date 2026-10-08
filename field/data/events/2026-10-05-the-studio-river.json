@@ -107,6 +107,17 @@
    "w": 1280,
    "h": 780,
    "caption": "The two toggles: DAY/NIGHT plays dusk or dawn, and CHANGE LIQUID only goes one way round, blue to green to orange and back to blue, the jewel lamps and the rails following."
+  },
+  {
+   "src": "data/photos/2026-10-05-the-studio-river/retired-valves.jpg",
+   "poster": null,
+   "video": null,
+   "ai": true,
+   "caption": "The valves that were cut: bypass valves with lit glass windows, fun to build and wrong to keep, back under the dust sheet.",
+   "w": 1376,
+   "h": 768,
+   "use": "post",
+   "cover": false
   }
  ],
  "fieldNotes": "Case study of the Studio header, built over Oct 2026 (PRs #77 to #103 in seasonal-portfolio). Facts from the commit history: liquids blue (1080p renders), green (4K), orange; one-way change cycle; 18 header + 18 footer clips, 124 files across sizes; tube light model learned from blue-night footage and re-applied to every clip; ends of each change graded to the loops; per-look share cards via ?look=; page skin, rivets and liquid-filled STUDIO letters (CSS text-filling technique); glowing buttons. Clips are screen recordings of the login page.",
