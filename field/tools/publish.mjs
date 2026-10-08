@@ -209,8 +209,16 @@ for (const e of events) {
   const fig = (p, cls) => p.video
     ? `<figure class="${cls || 'photo'} clip"><a href="${esc(p.src)}" data-lightbox data-video><video src="${esc(p.src)}" poster="${esc(p.poster)}" width="${p.w}" height="${p.h}" muted loop playsinline autoplay preload="metadata"></video></a>${p.caption ? `<figcaption>${p.ai ? '<span class="ai-badge">Made with AI</span> ' : ''}${esc(p.caption)}</figcaption>` : ''}</figure>`
     : `<figure class="${cls || 'photo'}"><a href="${esc(p.src)}" data-lightbox><img src="${esc(p.src)}" alt="${esc(p.caption)}" width="${p.w}" height="${p.h}" loading="lazy"></a>${p.caption ? `<figcaption>${p.ai ? '<span class="ai-badge">Made with AI</span> ' : ''}${esc(p.caption)}</figcaption>` : ''}</figure>`;
+  // A feature's look book (e.feature.lookbook): portraits in a grid, set just before the subhead it names ("before")
+  const LB = e.feature && e.feature.lookbook && (e.feature.lookbook.items || []).length ? e.feature.lookbook : null;
+  const lookbook = LB ? `<section class="mag-book"><h2 class="sub">${esc(LB.title || 'The look book')}</h2>${LB.dek ? `<p class="mag-book-dek">${esc(LB.dek)}</p>` : ''}<div class="mag-book-grid">${LB.items.map((x, k) => {
+    const f = 'look-' + String(k + 1).padStart(2, '0') + '.jpg'; fs.copyFileSync(path.join(FIELD, x.src), path.join(media, f));
+    return `<figure class="mag-look${k === 0 ? ' wide' : ''}"><a href="../media/${e.id}/${f}" data-lightbox><img src="../media/${e.id}/${f}" alt="GlazyArray in ${esc(x.name.toLowerCase())}" width="${x.w}" height="${x.h}" loading="lazy"></a><figcaption><b>${esc(x.name)}</b> ${esc(x.when)}</figcaption></figure>`;
+  }).join('')}</div><p class="mag-book-ai"><span class="ai-badge">Made with AI</span></p></section>\n` : '';
+  let lbDone = !LB;
   let body = '';
   ps.forEach((p, i) => {
+    if (!lbDone && /^## /.test(p) && p.slice(3).replace(/['\u2019]/g, "'") === String(LB.before || '').replace(/['\u2019]/g, "'")) { body += lookbook; lbDone = true; }
     const m = /^What I learned:\s*/i.exec(p);
     // a feature's own marks (a profile): "## " a subhead, "> " a pull quote set large
     if (/^## /.test(p)) body += `<h2 class="sub">${esc(p.slice(3))}</h2>\n`;
@@ -219,6 +227,7 @@ for (const e of events) {
     inline.forEach((u, k) => { if (slots[k] === i) body += (u.stack ? u.map((ph) => fig(ph, ph.strip ? 'photo strip' : '')).join('\n') : u.length > 1 ? `<div class="duo">${u.map((ph) => fig(ph)).join('')}</div>` : fig(u[0], tall(u[0]) ? 'photo tall' : '')) + '\n'; });
     if (i === tableSlot) body += tableFig() + '\n';
   });
+  if (!lbDone) body += lookbook;   // its subhead wasn't found: at the end of the story
 
   // A FEATURE (a profile, written like a magazine cover story: e.feature): the cover becomes a magazine cover with its
   // masthead and cover lines; after the story, a Q&A and a "Spotted" box. Everything else is a Note like any other.

@@ -172,7 +172,91 @@
       }
     ],
     "label": "Feature · Profile",
-    "byline": "Words by the Field Notes desk · Photographs made with AI"
+    "byline": "Words by the Field Notes desk · Photographs made with AI",
+    "lookbook": {
+      "title": "The look book",
+      "dek": "Eleven of her nineteen looks, photographed for this issue in the same two colours, magenta and cyan. On the site each Note dresses her in its own.",
+      "before": "Where you’ll find her",
+      "items": [
+        {
+          "src": "data/photos/2026-10-08-glazyarray-will-see-you-now/look-bike-helmet.jpg",
+          "w": 1376,
+          "h": 768,
+          "name": "The bike helmet",
+          "when": "Every ride. Her favourite: the little headlamp."
+        },
+        {
+          "src": "data/photos/2026-10-08-glazyarray-will-see-you-now/look-trail-cap.jpg",
+          "w": 1376,
+          "h": 768,
+          "name": "The trail cap",
+          "when": "Every hike, with her initials on the patch."
+        },
+        {
+          "src": "data/photos/2026-10-08-glazyarray-will-see-you-now/look-grad-cap.jpg",
+          "w": 1376,
+          "h": 768,
+          "name": "The mortarboard",
+          "when": "Every case study."
+        },
+        {
+          "src": "data/photos/2026-10-08-glazyarray-will-see-you-now/look-goggles.jpg",
+          "w": 1376,
+          "h": 768,
+          "name": "The workshop goggles",
+          "when": "Every build day, pushed up and ready."
+        },
+        {
+          "src": "data/photos/2026-10-08-glazyarray-will-see-you-now/look-valentines.jpg",
+          "w": 1376,
+          "h": 768,
+          "name": "Heart clips",
+          "when": "Valentine’s, Feb 10 to 14."
+        },
+        {
+          "src": "data/photos/2026-10-08-glazyarray-will-see-you-now/look-st-patricks.jpg",
+          "w": 1376,
+          "h": 768,
+          "name": "The tiny top hat",
+          "when": "St Patrick’s, Mar 15 to 17."
+        },
+        {
+          "src": "data/photos/2026-10-08-glazyarray-will-see-you-now/look-spring.jpg",
+          "w": 1376,
+          "h": 768,
+          "name": "Bunny ears and a flower crown",
+          "when": "Spring, Mar 20 to Apr 20."
+        },
+        {
+          "src": "data/photos/2026-10-08-glazyarray-will-see-you-now/look-fourth-of-july.jpg",
+          "w": 1376,
+          "h": 768,
+          "name": "The star tiara",
+          "when": "The Fourth of July, Jul 1 to 4."
+        },
+        {
+          "src": "data/photos/2026-10-08-glazyarray-will-see-you-now/look-halloween.jpg",
+          "w": 1376,
+          "h": 768,
+          "name": "The witch hat",
+          "when": "Halloween, Oct 20 to 31."
+        },
+        {
+          "src": "data/photos/2026-10-08-glazyarray-will-see-you-now/look-santa.jpg",
+          "w": 1376,
+          "h": 768,
+          "name": "The Santa hat",
+          "when": "The winter holidays, December."
+        },
+        {
+          "src": "data/photos/2026-10-08-glazyarray-will-see-you-now/look-beanie.jpg",
+          "w": 1376,
+          "h": 768,
+          "name": "The beanie",
+          "when": "Tahoe winter, January."
+        }
+      ]
+    }
   },
   "episode": {
     "title": "GlazyArray, On the Record",
