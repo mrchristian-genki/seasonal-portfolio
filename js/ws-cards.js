@@ -28,8 +28,9 @@
   // clip as the cover, a feature head, the story in a column with its clips set between the paragraphs, a pull quote,
   // the numbers, and the links. Clips play while they're on screen.
   function pic(m) {
+    var wh = m.w && m.h ? ' width="' + m.w + '" height="' + m.h + '"' : '';   // so it keeps its own shape before it loads
     return m.type === 'video'
-      ? '<video muted loop playsinline preload="none" poster="' + esc(m.poster || '') + '" data-src="' + esc(m.src) + '"' + (still ? ' controls' : '') + '></video>'
+      ? '<video muted loop playsinline preload="none" poster="' + esc(m.poster || '') + '" data-src="' + esc(m.src) + '"' + wh + (still ? ' controls' : '') + '></video>'
       : '<img alt="' + esc(m.caption || '') + '" loading="lazy" src="' + esc(m.src) + '">';
   }
   function fig(m) { return '<figure class="wsf-fig"><div class="wsf-pic">' + pic(m) + '</div>' + (m.caption ? '<figcaption>' + esc(m.caption) + '</figcaption>' : '') + '</figure>'; }
@@ -43,11 +44,13 @@
     var n = P.indexOf(p), next = P[(n + 1) % P.length], cover = p.card || p.media[0], rest = p.media.filter(function (m) { return m.src !== cover.src; });
     var story = (p.story && p.story.length ? p.story : [p.summary]).map(function (t) { return '<p>' + esc(t) + '</p>'; });
     // the clips go between the paragraphs, spread through the story; the pull quote after the second paragraph
-    var slots = {}, gaps = Math.max(1, story.length - 1);
-    rest.forEach(function (m, i) { var at = Math.min(story.length - 1, Math.max(1, Math.round((i + 1) * gaps / (rest.length + 1)))); (slots[at] = slots[at] || []).push(m); });
+    // (a clip with "after" goes right after that paragraph, counting from 1; the rest are spread evenly)
+    var slots = {}, gaps = Math.max(1, story.length - 1), free = rest.filter(function (m) { return !m.after; });
+    rest.forEach(function (m) { if (m.after) { var at = Math.min(story.length, Math.max(1, m.after)); (slots[at] = slots[at] || []).push(m); } });
+    free.forEach(function (m, i) { var at = Math.min(story.length - 1, Math.max(1, Math.round((i + 1) * gaps / (free.length + 1)))); (slots[at] = slots[at] || []).push(m); });
     var body = story.map(function (t, i) {
-      return t + (i === 1 && p.pull ? '<blockquote class="pull"><p>' + esc(p.pull) + '</p></blockquote>' : '') +
-        (slots[i + 1] || []).map(function (m) { return fig(m); }).join('');
+      return t + (slots[i + 1] || []).map(function (m) { return fig(m); }).join('') +
+        (i === 1 && p.pull ? '<blockquote class="pull"><p>' + esc(p.pull) + '</p></blockquote>' : '');
     }).join('');
     var links = (p.tool ? '<a class="btn solid" href="' + esc(p.tool.url) + '"' + (p.tool.url.charAt(0) === '#' ? '' : ' target="_blank" rel="noopener"') + '>' + esc(p.tool.label) + '</a>' : '') +
       (p.extra ? '<a class="btn solid" href="' + esc(p.extra.url) + '">' + esc(p.extra.label) + '</a>' : '') +
@@ -92,7 +95,7 @@
     }, 5200);
   }
   function start() {
-    fetch('assets/workshop/projects.json?v=3').then(function (r) { return r.json(); }).then(function (list) {
+    fetch('assets/workshop/projects.json?v=4').then(function (r) { return r.json(); }).then(function (list) {
       P = list; P.forEach(function (p, i) { var c = card(p, i); box.appendChild(c); cards.push(c); });
       if (!still) { play(cards[0], true); tour(); }
     }).catch(function () { box.hidden = true; });

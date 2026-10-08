@@ -51,6 +51,26 @@
    "h": 540,
    "use": "post",
    "cover": false
+  },
+  {
+   "src": "data/photos/2026-10-06-the-workshop/prompt-builder.jpg",
+   "poster": null,
+   "video": null,
+   "use": "post",
+   "cover": false,
+   "w": 1826,
+   "h": 1027,
+   "caption": "Step 1, the prompt builder: pick the kind of part, a style, a pose and which way it faces, and it writes a prompt for flat colours on plain white."
+  },
+  {
+   "src": "data/photos/2026-10-06-the-workshop/import-trace.jpg",
+   "poster": null,
+   "video": null,
+   "use": "post",
+   "cover": false,
+   "w": 1160,
+   "h": 653,
+   "caption": "Step 2, import and trace: a winged fox traced to 6 colours and 6 paths, 7 KB, in 164 ms, then set beside the doe to see if it belongs."
   }
  ],
  "fieldNotes": "Case study of the Workshop page in parts-catalog (workshop.html). Facts from the commit history: step 1 Prompt builds a prompt for 13 kinds of part, 2 styles, a kit sheet or a single piece; step 2 Import & trace is an in-browser port of trace.py (k-means colour reduction, cleanup, Douglas-Peucker simplification); the doe traces to 7 colours in under a second; the recorded fox traced to 5 colours, 5 paths, 7 KB in 693 ms; the kit-sheet output came from a beach trace that failed; step 3 Cut & rig is marked next; bench header built Oct 2: hologram cycling eagle, owl, hawk and squirrel, the live engine's buck, doe, elk and bear on glowing discs, Marley asleep with z's; a soldering iron was removed and the hair colour fixed. In the automaton parable the Workshop is the hands; that render goes at the top when it arrives.",
@@ -81,5 +101,8 @@
   "from": "case-study",
   "scene": ""
  },
- "palette": ["#54c4cd", "#b27034"]
+ "palette": [
+  "#54c4cd",
+  "#b27034"
+ ]
 }

@@ -62,6 +62,16 @@
    "h": 540,
    "use": "post",
    "cover": false
+  },
+  {
+   "src": "data/photos/2026-10-06-the-lake-v2/doe-visit.mp4",
+   "poster": "data/photos/2026-10-06-the-lake-v2/doe-visit.jpg",
+   "video": true,
+   "use": "post",
+   "cover": false,
+   "w": 742,
+   "h": 648,
+   "caption": "A visitor: a doe steps out from behind the bush, walks down to the water and stops to graze."
   }
  ],
  "fieldNotes": "Case study of the main site V2 (seasonal-portfolio; V1 was less robust). Facts from the commit history and code: each tab is a season (Books summer, Web fall, Workshop winter, Play spring); a 7-second change hides the swap in darkness; night mode; 6 weather levels (drizzle, shower, tempest; flurries, snow, blizzard) with the headline dripping in rain and holding snow; 33 wildlife visit types, 14 shapes plus the Marley rig; scene.js about 2,876 lines; 105 commits touch the main site; performance work on an iPhone/Safari bench: dropping will-change took winter night from 12 to 56 fps, first load from 319 KB to 238 KB; a Safari SVG filter fix; a spyglass camera for phones replaced a gyro; the getaway beach; the year started in summer; Lab became Play; 55 share links via URL words (?winter+night, ?beach, ?blizzard); hidden taps: trigger rocks, fish jump, eagle; reduced motion respected in 15 files. Clips are screen recordings of the live page. No place names. In the automaton parable the site is the face; that render goes at the top when it arrives.",

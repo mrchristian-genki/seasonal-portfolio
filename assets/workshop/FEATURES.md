@@ -25,7 +25,7 @@ help. This is the list, project by project, with prompts ready to copy.
 
 ## The Studio (4 pictures, 8 paragraphs): needs the most
 
-1. **Capture: the two toggles.** A close screen recording of the STUDIO panel: DAY/NIGHT flipped, then CHANGE LIQUID,
+1. **Done (Oct 8): the two toggles.** A close screen recording of the STUDIO panel: DAY/NIGHT flipped, then CHANGE LIQUID,
    with the jewel lamps lighting. *Goes:* "The controls took the longest".
 2. **Render: the valves that were cut.**
    > [The look.] A row of ornate brass bypass valves with little lit glass windows and handwheels, lined up on the
@@ -39,7 +39,7 @@ help. This is the list, project by project, with prompts ready to copy.
 
 ## The Workshop (3 pictures, 7 paragraphs)
 
-1. **Capture: the prompt builder.** Step 1 with a kind, a style and Kit sheet picked, and the prompt written out.
+1. **Done (Oct 8): the prompt builder,** with the Import & trace of a winged fox beside it. Step 1 with a kind, a style and Kit sheet picked, and the prompt written out.
    *Goes:* "It works in steps".
 2. **Render: the kit sheet.**
    > [The look.] On the bench, a sheet of heavy paper laid out like a model kit: separate flat-coloured pieces of a
@@ -74,7 +74,7 @@ help. This is the list, project by project, with prompts ready to copy.
    is SVG and code".
 2. **Capture: a blizzard on the headline.** Snow settling on the headline in winter, blizzard level. *Goes:* the same
    paragraph, or "Most of the work nobody sees".
-3. **Capture: a visitor.** A buck walking out of the trees, or the fox sniffing at the headline. *Goes:* "Then the
+3. **Done (Oct 8): a visitor,** a doe walking down to graze. A buck walking out of the trees, or the fox sniffing at the headline. *Goes:* "Then the
    visitors".
 4. **Render (optional): the frame rate.**
    > [The look.] A brass pocket watch lying open on the bench, its glass face showing a tiny snowy lake at night
@@ -104,5 +104,6 @@ Both have enough already: 7 renders and 9 pictures. Nothing is needed. If you ma
 
 Each picture lands in its Note's photos with its caption. Publish the Note, then run
 `python3 field/tools/wsprojects.py` (or ask Claude), and the picture joins the project's feature. The feature spreads
-a project's pictures through the column in their order, so to put one by its paragraph ("Goes:" above), move it up
-or down in that project's `media` list in `assets/workshop/projects.json`, or ask Claude.
+a project's pictures through the column in their order, and a picture with `"after": N` in that
+project's `media` list (`assets/workshop/projects.json`) goes right after paragraph N, so it sits by the part of the
+story it shows ("Goes:" above). Claude sets it when it adds one.

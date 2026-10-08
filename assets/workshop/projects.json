@@ -148,6 +148,15 @@
     "w": 960,
     "h": 540,
     "caption": "Orange back to blue by day, closing the loop."
+   },
+   {
+    "type": "video",
+    "src": "play/media/2026-10-05-the-studio-river/05.mp4?v=23n0b2q7n",
+    "poster": "play/media/2026-10-05-the-studio-river/05.jpg?v=23n0b2q7n",
+    "w": 1280,
+    "h": 780,
+    "caption": "The two toggles: DAY/NIGHT plays dusk or dawn, and CHANGE LIQUID only goes one way round, blue to green to orange and back to blue, the jewel lamps and the rails following.",
+    "after": 3
    }
   ],
   "pull": "It only feels like one machine when the light agrees everywhere.",
@@ -383,7 +392,8 @@
     "poster": "play/media/2026-10-06-the-workshop/02.jpg?v=4l4o1kp9",
     "w": 960,
     "h": 540,
-    "caption": "The bench header: a hologram cycling through new animals, the live buck, doe, elk and bear on glowing discs, and Marley asleep."
+    "caption": "The bench header: a hologram cycling through new animals, the live buck, doe, elk and bear on glowing discs, and Marley asleep.",
+    "after": 6
    },
    {
     "type": "video",
@@ -391,7 +401,20 @@
     "poster": "play/media/2026-10-06-the-workshop/03.jpg?v=3phi11jn",
     "w": 960,
     "h": 540,
-    "caption": "Import & trace: a cast fox traced to 5 colours and 5 paths, 7 KB, in 693 ms, then set next to the doe to check it belongs."
+    "caption": "Import & trace: a cast fox traced to 5 colours and 5 paths, 7 KB, in 693 ms, then set next to the doe to check it belongs.",
+    "after": 3
+   },
+   {
+    "type": "image",
+    "src": "play/media/2026-10-06-the-workshop/04.jpg",
+    "caption": "Step 1, the prompt builder: pick the kind of part, a style, a pose and which way it faces, and it writes a prompt for flat colours on plain white.",
+    "after": 2
+   },
+   {
+    "type": "image",
+    "src": "play/media/2026-10-06-the-workshop/05.jpg",
+    "caption": "Step 2, import and trace: a winged fox traced to 6 colours and 6 paths, 7 KB, in 164 ms, then set beside the doe to see if it belongs.",
+    "after": 3
    }
   ],
   "pull": "Make the way back in the easy part.",
@@ -575,6 +598,15 @@
     "w": 960,
     "h": 540,
     "caption": "The getaway: the hidden beach at sunset, reached by tapping the fisherman's boat."
+   },
+   {
+    "type": "video",
+    "src": "play/media/2026-10-06-the-lake-v2/05.mp4?v=9y36qrg",
+    "poster": "play/media/2026-10-06-the-lake-v2/05.jpg?v=9y36qrg",
+    "w": 742,
+    "h": 648,
+    "caption": "A visitor: a doe steps out from behind the bush, walks down to the water and stops to graze.",
+    "after": 3
    }
   ],
   "pull": "The scene is the portfolio.",
