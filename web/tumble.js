@@ -147,12 +147,12 @@
   // big glow. Nothing scrolls until the year in the dial itself is picked: then a slow tumble down to it.
   var close = document.querySelector('.tm-close'), closeImg = close && close.querySelector('img'), closeYr = close && close.querySelector('b'), held = 0, heldY = 0;
   var jwls = [].slice.call(document.querySelectorAll('.tm-jw')), brbs = [].slice.call(document.querySelectorAll('.tm-hb.br'));
-  function showClose(k, y) { closeImg.src = 'media/closeup/' + k + '.webp'; closeYr.textContent = y; close.classList.add('on'); }
+  function showClose(k, y) { closeImg.src = 'media/closeup/' + k + '.webp?v=2'; closeYr.textContent = y; close.classList.add('on'); }
   function hideClose() { if (!held) close.classList.remove('on'); }
   function release() { clearTimeout(held); held = 0; close.classList.remove('on', 'held'); close.setAttribute('tabindex', '-1'); }
   [].forEach.call(document.querySelectorAll('[data-close]'), function (b, n) {
     var k = b.getAttribute('data-close'), y = (jwls.filter(function (j) { return j.getAttribute('data-close') === k; })[0] || b).getAttribute('data-b');
-    (new Image()).src = 'media/closeup/' + k + '.webp';
+    (new Image()).src = 'media/closeup/' + k + '.webp?v=2';
     var show = function () { if (!held) showClose(k, y); };
     b.addEventListener('mouseenter', show); b.addEventListener('focus', show); b.addEventListener('mouseleave', hideClose); b.addEventListener('blur', hideClose);
   });
