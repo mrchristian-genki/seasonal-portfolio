@@ -335,3 +335,11 @@ html[data-era="e15"] .tp-rail,html[data-era="e10"] .tp-rail,html[data-era="e05"]
 .win05-bar span{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .win05 img{display:block;width:100%;height:auto;max-height:420px;object-fit:cover;object-position:top;background:#fff}
 .win05 figcaption{padding:8px 10px;font:13px/1.5 "Lucida Grande",Tahoma,sans-serif;color:#223;background:#f2f4f7}
+
+/* 2014-2019: an archived page in a flat, mid-2010s browser window */
+.win15{margin:18px 0 0;border-radius:8px;overflow:hidden;background:#fff;box-shadow:0 10px 30px rgba(0,0,0,.18)}
+.win15-bar{display:flex;align-items:center;gap:6px;padding:8px 12px;background:#eceff1;font:500 12px Roboto,"Helvetica Neue",Arial,sans-serif;color:#555}
+.win15-bar i{flex:none;width:10px;height:10px;border-radius:50%;background:#ff5f57}.win15-bar i+i{background:#febc2e}.win15-bar i+i+i{background:#28c840}
+.win15-bar span{margin-left:10px;flex:1;padding:3px 10px;border-radius:4px;background:#fff;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.win15 img{display:block;width:100%;height:auto}
+.win15 figcaption{padding:8px 12px;font:13px/1.5 Roboto,"Helvetica Neue",Arial,sans-serif;color:#555}
