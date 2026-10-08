@@ -207,3 +207,7 @@ html[data-era="e97"] .tb-browser i,html[data-era="end"] .tb-browser i,html[data-
   .tb-box-btn b{color:#6ee7b7}
 }
 @media (prefers-reduced-motion:reduce){.tb-box li{transition:none}}
+.born .br{font-weight:700}
+.before97{max-width:62ch;margin:18px auto 22px;text-align:left;font-size:16px}
+.before97 h3{margin:0 0 8px;font:bold 16px Arial,sans-serif;color:#000080;text-align:center}
+.before97 ul{margin:0;padding-left:0;list-style:none}.before97 li{margin:0 0 6px}.before97 b{display:inline-block;width:3.2em;color:#800000}
