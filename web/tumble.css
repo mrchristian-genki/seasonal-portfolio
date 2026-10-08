@@ -257,10 +257,11 @@ html[data-era="e15"] .tbx-t,html[data-era="e10"] .tbx-t,html[data-era="e05"] .tb
 .tm-jw,.tm-port,.tm-scr{left:calc(var(--x) * 1px);top:calc(var(--y) * 1px)}
 .tm-jw{width:44px;height:44px;margin:-22px 0 0 -22px;padding:0;border:0;border-radius:50%;cursor:pointer;background:radial-gradient(circle,var(--c) 0,color-mix(in srgb,var(--c) 45%,transparent) 40%,transparent 72%);
   box-shadow:0 0 0 0 var(--c);transition:transform .35s cubic-bezier(.3,1.5,.5,1),opacity .6s,filter .6s;animation:tm-jw 3.6s ease-in-out infinite;animation-delay:var(--d)}
-.tm-jw img{position:absolute;inset:3px;width:38px;height:38px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(255,230,180,.5)}
-.tm-jw::after{content:"";position:absolute;inset:3px;border-radius:50%;background:radial-gradient(circle at 34% 28%,rgba(255,255,255,.75),transparent 32%);pointer-events:none}
+/* each jewel is Christian's button render: lit on the left of its sprite, unlit on the right */
+.tm-jw img{position:absolute;inset:-2px;width:48px;height:48px;object-fit:cover;object-position:0 0;filter:drop-shadow(0 2px 3px rgba(0,0,0,.55))}
+.tm-jw.off img{object-position:100% 0;filter:brightness(.8) drop-shadow(0 2px 3px rgba(0,0,0,.55))}
 .tm-jw.has{background:none}
-.tm-jw.off{filter:grayscale(.85) brightness(.45);animation:none}
+.tm-jw.off{animation:none}
 .tm-jw span{position:absolute;left:50%;top:100%;margin-top:6px;translate:-50% 0;white-space:nowrap;padding:3px 8px;border-radius:6px;background:rgba(10,8,6,.85);color:#f6e3c6;font:700 12px system-ui,sans-serif;opacity:0;pointer-events:none;transition:opacity .2s}
 .tm-jw span i{font:600 11px ui-monospace,Menlo,monospace;font-style:normal;color:#cbb79d}
 .tm-jw:hover,.tm-jw:focus-visible{z-index:5;transform:scale(2.4);outline:none}
