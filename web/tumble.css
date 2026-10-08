@@ -258,7 +258,7 @@ html[data-era="e15"] .tbx-t,html[data-era="e10"] .tbx-t,html[data-era="e05"] .tb
 .tm-jw{width:44px;height:44px;margin:-22px 0 0 -22px;padding:0;border:0;border-radius:50%;cursor:pointer;background:radial-gradient(circle,var(--c) 0,color-mix(in srgb,var(--c) 45%,transparent) 40%,transparent 72%);
   box-shadow:0 0 0 0 var(--c);transition:transform .35s cubic-bezier(.3,1.5,.5,1),opacity .6s,filter .6s;animation:tm-jw 3.6s ease-in-out infinite;animation-delay:var(--d)}
 /* each jewel is Christian's button render: lit on the left of its sprite, unlit on the right */
-.tm-jw img{position:absolute;inset:-2px;width:48px;height:48px;object-fit:cover;object-position:0 0;filter:drop-shadow(0 2px 3px rgba(0,0,0,.55))}
+.tm-jw img{position:absolute;inset:-2px;width:48px;height:48px;object-fit:cover;object-position:0 0;filter:drop-shadow(0 2px 3px rgba(0,0,0,.55));transition:filter .5s}
 .tm-jw.off img{object-position:100% 0;filter:brightness(.8) drop-shadow(0 2px 3px rgba(0,0,0,.55))}
 .tm-jw.has{background:none}
 .tm-jw.off{animation:none}
@@ -289,7 +289,8 @@ html.tm-spin .tm-nd{transition:rotate 1s cubic-bezier(.2,.8,.3,1);rotate:400deg!
 html.flux .tm-flash{animation:tm-flash .9s ease-out}
 @keyframes tm-flash{8%{opacity:1}100%{opacity:0}}
 html.tm-dark .tm-room{filter:brightness(.32) saturate(.5)}
-html.tm-dark .tm-jw,html.tm-dark .tm-port{opacity:0;animation:none}
+html.tm-dark .tm-port{opacity:0;animation:none}
+html.tm-dark .tm-jw{animation:none}html.tm-dark .tm-jw img{object-position:100% 0;filter:brightness(.8)}
 .tm-title{position:absolute;left:clamp(20px,4vw,72px);top:clamp(120px,22%,220px);max-width:min(36vw,520px);z-index:2}
 @media (min-width:1101px){.tm-title{left:228px}}
 .tm-title .tb-kick{margin:0}

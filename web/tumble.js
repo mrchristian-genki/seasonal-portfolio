@@ -44,7 +44,7 @@
   }
   // the toolbox: each browser badge and each tool fades in once its year comes round, and out again as you fall past it
   var tbx = [].slice.call(document.querySelectorAll('.tbx-g li')), tbxN = document.querySelectorAll('[data-tbx-count]');
-  var brs = [].slice.call(document.querySelectorAll('[data-tbx-br] li, .tm-jw'));
+  var brs = [].slice.call(document.querySelectorAll('[data-tbx-br] li'));
   function toolbox(y) {
     var n = 0;
     tbx.forEach(function (li) { var have = y >= +li.getAttribute('data-y'); if (have) n++; li.classList.toggle('off', !have); });
@@ -53,7 +53,6 @@
     brs.forEach(function (li) {
       var b = +li.getAttribute('data-b'), e = +(li.getAttribute('data-e') || 9999), on = y >= b && y <= e;
       li.classList.toggle('off', !on);
-      if (li.classList.contains('tm-jw')) return;
       var nm = li.querySelector('.sr').textContent;
       li.title = nm + (y < b ? ': not yet (' + b + ')' : y > e ? ': gone since ' + e : ': since ' + b);
     });
@@ -130,6 +129,27 @@
   [].forEach.call(document.querySelectorAll('[data-go]'), function (b) {
     b.addEventListener('click', function () { var y = +b.getAttribute('data-go'); if (y < 1997) { if (end) scrollTo({ top: end.getBoundingClientRect().top + scrollY, behavior: still ? 'auto' : 'smooth' }); } else goYear(y, true); });
   });
+  // the jewels: all lit, and now and then a slow pattern runs through them (a chase round the ring, every other one,
+  // a few at random, a sweep off and back on), only while the cockpit is on screen
+  var jw = [].slice.call(document.querySelectorAll('.tm-jw')), jwOn = true, jwT = 0, jwSeen = true;
+  function jset(f) { jw.forEach(function (b, i) { b.classList.toggle('off', !!f(i)); }); }
+  var PAT = [
+    function (t) { return function (i) { return i === t % 9; }; },
+    function (t) { return function (i) { return (i + t) % 2; }; },
+    function () { var r = jw.map(function () { return Math.random() < .35; }); return function (i) { return r[i]; }; },
+    function (t) { return function (i) { return i < (t % 18 < 9 ? t % 9 : 9 - t % 9); }; },
+    function (t) { return function (i) { return Math.abs(i - 4) === t % 5; }; },
+    function () { return function () { return false; }; }
+  ];
+  if (jw.length && !still) {
+    var pat = PAT[5], step = 0;
+    setInterval(function () {
+      if (!jwSeen || document.hidden || root.classList.contains('tm-dark')) return;
+      if (step % 10 === 0) pat = PAT[Math.random() < .3 ? 5 : Math.floor(Math.random() * 5)];
+      jset(pat(step)); step++;
+    }, 650);
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { jwSeen = es[0].isIntersecting; if (!jwSeen) jset(function () { return false; }); }).observe(document.querySelector('.tm-view'));
+  }
   // the switch panels: power, the jewel lamps, and 88
   [].forEach.call(document.querySelectorAll('[data-pnl]'), function (b) {
     b.addEventListener('click', function () {
