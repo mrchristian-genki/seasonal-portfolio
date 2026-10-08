@@ -331,6 +331,16 @@ html.tm-dark .tm-jw{animation:none}html.tm-dark .tm-jw img.unlit{opacity:1}
 .tm-hb:hover::before,.tm-hb:focus-visible::before{opacity:.45}
 .tm-hb:focus-visible{outline:1px solid #7ff3e6;outline-offset:2px}
 .tm-hb.lit::before{opacity:.95}
+/* the 88 button breathes all the time, slowly, as if to say "now" */
+.tm-hb.beckon::before{inset:-110%;animation:tm-beckon 3.2s ease-in-out infinite}
+@keyframes tm-beckon{0%,100%{opacity:.15;transform:scale(.75)}50%{opacity:.9;transform:scale(1.1)}}
+/* hitting 88: the dial's face reads 88 MPH, swelling and fading three times, before the jump */
+.tm-88{left:600px;top:299px;width:176px;height:176px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;
+  font-family:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;color:#ffb02e;opacity:0;background:radial-gradient(circle,rgba(14,6,0,.85) 0,rgba(14,6,0,.7) 50%,transparent 72%)}
+.tm-88 b{font-size:64px;line-height:1;letter-spacing:.04em;text-shadow:0 0 10px #ff8a1a,0 0 26px #ff6a00}
+.tm-88 span{font:800 16px/1 system-ui,sans-serif;letter-spacing:.3em;margin-top:4px;text-shadow:0 0 8px #ff8a1a}
+html.tm-88on .tm-88{animation:tm-88 .95s ease-in-out 3}
+@keyframes tm-88{0%,100%{opacity:0}45%,60%{opacity:1}}
 /* a jewel picked above: its button on the console swells into a big, slow, breathing glow */
 .tm-hb.mega::before{inset:-240%;opacity:1;animation:tm-mega 2.4s ease-in-out infinite}
 .tm-hb.mega{box-shadow:0 0 14px 4px var(--c),0 0 34px 10px color-mix(in srgb,var(--c) 50%,transparent);transition:box-shadow 1s ease-in-out}
@@ -371,7 +381,7 @@ html[data-era="e15"] .tp-rail,html[data-era="e10"] .tp-rail,html[data-era="e05"]
 .tp-rail.drag .tp-mark{transition:none}
 @media (max-width:1100px){.tb-tape{top:58px;bottom:175px;width:30px;right:4px}.tp-rail{width:30px;background:linear-gradient(90deg,transparent 0 12px,rgba(10,16,24,.45) 12px)}.tp-ticks b{display:none}.tp-mark b{right:36px}
   .era-in,.tb-now-in,.tb-end{padding-right:22px}}
-@media (prefers-reduced-motion:reduce){.tm-hb.mega::before,.tb-now,.tm-jw,.tm-port::before,.tm-nd{animation:none!important}.tm-nd{transition:none}.tp-mark{transition:none}}
+@media (prefers-reduced-motion:reduce){.tm-hb.beckon::before,.tm-hb.mega::before,.tb-now,.tm-jw,.tm-port::before,.tm-nd{animation:none!important}.tm-nd{transition:none}.tp-mark{transition:none}}
 
 /* 2005-2009: archived pages in a mid-2000s browser window, grey chrome and a blue tab */
 .win05s{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:18px;margin:18px 0 22px}
