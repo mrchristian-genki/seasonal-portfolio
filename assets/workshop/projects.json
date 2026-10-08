@@ -250,6 +250,12 @@
     "w": 960,
     "h": 540,
     "caption": "Kindle Cover: two images, a title, and a live preview of the 1,600 by 2,560 ebook cover."
+   },
+   {
+    "type": "image",
+    "src": "play/media/2026-10-06-the-propre-engine/07.jpg",
+    "caption": "A printer’s proof of a colouring page: the dashed safe zone, the art running past the trim into the bleed, and a loupe to check it. Every rule in ProPre is a mistake made once.",
+    "after": 5
    }
   ],
   "pull": "Build the tool before the hundredth book, not after.",
@@ -433,6 +439,18 @@
     "src": "play/media/2026-10-06-the-workshop/05.jpg",
     "caption": "Step 2, import and trace: a winged fox traced to 6 colours and 6 paths, 7 KB, in 164 ms, then set beside the doe to see if it belongs.",
     "after": 3
+   },
+   {
+    "type": "image",
+    "src": "play/media/2026-10-06-the-workshop/06.jpg",
+    "caption": "The kit sheet: a lakeside scene asked for as separate pieces on one page (a pine, two rocks, a strip of shore, the reeds), each traced on its own.",
+    "after": 4
+   },
+   {
+    "type": "image",
+    "src": "play/media/2026-10-06-the-workshop/07.jpg",
+    "caption": "Step 3, cut and rig, next: a paper fox split at the joints and pinned with brass pivots, so it can move like the rest of the cast.",
+    "after": 5
    }
   ],
   "pull": "Make the way back in the easy part.",
@@ -625,6 +643,12 @@
     "h": 648,
     "caption": "A visitor: a doe steps out from behind the bush, walks down to the water and stops to graze.",
     "after": 3
+   },
+   {
+    "type": "image",
+    "src": "play/media/2026-10-06-the-lake-v2/06.jpg",
+    "caption": "A winter night in a pocket watch: the lake, the moon and the falling snow, kept smooth at 56 frames a second.",
+    "after": 5
    }
   ],
   "pull": "The scene is the portfolio.",

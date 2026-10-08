@@ -41,13 +41,13 @@ help. This is the list, project by project, with prompts ready to copy.
 
 1. **Done (Oct 8): the prompt builder,** with the Import & trace of a winged fox beside it. Step 1 with a kind, a style and Kit sheet picked, and the prompt written out.
    *Goes:* "It works in steps".
-2. **Render: the kit sheet.**
+2. **Done (Oct 8): the kit sheet.**
    > [The look.] On the bench, a sheet of heavy paper laid out like a model kit: separate flat-coloured pieces of a
    > lakeside scene (a rock, a pine, a strip of shoreline, a reed bed) arranged neatly with space around each, a
    > brass ruler and a craft knife beside it.
 
    *Goes:* "The kit-sheet option came from a failure".
-3. **Render: cut and rig, next.**
+3. **Done (Oct 8): cut and rig, next.**
    > [The look.] A paper origami fox lying on a cutting mat, its legs and neck separated at the joints and pinned
    > with tiny brass pivots, a jeweller's loupe and tweezers beside it, one leg lifting slightly as if testing.
 
@@ -76,7 +76,7 @@ help. This is the list, project by project, with prompts ready to copy.
    paragraph, or "Most of the work nobody sees".
 3. **Done (Oct 8): a visitor,** a doe walking down to graze. A buck walking out of the trees, or the fox sniffing at the headline. *Goes:* "Then the
    visitors".
-4. **Render (optional): the frame rate.**
+4. **Done (Oct 8): the frame rate,** a winter night in a pocket watch.
    > [The look.] A brass pocket watch lying open on the bench, its glass face showing a tiny snowy lake at night
    > inside, snowflakes falling smoothly, the watch's hands ticking.
 
@@ -86,7 +86,7 @@ help. This is the list, project by project, with prompts ready to copy.
 
 1. **Capture: MegaData.** The listing tab writing titles, keywords and the description in one go. *Goes:* "I
    called it ProPre".
-2. **Render: the rules learned the hard way.**
+2. **Done (Oct 8): the rules learned the hard way,** a proof sheet under a loupe.
    > [The look.] A printer's proof sheet of a black-and-white colouring page pinned to the bench, with pencilled
    > crop marks, a dashed safe-zone border and the art running past the trim into the bleed, a brass loupe resting
    > on it.
