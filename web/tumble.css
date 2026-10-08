@@ -238,72 +238,106 @@ html[data-era="e15"] .tbx-t,html[data-era="e10"] .tbx-t,html[data-era="e05"] .tb
 .e97 .sites-acc p span{border-radius:0;background:#fff;border:1px solid #808080}
 .credit{max-width:62ch;margin:0 auto 12px;font-size:12px;opacity:.7}
 
-/* the top, now: the browser as a time machine. A machine of glass rings and gems (the browsers, glowing in their
-   colours like pressed and uranium glass) turns behind the title, the lamps blink, the colours drift through the
-   whole spectrum, and the readouts and chart say where you're going. Fall fast enough (88) and it flashes. */
+/* the top, now: the browser as a time machine. The cockpit is Christian's render of a retro control room
+   (media/tm/console.jpg); on it, drawn in place: the readouts on its three screens, the jewel lamps round the big
+   dial pulsing, light swirling in the portholes, and needles (his needle sprite) that swing with the year, the fall
+   speed and the toolbox. Below: the chart in his TV set, a row of his gauges, and three of his switch panels that
+   work. Fall fast enough (88) and it flashes. */
 @property --h{syntax:"<angle>";inherits:true;initial-value:0deg}
-.tb-now{position:relative;min-height:100vh;overflow:hidden;isolation:isolate;padding:96px 20px 64px;display:flex;align-items:center;--h:0deg;animation:tm-hue 24s linear infinite}
+.tb-now{position:relative;overflow:hidden;isolation:isolate;padding:0 0 64px;--h:0deg;animation:tm-hue 24s linear infinite;
+  background:radial-gradient(ellipse at 15% 60%,hsl(calc(var(--h) + 280deg) 80% 45% / .16),transparent 50%),radial-gradient(ellipse at 85% 80%,hsl(calc(var(--h) + 160deg) 80% 45% / .14),transparent 50%),linear-gradient(180deg,#1a110b,#120c08 60%,#0d1b2a)}
 @keyframes tm-hue{to{--h:360deg}}
-.tb-now-in{position:relative;z-index:2;max-width:820px;margin:0 auto;width:100%}
-.tm{position:absolute;inset:0;z-index:0;pointer-events:none}
-.tm-sky{position:absolute;inset:-10%;filter:blur(40px) saturate(1.4);opacity:.85;
-  background:radial-gradient(circle at 20% 25%,hsl(calc(var(--h) + 280deg) 90% 55% / .55),transparent 40%),radial-gradient(circle at 80% 30%,hsl(calc(var(--h) + 160deg) 95% 50% / .5),transparent 42%),
-  radial-gradient(circle at 65% 85%,hsl(calc(var(--h) + 40deg) 95% 55% / .45),transparent 45%),radial-gradient(circle at 15% 90%,hsl(calc(var(--h) + 100deg) 90% 50% / .4),transparent 40%),#070b16}
-.tb-now::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(90deg,rgba(7,11,22,.82) 0,rgba(7,11,22,.55) 45%,rgba(7,11,22,.1) 75%),linear-gradient(0deg,#0d1b2a,transparent 22%)}
-.tm-core{position:absolute;right:-6vmin;top:50%;width:min(92vmin,820px);aspect-ratio:1;translate:0 -50%;filter:blur(1.2px)}
-.tm-ring{position:absolute;border-radius:50%;inset:var(--in);animation:tm-spin var(--t) linear infinite}
-.tm-ring.r1{--in:0;--t:60s;background:conic-gradient(from 0deg,#b48a3c,#ffe6a6,#7a5520,#ffd27a,#9c6f2c,#fff1c9,#b48a3c);
-  -webkit-mask:radial-gradient(closest-side,transparent 90%,#000 91%,#000 98%,transparent 99%);mask:radial-gradient(closest-side,transparent 90%,#000 91%,#000 98%,transparent 99%)}
-.tm-ring.r2{--in:7%;--t:40s;animation-direction:reverse;background:repeating-conic-gradient(from 0deg,hsl(calc(var(--h) + 120deg) 100% 60%) 0 2deg,transparent 2deg 10deg);
-  -webkit-mask:radial-gradient(closest-side,transparent 92%,#000 93%,#000 99%,transparent 100%);mask:radial-gradient(closest-side,transparent 92%,#000 93%,#000 99%,transparent 100%);filter:drop-shadow(0 0 6px hsl(calc(var(--h) + 120deg) 100% 60%))}
-.tm-ring.r3{--in:16%;--t:90s;border:2px solid rgba(255,214,140,.55);box-shadow:0 0 30px rgba(120,255,90,.35),inset 0 0 40px rgba(120,255,90,.25);
-  background:radial-gradient(closest-side,transparent 70%,rgba(120,255,90,.10) 85%,transparent 100%)}
-.tm-ring.r4{--in:27%;--t:25s;background:conic-gradient(from 90deg,transparent 0 20%,hsl(calc(var(--h) + 200deg) 100% 65% / .9) 25%,transparent 30% 70%,hsl(calc(var(--h) + 20deg) 100% 65% / .9) 75%,transparent 80%);
-  -webkit-mask:radial-gradient(closest-side,transparent 88%,#000 90%,#000 96%,transparent 98%);mask:radial-gradient(closest-side,transparent 88%,#000 90%,#000 96%,transparent 98%)}
+.tm-cockpit{position:relative;height:clamp(520px,100vh,960px)}
+.tm-view{position:absolute;inset:0;overflow:hidden}
+.tm-view::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(0deg,#1a110b 0,rgba(26,17,11,0) 22%),linear-gradient(90deg,rgba(16,10,6,.55),rgba(16,10,6,0) 36%)}
+.tm-room{position:absolute;left:0;top:0;width:1376px;height:768px;transform-origin:0 0;--u:1;transition:filter .8s}
+.tm-bg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.tm-room>*{position:absolute}
+.tm-jw,.tm-port,.tm-scr{left:calc(var(--x) * 1px);top:calc(var(--y) * 1px)}
+.tm-jw{width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:50%;background:radial-gradient(circle,var(--c) 0,color-mix(in srgb,var(--c) 40%,transparent) 35%,transparent 70%);
+  mix-blend-mode:screen;opacity:.15;animation:tm-jw 3.6s ease-in-out infinite;animation-delay:var(--d)}
+@keyframes tm-jw{15%{opacity:.95}40%{opacity:.25}}
+html.tm-burst .tm-jw{animation:tm-jwb .25s steps(2) 6}
+@keyframes tm-jwb{50%{opacity:1}}
+.tm-port{width:calc(var(--w) * 1px);height:calc(var(--h) * 1px);margin:calc(var(--h) * -.5px) 0 0 calc(var(--w) * -.5px);border-radius:50%;overflow:hidden;mix-blend-mode:screen;opacity:.55}
+.tm-port::before{content:"";position:absolute;inset:-60%;background:repeating-conic-gradient(from 0deg,rgba(255,226,150,.9) 0 6deg,rgba(255,180,60,0) 6deg 18deg),radial-gradient(circle,#fff6d0,transparent 60%);
+  filter:blur(5px);animation:tm-spin 9s linear infinite}
 @keyframes tm-spin{to{rotate:360deg}}
-.tm-heart{position:absolute;inset:36%;border-radius:50%;background:radial-gradient(circle,#fff 0,#d6ffb8 12%,#7dff4a 30%,rgba(60,200,40,.35) 55%,transparent 72%);box-shadow:0 0 80px 20px rgba(120,255,80,.35);animation:tm-pulse 3.2s ease-in-out infinite}
-@keyframes tm-pulse{50%{transform:scale(.9);filter:brightness(1.35) hue-rotate(-20deg)}}
-.tm-gems{list-style:none;margin:0;padding:0;position:absolute;inset:0;animation:tm-spin 120s linear infinite}
-.tm-gems li{position:absolute;left:50%;top:50%;width:13%;aspect-ratio:1;margin:-6.5%;border-radius:50%;
-  transform:rotate(calc(var(--i) * 40deg)) translateY(-205%) rotate(calc(var(--i) * -40deg));
-  background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.75),transparent 30%),radial-gradient(circle,color-mix(in srgb,var(--c) 70%,#fff) 0,var(--c) 45%,color-mix(in srgb,var(--c) 40%,#000) 100%);
-  box-shadow:0 0 0 3px rgba(255,220,150,.75),0 0 0 6px rgba(80,50,15,.8),0 0 28px 6px var(--c);animation:tm-gem 4s ease-in-out infinite;animation-delay:calc(var(--i) * -.45s)}
-.tm-gems img{width:70%;height:70%;margin:15%;display:block;mix-blend-mode:screen;opacity:.9;filter:saturate(1.3) drop-shadow(0 0 6px var(--c));animation:tm-spin 120s linear infinite reverse}
-@keyframes tm-gem{50%{box-shadow:0 0 0 3px rgba(255,220,150,.75),0 0 0 6px rgba(80,50,15,.8),0 0 60px 16px var(--c);filter:brightness(1.25)}}
-/* the lamps: Christian's own lamp sheet (media/lamps.webp: nine lamps lit on the top row, dark below), each blinking at its own pace */
-.tm-lamps{position:absolute;right:230px;bottom:5vh;display:grid;grid-template-columns:repeat(4,46px);gap:8px;transform:rotate(-6deg);opacity:.95}
-.tm-lamps i{position:relative;width:46px;height:46px;background:url(media/lamps.webp) calc(var(--x) * 12.5%) 100%/900% 200% no-repeat}
-.tm-lamps i::after{content:"";position:absolute;inset:0;background:url(media/lamps.webp) calc(var(--x) * 12.5%) 0/900% 200% no-repeat;
-  filter:drop-shadow(0 0 10px var(--c));opacity:0;animation:tm-lamp 2.8s steps(1) infinite;animation-delay:var(--d)}
-@keyframes tm-lamp{0%,55%{opacity:1}}
-.tm-flash{position:absolute;inset:0;background:radial-gradient(circle at 70% 50%,#fff,rgba(160,220,255,.6) 30%,transparent 70%);opacity:0}
+.tm-scr{width:calc(var(--w) * 1px);height:calc(var(--h) * 1px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border-radius:14px;overflow:hidden;
+  font-family:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;color:#0a3550;text-align:center;
+  background:repeating-linear-gradient(0deg,rgba(255,255,255,.07) 0 2px,rgba(0,0,0,.05) 2px 4px)}
+.tm-scr span{font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;opacity:.75}
+.tm-scr b{font-size:24px;line-height:1.05;letter-spacing:.03em;text-shadow:0 0 6px rgba(255,255,255,.7);padding:0 6px}
+.tm-scr:nth-of-type(2) b{font-size:17px}
+.tm-nd{left:calc((var(--x) - 19 * var(--r) / 173) * 1px);top:calc((var(--y) - 178 * var(--r) / 173) * 1px);width:calc(38px * var(--r) / 173);height:calc(222px * var(--r) / 173);
+  transform-origin:50% 80.2%;rotate:var(--a,-110deg);transition:rotate .5s cubic-bezier(.3,1.6,.5,1);filter:drop-shadow(0 2px 2px rgba(0,0,0,.5)) saturate(1.3) hue-rotate(-12deg)}
+.tm-nd[data-nd^="w"]{animation:tm-wob 3s ease-in-out infinite alternate;transition:none}
+.tm-nd[data-nd="w2"]{animation-duration:2.2s}.tm-nd[data-nd="w3"]{animation-duration:3.7s;animation-delay:-1s}.tm-nd[data-nd="w4"]{animation-duration:2.7s;animation-delay:-2s}.tm-nd[data-nd="w5"]{animation-duration:4.1s}
+@keyframes tm-wob{0%{rotate:-60deg}30%{rotate:-20deg}55%{rotate:-35deg}100%{rotate:25deg}}
+html.tm-spin .tm-nd{transition:rotate 1s cubic-bezier(.2,.8,.3,1);rotate:400deg!important;animation:none}
+.tm-flash{inset:0;background:radial-gradient(circle at 80% 30%,#fff,rgba(255,236,190,.7) 25%,transparent 65%);opacity:0;pointer-events:none}
 html.flux .tm-flash{animation:tm-flash .9s ease-out}
 @keyframes tm-flash{8%{opacity:1}100%{opacity:0}}
-.tb-now h1{background:linear-gradient(100deg,hsl(var(--h) 100% 72%),hsl(calc(var(--h) + 70deg) 100% 70%),hsl(calc(var(--h) + 150deg) 100% 72%),hsl(calc(var(--h) + 230deg) 100% 75%));-webkit-background-clip:text;background-clip:text;filter:drop-shadow(0 0 22px hsl(calc(var(--h) + 120deg) 100% 60% / .45))}
-.tb-now .tb-kick{color:hsl(calc(var(--h) + 140deg) 90% 70%)}
-.tb-now .tb-lede{color:#dfe8ee;text-shadow:0 1px 12px #070b16}
-/* the readouts: three rows of lit digits, red, green and amber */
-.tm-panel{display:grid;grid-template-columns:repeat(3,auto);justify-content:start;gap:8px;margin:26px 0 0;padding:10px;border-radius:12px;background:rgba(10,12,16,.7);border:1px solid rgba(255,214,140,.35);box-shadow:inset 0 0 0 3px rgba(0,0,0,.4);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+html.tm-dark .tm-room{filter:brightness(.32) saturate(.5)}
+html.tm-dark .tm-jw,html.tm-dark .tm-port{opacity:0;animation:none}
+.tm-title{position:absolute;left:clamp(20px,4vw,72px);top:clamp(140px,26%,260px);max-width:min(36vw,520px);z-index:2}
+.tm-title .tb-kick{margin:0}
+.tb-now h1{margin:6px 0 0;font:900 clamp(44px,5.8vw,92px)/.92 "Nunito","Avenir Next","Segoe UI",sans-serif;letter-spacing:-.04em;
+  background:linear-gradient(100deg,hsl(var(--h) 100% 72%),hsl(calc(var(--h) + 70deg) 100% 70%),hsl(calc(var(--h) + 150deg) 100% 72%),hsl(calc(var(--h) + 230deg) 100% 75%));-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 2px 0 rgba(0,0,0,.6)) drop-shadow(0 0 22px hsl(calc(var(--h) + 120deg) 100% 60% / .45))}
+.tb-now .tb-kick{color:hsl(calc(var(--h) + 140deg) 90% 72%);text-shadow:0 1px 6px #000}
+.tb-now-in{position:relative;z-index:2;max-width:1000px;margin:-40px auto 0;padding:0 20px;width:100%}
+.tb-now .tb-lede{max-width:62ch;color:#f1e6d8;text-shadow:0 1px 12px #000}
+/* the readouts, for phones and screen readers (on wide screens they're on the cockpit's screens) */
+.tm-panel{display:grid;grid-template-columns:repeat(3,auto);justify-content:start;gap:8px;margin:22px 0 0;padding:10px;border-radius:12px;background:rgba(10,12,16,.7);border:1px solid rgba(255,214,140,.35)}
 .tc{margin:0;display:flex;flex-direction:column;gap:3px}
 .tc span{font:800 9px system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#cfd6dc;padding:2px 6px;background:#9a1b1b;border-radius:2px;text-align:center}
-.tc b{padding:4px 10px;border-radius:4px;background:#060606;border:1px solid #222;font:700 clamp(18px,3vw,26px)/1.1 ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;letter-spacing:.08em;white-space:nowrap;font-variant-numeric:tabular-nums}
-.tc-dest b{color:#ff4b3a;text-shadow:0 0 8px #ff3b2a,0 0 18px #ff3b2a88}
-.tc-now b{color:#4dff6a;text-shadow:0 0 8px #3dff5a,0 0 18px #3dff5a88}
-.tc-last b{color:#ffb31f;text-shadow:0 0 8px #ffaa1a,0 0 18px #ffaa1a88}
-/* the chart */
-.tm-chart{margin:22px 0 0;padding:12px 14px 10px;border-radius:14px;background:rgba(7,11,22,.55);border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);max-width:640px}
-.tm-chart figcaption{font:700 11px system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#cfe3ee;margin:0 0 6px}
-.tm-chart svg{display:block;width:100%;height:auto;overflow:visible}
-.tm-chart text{font:600 10px system-ui,sans-serif;fill:#9fb6c4}
-.tm-chart .ar{filter:drop-shadow(0 0 6px var(--c))}
-.tm-key{display:flex;flex-wrap:wrap;gap:4px 12px;margin:6px 0 0;font:600 12px system-ui,sans-serif;color:#dfe8ee}
+.tc b{padding:4px 10px;border-radius:4px;background:#060606;border:1px solid #222;font:700 clamp(18px,3vw,24px)/1.1 ui-monospace,Menlo,Consolas,monospace;white-space:nowrap}
+.tc-dest b{color:#ff4b3a;text-shadow:0 0 8px #ff3b2a}.tc-now b{color:#4dff6a;text-shadow:0 0 8px #3dff5a}.tc-last b{color:#ffb31f;text-shadow:0 0 8px #ffaa1a}
+@media (min-width:761px){.tm-panel{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);margin:0;padding:0;border:0}}
+/* the desk: the chart on the TV, the gauges beside it */
+.tm-desk{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:24px;align-items:center;margin:28px 0 0}
+.tm-tv{margin:0}
+.tm-tv-set{position:relative}
+.tm-tv-set img{display:block;width:100%;height:auto;filter:drop-shadow(0 14px 24px rgba(0,0,0,.55))}
+.tm-tv-scr{position:absolute;left:21.6%;top:16.4%;width:56.6%;height:65%;border-radius:9%/13%;overflow:hidden;padding:5% 5% 7% 4%;
+  background:radial-gradient(ellipse at 50% 40%,#0d3a52,#061826 75%);box-shadow:inset 0 0 30px rgba(0,0,0,.8)}
+.tm-tv-scr::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(255,255,255,.04) 0 2px,transparent 2px 4px),radial-gradient(ellipse at 30% 20%,rgba(255,255,255,.12),transparent 50%)}
+.tm-tv-scr svg{display:block;width:100%;height:100%;overflow:visible}
+.tm-tv svg text{font:600 11px system-ui,sans-serif;fill:#9fd8ee}
+.tm-tv .ar{filter:drop-shadow(0 0 5px var(--c))}
+.tm-tv figcaption{margin:8px 0 0;font:700 11px system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#e9d9c4}
+.tm-key{display:flex;flex-wrap:wrap;gap:4px 12px;margin:6px 0 0;font:600 12px system-ui,sans-serif;color:#f1e6d8}
 .tm-key i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px;background:var(--c);box-shadow:0 0 8px var(--c)}
+.tm-gauges{display:grid;grid-template-columns:repeat(3,1fr);gap:10px 8px}
+.tm-g{margin:0;text-align:center}
+.tm-g .dial{position:relative;aspect-ratio:224/218}
+.tm-g .dial>img{position:absolute}
+.tm-g .face{inset:0;width:100%;height:100%}
+.tm-g .nd{left:44.9%;top:9.6%;width:8%;height:48%;transform-origin:50% 80.2%;rotate:var(--a,-120deg);transition:rotate 2.4s cubic-bezier(.3,1.25,.4,1);filter:drop-shadow(0 2px 2px rgba(0,0,0,.5)) saturate(1.3) hue-rotate(-12deg)}
+.tm-g figcaption{font:700 10px system-ui,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#e9d9c4;margin-top:2px}
+.tm-g figcaption b{display:block;font:700 13px ui-monospace,Menlo,monospace;letter-spacing:0;color:#7ff3e6;text-shadow:0 0 6px rgba(127,243,230,.6)}
+/* the switch panels: power, the lamps, and 88 */
+.tm-pnls{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:26px 0 0}
+.tm-pnl{position:relative;padding:0;border:0;background:none;cursor:pointer;border-radius:10px;filter:drop-shadow(0 8px 14px rgba(0,0,0,.5));transition:transform .15s}
+.tm-pnl:active{transform:translateY(2px)}
+.tm-pnl:focus-visible{outline:2px solid #7ff3e6;outline-offset:4px}
+.tm-pnl img{display:block;width:100%;height:auto}
+.tm-pnl img.off{position:absolute;inset:0;opacity:0}
+.tm-pnl[aria-pressed="false"] img.off{opacity:1}
+.tm-pnl.blink img.off{animation:tm-blink 2.4s steps(1) infinite}
+@keyframes tm-blink{0%,70%{opacity:0}71%,85%{opacity:1}86%{opacity:0}92%{opacity:1}}
+html.tm-dark .tm-pnl:not([data-pnl="power"]) img.off{opacity:1;animation:none}
 html.flux .tb-year{text-shadow:0 0 12px #fff,0 0 30px #7fdfff}
 @media (max-width:760px){
-  .tm-core{right:-30vmin;top:30%;width:110vmin;opacity:.7}
-  .tb-now::after{background:linear-gradient(90deg,rgba(7,11,22,.8),rgba(7,11,22,.45)),linear-gradient(0deg,#0d1b2a,transparent 22%)}
+  .tm-cockpit{height:auto;display:flex;flex-direction:column}
+  .tm-view{position:relative;inset:auto;height:62vh;min-height:340px}
+  .tm-view::after{background:linear-gradient(0deg,#1a110b 0,rgba(26,17,11,0) 25%)}
+  .tm-title{position:static;max-width:none;padding:0 20px;margin-top:-30px}
+  .tb-now-in{margin-top:14px}
   .tm-panel{grid-template-columns:1fr}.tc{flex-direction:row;align-items:center;justify-content:space-between}.tc span{width:9.5em}
-  .tm-lamps{display:none}
+  .tm-desk{grid-template-columns:1fr}
+  .tm-pnls{grid-template-columns:1fr;max-width:420px}
 }
 
 /* the tape: the whole fall as a measuring tape down the right side. Each year is a mark, each era a band in its colour;
@@ -327,7 +361,7 @@ html[data-era="e15"] .tp-rail,html[data-era="e10"] .tp-rail,html[data-era="e05"]
 .tp-rail.drag .tp-mark{transition:none}
 @media (max-width:1100px){.tb-tape{top:58px;bottom:175px;width:30px;right:4px}.tp-rail{width:30px;background:linear-gradient(90deg,transparent 0 12px,rgba(10,16,24,.45) 12px)}.tp-ticks b{display:none}.tp-mark b{right:36px}
   .era-in,.tb-now-in,.tb-end{padding-right:22px}}
-@media (prefers-reduced-motion:reduce){.tb-now,.tm-ring,.tm-gems,.tm-gems img,.tm-heart,.tm-gems li,.tm-lamps i{animation:none}.tm-lamps i:nth-child(odd)::after{opacity:1}.tp-mark{transition:none}}
+@media (prefers-reduced-motion:reduce){.tb-now,.tm-jw,.tm-port::before,.tm-nd,.tm-pnl.blink img.off{animation:none!important}.tm-jw{opacity:.6}.tm-nd,.tm-g .nd{transition:none}.tp-mark{transition:none}}
 
 /* 2005-2009: archived pages in a mid-2000s browser window, grey chrome and a blue tab */
 .win05s{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:18px;margin:18px 0 22px}

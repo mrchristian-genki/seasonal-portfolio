@@ -26,12 +26,13 @@
     if (end && end.getBoundingClientRect().top < mid) { year = 1997; era = 'end'; }
     if (now && now.getBoundingClientRect().bottom > mid) era = 'now';
     tapeAt(year);
-    if (year !== shownYear) { yearEl.textContent = year; shownYear = year; toolbox(year); }
+    if (year !== shownYear) { yearEl.textContent = year; shownYear = year; toolbox(year); needle('year', 2026 - year, 29); }
     if (root.getAttribute('data-era') !== era) { root.setAttribute('data-era', era); browserEl.textContent = label; }
     // 88: fall fast enough and the machine flashes
     var t1 = performance.now(), sy = scrollY, v = Math.abs(sy - lastY) / Math.max(16, t1 - lastT) * 30;
     lastY = sy; lastT = t1;
-    if (!still && v >= 88 && !root.classList.contains('flux')) { root.classList.add('flux'); setTimeout(function () { root.classList.remove('flux'); }, 900); }
+    if (!still && v >= 88) flux();
+    needle('speed', Math.min(120, v));
     if (still) return;
     // the parallax: each prop moves against the scroll by its depth, and turns as it falls
     for (var k = 0; k < props.length; k++) {
@@ -103,12 +104,40 @@
   var MON = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
   var stamp = function (d) { return MON[d.getMonth()] + ' ' + ('0' + d.getDate()).slice(-2) + ' ' + d.getFullYear() + ' ' + ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2); };
   if (tcNow) {
-    var tick = function () { tcNow.textContent = stamp(new Date()); }; tick(); setInterval(tick, 10000);
-    try { var last = localStorage.getItem('tumble-last'); if (last) tcLast.textContent = stamp(new Date(+last)); localStorage.setItem('tumble-last', String(Date.now())); } catch (e) {}
+    var tcNow2 = document.querySelector('[data-tc-now2]'), tcLast2 = document.querySelector('[data-tc-last2]');
+    var tick = function () { tcNow.textContent = tcNow2.textContent = stamp(new Date()); }; tick(); setInterval(tick, 10000);
+    try { var last = localStorage.getItem('tumble-last'); if (last) tcLast.textContent = tcLast2.textContent = stamp(new Date(+last)); localStorage.setItem('tumble-last', String(Date.now())); } catch (e) {}
   }
+  // the cockpit: the render scaled to cover its frame (left-aligned on wide screens, centred on the big dial on
+  // phones); its needles swing from -120 to 120 degrees, for the year, the fall speed and the toolbox
+  var room = document.querySelector('[data-tm-room]'), view = room && room.parentNode;
+  function fitRoom() {
+    if (!room) return;
+    var W = view.clientWidth, H = view.clientHeight, k = Math.max(W / 1376, H / 768), x = W <= 760 ? Math.min(0, Math.max(W - 1376 * k, W / 2 - 688 * k)) : 0;
+    room.style.transform = 'translate(' + x.toFixed(1) + 'px,' + ((H - 768 * k) / 2).toFixed(1) + 'px) scale(' + k.toFixed(4) + ')';
+  }
+  addEventListener('resize', fitRoom); fitRoom();
+  function needle(k, v, max) { var n = room && room.querySelector('[data-nd="' + k + '"]'); if (n) n.style.setProperty('--a', (-120 + 240 * Math.max(0, Math.min(1, v / (max || 120)))).toFixed(1) + 'deg'); }
+  needle('year', 2026 - shownYear, 29);
+  function flux() {
+    if (root.classList.contains('flux')) return;
+    root.classList.add('flux'); setTimeout(function () { root.classList.remove('flux'); }, 900);
+  }
+  // the switch panels: power, the jewel lamps, and 88
+  [].forEach.call(document.querySelectorAll('[data-pnl]'), function (b) {
+    b.addEventListener('click', function () {
+      var k = b.getAttribute('data-pnl');
+      if (k === 'power') { var on = b.getAttribute('aria-pressed') !== 'true'; b.setAttribute('aria-pressed', String(on)); root.classList.toggle('tm-dark', !on); return; }
+      if (root.classList.contains('tm-dark')) return;
+      b.setAttribute('aria-pressed', 'false'); setTimeout(function () { b.removeAttribute('aria-pressed'); }, 400);
+      if (k === 'lamps') { root.classList.remove('tm-burst'); void root.offsetWidth; root.classList.add('tm-burst'); setTimeout(function () { root.classList.remove('tm-burst'); }, 1600); }
+      if (k === 'go') { flux(); if (!still) { root.classList.add('tm-spin'); setTimeout(function () { root.classList.remove('tm-spin'); }, 1100); } }
+    });
+  });
+
   var chart = document.querySelector('[data-tm-chart]');
   if (chart) {
-    var GC = ['#7dff4a', '#ff4fd8', '#ffb31f', '#38c8ff', '#b07bff'], groups = [].slice.call(document.querySelectorAll('.tbx-g')), Y0 = 1993, Y1 = 2026, W = 600, H = 150;
+    var GC = ['#7dff4a', '#ff4fd8', '#ffb31f', '#38c8ff', '#b07bff'], groups = [].slice.call(document.querySelectorAll('.tbx-g')), Y0 = 1993, Y1 = 2026, W = 600, H = 250;
     var x = function (y) { return 24 + (y - Y0) / (Y1 - Y0) * (W - 30); }, yy = function (n) { return H - n / 36 * (H - 10); };
     var base = []; for (var y = Y0; y <= Y1; y++) base.push(0);
     var svg = '<defs>' + GC.map(function (c, i) { return '<linearGradient id="tg' + i + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + c + '" stop-opacity=".95"/><stop offset="1" stop-color="' + c + '" stop-opacity=".25"/></linearGradient>'; }).join('') + '</defs>', key = '';
@@ -125,6 +154,23 @@
     [1997, 2005, 2015, 2026].forEach(function (y) { svg += '<text x="' + x(y) + '" y="' + (H + 16) + '" text-anchor="middle">' + y + '</text><line x1="' + x(y) + '" x2="' + x(y) + '" y1="' + H + '" y2="' + (H + 4) + '" stroke="#9fb6c4"/>'; });
     svg += '<text x="' + (x(Y1) + 4) + '" y="' + (yy(base[Y1 - Y0]) + 4) + '" fill="#fff">' + base[Y1 - Y0] + '</text>';
     chart.innerHTML = svg; document.querySelector('[data-tm-key]').innerHTML = key;
+  }
+  // the gauges: each job's tools, and the browsers, in 1997 and now; the needles sweep from then to now when they come into view
+  var gbox = document.querySelector('[data-tm-gauges]');
+  if (gbox) {
+    var rows = [].map.call(document.querySelectorAll('.tbx-g'), function (g) {
+      var ys = [].map.call(g.querySelectorAll('li'), function (li) { return +li.getAttribute('data-y'); });
+      return { n: g.querySelector('h3').textContent, a: ys.filter(function (y) { return y <= 1997; }).length, b: ys.length, max: ys.length };
+    });
+    var alive = function (y) { return [].filter.call(document.querySelectorAll('[data-tbx-br] li'), function (li) { return y >= +li.getAttribute('data-b') && y <= +(li.getAttribute('data-e') || 9999); }).length; };
+    rows.push({ n: 'Browsers', a: alive(1997), b: alive(2026), max: 9 });
+    var ang = function (v, m) { return (-120 + 240 * v / m).toFixed(1) + 'deg'; };
+    gbox.innerHTML = rows.map(function (r) {
+      return '<figure class="tm-g"><div class="dial"><img class="face" src="media/tm/gauge.webp" alt=""><img class="nd" src="media/tm/needle.webp" alt="" style="--a:' + ang(r.a, r.max) + '" data-to="' + ang(r.b, r.max) + '"></div><figcaption>' + r.n + '<b>' + r.a + ' &rarr; ' + r.b + '</b></figcaption></figure>';
+    }).join('');
+    var sweep = function () { [].forEach.call(gbox.querySelectorAll('.nd'), function (n, i) { setTimeout(function () { n.style.setProperty('--a', n.getAttribute('data-to')); }, still ? 0 : i * 180); }); };
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (es, o) { if (es[0].isIntersecting) { o.disconnect(); sweep(); } }, { threshold: .4 }).observe(gbox); else sweep();
+    needle('tools', rows.reduce(function (t, r, i) { return i < rows.length - 1 ? t + r.b : t; }, 0), 36);
   }
 
   function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(frame); } }
