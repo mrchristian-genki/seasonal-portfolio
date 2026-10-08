@@ -7,9 +7,9 @@ Claude) under the names below.
 ## Before every shot
 
 - **Give your image tool a reference of her.** Use one of these:
+  - all of her, with her new eyes: `assets/narrator/kit/her-reference.jpg` (the best one)
+  - her head on green: `assets/narrator/kit/her-template.png`
   - her contact sheet: `assets/narrator/kit/her-contact-sheet.jpg`
-  - a rest-pose still: `assets/narrator/rest.jpg`
-  - her head: `assets/narrator/head-base.webp`
 
   Ask it to keep her exactly on-model.
 - **Paste the description below** at the start of every prompt (it's in each one already).
@@ -125,8 +125,8 @@ Claude) under the names below.
 
 - **`rt-publicist.jpg`** (4:5): her publicist and HR are never shown as people, so keep them as objects. A brass
   clipboard and a mug on a side table beside her desk, softly lit, with nothing written on either.
-- **`rt-story.jpg`** (9:16): a vertical version of the cover for Instagram Stories. Same prompt as shot 1, framed
-  tall, with space at the top and bottom.
+- **`rt-story.jpg`** (9:16): done. `story.jpg` in the Note's photos is the cover, set tall with the masthead.
+  To make it move, see `ANIMATE.md`.
 
 ---
 
