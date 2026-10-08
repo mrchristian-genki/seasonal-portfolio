@@ -33,6 +33,7 @@
       dlg.addEventListener('close', function () { var v = dlg.querySelector('video'); if (v) v.pause(); });
     }
     var links = (p.tool ? '<a class="btn solid" href="' + esc(p.tool.url) + '"' + (p.tool.url.charAt(0) === '#' ? '' : ' target="_blank" rel="noopener"') + '>' + esc(p.tool.label) + '</a>' : '') +
+      (p.extra ? '<a class="btn solid" href="' + esc(p.extra.url) + '">' + esc(p.extra.label) + '</a>' : '') +
       '<a class="btn" href="' + esc(p.note) + '">Read the case study</a>';
     dlg.innerHTML = '<div class="wsm-stage"><button type="button" class="wsm-x" aria-label="Close">×</button></div><p class="wsm-cap"></p>' +
       (p.media.length > 1 ? '<div class="wsm-thumbs">' + p.media.map(function (m, i) { return '<button type="button" data-i="' + i + '" aria-label="' + esc(m.caption || ('Picture ' + (i + 1))) + '"><img alt="" loading="lazy" src="' + esc(m.poster || m.src) + '"></button>'; }).join('') + '</div>' : '') +
@@ -66,7 +67,7 @@
     }, 5200);
   }
   function start() {
-    fetch('assets/workshop/projects.json?v=1').then(function (r) { return r.json(); }).then(function (list) {
+    fetch('assets/workshop/projects.json?v=2').then(function (r) { return r.json(); }).then(function (list) {
       P = list; P.forEach(function (p, i) { var c = card(p, i); box.appendChild(c); cards.push(c); });
       if (!still) { play(cards[0], true); tour(); }
     }).catch(function () { box.hidden = true; });
