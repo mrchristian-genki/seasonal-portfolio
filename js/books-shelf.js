@@ -157,6 +157,6 @@
   });
   // "Up next" on each tab: moves to the next one, as its tab button does
   document.querySelectorAll('[data-next]').forEach(function (b) {
-    b.addEventListener('click', function () { var t = document.getElementById(b.getAttribute('data-next')); if (t) { t.click(); document.getElementById('hero').scrollIntoView({ behavior: still ? 'auto' : 'smooth' }); } });
+    b.addEventListener('click', function () { var t = document.getElementById(b.getAttribute('data-next')); if (t) { t.click(); var h = document.getElementById('hero'); if (window.easeScroll) easeScroll.to(h); else h.scrollIntoView(); } });
   });
 })();

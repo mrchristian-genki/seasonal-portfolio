@@ -5,7 +5,7 @@
   background:linear-gradient(180deg,#cfe7f8 0%,#8cc0ea 38%,#4f8fd0 62%,#6fb4e4 74%,#86c25c 76%,#5e9a3c 100%)}
 .lake-band[hidden]{display:none}
 .lake-band a,.lake-band button,.lake-hide{appearance:none;border:0;cursor:pointer;font:600 14px/1 system-ui,-apple-system,"Segoe UI",sans-serif;
-  color:#0f3d5c;background:rgba(255,255,255,.88);border-radius:999px;padding:8px 15px;text-decoration:none;box-shadow:0 1px 5px rgba(10,40,70,.22)}
+  color:#0f3d5c;background:rgba(255,255,255,.88);border-radius:999px;padding:8px 15px;text-decoration:none;box-shadow:0 1px 5px rgba(10,40,70,.22);transition:background .4s ease}
 .lake-band a:hover,.lake-band button:hover,.lake-hide:hover{background:#fff}
 .lake-band a:focus-visible,.lake-band button:focus-visible,.lake-hide:focus-visible{outline:3px solid #0f4d47;outline-offset:2px}
 html.night-page .lake-band{background:linear-gradient(180deg,#0d1a3d 0%,#1f2b52 55%,#22406e 70%,#1c3a2a 76%,#12261a 100%)}

@@ -38,9 +38,20 @@
     cards.forEach(function (c) { play(c, false); });
     if (!dlg) {
       dlg = document.createElement('dialog'); dlg.className = 'wsm'; document.body.appendChild(dlg);
+      if (window.softDialog && dlg.showModal) softDialog(dlg, 450);   // it fades out as it closes
       dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });   // a click on the dimmed page closes it
-      dlg.addEventListener('close', function () { [].forEach.call(dlg.querySelectorAll('video'), function (v) { v.pause(); }); });
+      dlg.addEventListener('close', function () { clearTimeout(dlg._swap); dlg.classList.remove('swap'); [].forEach.call(dlg.querySelectorAll('video'), function (v) { v.pause(); }); });
     }
+    if (dlg.open && !still && !dlg.classList.contains('shut')) {   // the next feature: the last fades out, this one fades in at its top
+      dlg.classList.add('swap'); clearTimeout(dlg._swap);
+      dlg._swap = setTimeout(function () { fill(p); void dlg.offsetWidth; dlg.classList.remove('swap'); }, 400);
+      return;
+    }
+    fill(p);
+    if (!dlg.open) { if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', ''); }
+    dlg.scrollTop = 0;
+  }
+  function fill(p) {
     var n = P.indexOf(p), next = P[(n + 1) % P.length], cover = p.card || p.media[0], rest = p.media.filter(function (m) { return m.src !== cover.src; });
     var story = (p.story && p.story.length ? p.story : [p.summary]).map(function (t) { return '<p>' + esc(t) + '</p>'; });
     // the clips go between the paragraphs, spread through the story; the pull quote after the second paragraph
@@ -79,7 +90,6 @@
       [].forEach.call(vids, function (v) { io.observe(v); });
       dlg.addEventListener('close', function () { io.disconnect(); }, { once: true });
     } else [].forEach.call(vids, function (v) { v.src = v.getAttribute('data-src'); });
-    if (!dlg.open) { if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', ''); }
     dlg.scrollTop = 0;
   }
   // the tour: every few seconds the next card in view plays its clip, the others rest

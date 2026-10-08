@@ -122,7 +122,7 @@
         put(n, l);
         n.classList.remove('nb-swap'); void n.offsetWidth; if (!still) n.classList.add('nb-swap');
         requestAnimationFrame(function () { old.style.opacity = '0'; });
-        setTimeout(function () { old.remove(); n.classList.remove('nb-swap'); n._busy = false; }, still ? 0 : 520);
+        setTimeout(function () { old.remove(); n.classList.remove('nb-swap'); n._busy = false; }, still ? 0 : 850);
       });
     };
     img.src = src(l);

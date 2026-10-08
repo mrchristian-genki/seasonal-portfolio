@@ -58,7 +58,7 @@ figcaption{font-size:14px;color:var(--ink-3);margin-top:8px;padding:0 4px}
 .stat span{font-size:12px;color:var(--ink-3)}
 .profile{position:relative;margin-top:12px;user-select:none;touch-action:pan-y}
 .profile svg{display:block;width:100%;height:130px}
-.profile .tip{position:absolute;top:0;transform:translateX(-50%);background:var(--ink);color:#fff;font-size:12px;font-weight:600;padding:3px 8px;border-radius:6px;white-space:nowrap;pointer-events:none;opacity:0}
+.profile .tip{position:absolute;top:0;transform:translateX(-50%);background:var(--ink);color:#fff;font-size:12px;font-weight:600;padding:3px 8px;border-radius:6px;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .35s ease}
 .note{font-size:13px;color:var(--ink-3);margin:8px 0 0}
 
 /* Post */
@@ -73,7 +73,7 @@ figcaption{font-size:14px;color:var(--ink-3);margin-top:8px;padding:0 4px}
 
 /* Index cards */
 .cards{display:grid;gap:22px;margin-top:28px}
-.card{display:grid;grid-template-columns:minmax(0,1fr);text-decoration:none;background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;transition:transform .15s,box-shadow .15s}
+.card{display:grid;grid-template-columns:minmax(0,1fr);text-decoration:none;background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;transition:transform .4s ease,box-shadow .4s ease}
 @media (min-width:640px){.card{grid-template-columns:260px minmax(0,1fr)}}
 .card:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(15,77,71,.12)}
 .card img,.card .noimg{width:100%;height:100%;min-height:180px;object-fit:cover;background:#e3ecec}
@@ -89,6 +89,11 @@ figcaption{font-size:14px;color:var(--ink-3);margin-top:8px;padding:0 4px}
 
 .lightbox{border:0;padding:0;background:transparent;max-width:min(96vw,1400px)}
 .lightbox::backdrop{background:rgba(5,20,18,.88)}
+/* it fades in, and out (play.js) */
+.lightbox[open]{animation:lbIn .5s cubic-bezier(.2,.8,.3,1) both}.lightbox[open]::backdrop{animation:lbFade .5s ease both}
+.lightbox.shut{animation:lbOut .45s ease both}.lightbox.shut::backdrop{animation:lbFade .45s ease reverse both}
+@keyframes lbIn{from{opacity:0;transform:scale(.97)}}@keyframes lbOut{to{opacity:0;transform:scale(.98)}}@keyframes lbFade{from{opacity:0}}
+@media (prefers-reduced-motion:reduce){.lightbox[open],.lightbox[open]::backdrop,.lightbox.shut,.lightbox.shut::backdrop{animation:none}}
 .lightbox img{max-height:84vh;max-height:84dvh;border-radius:10px;margin:auto}
 .lightbox p{color:#fff;margin:10px 4px 0;font-size:15px}
 .lightbox button{position:absolute;top:8px;right:8px;width:38px;height:38px;border-radius:50%;border:0;background:rgba(255,255,255,.92);font-size:22px;cursor:pointer}
@@ -104,7 +109,7 @@ figcaption{font-size:14px;color:var(--ink-3);margin-top:8px;padding:0 4px}
 main.index,main.gallery-page{max-width:1120px}
 .index>.lede,.index>.season-line,.index>h1,.gallery-page>.lede{max-width:760px}
 .jump{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 0}
-.jump a{font:700 14px var(--display);text-decoration:none;border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 13px}
+.jump a{font:700 14px var(--display);text-decoration:none;border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 13px;transition:color .4s ease,border-color .4s ease}
 .jump a:hover{border-color:var(--accent);color:var(--accent)}
 .block{margin-top:52px;scroll-margin-top:70px}
 h2.sec{font-size:clamp(22px,3.4vw,30px);display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:28px 0 4px}
@@ -128,12 +133,12 @@ h2.sec{font-size:clamp(22px,3.4vw,30px);display:flex;align-items:center;gap:10px
 /* Daydreams series cards */
 .series{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
 .serie{position:relative;display:block;border-radius:14px;overflow:hidden;text-decoration:none;color:#fff;background:#222;aspect-ratio:4/3}
-.serie img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
-.serie:hover img{transform:scale(1.04)}
+.serie img{width:100%;height:100%;object-fit:cover;transition:transform .7s ease}
+.serie:hover img{transform:scale(1.03)}
 .serie span{position:absolute;inset:auto 0 0 0;padding:28px 14px 12px;background:linear-gradient(0deg,rgba(0,0,0,.72),transparent);display:flex;flex-direction:column}
 .serie b{font:800 19px var(--display);line-height:1.2}
 .serie i{font-style:normal;font-size:13px;opacity:.85}
-.serie em{font-style:normal;font-size:13.5px;line-height:1.35;opacity:.92;max-height:0;overflow:hidden;transition:max-height .35s ease,margin .35s ease}
+.serie em{font-style:normal;font-size:13.5px;line-height:1.35;opacity:.92;max-height:0;overflow:hidden;transition:max-height .5s ease,margin .5s ease}
 .serie:hover em,.serie:focus-visible em{max-height:4.1em;margin-top:6px}
 .series.full{grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;margin-top:22px}
 .series.full .serie{aspect-ratio:4/3.2}
@@ -158,12 +163,12 @@ h2.sec{font-size:clamp(22px,3.4vw,30px);display:flex;align-items:center;gap:10px
 /* Site + Play navigation (same tabs as the homepage) */
 .bar{flex-wrap:wrap;row-gap:6px}
 .bar nav.site{gap:4px}
-.bar nav.site a{padding:6px 10px;border-radius:999px;text-decoration:none}
+.bar nav.site a{padding:6px 10px;border-radius:999px;text-decoration:none;transition:color .4s ease}
 .bar nav.site a:hover{color:var(--accent)}
 .bar nav.site a.on{color:var(--accent);box-shadow:inset 0 -3px 0 var(--accent);border-radius:0;padding-bottom:3px}
 .playbar{position:sticky;top:57px;z-index:999;display:flex;align-items:center;gap:6px;overflow-x:auto;scrollbar-width:none;padding:8px 20px;background:rgba(251,252,251,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
 .playbar::-webkit-scrollbar{display:none}
-.playbar a{flex:none;font:700 14px var(--display);text-decoration:none;border:1px solid var(--line);background:#fff;border-radius:999px;padding:5px 12px}
+.playbar a{flex:none;font:700 14px var(--display);text-decoration:none;border:1px solid var(--line);background:#fff;border-radius:999px;padding:5px 12px;transition:color .4s ease,border-color .4s ease}
 .playbar a:hover{border-color:var(--accent);color:var(--accent)}
 .playbar a.on{background:var(--ink);border-color:var(--ink);color:#fff}
 .playbar .chip{margin-left:auto;flex:none}
@@ -210,7 +215,7 @@ figure video{display:block;width:100%;border-radius:12px;background:#000}
 /* "More" links under a post: small quiet pills instead of a run of underlined text */
 .links{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:14px;color:var(--ink-3)}
 .links a{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid var(--line);border-radius:999px;background:var(--card);
-  color:var(--ink);text-decoration:none;font-weight:600;transition:border-color .15s,background .15s}
+  color:var(--ink);text-decoration:none;font-weight:600;transition:border-color .4s ease,background .4s ease}
 .links a::after{content:"↗";font-size:12px;color:var(--ink-3)}
 .links a:hover{border-color:var(--accent);background:var(--accent-soft)}
 /* a loop as the cover: full width, playing silently over its poster frame */

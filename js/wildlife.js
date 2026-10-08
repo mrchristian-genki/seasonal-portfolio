@@ -50,8 +50,8 @@
     // Magic glow on a tapped trigger rock: a soft warm bloom plus a few rising sparkles.
     '.wl-glow{position:absolute;pointer-events:none;border-radius:50%;opacity:0;' +
       'background:radial-gradient(closest-side,rgba(255,250,220,.95),rgba(255,226,140,.6) 40%,rgba(160,215,255,.25) 70%,rgba(160,215,255,0));' +
-      'animation:wlGlow 2.6s ease-out forwards}' +
-    '@keyframes wlGlow{0%{opacity:0;transform:scale(.85)}12%{opacity:1;transform:scale(1)}40%{opacity:.75}100%{opacity:0;transform:scale(1.12)}}' +
+      'animation:wlGlow 3s ease-in-out forwards}' +
+    '@keyframes wlGlow{0%{opacity:0;transform:scale(.85)}25%{opacity:1;transform:scale(1)}45%{opacity:.75}100%{opacity:0;transform:scale(1.12)}}' +
     '.wl-spark{position:absolute;width:9px;height:9px;margin:-4.5px;border-radius:50%;pointer-events:none;opacity:0;' +
       'background:radial-gradient(closest-side,#fff,rgba(255,236,170,.9) 45%,rgba(255,236,170,0));animation:wlSpark var(--d,1.8s) ease-out var(--dl,0s) forwards}' +
     '@keyframes wlSpark{0%{opacity:0;transform:translate(0,0) scale(.6)}20%{opacity:1}100%{opacity:0;transform:translate(var(--dx,0),var(--dy,-40px)) scale(1.1)}}' +
@@ -1288,7 +1288,7 @@
       sp.style.setProperty('--dl', rand(0, 0.5).toFixed(2) + 's');
       frame.appendChild(sp);
     }
-    setTimeout(() => { g.remove(); frame.remove(); }, 3000);
+    setTimeout(() => { g.remove(); frame.remove(); }, 3100);
   }
   // Tap: wake the rock's area. Press and hold (about a second) on any rock: the test panel.
   function rock(r, keys) { hotspot(r, () => { glow(r); invite(keys()); }, () => { glow(r); openPanel(); }); }
