@@ -42,7 +42,9 @@ code{font:.92em ui-monospace,Menlo,Consolas,monospace}
 .era h2{margin:6px 0 22px}
 .era h3{margin:0 0 8px;font-size:15px;letter-spacing:.08em;text-transform:uppercase}
 .me{margin:0 0 26px;padding:18px 20px}
-.me p{margin:0 0 10px}.me p:last-child{margin:0}
+.me p{margin:0 0 14px;line-height:1.72;text-wrap:pretty}.me p:last-child{margin:0}
+/* the story reads like a story: the first paragraph leads a little larger */
+.me h3+p{font-size:1.1em;line-height:1.65}
 .cols{display:grid;grid-template-columns:1.25fr 1fr;gap:22px;margin:0 0 26px}
 .cols ul{margin:0;padding-left:18px}.cols li{margin:0 0 8px;font-size:16px}
 @media (max-width:720px){.cols{grid-template-columns:1fr}}
@@ -343,3 +345,5 @@ html[data-era="e15"] .tp-rail,html[data-era="e10"] .tp-rail,html[data-era="e05"]
 .win15-bar span{margin-left:10px;flex:1;padding:3px 10px;border-radius:4px;background:#fff;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .win15 img{display:block;width:100%;height:auto}
 .win15 figcaption{padding:8px 12px;font:13px/1.5 Roboto,"Helvetica Neue",Arial,sans-serif;color:#555}
+/* 2000-2004: the tour full width, the other two windows side by side on wide screens */
+@media (min-width:900px){.e00 .me{display:grid;grid-template-columns:1fr 1fr;column-gap:16px}.e00 .me>*{grid-column:1/-1}.e00 .me>.win00~.win00{grid-column:auto;align-self:start}}
