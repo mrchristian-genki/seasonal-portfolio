@@ -211,11 +211,23 @@ for (const e of events) {
   let body = '';
   ps.forEach((p, i) => {
     const m = /^What I learned:\s*/i.exec(p);
-    body += m ? `<p class="learned"><b>What I learned:</b> ${esc(p.slice(m[0].length))}</p>\n` : `<p>${esc(p)}</p>\n`;
+    // a feature's own marks (a profile): "## " a subhead, "> " a pull quote set large
+    if (/^## /.test(p)) body += `<h2 class="sub">${esc(p.slice(3))}</h2>\n`;
+    else if (/^> /.test(p)) body += `<blockquote class="pull"><p>${esc(p.slice(2))}</p></blockquote>\n`;
+    else body += m ? `<p class="learned"><b>What I learned:</b> ${esc(p.slice(m[0].length))}</p>\n` : `<p>${esc(p)}</p>\n`;
     inline.forEach((u, k) => { if (slots[k] === i) body += (u.stack ? u.map((ph) => fig(ph, ph.strip ? 'photo strip' : '')).join('\n') : u.length > 1 ? `<div class="duo">${u.map((ph) => fig(ph)).join('')}</div>` : fig(u[0], tall(u[0]) ? 'photo tall' : '')) + '\n'; });
     if (i === tableSlot) body += tableFig() + '\n';
   });
 
+  // A FEATURE (a profile, written like a magazine cover story: e.feature): the cover becomes a magazine cover with its
+  // masthead and cover lines; after the story, a Q&A and a "Spotted" box. Everything else is a Note like any other.
+  const F = e.feature && e.feature.masthead ? e.feature : null;
+  const magCover = F && cover ? `<header class="mag-cover"><div class="mag-img">${cover.video ? `<video src="${esc(cover.src)}" poster="${esc(cover.poster)}" muted loop playsinline autoplay></video>` : `<img src="${esc(cover.src)}" alt="${esc(cover.caption)}" width="${cover.w}" height="${cover.h}">`}</div>
+<div class="mag-top"><b class="mag-mast">${esc(F.masthead)}</b>${F.tagline ? `<span class="mag-tag">${esc(F.tagline)}</span>` : ''}</div>
+${F.issue ? `<span class="mag-issue">${esc(F.issue)}</span>` : ''}${(F.coverLines || []).length ? `<ul class="mag-lines">${F.coverLines.map((l) => `<li>${esc(l)}</li>`).join('')}</ul>` : ''}
+</header>${cover.caption ? `<p class="mag-cap"><span class="ai-badge">Made with AI</span> ${esc(cover.caption)}</p>` : ''}` : '';
+  const magQa = F && F.qa && (F.qa.items || []).length ? `<section class="mag-qa"><h2>${esc(F.qa.title || 'Questions')}</h2><dl>${F.qa.items.map((x) => `<dt>${esc(x.q)}</dt><dd>${esc(x.a)}</dd>`).join('')}</dl></section>` : '';
+  const magSpot = F && (F.spotted || []).length ? `<aside class="mag-spot"><h2>Spotted</h2><ul>${F.spotted.map((x) => `<li><b>${x.url ? `<a href="${esc(x.url)}">${esc(x.label)}</a>` : esc(x.label)}</b> ${esc(x.text)}</li>`).join('')}</ul></aside>` : '';
   const url = `${show.siteUrl}${e.id}/`, title = `${e.post && e.post.title || e.title} · ${show.showTitle}`;
   const desc = e.summary || paras(e.post && e.post.body)[0] || '';
   // its share card: the one cards.py made (GlazyArray's, with an episode; else the title on brass over the cover), else the cover itself
@@ -229,13 +241,13 @@ for (const e of events) {
       alt: audio ? `${e.post && e.post.title || e.title}: GlazyArray, the narrator, at her desk with the episode's player` : `${e.post && e.post.title || e.title}: the title on a brass nameplate over the Note's cover picture` };
   }
   const html = head(title, desc, url, share && share.abs, '../', 'field-notes', { type: 'article', lake: 'notes+' + e.id, published: e.date,
-    w: share && share.w, h: share && share.h, alt: share && share.alt, audio: audio && audio.abs }) + `<main class="article"${t ? ` data-route="../data/${esc(e.id)}.json"` : ''}>
-<p class="kicker"><span class="kind ${esc(e.kind)}">${KIND[e.kind] || esc(e.kind)}</span> · <time datetime="${esc(e.date)}">${day(e.date, true)}</time>${e.place ? ` · ${esc(e.place)}` : ''}</p>
+    w: share && share.w, h: share && share.h, alt: share && share.alt, audio: audio && audio.abs }) + `<main class="article${F ? ' feature' : ''}"${t ? ` data-route="../data/${esc(e.id)}.json"` : ''}>
+${magCover}<p class="kicker"><span class="kind ${esc(e.kind)}">${KIND[e.kind] || esc(e.kind)}</span> · <time datetime="${esc(e.date)}">${day(e.date, true)}</time>${e.place ? ` · ${esc(e.place)}` : ''}</p>
 <h1>${esc(e.post && e.post.title || e.title)}</h1>
 ${e.summary ? `<p class="lede">${esc(e.summary)}</p>` : ''}
 ${audio ? `<section class="listen" aria-label="Listen to the episode"${lookAttr(e)}><div><span class="listen-label">Listen · ${mmss(audio.sec)}</span><b>${esc(e.episode.title || e.title)}</b></div>
 <audio controls preload="metadata" src="${esc(audio.src)}"></audio></section>` : ''}
-${cover ? fig(cover, 'cover') : ''}${coverStrip ? '\n' + fig(coverStrip, 'photo strip') : ''}
+${cover && !F ? fig(cover, 'cover') : ''}${coverStrip ? '\n' + fig(coverStrip, 'photo strip') : ''}
 ${t ? `<section class="route" aria-label="The route"><h2>The route</h2>
 <div class="route-grid"><div class="map" id="map" role="img" aria-label="Map of the route"></div><div class="stats" id="stats">
 <div class="stat"><b>${mi(s.distanceKm)}</b><span>Distance</span></div><div class="stat"><b>${ft(s.maxEleM)}</b><span>High point</span></div></div></div>
@@ -245,7 +257,7 @@ ${t.trim && t.trim.shownKm != null && t.trim.shownKm < s.distanceKm - 0.2 ? `<p 
 </section>` : ''}
 <article class="post">
 ${body}</article>
-${(e.links || []).length ? `<p class="links"><span>More</span> ${e.links.map((l) => `<a href="${esc(l.url)}" rel="noopener" target="_blank">${esc(l.label)}</a>`).join('')}</p>` : ''}
+${magQa}${magSpot}${(e.links || []).length ? `<p class="links"><span>More</span> ${e.links.map((l) => `<a href="${esc(l.url)}" rel="noopener" target="_blank">${esc(l.label)}</a>`).join('')}</p>` : ''}
 <nav class="pager" id="pager"></nav>
 </main>
 ` + foot('../');
