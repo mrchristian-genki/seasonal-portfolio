@@ -129,36 +129,57 @@
   [].forEach.call(document.querySelectorAll('[data-go]'), function (b) {
     b.addEventListener('click', function () { var y = +b.getAttribute('data-go'); if (y < 1997) { if (end) scrollTo({ top: end.getBoundingClientRect().top + scrollY, behavior: still ? 'auto' : 'smooth' }); } else goYear(y, true); });
   });
-  // the jewels: all lit, and now and then a slow pattern runs through them (a chase round the ring, every other one,
-  // a few at random, a sweep off and back on), only while the cockpit is on screen
-  var jw = [].slice.call(document.querySelectorAll('.tm-jw')), jwOn = true, jwT = 0, jwSeen = true;
+  // the jewels: all lit, and slow patterns run through them, only while the cockpit is on screen. On shuffle (the
+  // default) a new pattern comes up every few seconds; the console's own buttons pick one, set the speed, flash them,
+  // switch the power and the portholes, spin the needles, or hit 88
+  var jw = [].slice.call(document.querySelectorAll('.tm-jw')), jwSeen = true, rnd = null;
   function jset(f) { jw.forEach(function (b, i) { b.classList.toggle('off', !!f(i)); }); }
-  var PAT = [
-    function (t) { return function (i) { return i === t % 9; }; },
-    function (t) { return function (i) { return (i + t) % 2; }; },
-    function () { var r = jw.map(function () { return Math.random() < .35; }); return function (i) { return r[i]; }; },
-    function (t) { return function (i) { return i < (t % 18 < 9 ? t % 9 : 9 - t % 9); }; },
-    function (t) { return function (i) { return Math.abs(i - 4) === t % 5; }; },
-    function () { return function () { return false; }; }
-  ];
-  if (jw.length && !still) {
-    var pat = PAT[5], step = 0;
-    setInterval(function () {
-      if (!jwSeen || document.hidden || root.classList.contains('tm-dark')) return;
-      if (step % 10 === 0) pat = PAT[Math.random() < .3 ? 5 : Math.floor(Math.random() * 5)];
-      jset(pat(step)); step++;
-    }, 650);
-    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { jwSeen = es[0].isIntersecting; if (!jwSeen) jset(function () { return false; }); }).observe(document.querySelector('.tm-view'));
+  var PAT = {
+    chase: function (t) { return function (i) { return i === t % 9; }; },
+    alt: function (t) { return function (i) { return (i + t) % 2; }; },
+    random: function (t) { if (t % 4 === 0 || !rnd) rnd = jw.map(function () { return Math.random() < .4; }); return function (i) { return rnd[i]; }; },
+    sweep: function (t) { return function (i) { return i < (t % 18 < 9 ? t % 9 : 9 - t % 9); }; },
+    ripple: function (t) { return function (i) { return Math.abs(i - 4) === t % 5; }; },
+    twinkle: function () { return function () { return Math.random() < .3; }; },
+    comet: function (t) { return function (i) { var d = (t - i + 900) % 9; return d > 2; }; },
+    on: function () { return function () { return false; }; },
+    off: function () { return function () { return true; }; }
+  };
+  var SHUF = ['chase', 'alt', 'random', 'sweep', 'ripple', 'twinkle', 'comet'], mode = 'auto', pat = PAT.on, step = 0, speed = 3, jwTimer = 0;
+  var SPD = [0, 1200, 900, 650, 420, 240];
+  function tickJ() {
+    clearTimeout(jwTimer); jwTimer = setTimeout(tickJ, SPD[speed]);
+    if (!jwSeen || document.hidden || root.classList.contains('tm-dark')) return;
+    if (mode === 'auto' && step % 10 === 0) pat = Math.random() < .3 ? PAT.on : PAT[SHUF[Math.floor(Math.random() * SHUF.length)]];
+    jset(pat(step)); step++;
   }
-  // the switch panels: power, the jewel lamps, and 88
-  [].forEach.call(document.querySelectorAll('[data-pnl]'), function (b) {
-    b.addEventListener('click', function () {
-      var k = b.getAttribute('data-pnl');
-      if (k === 'power') { var on = b.getAttribute('aria-pressed') !== 'true'; b.setAttribute('aria-pressed', String(on)); root.classList.toggle('tm-dark', !on); return; }
+  if (jw.length) {
+    if (!still) tickJ();
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { jwSeen = es[0].isIntersecting; if (!jwSeen) jset(PAT.on()); }).observe(document.querySelector('.tm-view'));
+  }
+  var hbs = [].slice.call(document.querySelectorAll('.tm-hb'));
+  function lit(sel, on) { hbs.forEach(function (h) { if (h.matches(sel)) h.classList.toggle('lit', on); }); }
+  function press(h) { h.classList.add('pz'); setTimeout(function () { h.classList.remove('pz'); }, 220); }
+  function showSpeed() { hbs.forEach(function (h) { var m = /^s:(\d)/.exec(h.getAttribute('data-act')); if (m) h.classList.toggle('lit', +m[1] <= speed); }); }
+  function burst() { root.classList.remove('tm-burst'); void root.offsetWidth; root.classList.add('tm-burst'); setTimeout(function () { root.classList.remove('tm-burst'); }, 1600); }
+  function spin() { if (still) return; root.classList.add('tm-spin'); setTimeout(function () { root.classList.remove('tm-spin'); }, 1100); }
+  lit('[data-act="p:auto"]', true); lit('[data-act="power"]', true); lit('[data-act="ports"]', true); showSpeed();
+  hbs.forEach(function (h) {
+    h.addEventListener('click', function () {
+      var a = h.getAttribute('data-act'); press(h);
+      if (a === 'power') { var dark = root.classList.toggle('tm-dark'); lit('[data-act="power"]', !dark); jset(dark ? PAT.off() : PAT.on()); return; }
       if (root.classList.contains('tm-dark')) return;
-      b.setAttribute('aria-pressed', 'false'); setTimeout(function () { b.removeAttribute('aria-pressed'); }, 400);
-      if (k === 'lamps') { root.classList.remove('tm-burst'); void root.offsetWidth; root.classList.add('tm-burst'); setTimeout(function () { root.classList.remove('tm-burst'); }, 1600); }
-      if (k === 'go') { flux(); if (!still) { root.classList.add('tm-spin'); setTimeout(function () { root.classList.remove('tm-spin'); }, 1100); } }
+      if (a.indexOf('p:') === 0) {
+        mode = a.slice(2); step = 0; pat = mode === 'auto' ? PAT.on : PAT[mode];
+        lit('[data-act^="p:"]', false); h.classList.add('lit');
+        if (still || mode === 'on' || mode === 'off') jset(pat(0)); else tickJ();
+      } else if (a.indexOf('s:') === 0) { speed = +a.slice(2); showSpeed(); if (!still) tickJ(); }
+      else if (a === 'lamp') { h.classList.toggle('lit'); var j = jw[Math.floor(Math.random() * jw.length)]; j.classList.add('off'); setTimeout(function () { j.classList.remove('off'); }, 400); }
+      else if (a === 'speed') { speed = speed % 5 + 1; showSpeed(); if (!still) tickJ(); var kk = ((parseFloat(h.style.getPropertyValue('--k')) || 0) + 72) % 360; h.style.setProperty('--k', kk + 'deg'); h.classList.add('turned'); }
+      else if (a === 'burst') burst();
+      else if (a === 'go') { flux(); spin(); }
+      else if (a === 'spin') { spin(); if (h.classList.contains('knob')) { var k = ((parseFloat(h.style.getPropertyValue('--k')) || 0) + 60) % 360; h.style.setProperty('--k', k + 'deg'); h.classList.add('turned'); } }
+      else if (a === 'ports') { var off = root.classList.toggle('tm-noports'); lit('[data-act="ports"]', !off); }
     });
   });
 
