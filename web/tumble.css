@@ -268,11 +268,12 @@ html[data-era="e15"] .tbx-t,html[data-era="e10"] .tbx-t,html[data-era="e05"] .tb
   box-shadow:0 0 0 3px rgba(255,220,150,.75),0 0 0 6px rgba(80,50,15,.8),0 0 28px 6px var(--c);animation:tm-gem 4s ease-in-out infinite;animation-delay:calc(var(--i) * -.45s)}
 .tm-gems img{width:70%;height:70%;margin:15%;display:block;mix-blend-mode:screen;opacity:.9;filter:saturate(1.3) drop-shadow(0 0 6px var(--c));animation:tm-spin 120s linear infinite reverse}
 @keyframes tm-gem{50%{box-shadow:0 0 0 3px rgba(255,220,150,.75),0 0 0 6px rgba(80,50,15,.8),0 0 60px 16px var(--c);filter:brightness(1.25)}}
-.tm-lamps{position:absolute;right:4vw;bottom:10vh;display:grid;grid-template-columns:repeat(6,22px);gap:10px;transform:rotate(-8deg);opacity:.9}
-.tm-lamps i{width:22px;height:22px;border-radius:50%;border:3px solid #6b6f73;background:radial-gradient(circle at 40% 35%,#fff8,transparent 40%),color-mix(in srgb,var(--c) 35%,#111);
-  animation:tm-lamp 2.8s steps(1) infinite;animation-delay:var(--d)}
-.tm-lamps i:nth-child(3n){border-radius:4px}
-@keyframes tm-lamp{0%,55%{background:radial-gradient(circle at 40% 35%,#fff,transparent 45%),var(--c);box-shadow:0 0 14px 3px var(--c)}}
+/* the lamps: Christian's own lamp sheet (media/lamps.webp: nine lamps lit on the top row, dark below), each blinking at its own pace */
+.tm-lamps{position:absolute;right:230px;bottom:5vh;display:grid;grid-template-columns:repeat(4,46px);gap:8px;transform:rotate(-6deg);opacity:.95}
+.tm-lamps i{position:relative;width:46px;height:46px;background:url(media/lamps.webp) calc(var(--x) * 12.5%) 100%/900% 200% no-repeat}
+.tm-lamps i::after{content:"";position:absolute;inset:0;background:url(media/lamps.webp) calc(var(--x) * 12.5%) 0/900% 200% no-repeat;
+  filter:drop-shadow(0 0 10px var(--c));opacity:0;animation:tm-lamp 2.8s steps(1) infinite;animation-delay:var(--d)}
+@keyframes tm-lamp{0%,55%{opacity:1}}
 .tm-flash{position:absolute;inset:0;background:radial-gradient(circle at 70% 50%,#fff,rgba(160,220,255,.6) 30%,transparent 70%);opacity:0}
 html.flux .tm-flash{animation:tm-flash .9s ease-out}
 @keyframes tm-flash{8%{opacity:1}100%{opacity:0}}
@@ -324,4 +325,4 @@ html[data-era="e15"] .tp-rail,html[data-era="e10"] .tp-rail,html[data-era="e05"]
 .tp-rail.drag .tp-mark{transition:none}
 @media (max-width:1100px){.tb-tape{top:58px;bottom:175px;width:30px;right:4px}.tp-rail{width:30px;background:linear-gradient(90deg,transparent 0 12px,rgba(10,16,24,.45) 12px)}.tp-ticks b{display:none}.tp-mark b{right:36px}
   .era-in,.tb-now-in,.tb-end{padding-right:22px}}
-@media (prefers-reduced-motion:reduce){.tb-now,.tm-ring,.tm-gems,.tm-gems img,.tm-heart,.tm-gems li,.tm-lamps i{animation:none}.tm-lamps i:nth-child(odd){background:var(--c);box-shadow:0 0 14px 3px var(--c)}.tp-mark{transition:none}}
+@media (prefers-reduced-motion:reduce){.tb-now,.tm-ring,.tm-gems,.tm-gems img,.tm-heart,.tm-gems li,.tm-lamps i{animation:none}.tm-lamps i:nth-child(odd)::after{opacity:1}.tp-mark{transition:none}}

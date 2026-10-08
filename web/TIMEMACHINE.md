@@ -72,7 +72,10 @@ Make each one alone, front-on, on pure #00FF00, about 1024 × 1024, as a jewel s
 
 *Goes:* the nine gems on the outer ring, one for every browser in the toolbox, the gone ones included.
 
-## 5. Indicator lamps (a sprite sheet on green)
+## 5. Indicator lamps (a sprite sheet on green): done (Oct 8)
+
+Christian's sheet is keyed into `web/media/lamps.webp` (lit on the top row, dark below), and twelve of its lamps
+blink at the machine's base. More sheets in other shapes and colours are welcome.
 
 > A flat, front-on sheet of vintage indicator lamps and push buttons on pure #00FF00: round and square lenses in
 > amber, red, cobalt blue, violet and uranium green, in knurled chrome and brass bezels, three rows of three. Left
