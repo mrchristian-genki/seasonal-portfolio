@@ -1321,7 +1321,7 @@
   "facebook": ""
  },
  "dashboard": {
-  "updown": false,
+  "updown": true,
   "speed": false,
   "facts": false
  },
