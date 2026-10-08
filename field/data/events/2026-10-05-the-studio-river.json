@@ -172,5 +172,62 @@
   "fit": "category",
   "from": "mini-cast",
   "scene": ""
+ },
+ "workshop": {
+  "order": 2,
+  "name": "The Studio",
+  "tagline": "Where a day out becomes a Field Note",
+  "pull": "It only feels like one machine when the light agrees everywhere.",
+  "numbers": [
+   [
+    "124",
+    "video files behind one header"
+   ],
+   [
+    "36",
+    "clips: 18 for the river, 18 for the pipe"
+   ],
+   [
+    "3",
+    "liquids, and only one way round"
+   ]
+  ],
+  "links": [
+   {
+    "label": "Open the Studio",
+    "url": "/studio/"
+   }
+  ],
+  "cover": "blue-green.mp4",
+  "media": [
+   {
+    "photo": "green-orange.mp4"
+   },
+   {
+    "photo": "dusk.mp4"
+   },
+   {
+    "photo": "blue-green.mp4"
+   },
+   {
+    "photo": "orange-blue.mp4"
+   },
+   {
+    "photo": "panel-toggles.mp4",
+    "after": 3
+   },
+   {
+    "photo": "retired-valves.jpg",
+    "after": 8
+   },
+   {
+    "photo": "title-filling.mp4",
+    "after": 6
+   },
+   {
+    "photo": "three-skins.jpg",
+    "after": 6
+   }
+  ]
  }
 }

@@ -126,5 +126,61 @@
  "palette": [
   "#54c4cd",
   "#b27034"
- ]
+ ],
+ "workshop": {
+  "order": 5,
+  "name": "The Workshop",
+  "tagline": "Prompt a new part, trace it, bring it to life",
+  "pull": "Make the way back in the easy part.",
+  "numbers": [
+   [
+    "13",
+    "kinds of part the prompt builder knows"
+   ],
+   [
+    "693 ms",
+    "to trace the fox: 5 colours, 7 KB"
+   ],
+   [
+    "3",
+    "steps, and the third is next"
+   ]
+  ],
+  "links": [
+   {
+    "label": "Open the Workshop",
+    "url": "/catalog/workshop"
+   }
+  ],
+  "cover": "automaton-hands.mp4",
+  "media": [
+   {
+    "photo": "automaton-hands.mp4"
+   },
+   {
+    "photo": "ws-header.mp4",
+    "after": 6
+   },
+   {
+    "photo": "ws-trace.mp4",
+    "after": 3
+   },
+   {
+    "photo": "prompt-builder.jpg",
+    "after": 2
+   },
+   {
+    "photo": "import-trace.jpg",
+    "after": 3
+   },
+   {
+    "photo": "kit-sheet.jpg",
+    "after": 4
+   },
+   {
+    "photo": "cut-and-rig.jpg",
+    "after": 5
+   }
+  ]
+ }
 }

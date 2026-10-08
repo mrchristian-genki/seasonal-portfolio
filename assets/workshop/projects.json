@@ -377,8 +377,11 @@
     "after": 4
    },
    {
-    "type": "image",
-    "src": "play/media/2026-10-06-the-parts-catalog/07.jpg",
+    "type": "video",
+    "src": "play/media/2026-10-06-the-parts-catalog/07.mp4?v=18tpq1pjm",
+    "poster": "play/media/2026-10-06-the-parts-catalog/07.jpg?v=18tpq1pjm",
+    "w": 1280,
+    "h": 720,
     "caption": "The giant paper squid that took the whale’s place in the deep-sea header, with a shoal of paper fish.",
     "after": 6
    },

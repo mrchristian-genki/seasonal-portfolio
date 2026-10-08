@@ -143,5 +143,67 @@
  "palette": [
   "#26bfac",
   "#b57835"
- ]
+ ],
+ "workshop": {
+  "order": 6,
+  "name": "GlazyArray",
+  "tagline": "The narrator who talks with her hands",
+  "pull": "A character is mostly the little things done carefully.",
+  "numbers": [
+   [
+    "1",
+    "video file for every move she makes"
+   ],
+   [
+    "19",
+    "looks in her Style Array"
+   ],
+   [
+    "Oct 6",
+    "the day she got a body"
+   ]
+  ],
+  "links": [
+   {
+    "label": "Meet her in the catalog",
+    "url": "/catalog/?glazyarray"
+   },
+   {
+    "label": "Read her feature",
+    "url": "/play/2026-10-08-glazyarray-will-see-you-now/"
+   }
+  ],
+  "cover": "wardrobe.mp4",
+  "media": [
+   {
+    "note": "2026-10-08-glazyarray-will-see-you-now",
+    "photo": "cover.jpg",
+    "caption": "Her RIVETING TONE cover: GlazyArray, photographed for her first profile."
+   },
+   {
+    "photo": "his-head-her-head.jpg"
+   },
+   {
+    "photo": "gestures.mp4"
+   },
+   {
+    "photo": "hints.jpg"
+   },
+   {
+    "photo": "wardrobe.mp4"
+   },
+   {
+    "photo": "wardrobe-grid.jpg"
+   },
+   {
+    "photo": "eyes.jpg"
+   },
+   {
+    "photo": "workshop-looks.jpg"
+   },
+   {
+    "photo": "catalog-card.jpg"
+   }
+  ]
+ }
 }

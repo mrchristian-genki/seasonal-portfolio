@@ -1,6 +1,6 @@
 <?php
-/* STUDIO VIDEO: short silent loops trimmed from the videos that came in from Drive. The videos stay on
-   this server: ffmpeg makes a small preview to scrub through in the browser, then cuts the chosen part
+/* STUDIO VIDEO: short silent loops trimmed from the videos that came in from Drive, or that were dropped into a
+   note (they come up in pieces to the work folder). The videos stay on this server: ffmpeg makes a small preview to scrub through in the browser, then cuts the chosen part
    into the loop Play shows (960 px on the long edge, H.264, no sound, starts fast) with a poster frame.
    iPhone HDR video is toned down to ordinary colour so it doesn't come out grey and washed out.
 
@@ -10,6 +10,8 @@ declare(strict_types=1);
 
 final class Video {
     public const MAX_SEC = 30;          // a loop is short; a longer edit belongs on YouTube with its sound
+    public const UP_MAX = 500_000_000;  // a video dropped into a note: plenty for a few minutes from a phone
+    private const UP_EXT = ['mp4', 'mov', 'm4v', 'webm'];
     private string $ffmpeg;
     private string $tz;
 
@@ -168,6 +170,35 @@ final class Video {
         if (!$taken) return null;
         $t = DateTime::createFromFormat('Y:m:d H:i:s', $taken, new DateTimeZone($this->tz));
         return $t ? $t->modify('+' . (int) $sec . ' seconds')->format('Y:m:d H:i:s') : $taken;
+    }
+
+    // A video dropped into a note comes up in pieces (no request is large) into the work folder, then it's trimmed
+    // from there like a Drive one. The first piece has to look like a video: MP4 or MOV (ftyp), or WebM.
+    public function upPart(string $up, string $ext, int $i, string $bytes, bool $last): array {
+        $ext = strtolower($ext);
+        if (!preg_match('/^[0-9a-f]{16}$/', $up) || !in_array($ext, self::UP_EXT, true) || $i < 0) throw new RuntimeException('Bad upload.');
+        $part = $this->dir() . "/up-$up.$ext.part";
+        if ($i === 0) {
+            if (substr($bytes, 4, 4) !== 'ftyp' && substr($bytes, 0, 4) !== "\x1A\x45\xDF\xA3") throw new RuntimeException("That isn't a video the Studio can read. Drop an MP4, MOV or WebM.");
+            $this->sweep();
+            file_put_contents($part, $bytes);
+        } else {
+            if (!is_file($part)) throw new RuntimeException('The upload was interrupted. Try again.');
+            file_put_contents($part, $bytes, FILE_APPEND);
+        }
+        clearstatcache(true, $part);
+        if (filesize($part) > self::UP_MAX) { @unlink($part); throw new RuntimeException('That video is too big (' . intdiv(self::UP_MAX, 1_000_000) . ' MB at most). Trim it on the phone first.'); }
+        if (!$last) return ['ok' => true];
+        $f = $this->dir() . "/up-$up.$ext";
+        rename($part, $f);
+        return ['up' => $up, 'bytes' => filesize($f)];
+    }
+
+    // a dropped video by its upload id (it goes two weeks after it came up)
+    public function upPath(string $up): ?string {
+        if (!preg_match('/^[0-9a-f]{16}$/', $up)) return null;
+        foreach (self::UP_EXT as $x) if (is_file($f = $this->dir() . "/up-$up.$x")) return $f;
+        return null;
     }
 
     // a finished loop (or its poster, or a preview) by its token, for the page and for the Save

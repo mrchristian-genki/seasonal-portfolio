@@ -117,5 +117,54 @@
   "#34b2af",
   "#00ab66"
  ],
- "paletteBy": "hand"
+ "paletteBy": "hand",
+ "workshop": {
+  "order": 7,
+  "name": "This lake",
+  "tagline": "One hand-built scene where every tab is a season",
+  "pull": "The scene is the portfolio.",
+  "numbers": [
+   [
+    "12 → 56",
+    "frames a second on a winter night, on an iPhone"
+   ],
+   [
+    "33",
+    "kinds of wildlife visit"
+   ],
+   [
+    "55",
+    "links in the trigger guide"
+   ]
+  ],
+  "links": [
+   {
+    "label": "Back to the lake",
+    "url": "#hero"
+   }
+  ],
+  "cover": "automaton-face.mp4",
+  "media": [
+   {
+    "photo": "automaton-face.mp4"
+   },
+   {
+    "photo": "v2-seasons.mp4"
+   },
+   {
+    "photo": "v2-winter.mp4"
+   },
+   {
+    "photo": "v2-beach.mp4"
+   },
+   {
+    "photo": "doe-visit.mp4",
+    "after": 3
+   },
+   {
+    "photo": "pocket-watch.jpg",
+    "after": 5
+   }
+  ]
+ }
 }

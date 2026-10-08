@@ -123,5 +123,50 @@
   "from": "case-study",
   "scene": ""
  },
- "palette": ["#25c0ad", "#b26e34"]
+ "palette": ["#25c0ad", "#b26e34"],
+ "workshop": {
+  "order": 1,
+  "name": "The whole machine",
+  "tagline": "How the lake, the Parts Catalog, the Workshop, the Studio and ProPre fit together",
+  "pull": "Each one is good alone, but it's the pipes between them that make it feel alive.",
+  "numbers": [
+   [
+    "5",
+    "parts: an eye, a face, a memory, hands and a heart"
+   ],
+   [
+    "7",
+    "renders of the automaton on the bench"
+   ],
+   [
+    "1",
+    "bird of light, flying into the lake"
+   ]
+  ],
+  "links": [],
+  "cover": "alive.mp4",
+  "media": [
+   {
+    "photo": "alive.mp4"
+   },
+   {
+    "photo": "prism.mp4"
+   },
+   {
+    "photo": "face.mp4"
+   },
+   {
+    "photo": "memory.mp4"
+   },
+   {
+    "photo": "hands.mp4"
+   },
+   {
+    "photo": "heart.mp4"
+   },
+   {
+    "photo": "at-rest.jpg"
+   }
+  ]
+ }
 }
