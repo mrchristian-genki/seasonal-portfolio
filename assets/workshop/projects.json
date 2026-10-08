@@ -163,6 +163,21 @@
     "src": "play/media/2026-10-05-the-studio-river/06.jpg",
     "caption": "The valves that were cut: bypass valves with lit glass windows, fun to build and wrong to keep, back under the dust sheet.",
     "after": 8
+   },
+   {
+    "type": "video",
+    "src": "play/media/2026-10-05-the-studio-river/07.mp4?v=esoqo56",
+    "poster": "play/media/2026-10-05-the-studio-river/07.jpg?v=esoqo56",
+    "w": 992,
+    "h": 288,
+    "caption": "The STUDIO letters filling with the liquid, a slow wave running through them; on every change they drain and fill again.",
+    "after": 6
+   },
+   {
+    "type": "image",
+    "src": "play/media/2026-10-05-the-studio-river/08.jpg",
+    "caption": "One page, three liquids: steel on slate for blue, gold on walnut for orange, verdigris on bronze for green.",
+    "after": 6
    }
   ],
   "pull": "It only feels like one machine when the light agrees everywhere.",
@@ -350,7 +365,7 @@
     "w": 1280,
     "h": 720,
     "caption": "A drawer for every part: a paper buck in his own lit drawer, lowering his head to graze and looking up again.",
-    "after": 3
+    "after": 2
    },
    {
     "type": "video",
@@ -366,6 +381,15 @@
     "src": "play/media/2026-10-06-the-parts-catalog/07.jpg",
     "caption": "The giant paper squid that took the whale’s place in the deep-sea header, with a shoal of paper fish.",
     "after": 6
+   },
+   {
+    "type": "video",
+    "src": "play/media/2026-10-06-the-parts-catalog/08.mp4?v=19uwo8ea",
+    "poster": "play/media/2026-10-06-the-parts-catalog/08.jpg?v=19uwo8ea",
+    "w": 506,
+    "h": 430,
+    "caption": "One card, every control: the buck grazing and walking off in summer, rain beading on him in a tempest, then his winter coat in a blizzard (twice speed).",
+    "after": 3
    }
   ],
   "pull": "A deer that looks right on its own card looks right on the lake.",

@@ -32,9 +32,9 @@ help. This is the list, project by project, with prompts ready to copy.
    > workbench under a dust sheet half pulled back, as if retired. Wistful, quiet light.
 
    *Caption idea:* "The valves were fun to build and wrong to keep."
-3. **Capture: the letters filling.** STUDIO's letters draining and filling with a new liquid. *Goes:* "Then the
+3. **Done (Oct 8): the letters filling.** STUDIO's letters draining and filling with a new liquid. *Goes:* "Then the
    liquid started spreading".
-4. **Capture: three skins.** The same Studio page in gold on walnut, steel on slate and verdigris on bronze, side by
+4. **Done (Oct 8): three skins,** as one page in three strips. The same Studio page in gold on walnut, steel on slate and verdigris on bronze, side by
    side. *Goes:* the same paragraph.
 
 ## The Workshop (3 pictures, 7 paragraphs)
@@ -55,7 +55,7 @@ help. This is the list, project by project, with prompts ready to copy.
 
 ## The Parts Catalog (4 pictures, 7 paragraphs)
 
-1. **Capture: a deer grazing.** One card, close: the doe lowering her head to graze, then looking up. *Goes:* "The
+1. **Done (Oct 8): a deer through the seasons,** the buck's card in every weather. One card, close: the doe lowering her head to graze, then looking up. *Goes:* "The
    animals are the heart of it".
 2. **Done (Oct 8): one drawer open,** twice: a paper buck grazing and a winged fox stretching.
    > [The look.] Close on a single small wooden drawer pulled open from a wall of tiny drawers, a paper origami deer

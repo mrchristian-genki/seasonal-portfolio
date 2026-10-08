@@ -118,6 +118,26 @@
    "h": 768,
    "use": "post",
    "cover": false
+  },
+  {
+   "src": "data/photos/2026-10-05-the-studio-river/title-filling.mp4",
+   "poster": "data/photos/2026-10-05-the-studio-river/title-filling.jpg",
+   "video": true,
+   "w": 992,
+   "h": 288,
+   "caption": "The STUDIO letters filling with the liquid, a slow wave running through them; on every change they drain and fill again.",
+   "use": "post",
+   "cover": false
+  },
+  {
+   "src": "data/photos/2026-10-05-the-studio-river/three-skins.jpg",
+   "w": 1826,
+   "h": 1027,
+   "caption": "One page, three liquids: steel on slate for blue, gold on walnut for orange, verdigris on bronze for green.",
+   "poster": null,
+   "video": null,
+   "use": "post",
+   "cover": false
   }
  ],
  "fieldNotes": "Case study of the Studio header, built over Oct 2026 (PRs #77 to #103 in seasonal-portfolio). Facts from the commit history: liquids blue (1080p renders), green (4K), orange; one-way change cycle; 18 header + 18 footer clips, 124 files across sizes; tube light model learned from blue-night footage and re-applied to every clip; ends of each change graded to the loops; per-look share cards via ?look=; page skin, rivets and liquid-filled STUDIO letters (CSS text-filling technique); glowing buttons. Clips are screen recordings of the login page.",
