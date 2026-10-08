@@ -81,7 +81,7 @@
     tMark.style.top = (Math.min(1, scrollY / maxY) * 100).toFixed(2) + '%';
     tMark.firstChild.textContent = scrollY < 40 ? 'Now' : y; tape.setAttribute('aria-valuenow', y); tape.setAttribute('aria-valuetext', scrollY < 40 ? 'Now, 2026' : String(y));
   }
-  function goYear(y, smooth) { var m = marks.filter(function (k) { return k.y === y; })[0]; if (m) scrollTo({ top: Math.max(0, m.at + 1), behavior: smooth && !still ? 'smooth' : 'auto' }); }
+  function goYear(y) { var m = marks.filter(function (k) { return k.y === y; })[0]; if (m) tumbleTo(Math.max(0, m.at + 1)); }
   if (tape) {
     var drag = false, sx = 0;
     var toY = function (e) { var r = tape.getBoundingClientRect(); return Math.min(1, Math.max(0, (e.clientY - r.top) / r.height)) * maxY; };
@@ -89,11 +89,11 @@
     tape.addEventListener('pointermove', function (e) { if (drag && Math.abs(e.clientY - sx) > 4) { root.style.scrollBehavior = 'auto'; scrollTo(0, toY(e)); } });
     tape.addEventListener('pointerup', function (e) {
       if (!drag) return; drag = false; tape.classList.remove('drag'); root.style.scrollBehavior = '';
-      if (Math.abs(e.clientY - sx) <= 4) scrollTo({ top: toY(e), behavior: still ? 'auto' : 'smooth' });
+      if (Math.abs(e.clientY - sx) <= 4) tumbleTo(toY(e));
     });
     tape.addEventListener('keydown', function (e) {
       var d = { ArrowUp: 1, ArrowRight: 1, ArrowDown: -1, ArrowLeft: -1, PageUp: 5, PageDown: -5 }[e.key];
-      if (e.key === 'Home') { e.preventDefault(); scrollTo({ top: 0 }); return; }
+      if (e.key === 'Home') { e.preventDefault(); tumbleTo(0); return; }
       if (e.key === 'End') { e.preventDefault(); goYear(1997); return; }
       if (d) { e.preventDefault(); goYear(Math.min(2026, Math.max(1997, shownYear + d)), true); }
     });
@@ -159,6 +159,7 @@
   // default) a new pattern comes up every few seconds; the console's own buttons pick one, set the speed, flash them,
   // switch the power and the portholes, spin the needles, or hit 88
   var jw = [].slice.call(document.querySelectorAll('.tm-jw')), jwSeen = true, rnd = null;
+  jw.forEach(function (b) { var i = b.querySelector('img'); if (i) { var u = i.cloneNode(); u.className = 'unlit'; i.after(u); } });
   function jset(f) { jw.forEach(function (b, i) { b.classList.toggle('off', !!f(i)); }); }
   var PAT = {
     chase: function (t) { return function (i) { return i === t % 9; }; },
@@ -171,40 +172,44 @@
     on: function () { return function () { return false; }; },
     off: function () { return function () { return true; }; }
   };
-  var SHUF = ['chase', 'alt', 'random', 'sweep', 'ripple', 'twinkle', 'comet'], mode = 'auto', pat = PAT.on, step = 0, speed = 3, jwTimer = 0;
-  var SPD = [0, 1200, 900, 650, 420, 240];
+  // the console: a button for each browser (in its colour) switches its jewel; one switches them all; one plays the
+  // patterns, a new one at random every few seconds. Every light eases on and off (tumble.css).
+  var SHUF = ['chase', 'alt', 'random', 'sweep', 'ripple', 'twinkle', 'comet'], playing = false, pat = PAT.on, step = 0, speed = 3, jwTimer = 0;
+  var SPD = [0, 1500, 1200, 950, 750, 560];
+  var hbs = [].slice.call(document.querySelectorAll('.tm-hb')), brb = hbs.filter(function (h) { return h.classList.contains('br'); });
+  function sync() { brb.forEach(function (h, i) { h.classList.toggle('lit', !jw[i].classList.contains('off')); }); }
+  function setJ(f) { jset(f); sync(); }
   function tickJ() {
-    clearTimeout(jwTimer); jwTimer = setTimeout(tickJ, SPD[speed]);
+    clearTimeout(jwTimer); if (!playing || still) return;
+    jwTimer = setTimeout(tickJ, SPD[speed]);
     if (!jwSeen || document.hidden || root.classList.contains('tm-dark')) return;
-    if (mode === 'auto' && step % 10 === 0) pat = Math.random() < .3 ? PAT.on : PAT[SHUF[Math.floor(Math.random() * SHUF.length)]];
-    jset(pat(step)); step++;
+    if (step % 10 === 0) pat = Math.random() < .25 ? PAT.on : PAT[SHUF[Math.floor(Math.random() * SHUF.length)]];
+    setJ(pat(step)); step++;
   }
   if (jw.length) {
-    if (!still) tickJ();
-    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { jwSeen = es[0].isIntersecting; if (!jwSeen) jset(PAT.on()); }).observe(document.querySelector('.tm-view'));
+    tickJ();
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { jwSeen = es[0].isIntersecting; if (!jwSeen && playing) setJ(PAT.on()); }).observe(document.querySelector('.tm-view'));
   }
-  var hbs = [].slice.call(document.querySelectorAll('.tm-hb'));
   function lit(sel, on) { hbs.forEach(function (h) { if (h.matches(sel)) h.classList.toggle('lit', on); }); }
-  function press(h) { h.classList.add('pz'); setTimeout(function () { h.classList.remove('pz'); }, 220); }
+  function press(h) { h.classList.add('pz'); setTimeout(function () { h.classList.remove('pz'); }, 260); }
   function showSpeed() { hbs.forEach(function (h) { var m = /^s:(\d)/.exec(h.getAttribute('data-act')); if (m) h.classList.toggle('lit', +m[1] <= speed); }); }
-  function burst() { root.classList.remove('tm-burst'); void root.offsetWidth; root.classList.add('tm-burst'); setTimeout(function () { root.classList.remove('tm-burst'); }, 1600); }
+  function stopPlay() { playing = false; clearTimeout(jwTimer); lit('[data-act="play"]', false); }
+  function burst() { root.classList.remove('tm-burst'); void root.offsetWidth; root.classList.add('tm-burst'); setTimeout(function () { root.classList.remove('tm-burst'); }, 1700); }
   function spin() { if (still) return; root.classList.add('tm-spin'); setTimeout(function () { root.classList.remove('tm-spin'); }, 1100); }
-  lit('[data-act="p:auto"]', true); lit('[data-act="power"]', true); lit('[data-act="ports"]', true); showSpeed();
+  lit('[data-act="play"]', false); lit('[data-act="all"]', true); lit('[data-act="power"]', true); lit('[data-act="ports"]', true); showSpeed(); sync();
   hbs.forEach(function (h) {
     h.addEventListener('click', function () {
       var a = h.getAttribute('data-act'); press(h);
-      if (a === 'power') { var dark = root.classList.toggle('tm-dark'); lit('[data-act="power"]', !dark); jset(dark ? PAT.off() : PAT.on()); return; }
+      if (a === 'power') { var dark = root.classList.toggle('tm-dark'); lit('[data-act="power"]', !dark); setJ(dark ? PAT.off() : PAT.on()); return; }
       if (root.classList.contains('tm-dark')) return;
-      if (a.indexOf('p:') === 0) {
-        mode = a.slice(2); step = 0; pat = mode === 'auto' ? PAT.on : PAT[mode];
-        lit('[data-act^="p:"]', false); h.classList.add('lit');
-        if (still || mode === 'on' || mode === 'off') jset(pat(0)); else tickJ();
-      } else if (a.indexOf('s:') === 0) { speed = +a.slice(2); showSpeed(); if (!still) tickJ(); }
-      else if (a === 'lamp') { h.classList.toggle('lit'); var j = jw[Math.floor(Math.random() * jw.length)]; j.classList.add('off'); setTimeout(function () { j.classList.remove('off'); }, 400); }
-      else if (a === 'speed') { speed = speed % 5 + 1; showSpeed(); if (!still) tickJ(); var kk = ((parseFloat(h.style.getPropertyValue('--k')) || 0) + 72) % 360; h.style.setProperty('--k', kk + 'deg'); h.classList.add('turned'); }
-      else if (a === 'burst') burst();
+      if (a.indexOf('b:') === 0) { if (playing) { stopPlay(); jset(PAT.on()); } var j = jw[+a.slice(2)]; j.classList.toggle('off'); sync(); }
+      else if (a === 'all') { stopPlay(); var anyOn = jw.some(function (j) { return !j.classList.contains('off'); }); setJ(anyOn ? PAT.off() : PAT.on()); h.classList.toggle('lit', !anyOn); }
+      else if (a === 'play') { if (playing) { stopPlay(); setJ(PAT.on()); } else { playing = true; step = 0; h.classList.add('lit'); tickJ(); } }
+      else if (a.indexOf('s:') === 0) { speed = +a.slice(2); showSpeed(); if (playing) tickJ(); }
+      else if (a === 'speed') { speed = speed % 5 + 1; showSpeed(); if (playing) tickJ(); var kk = ((parseFloat(h.style.getPropertyValue('--k')) || 0) + 72) % 360; h.style.setProperty('--k', kk + 'deg'); h.classList.add('turned'); }
+      else if (a === 'lamp') { h.classList.toggle('lit'); burst(); }
       else if (a === 'go') { flux(); spin(); }
-      else if (a === 'spin') { spin(); if (h.classList.contains('knob')) { var k = ((parseFloat(h.style.getPropertyValue('--k')) || 0) + 60) % 360; h.style.setProperty('--k', k + 'deg'); h.classList.add('turned'); } }
+      else if (a === 'spin') { spin(); var k = ((parseFloat(h.style.getPropertyValue('--k')) || 0) + 60) % 360; h.style.setProperty('--k', k + 'deg'); h.classList.add('turned'); }
       else if (a === 'ports') { var off = root.classList.toggle('tm-noports'); lit('[data-act="ports"]', !off); }
     });
   });
@@ -270,7 +275,7 @@
   });
   // the end: climb back up
   var up = document.querySelector('[data-tb-up]');
-  if (up) up.addEventListener('click', function () { scrollTo({ top: 0, behavior: still ? 'auto' : 'smooth' }); });
+  if (up) up.addEventListener('click', function () { tumbleTo(0); });
   // set the browsers and tools for the year you start at (the top is 2026: the gone ones dim)
   toolbox(shownYear);
 })();
