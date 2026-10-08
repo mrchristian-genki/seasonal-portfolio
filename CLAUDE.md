@@ -16,7 +16,9 @@ Christian's rule, a lesson learned on the Tumble: every change on screen eases. 
   `tumbleTo`: a few seconds, longer for longer distances, stopped at once by a wheel, touch or key), not
   `scrollTo` with `behavior: 'auto'`, and not the browser's quick `smooth`.
 - **Hovers are subtle.** A small lift or glow, not a big zoom.
-- **Reduced motion is the one exception:** with `prefers-reduced-motion: reduce`, things may appear or move at once.
+- **The Tumble's jump at 88 is fast on purpose** (Christian, Oct 8): the 88 MPH flashes, the flash and the spin hit
+  hard like the film; only the return to normal eases.
+- **Reduced motion is the other exception:** with `prefers-reduced-motion: reduce`, things may appear or move at once.
 
 ## Standing rules
 

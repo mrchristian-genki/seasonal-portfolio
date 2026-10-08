@@ -192,7 +192,7 @@ What happens when someone hits 88 (the button, the levers, or falling fast enoug
 4. **The return (clip + code):** the fire burns down to embers, light fills the screen again, and it fades back to the
    cockpit as it was.
 
-Everything eases in and out (the motion rule): nothing cuts, every flash swells and settles.
+The jump itself is fast, like the film: the one exception to the motion rule. The build-up and the return ease.
 
 **Format for both renders:** 9:16 or 16:9, at least 1920 px on the long side, on **pure black** (so the page can lay
 it over the cockpit with screen blend: the black drops out, only the light and fire show). No text, no letters, no
@@ -210,19 +210,21 @@ numbers, no logos.
 
 *Goes:* a still for the poster frame and for reduced motion.
 
-### K2. The animation (6 to 8 seconds, silent)
+### K2. The animation (4 to 5 seconds, silent): fast, like the film
 
-Use K1 as the end frame of the middle beat, or start from black.
+The jump is the one moment that should be fast and violent: a crack of light, fire racing, the plate spinning like a
+top. Only the return to normal is slow.
 
-> Pure black. A bright white-blue flash swells up from the bottom edge and fades. Two parallel tracks of fire ignite
-> at the bottom and race straight up the frame to the top, leaving burning trails. A blank metal plate tumbles end
-> over end up the middle between them, sparks trailing behind it, and leaves the top of the frame. The fire trails
-> burn on for a moment, then burn down into glowing embers that fade, while a soft white light rises and fills the
-> whole frame, then gently fades back to black. Smooth, eased, no cuts, camera locked off. No text, no letters, no
-> numbers, no logos, no people, no cars.
+> Pure black. A blinding white-blue flash cracks up from the bottom edge in an instant, with a shockwave ring. Two
+> parallel tracks of fire rip straight up the frame from bottom to top in a split second, flames roaring, sparks
+> flying. A blank metal plate (an old car licence plate with no writing) whips up the middle between them, spinning
+> furiously flat on its edge like a coin or a top, a blur of chrome, throwing sparks, then skids and wobbles to a
+> stop near the top between the burning tracks. The fire trails burn on, then slowly settle into glowing embers while
+> a soft white light rises and fills the frame and gently fades back to black. Camera locked off, high speed motion,
+> motion blur on the plate, no cuts. No text, no letters, no numbers, no logos, no people, no cars.
 
-*Size:* 1920 × 1080 (or 1080 × 1920 for phones, the same motion bottom to top). *Goes:* over the cockpit, on screen
-blend, after the 88 MPH flashes.
+*Size:* 1920 × 1080 (and 1080 × 1920 for phones). *Timing:* about 0.3 s flash, 1 s fire and spin, 3 s burn-down and
+light. *Goes:* over the cockpit, on screen blend, straight after the 88 MPH flashes.
 
 ### K3. Optional: the dial at 88 (a still)
 

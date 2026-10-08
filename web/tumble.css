@@ -298,10 +298,10 @@ html.tm-burst .tm-jw{animation:tm-jwb .8s ease-in-out 2}
 .tm-nd[data-nd^="w"]{animation:tm-wob 3s ease-in-out infinite alternate;transition:none}
 .tm-nd[data-nd="w2"]{animation-duration:2.2s}.tm-nd[data-nd="w3"]{animation-duration:3.7s;animation-delay:-1s}.tm-nd[data-nd="w4"]{animation-duration:2.7s;animation-delay:-2s}.tm-nd[data-nd="w5"]{animation-duration:4.1s}
 @keyframes tm-wob{0%{rotate:-60deg}30%{rotate:-20deg}55%{rotate:-35deg}100%{rotate:25deg}}
-html.tm-spin .tm-nd{transition:rotate 1s cubic-bezier(.2,.8,.3,1);rotate:400deg!important;animation:none}
+html.tm-spin .tm-nd{transition:rotate .9s cubic-bezier(.15,.9,.3,1);rotate:1480deg!important;animation:none}
 .tm-flash{inset:0;background:radial-gradient(circle at 80% 30%,#fff,rgba(255,236,190,.7) 25%,transparent 65%);opacity:0;pointer-events:none}
-html.flux .tm-flash{animation:tm-flash .9s ease-out}
-@keyframes tm-flash{8%{opacity:1}100%{opacity:0}}
+html.flux .tm-flash{animation:tm-flash 1.6s cubic-bezier(.1,.9,.3,1)}
+@keyframes tm-flash{3%{opacity:1}25%{opacity:.85}100%{opacity:0}}
 html.tm-dark .tm-room{filter:brightness(.32) saturate(.5)}
 html.tm-dark .tm-port{opacity:0;animation:none}
 html.tm-dark .tm-jw{animation:none}html.tm-dark .tm-jw img.unlit{opacity:1}
@@ -339,8 +339,8 @@ html.tm-dark .tm-jw{animation:none}html.tm-dark .tm-jw img.unlit{opacity:1}
   font-family:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;color:#ffb02e;opacity:0;background:radial-gradient(circle,rgba(14,6,0,.85) 0,rgba(14,6,0,.7) 50%,transparent 72%)}
 .tm-88 b{font-size:64px;line-height:1;letter-spacing:.04em;text-shadow:0 0 10px #ff8a1a,0 0 26px #ff6a00}
 .tm-88 span{font:800 16px/1 system-ui,sans-serif;letter-spacing:.3em;margin-top:4px;text-shadow:0 0 8px #ff8a1a}
-html.tm-88on .tm-88{animation:tm-88 .95s ease-in-out 3}
-@keyframes tm-88{0%,100%{opacity:0}45%,60%{opacity:1}}
+html.tm-88on .tm-88{animation:tm-88 .32s ease-out 4}
+@keyframes tm-88{0%,100%{opacity:0}15%,55%{opacity:1}}
 /* a jewel picked above: its button on the console swells into a big, slow, breathing glow */
 .tm-hb.mega::before{inset:-240%;opacity:1;animation:tm-mega 2.4s ease-in-out infinite}
 .tm-hb.mega{box-shadow:0 0 14px 4px var(--c),0 0 34px 10px color-mix(in srgb,var(--c) 50%,transparent);transition:box-shadow 1s ease-in-out}
