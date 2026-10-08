@@ -131,6 +131,7 @@ ${shareMeta(title, desc, url, image, meta)}
 ${ICONS}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <link rel="stylesheet" href="${rel}play.css?v=${V}">
+<link rel="stylesheet" href="${rel}../css/feature.css?v=${V}">
 <link rel="stylesheet" href="${rel}../css/logo.css?v=11">
 <link rel="stylesheet" href="${rel}../css/lake.css?v=1">
 <link rel="stylesheet" href="${rel}../css/narrator.css?v=32">
@@ -242,9 +243,13 @@ ${F.issue ? `<span class="mag-issue">${esc(F.issue)}</span>` : ''}${(F.coverLine
   }
   const html = head(title, desc, url, share && share.abs, '../', 'field-notes', { type: 'article', lake: 'notes+' + e.id, published: e.date,
     w: share && share.w, h: share && share.h, alt: share && share.alt, audio: audio && audio.abs }) + `<main class="article${F ? ' feature' : ''}"${t ? ` data-route="../data/${esc(e.id)}.json"` : ''}>
-${magCover}<p class="kicker"><span class="kind ${esc(e.kind)}">${KIND[e.kind] || esc(e.kind)}</span> · <time datetime="${esc(e.date)}">${day(e.date, true)}</time>${e.place ? ` · ${esc(e.place)}` : ''}</p>
+${magCover}${F ? `<header class="mag-head"><p class="mag-label">${esc(F.label || 'Feature')}</p>
 <h1>${esc(e.post && e.post.title || e.title)}</h1>
-${e.summary ? `<p class="lede">${esc(e.summary)}</p>` : ''}
+${e.summary ? `<p class="mag-deck">${esc(e.summary)}</p>` : ''}
+<p class="mag-byline">${F.byline ? `<span>${esc(F.byline)}</span>` : ''}<span><time datetime="${esc(e.date)}">${day(e.date, true)}</time>${e.place ? ` · ${esc(e.place)}` : ''}</span></p></header>
+` : ''}${F ? '' : '<p class="kicker">'}${F ? '' : `<span class="kind ${esc(e.kind)}">${KIND[e.kind] || esc(e.kind)}</span> · <time datetime="${esc(e.date)}">${day(e.date, true)}</time>${e.place ? ` · ${esc(e.place)}` : ''}</p>
+<h1>${esc(e.post && e.post.title || e.title)}</h1>
+${e.summary ? `<p class="lede">${esc(e.summary)}</p>` : ''}`}
 ${audio ? `<section class="listen" aria-label="Listen to the episode"${lookAttr(e)}><div><span class="listen-label">Listen · ${mmss(audio.sec)}</span><b>${esc(e.episode.title || e.title)}</b></div>
 <audio controls preload="metadata" src="${esc(audio.src)}"></audio></section>` : ''}
 ${cover && !F ? fig(cover, 'cover') : ''}${coverStrip ? '\n' + fig(coverStrip, 'photo strip') : ''}
