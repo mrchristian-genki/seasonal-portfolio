@@ -27,7 +27,7 @@ help. This is the list, project by project, with prompts ready to copy.
 
 1. **Done (Oct 8): the two toggles.** A close screen recording of the STUDIO panel: DAY/NIGHT flipped, then CHANGE LIQUID,
    with the jewel lamps lighting. *Goes:* "The controls took the longest".
-2. **Render: the valves that were cut.**
+2. **Done (Oct 8): the valves that were cut.**
    > [The look.] A row of ornate brass bypass valves with little lit glass windows and handwheels, lined up on the
    > workbench under a dust sheet half pulled back, as if retired. Wistful, quiet light.
 
@@ -62,7 +62,7 @@ help. This is the list, project by project, with prompts ready to copy.
    > inside standing on a bed of moss, lit from within by a soft cyan glow, the other drawers closed around it.
 
    *Goes:* "Forty live cards could easily melt a phone" (each one sleeps until it's opened).
-3. **Render: the squid that replaced the whale.**
+3. **Done (Oct 8): the squid that replaced the whale.**
    > [The look, but deep underwater:] a giant squid folded from paper, drifting in dark blue water with shafts of
    > light from above, tiny paper fish scattering around it.
 
