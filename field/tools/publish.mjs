@@ -117,7 +117,7 @@ const LOGO = (() => {
 const lakeBand = (words) => `<nav class="lake-band" aria-label="The lake scene"><a href="/?${esc(words)}+ylake" data-lake="1">Show the lake <span aria-hidden="true">▾</span></a></nav>`;
 const robots = show.listed ? '' : '<meta name="robots" content="noindex">\n';
 // Every page carries the main site's tabs (each opens that tab on the homepage) and Play's own bar.
-const PLAYBAR = [['field-notes', 'Field Notes', '#field-notes'], ['daily-dose', 'Daily Dose', '#daily-dose'], ['above', 'From Above', 'above/'], ['daydreams', 'Daydreams', '#daydreams']];
+const PLAYBAR = [['field-notes', 'Field Notes', '#field-notes'], ['daily-dose', 'Daily Dose', '#daily-dose'], ['above', 'From Above', 'above/'], ['daydreams', 'Daydreams', 'daydreams/']];
 const head = (title, desc, url, image, rel, sub = '', meta = {}) => `<!doctype html>
 <html lang="en">
 <head>
@@ -293,6 +293,8 @@ const tile = (g, rel, label) => {
   return `<figure class="tile"><a href="${esc(src)}" data-lightbox${g.video ? ' data-video' : ''}>${inner}</a>${cap ? `<figcaption>${esc(cap)}</figcaption>` : ''}</figure>`;
 };
 const AI = `<span class="ai-badge" title="${esc(G.tools)}">Made with AI</span>`;
+// A series card: its cover, title and count, and its one line (shown on hover on the hub, always on the Daydreams page).
+const serieCard = ({ s, m, cover }, rel) => `<a class="serie" href="${rel}daydreams/${s.key}/"><img src="${rel}gallery/${esc(cover.poster || cover.file)}" alt="" loading="lazy" width="${cover.w}" height="${cover.h}"><span><b>${esc(s.title)}</b><i>${m.picks.length + (m.real ? m.real.length : 0)}${m.real ? ', real and imagined' : ''}</i><em>${esc(s.about)}</em></span></a>`;
 const series = [];
 if (MAN) {
   MAN.above.forEach(copyMedia);
@@ -312,18 +314,31 @@ if (MAN) {
     else body = `<div class="grid">${m.picks.map((g) => tile(g, '../../')).join('')}</div>`;
     const dir = path.join(OUT, 'daydreams', s.key); fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(path.join(dir, 'index.html'), head(`${s.title} · Daydreams · Play`, s.about, `${show.siteUrl}daydreams/${s.key}/`, `${show.siteUrl}gallery/${cover.poster || cover.file}`, '../../', 'daydreams', { lake: 'daydreams+' + s.key }) +
-      `<main class="gallery-page"><p class="kicker"><a href="../../#daydreams">Daydreams</a> · ${m.real ? 'Real and imagined' : AI}</p><h1>${esc(s.title)}</h1><p class="lede">${esc(s.about)}</p>
+      `<main class="gallery-page"><p class="kicker"><a href="../">Daydreams</a> · ${m.real ? 'Real and imagined' : AI}</p><h1>${esc(s.title)}</h1><p class="lede">${esc(s.about)}</p>
 ${body}
 <p class="note tools">${esc(G.tools)}</p>
-<nav class="pager" data-series-pager="${s.key}"></nav></main>
+<nav class="pager" data-series-pager="${s.key}"></nav><section class="more-series" data-series-more="${s.key}"></section></main>
 ` + foot('../../').replace('../../../js/', '../../../js/'));
   }
   // Earlier / next series links, now that every series page exists.
   series.forEach(({ s }, i) => {
     const f = path.join(OUT, 'daydreams', s.key, 'index.html'), prev = series[i - 1], next = series[i + 1];
-    const link = (q, label, cls) => q ? `<a class="${cls}" href="../${q.s.key}/"><span>${label}</span>${esc(q.s.title)}</a>` : `<a class="${cls}" href="../../#daydreams"><span>${label}</span>All Daydreams</a>`;
-    fs.writeFileSync(f, fs.readFileSync(f, 'utf8').replace(`<nav class="pager" data-series-pager="${s.key}"></nav>`, `<nav class="pager">${link(prev, '← Previous', 'prev')}${link(next, 'Next →', 'next')}</nav>`));
+    const link = (q, label, cls) => q ? `<a class="${cls}" href="../${q.s.key}/"><span>${label}</span>${esc(q.s.title)}</a>` : `<a class="${cls}" href="../"><span>${label}</span>All Daydreams</a>`;
+    // more to look at: the next four series, round the end
+    const more = [1, 2, 3, 4].map((k) => series[(i + k) % series.length]).filter((q, k, a) => q.s.key !== s.key && a.indexOf(q) === k);
+    fs.writeFileSync(f, fs.readFileSync(f, 'utf8').replace(`<nav class="pager" data-series-pager="${s.key}"></nav>`, `<nav class="pager">${link(prev, '← Previous', 'prev')}${link(next, 'Next →', 'next')}</nav>`)
+      .replace(`<section class="more-series" data-series-more="${s.key}"></section>`, more.length ? `<section class="more-series"><h2 class="sec">More Daydreams</h2><div class="series">${more.map((q) => serieCard(q, '../../')).join('')}</div><p class="more"><a href="../">All ${series.length} series →</a></p></section>` : ''));
   });
+  // The Daydreams page: every series, each with its line
+  if (series.length) {
+    const total = series.reduce((n, { m }) => n + m.picks.length + (m.real ? m.real.length : 0), 0), c0 = series[0].cover;
+    fs.writeFileSync(path.join(OUT, 'daydreams', 'index.html'), head('Daydreams · Play', `Ideas that only exist as pictures, so far: ${series.length} series made with AI.`, `${show.siteUrl}daydreams/`, `${show.siteUrl}gallery/${c0.poster || c0.file}`, '../', 'daydreams', { lake: 'daydreams' }) +
+      `<main class="gallery-page"><p class="kicker"><a href="../">Play</a> · ${AI}</p><h1>Daydreams</h1><p class="lede">Ideas that only exist as pictures, so far. ${series.length} series and ${total} pictures: some for friends and family, some to see an idea before building it, and some just for fun.</p>
+<div class="series full">${series.map((q) => serieCard(q, '../')).join('')}</div>
+<p class="note tools">${esc(G.tools)}</p>
+<nav class="pager"><a href="../"><span>← Back</span>Play</a><span></span></nav></main>
+` + foot('../'));
+  }
   const dir = path.join(OUT, 'above'); fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(path.join(dir, 'index.html'), head(`${G.above.title} · Play`, G.above.about, `${show.siteUrl}above/`, `${show.siteUrl}gallery/${MAN.above[0].file}`, '../', 'above', { lake: 'above' }) +
     `<main class="gallery-page"><p class="kicker"><a href="../#above">Play</a> · <span class="real-badge">Real photographs</span></p><h1>${esc(G.above.title)}</h1><p class="lede">${esc(G.above.about)}</p>
@@ -363,7 +378,7 @@ const ytHTML = yt.length ? `<section id="daily-dose" class="block"><h2 class="se
 const aboveHTML = MAN && MAN.above.length ? `<section id="above" class="block"><h2 class="sec">${esc(G.above.title)} <span class="real-badge">Real photographs</span></h2><p class="sub">${esc(G.above.about)}</p>
 <div class="grid">${MAN.above.slice(0, 8).map((g) => tile(g, '')).join('')}</div><p class="more"><a href="above/">All ${MAN.above.length} →</a></p></section>` : '';
 const ddHTML = series.length ? `<section id="daydreams" class="block"><h2 class="sec">Daydreams ${AI}</h2><p class="sub">Ideas that only exist as pictures, so far. ${esc(G.tools)}</p>
-<div class="series">${series.map(({ s, m, cover }) => `<a class="serie" href="daydreams/${s.key}/"><img src="gallery/${esc(cover.poster || cover.file)}" alt="" loading="lazy" width="${cover.w}" height="${cover.h}"><span><b>${esc(s.title)}</b><i>${m.picks.length + (m.real ? m.real.length : 0)}${m.real ? ', real and imagined' : ''}</i></span></a>`).join('')}</div></section>` : '';
+<div class="series">${series.map((q) => serieCard(q, '')).join('')}</div><p class="more"><a href="daydreams/">All ${series.length} series →</a></p></section>` : '';
 fs.writeFileSync(path.join(OUT, 'index.html'), head('Play · Christian Gehrke', show.about, show.siteUrl, pages[0] && pages[0].cover && pages[0].cover.abs, '') +
   `<main class="index"><p class="season-line">Spring, when everything is starting</p><h1>Play</h1><p class="lede">The fun part. Rides, hikes and foraging, a decade of flying, and the things I make, real and imagined.</p>
 <section id="field-notes" class="block"><h2 class="sec">${esc(show.showTitle)}</h2><p class="sub">${esc(show.about)}</p>
