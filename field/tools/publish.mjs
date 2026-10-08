@@ -134,8 +134,8 @@ ${ICONS}
 <link rel="stylesheet" href="${rel}play.css?v=${V}">
 <link rel="stylesheet" href="${rel}../css/feature.css?v=${V}">
 <link rel="stylesheet" href="${rel}../css/logo.css?v=11">
-<link rel="stylesheet" href="${rel}../css/lake.css?v=1">
-<link rel="stylesheet" href="${rel}../css/narrator.css?v=32">
+<link rel="stylesheet" href="${rel}../css/lake.css?v=2">
+<link rel="stylesheet" href="${rel}../css/narrator.css?v=33">
 <script>/* Logo season from the calendar, as on About. */document.documentElement.dataset.season=["winter","winter","spring","spring","spring","summer","summer","summer","fall","fall","fall","winter"][new Date().getMonth()];</script>
 <link rel="stylesheet" href="${rel}../css/route-dash.css?v=${V}">
 </head>
@@ -150,10 +150,11 @@ const foot = (rel) => `<footer class="foot"><p>${esc(show.narrationNote)}</p>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" defer></script>
 <script src="${rel}../js/route-view.js?v=${V}" defer></script>
 <script src="${rel}../js/audio-rules.js?v=1" defer></script>
+<script src="${rel}../js/motion.js?v=1" defer></script>
 <script src="${rel}play.js?v=${V}" defer></script>
-<script src="${rel}../js/lake.js?v=3" defer></script>
+<script src="${rel}../js/lake.js?v=4" defer></script>
 <script src="${rel}../assets/narrator/resolve.js?v=1" defer></script>
-<script src="${rel}../js/narrator.js?v=41" defer></script>
+<script src="${rel}../js/narrator.js?v=42" defer></script>
 </body>
 </html>
 `;

@@ -34,7 +34,7 @@
 .ab-certs b{color:var(--ab-ink)}
 .ab-certs span{margin-left:auto;font:800 14px var(--ab-display);color:var(--ab-ink3)}
 .ab-links{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
-.ab-links a{display:flex;flex-direction:column;gap:2px;text-decoration:none;color:var(--ab-ink);border:1px solid var(--ab-line);border-radius:12px;padding:12px 14px;background:var(--ab-card)}
+.ab-links a{display:flex;flex-direction:column;gap:2px;text-decoration:none;color:var(--ab-ink);border:1px solid var(--ab-line);border-radius:12px;padding:12px 14px;background:var(--ab-card);transition:border-color .4s ease}
 .ab-links a:hover{border-color:var(--ab-accent)}
 .ab-links b{font:800 16px var(--ab-display)}
 .ab-links span{font-size:14px;color:var(--ab-ink3)}

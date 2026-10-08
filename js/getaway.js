@@ -51,7 +51,7 @@
   const els = [];
   let active = false, busy = false, sc = 1, range = 0, cam = 0, target = 0, raf = 0;
 
-  const addCss = () => new Promise((res) => { const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = 'css/getaway.css' + V; l.onload = l.onerror = res; document.head.appendChild(l); });
+  const addCss = () => new Promise((res) => { const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = 'css/getaway.css?v=1794800000'; l.onload = l.onerror = res; document.head.appendChild(l); });
   const addJs = () => new Promise((res) => { const s = document.createElement('script'); s.src = 'js/getaway-procedural.js' + V; s.onload = s.onerror = res; document.head.appendChild(s); });
   let cssP = null;
   const css = () => cssP || (cssP = addCss());
@@ -163,8 +163,9 @@
   async function goHome() {
     if (!active || busy) return;
     busy = true;
+    home.classList.add('gw-out');   // the button fades as the wave comes
     await washOver(true);
-    stage.hidden = true; home.hidden = true; pauseLake(false); active = false; setUrl(false); forceSunset = false;
+    stage.hidden = true; home.hidden = true; home.classList.remove('gw-out'); pauseLake(false); active = false; setUrl(false); forceSunset = false;
     if (boatEl) boatEl.classList.remove('gw-arrive');
     await washOver(false);
     busy = false;

@@ -148,7 +148,7 @@
 .dash .ring .rv{font:800 30px var(--dd);fill:#fff;text-anchor:middle}
 .dash .ring .ru{font:700 12px system-ui,sans-serif;fill:#9ea6ea;text-anchor:middle;letter-spacing:.06em}
 .dash .ring figcaption span{color:#c3c9f2;font-weight:700}
-@media (prefers-reduced-motion:no-preference){.dash .ring .rs.on{animation:ringon .35s both}}
+@media (prefers-reduced-motion:no-preference){.dash .ring .rs.on{animation:ringon .8s ease-in-out both}}
 @keyframes ringon{from{opacity:0}}
 /* the speed line: a glowing run of colour */
 .dash.neon .chart .l0{stop-color:#29e0d6} .dash.neon .chart .l1{stop-color:#b44dff} .dash.neon .chart .l2{stop-color:#ff7a59}
@@ -174,7 +174,7 @@
 .dash .elev{grid-column:span 4}
 .dash .dprof{position:relative;margin:0;user-select:none;touch-action:pan-y}
 .dash .dprof svg{display:block;width:100%;height:150px}
-.dash .dprof .tip{position:absolute;top:0;transform:translateX(-50%);background:var(--dk);color:var(--dc);font-size:12px;font-weight:700;padding:3px 8px;border-radius:6px;white-space:nowrap;pointer-events:none;opacity:0}
+.dash .dprof .tip{position:absolute;top:0;transform:translateX(-50%);background:var(--dk);color:var(--dc);font-size:12px;font-weight:700;padding:3px 8px;border-radius:6px;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .35s ease}
 .dash .dprof .pg-l{stroke:var(--da)} .dash .dprof .pg-t{stroke:var(--dl)} .dash .dprof .pg-x{fill:var(--dk3)} .dash .dprof .cur{stroke:var(--dk)}
 @media (max-width:720px){.dash .elev{grid-column:1/-1}}
 .dash.neon .dprof .l0{stop-color:#29e0d6} .dash.neon .dprof .l1{stop-color:#b44dff} .dash.neon .dprof .l2{stop-color:#ff7a59}

@@ -32,6 +32,7 @@
     ev.preventDefault();
     if (!box) {
       box = document.createElement('dialog'); box.className = 'lightbox';
+      if (window.softDialog) softDialog(box, 450);   // ../js/motion.js: it fades out as it closes
       box.innerHTML = '<img alt=""><video controls loop playsinline hidden></video><p></p><button type="button" aria-label="Close">&times;</button>';
       box.querySelector('button').onclick = function () { box.close(); };
       box.addEventListener('click', function (e) { if (e.target === box) box.close(); });

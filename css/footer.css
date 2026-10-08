@@ -60,7 +60,7 @@ html.night-page .ft-scene,html.night-page .ft-ground{filter:brightness(.42) satu
 .site-foot[data-season="spring"] .ft-bottom{background:#4f7d45}
 html.night-page .ft-bottom{background:#0a121a}
 .ft-links{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 18px;margin:0 0 10px;padding:0;list-style:none;font:800 15px var(--ft-display)}
-.ft-links a{color:inherit;text-decoration:none;opacity:.92}
+.ft-links a{color:inherit;text-decoration:none;opacity:.92;transition:opacity .4s ease}
 .ft-links a:hover{opacity:1;text-decoration:underline}
 .ft-small{margin:0;font-size:13px;opacity:.75}
 @media (prefers-reduced-motion:reduce){.site-foot,.ft-ground,.ft-scene,.ft-bottom,.ft-log b,.ft-log span{transition:none}}

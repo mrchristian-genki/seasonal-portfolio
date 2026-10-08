@@ -14,10 +14,11 @@
     try { history.replaceState(history.state, '', location.pathname + (ws.length ? '?' + ws.join('+') : '') + location.hash); } catch (e) {}
   }
   function open() {
-    if (!cssOn) { cssOn = true; var l = document.createElement('link'); l.rel = 'stylesheet'; l.href = 'about/about.css?v=1793340000'; document.head.appendChild(l); }
+    if (!cssOn) { cssOn = true; var l = document.createElement('link'); l.rel = 'stylesheet'; l.href = 'about/about.css?v=1794800000'; document.head.appendChild(l); }
     if (!dlg) {
       dlg = document.createElement('dialog'); dlg.className = 'pi-story ab-modal';
       dlg.innerHTML = '<div class="pi-story-bar"><a class="pi-story-link" href="about/" target="_blank" rel="noopener">Open as a page</a><button type="button" class="pi-close" aria-label="Close">×</button></div><div class="pi-story-body"></div>';
+      if (window.softDialog) softDialog(dlg, 450);   // it fades out as it closes (css/play-inline.css .shut)
       dlg.querySelector('.pi-close').onclick = function () { dlg.close(); };
       var down = null; dlg.addEventListener('pointerdown', function (e) { down = e.target; });
       dlg.addEventListener('click', function (e) { if (e.target === dlg && down === dlg) dlg.close(); down = null; });

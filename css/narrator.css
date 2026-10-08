@@ -30,18 +30,20 @@ section.listen.has-nb::before{content:"";position:absolute;left:0;right:0;bottom
 .nb.blink .nb-lids{opacity:1;clip-path:none}
 /* the hints: the head turns toward the Play button, and the antenna bulb glows and flickers */
 .nb.look .nb-head{rotate:7deg;translate:2.4% 0}
-.nb-bulb{position:absolute;left:49.8%;top:5.03%;width:12.5%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;pointer-events:none;opacity:0;transition:opacity .15s;
-  background:radial-gradient(circle,rgba(235,255,255,.95) 0,rgba(130,240,255,.6) 22%,rgba(80,220,255,0) 68%);mix-blend-mode:screen}
+.nb-bulb{position:absolute;left:49.8%;top:5.03%;width:12.5%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;pointer-events:none;opacity:0;transition:opacity .6s ease-in-out;
+  mix-blend-mode:screen}
+.nb-bulb::after{content:"";position:absolute;inset:0;border-radius:50%;animation:nb-flick 1.4s ease-in-out infinite;   /* it breathes inside, so on and off are plain fades */
+  background:radial-gradient(circle,rgba(235,255,255,.95) 0,rgba(130,240,255,.6) 22%,rgba(80,220,255,0) 68%)}
 .nb.nb-nobulb .nb-bulb{display:none}   /* a look whose hat or bow covers the antenna */
-.nb.glow .nb-bulb{opacity:1;animation:nb-flick .36s steps(2,jump-none) infinite}
+.nb.glow .nb-bulb{opacity:1}
 @keyframes nb-flick{50%{opacity:.45}}
 @media (max-width:560px){section.listen.has-nb{--nb:150px;padding-left:calc(var(--nb) + 12px)}}
-@media (prefers-reduced-motion:reduce){.nb-head{transition:none}.nb.glow .nb-bulb{animation:none}}
+@media (prefers-reduced-motion:reduce){.nb-head{transition:none}.nb-bulb::after{animation:none}}
 
 /* changing her hair on a click (narrator.js restyle): the old look fades out over the new one, her head gives a
    little shake; the click target is her face and hair only, not the whole wide layer */
 .nb-hit{position:absolute;left:31%;width:38%;top:8%;height:70%;border-radius:50%;pointer-events:auto;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.nb-old{transition:opacity .48s ease}
+.nb-old{transition:opacity .8s ease-in-out}
 .nb.nb-swap .nb-head{animation:nb-shake .5s cubic-bezier(.3,1.6,.5,1)}
 @keyframes nb-shake{0%{scale:1}25%{scale:1.04 .97;rotate:-3deg}55%{scale:.98 1.03;rotate:2.5deg}100%{scale:1;rotate:0deg}}
 @media (prefers-reduced-motion:reduce){.nb-old{transition:none}}
@@ -84,7 +86,7 @@ section.listen.has-bd::before{z-index:1}
 .nb-seek::-moz-range-thumb{width:14px;height:14px;border:0;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.35)}
 .nb-seek:focus-visible{outline:2px solid #9fd8d0;outline-offset:3px}
 .nb-ctl{display:flex;align-items:center;justify-content:center;gap:14px}
-.nb-ctl button{display:grid;place-items:center;width:38px;height:38px;padding:7px;border:0;border-radius:50%;background:none;color:#e8eeee;cursor:pointer;transition:background .2s}
+.nb-ctl button{display:grid;place-items:center;width:38px;height:38px;padding:7px;border:0;border-radius:50%;background:none;color:#e8eeee;cursor:pointer;transition:background .4s ease}
 .nb-ctl button:hover{background:rgba(255,255,255,.12)}
 .nb-ctl button:focus-visible{outline:2px solid #9fd8d0;outline-offset:2px}
 .nb-ctl .nb-pp{width:48px;height:48px;padding:12px;background:rgba(30,32,32,.62)}

@@ -249,7 +249,7 @@
     function pt(deg, rr) { var a = deg * Math.PI / 180; return (cx + rr * Math.cos(a)).toFixed(1) + ' ' + (cy + rr * Math.sin(a)).toFixed(1); }
     for (var i = 0; i < N; i++) {
       var a0 = 135 + i * 270 / N + 1.4, a1 = 135 + (i + 1) * 270 / N - 1.4, on = i < lit, h = hues[0] + (hues[1] - hues[0]) * i / (N - 1);
-      out += '<path d="M' + pt(a0, r) + ' A' + r + ' ' + r + ' 0 0 1 ' + pt(a1, r) + '" class="rs' + (on ? ' on' : '') + '"' + (on ? ' data-st="stroke:hsl(' + h.toFixed(0) + ' 95% 62%);animation-delay:' + (i * 0.035).toFixed(2) + 's"' : '') + '/>';
+      out += '<path d="M' + pt(a0, r) + ' A' + r + ' ' + r + ' 0 0 1 ' + pt(a1, r) + '" class="rs' + (on ? ' on' : '') + '"' + (on ? ' data-st="stroke:hsl(' + h.toFixed(0) + ' 95% 62%);animation-delay:' + (i * 0.05).toFixed(2) + 's"' : '') + '/>';
     }
     return '<figure class="gauge ring"><svg viewBox="0 0 220 196" role="img" aria-label="' + esc(label) + ': ' + v.toFixed(1) + ' ' + spdU() + '">' +
       '<circle cx="' + cx + '" cy="' + cy + '" r="' + (r + 16) + '" class="rr-o" stroke="hsl(' + hues[1] + ' 95% 62%)"/><circle cx="' + cx + '" cy="' + cy + '" r="' + (r - 16) + '" class="rr-i"/>' + out +

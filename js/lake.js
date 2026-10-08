@@ -27,12 +27,13 @@
   var hide = document.createElement('button'); hide.type = 'button'; hide.className = 'lake-hide'; hide.innerHTML = 'Hide the lake <span aria-hidden="true">▴</span>';
   if (head) head.insertAdjacentElement('afterend', band); else hero.parentNode.insertBefore(band, hero);
   hero.appendChild(hide);
+  function glide(y) { if (window.easeScroll) easeScroll(y); else window.scrollTo(0, y); }   // js/motion.js: eased, never a jump
   function apply(on, byHand) {
     root.classList.toggle('lake-off', !on); band.hidden = on;
     if (on) hero.removeAttribute('aria-hidden'); else hero.setAttribute('aria-hidden', 'true');
     if (byHand) {
       set(on ? '1' : '0'); writeWord(on);
-      if (on) { dispatchEvent(new Event('resize')); window.scrollTo({ top: 0 }); hide.focus({ preventScroll: true }); }
+      if (on) { dispatchEvent(new Event('resize')); glide(0); hide.focus({ preventScroll: true }); }
       else band.querySelector('button').focus({ preventScroll: true });
     }
   }
@@ -66,17 +67,17 @@
   function bandIn(show) {   // the band eases open (or shut) on its own
     if (reduce || !band.animate) return;
     band.animate(show ? [{ maxHeight: '0px', opacity: 0, padding: '0 16px' }, { maxHeight: '60px', opacity: 1 }] : [{ maxHeight: '60px', opacity: 1 }, { maxHeight: '0px', opacity: 0, padding: '0 16px' }],
-      { duration: 380, easing: EASE });
+      { duration: 650, easing: EASE });
   }
   band.querySelector('button').onclick = function () {
     if (busy) return;
     if (reduce || !hero.animate) return apply(true, true);
     bandIn(false);
-    setTimeout(function () { apply(true, true); animate(true, function () {}); }, reduce ? 0 : 220);
+    setTimeout(function () { apply(true, true); animate(true, function () {}); }, reduce ? 0 : 380);
   };
   hide.onclick = function () {
     if (busy) return;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    glide(0);
     animate(false, function () { apply(false, true); bandIn(true); });
   };
   apply(wanted(), false);

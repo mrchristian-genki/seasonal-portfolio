@@ -56,8 +56,11 @@
 .gw-home{position:absolute;right:clamp(12px,3vw,40px);top:calc(clamp(14px,2.5vw,26px) + 44px);   /* under Hide the lake (lake.css), same right edge */
   z-index:12;font:600 13px/1 system-ui,sans-serif;color:#0d3b4a;background:rgba(255,255,255,.88);
   border:0;border-radius:999px;padding:9px 14px;cursor:pointer;box-shadow:0 2px 8px rgba(0,40,60,.25);pointer-events:auto}
+.gw-home{transition:background .4s ease,opacity .9s ease-in-out;animation:gw-in .9s ease-in-out backwards}   /* fades in with the beach, out as the wave comes */
+.gw-home.gw-out{opacity:0}
+@keyframes gw-in{from{opacity:0}}
 .gw-home:hover{background:#fff}
 .gw-home:focus-visible{outline:2px solid #fff;outline-offset:2px}
 .gw-home[hidden]{display:none}
 @media (max-width:640px){.gw-home{top:auto;bottom:140px;right:12px}}   /* above Hide the lake, which sits at the bottom on phones */
-@media (prefers-reduced-motion:reduce){.gw-stage *{animation:none!important}.gw-layer{transition:none}}
+@media (prefers-reduced-motion:reduce){.gw-stage *{animation:none!important}.gw-layer,.gw-home{transition:none;animation:none}}

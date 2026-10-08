@@ -26,7 +26,7 @@
   function allTags() { var t = {}; (H ? H.episodes : []).forEach(function (e) { (e.tags || []).forEach(function (x) { t[x] = (t[x] || 0) + 1; }); }); return t; }
   function isNoteWord(w) { return LAYOUTS.indexOf(w) >= 0 || ORDERS.indexOf(w) >= 0 || (H && allTags()[w] > 0); }
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var FADE = reduce ? 0 : 260;
+  var FADE = reduce ? 0 : 450;
 
   function words() { return (decodeURIComponent(location.search.slice(1)).toLowerCase().split(/[+&,;\s]+/)).map(function (w) { return w.split('=')[0]; }).filter(Boolean); }
   function readURL() {
@@ -137,7 +137,7 @@
     setTimeout(function () {
       paint();
       var top = box.getBoundingClientRect().top;
-      if (top < 0 || top > innerHeight * 0.6) box.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+      if (top < 0 || top > innerHeight * 0.6) { if (window.easeScroll) easeScroll.to(box); else box.scrollIntoView({ block: 'start' }); }
     }, FADE);
   }
   function setView(v, push) {
@@ -157,17 +157,24 @@
     if (!mdlg) {
       mdlg = document.createElement('dialog'); mdlg.className = 'pi-story pi-modal';
       mdlg.innerHTML = '<div class="pi-story-bar"><span class="pi-modal-kick"></span><button type="button" class="pi-close" aria-label="Close">×</button></div><div class="pi-story-body"></div>';
+      if (window.softDialog) softDialog(mdlg, FADE_OUT, function () { return !!mdlg._focus; });
       mdlg.querySelector('.pi-close').onclick = function () { mdlg.close(); };
       backdropClose(mdlg, function () { mdlg.close(); });
-      mdlg.addEventListener('close', function () { var b = mdlg.querySelector('.pi-story-body'); b.innerHTML = ''; if (mdlg._onClose) mdlg._onClose(); });
+      mdlg.addEventListener('close', function () { clearTimeout(mdlg._swap); mdlg.classList.remove('swap'); var b = mdlg.querySelector('.pi-story-body'); b.innerHTML = ''; if (mdlg._onClose) mdlg._onClose(); });
       mdlg.querySelector('.pi-story-body').addEventListener('click', onModalClick);
       document.body.appendChild(mdlg);
     }
     mdlg._onClose = onClose || null;
     focusOut(mdlg, true);
-    var b = mdlg.querySelector('.pi-story-body'); b.innerHTML = html; b.scrollTop = 0;
+    var b = mdlg.querySelector('.pi-story-body');
+    var fill = function () { b.innerHTML = html; b.scrollTop = 0; watch(b); };
+    if (mdlg.open && FADE && !mdlg.classList.contains('shut')) {   // already open (its pager): the old fades out, the new fades in
+      mdlg.classList.add('swap'); clearTimeout(mdlg._swap);
+      mdlg._swap = setTimeout(function () { fill(); void b.offsetWidth; mdlg.classList.remove('swap'); }, FADE);
+      return mdlg;
+    }
+    fill();
     if (!mdlg.open) mdlg.showModal();
-    watch(b);
     return mdlg;
   }
   function openSeries(key) {
@@ -249,14 +256,15 @@
   function mapAssets() {
     return assets || (assets = Promise.all([
       need('link', { rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css' }),
-      need('link', { rel: 'stylesheet', href: 'css/route-dash.css?v=1794300000' }),
+      need('link', { rel: 'stylesheet', href: 'css/route-dash.css?v=1794800000' }),
       window.L ? 0 : need('script', { src: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js' })
-    ]).then(function () { return window.RouteView ? 0 : need('script', { src: 'js/route-view.js?v=1794300000' }); }));
+    ]).then(function () { return window.RouteView ? 0 : need('script', { src: 'js/route-view.js?v=1794800000' }); }));
   }
   function story(url) {
     if (!sdlg) {
       sdlg = document.createElement('dialog'); sdlg.className = 'pi-story';
       sdlg.innerHTML = '<div class="pi-story-bar"><a class="pi-story-link" href="#" target="_blank" rel="noopener">Open as a page</a><button type="button" class="pi-close" aria-label="Close">×</button></div><div class="pi-story-body"></div>';
+      if (window.softDialog) softDialog(sdlg, FADE_OUT, function () { return !!sdlg._focus; });
       sdlg.querySelector('.pi-close').onclick = function () { sdlg.close(); };
       backdropClose(sdlg, function () { sdlg.close(); });
       sdlg.addEventListener('close', function () { var a = sdlg.querySelector('audio'); if (a) a.pause(); if (window.RouteView) RouteView.clearMaps(); });
@@ -300,7 +308,7 @@
       ? '<video src="' + esc(src) + '"' + (tv ? ' poster="' + esc(tv.getAttribute('poster') || '') + '" width="' + tv.getAttribute('width') + '" height="' + tv.getAttribute('height') + '"' : '') + ' autoplay muted loop playsinline' + r + '></video>'
       : '<img src="' + esc(src) + '" alt="' + esc(alt) + '"' + r + '>') + (cap && cap.textContent ? '<p>' + esc(cap.textContent) + '</p>' : '');
   }
-  var FADE_OUT = reduce ? 0 : 220;
+  var FADE_OUT = reduce ? 0 : 450;
   // Close a dialog on a backdrop click only when the press also started on the backdrop, so dragging
   // an audio slider and letting go outside it never closes anything.
   function backdropClose(d, close) {

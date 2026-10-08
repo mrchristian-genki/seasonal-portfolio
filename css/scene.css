@@ -92,12 +92,12 @@ html,body{margin:0;background:#0b1020;font-family:system-ui,-apple-system,sans-s
     appearance:none;border:0;background:none;cursor:pointer;font:inherit;
     font-family:var(--font-display);font-weight:700;font-size:17px;color:#0f4d47;
     padding:10px 14px 12px;border-radius:10px;position:relative;
-    transition:color 220ms ease-out,background 220ms ease-out,transform var(--spring-pop-time) var(--spring-pop)
+    transition:color .4s ease,background .4s ease,transform var(--spring-pop-time) var(--spring-pop)
   }
-.tab::after{content:"";position:absolute;left:14px;right:14px;bottom:6px;height:3px;border-radius:3px;background:rgb(var(--accent));transform:scaleX(0);transform-origin:0 50%;transition:transform 240ms ease-out,background .8s}
+.tab::after{content:"";position:absolute;left:14px;right:14px;bottom:6px;height:3px;border-radius:3px;background:rgb(var(--accent));transform:scaleX(0);transform-origin:0 50%;transition:transform .45s ease-in-out,background .8s}
 .tab:hover{background:rgba(15,77,71,.06)}
 .tab:hover::after,.tab:focus-visible::after{transform:scaleX(1)}
-.tab:active{transform:scale(.94);transition-duration:80ms}
+.tab:active{transform:scale(.96);transition-duration:.2s}
 .tab[aria-selected="true"]{color:rgb(var(--accent))}
 .tab[aria-selected="true"]::after{transform:scaleX(1)}
 .tab:focus-visible{outline:3px solid rgb(var(--accent));outline-offset:2px}
@@ -112,18 +112,23 @@ html,body{margin:0;background:#0b1020;font-family:system-ui,-apple-system,sans-s
     transition:transform var(--spring-pop-time) var(--spring-pop),background .8s
   }
 .btn:hover{transform:translateY(-2px)}
-.btn:active{transform:scale(.96);transition-duration:80ms}
+.btn:active{transform:scale(.97);transition-duration:.2s}
 .btn.solid{background:rgb(var(--accent))}
 .btn:focus-visible{outline:3px solid rgb(var(--accent));outline-offset:3px}
 .btn + .btn{margin-left:10px}
 @media (max-width:520px){.btn + .btn{margin:10px 0 0 0}}
 .view{display:none}
-.view.on{display:block;animation:rise var(--spring-soft-time) var(--spring-soft) both}
-.view.on .works li{animation:rowIn 320ms ease-out both}
-.view.on .works li:nth-child(1){animation-delay:140ms}
-.view.on .works li:nth-child(2){animation-delay:200ms}
-.view.on .works li:nth-child(3){animation-delay:260ms}
-.hiding .view.on{animation:sink .35s ease-in both}
+.view.on{display:block;animation:rise var(--spring-soft-time) var(--spring-soft) both,fadeIn .9s ease-in-out both}
+.view.on .works li{animation:rowIn .7s ease-in-out both}
+.view.on .works li:nth-child(1){animation-delay:200ms}
+.view.on .works li:nth-child(2){animation-delay:400ms}
+.view.on .works li:nth-child(3){animation-delay:600ms}
+.hiding .view.on{animation:sink .9s ease-in-out both}
+/* (these keyframes were lost in the port, so tab changes swapped the copy at once) */
+@keyframes rise{from{transform:translateY(14px)}}
+@keyframes fadeIn{from{opacity:0}}
+@keyframes sink{to{opacity:0;transform:translateY(8px)}}
+@keyframes rowIn{from{opacity:0;transform:translateY(10px)}}
 .hiding .view.on .works li{animation:none}
 /* ---------- white section ---------- */
   .about{position:relative;padding:40px clamp(20px,6vw,80px) 90px;text-align:center;overflow:hidden;background:#fff}
@@ -149,7 +154,7 @@ html,body{margin:0;background:#0b1020;font-family:system-ui,-apple-system,sans-s
   }
 .clock button{
     appearance:none;font:inherit;font-family:var(--font-display);font-weight:700;font-size:13px;cursor:pointer;
-    border:0;background:rgb(var(--accent));color:#fff;padding:8px 14px;border-radius:99px;transition:background .8s,filter .2s
+    border:0;background:rgb(var(--accent));color:#fff;padding:8px 14px;border-radius:99px;transition:background .8s,filter .4s ease
   }
 .clock button:hover{filter:brightness(1.1)}
 .clock #modeBtn{background:#243b46}
@@ -388,7 +393,7 @@ html[data-season="winter"] .edge-ground{ -webkit-mask-image: var(--edge-winter);
 .tg::backdrop{background:rgba(10,24,28,.55);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
 .tg-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 20px;border-bottom:1px solid #dbe4dc;background:#fff}
 .tg-head h2{margin:0;font-family:var(--font-display);font-weight:700;font-size:20px;color:#0f4d47}
-.tg-x{appearance:none;border:0;background:#eef3ef;color:#0f4d47;width:34px;height:34px;border-radius:50%;font-size:22px;line-height:1;cursor:pointer}
+.tg-x{appearance:none;border:0;background:#eef3ef;color:#0f4d47;width:34px;height:34px;border-radius:50%;font-size:22px;line-height:1;cursor:pointer;transition:background .4s ease}
 .tg-x:hover{background:#e0eae3}
 .tg-x:focus-visible{outline:2px solid rgb(var(--accent));outline-offset:2px}
 .tg-body{overflow:auto;padding:18px 20px 24px}
@@ -530,7 +535,7 @@ html.night-page{color-scheme:dark}
 .tg-lwhat small{display:block;font-weight:400;font-size:13px;color:#6a7a70}
 .tg-lrow a{font-family:ui-monospace,Menlo,monospace;font-size:13.5px;color:rgb(var(--accent));text-decoration:none;overflow-wrap:anywhere;min-width:0}
 .tg-lrow a:hover{text-decoration:underline}
-.tg-lcopy{appearance:none;font:700 13px var(--font-display),sans-serif;color:#0f4d47;background:#eef3ef;border:1px solid #dbe4dc;border-radius:8px;padding:5px 10px;cursor:pointer}
+.tg-lcopy{appearance:none;font:700 13px var(--font-display),sans-serif;color:#0f4d47;background:#eef3ef;border:1px solid #dbe4dc;border-radius:8px;padding:5px 10px;cursor:pointer;transition:color .5s ease,background .5s ease,border-color .5s ease}
 .tg-lcopy:hover{border-color:rgb(var(--accent))}
 .tg-lcopy.done{color:#fff;background:#0f4d47;border-color:#0f4d47}
 .tg-lcopy:focus-visible,.tg-lrow a:focus-visible{outline:2px solid rgb(var(--accent));outline-offset:2px}
@@ -574,8 +579,9 @@ html.night-page .hero-swell{ background: linear-gradient(rgba(12,18,32,.35), rgb
 .storm-shade, .storm-flash{ position:absolute; inset:0; pointer-events:none; opacity:0; }
 .storm-shade{ background: linear-gradient(rgba(28,36,52,.55), rgba(28,36,52,.2) 60%, rgba(28,36,52,.1)); }
 .storm-flash{ background: rgba(235,242,255,.85); }
-.storm-flash.on{ animation: bolt 1.1s ease-out; }
-@keyframes bolt{ 0%{opacity:0} 4%{opacity:.8} 9%{opacity:.1} 14%{opacity:.6} 100%{opacity:0} }
+.storm-flash.on{ animation: bolt 2s ease-in-out; }
+@keyframes bolt{ 0%{opacity:0} 10%{opacity:.7} 22%{opacity:.25} 32%{opacity:.55} 100%{opacity:0} }   /* a flash, but eased: no hard strobe */
+@media (prefers-reduced-motion:reduce){ .storm-flash.on{ animation:none; } }
 
 /* Storm weather on the page copy (scene.js copyWeather): rain beads on the headline and button
    and drops running down the lines; in winter, snow building up on the letters and the button top,
