@@ -249,7 +249,7 @@ html[data-era="e15"] .tbx-t,html[data-era="e10"] .tbx-t,html[data-era="e05"] .tb
 @keyframes tm-hue{to{--h:360deg}}
 .tm-cockpit{position:relative;height:clamp(520px,100vh,960px)}
 .tm-view{position:absolute;inset:0;overflow:hidden}
-.tm-view::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(0deg,#1a110b 0,rgba(26,17,11,0) 22%),linear-gradient(90deg,rgba(16,10,6,.55),rgba(16,10,6,0) 36%)}
+.tm-view::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(0deg,#1a110b 0,rgba(26,17,11,0) 22%),linear-gradient(90deg,rgba(16,10,6,.82) 0,rgba(16,10,6,.6) 26%,rgba(16,10,6,0) 40%)}
 .tm-room{position:absolute;left:0;top:0;width:1376px;height:768px;transform-origin:0 0;--u:1;transition:filter .8s}
 .tm-bg{position:absolute;inset:0;width:100%;height:100%;display:block}
 .tm-room>*{position:absolute}
@@ -267,8 +267,8 @@ html.tm-burst .tm-jw{animation:tm-jwb .25s steps(2) 6}
   font-family:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;color:#0a3550;text-align:center;
   background:repeating-linear-gradient(0deg,rgba(255,255,255,.07) 0 2px,rgba(0,0,0,.05) 2px 4px)}
 .tm-scr span{font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;opacity:.75}
-.tm-scr b{font-size:24px;line-height:1.05;letter-spacing:.03em;text-shadow:0 0 6px rgba(255,255,255,.7);padding:0 6px}
-.tm-scr:nth-of-type(2) b{font-size:17px}
+.tm-scr b{font-size:22px;line-height:1.05;letter-spacing:.03em;text-shadow:0 0 6px rgba(255,255,255,.7);padding:0 6px}
+.tm-scr:nth-of-type(2) b,.tm-scr:nth-of-type(3) b{font-size:15px}
 .tm-nd{left:calc((var(--x) - 19 * var(--r) / 173) * 1px);top:calc((var(--y) - 178 * var(--r) / 173) * 1px);width:calc(38px * var(--r) / 173);height:calc(222px * var(--r) / 173);
   transform-origin:50% 80.2%;rotate:var(--a,-110deg);transition:rotate .5s cubic-bezier(.3,1.6,.5,1);filter:drop-shadow(0 2px 2px rgba(0,0,0,.5)) saturate(1.3) hue-rotate(-12deg)}
 .tm-nd[data-nd^="w"]{animation:tm-wob 3s ease-in-out infinite alternate;transition:none}
@@ -280,9 +280,10 @@ html.flux .tm-flash{animation:tm-flash .9s ease-out}
 @keyframes tm-flash{8%{opacity:1}100%{opacity:0}}
 html.tm-dark .tm-room{filter:brightness(.32) saturate(.5)}
 html.tm-dark .tm-jw,html.tm-dark .tm-port{opacity:0;animation:none}
-.tm-title{position:absolute;left:clamp(20px,4vw,72px);top:clamp(140px,26%,260px);max-width:min(36vw,520px);z-index:2}
+.tm-title{position:absolute;left:clamp(20px,4vw,72px);top:clamp(120px,22%,220px);max-width:min(36vw,520px);z-index:2}
+@media (min-width:1101px){.tm-title{left:228px}}
 .tm-title .tb-kick{margin:0}
-.tb-now h1{margin:6px 0 0;font:900 clamp(44px,5.8vw,92px)/.92 "Nunito","Avenir Next","Segoe UI",sans-serif;letter-spacing:-.04em;
+.tb-now h1{margin:6px 0 0;font:900 clamp(44px,5vw,80px)/.92 "Nunito","Avenir Next","Segoe UI",sans-serif;letter-spacing:-.04em;
   background:linear-gradient(100deg,hsl(var(--h) 100% 72%),hsl(calc(var(--h) + 70deg) 100% 70%),hsl(calc(var(--h) + 150deg) 100% 72%),hsl(calc(var(--h) + 230deg) 100% 75%));-webkit-background-clip:text;background-clip:text;color:transparent;
   filter:drop-shadow(0 2px 0 rgba(0,0,0,.6)) drop-shadow(0 0 22px hsl(calc(var(--h) + 120deg) 100% 60% / .45))}
 .tb-now .tb-kick{color:hsl(calc(var(--h) + 140deg) 90% 72%);text-shadow:0 1px 6px #000}
@@ -295,6 +296,20 @@ html.tm-dark .tm-jw,html.tm-dark .tm-port{opacity:0;animation:none}
 .tc b{padding:4px 10px;border-radius:4px;background:#060606;border:1px solid #222;font:700 clamp(18px,3vw,24px)/1.1 ui-monospace,Menlo,Consolas,monospace;white-space:nowrap}
 .tc-dest b{color:#ff4b3a;text-shadow:0 0 8px #ff3b2a}.tc-now b{color:#4dff6a;text-shadow:0 0 8px #3dff5a}.tc-last b{color:#ffb31f;text-shadow:0 0 8px #ffaa1a}
 @media (min-width:761px){.tm-panel{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);margin:0;padding:0;border:0}}
+/* the browsers under glass: Christian's renders, each a jewel in a brass bezel; a pick falls to the year it arrived */
+.tm-glass{margin:30px 0 0}
+.tm-glass h2{margin:0;font:900 clamp(22px,3vw,30px)/1.1 "Nunito","Segoe UI",sans-serif;color:#f6e3c6}
+.tm-glass>p{margin:6px 0 14px;max-width:60ch;color:#e3d2bd;font-size:15px}
+.tm-glass ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px 12px}
+.tm-gem{display:block;width:100%;padding:0;border:0;background:none;color:#f1e6d8;text-align:center;cursor:pointer;font:inherit}
+.tm-gem img,.tm-gem .fb{display:block;width:100%;height:auto;aspect-ratio:420/296;filter:drop-shadow(0 8px 14px rgba(0,0,0,.55));transition:transform .3s,filter .3s}
+.tm-gem .fb{display:grid;place-items:center;border-radius:50%;background:radial-gradient(ellipse at 40% 30%,rgba(255,255,255,.35),transparent 40%),radial-gradient(ellipse,#1d4a5c 0 55%,#8a5a2b 57% 66%,#5a3818 68% 72%,#a87a42 74%,#6b4520 100%)}
+.tm-gem .fb img{width:34%;aspect-ratio:1;filter:drop-shadow(0 0 10px var(--c))}
+.tm-gem b{display:block;margin-top:4px;font-size:14px}
+.tm-gem span{font:600 12px ui-monospace,Menlo,monospace;color:#cbb79d}
+.tm-gem.gone>img,.tm-gem.gone .fb{filter:grayscale(.55) brightness(.8) drop-shadow(0 8px 14px rgba(0,0,0,.55))}
+.tm-gem:hover>img,.tm-gem:hover .fb,.tm-gem:focus-visible>img,.tm-gem:focus-visible .fb{transform:translateY(-4px) scale(1.03);filter:drop-shadow(0 0 18px var(--c)) drop-shadow(0 8px 14px rgba(0,0,0,.5))}
+.tm-gem:focus-visible{outline:2px solid #7ff3e6;outline-offset:4px;border-radius:12px}
 /* the desk: the chart on the TV, the gauges beside it */
 .tm-desk{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:24px;align-items:center;margin:28px 0 0}
 .tm-tv{margin:0}

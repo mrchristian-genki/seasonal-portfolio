@@ -123,6 +123,10 @@
     if (root.classList.contains('flux')) return;
     root.classList.add('flux'); setTimeout(function () { root.classList.remove('flux'); }, 900);
   }
+  // the browsers under glass: a pick falls to the year that browser arrived (before 1997, to the very bottom)
+  [].forEach.call(document.querySelectorAll('[data-go]'), function (b) {
+    b.addEventListener('click', function () { var y = +b.getAttribute('data-go'); if (y < 1997) { if (end) scrollTo({ top: end.getBoundingClientRect().top + scrollY, behavior: still ? 'auto' : 'smooth' }); } else goYear(y, true); });
+  });
   // the switch panels: power, the jewel lamps, and 88
   [].forEach.call(document.querySelectorAll('[data-pnl]'), function (b) {
     b.addEventListener('click', function () {
