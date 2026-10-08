@@ -1,7 +1,7 @@
 /* THE WORKSHOP'S PROJECTS on the Workshop tab (css/ws-cards.css). One card per big project, from its case study on Play
    (assets/workshop/projects.json: its clips and captions, taken from the Note): the card loops its clip, one card at a
-   time as a little tour, and a hover plays one; a click opens a window with all its clips (a strip to switch), what
-   it is, and links to the tool and to its case study. Starts when the cards come near the screen. */
+   time as a little tour, and a hover plays one; a click opens its case study as a magazine feature (its story from
+   the Note, its clips through the column, a pull quote and its numbers) with links to the tool and to its episode. Starts when the cards come near the screen. */
 (function () {
   'use strict';
   var box = document.querySelector('[data-wscards]'); if (!box) return;
@@ -24,35 +24,60 @@
     b.addEventListener('click', function () { open(p); });
     return b;
   }
-  // the window: a stage, the caption, a strip of its clips, the story and the links
+  // the window: the project's case study set as a magazine feature (css/feature.css, as on her RIVETING TONE profile): its
+  // clip as the cover, a feature head, the story in a column with its clips set between the paragraphs, a pull quote,
+  // the numbers, and the links. Clips play while they're on screen.
+  function pic(m) {
+    return m.type === 'video'
+      ? '<video muted loop playsinline preload="none" poster="' + esc(m.poster || '') + '" data-src="' + esc(m.src) + '"' + (still ? ' controls' : '') + '></video>'
+      : '<img alt="' + esc(m.caption || '') + '" loading="lazy" src="' + esc(m.src) + '">';
+  }
+  function fig(m) { return '<figure class="wsf-fig"><div class="wsf-pic">' + pic(m) + '</div>' + (m.caption ? '<figcaption>' + esc(m.caption) + '</figcaption>' : '') + '</figure>'; }
   function open(p) {
     cards.forEach(function (c) { play(c, false); });
     if (!dlg) {
       dlg = document.createElement('dialog'); dlg.className = 'wsm'; document.body.appendChild(dlg);
       dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });   // a click on the dimmed page closes it
-      dlg.addEventListener('close', function () { var v = dlg.querySelector('video'); if (v) v.pause(); });
+      dlg.addEventListener('close', function () { [].forEach.call(dlg.querySelectorAll('video'), function (v) { v.pause(); }); });
     }
+    var n = P.indexOf(p), next = P[(n + 1) % P.length], cover = p.card || p.media[0], rest = p.media.filter(function (m) { return m.src !== cover.src; });
+    var story = (p.story && p.story.length ? p.story : [p.summary]).map(function (t) { return '<p>' + esc(t) + '</p>'; });
+    // the clips go between the paragraphs, spread through the story; the pull quote after the second paragraph
+    var slots = {}, gaps = Math.max(1, story.length - 1);
+    rest.forEach(function (m, i) { var at = Math.min(story.length - 1, Math.max(1, Math.round((i + 1) * gaps / (rest.length + 1)))); (slots[at] = slots[at] || []).push(m); });
+    var body = story.map(function (t, i) {
+      return t + (i === 1 && p.pull ? '<blockquote class="pull"><p>' + esc(p.pull) + '</p></blockquote>' : '') +
+        (slots[i + 1] || []).map(function (m) { return fig(m); }).join('');
+    }).join('');
     var links = (p.tool ? '<a class="btn solid" href="' + esc(p.tool.url) + '"' + (p.tool.url.charAt(0) === '#' ? '' : ' target="_blank" rel="noopener"') + '>' + esc(p.tool.label) + '</a>' : '') +
       (p.extra ? '<a class="btn solid" href="' + esc(p.extra.url) + '">' + esc(p.extra.label) + '</a>' : '') +
-      '<a class="btn" href="' + esc(p.note) + '">Read the case study</a>';
-    dlg.innerHTML = '<div class="wsm-stage"><button type="button" class="wsm-x" aria-label="Close">×</button></div><p class="wsm-cap"></p>' +
-      (p.media.length > 1 ? '<div class="wsm-thumbs">' + p.media.map(function (m, i) { return '<button type="button" data-i="' + i + '" aria-label="' + esc(m.caption || ('Picture ' + (i + 1))) + '"><img alt="" loading="lazy" src="' + esc(m.poster || m.src) + '"></button>'; }).join('') + '</div>' : '') +
-      '<div class="wsm-body"><h3>' + esc(p.name) + '</h3><p class="wsm-tag">' + esc(p.tagline) + '</p><p>' + esc(p.summary) + '</p><div class="wsm-links">' + links + '</div></div>';
-    var stage = dlg.querySelector('.wsm-stage'), cap = dlg.querySelector('.wsm-cap');
-    function show(i) {
-      var m = p.media[i]; if (!m) return; var old = stage.querySelector('video,img'); if (old) old.remove();
-      var el = document.createElement(m.type === 'video' ? 'video' : 'img');
-      if (m.type === 'video') { el.muted = true; el.loop = true; el.playsInline = true; el.controls = true; el.poster = m.poster || ''; el.src = m.src; if (!still) el.autoplay = true; }
-      else { el.alt = m.caption || ''; el.src = m.src; }
-      stage.insertBefore(el, stage.firstChild); cap.textContent = m.caption || '';
-      [].forEach.call(dlg.querySelectorAll('.wsm-thumbs button'), function (b) { b.classList.toggle('on', +b.getAttribute('data-i') === i); });
-    }
-    var start = Math.max(0, p.media.indexOf(p.card));
-    show(start);
-    [].forEach.call(dlg.querySelectorAll('.wsm-thumbs button'), function (b) { b.onclick = function () { show(+b.getAttribute('data-i')); }; });
+      '<a class="btn" href="' + esc(p.note) + '">Listen to its episode</a>';
+    dlg.innerHTML = '<div class="wsm-bar"><button type="button" class="wsm-x" aria-label="Close">×</button></div>' +
+      '<article class="feature wsf">' +
+      '<header class="mag-cover wsf-cover"><div class="mag-img">' + pic(cover) + '</div>' +
+      '<div class="mag-top"><span class="wsf-mast">The Workshop</span><span class="mag-tag">Project ' + (n + 1) + ' of ' + P.length + '</span></div></header>' +
+      (cover.caption ? '<p class="mag-cap">' + esc(cover.caption) + '</p>' : '') +
+      '<div class="mag-head"><p class="mag-label">' + esc(p.name) + ' · Case study</p><h1>' + esc(p.title || p.name) + '</h1><p class="mag-deck">' + esc(p.summary) + '</p>' +
+      '<p class="mag-byline"><span>Words and pictures by Christian Gehrke</span><span>' + esc(p.date) + '</span></p></div>' +
+      '<div class="post">' + body + '</div>' +
+      (p.numbers ? '<aside class="wsf-nums"><h2>By the numbers</h2><ul>' + p.numbers.map(function (x) { return '<li><b>' + esc(x[0]) + '</b><span>' + esc(x[1]) + '</span></li>'; }).join('') + '</ul></aside>' : '') +
+      '<div class="wsm-links">' + links + '</div>' +
+      '<button type="button" class="wsf-next"><span>Next feature</span><b>' + esc(next.title || next.name) + ' <i aria-hidden="true">→</i></b></button>' +
+      '</article>';
     dlg.querySelector('.wsm-x').onclick = function () { dlg.close(); };
+    dlg.querySelector('.wsf-next').onclick = function () { open(next); };
     [].forEach.call(dlg.querySelectorAll('.wsm-links a[href^="#"]'), function (a) { a.onclick = function () { dlg.close(); }; });
-    if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
+    // each clip plays while it's on screen in the window
+    var vids = dlg.querySelectorAll('video');
+    if ('IntersectionObserver' in window && !still) {
+      var io = new IntersectionObserver(function (es) {
+        es.forEach(function (e) { var v = e.target; if (e.isIntersecting) { if (!v.src) v.src = v.getAttribute('data-src'); var r = v.play(); if (r && r.catch) r.catch(function () {}); } else v.pause(); });
+      }, { root: dlg, threshold: .35 });
+      [].forEach.call(vids, function (v) { io.observe(v); });
+      dlg.addEventListener('close', function () { io.disconnect(); }, { once: true });
+    } else [].forEach.call(vids, function (v) { v.src = v.getAttribute('data-src'); });
+    if (!dlg.open) { if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', ''); }
+    dlg.scrollTop = 0;
   }
   // the tour: every few seconds the next card in view plays its clip, the others rest
   var at = 0;
@@ -67,7 +92,7 @@
     }, 5200);
   }
   function start() {
-    fetch('assets/workshop/projects.json?v=2').then(function (r) { return r.json(); }).then(function (list) {
+    fetch('assets/workshop/projects.json?v=3').then(function (r) { return r.json(); }).then(function (list) {
       P = list; P.forEach(function (p, i) { var c = card(p, i); box.appendChild(c); cards.push(c); });
       if (!still) { play(cards[0], true); tour(); }
     }).catch(function () { box.hidden = true; });
