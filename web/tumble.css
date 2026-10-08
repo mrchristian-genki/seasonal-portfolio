@@ -57,6 +57,23 @@ code{font:.92em ui-monospace,Menlo,Consolas,monospace}
 .tb-big{position:absolute;right:-2vw;top:8%;font:900 clamp(120px,24vw,340px)/1 "Nunito","Segoe UI",sans-serif;letter-spacing:-.05em;opacity:.07;will-change:transform}
 .tb-depth i{position:absolute;display:block;will-change:transform}
 
+/* each era's most-visited sites drift behind it, two rows the opposite way */
+.tb-sites{position:absolute;left:0;right:0;top:34%;overflow:hidden;opacity:.11;will-change:transform}
+.tb-sites p{margin:0;white-space:nowrap;font-weight:900;font-size:clamp(30px,5vw,60px);line-height:1.25;display:inline-block;animation:tb-drift 90s linear infinite}
+.tb-sites p span{margin-right:.9em}
+.tb-sites .r2{display:block;width:max-content;animation-direction:reverse;animation-duration:120s;opacity:.8}
+@keyframes tb-drift{to{transform:translateX(-50%)}}
+.e00 .tb-sites,.e26 .tb-sites{opacity:.12}
+/* the web then: what was born, where everyone went, and a few numbers */
+.webthen{margin:0 0 26px;padding:16px 18px;border:1px dashed currentColor;border-radius:10px}
+.webthen h3{margin-bottom:10px}
+.born{margin:0 0 10px;display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center;font-size:15px}
+.born span{padding:2px 9px;border-radius:999px;border:1px solid currentColor;white-space:nowrap}
+.born i{font-style:normal;font-weight:800;opacity:.7}
+.pop{margin:0 0 8px;font-size:15px}
+.stats{margin:0;padding-left:18px;font-size:15px}.stats li{margin:0 0 6px}
+.e97 .webthen{border-radius:0;border:2px ridge #c0c0c0;background:#f0f0ff}.e97 .born span{border-radius:0;background:#fff}
+.e00 .webthen{border-color:#3a4654;border-radius:0}
 /* 2026: calm glass on deep blue */
 .e26{background:radial-gradient(ellipse at 80% 10%,#16405a,transparent 55%),linear-gradient(180deg,#0d1b2a,#102a3c);color:#e8eef2}
 .e26 h2{font:900 clamp(36px,6vw,60px)/1.02 "Nunito","Avenir Next","Segoe UI",sans-serif;letter-spacing:-.025em}
@@ -165,3 +182,28 @@ html[data-era="e97"] .tb-browser i,html[data-era="end"] .tb-browser i,html[data-
 /* phones: smaller margins; less motion when asked */
 @media (max-width:560px){.era{padding:100px 14px 90px}.me{padding:14px 14px}.e97 .era-in{padding:16px 14px}.tb-bar{padding:8px 10px;gap:8px}.tb-home{font-size:14px}.tb-browser{font-size:11px}}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.tb-hint i{animation:none}.tb-depth{display:none}}
+
+/* the toolbox: what every major browser could do in the year you've fallen to. As the year drops, each feature not
+   there yet is blanked out (greyed and struck through) but stays in the list, so by 1997 you can see everything we
+   take for granted now, and how little was lit: tables, GIFs and a little JavaScript. */
+.tb-box{position:fixed;left:12px;top:64px;bottom:16px;z-index:19;width:214px;display:flex;flex-direction:column;padding:12px 12px 10px;border-radius:12px;
+  background:rgba(8,14,22,.84);color:#e8eef2;font:13px/1.35 system-ui,-apple-system,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.35);backdrop-filter:blur(6px)}
+.tb-box h2{margin:0;font:800 12px system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#6ee7b7}
+.tb-box .tbx-n{margin:2px 0 8px;font:800 22px/1.1 system-ui,sans-serif}
+.tb-box .tbx-n small{display:block;font-weight:500;font-size:11px;opacity:.7}
+.tb-box ol{list-style:none;margin:0;padding:0;overflow:auto;flex:1;scrollbar-width:thin}
+.tb-box li{display:flex;gap:8px;align-items:baseline;padding:2px 0;transition:opacity .5s,filter .5s}
+.tb-box li b{flex:none;width:34px;font-variant-numeric:tabular-nums;font-weight:700;opacity:.6}
+.tb-box li span{transition:color .3s}
+.tb-box li.off{opacity:.28;filter:grayscale(1)}
+.tb-box li.off span{text-decoration:line-through;text-decoration-color:rgba(255,138,138,.8)}
+.tb-box li.off b{opacity:1;color:#ff8a8a}
+.tb-box .tbx-lost{margin:8px 0 0;min-height:2.7em;font-size:12px;color:#ffb4b4}
+.tb-box-btn{display:none}
+@media (max-width:1239px){
+  .tb-box{top:auto;left:10px;right:10px;bottom:10px;width:auto;max-height:58vh;background:#0b1520;transform:translateY(calc(100% + 20px));transition:transform .4s cubic-bezier(.2,.8,.2,1);z-index:21}
+  .tb-box.open{transform:none}
+  .tb-box-btn{display:flex;align-items:center;gap:6px;position:fixed;left:10px;bottom:14px;z-index:20;padding:8px 12px;border:0;border-radius:999px;background:rgba(8,14,22,.86);color:#e8eef2;font:700 13px system-ui,sans-serif;cursor:pointer;box-shadow:0 6px 16px rgba(0,0,0,.35)}
+  .tb-box-btn b{color:#6ee7b7}
+}
+@media (prefers-reduced-motion:reduce){.tb-box li{transition:none}}
