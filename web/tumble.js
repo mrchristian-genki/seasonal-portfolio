@@ -127,11 +127,11 @@
     if (at88) return;
     if (still) { flux(); return; }
     root.classList.add('tm-88on');
-    at88 = setTimeout(function () { root.classList.remove('tm-88on'); flux(); spin(); at88 = 0; }, 1300);
+    at88 = setTimeout(function () { root.classList.remove('tm-88on'); flux(); spin(); at88 = 0; }, 2900);
   }
   function flux() {
     if (root.classList.contains('flux')) return;
-    root.classList.add('flux'); setTimeout(function () { root.classList.remove('flux'); }, 1600);
+    root.classList.add('flux'); setTimeout(function () { root.classList.remove('flux'); }, 900);
   }
   // the browsers under glass: a pick falls to the year that browser arrived (before 1997, to the very bottom)
   // a pick tumbles you down to it: a slow, eased scroll (several seconds, longer the further you go), which a wheel, a touch
@@ -223,7 +223,7 @@
   function showSpeed() { hbs.forEach(function (h) { var m = /^s:(\d)/.exec(h.getAttribute('data-act')); if (m) h.classList.toggle('lit', +m[1] <= speed); }); }
   function stopPlay() { playing = false; clearTimeout(jwTimer); lit('[data-act="play"]', false); }
   function burst() { root.classList.remove('tm-burst'); void root.offsetWidth; root.classList.add('tm-burst'); setTimeout(function () { root.classList.remove('tm-burst'); }, 1700); }
-  function spin() { if (still) return; root.classList.add('tm-spin'); setTimeout(function () { root.classList.remove('tm-spin'); }, 1400); }
+  function spin() { if (still) return; root.classList.add('tm-spin'); setTimeout(function () { root.classList.remove('tm-spin'); }, 1100); }
   lit('[data-act="play"]', false); lit('[data-act="all"]', true); lit('[data-act="power"]', true); lit('[data-act="ports"]', true); showSpeed(); sync();
   hbs.forEach(function (h) {
     h.addEventListener('click', function () {
