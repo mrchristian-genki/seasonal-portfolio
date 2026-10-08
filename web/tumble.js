@@ -49,6 +49,12 @@
   // 1997–1999: the visitor counter goes up while you're on the page
   var count = document.querySelector('[data-tb-count]');
   if (count && !still) { var c = 427; setInterval(function () { if (Math.random() < .35) { c++; count.textContent = ('000000' + c).slice(-6); } }, 2500); }
+  // clips play only while they're on screen
+  [].forEach.call(document.querySelectorAll('[data-tb-video]'), function (v) {
+    if (still) { v.controls = true; return; }
+    if (!('IntersectionObserver' in window)) { v.autoplay = true; return; }
+    new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { var r = v.play(); if (r && r.catch) r.catch(function () {}); } else v.pause(); }); }, { threshold: .3 }).observe(v);
+  });
   // the end: climb back up
   var up = document.querySelector('[data-tb-up]');
   if (up) up.addEventListener('click', function () { scrollTo({ top: 0, behavior: still ? 'auto' : 'smooth' }); });
