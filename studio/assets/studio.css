@@ -562,3 +562,5 @@ dialog.pfp::backdrop{background:rgba(20,12,6,.7)}
 .ga-catedit .chip.fixed{padding-right:10px;background:#d6e6e3;font-weight:600}
 .ga-catedit .chip button{border:0;background:none;cursor:pointer;font-size:15px;line-height:1;padding:0 6px;color:var(--ink3)}
 .ga-catedit input{flex:1 1 160px;min-width:140px}
+.panel.cats .lookg .ga-def{display:inline-flex;gap:5px;align-items:center;justify-content:center;width:auto}
+.panel.cats .lookg .ga-def input{width:auto;padding:0;margin:0;flex:none;border-radius:3px}

@@ -314,6 +314,11 @@
   "media": [
    {
     "type": "image",
+    "src": "play/media/2026-10-08-glazyarray-will-see-you-now/01.jpg",
+    "caption": "Her RIVETING TONE cover: GlazyArray, photographed for her first profile."
+   },
+   {
+    "type": "image",
     "src": "play/media/2026-10-06-the-narrator-gets-a-face/01.jpg",
     "caption": "The first head, and hers. The voice is a woman's, so the robot became her too."
    },
@@ -358,7 +363,11 @@
     "src": "play/media/2026-10-06-the-narrator-gets-a-face/08.jpg",
     "caption": "Her card in the Parts Catalog, under a new Characters shelf."
    }
-  ]
+  ],
+  "extra": {
+   "label": "Read her feature",
+   "url": "/play/2026-10-08-glazyarray-will-see-you-now/"
+  }
  },
  {
   "id": "2026-10-06-the-lake-v2",
