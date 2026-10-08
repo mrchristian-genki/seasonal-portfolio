@@ -142,19 +142,39 @@
       if (k < 1) tumbleRaf = requestAnimationFrame(step); else stop();
     })(t0);
   }
-  [].forEach.call(document.querySelectorAll('[data-go]'), function (b) {
+  // the jewels and their console buttons: hover or focus shows the browser's up-close render in the dial's face with
+  // the year it arrived; a tap or click on a jewel holds it there and wakes its button on the console below in a slow,
+  // big glow. Nothing scrolls until the year in the dial itself is picked: then a slow tumble down to it.
+  var close = document.querySelector('.tm-close'), closeImg = close && close.querySelector('img'), closeYr = close && close.querySelector('b'), held = 0, heldY = 0;
+  var jwls = [].slice.call(document.querySelectorAll('.tm-jw')), brbs = [].slice.call(document.querySelectorAll('.tm-hb.br'));
+  function showClose(k, y) { closeImg.src = 'media/closeup/' + k + '.webp'; closeYr.textContent = y; close.classList.add('on'); }
+  function hideClose() { if (!held) close.classList.remove('on'); }
+  function release() { clearTimeout(held); held = 0; close.classList.remove('on', 'held'); close.setAttribute('tabindex', '-1'); }
+  [].forEach.call(document.querySelectorAll('[data-close]'), function (b, n) {
+    var k = b.getAttribute('data-close'), y = (jwls.filter(function (j) { return j.getAttribute('data-close') === k; })[0] || b).getAttribute('data-b');
+    (new Image()).src = 'media/closeup/' + k + '.webp';
+    var show = function () { if (!held) showClose(k, y); };
+    b.addEventListener('mouseenter', show); b.addEventListener('focus', show); b.addEventListener('mouseleave', hideClose); b.addEventListener('blur', hideClose);
+  });
+  jwls.forEach(function (b, i) {
     b.addEventListener('click', function () {
-      var y = +b.getAttribute('data-go'), m = marks.filter(function (k) { return k.y === y; })[0];
-      if (y < 1997) { if (end) tumbleTo(end.getBoundingClientRect().top + scrollY); } else if (m) tumbleTo(Math.max(0, m.at + 1));
+      heldY = +b.getAttribute('data-b'); showClose(b.getAttribute('data-close'), heldY);
+      close.classList.add('held'); close.setAttribute('tabindex', '0'); close.setAttribute('aria-label', 'Tumble down to ' + heldY);
+      clearTimeout(held); held = setTimeout(release, 9000);
+      brbs.forEach(function (h) { h.classList.remove('mega'); });
+      var h = brbs[i]; if (!h) return; void h.offsetWidth; h.classList.add('mega');
+      clearTimeout(h._mega); h._mega = setTimeout(function () { h.classList.remove('mega'); }, 9000);
     });
   });
-  // hover or focus a jewel: its up-close render fills the dial's face
-  var close = document.querySelector('.tm-close'), closeImg = close && close.querySelector('img');
-  [].forEach.call(document.querySelectorAll('[data-close]'), function (b) {
-    var src = 'media/closeup/' + b.getAttribute('data-close') + '.webp', pre = new Image();
-    var show = function () { if (!pre.src) pre.src = src; closeImg.src = src; close.classList.add('on'); }, hide = function () { close.classList.remove('on'); };
-    b.addEventListener('mouseenter', show); b.addEventListener('focus', show); b.addEventListener('mouseleave', hide); b.addEventListener('blur', hide);
-  });
+  function goHeld() {
+    if (!held) return; var y = heldY; release();
+    brbs.forEach(function (h) { h.classList.remove('mega'); });
+    if (y < 1997) { if (end) tumbleTo(end.getBoundingClientRect().top + scrollY); } else goYear(y);
+  }
+  if (close) {
+    close.addEventListener('click', goHeld);
+    close.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); goHeld(); } });
+  }
   // the jewels: all lit, and slow patterns run through them, only while the cockpit is on screen. On shuffle (the
   // default) a new pattern comes up every few seconds; the console's own buttons pick one, set the speed, flash them,
   // switch the power and the portholes, spin the needles, or hit 88
