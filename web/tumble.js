@@ -121,6 +121,14 @@
   addEventListener('resize', fitRoom); fitRoom();
   function needle(k, v, max) { var n = room && room.querySelector('[data-nd="' + k + '"]'); if (n) n.style.setProperty('--a', (-120 + 240 * Math.max(0, Math.min(1, v / (max || 120)))).toFixed(1) + 'deg'); }
   needle('year', 2026 - shownYear, 29);
+  // hit 88: the dial reads 88 MPH three times, then the jump (the flash and the needles; the fire trail comes later)
+  var at88 = 0;
+  function hit88() {
+    if (at88) return;
+    if (still) { flux(); return; }
+    root.classList.add('tm-88on');
+    at88 = setTimeout(function () { root.classList.remove('tm-88on'); flux(); spin(); at88 = 0; }, 2900);
+  }
   function flux() {
     if (root.classList.contains('flux')) return;
     root.classList.add('flux'); setTimeout(function () { root.classList.remove('flux'); }, 900);
@@ -228,7 +236,7 @@
       else if (a.indexOf('s:') === 0) { speed = +a.slice(2); showSpeed(); if (playing) tickJ(); }
       else if (a === 'speed') { speed = speed % 5 + 1; showSpeed(); if (playing) tickJ(); var kk = ((parseFloat(h.style.getPropertyValue('--k')) || 0) + 72) % 360; h.style.setProperty('--k', kk + 'deg'); h.classList.add('turned'); }
       else if (a === 'lamp') { h.classList.toggle('lit'); burst(); }
-      else if (a === 'go') { flux(); spin(); }
+      else if (a === 'go') hit88();
       else if (a === 'spin') { spin(); var k = ((parseFloat(h.style.getPropertyValue('--k')) || 0) + 60) % 360; h.style.setProperty('--k', k + 'deg'); h.classList.add('turned'); }
       else if (a === 'ports') { var off = root.classList.toggle('tm-noports'); lit('[data-act="ports"]', !off); }
     });
