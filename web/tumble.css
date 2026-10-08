@@ -273,6 +273,13 @@ html[data-era="e15"] .tbx-t,html[data-era="e10"] .tbx-t,html[data-era="e05"] .tb
   box-shadow:inset 0 0 18px rgba(0,0,0,.6)}
 .tm-close img{display:block;width:100%;height:100%;object-fit:cover}
 .tm-close.on{opacity:1;transform:none}
+/* the year it arrived, set cleanly over the render; once a jewel is picked, the dial's face takes you there */
+.tm-close b{position:absolute;left:0;right:0;bottom:22%;text-align:center;font:800 26px/1 "Nunito","Avenir Next",system-ui,sans-serif;letter-spacing:.08em;
+  color:#fff8ea;text-shadow:0 1px 2px rgba(0,0,0,.7),0 0 12px rgba(0,0,0,.55);opacity:.92}
+.tm-close.held{pointer-events:auto;cursor:pointer}
+.tm-close.held b::after{content:"";display:block;width:34px;height:2px;margin:6px auto 0;border-radius:1px;background:currentColor;opacity:.7;animation:tm-cue 2.4s ease-in-out infinite}
+@keyframes tm-cue{50%{opacity:.25;transform:scaleX(.6)}}
+.tm-close.held:focus-visible{outline:2px solid #7ff3e6;outline-offset:3px}
 @keyframes tm-jw{15%{box-shadow:0 0 18px 4px var(--c)}40%{box-shadow:0 0 0 0 var(--c)}}
 html.tm-burst .tm-jw{animation:tm-jwb .8s ease-in-out 2}
 @keyframes tm-jwb{50%{box-shadow:0 0 26px 8px var(--c);filter:brightness(1.6)}}
@@ -324,6 +331,10 @@ html.tm-dark .tm-jw{animation:none}html.tm-dark .tm-jw img.unlit{opacity:1}
 .tm-hb:hover::before,.tm-hb:focus-visible::before{opacity:.45}
 .tm-hb:focus-visible{outline:1px solid #7ff3e6;outline-offset:2px}
 .tm-hb.lit::before{opacity:.95}
+/* a jewel picked above: its button on the console swells into a big, slow, breathing glow */
+.tm-hb.mega::before{inset:-240%;opacity:1;animation:tm-mega 2.4s ease-in-out infinite}
+.tm-hb.mega{box-shadow:0 0 14px 4px var(--c),0 0 34px 10px color-mix(in srgb,var(--c) 50%,transparent);transition:box-shadow 1s ease-in-out}
+@keyframes tm-mega{0%,100%{opacity:.55;transform:scale(.8)}50%{opacity:1;transform:scale(1.15)}}
 .tm-hb.pz::before{opacity:1;transition:opacity .2s ease-out}
 .tm-hb.knob::after{content:"";position:absolute;left:50%;top:8%;width:2px;height:38%;margin-left:-1px;background:#fff6d8;border-radius:1px;transform-origin:50% 110%;rotate:var(--k,0deg);transition:rotate .4s;opacity:0}
 .tm-hb.knob.turned::after{opacity:.8}
@@ -360,7 +371,7 @@ html[data-era="e15"] .tp-rail,html[data-era="e10"] .tp-rail,html[data-era="e05"]
 .tp-rail.drag .tp-mark{transition:none}
 @media (max-width:1100px){.tb-tape{top:58px;bottom:175px;width:30px;right:4px}.tp-rail{width:30px;background:linear-gradient(90deg,transparent 0 12px,rgba(10,16,24,.45) 12px)}.tp-ticks b{display:none}.tp-mark b{right:36px}
   .era-in,.tb-now-in,.tb-end{padding-right:22px}}
-@media (prefers-reduced-motion:reduce){.tb-now,.tm-jw,.tm-port::before,.tm-nd{animation:none!important}.tm-nd{transition:none}.tp-mark{transition:none}}
+@media (prefers-reduced-motion:reduce){.tm-hb.mega::before,.tb-now,.tm-jw,.tm-port::before,.tm-nd{animation:none!important}.tm-nd{transition:none}.tp-mark{transition:none}}
 
 /* 2005-2009: archived pages in a mid-2000s browser window, grey chrome and a blue tab */
 .win05s{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:18px;margin:18px 0 22px}
