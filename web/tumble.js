@@ -34,28 +34,21 @@
       p.style.transform = 'translate3d(0,' + (off * (d - 0.5) * 0.6).toFixed(1) + 'px,0) rotate(' + (spin * off / vh).toFixed(1) + 'deg)';
     }
   }
-  // the toolbox: a feature is blanked out (greyed, struck through) once you've fallen to a year before it worked
-  // everywhere, and lights up again as you climb; nothing leaves the list, so 1997 shows how much wasn't there
-  var tbx = [].slice.call(document.querySelectorAll('[data-tbx] li')), tbxN = document.querySelectorAll('[data-tbx-count]'), lost = document.querySelector('[data-tbx-lost]');
+  // the toolbox: each browser badge and each tool fades in once its year comes round, and out again as you fall past it
+  var tbx = [].slice.call(document.querySelectorAll('.tbx-g li')), tbxN = document.querySelectorAll('[data-tbx-count]');
+  var brs = [].slice.call(document.querySelectorAll('[data-tbx-br] li'));
   function toolbox(y) {
-    var n = 0, gone = [];
-    tbx.forEach(function (li) {
-      var have = y >= +li.getAttribute('data-y');
-      if (have) n++;
-      else if (!li.classList.contains('off')) gone.push(li.querySelector('span').textContent);
-      li.classList.toggle('off', !have);
-    });
+    var n = 0;
+    tbx.forEach(function (li) { var have = y >= +li.getAttribute('data-y'); if (have) n++; li.classList.toggle('off', !have); });
     [].forEach.call(tbxN, function (e) { e.textContent = n; });
-    // the browsers: lit only in their own lifetimes; before, "not yet"; after, "gone since"
-    [].forEach.call(document.querySelectorAll('[data-tbx-br] li'), function (li) {
-      var b = +li.getAttribute('data-b'), e = +(li.getAttribute('data-e') || 9999), em = li.querySelector('em');
-      li.classList.toggle('off', y < b || y > e); li.classList.toggle('dead', y > e);
-      em.textContent = y < b ? 'not yet (' + b + ')' : y > e ? 'gone since ' + e : 'since ' + b;
+    brs.forEach(function (li) {
+      var b = +li.getAttribute('data-b'), e = +(li.getAttribute('data-e') || 9999), on = y >= b && y <= e, nm = li.querySelector('.sr').textContent;
+      li.classList.toggle('off', !on);
+      li.title = nm + (y < b ? ': not yet (' + b + ')' : y > e ? ': gone since ' + e : ': since ' + b);
     });
-    if (lost) lost.textContent = gone.length ? 'Just lost: ' + gone.slice(-3).join(', ') + (gone.length > 3 ? ' and ' + (gone.length - 3) + ' more' : '') : (n === tbx.length ? '' : lost.textContent);
   }
   var tbBtn = document.querySelector('[data-tbx-open]'), tbBox = document.getElementById('tbBox');
-  if (tbBtn) tbBtn.addEventListener('click', function () { var o = tbBox.classList.toggle('open'); tbBtn.setAttribute('aria-expanded', String(o)); });
+  if (tbBtn) tbBtn.addEventListener('click', function () { var o = tbBox.classList.toggle('open'); tbBtn.setAttribute('aria-expanded', String(o)); document.documentElement.classList.toggle('tbx-open', o); });
   function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(frame); } }
   addEventListener('scroll', onScroll, { passive: true }); addEventListener('resize', onScroll); frame();
 

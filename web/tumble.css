@@ -183,39 +183,44 @@ html[data-era="e97"] .tb-browser i,html[data-era="end"] .tb-browser i,html[data-
 @media (max-width:560px){.era{padding:100px 14px 90px}.me{padding:14px 14px}.e97 .era-in{padding:16px 14px}.tb-bar{padding:8px 10px;gap:8px}.tb-home{font-size:14px}.tb-browser{font-size:11px}}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.tb-hint i{animation:none}.tb-depth{display:none}}
 
-/* the toolbox: what every major browser could do in the year you've fallen to. As the year drops, each feature not
-   there yet is blanked out (greyed and struck through) but stays in the list, so by 1997 you can see everything we
-   take for granted now, and how little was lit: tables, GIFs and a little JavaScript. */
-.tb-box{position:fixed;left:12px;top:64px;bottom:16px;z-index:19;width:214px;display:flex;flex-direction:column;padding:12px 12px 10px;border-radius:12px;
-  background:rgba(8,14,22,.84);color:#e8eef2;font:13px/1.35 system-ui,-apple-system,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.35);backdrop-filter:blur(6px)}
-.tb-box h2{margin:0;font:800 12px system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#6ee7b7}
-.tb-box .tbx-n{margin:2px 0 8px;font:800 22px/1.1 system-ui,sans-serif}
-.tb-box .tbx-n small{display:block;font-weight:500;font-size:11px;opacity:.7}
-.tb-box ol{list-style:none;margin:0;padding:0;overflow:auto;flex:1;scrollbar-width:thin}
-.tb-box li{display:flex;gap:8px;align-items:baseline;padding:2px 0;transition:opacity .5s,filter .5s}
-.tb-box li b{flex:none;width:34px;font-variant-numeric:tabular-nums;font-weight:700;opacity:.6}
-.tb-box li span{transition:color .3s}
-.tb-box li.off{opacity:.28;filter:grayscale(1)}
-.tb-box li.off span{text-decoration:line-through;text-decoration-color:rgba(255,138,138,.8)}
-.tb-box li.off b{opacity:1;color:#ff8a8a}
-.tb-box .tbx-lost{margin:8px 0 0;min-height:2.7em;font-size:12px;color:#ffb4b4}
-.tb-box-btn{display:none}
-@media (max-width:1239px){
-  .tb-box{top:auto;left:10px;right:10px;bottom:10px;width:auto;max-height:58vh;background:#0b1520;transform:translateY(calc(100% + 20px));transition:transform .4s cubic-bezier(.2,.8,.2,1);z-index:21}
-  .tb-box.open{transform:none}
-  .tb-box-btn{display:flex;align-items:center;gap:6px;position:fixed;left:10px;bottom:14px;z-index:20;padding:8px 12px;border:0;border-radius:999px;background:rgba(8,14,22,.86);color:#e8eef2;font:700 13px system-ui,sans-serif;cursor:pointer;box-shadow:0 6px 16px rgba(0,0,0,.35)}
-  .tb-box-btn b{color:#6ee7b7}
+/* the toolbox, always open: a small translucent panel on the side. Browser badges along the top (my own monograms in
+   their colours, not their logos) and the tools below, grouped by job; each fades in or out with the year you've fallen to. */
+.tb-box{position:fixed;left:12px;top:64px;z-index:19;width:184px;max-height:calc(100vh - 80px);overflow:auto;scrollbar-width:none;padding:9px 10px 10px;border-radius:12px;
+  background:rgba(10,16,24,.55);border:1px solid rgba(255,255,255,.14);color:#eef3f6;backdrop-filter:blur(10px) saturate(1.2);-webkit-backdrop-filter:blur(10px) saturate(1.2);
+  font:11px/1.3 system-ui,-apple-system,sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.tbx-top{display:flex;align-items:baseline;gap:6px;margin:0 0 6px}
+.tbx-t{font:800 10px system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#6ee7b7}
+.tbx-n{margin-left:auto;font:700 11px system-ui,sans-serif;opacity:.85}.tbx-n b{font-size:14px}
+.tbx-more{display:none}
+.tbx-br{list-style:none;margin:0 0 8px;padding:0;display:grid;grid-template-columns:repeat(5,1fr);gap:5px}
+.tbx-br li{transition:opacity .6s,transform .6s,filter .6s}
+.tbx-br i{display:grid;place-items:center;width:28px;height:28px;margin:auto;border-radius:50%;font:800 11px system-ui,sans-serif;font-style:normal;color:#fff;
+  background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.45),transparent 55%),var(--c);box-shadow:0 0 0 2px rgba(255,255,255,.18)}
+.tbx-br li.off{opacity:.15;filter:grayscale(1);transform:scale(.8)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.tbx-g{margin:0 0 6px}
+.tbx-g h3{margin:0 0 3px;font:800 9px system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#eef3f6;opacity:.55}
+.tbx-g ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:3px}
+.tbx-g li{padding:1px 6px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.12);white-space:nowrap;transition:opacity .6s,background .6s}
+.tbx-g li.off{opacity:.14;background:transparent}
+/* light eras: the same panel, frosted light */
+html[data-era="e15"] .tb-box,html[data-era="e10"] .tb-box,html[data-era="e05"] .tb-box,html[data-era="e97"] .tb-box,html[data-era="end"] .tb-box{background:rgba(255,255,255,.55);color:#13212b;border-color:rgba(0,0,0,.12)}
+html[data-era="e15"] .tbx-g h3,html[data-era="e10"] .tbx-g h3,html[data-era="e05"] .tbx-g h3,html[data-era="e97"] .tbx-g h3,html[data-era="end"] .tbx-g h3{color:#13212b}
+html[data-era="e15"] .tbx-g li,html[data-era="e10"] .tbx-g li,html[data-era="e05"] .tbx-g li,html[data-era="e97"] .tbx-g li,html[data-era="end"] .tbx-g li{background:rgba(0,0,0,.07);border-color:rgba(0,0,0,.1)}
+html[data-era="e15"] .tbx-t,html[data-era="e10"] .tbx-t,html[data-era="e05"] .tbx-t,html[data-era="e97"] .tbx-t,html[data-era="end"] .tbx-t{color:#0f6b52}
+/* phones: no side margin, so a slim strip along the bottom with the badges and the count; Tools opens the chips */
+@media (max-width:1100px){
+  .tb-box{top:auto;bottom:8px;left:8px;right:8px;width:auto;max-height:60vh;padding:6px 8px}
+  .tbx-top{margin:0}
+  .tbx-br{grid-template-columns:repeat(9,1fr);gap:2px;margin:6px 0 0}
+  .tbx-br i{width:24px;height:24px;font-size:10px}
+  .tbx-more{display:inline-block;margin-left:8px;padding:2px 9px;border-radius:999px;border:1px solid currentColor;background:none;color:inherit;font:700 11px system-ui,sans-serif;cursor:pointer}
+  .tbx-tools{display:none;margin-top:8px}.tb-box.open .tbx-tools{display:block}
+  .tb-hud{bottom:96px;transition:opacity .3s}
+  html.tbx-open .tb-hud{opacity:0}
 }
-@media (prefers-reduced-motion:reduce){.tb-box li{transition:none}}
+@media (prefers-reduced-motion:reduce){.tbx-br li,.tbx-g li{transition:none}}
 .born .br{font-weight:700}
 .before97{max-width:62ch;margin:18px auto 22px;text-align:left;font-size:16px}
 .before97 h3{margin:0 0 8px;font:bold 16px Arial,sans-serif;color:#000080;text-align:center}
 .before97 ul{margin:0;padding-left:0;list-style:none}.before97 li{margin:0 0 6px}.before97 b{display:inline-block;width:3.2em;color:#800000}
-.tb-box .tbx-h{margin:4px 0 4px;font:800 10px system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase;opacity:.7;color:#e8eef2}
-.tbx-br{list-style:none;margin:0 0 8px;padding:0;display:grid;grid-template-columns:1fr;gap:1px}
-.tbx-br li{display:flex;justify-content:space-between;gap:6px;padding:1px 0;transition:opacity .5s}
-.tbx-br li span{font-weight:700}
-.tbx-br li em{font-style:normal;font-size:11px;opacity:.75;white-space:nowrap}
-.tbx-br li.off{opacity:.3}.tbx-br li.off span{text-decoration:line-through}
-.tbx-br li.dead em{color:#ff8a8a;opacity:1}
-@media (max-width:1239px){.tbx-br{grid-template-columns:1fr 1fr;column-gap:14px}}
