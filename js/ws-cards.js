@@ -95,7 +95,7 @@
     }, 5200);
   }
   function start() {
-    fetch('assets/workshop/projects.json?v=4').then(function (r) { return r.json(); }).then(function (list) {
+    fetch('assets/workshop/projects.json?v=5').then(function (r) { return r.json(); }).then(function (list) {
       P = list; P.forEach(function (p, i) { var c = card(p, i); box.appendChild(c); cards.push(c); });
       if (!still) { play(cards[0], true); tour(); }
     }).catch(function () { box.hidden = true; });

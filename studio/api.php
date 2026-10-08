@@ -86,6 +86,14 @@ function note_cats(array $e): array {
     return $out;
 }
 
+// the video to trim: one in the note's Drive folder (f and n), or one dropped into the note (u, its upload id)
+function video_src(array $q, array $cfg): string {
+    $u = (string) ($q['u'] ?? '');
+    $path = $u !== '' ? (new Video($cfg))->upPath($u) : (new Drive($cfg))->path((string) ($q['f'] ?? ''), (string) ($q['n'] ?? ''));
+    if ($path === null || ($u === '' && Drive::kind($path) !== 'video')) json_fail($u !== '' ? 'That video is gone from the server (dropped videos are kept two weeks). Drop it in again.' : 'No such video.', 404);
+    return $path;
+}
+
 function valid_id(string $id): bool { return (bool) preg_match('/^\d{4}-\d{2}-\d{2}-[a-z0-9-]{1,60}$/', $id); }
 
 /* Review. An editor's save goes to the branch review/<id>, never to the live branch, so nothing they do
@@ -478,14 +486,17 @@ try {
         // chosen part is cut into a loop, all on this server. Both run in the background; the page asks again.
         case 'GET video':
             @set_time_limit(60);
-            $path = (new Drive($cfg))->path((string) ($_GET['f'] ?? ''), (string) ($_GET['n'] ?? ''));
-            if ($path === null || Drive::kind($path) !== 'video') json_fail('No such video.', 404);
-            json_out((new Video($cfg))->preview($path, !empty($_GET['retry'])));
+            json_out((new Video($cfg))->preview(video_src($_GET, $cfg), !empty($_GET['retry'])));
 
         case 'POST loop':
-            $path = (new Drive($cfg))->path((string) ($body['f'] ?? ''), (string) ($body['n'] ?? ''));
-            if ($path === null || Drive::kind($path) !== 'video') json_fail('No such video.', 404);
-            json_out((new Video($cfg))->loop($path, (float) ($body['from'] ?? 0), (float) ($body['to'] ?? 0), !empty($body['retry'])));
+            json_out((new Video($cfg))->loop(video_src($body, $cfg), (float) ($body['from'] ?? 0), (float) ($body['to'] ?? 0), !empty($body['retry'])));
+
+        // A video dropped into a note comes up in pieces to the server's video work folder (lib/video.php), to be
+        // trimmed into a loop like a Drive one. It stays on the server; only the loop goes to the repo, on Save.
+        case 'POST videopart':
+            $bytes = $raw ?? base64_decode((string) ($body['b64'] ?? ''), true);
+            if ($bytes === false || strlen($bytes) > 3_000_000) json_fail('Bad upload piece.');
+            json_out((new Video($cfg))->upPart((string) ($body['up'] ?? ''), (string) ($body['ext'] ?? ''), (int) ($body['i'] ?? -1), $bytes, !empty($body['last']) && $body['last'] !== '0'));
 
         case 'GET vfile':
             $t = (string) ($_GET['t'] ?? '');

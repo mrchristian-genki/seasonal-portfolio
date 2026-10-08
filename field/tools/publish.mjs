@@ -9,6 +9,7 @@
      play/data/<id>.json        the route for the map (trimmed line, profile, stats)
      play/media/<id>/…          the photos and the episode audio
      play/feed.xml              RSS with the episodes as enclosures (podcast apps can read it)
+   and assets/workshop/projects.json, the Workshop tab's project features, from the Notes (wsprojects.py).
    Only public fields leave field/: no field notes, questions, consent records, original file names
    or photo times. Anything not Published is removed from play/ on the next run.
    play/play.css and play/play.js are hand-written and left alone. */
@@ -465,4 +466,7 @@ fs.writeFileSync(path.join(OUT, 'feed.xml'), rss);
   }
   console.log(bad.length ? 'Wardrobe check:\n  ' + bad.join('\n  ') : 'Wardrobe check: every Note is dressed.');
 }
+// The Workshop tab's project features (assets/workshop/projects.json) are made from the Published Notes that have a
+// "workshop" object (field/tools/wsprojects.py), so a feature changes with its Note
+execFileSync('python3', [path.join(here, 'wsprojects.py')], { stdio: 'inherit' });
 console.log(`play/: ${pages.length} published (${pages.map((p) => p.e.id).join(', ') || 'none'})${show.listed ? '' : ', unlisted (noindex)'}`);

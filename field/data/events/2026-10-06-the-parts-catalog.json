@@ -86,13 +86,13 @@
    "cover": false
   },
   {
-   "src": "data/photos/2026-10-06-the-parts-catalog/paper-squid.jpg",
-   "poster": null,
-   "video": null,
+   "src": "data/photos/2026-10-06-the-parts-catalog/paper-squid.mp4",
+   "poster": "data/photos/2026-10-06-the-parts-catalog/paper-squid.jpg",
+   "video": true,
    "ai": true,
    "caption": "The giant paper squid that took the whale’s place in the deep-sea header, with a shoal of paper fish.",
-   "w": 1376,
-   "h": 768,
+   "w": 1280,
+   "h": 720,
    "use": "post",
    "cover": false
   },
@@ -138,5 +138,62 @@
  "palette": [
   "#34a3b2",
   "#b26934"
- ]
+ ],
+ "workshop": {
+  "order": 4,
+  "name": "The Parts Catalog",
+  "tagline": "Every piece of the lake, running live on its own",
+  "pull": "A deer that looks right on its own card looks right on the lake.",
+  "numbers": [
+   [
+    "60",
+    "parts in 9 groups"
+   ],
+   [
+    "15",
+    "origami creatures, rigged at the joints"
+   ],
+   [
+    "1",
+    "animation loop shared by every card"
+   ]
+  ],
+  "links": [
+   {
+    "label": "Open the catalog",
+    "url": "/catalog/"
+   }
+  ],
+  "cover": "automaton-memory.mp4",
+  "media": [
+   {
+    "photo": "automaton-memory.mp4"
+   },
+   {
+    "photo": "cat-header.mp4"
+   },
+   {
+    "photo": "cat-animals.mp4"
+   },
+   {
+    "photo": "cat-search.mp4"
+   },
+   {
+    "photo": "drawer-buck.mp4",
+    "after": 2
+   },
+   {
+    "photo": "drawer-fox.mp4",
+    "after": 4
+   },
+   {
+    "photo": "paper-squid.mp4",
+    "after": 6
+   },
+   {
+    "photo": "buck-seasons.mp4",
+    "after": 3
+   }
+  ]
+ }
 }

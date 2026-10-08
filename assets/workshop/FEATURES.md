@@ -62,7 +62,7 @@ help. This is the list, project by project, with prompts ready to copy.
    > inside standing on a bed of moss, lit from within by a soft cyan glow, the other drawers closed around it.
 
    *Goes:* "Forty live cards could easily melt a phone" (each one sleeps until it's opened).
-3. **Done (Oct 8): the squid that replaced the whale.**
+3. **Done (Oct 8): the squid that replaced the whale,** now a seamless loop (it glows for a moment).
    > [The look, but deep underwater:] a giant squid folded from paper, drifting in dark blue water with shafts of
    > light from above, tiny paper fish scattering around it.
 
@@ -102,8 +102,11 @@ Both have enough already: 7 renders and 9 pictures. Nothing is needed. If you ma
 
 ## After they're in
 
-Each picture lands in its Note's photos with its caption. Publish the Note, then run
-`python3 field/tools/wsprojects.py` (or ask Claude), and the picture joins the project's feature. The feature spreads
-a project's pictures through the column in their order, and a picture with `"after": N` in that
-project's `media` list (`assets/workshop/projects.json`) goes right after paragraph N, so it sits by the part of the
-story it shows ("Goes:" above). Claude sets it when it adds one.
+Each picture lands in its Note's photos with its caption: a photo dropped in the Studio, or a video dropped in (or
+brought in from Drive) and trimmed into a silent loop under **Video loops**. Everything about the feature lives in
+the project's Note and is edited in the Studio, under **Workshop feature**: the card's name and tagline, its place on
+the tab, the pull quote, the numbers, the buttons, the picture on the card, and each picture's place, spread through
+the column in the order set there or right after paragraph N ("Goes:" above), so it sits by the part of the story it
+shows. A new picture on the Note joins the end of the column until it's placed. Publish the Note (or save it if it's
+live) and the deploy rebuilds the feature: `field/tools/publish.mjs` runs `field/tools/wsprojects.py`, which writes
+`assets/workshop/projects.json` from the Published Notes, so that file is output and never edited by hand.

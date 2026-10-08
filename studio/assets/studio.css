@@ -316,6 +316,14 @@ body.login .st-hero{--h:clamp(220px,27vh,255px)} body.login .st-foot{--h:max(cla
 .drvtrk{margin-top:8px} .drvtrk .useTrk{margin:4px 6px 0 0}
 
 /* video loops */
+#loopBox .drop{margin:10px 0} .vup b{font-variant-numeric:tabular-nums}
+/* the Workshop feature */
+#featBox h3{margin:16px 0 6px} .wsNum,.wsLink{margin:0 0 6px} .wsNum .wsN0{flex:0 1 110px} .wsLink input{flex:1 1 200px}
+.wsPics{list-style:none;margin:8px 0 12px;padding:0;display:flex;flex-direction:column;gap:6px}
+.wsPic{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.5)}
+.wsPic.off{opacity:.55} .wsPic img,.wsNo{width:72px;height:44px;object-fit:cover;border-radius:4px;background:rgba(0,0,0,.08);flex:none}
+.wsPicT{flex:1 1 180px;min-width:0;display:flex;flex-direction:column;overflow-wrap:anywhere} .wsPicT small{color:var(--ink3)}
+.wsAt{flex:0 1 250px;min-width:0} .wsMv{display:flex;gap:2px} .wsMv .link{font-size:18px;padding:0 6px}
 .vids{list-style:none;margin:10px 0;padding:0;display:flex;flex-direction:column;gap:6px}
 .vids li{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.5)}
 .vids li.on{border-color:#b08a52;background:rgba(170,130,80,.12)}

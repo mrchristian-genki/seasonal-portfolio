@@ -18,6 +18,7 @@
   var posterBust = '';   // after a save with new poster frames, so the editor shows them and not a cached old one
   var posterNew = {}; // clip-N.jpg -> { blob, url } for a loop's poster frame picked here and not yet saved
   var DRIVEVID = null, VT = null;           // the videos in the note's Drive folder; the one being trimmed
+  var UPVID = [];                           // videos dropped into this note: { name, bytes, up } (on the server two weeks)
 
   // ---------- helpers ----------
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
@@ -164,7 +165,7 @@
   function showList(tab) {
     tab = tab === 'categories' || tab === 'people' ? tab : 'notes';
     if (dirty && !confirm('Leave without saving?')) return;
-    dirty = false; E = null; fresh = {}; removed = []; INBOX = null; audioNew = null; audioGone = false; DRIVEAUD = null; DRIVETRK = null; trackRaw = null; trackSwap = false; clipsNew = {}; posterNew = {}; DRIVEVID = null; stopTrim();
+    dirty = false; E = null; fresh = {}; removed = []; INBOX = null; audioNew = null; audioGone = false; DRIVEAUD = null; DRIVETRK = null; trackRaw = null; trackSwap = false; clipsNew = {}; posterNew = {}; DRIVEVID = null; UPVID = []; stopTrim();
     route(tab);
     var tabs = owner() ? '<nav class="tabs" role="tablist">' + [['notes', 'Notes'], ['categories', 'Categories'], ['people', 'People']].map(function (t) {
       return '<button type="button" role="tab" data-tab="' + t[0] + '" aria-selected="' + (t[0] === tab) + '">' + t[1] + '</button>'; }).join('') + '</nav>' : '';
@@ -626,7 +627,7 @@
     var L = loader('Processing', ['Read the folder', 'Bring in the track', 'Bring in the photos', 'Claude drafts the note', 'Ready for you to read'], label);
     L.at(0);
     api('inbox', null, '&f=' + encodeURIComponent(src)).then(function (j) {
-      INBOX = j; dirty = false; fresh = {}; removed = []; audioNew = null; audioGone = false; DRIVEAUD = null; DRIVETRK = null; trackRaw = null; trackSwap = false; clipsNew = {}; posterNew = {}; DRIVEVID = null; stopTrim();
+      INBOX = j; dirty = false; fresh = {}; removed = []; audioNew = null; audioGone = false; DRIVEAUD = null; DRIVETRK = null; trackRaw = null; trackSwap = false; clipsNew = {}; posterNew = {}; DRIVEVID = null; UPVID = []; stopTrim();
       var name = src.split('/').slice(1).join('/').replace(/^#/, ''), when = guessDate(name);
       E = blank(); savedStatus = null; E.source = src; E.title = guessTitle(name); E.fieldNotes = j.notes || '';
       if (when) E.date = when;
@@ -672,7 +673,7 @@
   }
   function edit(id) {
     if (dirty && !confirm('Leave without saving?')) return;
-    dirty = false; fresh = {}; removed = []; audioNew = null; audioGone = false; DRIVEAUD = null; DRIVETRK = null; trackRaw = null; trackSwap = false; clipsNew = {}; posterNew = {}; DRIVEVID = null; stopTrim();
+    dirty = false; fresh = {}; removed = []; audioNew = null; audioGone = false; DRIVEAUD = null; DRIVETRK = null; trackRaw = null; trackSwap = false; clipsNew = {}; posterNew = {}; DRIVEVID = null; UPVID = []; stopTrim();
     REVIEW = null; LIVE = null;
     if (!id) { E = blank(); savedStatus = null; route('new'); render(); return Promise.resolve(); }
     app.innerHTML = '<p class="muted">Opening…</p>';
@@ -693,7 +694,7 @@
   function render() {
     // a note made from a Drive folder, or already saved, has its content: the drop zones wait at the bottom
     var later = !!(E.id || E.source), trackTop = !later || !!E.track;
-    var dropPhotos = '<div id="drop-photos" class="drop">Drop photos here, or <label class="pick">choose<input type="file" accept="image/*" multiple hidden id="pickPhotos"></label>. They\'re resized and their location data removed before upload.</div>';
+    var dropPhotos = '<div id="drop-photos" class="drop">Drop photos or videos here, or <label class="pick">choose<input type="file" accept="image/*,video/mp4,video/quicktime,video/webm,.mov,.m4v" multiple hidden id="pickPhotos"></label>. Photos are resized and their location data removed before upload; a video goes to Video loops, to trim a loop from.</div>';
     var kOpts = ['ride', 'hike', 'forage', 'make'].map(function (k) { return '<option' + (E.kind === k ? ' selected' : '') + '>' + k + '</option>'; }).join('');
     // The page follows the note's stage: what's needed now sits open near the top, the rest folds away (one
     // click opens it). Once the script is final, the audio prompt and the audio file come up under the summary;
@@ -731,7 +732,8 @@
         (later ? '' : dropPhotos) + '<div id="photos" class="photos"></div>' + (later ? '<p class="muted" id="noPhotos">No photos yet. Add some under Add more.</p>' : '')) +
       (E.id ? fold('social', 'Social', E.social && E.social.instagram ? 'captions written' : isLive ? 'next: share it' : 'Instagram and Facebook', false, '<div id="socialBox"></div>') : '') +
       (trackTop ? fold('track', 'Track', E.track ? 'on the map' : '', !isLive, '<div id="track"></div>') : '') +
-      (E.source ? fold('loops', 'Video loops', '', false, '<div id="loopBox"></div>') : '') +
+      fold('loops', 'Video loops', '', false, '<div id="loopBox"></div>') +
+      fold('feature', 'Workshop feature', E.workshop ? (E.workshop.name || 'on the Workshop tab') : 'not a feature', false, '<div id="featBox"></div>') +
       (later ? fold('more', 'Add more', 'photos' + (trackTop ? '' : ', a track'), false, '<p class="muted">Only if you want to add to what\'s here.</p>' + (trackTop ? '' : '<h3>Track</h3><div id="track"></div>') + '<h3>Photos</h3>' + dropPhotos) : '') +
       '<footer class="savebar"><span id="saveState" class="muted">' + (E.id ? 'Saved' : 'Not saved yet') + '</span>' +
         '<button type="button" id="publish" class="pub"><span class="pub-t">Publish</span><small class="pub-n"></small></button><button id="save" class="primary">' + (owner() ? 'Save' : 'Save for review') + '</button></footer>';
@@ -749,6 +751,7 @@
     renderTrack(); renderPhotos(); renderQuestions(); renderAudio(); renderLoops();
     driveAudio().then(function () { renderDriveFiles(); renderVoiceNotes(); renderNext(); });
     ['postBody', 'epScript', 'fieldNotes'].forEach(function (k) { $('#' + k).addEventListener('change', renderNext); });
+    $('#postBody').addEventListener('change', renderFeature);   // the feature's "after paragraph" picks follow the paragraphs
     renderNext();
     var dp = $('#drop-photos');
     ['dragover', 'dragenter'].forEach(function (t) { dp.addEventListener(t, function (ev) { ev.preventDefault(); dp.classList.add('on'); }); });
@@ -1375,14 +1378,17 @@
     }).join('');
     $$('.ph', box).forEach(function (d) {
       $('textarea', d).addEventListener('input', markDirty);
-      $$('input', d).forEach(function (i) { i.addEventListener('change', function () { markDirty(); collect(); d.classList.toggle('off', !$('.use', d).checked); if (i.classList.contains('cover')) repalette(); }); });
+      $$('input', d).forEach(function (i) { i.addEventListener('change', function () { markDirty(); collect(); d.classList.toggle('off', !$('.use', d).checked); if (i.classList.contains('cover')) repalette(); renderFeature(); }); });
+      $('textarea', d).addEventListener('change', renderFeature);
       $('.rm', d).onclick = function () {
         if (!confirm('Remove this photo from the entry?')) return;
         collect();
         var i = +d.getAttribute('data-i'), p = E.photos[i], n = photoName(p);
         if (p.poster) delete posterNew[p.poster.split('/').pop()];
         if (fresh[n]) delete fresh[n]; else if (clipsNew[n]) delete clipsNew[n]; else { removed.push(n); if (p.poster) removed.push(p.poster.split('/').pop()); }
-        E.photos.splice(i, 1); markDirty(); renderPhotos(); renderLoops();
+        E.photos.splice(i, 1);
+        if (E.workshop && E.workshop.media) E.workshop.media = E.workshop.media.filter(function (x) { return x.note || featFind(x); });
+        markDirty(); renderPhotos(); renderLoops();
       };
     });
     $$('.pfBtn', box).forEach(function (b) { b.onclick = function () { collect(); posterPicker(E.photos[+b.closest('.ph').getAttribute('data-i')]); }; });
@@ -1395,6 +1401,87 @@
           .then(function (b) { v.src = URL.createObjectURL(b); v.play(); }).catch(function () { toast('Couldn\'t load that clip.', true); });
       };
     });
+    renderFeature();
+  }
+
+  // ---------- the Workshop feature: this Note as one of the big projects on the Workshop tab (E.workshop). The
+  // build (field/tools/wsprojects.py, from publish.mjs) makes assets/workshop/projects.json from the Published Notes,
+  // so this is where a feature is edited: the card's name and tagline, its place on the tab, the pull quote, the
+  // numbers, the buttons, the picture on the card, and where each picture sits in the story ----------
+  function featFind(x) {   // a feature entry's photo or loop on this Note (a loop's poster frame can stand in as a still)
+    return x.note ? null : E.photos.filter(function (p) { return photoName(p) === x.photo || (p.poster && p.poster.split('/').pop() === x.photo); })[0] || null;
+  }
+  function featPics() {   // the feature's pictures in order: the ones it lists, then the Note's others (they join at the end)
+    var out = [], hidden = [], seen = {};
+    (E.workshop.media || []).forEach(function (x) {
+      var p = featFind(x);
+      if (x.note || (p && p.use !== 'skip')) out.push(x); else if (p) hidden.push(x);   // kept for when it's used again
+      if (p) seen[photoName(p)] = 1;
+    });
+    E.photos.forEach(function (p) { if (p.use !== 'skip' && !seen[photoName(p)]) out.push({ photo: photoName(p) }); });
+    return { list: out, hidden: hidden };
+  }
+  function featThumb(x) {
+    var p = featFind(x); if (!p) return '';
+    var n = photoName(p);
+    if (!p.video || x.photo !== n) return p.video ? 'api.php?a=photo&id=' + encodeURIComponent(E.id) + '&n=' + encodeURIComponent(x.photo) : photoUrl(p);
+    return clipsNew[n] ? 'api.php?a=vfile&t=poster&k=' + clipsNew[n].token : E.id ? 'api.php?a=photo&id=' + encodeURIComponent(E.id) + '&n=' + encodeURIComponent(p.poster.split('/').pop()) + posterBust : '';
+  }
+  function renderFeature() {
+    var box = $('#featBox'); if (!box || !E) return;
+    var W = E.workshop;
+    if (!W) {
+      box.innerHTML = '<p class="muted">Make this Note one of the big projects on the Workshop tab: a magazine feature with its post as the story, its photos and loops through the column, a pull quote and its numbers, all edited here. It shows once the Note is published.</p>' +
+        '<button type="button" class="small" id="wsOn">Make it a Workshop feature</button>';
+      $('#wsOn').onclick = function () { collect(); E.workshop = { order: null, name: E.title, tagline: '', pull: '', numbers: [], links: [], media: [] }; markDirty(); renderFeature(); };
+      return;
+    }
+    var paras = ($('#postBody') ? $('#postBody').value : E.post.body || '').split(/\n\s*\n/).map(function (t) { return t.trim(); }).filter(Boolean);
+    var P = featPics(), cov = W.cover || ((E.photos.filter(function (p) { return p.cover && p.use !== 'skip'; })[0] || {}).src || '').split('/').pop();
+    var inp = function (k, v, ph) { return '<input class="wsF" data-k="' + k + '" value="' + esc(v || '') + '" placeholder="' + esc(ph || '') + '">'; };
+    var ln = W.links || [];
+    box.innerHTML = '<p class="muted">Its story is the post, its headline the post\'s title, its deck the card summary. Shows once the Note is published; the site updates on the next deploy.</p>' +
+      '<div class="grid2">' + field('Name on the card', inp('name', W.name, E.title)) + field('Tagline', inp('tagline', W.tagline, 'One line under the name')) +
+        field('Place on the tab', '<input class="wsF" data-k="order" type="number" min="1" max="99" value="' + esc(W.order || '') + '">', '1 comes first; left empty, it goes last') + '</div>' +
+      field('Pull quote', '<textarea class="wsF" data-k="pull" rows="2" placeholder="A line from the story, set large after the second paragraph">' + esc(W.pull || '') + '</textarea>') +
+      '<h3>By the numbers</h3><div class="wsNums">' + (W.numbers || []).map(function (x, i) {
+        return '<div class="row wsNum" data-i="' + i + '"><input class="wsN0" value="' + esc(x[0]) + '" placeholder="124" aria-label="Figure"><input class="wsN1" value="' + esc(x[1]) + '" placeholder="video files behind one header" aria-label="What it counts"><button type="button" class="link wsNx">Remove</button></div>';
+      }).join('') + '</div><button type="button" class="small" id="wsNadd">Add a number</button>' +
+      '<h3>Buttons</h3>' + [0, 1].map(function (i) {
+        var l = ln[i] || {};
+        return '<div class="row wsLink" data-i="' + i + '"><input class="wsL0" value="' + esc(l.label || '') + '" placeholder="' + (i ? 'Another link (optional)' : 'e.g. Open the Studio') + '" aria-label="Label"><input class="wsL1" value="' + esc(l.url || '') + '" placeholder="' + (i ? 'Its address' : '/studio/') + '" aria-label="Address"></div>';
+      }).join('') + '<small class="muted">"Listen to its episode" is always there too.</small>' +
+      '<h3>Pictures</h3><p class="muted">In this order through the story: each one spread evenly, or right after the paragraph you pick. Card is the one on the Workshop card and at the top of the feature.</p>' +
+      '<ul class="wsPics">' + P.list.map(function (x, k) {
+        var p = featFind(x), t = featThumb(x), at = x.off ? 'off' : x.after ? String(x.after) : '';
+        var label = x.note ? 'From ' + x.note + ': ' + x.photo : x.photo + (p && p.video && x.photo === photoName(p) ? ' · loop' : p && p.video ? ' · still of a loop' : '');
+        return '<li class="wsPic' + (x.off ? ' off' : '') + '" data-k="' + k + '">' + (t ? '<img src="' + esc(t) + '" alt="" loading="lazy">' : '<span class="wsNo"></span>') +
+          '<span class="wsPicT"><b>' + esc(label) + '</b><small>' + esc((x.caption || (p && p.caption) || '').slice(0, 90)) + '</small></span>' +
+          '<select class="wsAt" aria-label="Where it goes"><option value="">Spread through the story</option>' + paras.map(function (t, i) {
+            return '<option value="' + (i + 1) + '"' + (at === String(i + 1) ? ' selected' : '') + '>After paragraph ' + (i + 1) + ': ' + esc(t.split(/\s+/).slice(0, 6).join(' ')) + '…</option>';
+          }).join('') + (+at > paras.length ? '<option value="' + at + '" selected>After paragraph ' + at + ' (there are ' + paras.length + ')</option>' : '') +
+          '<option value="off"' + (at === 'off' ? ' selected' : '') + '>Not in the feature</option></select>' +
+          (x.note ? '' : '<label><input type="radio" name="wsCov" class="wsCov"' + (x.photo === cov ? ' checked' : '') + '> Card</label>') +
+          '<span class="wsMv"><button type="button" class="link wsUp" aria-label="Earlier"' + (k ? '' : ' disabled') + '>↑</button><button type="button" class="link wsDn" aria-label="Later"' + (k < P.list.length - 1 ? '' : ' disabled') + '>↓</button></span></li>';
+      }).join('') + '</ul>' + (P.list.length ? '' : '<p class="muted">No photos or loops yet.</p>') +
+      '<button type="button" class="link" id="wsOff">Take it off the Workshop tab</button>';
+    var save = function () { E.workshop.media = P.list.concat(P.hidden).map(function (x) { var o = {}; ['note', 'photo', 'caption', 'after', 'off'].forEach(function (k) { if (x[k]) o[k] = x[k]; }); return o; }); markDirty(); };
+    $$('.wsF', box).forEach(function (el) { el.addEventListener('input', function () { var k = el.getAttribute('data-k'); W[k] = k === 'order' ? (+el.value || null) : el.value.trim(); markDirty(); }); });
+    var nums = function () { W.numbers = $$('.wsNum', box).map(function (r) { return [$('.wsN0', r).value.trim(), $('.wsN1', r).value.trim()]; }); markDirty(); };
+    $$('.wsN0, .wsN1', box).forEach(function (el) { el.addEventListener('input', nums); });
+    $$('.wsNx', box).forEach(function (b) { b.onclick = function () { W.numbers.splice(+b.parentNode.getAttribute('data-i'), 1); markDirty(); renderFeature(); }; });
+    $('#wsNadd').onclick = function () { (W.numbers = W.numbers || []).push(['', '']); renderFeature(); var r = $$('.wsN0', box).pop(); if (r) r.focus(); };
+    $$('.wsL0, .wsL1', box).forEach(function (el) { el.addEventListener('input', function () {
+      W.links = $$('.wsLink', box).map(function (r) { return { label: $('.wsL0', r).value.trim(), url: $('.wsL1', r).value.trim() }; }).filter(function (l) { return l.label || l.url; }); markDirty();
+    }); });
+    $$('.wsPic', box).forEach(function (li) {
+      var k = +li.getAttribute('data-k'), x = P.list[k];
+      $('.wsAt', li).onchange = function () { var v = this.value; delete x.after; delete x.off; if (v === 'off') x.off = true; else if (v) x.after = +v; save(); renderFeature(); };
+      var c = $('.wsCov', li); if (c) c.onchange = function () { W.cover = x.photo; markDirty(); };
+      $('.wsUp', li).onclick = function () { P.list.splice(k - 1, 0, P.list.splice(k, 1)[0]); save(); renderFeature(); };
+      $('.wsDn', li).onclick = function () { P.list.splice(k + 1, 0, P.list.splice(k, 1)[0]); save(); renderFeature(); };
+    });
+    $('#wsOff').onclick = function () { if (!confirm('Take this Note off the Workshop tab? Its pull quote, numbers and picture places go too.')) return; delete E.workshop; markDirty(); renderFeature(); };
   }
   function clipView(p, n) {
     var c = clipsNew[n], pn = p.poster ? p.poster.split('/').pop() : '', pk = posterNew[pn];
@@ -1543,6 +1630,7 @@
   }
   function addPhotos(files) {
     collect();
+    [].slice.call(files).filter(isVideo).forEach(upVideo);   // a video goes to Video loops, to trim a loop from
     var list = [].slice.call(files).filter(function (f) { return /^image\//.test(f.type) || /\.(jpe?g|heic|png|webp)$/i.test(f.name); });
     if (!list.length) return Promise.resolve();
     return Promise.all(list.map(exifDate)).then(function (times) {
@@ -1598,21 +1686,53 @@
     E.photos.concat(removed.map(function (n) { return { src: n }; })).forEach(function (p) { var m = /^clip-(\d+)\./.exec(photoName(p)); if (m) max = Math.max(max, +m[1]); });
     return 'clip-' + (max + 1);
   }
+  var UPING = null;   // a dropped video on its way up: { name, pct }
   function renderLoops() {
     var box = $('#loopBox'); if (!box) return Promise.resolve();
-    return driveVideos().then(function (list) {
+    return driveVideos().then(function (drv) {
       setTimeout(renderNext, 0);
       if (!$('#loopBox')) return;
-      if (!list.length) { box.innerHTML = '<p class="muted">No videos in this note\'s Drive folder.</p>'; return; }
+      var list = drv.concat(UPVID);
       var made = function (n) { return E.photos.filter(function (p) { return p.video && p.from === n; }).length; };
-      box.innerHTML = '<p class="muted">Pick a video, find the moment, and make a short loop (' + LOOP_MAX + ' seconds at most). Loops play silently, over and over, in the post. The videos themselves stay on the server.</p>' +
-        '<ul class="vids">' + list.map(function (f) {
+      box.innerHTML = '<p class="muted">Pick a video, find the moment, and make a short loop (' + LOOP_MAX + ' seconds at most). Loops play silently, over and over, in the post, and join Photos, where you choose the cover and caption (and under Workshop feature, where it goes in the feature). The videos themselves stay on the server.</p>' +
+        '<div id="drop-video" class="drop">Drop a video here (MP4, MOV or WebM, up to 500 MB), or <label class="pick">choose<input type="file" accept="video/mp4,video/quicktime,video/webm,.mov,.m4v" multiple hidden id="pickVideo"></label>. It goes up to the Studio\'s server, not to the site, and is kept there two weeks.</div>' +
+        (UPING ? '<p class="muted vup">Uploading ' + esc(UPING.name) + '… <b>' + UPING.pct + '%</b></p>' : '') +
+        (list.length ? '<ul class="vids">' + list.map(function (f) {
           var k = made(f.name), on = VT && VT.name === f.name;
-          return '<li' + (on ? ' class="on"' : '') + '><span><b>' + esc(f.name.split('/').pop()) + '</b> <small>' + size(f.bytes) + (k ? ' · ' + k + ' loop' + (k > 1 ? 's' : '') + ' made' : '') + '</small></span>' +
-            (on ? '' : '<button type="button" class="small trimVid" data-n="' + esc(f.name) + '">' + (k ? 'Trim another' : 'Trim a loop') + '</button>') + '</li>';
-        }).join('') + '</ul><div id="trimmer"></div>';
-      $$('.trimVid', box).forEach(function (b) { b.onclick = function () { openTrim(b.getAttribute('data-n')); }; });
+          return '<li' + (on ? ' class="on"' : '') + '><span><b>' + esc(f.name.split('/').pop()) + '</b> <small>' + size(f.bytes) + (f.up ? ' · dropped in' : '') + (k ? ' · ' + k + ' loop' + (k > 1 ? 's' : '') + ' made' : '') + '</small></span>' +
+            (on ? '' : '<button type="button" class="small trimVid" data-n="' + esc(f.name) + '" data-u="' + esc(f.up || '') + '">' + (k ? 'Trim another' : 'Trim a loop') + '</button>') + '</li>';
+        }).join('') + '</ul>' : E.source ? '<p class="muted">No videos in this note\'s Drive folder.</p>' : '') + '<div id="trimmer"></div>';
+      $$('.trimVid', box).forEach(function (b) { b.onclick = function () { openTrim(b.getAttribute('data-n'), b.getAttribute('data-u')); }; });
+      var dz = $('#drop-video');
+      ['dragover', 'dragenter'].forEach(function (t) { dz.addEventListener(t, function (ev) { ev.preventDefault(); dz.classList.add('on'); }); });
+      dz.addEventListener('dragleave', function () { dz.classList.remove('on'); });
+      dz.addEventListener('drop', function (ev) { ev.preventDefault(); dz.classList.remove('on'); [].slice.call(ev.dataTransfer.files).forEach(upVideo); });
+      $('#pickVideo').onchange = function () { [].slice.call(this.files).forEach(upVideo); this.value = ''; };
       if (VT) drawTrim();
+    });
+  }
+  // A video dropped into the note goes up in pieces to the server's video work folder (api.php videopart), then
+  // opens in the trimmer like a Drive one. One at a time; the rest wait their turn.
+  var VCH = 2000000, upChain = Promise.resolve();
+  function isVideo(f) { return /^video\//.test(f.type) || /\.(mp4|mov|m4v|webm)$/i.test(f.name); }
+  function upVideo(file) {
+    if (!isVideo(file)) { toast(file.name + ' isn\'t a video. Drop an MP4, MOV or WebM.', true); return; }
+    if (file.size > 500e6) { toast(file.name + ' is too big (500 MB at most). Trim it on the phone first.', true); return; }
+    var ext = (/\.(mp4|mov|m4v|webm)$/i.exec(file.name) || [, /webm/.test(file.type) ? 'webm' : /quicktime/.test(file.type) ? 'mov' : 'mp4'])[1].toLowerCase();
+    var f = $('#f-loops'); if (f) f.open = true;
+    upChain = upChain.then(function () {
+      var up = Array.from(crypto.getRandomValues(new Uint8Array(8)), function (b) { return b.toString(16).padStart(2, '0'); }).join('');
+      var n = Math.ceil(file.size / VCH), chain = Promise.resolve();
+      UPING = { name: file.name, pct: 0 }; renderLoops();
+      for (var i = 0; i < n; i++) (function (i) {
+        chain = chain.then(function () { return api('videopart', file.slice(i * VCH, (i + 1) * VCH), '&up=' + up + '&ext=' + ext + '&i=' + i + '&last=' + (i === n - 1 ? 1 : 0)); })
+          .then(function () { UPING.pct = Math.round((i + 1) / n * 100); var b = $('#loopBox .vup b'); if (b) b.textContent = UPING.pct + '%'; });
+      })(i);
+      return chain.then(function () {
+        UPING = null; UPVID.push({ name: file.name, bytes: file.size, up: up });
+        toast(file.name + ' is up. Find the moment and make a loop.');
+        openTrim(file.name, up);
+      }).catch(function (err) { UPING = null; renderLoops(); toast('While uploading ' + file.name + ': ' + err.message, true); });
     });
   }
   // the end of ffmpeg's log, folded away, for when something goes wrong
@@ -1620,14 +1740,16 @@
     return lines && lines.length ? '<details class="vt-log" id="vtLog"><summary>What ffmpeg said</summary><pre>' + esc(lines.join('\n')) + '</pre></details>' : '';
   }
   function stopTrim() { if (VT) { clearTimeout(VT.poll); VT.dead = true; } VT = null; }
-  function openTrim(name) {
+  function openTrim(name, up) {
     stopTrim();
-    VT = { name: name, state: 'working', pct: 0 };
+    VT = { name: name, up: up || '', state: 'working', pct: 0 };
     renderLoops(); pollPreview(true);   // opening a video again gives one that failed before a fresh try
   }
+  // which video: a dropped one by its upload id, else the one in the note's Drive folder
+  function vidQ(vt) { return vt.up ? '&u=' + vt.up : '&f=' + encodeURIComponent(E.source) + '&n=' + encodeURIComponent(vt.name); }
   function pollPreview(retry) {
     var vt = VT; if (!vt) return;
-    api('video', null, '&f=' + encodeURIComponent(E.source) + '&n=' + encodeURIComponent(vt.name) + (retry ? '&retry=1' : '')).then(function (r) {
+    api('video', null, vidQ(vt) + (retry ? '&retry=1' : '')).then(function (r) {
       if (vt.dead) return;
       vt.key = r.key; vt.info = r.info; vt.state = r.state; vt.pct = r.pct || 0; vt.error = r.error; vt.log = r.log;
       if (r.state === 'ready' && vt.from == null) { vt.from = 0; vt.to = Math.min(r.info.sec, 8); }
@@ -1694,7 +1816,7 @@
     var b = $('#vtMake'), msg = $('#vtMsg'), from = +vt.from.toFixed(2), to = +vt.to.toFixed(2), retry = false;
     b.disabled = true;
     var ask = function () {
-      api('loop', { f: E.source, n: vt.name, from: from, to: to, retry: retry }).then(function (r) {
+      api('loop', vt.up ? { u: vt.up, from: from, to: to, retry: retry } : { f: E.source, n: vt.name, from: from, to: to, retry: retry }).then(function (r) {
         retry = false;
         if (vt.dead) return;
         if (r.state === 'working') { if (msg) msg.textContent = 'Making the loop… ' + (r.pct ? r.pct + '%' : ''); setTimeout(ask, 2000); return; }

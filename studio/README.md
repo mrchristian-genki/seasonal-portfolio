@@ -10,6 +10,17 @@ Log in, then:
 - **Photos**: drop them in. Each is drawn upright into a canvas at 1600 px and re-saved as JPEG, so
   location data, camera serials and every other EXIF field are gone before upload. Only the time taken
   is kept (read in the browser) for ordering.
+- **Videos**: drop them in too (on Photos, or under **Video loops**), MP4, MOV or WebM up to 500 MB. A video goes up in
+  2 MB pieces to the server's video work folder (`~/studio-private/video`, never the site, kept two weeks) and opens in
+  the trimmer, where it becomes a short silent loop just like a Drive video (see Video loops below). The loop joins
+  Photos with the next Save: tick **Cover** to make it the Note's cover, and place it in the feature under
+  **Workshop feature**.
+- **Workshop feature**: makes the Note one of the big projects on the Workshop tab, a magazine feature with the post
+  as its story. Edit the card's name and tagline, its place on the tab, the pull quote, the numbers ("By the
+  numbers"), the buttons, the picture on the card, and for each photo or loop: spread through the story, right after
+  paragraph N, or left out, in the order you set with the arrows. It's kept in the Note (`"workshop"` in its JSON);
+  the deploy builds `assets/workshop/projects.json` from the Published Notes (`field/tools/wsprojects.py`, run by
+  `publish.mjs`), so that file is never edited by hand.
 - **Your notes**: what happened, in your words.
 - **Draft with Claude**: sends the notes, the track's figures, photo times and small copies of the photos
   to Claude (`claude-opus-5-5`) with `field/SHOW-GUIDE.md` as the rules. Fills in the summary, post,
@@ -62,17 +73,17 @@ attach), animated clips and the prints-on-a-table layout.
 | Path | What it is |
 |---|---|
 | `index.php` | Login and the page |
-| `api.php` | JSON API for the page: config, list, entry, photo, blob, save, draft. Login and CSRF on every call |
+| `api.php` | JSON API for the page: config, list, entry, photo, blob, save, draft, and the video loops (video, videopart, loop). Login and CSRF on every call |
 | `lib/bootstrap.php` | Private config, session (secure cookie, idle timeout), login throttle (5 tries per 15 min), headers |
 | `lib/github.php` | Reads and commits to the repo through the GitHub API |
 | `lib/drive.php` | Bring in from Drive: starts `rclone copy` in the background and reads back its log |
-| `lib/video.php` | Video loops: ffmpeg makes a small preview of a Drive video, then cuts the chosen part into a silent loop |
+| `lib/video.php` | Video loops: takes in a dropped video in pieces; ffmpeg makes a small preview of it (or of a Drive video), then cuts the chosen part into a silent loop |
 | `lib/drafter.php` | The Claude call (official Anthropic PHP SDK, structured output, server-side fallback) |
 | `assets/studio.js`, `assets/studio.css` | The page. `assets/track.js` is copied from `field/track.js` at deploy |
 | `tools/setup.php` | One-time setup over SSH; writes the private config |
 | `composer.json` / `.lock` | The SDK (installed by the deploy workflow; `vendor/` isn't in git) |
 
-Nothing is stored on the web server except what "Bring in from Drive" copies to `~/incoming`. The private settings live in `~/studio-private/config.php` on
+Nothing is stored on the web server except what "Bring in from Drive" copies to `~/incoming` and the video work (dropped videos, previews, loops) in `~/studio-private/video`, cleared after two weeks. The private settings live in `~/studio-private/config.php` on
 DreamHost (outside the web folder, mode 600): the password hash, the Anthropic API key, the GitHub token
 (fine-grained, this repo only, Contents read/write) and the private zones.
 
@@ -112,7 +123,9 @@ The copy's log is `~/studio-private/drive-sync.log`.
 
 ## Video loops (once)
 
-The videos that come in from Drive stay on the server. In a note, **Video loops** makes a small preview of
+The videos that come in from Drive, and the ones dropped into a note (they come up in 2 MB pieces, so the host's
+upload limit doesn't matter; 500 MB at most each), stay on the server. Dropped ones are listed under **Video loops**
+for as long as the note is open; to trim one again later, drop it in again. In a note, **Video loops** makes a small preview of
 one to scrub through, and cuts the part you choose (30 seconds at most) into a silent loop: 960 px on the
 long edge, H.264, with a poster frame; iPhone HDR is toned to ordinary colour. The loop is committed with
 the next Save and plays in place in the post, like the other clips. It needs ffmpeg on DreamHost:

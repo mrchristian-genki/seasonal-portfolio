@@ -123,5 +123,56 @@
   "from": "case-study",
   "scene": ""
  },
- "palette": ["#38b1c0", "#b26f34"]
+ "palette": ["#38b1c0", "#b26f34"],
+ "workshop": {
+  "order": 3,
+  "name": "ProPre Engine",
+  "tagline": "From the first prompt to a print-ready book",
+  "pull": "Build the tool before the hundredth book, not after.",
+  "numbers": [
+   [
+    "4 days",
+    "from the first notes to a working tool"
+   ],
+   [
+    "5",
+    "tabs, from the prompt to the Kindle cover"
+   ],
+   [
+    "101",
+    "titles in the Coloring Book Catalog"
+   ]
+  ],
+  "links": [
+   {
+    "label": "Open ProPre",
+    "url": "/propre/"
+   }
+  ],
+  "cover": "automaton-prism.mp4",
+  "media": [
+   {
+    "photo": "automaton-prism.mp4"
+   },
+   {
+    "photo": "books-library.mp4"
+   },
+   {
+    "photo": "pp-prompts.mp4"
+   },
+   {
+    "photo": "pp-cover.mp4"
+   },
+   {
+    "photo": "cover-pdf.jpg"
+   },
+   {
+    "photo": "pp-kindle.mp4"
+   },
+   {
+    "photo": "proof-sheet.jpg",
+    "after": 5
+   }
+  ]
+ }
 }
