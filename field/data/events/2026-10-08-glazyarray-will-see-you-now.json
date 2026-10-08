@@ -29,31 +29,37 @@
   "track": null,
   "photos": [
     {
-      "src": "data/photos/2026-10-08-glazyarray-will-see-you-now/cover.jpg",
+      "src": "data/photos/2026-10-08-glazyarray-will-see-you-now/cover.mp4",
       "ai": true,
       "caption": "GlazyArray, photographed for RIVETING TONE: a deep teal backdrop, a warm key light, and the flower-bud bulb lit for the occasion.",
-      "w": 2000,
-      "h": 1116,
+      "w": 1280,
+      "h": 720,
       "use": "post",
-      "cover": true
+      "cover": true,
+      "poster": "data/photos/2026-10-08-glazyarray-will-see-you-now/cover.jpg",
+      "video": true
     },
     {
-      "src": "data/photos/2026-10-08-glazyarray-will-see-you-now/desk.jpg",
+      "src": "data/photos/2026-10-08-glazyarray-will-see-you-now/desk.mp4",
       "ai": true,
       "caption": "At her desk after hours, mid-story. She says she was making a point. She usually is.",
-      "w": 1376,
-      "h": 768,
+      "w": 1280,
+      "h": 720,
       "use": "post",
-      "cover": false
+      "cover": false,
+      "poster": "data/photos/2026-10-08-glazyarray-will-see-you-now/desk.jpg",
+      "video": true
     },
     {
-      "src": "data/photos/2026-10-08-glazyarray-will-see-you-now/bts.jpg",
+      "src": "data/photos/2026-10-08-glazyarray-will-see-you-now/bts.mp4",
       "ai": true,
       "caption": "Between takes on the green screen, where every one of her moves was rendered. Below the desk: a rare look at her shoes.",
-      "w": 1376,
-      "h": 768,
+      "w": 1280,
+      "h": 720,
       "use": "post",
-      "cover": false
+      "cover": false,
+      "poster": "data/photos/2026-10-08-glazyarray-will-see-you-now/bts.jpg",
+      "video": true
     },
     {
       "src": "data/photos/2026-10-08-glazyarray-will-see-you-now/portrait.jpg",
@@ -74,13 +80,15 @@
       "cover": false
     },
     {
-      "src": "data/photos/2026-10-08-glazyarray-will-see-you-now/lookbook.jpg",
+      "src": "data/photos/2026-10-08-glazyarray-will-see-you-now/lookbook.mp4",
       "ai": true,
       "caption": "The look book: a beanie, a witch hat, a trail cap, a tiara of stars and a Santa hat. Nineteen looks in all; these five came to the shoot.",
-      "w": 1376,
-      "h": 768,
+      "w": 1280,
+      "h": 720,
       "use": "post",
-      "cover": false
+      "cover": false,
+      "poster": "data/photos/2026-10-08-glazyarray-will-see-you-now/lookbook.jpg",
+      "video": true
     },
     {
       "src": "data/photos/2026-10-08-glazyarray-will-see-you-now/library.jpg",
