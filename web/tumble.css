@@ -355,3 +355,5 @@ html[data-era="e15"] .tp-rail,html[data-era="e10"] .tp-rail,html[data-era="e05"]
 .gif99 td{border:1px inset #c0c0c0;text-align:center;vertical-align:middle;padding:6px}
 .gif99 img{display:block;max-width:100%;max-height:110px;width:auto;height:auto;margin:auto}
 @media (max-width:560px){.gif99 td{padding:3px}.gif99 img{max-width:52px}}
+.win00.tall img{max-height:620px;object-fit:cover;object-position:top}
+@media (min-width:900px){.win00.tall img{max-width:640px;margin:0 auto}}
