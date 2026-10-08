@@ -1182,7 +1182,7 @@
    "w": 960,
    "h": 540,
    "use": "post",
-   "cover": true,
+   "cover": false,
    "from": "IMG_5210.MOV",
    "range": [
     12.9,
@@ -1216,7 +1216,7 @@
    "w": 1600,
    "h": 900,
    "use": "post",
-   "cover": false,
+   "cover": true,
    "from": "IMG_5215.JPG"
   },
   {
