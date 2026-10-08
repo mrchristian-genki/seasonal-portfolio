@@ -1,0 +1,24 @@
+/* THE TUMBLE'S DOOR on the Web tab (index.html → web/): a stack of era windows falling away into the distance, each
+   in its era's colours, and the way in. Hover (or focus) and the stack tumbles open. */
+.tumble-door{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:22px;align-items:center;margin:4px 0 26px;padding:22px;border-radius:18px;
+  background:radial-gradient(ellipse at 20% 30%,#16405a,transparent 60%),#0d1b2a;color:#e8eef2;text-decoration:none;text-align:left;
+  box-shadow:0 18px 36px -18px rgba(13,27,42,.7);transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+.tumble-door:hover,.tumble-door:focus-visible{transform:translateY(-4px)}
+.tumble-door:focus-visible{outline:3px solid #6ee7b7;outline-offset:3px}
+.td-stack{position:relative;height:220px}
+.td-stack i{position:absolute;left:8%;bottom:6%;width:70%;height:52%;display:flex;align-items:flex-start;padding:6px 10px;font:900 15px/1 "Nunito","Segoe UI",sans-serif;font-style:normal;border-radius:8px;
+  transform:translate(calc(var(--n) * 14px),calc(var(--n) * -23px)) scale(calc(1 - var(--n) * .045));transform-origin:0 100%;
+  transition:transform .6s cubic-bezier(.2,.8,.2,1);box-shadow:0 6px 14px rgba(0,0,0,.4)}
+.tumble-door:hover .td-stack i,.tumble-door:focus-visible .td-stack i{transform:translate(calc(var(--n) * 20px),calc(var(--n) * -27px)) scale(calc(1 - var(--n) * .045)) rotate(calc(var(--n) * -1.5deg))}
+.td26{--n:0;z-index:6;background:linear-gradient(160deg,#1d4f6e,#10283a);border:1px solid rgba(255,255,255,.25);color:#6ee7b7}
+.td15{--n:1;z-index:5;background:#f4f6f8;color:#1e88e5;border-radius:3px!important}
+.td10{--n:2;z-index:4;background:linear-gradient(180deg,#fffdf7,#e3d6b8);color:#4a3f2f}
+.td05{--n:3;z-index:3;background:repeating-linear-gradient(90deg,#eaf6fd 0 10px,#f6fbfe 10px 20px);color:#ff6d1f}
+.td00{--n:4;z-index:2;background:#0a0d12;color:#cfd6de;border-radius:0!important;font-family:Verdana,sans-serif!important}
+.td97{--n:5;z-index:1;background:#c0c0c0;color:#000080;border-radius:0!important;font-family:"Times New Roman",serif!important}
+.td-copy{display:flex;flex-direction:column;gap:6px}
+.td-copy b{font:900 clamp(26px,3.4vw,36px)/1 "Nunito","Segoe UI",sans-serif;letter-spacing:-.02em}
+.td-copy span{font-size:15px;line-height:1.5;color:#c5d3dc}
+.td-copy em{font:800 13px "Nunito","Segoe UI",sans-serif;font-style:normal;letter-spacing:.14em;text-transform:uppercase;color:#6ee7b7}
+@media (max-width:640px){.tumble-door{grid-template-columns:1fr;padding:18px}.td-stack{height:150px}}
+@media (prefers-reduced-motion:reduce){.tumble-door,.td-stack i{transition:none}}
