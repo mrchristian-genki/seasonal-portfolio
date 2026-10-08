@@ -180,6 +180,60 @@ Then add the shape and colours:
 **Bring them back** as they are (on green). Claude keys out the green, makes each a 128 px sprite with its lit and
 unlit state, and swaps them into the dial.
 
+## K. Hit 88 (the jump)
+
+What happens when someone hits 88 (the button, the levers, or falling fast enough):
+
+1. **The build-up (code):** the big dial's face shows **88 MPH** in glowing digits, flashing slowly two or three
+   times, and the lamps and needles strain.
+2. **The flash (clip):** a white-blue flash fills the screen from the bottom.
+3. **The trail (clip):** two parallel tracks of fire race up the screen from bottom to top, and a spinning
+   plate tumbles end over end up between them, trailing sparks.
+4. **The return (clip + code):** the fire burns down to embers, light fills the screen again, and it fades back to the
+   cockpit as it was.
+
+Everything eases in and out (the motion rule): nothing cuts, every flash swells and settles.
+
+**Format for both renders:** 9:16 or 16:9, at least 1920 px on the long side, on **pure black** (so the page can lay
+it over the cockpit with screen blend: the black drops out, only the light and fire show). No text, no letters, no
+numbers, no logos.
+
+### K1. The still (the trail, at its peak)
+
+> A tack-sharp cinematic still on pure black: two perfectly straight parallel tracks of fire burning upward from the
+> bottom edge of the frame to the top, bright orange and gold flames close to the ground with blue-white cores,
+> embers and sparks drifting off them. Between the tracks, near the top, a blank rectangular metal plate (like an
+> old car licence plate with no writing on it, chrome edge, stamped border, a few rivet holes) tumbling end over end
+> in mid-air, catching the firelight, motion streaks behind it. Faint heat shimmer. Retro 1980s science fiction feel,
+> warm and dramatic, high contrast, everything outside the fire pure black. No text, no letters, no numbers, no
+> logos, no people, no cars.
+
+*Goes:* a still for the poster frame and for reduced motion.
+
+### K2. The animation (6 to 8 seconds, silent)
+
+Use K1 as the end frame of the middle beat, or start from black.
+
+> Pure black. A bright white-blue flash swells up from the bottom edge and fades. Two parallel tracks of fire ignite
+> at the bottom and race straight up the frame to the top, leaving burning trails. A blank metal plate tumbles end
+> over end up the middle between them, sparks trailing behind it, and leaves the top of the frame. The fire trails
+> burn on for a moment, then burn down into glowing embers that fade, while a soft white light rises and fills the
+> whole frame, then gently fades back to black. Smooth, eased, no cuts, camera locked off. No text, no letters, no
+> numbers, no logos, no people, no cars.
+
+*Size:* 1920 × 1080 (or 1080 × 1920 for phones, the same motion bottom to top). *Goes:* over the cockpit, on screen
+blend, after the 88 MPH flashes.
+
+### K3. Optional: the dial at 88 (a still)
+
+If you'd rather the 88 MPH be part of the render than code:
+
+> Close-up, front-on, of a round retro analog speedometer with a glowing teal face and an amber needle pinned hard at
+> the top of its sweep, the glass glowing hot, a few sparks off the bezel, on a copper console. No numbers or letters.
+
+(The 88 MPH itself is best drawn by the page, sharp and in the dial's own font, so a render doesn't have to get the
+lettering right.)
+
 ---
 
 ## The first look (art deco and glowing glass)
