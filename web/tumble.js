@@ -44,14 +44,17 @@
   }
   // the toolbox: each browser badge and each tool fades in once its year comes round, and out again as you fall past it
   var tbx = [].slice.call(document.querySelectorAll('.tbx-g li')), tbxN = document.querySelectorAll('[data-tbx-count]');
-  var brs = [].slice.call(document.querySelectorAll('[data-tbx-br] li'));
+  var brs = [].slice.call(document.querySelectorAll('[data-tbx-br] li, .tm-jw'));
   function toolbox(y) {
     var n = 0;
     tbx.forEach(function (li) { var have = y >= +li.getAttribute('data-y'); if (have) n++; li.classList.toggle('off', !have); });
     [].forEach.call(tbxN, function (e) { e.textContent = n; });
+    if (typeof needle === 'function') needle('tools', n, tbx.length);
     brs.forEach(function (li) {
-      var b = +li.getAttribute('data-b'), e = +(li.getAttribute('data-e') || 9999), on = y >= b && y <= e, nm = li.querySelector('.sr').textContent;
+      var b = +li.getAttribute('data-b'), e = +(li.getAttribute('data-e') || 9999), on = y >= b && y <= e;
       li.classList.toggle('off', !on);
+      if (li.classList.contains('tm-jw')) return;
+      var nm = li.querySelector('.sr').textContent;
       li.title = nm + (y < b ? ': not yet (' + b + ')' : y > e ? ': gone since ' + e : ': since ' + b);
     });
   }
@@ -201,4 +204,6 @@
   // the end: climb back up
   var up = document.querySelector('[data-tb-up]');
   if (up) up.addEventListener('click', function () { scrollTo({ top: 0, behavior: still ? 'auto' : 'smooth' }); });
+  // set the browsers and tools for the year you start at (the top is 2026: the gone ones dim)
+  toolbox(shownYear);
 })();

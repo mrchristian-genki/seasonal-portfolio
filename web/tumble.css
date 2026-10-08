@@ -253,12 +253,21 @@ html[data-era="e15"] .tbx-t,html[data-era="e10"] .tbx-t,html[data-era="e05"] .tb
 .tm-room{position:absolute;left:0;top:0;width:1376px;height:768px;transform-origin:0 0;--u:1;transition:filter .8s}
 .tm-bg{position:absolute;inset:0;width:100%;height:100%;display:block}
 .tm-room>*{position:absolute}
+.tm-room{pointer-events:none}.tm-jw{pointer-events:auto}
 .tm-jw,.tm-port,.tm-scr{left:calc(var(--x) * 1px);top:calc(var(--y) * 1px)}
-.tm-jw{width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:50%;background:radial-gradient(circle,var(--c) 0,color-mix(in srgb,var(--c) 40%,transparent) 35%,transparent 70%);
-  mix-blend-mode:screen;opacity:.15;animation:tm-jw 3.6s ease-in-out infinite;animation-delay:var(--d)}
-@keyframes tm-jw{15%{opacity:.95}40%{opacity:.25}}
+.tm-jw{width:44px;height:44px;margin:-22px 0 0 -22px;padding:0;border:0;border-radius:50%;cursor:pointer;background:radial-gradient(circle,var(--c) 0,color-mix(in srgb,var(--c) 45%,transparent) 40%,transparent 72%);
+  box-shadow:0 0 0 0 var(--c);transition:transform .35s cubic-bezier(.3,1.5,.5,1),opacity .6s,filter .6s;animation:tm-jw 3.6s ease-in-out infinite;animation-delay:var(--d)}
+.tm-jw img{position:absolute;inset:3px;width:38px;height:38px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(255,230,180,.5)}
+.tm-jw::after{content:"";position:absolute;inset:3px;border-radius:50%;background:radial-gradient(circle at 34% 28%,rgba(255,255,255,.75),transparent 32%);pointer-events:none}
+.tm-jw.has{background:none}
+.tm-jw.off{filter:grayscale(.85) brightness(.45);animation:none}
+.tm-jw span{position:absolute;left:50%;top:100%;margin-top:6px;translate:-50% 0;white-space:nowrap;padding:3px 8px;border-radius:6px;background:rgba(10,8,6,.85);color:#f6e3c6;font:700 12px system-ui,sans-serif;opacity:0;pointer-events:none;transition:opacity .2s}
+.tm-jw span i{font:600 11px ui-monospace,Menlo,monospace;font-style:normal;color:#cbb79d}
+.tm-jw:hover,.tm-jw:focus-visible{z-index:5;transform:scale(2.4);outline:none}
+.tm-jw:hover span,.tm-jw:focus-visible span{opacity:1;scale:.42}
+@keyframes tm-jw{15%{box-shadow:0 0 18px 4px var(--c)}40%{box-shadow:0 0 0 0 var(--c)}}
 html.tm-burst .tm-jw{animation:tm-jwb .25s steps(2) 6}
-@keyframes tm-jwb{50%{opacity:1}}
+@keyframes tm-jwb{50%{box-shadow:0 0 26px 8px var(--c);filter:brightness(1.6)}}
 .tm-port{width:calc(var(--w) * 1px);height:calc(var(--h) * 1px);margin:calc(var(--h) * -.5px) 0 0 calc(var(--w) * -.5px);border-radius:50%;overflow:hidden;mix-blend-mode:screen;opacity:.55}
 .tm-port::before{content:"";position:absolute;inset:-60%;background:repeating-conic-gradient(from 0deg,rgba(255,226,150,.9) 0 6deg,rgba(255,180,60,0) 6deg 18deg),radial-gradient(circle,#fff6d0,transparent 60%);
   filter:blur(5px);animation:tm-spin 9s linear infinite}
@@ -296,42 +305,6 @@ html.tm-dark .tm-jw,html.tm-dark .tm-port{opacity:0;animation:none}
 .tc b{padding:4px 10px;border-radius:4px;background:#060606;border:1px solid #222;font:700 clamp(18px,3vw,24px)/1.1 ui-monospace,Menlo,Consolas,monospace;white-space:nowrap}
 .tc-dest b{color:#ff4b3a;text-shadow:0 0 8px #ff3b2a}.tc-now b{color:#4dff6a;text-shadow:0 0 8px #3dff5a}.tc-last b{color:#ffb31f;text-shadow:0 0 8px #ffaa1a}
 @media (min-width:761px){.tm-panel{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);margin:0;padding:0;border:0}}
-/* the browsers under glass: Christian's renders, each a jewel in a brass bezel; a pick falls to the year it arrived */
-.tm-glass{margin:30px 0 0}
-.tm-glass h2{margin:0;font:900 clamp(22px,3vw,30px)/1.1 "Nunito","Segoe UI",sans-serif;color:#f6e3c6}
-.tm-glass>p{margin:6px 0 14px;max-width:60ch;color:#e3d2bd;font-size:15px}
-.tm-glass ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px 12px}
-.tm-gem{display:block;width:100%;padding:0;border:0;background:none;color:#f1e6d8;text-align:center;cursor:pointer;font:inherit}
-.tm-gem img,.tm-gem .fb{display:block;width:100%;height:auto;aspect-ratio:420/296;filter:drop-shadow(0 8px 14px rgba(0,0,0,.55));transition:transform .3s,filter .3s}
-.tm-gem .fb{display:grid;place-items:center;border-radius:50%;background:radial-gradient(ellipse at 40% 30%,rgba(255,255,255,.35),transparent 40%),radial-gradient(ellipse,#1d4a5c 0 55%,#8a5a2b 57% 66%,#5a3818 68% 72%,#a87a42 74%,#6b4520 100%)}
-.tm-gem .fb img{width:34%;aspect-ratio:1;filter:drop-shadow(0 0 10px var(--c))}
-.tm-gem b{display:block;margin-top:4px;font-size:14px}
-.tm-gem span{font:600 12px ui-monospace,Menlo,monospace;color:#cbb79d}
-.tm-gem.gone>img,.tm-gem.gone .fb{filter:grayscale(.55) brightness(.8) drop-shadow(0 8px 14px rgba(0,0,0,.55))}
-.tm-gem:hover>img,.tm-gem:hover .fb,.tm-gem:focus-visible>img,.tm-gem:focus-visible .fb{transform:translateY(-4px) scale(1.03);filter:drop-shadow(0 0 18px var(--c)) drop-shadow(0 8px 14px rgba(0,0,0,.5))}
-.tm-gem:focus-visible{outline:2px solid #7ff3e6;outline-offset:4px;border-radius:12px}
-/* the desk: the chart on the TV, the gauges beside it */
-.tm-desk{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:24px;align-items:center;margin:28px 0 0}
-.tm-tv{margin:0}
-.tm-tv-set{position:relative}
-.tm-tv-set img{display:block;width:100%;height:auto;filter:drop-shadow(0 14px 24px rgba(0,0,0,.55))}
-.tm-tv-scr{position:absolute;left:21.6%;top:16.4%;width:56.6%;height:65%;border-radius:9%/13%;overflow:hidden;padding:5% 5% 7% 4%;
-  background:radial-gradient(ellipse at 50% 40%,#0d3a52,#061826 75%);box-shadow:inset 0 0 30px rgba(0,0,0,.8)}
-.tm-tv-scr::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(255,255,255,.04) 0 2px,transparent 2px 4px),radial-gradient(ellipse at 30% 20%,rgba(255,255,255,.12),transparent 50%)}
-.tm-tv-scr svg{display:block;width:100%;height:100%;overflow:visible}
-.tm-tv svg text{font:600 11px system-ui,sans-serif;fill:#9fd8ee}
-.tm-tv .ar{filter:drop-shadow(0 0 5px var(--c))}
-.tm-tv figcaption{margin:8px 0 0;font:700 11px system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#e9d9c4}
-.tm-key{display:flex;flex-wrap:wrap;gap:4px 12px;margin:6px 0 0;font:600 12px system-ui,sans-serif;color:#f1e6d8}
-.tm-key i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px;background:var(--c);box-shadow:0 0 8px var(--c)}
-.tm-gauges{display:grid;grid-template-columns:repeat(3,1fr);gap:10px 8px}
-.tm-g{margin:0;text-align:center}
-.tm-g .dial{position:relative;aspect-ratio:224/218}
-.tm-g .dial>img{position:absolute}
-.tm-g .face{inset:0;width:100%;height:100%}
-.tm-g .nd{left:44.9%;top:9.6%;width:8%;height:48%;transform-origin:50% 80.2%;rotate:var(--a,-120deg);transition:rotate 2.4s cubic-bezier(.3,1.25,.4,1);filter:drop-shadow(0 2px 2px rgba(0,0,0,.5)) saturate(1.3) hue-rotate(-12deg)}
-.tm-g figcaption{font:700 10px system-ui,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#e9d9c4;margin-top:2px}
-.tm-g figcaption b{display:block;font:700 13px ui-monospace,Menlo,monospace;letter-spacing:0;color:#7ff3e6;text-shadow:0 0 6px rgba(127,243,230,.6)}
 /* the switch panels: power, the lamps, and 88 */
 .tm-pnls{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:26px 0 0}
 .tm-pnl{position:relative;padding:0;border:0;background:none;cursor:pointer;border-radius:10px;filter:drop-shadow(0 8px 14px rgba(0,0,0,.5));transition:transform .15s}
@@ -351,7 +324,6 @@ html.flux .tb-year{text-shadow:0 0 12px #fff,0 0 30px #7fdfff}
   .tm-title{position:static;max-width:none;padding:0 20px;margin-top:-30px}
   .tb-now-in{margin-top:14px}
   .tm-panel{grid-template-columns:1fr}.tc{flex-direction:row;align-items:center;justify-content:space-between}.tc span{width:9.5em}
-  .tm-desk{grid-template-columns:1fr}
   .tm-pnls{grid-template-columns:1fr;max-width:420px}
 }
 
@@ -376,7 +348,7 @@ html[data-era="e15"] .tp-rail,html[data-era="e10"] .tp-rail,html[data-era="e05"]
 .tp-rail.drag .tp-mark{transition:none}
 @media (max-width:1100px){.tb-tape{top:58px;bottom:175px;width:30px;right:4px}.tp-rail{width:30px;background:linear-gradient(90deg,transparent 0 12px,rgba(10,16,24,.45) 12px)}.tp-ticks b{display:none}.tp-mark b{right:36px}
   .era-in,.tb-now-in,.tb-end{padding-right:22px}}
-@media (prefers-reduced-motion:reduce){.tb-now,.tm-jw,.tm-port::before,.tm-nd,.tm-pnl.blink img.off{animation:none!important}.tm-jw{opacity:.6}.tm-nd,.tm-g .nd{transition:none}.tp-mark{transition:none}}
+@media (prefers-reduced-motion:reduce){.tb-now,.tm-jw,.tm-port::before,.tm-nd,.tm-pnl.blink img.off{animation:none!important}.tm-nd{transition:none}.tp-mark{transition:none}}
 
 /* 2005-2009: archived pages in a mid-2000s browser window, grey chrome and a blue tab */
 .win05s{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:18px;margin:18px 0 22px}
