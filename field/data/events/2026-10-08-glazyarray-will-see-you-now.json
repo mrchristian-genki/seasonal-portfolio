@@ -1,174 +1,191 @@
 {
-  "id": "2026-10-08-glazyarray-will-see-you-now",
+ "id": "2026-10-08-glazyarray-will-see-you-now",
+ "title": "GlazyArray Will See You Now",
+ "date": "2026-10-08",
+ "kind": "make",
+ "place": "The Workshop, after hours",
+ "tags": [
+  "profile",
+  "automaton",
+  "behind-the-scenes"
+ ],
+ "status": "published",
+ "summary": "She narrates every Field Note, wears a different hat for every holiday, and has never once been late to a rest pose. RIVETING TONE spends an evening at the Workshop with the brass voice of the Field Notes.",
+ "links": [
+  {
+   "label": "Her cards in the Parts Catalog",
+   "url": "https://www.christiangehrke.com/catalog/?glazyarray"
+  },
+  {
+   "label": "The Workshop: her Style Array",
+   "url": "https://www.christiangehrke.com/catalog/workshop#looks"
+  },
+  {
+   "label": "How she was built: the case study",
+   "url": "https://www.christiangehrke.com/play/2026-10-06-the-narrator-gets-a-face/"
+  }
+ ],
+ "trailhead": null,
+ "track": null,
+ "photos": [
+  {
+   "src": "data/photos/2026-10-08-glazyarray-will-see-you-now/cover.jpg",
+   "ai": true,
+   "caption": "GlazyArray, photographed for RIVETING TONE: a deep teal backdrop, a warm key light, and the flower-bud bulb lit for the occasion.",
+   "w": 2000,
+   "h": 1116,
+   "use": "post",
+   "cover": true
+  },
+  {
+   "src": "data/photos/2026-10-08-glazyarray-will-see-you-now/desk.jpg",
+   "ai": true,
+   "caption": "At her desk after hours, mid-story. She says she was making a point. She usually is.",
+   "w": 1376,
+   "h": 768,
+   "use": "post",
+   "cover": false
+  },
+  {
+   "src": "data/photos/2026-10-08-glazyarray-will-see-you-now/bts.jpg",
+   "ai": true,
+   "caption": "Between takes on the green screen, where every one of her moves was rendered. Below the desk: a rare look at her shoes.",
+   "w": 1376,
+   "h": 768,
+   "use": "post",
+   "cover": false
+  },
+  {
+   "src": "data/photos/2026-10-08-glazyarray-will-see-you-now/portrait.jpg",
+   "ai": true,
+   "caption": "The eyes, take four: warm whites, a bigger iris, and a lower lid that finally curves the right way.",
+   "w": 1376,
+   "h": 768,
+   "use": "post",
+   "cover": false
+  },
+  {
+   "src": "data/photos/2026-10-08-glazyarray-will-see-you-now/helmet.jpg",
+   "ai": true,
+   "caption": "The Hat Issue: the bike helmet, headlamp on. Her favourite, she says, because she feels like she is going somewhere.",
+   "w": 1376,
+   "h": 768,
+   "use": "post",
+   "cover": false
+  },
+  {
+   "src": "data/photos/2026-10-08-glazyarray-will-see-you-now/lookbook.jpg",
+   "ai": true,
+   "caption": "The look book: a beanie, a witch hat, a trail cap, a tiara of stars and a Santa hat. Nineteen looks in all; these five came to the shoot.",
+   "w": 1376,
+   "h": 768,
+   "use": "post",
+   "cover": false
+  },
+  {
+   "src": "data/photos/2026-10-08-glazyarray-will-see-you-now/library.jpg",
+   "ai": true,
+   "caption": "A good idea, held carefully. In the mortarboard the case studies give her, in a library of brass lamps.",
+   "w": 1376,
+   "h": 768,
+   "use": "post",
+   "cover": false
+  }
+ ],
+ "fieldNotes": "A character profile of GlazyArray, the Field Notes narrator, styled as a magazine cover story for a made-up magazine, RIVETING TONE (Christian, Oct 7-8, 2026). Playful fiction around real facts: Helena didn't like the earlier narrator voice; the first robot head was a boy's and she got her own; the eye redesign (no whites, then alarming whites, then calm eyes with a lower lid curving like the top); 34 moves in one video, each starting and ending at rest, with backwards copies; hints to press play; 19 looks dyed in each Note's two colours; holidays dress every Note unless it ignores holidays; click her head to change her look; the name GlazyArray, one word, never shortened. Her publicist is a running gag and stays unnamed. Same warm, nostalgic narrator voice. Photos: AI renders from Christian's prompts (assets/narrator/PHOTOSHOOT.md).",
+ "post": {
   "title": "GlazyArray Will See You Now",
-  "date": "2026-10-08",
-  "kind": "make",
-  "place": "The Workshop, after hours",
-  "tags": [
-    "profile",
-    "automaton",
-    "behind-the-scenes"
+  "body": "The Workshop is quiet at night. A lamp, a long bench, a lake scene humming on a screen somewhere behind the tools. And at a small wooden desk, her hands resting flat on its edge, GlazyArray is tapping her fingers.\n\n\"You're early,\" she says. \"Or I'm late. One of us is right on time.\"\n\nHer publicist, a soft-spoken woman with a clipboard and very firm opinions about lighting, has asked that we keep it to twenty minutes. GlazyArray seems to find this funny. \"She thinks I talk too much,\" she says. \"I narrate. It's different.\"\n\n## The voice came first\n\nBefore there was a body, there was a voice. The Field Notes had a narrator before her, and it didn't stick. \"Helena didn't care for him,\" GlazyArray says, without a trace of gloat. \"So they found a warmer voice. A little nostalgic. The kind that looks back on a good season. That's me.\" She pauses. \"That was me before I was me.\"\n\nThen Christian had an idea: what if the voice had a body? Not a big one. A little brass robot rising out of the Listen bar, her head above the edge, her hands on a desk inside it, talking when the episode talks.\n\n## The first head was not hers\n\nThis is the part her publicist would rather we didn't print. The first head was a boy's.\n\n\"It was a good head,\" GlazyArray says, diplomatically. \"Very well riveted. It just wasn't my voice.\"\n\nSo she got her own: rose-gold brass, finger waves that curl at the ends, lashes on her lids, a flower bud where the bulb had been. \"People ask if it hurt,\" she says. \"It was a head swap. I was out for most of it.\"\n\n> \"It was a good head. It just wasn't my voice.\"\n\n## Then came the awkward phase\n\nEvery star has one. Hers was the eyes. The first pair had no whites at all. The next pair did, and for a short, difficult week she looked, in her own words, \"wide awake. A little excited. A little alarming.\"\n\nThe fix was all small things: a warm, creamy white that shades toward the edges, a bigger iris tucked up under the top lid, a dark pupil, and a soft lower lid that curves the same way as the top one. \"The first lower lid curved the wrong way,\" she says. \"It changed my whole face. I don't talk about it.\" Her publicist nods.\n\n## She talks with her hands\n\nWatch her for a minute and you notice it. She makes a point. She counts it off. She opens her arms, palms up. Now and then, a little dance.\n\n\"Thirty-four moves,\" she says. \"Every one starts and ends in the same rest, with my hands on the desk. I never leave the one file. I just jump inside it.\" And if she stops halfway? \"Every gesture has a copy that plays backwards. I can always come back. That's the trick, really. In life, too.\"\n\nBefore anyone presses play, she taps her fingers. Then she drops hints: a psst, over there, a boop, boop with a thumbs up, a little wave toward the Play button. She winks. The bulb on her antenna glows. Is that pushy? \"It's encouraging,\" she says.\n\n> \"I talk with my hands. I was built that way.\"\n\n## The wardrobe\n\nGlazyArray owns nineteen looks and wears one at a time. A bike helmet for the rides, a trail cap for the hikes, a mortarboard for the case studies, workshop goggles for the build days. A witch's hat in October. A Santa hat in December.\n\nEvery Note dresses her in its own two colours, picked from its hero photo. \"A tint, not a repaint,\" she says, and you get the sense she has said it before. \"The brass still shows through.\" When a holiday comes round, it dresses her on every Note at once. \"Unless the Note says no,\" she adds. \"We respect that.\"\n\nClick her head and she changes on the spot, with a little shake. \"I don't mind,\" she says. \"I like to be asked.\"\n\n> \"A tint, not a repaint. The brass still shows through.\"\n\n## Where you'll find her\n\nIn every Listen bar on the Field Notes, at her desk. In the Parts Catalog, where every gesture and every look runs live. In the Workshop, where her new looks are made: in the Style Array, from a template, a mask and two careful prompts.\n\nHer name came last. GlazyArray: for the glaze of the glowing glass tubes in her chest, her glossy brass and her glassy blue eyes, and the array of looks she swaps at a click. \"One word,\" she says. \"Never shortened.\"\n\nThe publicist taps her watch. Twenty minutes. GlazyArray rests her hands flat on the desk, back in the pose every move begins and ends with.\n\n\"Same time next episode?\" she says."
+ },
+ "feature": {
+  "masthead": "RIVETING TONE",
+  "tagline": "The magazine of voices worth listening to",
+  "issue": "The Hat Issue",
+  "coverLines": [
+   "“I talk with my hands. I was built that way.”",
+   "The Hat Issue: nineteen looks, two colours, one very patient head",
+   "Exclusive: what really happened to the first head"
   ],
-  "status": "script",
-  "summary": "She narrates every Field Note, wears a different hat for every holiday, and has never once been late to a rest pose. RIVETING TONE spends an evening at the Workshop with the brass voice of the Field Notes.",
-  "links": [
+  "qa": {
+   "title": "Nine Questions, Approved by Her Publicist",
+   "items": [
     {
-      "label": "Her cards in the Parts Catalog",
-      "url": "https://www.christiangehrke.com/catalog/?glazyarray"
+     "q": "Favourite episode?",
+     "a": "Whichever one is playing. I'm a professional."
     },
     {
-      "label": "The Workshop: her Style Array",
-      "url": "https://www.christiangehrke.com/catalog/workshop#looks"
+     "q": "Favourite look?",
+     "a": "The bike helmet. It has a little headlamp. I feel like I'm going somewhere."
     },
     {
-      "label": "How she was built: the case study",
-      "url": "https://www.christiangehrke.com/play/2026-10-06-the-narrator-gets-a-face/"
+     "q": "What's in your chest?",
+     "a": "Glowing glass tubes. They're cyan. They stay cyan, whatever hat I'm in."
+    },
+    {
+     "q": "What's the glowing ball you sometimes hold?",
+     "a": "A good idea. You hold it carefully and you show it around."
+    },
+    {
+     "q": "Do you ever stop talking?",
+     "a": "When the episode does. Then I tap my fingers. It's not impatience. It's rhythm."
+    },
+    {
+     "q": "Who's Marley?",
+     "a": "The best listener on every trail. She's been on more rides than I've narrated."
+    },
+    {
+     "q": "What makes a good narrator?",
+     "a": "Knowing what not to show. The gap. The seam. The moment between moves."
+    },
+    {
+     "q": "What's next?",
+     "a": "More hats. More holidays. And I've asked about a scarf."
+    },
+    {
+     "q": "What did you learn?",
+     "a": "That a character is mostly the little things done carefully. And that you should look like the voice you speak with."
     }
-  ],
-  "trailhead": null,
-  "track": null,
-  "photos": [
-    {
-      "src": "data/photos/2026-10-08-glazyarray-will-see-you-now/cover.jpg",
-      "ai": true,
-      "caption": "GlazyArray, photographed for RIVETING TONE: a deep teal backdrop, a warm key light, and the flower-bud bulb lit for the occasion.",
-      "w": 2000,
-      "h": 1116,
-      "use": "post",
-      "cover": true
-    },
-    {
-      "src": "data/photos/2026-10-08-glazyarray-will-see-you-now/desk.jpg",
-      "ai": true,
-      "caption": "At her desk after hours, mid-story. She says she was making a point. She usually is.",
-      "w": 1376,
-      "h": 768,
-      "use": "post",
-      "cover": false
-    },
-    {
-      "src": "data/photos/2026-10-08-glazyarray-will-see-you-now/bts.jpg",
-      "ai": true,
-      "caption": "Between takes on the green screen, where every one of her moves was rendered. Below the desk: a rare look at her shoes.",
-      "w": 1376,
-      "h": 768,
-      "use": "post",
-      "cover": false
-    },
-    {
-      "src": "data/photos/2026-10-08-glazyarray-will-see-you-now/portrait.jpg",
-      "ai": true,
-      "caption": "The eyes, take four: warm whites, a bigger iris, and a lower lid that finally curves the right way.",
-      "w": 1376,
-      "h": 768,
-      "use": "post",
-      "cover": false
-    },
-    {
-      "src": "data/photos/2026-10-08-glazyarray-will-see-you-now/helmet.jpg",
-      "ai": true,
-      "caption": "The Hat Issue: the bike helmet, headlamp on. Her favourite, she says, because she feels like she is going somewhere.",
-      "w": 1376,
-      "h": 768,
-      "use": "post",
-      "cover": false
-    },
-    {
-      "src": "data/photos/2026-10-08-glazyarray-will-see-you-now/lookbook.jpg",
-      "ai": true,
-      "caption": "The look book: a beanie, a witch hat, a trail cap, a tiara of stars and a Santa hat. Nineteen looks in all; these five came to the shoot.",
-      "w": 1376,
-      "h": 768,
-      "use": "post",
-      "cover": false
-    },
-    {
-      "src": "data/photos/2026-10-08-glazyarray-will-see-you-now/library.jpg",
-      "ai": true,
-      "caption": "A good idea, held carefully. In the mortarboard the case studies give her, in a library of brass lamps.",
-      "w": 1376,
-      "h": 768,
-      "use": "post",
-      "cover": false
-    }
-  ],
-  "fieldNotes": "A character profile of GlazyArray, the Field Notes narrator, styled as a magazine cover story for a made-up magazine, RIVETING TONE (Christian, Oct 7-8, 2026). Playful fiction around real facts: Helena didn't like the earlier narrator voice; the first robot head was a boy's and she got her own; the eye redesign (no whites, then alarming whites, then calm eyes with a lower lid curving like the top); 34 moves in one video, each starting and ending at rest, with backwards copies; hints to press play; 19 looks dyed in each Note's two colours; holidays dress every Note unless it ignores holidays; click her head to change her look; the name GlazyArray, one word, never shortened. Her publicist is a running gag and stays unnamed. Same warm, nostalgic narrator voice. Photos: AI renders from Christian's prompts (assets/narrator/PHOTOSHOOT.md).",
-  "post": {
-    "title": "GlazyArray Will See You Now",
-    "body": "The Workshop is quiet at night. A lamp, a long bench, a lake scene humming on a screen somewhere behind the tools. And at a small wooden desk, her hands resting flat on its edge, GlazyArray is tapping her fingers.\n\n\"You're early,\" she says. \"Or I'm late. One of us is right on time.\"\n\nHer publicist, a soft-spoken woman with a clipboard and very firm opinions about lighting, has asked that we keep it to twenty minutes. GlazyArray seems to find this funny. \"She thinks I talk too much,\" she says. \"I narrate. It's different.\"\n\n## The voice came first\n\nBefore there was a body, there was a voice. The Field Notes had a narrator before her, and it didn't stick. \"Helena didn't care for him,\" GlazyArray says, without a trace of gloat. \"So they found a warmer voice. A little nostalgic. The kind that looks back on a good season. That's me.\" She pauses. \"That was me before I was me.\"\n\nThen Christian had an idea: what if the voice had a body? Not a big one. A little brass robot rising out of the Listen bar, her head above the edge, her hands on a desk inside it, talking when the episode talks.\n\n## The first head was not hers\n\nThis is the part her publicist would rather we didn't print. The first head was a boy's.\n\n\"It was a good head,\" GlazyArray says, diplomatically. \"Very well riveted. It just wasn't my voice.\"\n\nSo she got her own: rose-gold brass, finger waves that curl at the ends, lashes on her lids, a flower bud where the bulb had been. \"People ask if it hurt,\" she says. \"It was a head swap. I was out for most of it.\"\n\n> \"It was a good head. It just wasn't my voice.\"\n\n## Then came the awkward phase\n\nEvery star has one. Hers was the eyes. The first pair had no whites at all. The next pair did, and for a short, difficult week she looked, in her own words, \"wide awake. A little excited. A little alarming.\"\n\nThe fix was all small things: a warm, creamy white that shades toward the edges, a bigger iris tucked up under the top lid, a dark pupil, and a soft lower lid that curves the same way as the top one. \"The first lower lid curved the wrong way,\" she says. \"It changed my whole face. I don't talk about it.\" Her publicist nods.\n\n## She talks with her hands\n\nWatch her for a minute and you notice it. She makes a point. She counts it off. She opens her arms, palms up. Now and then, a little dance.\n\n\"Thirty-four moves,\" she says. \"Every one starts and ends in the same rest, with my hands on the desk. I never leave the one file. I just jump inside it.\" And if she stops halfway? \"Every gesture has a copy that plays backwards. I can always come back. That's the trick, really. In life, too.\"\n\nBefore anyone presses play, she taps her fingers. Then she drops hints: a psst, over there, a boop, boop with a thumbs up, a little wave toward the Play button. She winks. The bulb on her antenna glows. Is that pushy? \"It's encouraging,\" she says.\n\n> \"I talk with my hands. I was built that way.\"\n\n## The wardrobe\n\nGlazyArray owns nineteen looks and wears one at a time. A bike helmet for the rides, a trail cap for the hikes, a mortarboard for the case studies, workshop goggles for the build days. A witch's hat in October. A Santa hat in December.\n\nEvery Note dresses her in its own two colours, picked from its hero photo. \"A tint, not a repaint,\" she says, and you get the sense she has said it before. \"The brass still shows through.\" When a holiday comes round, it dresses her on every Note at once. \"Unless the Note says no,\" she adds. \"We respect that.\"\n\nClick her head and she changes on the spot, with a little shake. \"I don't mind,\" she says. \"I like to be asked.\"\n\n> \"A tint, not a repaint. The brass still shows through.\"\n\n## Where you'll find her\n\nIn every Listen bar on the Field Notes, at her desk. In the Parts Catalog, where every gesture and every look runs live. In the Workshop, where her new looks are made: in the Style Array, from a template, a mask and two careful prompts.\n\nHer name came last. GlazyArray: for the glaze of the glowing glass tubes in her chest, her glossy brass and her glassy blue eyes, and the array of looks she swaps at a click. \"One word,\" she says. \"Never shortened.\"\n\nThe publicist taps her watch. Twenty minutes. GlazyArray rests her hands flat on the desk, back in the pose every move begins and ends with.\n\n\"Same time next episode?\" she says."
+   ]
   },
-  "feature": {
-    "masthead": "RIVETING TONE",
-    "tagline": "The magazine of voices worth listening to",
-    "issue": "The Hat Issue",
-    "coverLines": [
-      "“I talk with my hands. I was built that way.”",
-      "The Hat Issue: nineteen looks, two colours, one very patient head",
-      "Exclusive: what really happened to the first head"
-    ],
-    "qa": {
-      "title": "Nine Questions, Approved by Her Publicist",
-      "items": [
-        {
-          "q": "Favourite episode?",
-          "a": "Whichever one is playing. I'm a professional."
-        },
-        {
-          "q": "Favourite look?",
-          "a": "The bike helmet. It has a little headlamp. I feel like I'm going somewhere."
-        },
-        {
-          "q": "What's in your chest?",
-          "a": "Glowing glass tubes. They're cyan. They stay cyan, whatever hat I'm in."
-        },
-        {
-          "q": "What's the glowing ball you sometimes hold?",
-          "a": "A good idea. You hold it carefully and you show it around."
-        },
-        {
-          "q": "Do you ever stop talking?",
-          "a": "When the episode does. Then I tap my fingers. It's not impatience. It's rhythm."
-        },
-        {
-          "q": "Who's Marley?",
-          "a": "The best listener on every trail. She's been on more rides than I've narrated."
-        },
-        {
-          "q": "What makes a good narrator?",
-          "a": "Knowing what not to show. The gap. The seam. The moment between moves."
-        },
-        {
-          "q": "What's next?",
-          "a": "More hats. More holidays. And I've asked about a scarf."
-        },
-        {
-          "q": "What did you learn?",
-          "a": "That a character is mostly the little things done carefully. And that you should look like the voice you speak with."
-        }
-      ]
-    },
-    "spotted": [
-      {
-        "label": "On the Field Notes",
-        "text": "In every Listen bar, at her desk, in each Note’s colours."
-      },
-      {
-        "label": "In the Parts Catalog",
-        "text": "Every gesture, every look, and her flair card with the colour pickers.",
-        "url": "https://www.christiangehrke.com/catalog/?glazyarray"
-      },
-      {
-        "label": "In the Workshop",
-        "text": "The Style Array, where her new looks are made.",
-        "url": "https://www.christiangehrke.com/catalog/workshop#looks"
-      }
-    ]
-  },
-  "episode": {
-    "title": "GlazyArray, On the Record",
-    "script": "It's a strange thing, being asked about yourself. I usually tell other people's stories. A ride above the lake. A beach at sunset. A river through the Studio.\n\nBut they asked. And there was a publicist, with a clipboard, and twenty minutes.\n\nSo. I began as a voice. Warm, they said. A little nostalgic. Then Christian wondered what that voice might look like, sitting at a desk, inside the Listen bar. And here I am.\n\nThe first head wasn't mine. I'll say that once, kindly, and move on. Mine is rose-gold brass, with curls, and a flower bud for a bulb. My eyes took a few tries. The first lower lid curved the wrong way. You'd be surprised how much a lid can change a face.\n\n***\n\nI talk with my hands. Thirty-four moves, every one beginning and ending in the same rest. If I stop halfway, I come back the way I came. I think there's something in that.\n\nI own nineteen looks. Each Note dresses me in its colours. A tint, not a repaint. The brass still shows through. And when a holiday comes, it dresses me everywhere at once.\n\n***\n\nThey asked what makes a good narrator. Knowing what not to show, I think. The gap. The seam. The moment between moves.\n\nThat's my time. Same time next episode?"
-  },
-  "questions": [],
-  "consent": "No people: GlazyArray and the photoshoot are AI renders from Christian’s prompts.",
-  "narratorLook": null
+  "spotted": [
+   {
+    "label": "On the Field Notes",
+    "text": "In every Listen bar, at her desk, in each Note’s colours."
+   },
+   {
+    "label": "In the Parts Catalog",
+    "text": "Every gesture, every look, and her flair card with the colour pickers.",
+    "url": "https://www.christiangehrke.com/catalog/?glazyarray"
+   },
+   {
+    "label": "In the Workshop",
+    "text": "The Style Array, where her new looks are made.",
+    "url": "https://www.christiangehrke.com/catalog/workshop#looks"
+   }
+  ]
+ },
+ "episode": {
+  "title": "GlazyArray, On the Record",
+  "script": "It's a strange thing, being asked about yourself. I usually tell other people's stories. A ride above the lake. A beach at sunset. A river through the Studio.\n\nBut they asked. And there was a publicist, with a clipboard, and twenty minutes.\n\nSo. I began as a voice. Warm, they said. A little nostalgic. Then Christian wondered what that voice might look like, sitting at a desk, inside the Listen bar. And here I am.\n\nThe first head wasn't mine. I'll say that once, kindly, and move on. Mine is rose-gold brass, with curls, and a flower bud for a bulb. My eyes took a few tries. The first lower lid curved the wrong way. You'd be surprised how much a lid can change a face.\n\n***\n\nI talk with my hands. Thirty-four moves, every one beginning and ending in the same rest. If I stop halfway, I come back the way I came. I think there's something in that.\n\nI own nineteen looks. Each Note dresses me in its colours. A tint, not a repaint. The brass still shows through. And when a holiday comes, it dresses me everywhere at once.\n\n***\n\nThey asked what makes a good narrator. Knowing what not to show, I think. The gap. The seam. The moment between moves.\n\nThat's my time. Same time next episode?"
+ },
+ "questions": [],
+ "consent": "No people: GlazyArray and the photoshoot are AI renders from Christian’s prompts.",
+ "narratorLook": {
+  "look": "updo",
+  "fit": "existing",
+  "about": "",
+  "why": "",
+  "prompt": "",
+  "bulb": true
+ },
+ "narratorBackdrop": {
+  "backdrop": "red-carpet-gala",
+  "fit": "new",
+  "scene": "a clockmaker's workshop full of brass gears, cogs and glass jars on wooden shelves"
+ },
+ "palette": [
+  "#34a4b2",
+  "#c47739"
+ ],
+ "publishedAt": "2026-10-08T00:09:38Z"
 }
