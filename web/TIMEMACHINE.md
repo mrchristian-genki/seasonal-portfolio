@@ -31,7 +31,114 @@ to read, and the code keeps the lights blinking on top.
 
 ---
 
-## 1. The machine (the background still)
+## The control room look (sharp, clean, super retro)
+
+This is the look from Christian's references: the inside of a retro-futuristic sub or ship, all copper and brass
+consoles, rows of round analog gauges glowing teal, amber buttons, small blue screens and round portholes full of
+warm light. These prompts make the machine sharp and clean rather than hazy. (His second reference is a watermarked
+stock photo, so it's mood only; nothing of it goes on the site.)
+
+**The control room look (paste at the start of every prompt in this part):**
+
+> A tack-sharp, clean, cinematic photograph of a retro-futuristic control room from 1960s and 1970s analog science
+> fiction: brushed copper and brass consoles with crisp rounded edges, rows of round analog gauges with glowing teal
+> faces and slim amber needles, amber backlit push buttons and toggle switches, small curved screens glowing soft
+> blue with fine line diagrams, round porthole windows full of warm light. Warm amber and deep teal palette, clean
+> studio lighting with soft rim light, a little atmospheric haze, high detail, crisp focus everywhere, symmetrical
+> composition, no grime, no clutter, no motion blur. No text, no letters, no numbers on the dials, no logos, no people.
+
+The screens come back **blank but glowing** (no diagrams if you can), so the page can put real things on them: the
+year you've fallen to, the three readouts, and the chart of what the browser can do. The gauge needles can come
+back separately, so the code can swing them with the scroll.
+
+### A. The time machine console (the new background)
+
+> [The control room look.] Seen straight on from the pilot's seat: a wide, curved console in copper and brass. At
+> its centre, a large round chronometer dial with a glowing teal face and a ring of nine glowing glass jewel lamps
+> around its bezel, each a different colour (orange, red, sky blue, teal, green, deep blue, violet, amber, coral).
+> Above the console, three small blank screens glowing soft blue. On the right, two round portholes full of
+> swirling golden light, like a tunnel of time rushing past. The left third of the frame falls away into a darker,
+> plain copper wall panel with a single row of small gauges, quiet enough to set a title over.
+
+*Size:* 16:9, 2560 × 1440. *Goes:* behind the title, blurred only a touch.
+
+### B. The same console on a phone
+
+> [The control room look.] The same console from a little higher, framed tall: the chronometer dial and its ring
+> of jewel lamps in the lower half, the glowing portholes above it at the sides, and the top third a calm, dark
+> copper ceiling with soft lights.
+
+*Size:* 9:16, 1440 × 2560. *Goes:* behind the title on phones.
+
+### C. It comes alive (a clip, made from A)
+
+Use A as the start frame.
+
+> The gauge needles tremble and settle, the jewel lamps pulse one after another around the dial, amber buttons
+> blink in short rows, the light in the portholes swirls slowly forward, a soft flicker runs across the screens.
+> The camera holds perfectly still. Seamless loop, no cuts.
+
+*Size:* 6 to 8 s, 1920 × 1080 or larger. *Goes:* the background, playing.
+
+### D. Blank screens (sprites)
+
+> [The control room look.] A single curved monitor set into a copper console, front-on, its screen glowing an even
+> soft blue with a faint scan-line texture and nothing on it, a thin brass bezel with rounded corners. Isolated on
+> pure chroma green (#00FF00).
+
+Make three: wide, square and tall. *Goes:* the readouts and the chart sit inside them.
+
+### E. Gauges and needles (sprites)
+
+> [The control room look.] A sheet of six round analog gauges, front-on, on pure chroma green (#00FF00): knurled
+> brass and copper bezels, glass fronts, glowing teal faces with fine tick marks and no numbers, and no needles.
+> Then, on the same green, the six matching slim amber needles laid out flat, each with its little brass hub.
+
+*Goes:* gauges along the console whose needles swing with the year as you fall.
+
+### F. Switches and push buttons (sprites, on and off)
+
+> [The control room look.] A flat, front-on sheet on pure chroma green (#00FF00): chrome toggle switches, square
+> amber push buttons, round teal and red push buttons, and a rotary dial, in three rows. Left half: each one on and
+> lit. Right half: the same ones in the same order, off and dark. Even lighting, no shadows on the green.
+
+*Goes:* blinking and flipping along the console, like the lamp sheet.
+
+### G. The porthole of time (a clip)
+
+> [The control room look.] Close on a single round porthole in a riveted copper wall: through the thick glass, a
+> tunnel of golden and teal light streams towards the viewer, then flares white for a moment and settles back.
+> Seamless loop, 6 s.
+
+*Goes:* the flash when you fall fast enough (88).
+
+### H. The submarine's porthole room (for the squid in the Parts Catalog)
+
+> [The control room look, but underwater:] the inside of a small deep-sea submarine, a curved copper wall with one
+> big round porthole in the middle and gauges and amber buttons around it. Through the glass, only dark, deep-blue
+> water with a few drifting specks, empty and waiting. Front-on and centred.
+
+*Size:* 16:9, 2560 × 1440. *Goes:* behind the squid card's story mode, with the squid swimming in the glass.
+
+### I. Close-ups (textures)
+
+> [The control room look.] Macro photograph of one round analog gauge, its teal face glowing, a slim amber needle,
+> knurled brass bezel, shallow depth of field, against dark copper.
+
+> [The control room look.] Macro photograph of a row of square amber backlit push buttons in a brushed copper panel,
+> clean and sharp, shallow depth of field.
+
+*Goes:* the panels behind the readouts and the chart.
+
+**Words that keep it sharp and clean:** "tack-sharp", "crisp focus everywhere", "clean studio lighting", "no grime",
+"no clutter", "no motion blur", "symmetrical", "high detail". **Words that keep it retro:** "1960s and 1970s analog
+science fiction", "brushed copper and brass", "round analog gauges", "amber backlit buttons", "small curved screens".
+
+---
+
+## The first look (art deco and glowing glass)
+
+### 1. The machine (the background still)
 
 > [The look.] The machine seen front-on and a little from below: a great vertical ring of brass, about two metres
 > across, with a turning inner ring of uranium glass glowing green and a white-hot core at its centre. Nine glass
@@ -42,21 +149,21 @@ to read, and the code keeps the lights blinking on top.
 
 *Goes:* behind the title, blurred 4 to 6 px and darkened on the left.
 
-## 2. The machine on a phone (9:16)
+### 2. The machine on a phone (9:16)
 
 > [The look.] The same brass ring machine seen from below, filling the lower half of a tall frame, its glow rising
 > into haze. The top half is dark, hazy air with faint beams of light and a few drifting sparks.
 
 *Goes:* behind the title on phones.
 
-## 3. It comes alive (a clip, made from 1)
+### 3. It comes alive (a clip, made from 1)
 
 Use picture 1 as the start frame.
 
 > The lamps blink on and off at their own pace; the inner glass ring turns slowly; the core pulses brighter and
 > dimmer; sparks crawl along the brass; the haze drifts. The camera holds still. Seamless loop, no cuts.
 
-## 4. The browsers as glass (nine sprites on green)
+### 4. The browsers as glass (nine sprites on green)
 
 Make each one alone, front-on, on pure #00FF00, about 1024 × 1024, as a jewel set in a round brass bezel:
 
@@ -72,7 +179,7 @@ Make each one alone, front-on, on pure #00FF00, about 1024 × 1024, as a jewel s
 
 *Goes:* the nine gems on the outer ring, one for every browser in the toolbox, the gone ones included.
 
-## 5. Indicator lamps (a sprite sheet on green): done (Oct 8)
+### 5. Indicator lamps (a sprite sheet on green): done (Oct 8)
 
 Christian's sheet is keyed into `web/media/lamps.webp` (lit on the top row, dark below), and twelve of its lamps
 blink at the machine's base. More sheets in other shapes and colours are welcome.
@@ -84,14 +191,14 @@ blink at the machine's base. More sheets in other shapes and colours are welcome
 
 *Goes:* the lamp panel at the machine's base, blinking.
 
-## 6. The flash at 88 (a clip)
+### 6. The flash at 88 (a clip)
 
 > [The look.] The machine at full power: the core flares white, a ring of blue-white light bursts outward through
 > the haze, sparks spray off the brass, then it settles back to its glow. 3 seconds, black before and after.
 
 *Goes:* the flash when you fall fast enough.
 
-## 7. Glass close-ups (textures)
+### 7. Glass close-ups (textures)
 
 > Macro photograph of uranium glass glowing vivid green under ultraviolet light, pressed into an art deco sunburst
 > pattern, against black. Shallow depth of field.
@@ -101,7 +208,7 @@ blink at the machine's base. More sheets in other shapes and colours are welcome
 
 *Goes:* the panels behind the readouts and the chart.
 
-## 8. The arrival (a clip for a Story or a reel, 9:16)
+### 8. The arrival (a clip for a Story or a reel, 9:16)
 
 > [The look.] The camera pushes slowly through dark haze towards the machine as it powers up: first one lamp, then
 > rows of lamps, then the rings begin to turn and the gems light one by one, and the core blooms white. 8 seconds.
