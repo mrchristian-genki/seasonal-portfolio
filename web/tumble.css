@@ -347,3 +347,11 @@ html[data-era="e15"] .tp-rail,html[data-era="e10"] .tp-rail,html[data-era="e05"]
 .win15 figcaption{padding:8px 12px;font:13px/1.5 Roboto,"Helvetica Neue",Arial,sans-serif;color:#555}
 /* 2000-2004: the tour full width, the other two windows side by side on wide screens */
 @media (min-width:900px){.e00 .me{display:grid;grid-template-columns:1fr 1fr;column-gap:16px}.e00 .me>*{grid-column:1/-1}.e00 .me>.win00~.win00{grid-column:auto;align-self:start}}
+
+.e00 .me>.win00.wide{grid-column:1/-1}
+/* 1997-1999: the column's GIFs in a table, the way they'd have sat on the page */
+.gif99{margin:14px auto 0;border-collapse:collapse;background:#fff;border:2px outset #c0c0c0}
+.gif99 caption{caption-side:bottom;padding:6px 0 0;font:italic 13px "Times New Roman",Times,serif;color:#000}
+.gif99 td{border:1px inset #c0c0c0;text-align:center;vertical-align:middle;padding:6px}
+.gif99 img{display:block;max-width:100%;max-height:110px;width:auto;height:auto;margin:auto}
+@media (max-width:560px){.gif99 td{padding:3px}.gif99 img{max-width:52px}}
