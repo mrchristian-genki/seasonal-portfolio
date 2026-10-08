@@ -71,6 +71,28 @@
    "w": 1160,
    "h": 653,
    "caption": "Step 2, import and trace: a winged fox traced to 6 colours and 6 paths, 7 KB, in 164 ms, then set beside the doe to see if it belongs."
+  },
+  {
+   "src": "data/photos/2026-10-06-the-workshop/kit-sheet.jpg",
+   "poster": null,
+   "video": null,
+   "ai": true,
+   "caption": "The kit sheet: a lakeside scene asked for as separate pieces on one page (a pine, two rocks, a strip of shore, the reeds), each traced on its own.",
+   "w": 1376,
+   "h": 768,
+   "use": "post",
+   "cover": false
+  },
+  {
+   "src": "data/photos/2026-10-06-the-workshop/cut-and-rig.jpg",
+   "poster": null,
+   "video": null,
+   "ai": true,
+   "caption": "Step 3, cut and rig, next: a paper fox split at the joints and pinned with brass pivots, so it can move like the rest of the cast.",
+   "w": 1376,
+   "h": 768,
+   "use": "post",
+   "cover": false
   }
  ],
  "fieldNotes": "Case study of the Workshop page in parts-catalog (workshop.html). Facts from the commit history: step 1 Prompt builds a prompt for 13 kinds of part, 2 styles, a kit sheet or a single piece; step 2 Import & trace is an in-browser port of trace.py (k-means colour reduction, cleanup, Douglas-Peucker simplification); the doe traces to 7 colours in under a second; the recorded fox traced to 5 colours, 5 paths, 7 KB in 693 ms; the kit-sheet output came from a beach trace that failed; step 3 Cut & rig is marked next; bench header built Oct 2: hologram cycling eagle, owl, hawk and squirrel, the live engine's buck, doe, elk and bear on glowing discs, Marley asleep with z's; a soldering iron was removed and the hair colour fixed. In the automaton parable the Workshop is the hands; that render goes at the top when it arrives.",

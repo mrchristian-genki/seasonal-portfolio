@@ -82,6 +82,17 @@
    "h": 540,
    "use": "post",
    "cover": false
+  },
+  {
+   "src": "data/photos/2026-10-06-the-propre-engine/proof-sheet.jpg",
+   "poster": null,
+   "video": null,
+   "ai": true,
+   "caption": "A printer’s proof of a colouring page: the dashed safe zone, the art running past the trim into the bleed, and a loupe to check it. Every rule in ProPre is a mistake made once.",
+   "w": 1376,
+   "h": 768,
+   "use": "post",
+   "cover": false
   }
  ],
  "fieldNotes": "Case study of ProPre Engine (repo propre, live at /propre/ behind the Studio login) and the Coloring Book Catalog (/books/). Facts from Drive dates and the docs: manifesto and first feedback note May 20, 2026; eight single-page prototypes built with Gemini May 22; first full working version (about 100 KB) May 23-24, with a backup before the edition selector; documentation suite (PRD, SRS, technical docs, user manual, handoff) May 26, covering v1.0.0 to v1.0.4; split into modules with build.py May 25-28 (README and build.py May 25, modules May 28); Claude proxy (Cloudflare Worker) June; later KDP warnings, series builder, Kindle covers as JPG, mandala structure, page-range runs (1-20, 21-40); Books tab and the catalog site July 13-17. Catalog sheet: 101 titles, 8 published, 93 in progress (Oct 2026). About 50 books carry the 'Exported from ProPre MegaData' footer. Oct 6: sources rebuilt from the live page into the repo (byte-for-byte build), the AI calls moved behind the Studio login. Christian: this is the project that brought him back to web development after a long break. Clips recorded locally with the real engine and the real catalog data and covers; the AI tabs aren't shown generating because that needs a live call. Brand names of the book line kept out. The prism idea is Christian's own (Oct 6, 2026): coloring books are beauty broken down to black and white lines, built back up by the colorer; a beautiful image is the core of every prompt. Opening loop: the automaton parable (Catalog = memory, Workshop = hands, Studio = heart, main site = face, ProPre = the prism eye), rendered by Christian with AI from the prompts in Oct 2026; seams dissolved so it loops cleanly.",
