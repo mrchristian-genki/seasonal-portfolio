@@ -23,7 +23,7 @@
       if (r.bottom <= mid) { year = +eras[i].getAttribute('data-to'); era = eras[i].getAttribute('data-era'); label = eras[i].getAttribute('data-browser'); }
     }
     if (end && end.getBoundingClientRect().top < mid) { year = 1997; era = 'end'; }
-    if (year !== shownYear) { yearEl.textContent = year; shownYear = year; }
+    if (year !== shownYear) { yearEl.textContent = year; shownYear = year; toolbox(year); }
     if (root.getAttribute('data-era') !== era) { root.setAttribute('data-era', era); browserEl.textContent = label; }
     if (still) return;
     // the parallax: each prop moves against the scroll by its depth, and turns as it falls
@@ -34,6 +34,22 @@
       p.style.transform = 'translate3d(0,' + (off * (d - 0.5) * 0.6).toFixed(1) + 'px,0) rotate(' + (spin * off / vh).toFixed(1) + 'deg)';
     }
   }
+  // the toolbox: a feature is blanked out (greyed, struck through) once you've fallen to a year before it worked
+  // everywhere, and lights up again as you climb; nothing leaves the list, so 1997 shows how much wasn't there
+  var tbx = [].slice.call(document.querySelectorAll('[data-tbx] li')), tbxN = document.querySelectorAll('[data-tbx-count]'), lost = document.querySelector('[data-tbx-lost]');
+  function toolbox(y) {
+    var n = 0, gone = [];
+    tbx.forEach(function (li) {
+      var have = y >= +li.getAttribute('data-y');
+      if (have) n++;
+      else if (!li.classList.contains('off')) gone.push(li.querySelector('span').textContent);
+      li.classList.toggle('off', !have);
+    });
+    [].forEach.call(tbxN, function (e) { e.textContent = n; });
+    if (lost) lost.textContent = gone.length ? 'Just lost: ' + gone.slice(-3).join(', ') + (gone.length > 3 ? ' and ' + (gone.length - 3) + ' more' : '') : (n === tbx.length ? '' : lost.textContent);
+  }
+  var tbBtn = document.querySelector('[data-tbx-open]'), tbBox = document.getElementById('tbBox');
+  if (tbBtn) tbBtn.addEventListener('click', function () { var o = tbBox.classList.toggle('open'); tbBtn.setAttribute('aria-expanded', String(o)); });
   function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(frame); } }
   addEventListener('scroll', onScroll, { passive: true }); addEventListener('resize', onScroll); frame();
 
