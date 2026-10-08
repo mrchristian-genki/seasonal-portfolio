@@ -330,6 +330,24 @@
     "w": 960,
     "h": 540,
     "caption": "Search narrows 60 parts as you type: fox, then snow."
+   },
+   {
+    "type": "video",
+    "src": "play/media/2026-10-06-the-parts-catalog/05.mp4?v=ilhe2ehf",
+    "poster": "play/media/2026-10-06-the-parts-catalog/05.jpg?v=ilhe2ehf",
+    "w": 1280,
+    "h": 720,
+    "caption": "A drawer for every part: a paper buck in his own lit drawer, lowering his head to graze and looking up again.",
+    "after": 3
+   },
+   {
+    "type": "video",
+    "src": "play/media/2026-10-06-the-parts-catalog/06.mp4?v=ec4s2cdx",
+    "poster": "play/media/2026-10-06-the-parts-catalog/06.jpg?v=ec4s2cdx",
+    "w": 1280,
+    "h": 720,
+    "caption": "Another drawer: a paper fox with wings, stretching them in the glow, the way each card wakes when it comes into view.",
+    "after": 4
    }
   ],
   "pull": "A deer that looks right on its own card looks right on the lake.",
