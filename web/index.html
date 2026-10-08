@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en" data-era="e26">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Tumble · Christian Gehrke</title>
+<meta name="description" content="A fall back through twenty-nine years of building for the web, from 2026 to 1997: the browsers, the tricks, what we had and what we didn't, and what I was building at the time.">
+<link rel="canonical" href="https://www.christiangehrke.com/web/">
+<meta property="og:site_name" content="Christian Gehrke"><meta property="og:locale" content="en_US"><meta property="og:type" content="website">
+<meta property="og:title" content="The Tumble · Christian Gehrke"><meta property="og:url" content="https://www.christiangehrke.com/web/">
+<meta property="og:description" content="Scroll down and fall back in time: twenty-nine years of web development, era by era, from container queries to table layouts.">
+<meta property="og:image" content="https://www.christiangehrke.com/og-image.jpg?v=2"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.ico?v=2" sizes="any"><link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml"><link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2"><meta name="theme-color" content="#0d1b2a">
+<link rel="stylesheet" href="tumble.css?v=1">
+</head>
+<body>
+<!-- THE TUMBLE (web/tumble.js, web/tumble.css): the Web tab's story, told as a fall from 2026 back to 1997. Each era
+     is styled the way the web looked at the time; the history in it is checked, and the "Me, then" parts are
+     Christian's own words and facts only. -->
+<header class="tb-bar"><a class="tb-home" href="../?web">&larr; Christian Gehrke</a><span class="tb-browser" aria-hidden="true"><i></i><b data-tb-browser>2026 · any browser</b></span></header>
+<div class="tb-hud" aria-hidden="true"><span class="tb-year" data-tb-year>2026</span><span class="tb-hud-l">and falling</span></div>
+
+<main>
+<section class="tb-open">
+  <p class="tb-kick">The Web, since 1997</p>
+  <h1>The Tumble</h1>
+  <p class="tb-lede">Twenty-nine years of building for the web, from the top down. Scroll, and fall back through every era I've worked in: what the browsers could do, the tricks we used when they couldn't, and what I was building at the time.</p>
+  <p class="tb-hint"><span>Scroll to fall</span> <i aria-hidden="true">&darr;</i></p>
+</section>
+
+<!-- 2020–2026 -->
+<section class="era e26" data-era="e26" data-from="2026" data-to="2020" data-browser="2026 · every browser, finally agreeing">
+  <div class="tb-depth" aria-hidden="true"><b class="tb-big" data-depth=".35">2026</b><i class="p26 orb a" data-depth=".6" data-spin="20"></i><i class="p26 orb b" data-depth=".9" data-spin="-30"></i></div>
+  <div class="era-in">
+    <p class="era-when">2020 &ndash; 2026</p>
+    <h2>The platform caught up</h2>
+    <div class="me"><h3>Me, now</h3>
+      <p>This site is the proof of where things are: a lake built from SVG and code that turns through the seasons, a narrator who talks with her hands, and a Studio that turns a day out into a post and a podcast. ProPre, the press for my coloring books, is the project that brought me back to web development this May, and the rest of this site followed.</p></div>
+    <div class="cols">
+      <div><h3>What we have</h3><ul>
+        <li><b>Container queries</b>: a component sizes itself to its box, not the window. In every major browser by February 2023.</li>
+        <li><b><code>:has()</code></b>, the "parent selector" people wanted for twenty years (2022 to 2023).</li>
+        <li><b>CSS nesting</b>, natively, without a preprocessor (2023).</li>
+        <li><b>View Transitions</b> and <b>scroll-driven animation</b> (Chrome 111 and 115, 2023): the motion we used to need a plug-in for.</li>
+        <li><b>WebGPU</b> (2023), and AI pair programming in the editor.</li></ul></div>
+      <div><h3>What's gone</h3><ul>
+        <li><b>Flash</b>: support ended on December 31, 2020, and the player was blocked from January 12, 2021.</li>
+        <li><b>Internet Explorer</b>: retired on June 15, 2022.</li></ul></div>
+    </div>
+    <figure class="code"><figcaption>Then and now: a card that changes layout when it gets room</figcaption>
+<pre class="then"><span class="tag">2015</span>window.addEventListener('resize', function () {
+  card.classList.toggle('wide', card.offsetWidth &gt; 480);
+});</pre>
+<pre class="now"><span class="tag">2026</span>.shelf { container-type: inline-size; }
+@container (width &gt; 30rem) { .card { display: grid; } }</pre></figure>
+  </div>
+</section>
+
+<!-- 2014–2019 -->
+<section class="era e15" data-era="e15" data-from="2019" data-to="2014" data-browser="Chrome · Safari · Firefox · Edge">
+  <div class="tb-depth" aria-hidden="true"><b class="tb-big" data-depth=".35">2017</b><i class="p15 sq" data-depth=".7" data-spin="45"></i><i class="p15 ci" data-depth="1" data-spin="-60"></i><i class="p15 tri" data-depth=".5" data-spin="90"></i></div>
+  <div class="era-in">
+    <p class="era-when">2014 &ndash; 2019</p>
+    <h2>Flat, fast and back in Hawaii</h2>
+    <div class="me"><h3>Me, then</h3>
+      <p>Back in Honolulu. At MVNP I was associate digital director and senior front-end developer, and we launched First Hawaiian Bank's new brand guidelines with its executives and marketing team. The stack there was AngularJS, Node.js, MongoDB and Bootstrap. At Anthology Media Group I directed the experience design team and brought in prototyping and usability testing, for clients like Hawaii Pacific Health. In 2018 I started 123 ADAPT in Kailua, building and running sites for Manoa Valley Theatre and Hawaii Realty Group.</p></div>
+    <div class="cols">
+      <div><h3>What we had</h3><ul>
+        <li><b>Flat design</b> took over: iOS 7 (2013), then Material Design (2014).</li>
+        <li><b>ES2015</b> (June 2015): classes, modules, arrow functions, <code>let</code> and <code>const</code>. React, open-sourced in 2013, was everywhere.</li>
+        <li><b>Flexbox</b>, at last safe to ship, and <b>CSS Grid</b>, which landed in Chrome, Firefox and Safari in the same month: March 2017.</li>
+        <li><b>CSS variables</b> in every current browser by 2017.</li>
+        <li><b>Lottie</b> (2017) played After Effects animations on the web as small JSON files.</li></ul></div>
+      <div><h3>Not yet</h3><ul>
+        <li>No container queries, no <code>:has()</code>, no native nesting.</li>
+        <li>Internet Explorer 11 still on office desks, so every layout had a fallback.</li>
+        <li>In July 2017 Adobe announced Flash would end in 2020.</li></ul></div>
+    </div>
+    <figure class="code"><figcaption>Then and now: a row of cards</figcaption>
+<pre class="then"><span class="tag">2012</span>.col { float: left; width: 31.333%; margin-right: 3%; }
+.col:last-child { margin-right: 0; }
+.row:after { content: ""; display: table; clear: both; }</pre>
+<pre class="now"><span class="tag">2017</span>.row { display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 2rem; }</pre></figure>
+  </div>
+</section>
+
+<!-- 2009–2014 -->
+<section class="era e10" data-era="e10" data-from="2014" data-to="2009" data-browser="IE 8 · IE 9 · Chrome · Firefox 3.6 · Safari 5">
+  <div class="tb-depth" aria-hidden="true"><b class="tb-big" data-depth=".35">2010</b><i class="p10 phone" data-depth=".7" data-spin="25"></i><i class="p10 pill" data-depth="1" data-spin="-35"></i></div>
+  <div class="era-in">
+    <p class="era-when">2009 &ndash; 2014</p>
+    <h2>HTML5, CSS3 and the word "responsive"</h2>
+    <div class="me"><h3>Me, then</h3>
+      <p>Senior front-end developer at Pramerica Systems Ireland in Letterkenny, the Irish arm of Prudential Financial (outside the US it trades as Pramerica, because the Prudential name belongs to another company there). Prudential was our only client. I built interfaces with the Lotus Notes, Java and .NET teams, back when jQuery was still fighting the other libraries for the job.</p>
+      <p>I helped set up the process that let open-source tools through Prudential's legal and technology reviews, with training to match, so we could bring in jQuery, Sass and grid frameworks. And I delivered the company's first responsive-design product.</p>
+      <p>I also built a theme on Bootstrap just for our internal tools, with the branding already in it. Developers who weren't strong on design could use my styles, and their pages came out on-brand without them having to think about it, whether they were building in .NET, Lotus Notes or Java.</p></div>
+    <div class="cols">
+      <div><h3>What we had</h3><ul>
+        <li><b>HTML5</b>: <code>&lt;video&gt;</code>, <code>&lt;canvas&gt;</code> and real form inputs.</li>
+        <li><b>CSS3</b>: <code>border-radius</code>, <code>box-shadow</code>, gradients and transitions, each one written three or four times with <code>-webkit-</code>, <code>-moz-</code> and <code>-o-</code>.</li>
+        <li><b>Web fonts</b> that worked: <code>@font-face</code>, and Google Web Fonts (2010).</li>
+        <li>In April 2010 Apple's "Thoughts on Flash" kept Flash off the iPhone for good. In May 2010 Ethan Marcotte named <b>responsive web design</b>.</li>
+        <li><b>Bootstrap</b> (2011) and Sass's SCSS syntax (2010).</li></ul></div>
+      <div><h3>Not yet</h3><ul>
+        <li>Internet Explorer 8 in every office, with no <code>border-radius</code> until IE9 (2011).</li>
+        <li>Flexbox existed only as a draft that kept changing its syntax.</li>
+        <li>No ES modules: one long jQuery file, carefully ordered.</li></ul></div>
+    </div>
+    <figure class="code"><figcaption>Then and now: rounded corners</figcaption>
+<pre class="then"><span class="tag">2010</span>-webkit-border-radius: 8px;
+   -moz-border-radius: 8px;
+        border-radius: 8px;  /* and an image for IE8 */</pre>
+<pre class="now"><span class="tag">2026</span>border-radius: 8px;</pre></figure>
+  </div>
+</section>
+
+<!-- 2005–2009 -->
+<section class="era e05" data-era="e05" data-from="2009" data-to="2005" data-browser="IE 6 · IE 7 · Firefox 2 · Safari 3">
+  <div class="tb-depth" aria-hidden="true"><b class="tb-big" data-depth=".35">2006</b><i class="p05 burst" data-depth=".8" data-spin="30"><span>beta</span></i><i class="p05 gloss" data-depth=".55" data-spin="-20"></i></div>
+  <div class="era-in">
+    <p class="era-when">2005 &ndash; 2009</p>
+    <h2>Ireland, and Web 2.0</h2>
+    <div class="me"><h3>Me, then</h3>
+      <p>I moved to Ireland, took City &amp; Guilds' Advanced Programming I, II and III (2005), and went on with training at NUI Maynooth (2007). I worked as the front-end developer, web person and tech support at the North West of Ireland Printing and Publishing Company, which publishes newspapers across the northwest. A COBOL course brought me into contact with the Pramerica team. I didn't like COBOL, but when they had an opening for a front-end developer in 2009, I took it.</p></div>
+    <div class="cols">
+      <div><h3>What we had</h3><ul>
+        <li><b>Ajax</b>, named in February 2005, after Gmail (2004) and Google Maps (2005) showed pages that updated without reloading.</li>
+        <li><b>jQuery</b> (January 2006): <code>$('.thing')</code> instead of a page of browser checks. <b>Firebug</b> (2006) gave us our first real inspector.</li>
+        <li><b>YouTube</b> (2005), playing video through Flash.</li>
+        <li><b>The iPhone</b> (2007), with no Flash, and <b>Chrome</b> (2008), with a fast JavaScript engine.</li></ul></div>
+      <div><h3>Not yet</h3><ul>
+        <li>Rounded corners and gradients were still images: four corner GIFs, or "sliding doors". My table trick, moved into <code>div</code>s.</li>
+        <li>Custom fonts meant sIFR, which swapped each headline for a tiny Flash movie.</li>
+        <li>No native video, and IE6 still needed hacks for transparent PNGs.</li></ul></div>
+    </div>
+    <figure class="code"><figcaption>Then and now: a box with rounded corners</figcaption>
+<pre class="then"><span class="tag">2006</span>&lt;div class="box"&gt;&lt;b class="tl"&gt;&lt;/b&gt;&lt;b class="tr"&gt;&lt;/b&gt;
+  Content
+&lt;b class="bl"&gt;&lt;/b&gt;&lt;b class="br"&gt;&lt;/b&gt;&lt;/div&gt;
+.tl { background: url(corner-tl.gif) no-repeat; }  /* &times;4 */</pre>
+<pre class="now"><span class="tag">2026</span>.box { border-radius: 12px; }</pre></figure>
+  </div>
+</section>
+
+<!-- 2000–2004 -->
+<section class="era e00" data-era="e00" data-from="2004" data-to="2000" data-browser="Internet Explorer 6 · Netscape 6 · Flash Player 6">
+  <div class="tb-depth" aria-hidden="true"><b class="tb-big" data-depth=".35">2002</b><i class="p00 cd" data-depth=".8" data-spin="120"></i></div>
+  <div class="era-in">
+    <div class="splash" data-tb-splash><p class="splash-l">Loading <span data-tb-load>0</span>%</p><span class="splash-bar"><i data-tb-bar></i></span><button type="button" class="skip" data-tb-skip>Skip intro &raquo;</button></div>
+    <p class="era-when">2000 &ndash; 2004</p>
+    <h2>Flash, freelance and barter</h2>
+    <div class="me"><h3>Me, then</h3>
+      <p>I was waiting tables and freelancing on the side, as Adaptive Designs. I built sites for Courier Corporation of Hawaii and Anderson Aviation, much of it paid on a barter system, in trade credits rather than cash. I made a couple of Flash sites and some banners, but I never really got into Flash.</p>
+      <p>In 2002 to 2003, with two friends, I built a site for the John A. Burns School of Medicine in Hawaii while its new building was going up. One of them was a Flash developer, and together we turned the architects' renderings into a clickable 3D model of a building that didn't exist yet. We also built a full admin area so students and alumni could log in and edit their own profiles: a complete content management system.</p></div>
+    <div class="cols">
+      <div><h3>What we had</h3><ul>
+        <li><b>Internet Explorer 6</b> (August 2001), on about nine in ten screens within a couple of years.</li>
+        <li><b>Flash 5</b> (2000) with ActionScript, then <b>Flash MX</b> (2002), which brought video into Flash. Every agency site opened with an intro.</li>
+        <li><b>CSS Zen Garden</b> (2003) showed one HTML page in dozens of designs, using CSS and no tables.</li>
+        <li><b>Safari</b> (2003), <b>WordPress</b> (2003) and <b>Firefox 1.0</b> (November 2004).</li></ul></div>
+      <div><h3>Not yet</h3><ul>
+        <li>No video without a plug-in, and no rounded corners without images.</li>
+        <li>IE6 measured boxes its own way in quirks mode, and showed transparent PNGs with a grey background unless you used its <code>AlphaImageLoader</code> filter.</li>
+        <li>Layout still meant tables, more often than not.</li></ul></div>
+    </div>
+    <figure class="code"><figcaption>Then and now: putting a movie on a page</figcaption>
+<pre class="then"><span class="tag">2002</span>&lt;object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
+  width="550" height="400"&gt;
+  &lt;param name="movie" value="intro.swf"&gt;
+  &lt;embed src="intro.swf" width="550" height="400"&gt;
+&lt;/object&gt;</pre>
+<pre class="now"><span class="tag">2026</span>&lt;video src="intro.mp4" controls&gt;&lt;/video&gt;</pre></figure>
+  </div>
+</section>
+
+<!-- 1997–1999 -->
+<section class="era e97" data-era="e97" data-from="1999" data-to="1997" data-browser="Netscape Navigator 4 · Internet Explorer 4 · 800 × 600">
+  <div class="tb-depth" aria-hidden="true"><b class="tb-big" data-depth=".35">1997</b><i class="p97 floppy" data-depth=".75" data-spin="-140"></i><i class="p97 cone" data-depth="1" data-spin="80"></i></div>
+  <div class="era-in">
+    <p class="u-c" aria-hidden="true">&#9888; UNDER CONSTRUCTION &#9888;</p>
+    <p class="era-when">1997 &ndash; 1999</p>
+    <h2>Free web space, FTP and tables</h2>
+    <hr class="bevel">
+    <div class="me"><h3>Me, then</h3>
+      <p>I got online in 1997 through Road Runner in Hawaii, which came with free home-page space. We worked out how to FTP files up to it, and a friend and I started building sites back and forth. I used FrontPage for a long time, just as a WYSIWYG editor. The code made me uneasy at first, then it didn't. I also played with a Microsoft animation tool, just for fun. By 1999 I was doing it for work.</p></div>
+    <div class="trick"><h3>The trick: responsive before it had a name</h3>
+      <p>Start with a table of three rows and three columns. Put a fixed-width corner image in each corner cell, and give every cell between them a repeating background image. The middle cell holds the content. However the browser window changed, the corners stayed corners, and the edges stretched to join them. Drag the bottom-right corner to try it:</p>
+      <div class="t97-demo">
+        <table class="t97" cellpadding="0" cellspacing="0" border="0" width="100%">
+          <tr><td width="22" height="22"><img src="t97/tl.svg" width="22" height="22" alt=""></td><td background="t97/top.svg"></td><td width="22"><img src="t97/tr.svg" width="22" height="22" alt=""></td></tr>
+          <tr><td background="t97/left.svg"></td><td class="t97-mid" bgcolor="#fffbe8"><font face="Times New Roman, serif" size="3"><b>Welcome to my home page!</b><br>This box is a real 1990s table: four corner images, four repeating edges, and the words in the middle.</font></td><td background="t97/right.svg"></td></tr>
+          <tr><td height="22"><img src="t97/bl.svg" width="22" height="22" alt=""></td><td background="t97/bottom.svg"></td><td><img src="t97/br.svg" width="22" height="22" alt=""></td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="cols">
+      <div><h3>What we had</h3><ul>
+        <li><b>The browser wars</b>: Netscape Navigator 4 against Internet Explorer 4, both 1997, each with its own "dynamic HTML" (<code>&lt;layer&gt;</code> against <code>document.all</code>).</li>
+        <li><b>HTML 4.0</b> (December 1997). CSS1 (1996) and CSS2 (1998) were standards on paper, half supported in practice.</li>
+        <li>Layout by <b>tables, spacer GIFs and <code>&lt;font&gt;</code> tags</b>. Editors: FrontPage, and Dreamweaver (December 1997).</li>
+        <li>Animation was animated GIFs, Java applets or the Flash 3 and 4 plug-in. Video was RealPlayer.</li>
+        <li>Most visitors on dial-up: 28.8k, then 56k. Screens of 800 &times; 600, some still 640 &times; 480. "Best viewed in&hellip;" badges.</li></ul></div>
+      <div><h3>Not yet</h3><ul>
+        <li>No CSS layout that worked the same in both browsers.</li>
+        <li>No rounded corners, no shadows, no transparency: every one was an image.</li>
+        <li>No web fonts. You got the fonts on the visitor's computer.</li>
+        <li>No video without a plug-in, and Ajax was years away. Internet Explorer 5 shipped its XMLHTTP object in 1999, and almost nobody noticed.</li></ul></div>
+    </div>
+    <figure class="code"><figcaption>Then and now: the stretchy box</figcaption>
+<pre class="then"><span class="tag">1998</span>&lt;table width="100%" cellpadding="0" cellspacing="0" border="0"&gt;
+&lt;tr&gt;&lt;td width="22"&gt;&lt;img src="tl.gif" width="22" height="22"&gt;&lt;/td&gt;
+    &lt;td background="top.gif"&gt;&lt;img src="spacer.gif" width="1" height="1"&gt;&lt;/td&gt;
+    &lt;td width="22"&gt;&lt;img src="tr.gif" width="22" height="22"&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td background="left.gif"&gt;&amp;nbsp;&lt;/td&gt;
+    &lt;td bgcolor="#FFFBE8"&gt;Welcome to my home page!&lt;/td&gt;
+    &lt;td background="right.gif"&gt;&amp;nbsp;&lt;/td&gt;&lt;/tr&gt;
+&lt;!-- &hellip;and the same again for the bottom row --&gt;
+&lt;/table&gt;</pre>
+<pre class="now"><span class="tag">2026</span>.box { border-image: url(frame.png) 22 round; }
+/* or, most days: */
+.box { border-radius: 12px; }</pre></figure>
+    <p class="counter" aria-label="A visitor counter, as every home page had">You are visitor number <span class="digits" data-tb-count>000427</span></p>
+    <p class="best">Best viewed in Netscape Navigator 4 at 800 &times; 600</p>
+  </div>
+</section>
+
+<section class="tb-end">
+  <p class="tb-kick">1997, the bottom</p>
+  <h2>Twenty-nine years down</h2>
+  <p>From corner GIFs in a table cell to a lake that turns through the seasons. The tricks changed every few years, and the job didn't: make it work for the person on the other side of the screen, in whatever browser they've got.</p>
+  <p class="tb-acts"><button type="button" class="tb-btn" data-tb-up>Climb back to 2026 &uarr;</button> <a class="tb-btn ghost" href="../?web">Back to the lake</a> <a class="tb-btn ghost" href="../about/">The résumé</a></p>
+</section>
+</main>
+<script src="tumble.js?v=1" defer></script>
+</body>
+</html>
