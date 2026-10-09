@@ -83,3 +83,85 @@ html.night-page .feature .mag-qa dt{background:#22313d;border-color:#33475a;colo
 html.night-page .feature .mag-qa dd{background:#1f6d63}
 html.night-page .feature .mag-qa dd::after{box-shadow:0 0 0 2px #16232f,0 0 0 3px #c9a14a}
 html.night-page .feature .mag-spot{border-color:#3a5157}
+/* A feature's building blocks (field/tools/publish.mjs, e.feature.blocks), shared by every magazine theme: a spec box,
+   a sidebar, a verdict with bars, and a picture with numbered callouts. Each theme only re-colours and re-types them. */
+.feature .mag-specs,.feature .mag-box{margin:1.6em 0;padding:18px 20px;border:2px solid var(--mg-ink);border-radius:4px;background:rgba(255,255,255,.35)}
+.feature .mag-specs h3,.feature .mag-box h3{margin:0 0 10px;font:800 15px/1.25 var(--mg-sans);letter-spacing:.14em;text-transform:uppercase;color:var(--mg-red)}
+.feature .mag-specs dl{margin:0;display:grid;gap:6px}
+.feature .mag-specs dl>div{display:flex;gap:10px;align-items:baseline;border-bottom:1px dotted var(--mg-ink3);padding:0 0 5px}
+.feature .mag-specs dt{flex:0 0 40%;font:700 13px/1.3 var(--mg-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--mg-ink2)}
+.feature .mag-specs dd{margin:0;font:600 16px/1.35 var(--mg-text);color:var(--mg-ink)}
+.feature .mag-specs>p{margin:10px 0 0;font:italic 14px/1.45 var(--mg-text);color:var(--mg-ink3)}
+.feature .mag-box-k{margin:0 0 4px;font:800 11px/1.2 var(--mg-sans);letter-spacing:.2em;text-transform:uppercase;color:var(--mg-ink3)}
+.feature .mag-box p{font:16.5px/1.6 var(--mg-text);color:var(--mg-ink);margin:0 0 10px}
+.feature .mag-box figure{margin:12px 0 0}
+.feature .mag-verdict{margin:2em 0 1.4em;padding:22px 22px 18px;border-top:4px solid var(--mg-ink);border-bottom:1px solid var(--mg-ink)}
+.feature .mag-verdict h2{margin:0 0 12px;font:900 28px/1.1 var(--mg-serif);color:var(--mg-ink)}
+.feature .mv-top{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin:0 0 14px}
+.feature .mv-score{margin:0;display:flex;align-items:baseline;gap:4px}
+.feature .mv-score b{font:900 56px/1 var(--mg-serif);color:var(--mg-red)}
+.feature .mv-score span{font:700 18px/1 var(--mg-sans);color:var(--mg-ink2)}
+.feature .mv-seal{margin:0;width:96px;height:96px;border-radius:50%;display:grid;place-items:center;text-align:center;padding:10px;rotate:-12deg;
+  border:3px double var(--mg-red);color:var(--mg-red);font:900 13px/1.1 var(--mg-sans);letter-spacing:.08em;text-transform:uppercase}
+.feature .mv-bars{list-style:none;margin:0 0 14px;padding:0;display:grid;gap:8px}
+.feature .mv-bars li{display:grid;grid-template-columns:minmax(110px,34%) 1fr 34px;gap:10px;align-items:center;margin:0}
+.feature .mv-bars span{font:700 13px/1.2 var(--mg-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--mg-ink2)}
+.feature .mv-bars i{height:12px;border-radius:6px;background:linear-gradient(90deg,var(--mg-red) calc(var(--v) * 100%),rgba(0,0,0,.1) 0)}
+.feature .mv-bars b{font:800 15px/1 var(--mg-sans);color:var(--mg-ink);text-align:right}
+.feature .mag-verdict>p{font:17px/1.6 var(--mg-text);color:var(--mg-ink);margin:0 0 10px}
+.feature .mag-callouts{margin:1.6em 0}
+.feature .mc-pic{position:relative;border-radius:6px;overflow:hidden}
+.feature .mc-pic img{display:block;width:100%;height:auto;max-height:none;margin:0;border-radius:0}
+.feature .mc-dot{position:absolute;left:var(--x);top:var(--y);transform:translate(-50%,-50%);display:flex;align-items:center;gap:6px;pointer-events:none}
+.feature .mc-dot i{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--mg-red);color:#fff;font:800 13px/1 var(--mg-sans);font-style:normal;box-shadow:0 0 0 2px #fff,0 2px 6px rgba(0,0,0,.35)}
+.feature .mc-dot.flip{flex-direction:row-reverse;transform:translate(calc(-100% + 12px),-50%)}   /* near the right edge: the label to the left of its dot */
+.feature .mc-dot b{padding:3px 8px;border-radius:3px;background:rgba(255,255,255,.92);color:var(--mg-ink);font:700 12px/1.25 var(--mg-sans);letter-spacing:.02em;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,.25)}
+.feature .mag-callouts figcaption{margin:8px 0 0;font:italic 14px/1.45 var(--mg-text);color:var(--mg-ink2)}
+.feature .mag-callouts figcaption b{font-style:normal;font-family:var(--mg-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--mg-ink)}
+@media (max-width:640px){.feature .mc-dot b{display:none}}   /* small screens: just the numbers; the caption lists them */
+@media (min-width:900px){main.feature .mag-callouts,main.feature .mag-verdict{margin-left:-60px;margin-right:-60px}}
+html.night-page .feature .mag-specs,html.night-page .feature .mag-box{background:rgba(255,255,255,.04);border-color:var(--mg-rule)}
+html.night-page .feature .mv-bars i{background:linear-gradient(90deg,var(--mg-red) calc(var(--v) * 100%),rgba(255,255,255,.12) 0)}
+
+/* POPULAR PARADOX (theme "paradox"): a made-up 1970s–80s popular-science monthly. Cream newsprint, mustard, burnt
+   orange and avocado, a chunky slab masthead over rainbow stripes, a round "tested" seal, slab body type. */
+.feature.mag-paradox{--mg-ink:#2a1e14;--mg-ink2:#5a4632;--mg-ink3:#8b7457;--mg-red:#d4521c;--mg-gold:#ffd166;--mg-rule:#2a1e14;--pp-mustard:#e3a12b;--pp-avocado:#6e7b2b;--pp-paper:#f6ecd2;
+  --mg-serif:"Alfa Slab One","Rockwell","Roboto Slab",Georgia,serif;--mg-text:"Roboto Slab","Rockwell",Georgia,serif;--mg-sans:"Roboto Condensed","Arial Narrow","Helvetica Neue",Arial,sans-serif}
+.feature.mag-paradox .mag-cover{background:#1b120b;border-radius:6px}
+.feature.mag-paradox .mag-cover::after{background:linear-gradient(90deg,rgba(20,12,6,.72) 0,rgba(20,12,6,.15) 46%,rgba(20,12,6,0) 62%),linear-gradient(180deg,rgba(20,12,6,.55) 0,rgba(20,12,6,0) 36%)}
+.feature.mag-paradox .mag-mast{font:400 clamp(30px,8.4vw,80px)/.88 var(--mg-serif);letter-spacing:.01em;color:var(--pp-paper);text-shadow:3px 3px 0 var(--mg-red),6px 6px 0 rgba(0,0,0,.35)}
+.feature.mag-paradox .mag-top::after{content:"";display:block;width:min(46%,420px);height:12px;margin:8px 0 4px;
+  background:linear-gradient(180deg,var(--pp-mustard) 0 33%,var(--mg-red) 33% 66%,var(--pp-avocado) 66%)}
+.feature.mag-paradox .mag-tag{font:700 clamp(10px,1.4vw,14px)/1.3 var(--mg-sans);letter-spacing:.14em;text-transform:uppercase;color:var(--mg-gold);font-style:normal;padding:0}
+.feature.mag-paradox .mag-issue{left:auto;right:4%;top:4%;bottom:auto;width:clamp(64px,11vw,110px);height:clamp(64px,11vw,110px);padding:8px;border-radius:50%;display:grid;place-items:center;text-align:center;
+  background:var(--pp-mustard);color:var(--mg-ink);rotate:10deg;box-shadow:0 4px 14px rgba(0,0,0,.4);font:800 clamp(9px,1.3vw,13px)/1.1 var(--mg-sans)}
+.feature.mag-paradox .mag-lines{left:4%;right:auto;top:auto;bottom:7%;width:40%;text-align:left}
+.feature.mag-paradox .mag-lines li{font:700 clamp(11px,1.6vw,17px)/1.25 var(--mg-sans);letter-spacing:.02em;text-transform:uppercase}
+.feature.mag-paradox .mag-lines li:first-child{font:400 clamp(14px,2.3vw,25px)/1.1 var(--mg-serif);text-transform:none;color:var(--mg-gold)}
+.feature.mag-paradox .mag-label{border:0;padding:4px 12px;background:var(--mg-red);color:#fff;letter-spacing:.24em}
+.feature.mag-paradox .mag-head h1{font:400 clamp(36px,6.6vw,64px)/1.04 var(--mg-serif);max-width:17ch;letter-spacing:0}
+.feature.mag-paradox .mag-deck{font:400 clamp(17px,2.1vw,21px)/1.5 var(--mg-text);font-style:normal}
+.feature.mag-paradox .mag-byline{border-top:3px solid var(--mg-ink);border-bottom:3px solid var(--mg-ink);font-family:var(--mg-sans)}
+.feature.mag-paradox .post>p{font:400 18px/1.72 var(--mg-text)}
+.feature.mag-paradox .post>p:first-child::first-letter{font:400 78px/.8 var(--mg-serif);color:var(--mg-red)}
+.feature.mag-paradox .post>p:first-child::first-line{font-variant:normal;font-weight:600}
+.feature.mag-paradox .post h2.sub{font:400 24px/1.15 var(--mg-serif);letter-spacing:0;text-transform:none;color:var(--mg-ink)}
+.feature.mag-paradox .post h2.sub::before{width:72px;height:8px;background:linear-gradient(180deg,var(--pp-mustard) 0 33%,var(--mg-red) 33% 66%,var(--pp-avocado) 66%)}
+.feature.mag-paradox .pull{border-top:6px solid var(--mg-red);border-bottom:2px solid var(--mg-ink)}
+.feature.mag-paradox .pull p{font:400 clamp(22px,3.3vw,32px)/1.22 var(--mg-serif);font-style:normal;color:var(--mg-red)}
+.feature.mag-paradox .mag-specs{background:var(--pp-paper);border:3px solid var(--mg-ink);border-radius:0;box-shadow:6px 6px 0 var(--pp-mustard)}
+.feature.mag-paradox .mag-specs h3{margin:-18px -20px 12px;padding:8px 20px;background:var(--mg-ink);color:var(--pp-paper)}
+.feature.mag-paradox .mag-box{background:#eef0d8;border:0;border-left:8px solid var(--pp-avocado);border-radius:0}
+.feature.mag-paradox .mag-box h3{color:var(--pp-avocado);font-family:var(--mg-serif);font-weight:400;letter-spacing:0;text-transform:none;font-size:21px}
+.feature.mag-paradox .mv-seal{border-color:var(--mg-red);background:var(--pp-paper)}
+.feature.mag-paradox .mv-bars i{background:linear-gradient(90deg,var(--pp-mustard) calc(var(--v) * 100%),rgba(42,30,20,.12) 0)}
+.feature.mag-paradox .mag-qa{background:var(--pp-paper);border-top:6px solid var(--mg-red)}
+.feature.mag-paradox .mag-qa h2{font:400 26px/1.15 var(--mg-serif)}
+.feature.mag-paradox .mag-qa dd{margin-right:0;background:var(--mg-ink);font-family:var(--mg-text)}
+.feature.mag-paradox .mag-qa dd::after{display:none}   /* the inventor answers here, not GlazyArray: no avatar */
+.feature.mag-paradox .mag-spot h2{font:400 22px/1 var(--mg-serif);letter-spacing:.02em}
+html.night-page .feature.mag-paradox{--mg-ink:#f3e7cf;--mg-ink2:#d6c4a3;--mg-ink3:#a8936f;--mg-red:#ff7a45;--mg-rule:#5a4632}
+html.night-page .feature.mag-paradox .mag-specs,html.night-page .feature.mag-paradox .mag-qa{background:#2a2016}
+html.night-page .feature.mag-paradox .mag-specs h3{background:#f3e7cf;color:#2a2016}
+html.night-page .feature.mag-paradox .mag-box{background:#262a17}
+html.night-page .feature.mag-paradox .mag-qa dd{background:#5a4632}

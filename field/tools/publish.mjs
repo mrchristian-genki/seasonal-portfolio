@@ -30,6 +30,8 @@ const V = Date.now().toString(36);   // cache tag for the shared css/js
 
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const KIND = { ride: 'Ride', hike: 'Hike', forage: 'Foraging walk', make: 'Mini-Cast' };
+// the web fonts a feature's magazine theme brings (css/feature.css .mag-<theme>), loaded only on its page
+const THEME_FONTS = { paradox: 'family=Alfa+Slab+One&family=Roboto+Slab:wght@400;600;800&family=Roboto+Condensed:wght@700' };
 // a Note's tags, for Play's filters and its address words: what kind it is, its own tags (field/data/events, "tags"),
 // and its year. Lowercase words with dashes, so they read well in a link (?spring+notes+grid+with-marley).
 const KIND_TAG = { ride: 'ride', hike: 'hike', forage: 'foraging', make: 'mini-cast' };
@@ -172,10 +174,10 @@ for (const e of events) {
       fs.copyFileSync(path.join(FIELD, p.poster), path.join(media, base + '.jpg'));
       // same name, new clip or new poster frame: let caches go
       const tag = '?v=' + fs.statSync(path.join(FIELD, p.src)).size.toString(36) + fs.statSync(path.join(FIELD, p.poster)).size.toString(36);
-      return { src: `../media/${e.id}/${base}.mp4${tag}`, poster: `../media/${e.id}/${base}.jpg${tag}`, abs: `${show.siteUrl}media/${e.id}/${base}.jpg${tag}`, caption: p.caption || '', w: p.w, h: p.h, cover: !!p.cover, video: true, ai: !!p.ai, table: p.table || null, after: p.after };
+      return { src: `../media/${e.id}/${base}.mp4${tag}`, poster: `../media/${e.id}/${base}.jpg${tag}`, abs: `${show.siteUrl}media/${e.id}/${base}.jpg${tag}`, caption: p.caption || '', w: p.w, h: p.h, cover: !!p.cover, video: true, ai: !!p.ai, table: p.table || null, after: p.after, file: path.basename(p.src), at: p.at || null };
     }
     fs.copyFileSync(path.join(FIELD, p.src), path.join(media, name));
-    return { src: `../media/${e.id}/${name}`, abs: `${show.siteUrl}media/${e.id}/${name}`, caption: p.caption || '', w: p.w, h: p.h, cover: !!p.cover, ai: !!p.ai, strip: p.strip || 0 };
+    return { src: `../media/${e.id}/${name}`, abs: `${show.siteUrl}media/${e.id}/${name}`, caption: p.caption || '', w: p.w, h: p.h, cover: !!p.cover, ai: !!p.ai, strip: p.strip || 0, file: path.basename(p.src), at: p.at || null };
   });
   // the cover heads the post: a photo, or a loop playing silently (its poster frame stands in for it on cards and shares)
   const cover = photos.find((p) => p.cover) || photos.find((p) => !p.video) || null;
@@ -195,7 +197,9 @@ for (const e of events) {
   // An HDR photo's exposure strip (made by the Studio's merge) always sits right under the photo it made,
   // the cover's included.
   const coverStrip = cover && photos[photos.indexOf(cover) + 1] && photos[photos.indexOf(cover) + 1].strip ? photos[photos.indexOf(cover) + 1] : null;
-  const ps = paras(e.post && e.post.body), table = photos.filter((p) => p.table), loose = photos.filter((p) => p !== cover && p !== coverStrip && !p.table);
+  const FB = (e.feature && e.feature.masthead && Array.isArray(e.feature.blocks)) ? e.feature.blocks : [];
+  const held = new Set(FB.map((b) => b.photo).filter(Boolean));   // pictures a feature's block shows inside itself
+  const ps = paras(e.post && e.post.body), table = photos.filter((p) => p.table), loose = photos.filter((p) => p !== cover && p !== coverStrip && !p.table && !p.at && !held.has(p.file));
   const tall = (p) => p.w && p.h && p.h > p.w * 1.1;
   const inline = [];
   for (let k = 0; k < loose.length; k++) {
@@ -217,23 +221,41 @@ for (const e of events) {
     const f = 'look-' + String(k + 1).padStart(2, '0') + '.jpg'; fs.copyFileSync(path.join(FIELD, x.src), path.join(media, f));
     return `<figure class="mag-look${k === 0 ? ' wide' : ''}"><a href="../media/${e.id}/${f}" data-lightbox><img src="../media/${e.id}/${f}" alt="GlazyArray in ${esc(x.name.toLowerCase())}" width="${x.w}" height="${x.h}" loading="lazy"></a><figcaption><b>${esc(x.name)}</b> ${esc(x.when)}</figcaption></figure>`;
   }).join('')}</div><p class="mag-book-ai"><span class="ai-badge">Made with AI</span></p></section>\n` : '';
+  // A feature's blocks (e.feature.blocks), the furniture any magazine template can use, each set just before the
+  // subhead it names ("before"; at the end of the story if none): a spec box ("specs": rows of [label, value]), a
+  // sidebar ("box": a kicker, a title, text and an optional picture of the Note's), a verdict ("verdict": a score,
+  // sub-scores as bars, a line) and a picture with labelled callouts ("callouts": items at x/y percentages)
+  const byFile = (f) => photos.find((p) => p.file === f);
+  const blockHtml = (b) => {
+    if (b.type === 'specs') return `<aside class="mag-specs">${b.title ? `<h3>${esc(b.title)}</h3>` : ''}<dl>${(b.rows || []).map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>${b.note ? `<p>${esc(b.note)}</p>` : ''}</aside>\n`;
+    if (b.type === 'box') { const ph = b.photo && byFile(b.photo); return `<aside class="mag-box">${b.kicker ? `<p class="mag-box-k">${esc(b.kicker)}</p>` : ''}${b.title ? `<h3>${esc(b.title)}</h3>` : ''}${paras(b.text).map((t) => `<p>${esc(t)}</p>`).join('')}${ph ? fig(ph) : ''}</aside>\n`; }
+    if (b.type === 'verdict') return `<section class="mag-verdict"><h2>${esc(b.title || 'The verdict')}</h2><div class="mv-top">${b.score ? `<p class="mv-score"><b>${esc(b.score)}</b>${b.outOf ? `<span>${esc(b.outOf)}</span>` : ''}</p>` : ''}${b.seal ? `<p class="mv-seal">${esc(b.seal)}</p>` : ''}</div>${(b.scores || []).length ? `<ul class="mv-bars">${b.scores.map(([l, v, max]) => `<li><span>${esc(l)}</span><i style="--v:${Math.max(0, Math.min(1, Number(v) / Number(max || 10))).toFixed(3)}"></i><b>${esc(v)}</b></li>`).join('')}</ul>` : ''}${paras(b.text).map((t) => `<p>${esc(t)}</p>`).join('')}</section>\n`;
+    if (b.type === 'callouts') { const ph = b.photo && byFile(b.photo); if (!ph) return ''; return `<figure class="mag-callouts"><div class="mc-pic"><img src="${esc(ph.src)}" alt="${esc(ph.caption)}" width="${ph.w}" height="${ph.h}" loading="lazy">${(b.items || []).map((x, k) => `<span class="mc-dot${Number(x.x) > 62 ? ' flip' : ''}" style="--x:${Number(x.x)}%;--y:${Number(x.y)}%"><i>${k + 1}</i><b>${esc(x.label)}</b></span>`).join('')}</div><figcaption>${b.title ? `<b>${esc(b.title)}</b> ` : ''}${ph.ai ? '<span class="ai-badge">Made with AI</span> ' : ''}${esc(ph.caption)}</figcaption></figure>\n`; }
+    return '';
+  };
+  const sameSub = (a, b) => String(a || '').replace(/['\u2019]/g, "'") === String(b || '').replace(/['\u2019]/g, "'");
+  const placed = new Set();
   let lbDone = !LB;
   let body = '';
   ps.forEach((p, i) => {
     if (!lbDone && /^## /.test(p) && p.slice(3).replace(/['\u2019]/g, "'") === String(LB.before || '').replace(/['\u2019]/g, "'")) { body += lookbook; lbDone = true; }
+    if (/^## /.test(p)) FB.forEach((b, k) => { if (!placed.has(k) && sameSub(b.before, p.slice(3))) { body += blockHtml(b); placed.add(k); } });
     const m = /^What I learned:\s*/i.exec(p);
     // a feature's own marks (a profile): "## " a subhead, "> " a pull quote set large
-    if (/^## /.test(p)) body += `<h2 class="sub">${esc(p.slice(3))}</h2>\n`;
+    if (/^## /.test(p)) { body += `<h2 class="sub">${esc(p.slice(3))}</h2>\n`; photos.filter((ph) => ph.at && sameSub(ph.at, p.slice(3))).forEach((ph) => { body += fig(ph, tall(ph) ? 'photo tall' : '') + '\n'; }); }
     else if (/^> /.test(p)) body += `<blockquote class="pull"><p>${esc(p.slice(2))}</p></blockquote>\n`;
     else body += m ? `<p class="learned"><b>What I learned:</b> ${esc(p.slice(m[0].length))}</p>\n` : `<p>${esc(p)}</p>\n`;
     inline.forEach((u, k) => { if (slots[k] === i) body += (u.stack ? u.map((ph) => fig(ph, ph.strip ? 'photo strip' : '')).join('\n') : u.length > 1 ? `<div class="duo">${u.map((ph) => fig(ph)).join('')}</div>` : fig(u[0], tall(u[0]) ? 'photo tall' : '')) + '\n'; });
     if (i === tableSlot) body += tableFig() + '\n';
   });
   if (!lbDone) body += lookbook;   // its subhead wasn't found: at the end of the story
+  FB.forEach((b, k) => { if (!placed.has(k)) body += blockHtml(b); });   // blocks whose subhead wasn't found, or that name none: at the end
 
   // A FEATURE (a profile, written like a magazine cover story: e.feature): the cover becomes a magazine cover with its
   // masthead and cover lines; after the story, a Q&A and a "Spotted" box. Everything else is a Note like any other.
   const F = e.feature && e.feature.masthead ? e.feature : null;
+  // its magazine's look (css/feature.css, main.mag-<theme>): RIVETING TONE's is the default, with none named
+  const theme = F && /^[a-z0-9-]{1,30}$/.test(F.theme || '') ? F.theme : '';
   const magCover = F && cover ? `<header class="mag-cover"><div class="mag-img">${cover.video ? `<video src="${esc(cover.src)}" poster="${esc(cover.poster)}" muted loop playsinline autoplay></video>` : `<img src="${esc(cover.src)}" alt="${esc(cover.caption)}" width="${cover.w}" height="${cover.h}">`}</div>
 <div class="mag-top"><b class="mag-mast">${esc(F.masthead)}</b>${F.tagline ? `<span class="mag-tag">${esc(F.tagline)}</span>` : ''}</div>
 ${F.issue ? `<span class="mag-issue">${esc(F.issue)}</span>` : ''}${(F.coverLines || []).length ? `<ul class="mag-lines">${F.coverLines.map((l) => `<li>${esc(l)}</li>`).join('')}</ul>` : ''}
@@ -253,8 +275,8 @@ ${F.issue ? `<span class="mag-issue">${esc(F.issue)}</span>` : ''}${(F.coverLine
       alt: audio ? `${e.post && e.post.title || e.title}: GlazyArray, the narrator, at her desk with the episode's player` : `${e.post && e.post.title || e.title}: the title on a brass nameplate over the Note's cover picture` };
   }
   const html = head(title, desc, url, share && share.abs, '../', 'field-notes', { type: 'article', lake: 'notes+' + e.id, published: e.date,
-    w: share && share.w, h: share && share.h, alt: share && share.alt, audio: audio && audio.abs }) + `<main class="article${F ? ' feature' : ''}"${t ? ` data-route="../data/${esc(e.id)}.json"` : ''}>
-${magCover}${F ? `<header class="mag-head"><p class="mag-label">${esc(F.label || 'Feature')}</p>
+    w: share && share.w, h: share && share.h, alt: share && share.alt, audio: audio && audio.abs }) + `<main class="article${F ? ' feature' : ''}${theme ? ' mag-' + theme : ''}"${t ? ` data-route="../data/${esc(e.id)}.json"` : ''}>
+${theme && THEME_FONTS[theme] ? `<link rel="stylesheet" href="https://fonts.googleapis.com/css2?${THEME_FONTS[theme]}&display=swap">\n` : ''}${magCover}${F ? `<header class="mag-head"><p class="mag-label">${esc(F.label || 'Feature')}</p>
 <h1>${esc(e.post && e.post.title || e.title)}</h1>
 ${e.summary ? `<p class="mag-deck">${esc(e.summary)}</p>` : ''}
 <p class="mag-byline">${F.byline ? `<span>${esc(F.byline)}</span>` : ''}<span><time datetime="${esc(e.date)}">${day(e.date, true)}</time>${e.place ? ` · ${esc(e.place)}` : ''}</span></p></header>
