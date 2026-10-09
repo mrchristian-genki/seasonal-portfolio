@@ -136,6 +136,7 @@
     var done = function () { root.classList.remove('tm-jumping'); setTimeout(function () { at88 = 0; }, 600); };
     jumpV.onended = done; jumpV.onerror = null;
     try { jumpV.currentTime = 0; } catch (e) {}
+    jumpV.playbackRate = 2; // twice as fast (Christian, Oct 9)
     var p = jumpV.play();
     root.classList.add('tm-jumping');
     if (p && p.catch) p.catch(function () { root.classList.remove('tm-jumping'); flux(); at88 = 0; });
