@@ -288,7 +288,7 @@
  "source": "Rides/Oahu Aerial ",
  "palette": [
   "#1996cc",
-  "#a3b234"
+  "#00b493"
  ],
  "narratorLook": {
   "look": "trail-cap",
@@ -303,5 +303,6 @@
   "fit": "new",
   "scene": "a tropical shoreline with palm trees, turquoise water and two small offshore islands"
  },
+ "paletteBy": "hand",
  "publishedAt": "2026-10-09T20:44:38Z"
 }
