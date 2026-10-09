@@ -4,7 +4,7 @@
  "date": "2019-03-09",
  "kind": "ride",
  "place": "Oahu, Hawaii",
- "status": "draft",
+ "status": "published",
  "summary": "A feature rather than a usual Note: a collage of Christian's favorite drone footage from his years living on Oahu, from the Mokes and Lanikai on the east side to manta rays off the North Shore, with a little about the island.",
  "trailhead": null,
  "links": [],
@@ -291,16 +291,17 @@
   "#a3b234"
  ],
  "narratorLook": {
-  "look": "beach-shades",
+  "look": "trail-cap",
   "fit": "existing",
-  "about": "round sunglasses pushed up in her curls, with a gem clip",
-  "why": "A sunny island reel of beaches, coves and shorebreak.",
+  "about": "a trucker cap with a GA leather patch, its front and brim in one colour and its mesh back in the other",
+  "why": "",
   "prompt": "",
-  "bulb": true
+  "bulb": false
  },
  "narratorBackdrop": {
   "backdrop": "hawaii-coast",
   "fit": "new",
   "scene": "a tropical shoreline with palm trees, turquoise water and two small offshore islands"
- }
+ },
+ "publishedAt": "2026-10-09T20:44:38Z"
 }
