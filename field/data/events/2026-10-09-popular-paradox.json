@@ -1,0 +1,383 @@
+{
+  "id": "2026-10-09-popular-paradox",
+  "title": "We Took the Tumble Time Machine for a Spin",
+  "date": "2026-10-09",
+  "kind": "make",
+  "place": "The Web tab",
+  "tags": [
+    "feature",
+    "web",
+    "time-machine",
+    "behind-the-scenes"
+  ],
+  "status": "published",
+  "summary": "A brass cockpit, nine browsers under glass, a porthole full of bubbles and a dial that goes to 88. Our test pilot took Christian Gehrke's web time machine for a spin, and came back with different hair.",
+  "links": [
+    {
+      "label": "Ride the Tumble yourself",
+      "url": "https://www.christiangehrke.com/?web"
+    },
+    {
+      "label": "Meet the test pilot: GlazyArray's own feature",
+      "url": "https://www.christiangehrke.com/play/2026-10-08-glazyarray-will-see-you-now/"
+    }
+  ],
+  "trailhead": null,
+  "track": null,
+  "photos": [
+    {
+      "src": "data/photos/2026-10-09-popular-paradox/pp-cover.jpg",
+      "ai": true,
+      "caption": "Our test pilot, GlazyArray, at the moment the Tumble hit 88. She had been told it was a gentle ride.",
+      "w": 1376,
+      "h": 768,
+      "use": "post",
+      "cover": true
+    },
+    {
+      "src": "data/photos/2026-10-09-popular-paradox/clip-jewels.mp4",
+      "ai": false,
+      "caption": "Press a jewel: that browser comes up close under the glass of the big dial, with the year it arrived.",
+      "w": 1280,
+      "h": 720,
+      "use": "post",
+      "cover": false,
+      "poster": "data/photos/2026-10-09-popular-paradox/clip-jewels.jpg",
+      "video": true,
+      "at": "Test one: the jewels"
+    },
+    {
+      "src": "data/photos/2026-10-09-popular-paradox/pp-knob.jpg",
+      "ai": true,
+      "caption": "“Just once more.” Famous last words, test flight four.",
+      "w": 1376,
+      "h": 768,
+      "use": "post",
+      "cover": false,
+      "at": "Test two: the knobs"
+    },
+    {
+      "src": "data/photos/2026-10-09-popular-paradox/clip-surge.mp4",
+      "ai": false,
+      "caption": "One turn of a knob: the gauges sweep and glow orange, the portholes flare, and golden bubbles rise.",
+      "w": 1280,
+      "h": 720,
+      "use": "post",
+      "cover": false,
+      "poster": "data/photos/2026-10-09-popular-paradox/clip-surge.jpg",
+      "video": true,
+      "at": "Test two: the knobs"
+    },
+    {
+      "src": "data/photos/2026-10-09-popular-paradox/pp-88.jpg",
+      "ai": true,
+      "caption": "Hitting 88. The sparks are real. The composure is not.",
+      "w": 1376,
+      "h": 768,
+      "use": "post",
+      "cover": false,
+      "at": "Test three: 88"
+    },
+    {
+      "src": "data/photos/2026-10-09-popular-paradox/clip-88.mp4",
+      "ai": false,
+      "caption": "The 88 MPH flashes, the running lights, and the jump playing out under the glass of the big dial.",
+      "w": 1280,
+      "h": 720,
+      "use": "post",
+      "cover": false,
+      "poster": "data/photos/2026-10-09-popular-paradox/clip-88.jpg",
+      "video": true,
+      "at": "Test three: 88"
+    },
+    {
+      "src": "data/photos/2026-10-09-popular-paradox/pp-static.jpg",
+      "ai": true,
+      "caption": "Post-jump hair. Our pilot asks that you not mention it.",
+      "w": 1376,
+      "h": 768,
+      "use": "post",
+      "cover": false,
+      "at": "Test three: 88"
+    },
+    {
+      "src": "data/photos/2026-10-09-popular-paradox/pp-bubbles.jpg",
+      "ai": true,
+      "caption": "The porthole, mid-burst. That reflection is our pilot, not a stowaway.",
+      "w": 1376,
+      "h": 768,
+      "use": "post",
+      "cover": false,
+      "at": "Test four: the porthole"
+    },
+    {
+      "src": "data/photos/2026-10-09-popular-paradox/clip-fall.mp4",
+      "ai": false,
+      "caption": "Scroll, or pull the tape on the right, and the page falls back through every era, all the way to the bottom.",
+      "w": 1024,
+      "h": 576,
+      "use": "post",
+      "cover": false,
+      "poster": "data/photos/2026-10-09-popular-paradox/clip-fall.jpg",
+      "video": true,
+      "at": "The fall"
+    },
+    {
+      "src": "data/photos/2026-10-09-popular-paradox/clip-table.mp4",
+      "ai": false,
+      "caption": "A 1990s table with a corner image in each corner cell and repeating edges between them: drag the corner and it stretches.",
+      "w": 1280,
+      "h": 836,
+      "use": "post",
+      "cover": false,
+      "poster": "data/photos/2026-10-09-popular-paradox/clip-table.jpg",
+      "video": true
+    },
+    {
+      "src": "data/photos/2026-10-09-popular-paradox/pp-cutaway.jpg",
+      "ai": true,
+      "caption": "Our artist's impression of the works. Christian's actual machine runs on code, not clockwork; we checked.",
+      "w": 1376,
+      "h": 768,
+      "use": "post",
+      "cover": false
+    },
+    {
+      "src": "data/photos/2026-10-09-popular-paradox/clip-dark.mp4",
+      "ai": false,
+      "caption": "Shut it down and the cockpit goes dark, but the portholes stay lit from outside.",
+      "w": 1280,
+      "h": 720,
+      "use": "post",
+      "cover": false,
+      "poster": "data/photos/2026-10-09-popular-paradox/clip-dark.jpg",
+      "video": true,
+      "at": "After the jump"
+    },
+    {
+      "src": "data/photos/2026-10-09-popular-paradox/pp-after.jpg",
+      "ai": true,
+      "caption": "Our test pilot, filing her report. The clipboard is blank. She says it's all up here.",
+      "w": 1376,
+      "h": 768,
+      "use": "post",
+      "cover": false,
+      "at": "After the jump"
+    }
+  ],
+  "fieldNotes": "The Tumble's own feature, a lab-test review in a made-up 1970s–80s popular-science magazine, POPULAR PARADOX. Facts from Christian's voice note of Oct 9 (assets/paradox/FROM-CHRISTIAN.md) and from what the Tumble does; renders from assets/paradox/PHOTOSHOOT.md; clips from his screen recording.",
+  "post": {
+    "title": "We Took the Tumble Time Machine for a Spin",
+    "body": "The machine sits at the top of the Web tab on christiangehrke.com, and it does not look like a web page. It looks like the cockpit of something that should not be allowed out of the hangar: a brass console, a row of portholes, a ring of glowing jewels around one enormous dial, and more knobs than any reasonable pilot needs. Its inventor calls it the Tumble. We sent our most reliable test pilot to find out what it does.\n\n## A time machine for the browser\n\nChristian Gehrke has been building websites since 1997. As he puts it, saying you built a website in 1997 doesn't mean a lot to a lot of developers now. What does mean something is the tools you had back then: tables, basic CSS, just images and some JavaScript. Then, as time goes on, more tools arrive. The Tumble shows it: a fall from today, at the top, all the way back to the first browser in 1990, at the very bottom.\n\n> It's a time machine, but it's focused on the browser: the arch-enemy of a web developer, and also the tool that lets us do our job.\n\n## The nemesis\n\nAs a developer, he told us, it was always fighting with the browser. You had to do fixes for every version: Netscape, the Mozillas, Firefox, Chrome, whatever it was. And yet there's no web developer whose work doesn't get seen in a browser at some point. That's what you're building for. So there's this struggle between them, and the dashboard puts the browsers right where you can't miss them: nine jewels in a ring around the big dial, one for each browser, from Mosaic to Brave.\n\n## Test one: the jewels\n\nPress a jewel and that browser comes up close, under the glass of the big dial, with the year it arrived. Press the year and the whole page tumbles down to that moment in history, slowly. Nothing snaps. It lowers you like a lift with good manners.\n\n## Test two: the knobs\n\nThe row of knobs on the right looks decorative. It is not. Turn one and a surge runs through the machine: every gauge sweeps up and back and glows orange, the portholes flare white-gold, rings of light pulse out, and a burst of golden bubbles rises past the porthole up top. Our test pilot turned it again. Then a third time, quickly. That was a mistake.\n\n## Test three: 88\n\nThree quick turns, or one press of the button that has been breathing at you the whole time, and the big dial reads 88 MPH. The lights on the desk start running like Christmas lights strung along a porch. Then the jump: a crack of light, two trails of fire and a spinning plate, all playing out under the glass of the big dial. Our pilot's notes from this part of the test are unprintable. Her hair, as you can see, did not come through it.\n\n## Test four: the porthole\n\nAbove the dials sits a porthole into deep water. Every so often a bubble drifts up with a browser inside it. Press a browser and its own bubble is released, with a burp of air behind it to lift it on its way. Press it again, and again, and the porthole fills.\n\n> Ejecting little bubbles out into the ether in this little chamber, and watching the bubbles with the logos go up, is a bit therapeutic.\n\n## The fall\n\nScroll, or pull the tape down the right-hand side, and the page falls back through every era he's worked in: what the browsers could do, the tricks developers used when they couldn't, and what he was building at the time. Near the bottom, in 1997, there's a trick from the period you can still pull on yourself.\n\n## After the jump\n\nThere are hidden Easter eggs in there too, he says, that make it kind of fun. We found some. We're not telling you where. A lot of it, he told us, was simply a challenge in design and animation: to see what could be done to make the dashboard actually work. Once he saw the dash panel and how it looked, putting the browsers themselves into it was, in his words, pretty cool. We'd go further."
+  },
+  "feature": {
+    "theme": "paradox",
+    "masthead": "Popular Paradox",
+    "tagline": "Science, gadgets and the fourth dimension",
+    "issue": "Lab Test: The Tumble",
+    "coverLines": [
+      "We hit 88 so you don't have to",
+      "Nine browsers, one dial: a history you can fly",
+      "Inside the porthole: why bubbles are therapeutic",
+      "Test pilot report: “My hair has notes”"
+    ],
+    "label": "Lab Test · Time Machines",
+    "byline": "Test flights and words by GlazyArray · Photographs made with AI",
+    "blocks": [
+      {
+        "type": "specs",
+        "before": "A time machine for the browser",
+        "title": "Spec sheet",
+        "rows": [
+          [
+            "Model",
+            "The Tumble, web time machine"
+          ],
+          [
+            "Location",
+            "The Web tab, christiangehrke.com"
+          ],
+          [
+            "Range",
+            "Today, back to 1990 (the first browser)"
+          ],
+          [
+            "Top speed",
+            "88 MPH"
+          ],
+          [
+            "Browsers on board",
+            "9 jewels, Mosaic to Brave"
+          ],
+          [
+            "Controls",
+            "Jewels, knobs, levers, a porthole and one very tempting button"
+          ],
+          [
+            "Fuel",
+            "HTML, CSS and some JavaScript"
+          ],
+          [
+            "Safety equipment",
+            "Goggles (supplied)"
+          ]
+        ],
+        "note": "Prices, warranties and the effects of 88 on hair are not covered."
+      },
+      {
+        "type": "box",
+        "before": "After the jump",
+        "kicker": "How it works",
+        "title": "Responsive, before it had a name",
+        "photo": "clip-table.mp4",
+        "text": "Down at the bottom of the fall, in 1997, there's a trick from the period. Start with a table of three rows and three columns. Put a fixed-width corner image in each corner cell, and give every cell between them a repeating background image. The middle cell holds the content.\n\nWhen the browser window changed, the corners stayed corners, and the edges stretched to join them. That's how a box grew and shrank before CSS could do it, and on the Tumble you can drag its corner and try it."
+      },
+      {
+        "type": "callouts",
+        "before": "After the jump",
+        "photo": "pp-cutaway.jpg",
+        "title": "Cutaway:",
+        "items": [
+          {
+            "x": 22,
+            "y": 31,
+            "label": "Test pilot (goggles down)"
+          },
+          {
+            "x": 41,
+            "y": 43,
+            "label": "Nine browser jewels"
+          },
+          {
+            "x": 42,
+            "y": 28,
+            "label": "The year dial"
+          },
+          {
+            "x": 56,
+            "y": 55,
+            "label": "Clockwork (artist's licence)"
+          },
+          {
+            "x": 67,
+            "y": 47,
+            "label": "Surge valves"
+          },
+          {
+            "x": 75,
+            "y": 66,
+            "label": "The bubble coil"
+          },
+          {
+            "x": 84,
+            "y": 30,
+            "label": "Portholes, lit from outside"
+          }
+        ]
+      },
+      {
+        "type": "verdict",
+        "title": "The verdict",
+        "score": "88",
+        "outOf": "/ 88 MPH",
+        "seal": "Tested by Popular Paradox",
+        "scores": [
+          [
+            "Nostalgia",
+            10,
+            10
+          ],
+          [
+            "Browser rivalry",
+            10,
+            10
+          ],
+          [
+            "Knob temptation",
+            10,
+            10
+          ],
+          [
+            "Therapeutic bubbles",
+            10,
+            10
+          ],
+          [
+            "Hair safety",
+            2,
+            10
+          ]
+        ],
+        "text": "A history lesson you can fly. The Tumble makes twenty-nine years of web building something you can see and touch, from 1997's tables and spacer images up to today, and it's honest about the browser: the nemesis and the reason for the job at the same time.\n\nRecommended for developers, the curious, and anyone who has ever had to fix the same page for every browser. Goggles advised."
+      }
+    ],
+    "qa": {
+      "title": "Ask the Inventor",
+      "items": [
+        {
+          "q": "Why build a time machine for a website?",
+          "a": "To show off the work I've done over the years, and the limitations that were there. Saying you built a website in 1997 doesn't mean a lot to a lot of developers now."
+        },
+        {
+          "q": "So what did a 1997 website have?",
+          "a": "The tables, the basic CSS, just images and some JavaScript. And then, as time progresses, you see we've got more tools."
+        },
+        {
+          "q": "Why put the browsers on the dashboard?",
+          "a": "As a developer it was always fighting with the browser. You had to do fixes for every version. It was a good way to visualize how it's changed over the years."
+        },
+        {
+          "q": "Friend or foe, then?",
+          "a": "Both. It's the nemesis of a web developer, but also the tool that enables us to do our job. That's what you're building for."
+        },
+        {
+          "q": "And the bubbles?",
+          "a": "Ejecting little bubbles out into the ether in this little chamber, and watching the bubbles with the logos go up, is a bit therapeutic."
+        },
+        {
+          "q": "Anything we missed?",
+          "a": "There are some hidden Easter eggs in there that make it kind of fun."
+        }
+      ]
+    },
+    "spotted": [
+      {
+        "label": "The Tumble",
+        "url": "https://www.christiangehrke.com/?web",
+        "text": "At the top of the Web tab. Goggles not included."
+      },
+      {
+        "label": "The test pilot",
+        "url": "https://www.christiangehrke.com/play/2026-10-08-glazyarray-will-see-you-now/",
+        "text": "GlazyArray narrates every Field Note, usually with tidier hair."
+      },
+      {
+        "label": "The photoshoot",
+        "text": "Every picture of GlazyArray here is an AI render from Christian's prompts; the clips are screen recordings of the real thing."
+      }
+    ]
+  },
+  "episode": {
+    "title": "GlazyArray Tests the Tumble",
+    "script": "Hello, it's GlazyArray. Today I'm reporting from the pilot's seat of the Tumble, the time machine at the top of Christian's Web tab, for a magazine called Popular Paradox. They gave me goggles. I should have asked why.\n\nChristian has been building websites since 1997, and he says that date alone doesn't mean much to developers now. What means something is what you had to work with: tables, basic CSS, images, and a little JavaScript. So he built a machine that falls from today, all the way back to the first browser in 1990.\n\nIt's a time machine for the browser: a web developer's arch-enemy, and the tool that lets them do the job at all. Every version needed its own fixes. Netscape, the Mozillas, Firefox, Chrome. So the browsers sit right there on the dashboard, nine glowing jewels around the big dial. Press one and it comes up close, with the year it arrived.\n\nThen there are the knobs. Turn one and the whole cockpit surges: the gauges glow orange, the portholes blaze, and golden bubbles rush past the window. Turn it three times, quickly, and you hit eighty-eight. I don't want to talk about eighty-eight. My hair doesn't want to talk about it either.\n\nMy favourite part is the porthole. Every so often a bubble floats up with a browser inside it, and if you press a browser, you can send its bubble up yourself. Christian says it's a bit therapeutic. He's right.\n\nThere are Easter eggs hidden in there, too. Christian says it was a challenge in design and animation, to make a dashboard that really works. I can confirm: it works. I'm GlazyArray, and that was the Tumble. Mind the knobs."
+  },
+  "questions": [],
+  "consent": "No people: GlazyArray and the photoshoot are AI renders from Christian's prompts; the clips are screen recordings of the site.",
+  "narratorLook": {
+    "look": "workshop-goggles",
+    "fit": "existing",
+    "about": "",
+    "why": "She's the test pilot.",
+    "prompt": "",
+    "bulb": true
+  },
+  "narratorBackdrop": {
+    "backdrop": "clockmaker",
+    "fit": "existing"
+  },
+  "palette": [
+    "#d4521c",
+    "#e3a12b"
+  ],
+  "publishedAt": "2026-10-09T16:00:00Z"
+}
