@@ -131,16 +131,30 @@
     if (jumpV && jumpV.preload === 'none') { jumpV.preload = 'auto'; jumpV.load(); }
     at88 = setTimeout(function () { root.classList.remove('tm-88on'); spin(); jump(); }, 2900);
   }
+  // the clip only shows once it is really playing, and always clears: on its end, a stall, an error, a pause, a time
+  // limit, or the page coming back from the back/forward cache, so the gauge never stays black
+  var jumpEnd = 0;
+  function jumpDone() {
+    clearTimeout(jumpEnd); jumpEnd = 0;
+    if (jumpV) { jumpV.onplaying = jumpV.onended = jumpV.onerror = jumpV.onpause = jumpV.onstalled = null; try { jumpV.pause(); } catch (e) {} }
+    root.classList.remove('tm-jumping');
+    setTimeout(function () { at88 = 0; }, 600);
+  }
   function jump() {
     if (!jumpV) { flux(); at88 = 0; return; }
-    var done = function () { root.classList.remove('tm-jumping'); setTimeout(function () { at88 = 0; }, 600); };
-    jumpV.onended = done; jumpV.onerror = null;
+    var shown = false;
+    jumpV.onplaying = function () { shown = true; root.classList.add('tm-jumping'); };
+    jumpV.onended = jumpV.onpause = jumpDone;
+    jumpV.onerror = jumpV.onstalled = function () { if (!shown) flux(); jumpDone(); };
     try { jumpV.currentTime = 0; } catch (e) {}
     jumpV.playbackRate = 2; // twice as fast (Christian, Oct 9)
+    jumpEnd = setTimeout(function () { if (!shown) flux(); jumpDone(); }, 7000);
     var p = jumpV.play();
-    root.classList.add('tm-jumping');
-    if (p && p.catch) p.catch(function () { root.classList.remove('tm-jumping'); flux(); at88 = 0; });
+    if (p && p.catch) p.catch(function () { flux(); jumpDone(); });
   }
+  addEventListener('pageshow', function (e) { if (e.persisted) { root.classList.remove('tm-jumping', 'tm-88on'); clearTimeout(at88); at88 = 0; jumpDone(); } });
+  addEventListener('pagehide', function () { if (root.classList.contains('tm-jumping')) jumpDone(); });
+
   function flux() {
     if (root.classList.contains('flux')) return;
     root.classList.add('flux'); setTimeout(function () { root.classList.remove('flux'); }, 900);
