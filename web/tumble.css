@@ -287,7 +287,7 @@ html.tm-burst .tm-jw{animation:tm-jwb .8s ease-in-out 2}
 .tm-port::before{content:"";position:absolute;inset:-60%;background:repeating-conic-gradient(from 0deg,rgba(255,226,150,.9) 0 6deg,rgba(255,180,60,0) 6deg 18deg),radial-gradient(circle,#fff6d0,transparent 60%);
   filter:blur(5px);animation:tm-spin 9s linear infinite}
 @keyframes tm-spin{to{rotate:360deg}}
-/* a surge (the knobs on the right): the right-hand gauges sweep up and back, one after another, and a spike of energy
+/* a surge (the knobs on the right): every gauge sweeps up and back, one after another, and a spike of energy
    goes through the portholes: their light flares and whirls, rings of light pulse out, and a wash of radiance spills
    into the room, all easing up and back down over about three seconds */
 .tm-glow{left:820px;top:-160px;width:760px;height:720px;pointer-events:none;opacity:0;mix-blend-mode:screen;
@@ -299,8 +299,17 @@ html.tm-surge .tm-port::before{animation:tm-spin 9s linear infinite,tm-whirl 3s 
 html.tm-surge .tm-glow{animation:tm-glow 3s ease-in-out}
 html.tm-surge .tm-pulse{animation:tm-pulse 1.9s cubic-bezier(.2,.6,.3,1) .25s}
 html.tm-surge .tm-pulse.late{animation-delay:.75s}
-html.tm-surge .tm-nd[data-nd="w2"],html.tm-surge .tm-nd[data-nd="w3"],html.tm-surge .tm-nd[data-nd="w4"],html.tm-surge .tm-nd[data-nd="w5"]{animation:tm-wob 3s ease-in-out infinite alternate,tm-surge-nd 2.6s ease-in-out}
+html.tm-surge .tm-nd[data-nd^="w"]{animation:tm-wob 3s ease-in-out infinite alternate,tm-surge-nd 2.6s ease-in-out}
+html.tm-surge .tm-nd:not([data-nd^="w"]){animation:tm-surge-nd 2.6s ease-in-out}
+html.tm-surge .tm-nd[data-nd="speed"]{animation-delay:.1s}html.tm-surge .tm-nd[data-nd="tools"]{animation-delay:.2s}html.tm-surge .tm-nd[data-nd="w1"]{animation-delay:0s,.15s}
 html.tm-surge .tm-nd[data-nd="w3"]{animation-delay:-1s,.15s}html.tm-surge .tm-nd[data-nd="w4"]{animation-delay:-2s,.3s}html.tm-surge .tm-nd[data-nd="w5"]{animation-delay:0s,.45s}
+/* during a surge every gauge's face (the big dial too) turns to a glowing orange, like the porthole, each with its own
+   needle's sweep, and back, so a phone, which can't see the portholes, sees it too */
+.tm-gface,.tm-gglow{left:calc((var(--x) - var(--rx)) * 1px);top:calc((var(--y) - var(--ry)) * 1px);width:calc(var(--rx) * 2px);height:calc(var(--ry) * 2px);border-radius:50%;pointer-events:none;opacity:0}
+.tm-gface{mix-blend-mode:color;background:#ff5a00}
+.tm-gglow{mix-blend-mode:screen;transform:scale(1.35);background:radial-gradient(circle,rgba(255,150,40,.7) 0 50%,rgba(255,110,20,.4) 66%,transparent 74%)}
+html.tm-surge .tm-gface,html.tm-surge .tm-gglow{animation:tm-gface 2.8s ease-in-out var(--gd,0s)}
+@keyframes tm-gface{0%,100%{opacity:0}35%,60%{opacity:1}}
 @keyframes tm-port-surge{0%,100%{opacity:.3;filter:none}35%,50%{opacity:1;filter:brightness(1.7) saturate(1.3)}}
 @keyframes tm-whirl{0%{transform:none}100%{transform:rotate(540deg)}}
 @keyframes tm-glow{0%,100%{opacity:0}35%,50%{opacity:.9}}
