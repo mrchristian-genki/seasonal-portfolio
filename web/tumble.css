@@ -309,8 +309,11 @@ html.tm-at88 .tm-nd[data-nd="year"]{opacity:0;transition:opacity .6s ease-in-out
 .tm-flash{inset:0;background:radial-gradient(circle at 80% 30%,#fff,rgba(255,236,190,.7) 25%,transparent 65%);opacity:0;pointer-events:none}
 html.flux .tm-flash{animation:tm-flash .9s ease-out}
 @keyframes tm-flash{8%{opacity:1}100%{opacity:0}}
-html.tm-dark .tm-room{filter:brightness(.32) saturate(.5)}
-html.tm-dark .tm-port{opacity:0;animation:none}
+/* shut down: the cockpit goes dark under a shade, but the three portholes stay lit from outside (the shade has soft
+   holes at them, so a little of their light spills into the dark room) */
+.tm-shade{left:0;top:0;width:1376px;height:768px;pointer-events:none;opacity:0;background:rgba(5,4,3,.7);transition:opacity 1.2s ease-in-out;
+  -webkit-mask:radial-gradient(ellipse 54px 106px at 1103px 220px,transparent 0 86%,#000 135%),radial-gradient(ellipse 76px 152px at 1318px 188px,transparent 0 86%,#000 135%),radial-gradient(circle 54px at 687px 123px,transparent 0 90%,#000 140%);-webkit-mask-composite:source-in;mask:radial-gradient(ellipse 54px 106px at 1103px 220px,transparent 0 86%,#000 135%),radial-gradient(ellipse 76px 152px at 1318px 188px,transparent 0 86%,#000 135%),radial-gradient(circle 54px at 687px 123px,transparent 0 90%,#000 140%);mask-composite:intersect}
+html.tm-dark .tm-shade{opacity:1}
 html.tm-dark .tm-jw{animation:none}html.tm-dark .tm-jw img.unlit{opacity:1}
 .tm-title{position:absolute;left:clamp(20px,4vw,72px);top:clamp(120px,22%,220px);max-width:min(36vw,520px);z-index:2}
 @media (min-width:1101px){.tm-title{left:228px}}
