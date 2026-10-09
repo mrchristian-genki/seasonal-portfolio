@@ -287,7 +287,7 @@ html.tm-burst .tm-jw{animation:tm-jwb .8s ease-in-out 2}
 .tm-port::before{content:"";position:absolute;inset:-60%;background:repeating-conic-gradient(from 0deg,rgba(255,226,150,.9) 0 6deg,rgba(255,180,60,0) 6deg 18deg),radial-gradient(circle,#fff6d0,transparent 60%);
   filter:blur(5px);animation:tm-spin 9s linear infinite}
 @keyframes tm-spin{to{rotate:360deg}}
-.tm-scr{width:calc(var(--w) * 1px);height:calc(var(--h) * 1px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border-radius:14px;overflow:hidden;
+.tm-scr{width:calc(var(--w) * 1px);height:calc(var(--hh) * 1px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border-radius:14px;overflow:hidden;
   font-family:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;color:#0a3550;text-align:center;
   background:repeating-linear-gradient(0deg,rgba(255,255,255,.07) 0 2px,rgba(0,0,0,.05) 2px 4px)}
 .tm-scr span{font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;opacity:.75}
