@@ -311,7 +311,20 @@
   function burst() { root.classList.remove('tm-burst'); void root.offsetWidth; root.classList.add('tm-burst'); setTimeout(function () { root.classList.remove('tm-burst'); }, 1700); }
   // the knobs on the right: a surge through the right-hand gauges and the portholes (restarts on each turn)
   var surgeT = 0;
-  function surge() { if (still) return; root.classList.remove('tm-surge'); void root.offsetWidth; root.classList.add('tm-surge'); clearTimeout(surgeT); surgeT = setTimeout(function () { root.classList.remove('tm-surge'); }, 3200); }
+  function surge() { if (still) return; root.classList.remove('tm-surge'); void root.offsetWidth; root.classList.add('tm-surge'); clearTimeout(surgeT); surgeT = setTimeout(function () { root.classList.remove('tm-surge'); }, 3200); goldBurst(); }
+  // ...and the power rush blows a burst of golden bubbles up past the middle porthole: Christian's bubble renders turned
+  // gold, big and small, each with its own place, pace and wobble, timed to the spike
+  function goldBurst() {
+    var g = document.querySelector('.tm-sub-glass'); if (!g) return;
+    for (var k = 0; k < 24; k++) {
+      var b = document.createElement('i'), s = Math.random() < .75 ? 5 + Math.random() * 9 : 15 + Math.random() * 12;
+      b.className = 'tm-gold';
+      b.style.cssText = '--x:' + (12 + Math.random() * 76).toFixed(0) + '%;--s:' + s.toFixed(1) + 'px;--d:' + (.35 + Math.random() * 1.1).toFixed(2) + 's;--t:' + (2.2 + Math.random() * 1.6).toFixed(2) + 's;--w:' + ((Math.random() < .5 ? -1 : 1) * (2 + Math.random() * 6)).toFixed(1) + 'px;--bub:url(media/tm/bubble-' + (1 + Math.floor(Math.random() * 5)) + '.webp)';
+      b.addEventListener('animationend', function () { this.remove(); });
+      g.appendChild(b);
+    }
+    var all = g.querySelectorAll('.tm-gold'); for (var i = 0; i < all.length - 90; i++) all[i].remove();   // keep a rush of turns from piling up
+  }
   function spin() { if (still) return; root.classList.add('tm-spin'); setTimeout(function () { root.classList.remove('tm-spin'); }, 1100); }
   lit('[data-act="play"]', false); lit('[data-act="all"]', true); lit('[data-act="power"]', true); lit('[data-act="ports"]', true); showSpeed(); sync();
   hbs.forEach(function (h) {
