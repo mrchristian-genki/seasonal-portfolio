@@ -234,6 +234,22 @@ If you'd rather the 88 MPH be part of the render than code:
 (The 88 MPH itself is best drawn by the page, sharp and in the dial's own font, so a render doesn't have to get the
 lettering right.)
 
+### L. The porthole's big bubble (Oct 9)
+
+The porthole where the middle TV was sends up a big air bubble every so often, with a browser's logo inside; pressing
+a browser (its jewel or its console button) releases that browser's bubble, with a burp of air behind it. The page
+puts the real logos in, so the render is **an empty bubble**: no logo, nothing inside.
+
+> A single large clear air bubble underwater, seen straight on, perfectly round with a gentle wobble, on a pure black
+> background. A thin bright rim of light around its edge, a soft white highlight at the upper left, a faint
+> reflection at the lower right, and the middle completely clear and empty. Soft cyan underwater light. Photographic,
+> sharp, centred. No text, no letters, no logos, no symbols, nothing inside the bubble.
+
+*Size:* 1024 × 1024, the bubble filling about 90% of the square. *Variations:* three or four, each with a slightly
+different wobble and highlight, so they don't all look alike. *Optional:* a 3-second loop of it wobbling as it rises
+(locked camera, the bubble centred, on black). *Goes:* on screen blend (its black drops out), with the logo set inside
+by the page.
+
 ---
 
 ## The first look (art deco and glowing glass)
