@@ -173,6 +173,15 @@
       squidLater(24000 + Math.random() * 22000);
     }, ms);
   }
+  // its bubbles: a few loose ones, each with its own place, size, pace, wobble and brightness, so no two rise together
+  var bubs = sub && sub.querySelector('.tm-sub-bubs');
+  if (bubs && !still) {
+    for (var bi = 0; bi < 8; bi++) {
+      var bb = document.createElement('b'), d = 6 + Math.random() * 9, sz = Math.random() < .7 ? 1.5 + Math.random() * 2 : 3.5 + Math.random() * 2.5;
+      bb.style.cssText = '--x:' + (12 + Math.random() * 72).toFixed(1) + '%;--s:' + sz.toFixed(1) + 'px;--d:' + d.toFixed(2) + 's;--dl:' + (-Math.random() * d).toFixed(2) + 's;--w:' + ((Math.random() < .5 ? -1 : 1) * (1.5 + Math.random() * 4)).toFixed(1) + 'px;--o:' + (.35 + Math.random() * .5).toFixed(2);
+      bubs.appendChild(bb);
+    }
+  }
   if (sub && !still) {
     sub.addEventListener('click', squidBy);
     sub.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); squidBy(); } });
