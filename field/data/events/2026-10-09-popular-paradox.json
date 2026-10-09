@@ -26,6 +26,22 @@
  "track": null,
  "photos": [
   {
+   "src": "data/photos/2026-10-09-popular-paradox/clip-92.mp4",
+   "poster": "data/photos/2026-10-09-popular-paradox/clip-92.jpg",
+   "video": true,
+   "caption": "Look at the bubbles.",
+   "takenAt": "2026:10:09 11:08:50",
+   "w": 960,
+   "h": 554,
+   "use": "post",
+   "cover": false,
+   "from": "gemini_generated_video_e97fd3d1.mp4",
+   "range": [
+    0,
+    10.05
+   ]
+  },
+  {
    "src": "data/photos/2026-10-09-popular-paradox/clip-89.mp4",
    "poster": "data/photos/2026-10-09-popular-paradox/clip-89.jpg",
    "video": true,
