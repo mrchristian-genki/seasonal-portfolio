@@ -162,7 +162,7 @@
    "caption": "Post-jump hair. Our pilot asks that you not mention it.",
    "w": 1376,
    "h": 768,
-   "use": "post",
+   "use": "skip",
    "cover": false,
    "at": "Test three: 88"
   },
