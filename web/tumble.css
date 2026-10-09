@@ -341,9 +341,9 @@ html.tm-dark .tm-jw{animation:none}html.tm-dark .tm-jw img.unlit{opacity:1}
 .tm-88 span{font:800 16px/1 system-ui,sans-serif;letter-spacing:.3em;margin-top:4px;text-shadow:0 0 8px #ff8a1a}
 html.tm-88on .tm-88{animation:tm-88 .95s ease-in-out 3}
 /* the jump: the fire-trail clip plays under the big gauge's glass, masked to its circle (where the close-ups show), eased in and out */
-.tm-jump{left:600px;top:299px;width:176px;height:176px;border-radius:50%;object-fit:cover;background:#000;pointer-events:none;opacity:0;transform:scale(.92);
-  -webkit-mask:radial-gradient(circle,#000 86%,transparent 100%);mask:radial-gradient(circle,#000 86%,transparent 100%);transition:opacity .6s ease-in-out,transform .6s ease-in-out}
-html.tm-jumping .tm-jump{opacity:1;transform:none}
+.tm-jump{left:600px;top:299px;width:176px;height:176px;border-radius:50%;object-fit:cover;pointer-events:none;opacity:0;visibility:hidden;transform:scale(.92);
+  -webkit-mask:radial-gradient(circle,#000 86%,transparent 100%);mask:radial-gradient(circle,#000 86%,transparent 100%);transition:opacity .6s ease-in-out,transform .6s ease-in-out,visibility 0s .6s}
+html.tm-jumping .tm-jump{opacity:1;visibility:visible;transform:none;transition:opacity .6s ease-in-out,transform .6s ease-in-out}
 html.tm-jumping .tm-close{opacity:0}
 @keyframes tm-88{0%,100%{opacity:0}45%,60%{opacity:1}}
 /* a jewel picked above: its button on the console swells into a big, slow, breathing glow */
