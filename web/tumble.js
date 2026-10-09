@@ -151,26 +151,36 @@
     var p = jumpV.play();
     if (p && p.catch) p.catch(function () { flux(); jumpDone(); });
   }
-  // the porthole: the squid glides past now and then (first after a few seconds, then every half a minute or so, only
-  // while the cockpit is on screen), or whenever it's tapped; with reduced motion it stays away
-  var sub = document.querySelector('.tm-sub'), sqV = sub && sub.querySelector('video'), sqT = 0, sqEnd = 0;
-  function squidBy() {
-    if (!sqV || still || sub.classList.contains('pass')) return;
-    if (sqV.preload === 'none') { sqV.preload = 'auto'; sqV.load(); }
-    try { sqV.currentTime = 0; } catch (e) {}
-    sqV.playbackRate = 0.7;
-    var p = sqV.play();
+  // the porthole: every so often a big bubble with a browser's logo in it floats up, wobbling (first after a few seconds,
+  // then every ten to twenty, only while the cockpit is on screen), or whenever it's tapped; the browsers come round
+  // in a shuffled order. With reduced motion the bubbles stay away
+  var sub = document.querySelector('.tm-sub'), lb = sub && sub.querySelector('.tm-sub-lb'), lbT = 0, lbQ = [];
+  var LB = ['mosaic', 'netscape', 'ie', 'opera', 'safari', 'firefox', 'chrome', 'edge', 'brave'];
+  // a browser pressed (its jewel or its console button) releases its own bubble, slower, with a burp of air rushing up
+  // behind to lift it
+  var lbOff = 0;
+  function bubbleUp(name, burp) {
+    if (!lb || still) return;
+    if (sub.classList.contains('pass')) { if (!name) return; sub.classList.remove('pass'); void lb.offsetWidth; }
+    if (!name) { if (!lbQ.length) lbQ = LB.slice().sort(function () { return Math.random() - .5; }); name = lbQ.shift(); }
+    lb.querySelector('img').src = 'browsers/' + name + '.png';
+    lb.style.setProperty('--bx', (34 + Math.random() * 32).toFixed(0) + '%');
+    lb.style.setProperty('--lbd', burp ? '9.5s' : '7s');
+    Array.prototype.forEach.call(lb.querySelectorAll('i'), function (i) { i.remove(); });
+    if (burp) for (var k = 0; k < 14; k++) {
+      var i = document.createElement('i'), s = 2.5 + Math.random() * 5;
+      i.style.cssText = 'left:' + (18 + Math.random() * 64).toFixed(0) + '%;top:' + (105 + Math.random() * 70).toFixed(0) + '%;width:' + s.toFixed(1) + 'px;height:' + s.toFixed(1) + 'px;animation-delay:' + (1.1 + Math.random() * 2.2).toFixed(2) + 's;animation-duration:' + (1.8 + Math.random() * 1.4).toFixed(2) + 's';
+      lb.appendChild(i);
+    }
     sub.classList.add('pass');
-    sqEnd = setTimeout(squidGone, 7500);
-    if (p && p.catch) p.catch(squidGone);
+    clearTimeout(lbOff); lbOff = setTimeout(function () { sub.classList.remove('pass'); }, burp ? 9600 : 7100);
   }
-  function squidGone() { clearTimeout(sqEnd); sub.classList.remove('pass'); try { sqV.pause(); } catch (e) {} }
-  function squidLater(ms) {
-    clearTimeout(sqT);
-    sqT = setTimeout(function () {
+  function bubbleLater(ms) {
+    clearTimeout(lbT);
+    lbT = setTimeout(function () {
       var r = sub.getBoundingClientRect();
-      if (!document.hidden && r.bottom > 0 && r.top < innerHeight) squidBy();
-      squidLater(24000 + Math.random() * 22000);
+      if (!document.hidden && r.bottom > 0 && r.top < innerHeight) bubbleUp();
+      bubbleLater(10000 + Math.random() * 10000);
     }, ms);
   }
   // its bubbles: a few loose ones, each with its own place, size, pace, wobble and brightness, so no two rise together
@@ -183,9 +193,10 @@
     }
   }
   if (sub && !still) {
-    sub.addEventListener('click', squidBy);
-    sub.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); squidBy(); } });
-    squidLater(5000);
+    sub.addEventListener('click', function () { bubbleUp(); });
+    document.addEventListener('click', function (e) { var t = e.target.closest && e.target.closest('.tm-jw[data-close], .tm-hb.br[data-close]'); if (t) bubbleUp(t.getAttribute('data-close'), true); });
+    sub.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); bubbleUp(); } });
+    bubbleLater(3500);
   }
   addEventListener('pageshow', function (e) { if (e.persisted) { root.classList.remove('tm-jumping', 'tm-88on'); clearTimeout(at88); at88 = 0; jumpDone(); } });
   addEventListener('pagehide', function () { if (root.classList.contains('tm-jumping')) jumpDone(); });

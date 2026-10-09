@@ -340,8 +340,8 @@ html.tm-dark .tm-jw{animation:none}html.tm-dark .tm-jw img.unlit{opacity:1}
 .tm-88 b{font-size:64px;line-height:1;letter-spacing:.04em;text-shadow:0 0 10px #ff8a1a,0 0 26px #ff6a00}
 .tm-88 span{font:800 16px/1 system-ui,sans-serif;letter-spacing:.3em;margin-top:4px;text-shadow:0 0 8px #ff8a1a}
 html.tm-88on .tm-88{animation:tm-88 .95s ease-in-out 3}
-/* the porthole where the middle TV was: deep water, slow light shafts and bubbles, and now and then the paper squid
-   glides past (its clip on screen blend, so its black drops out); tap it to call the squid */
+/* the porthole where the middle TV was: deep water, slow light shafts and little bubbles, and every so often a big
+   bubble with a browser's logo in it floats up; tap it to send one up */
 .tm-sub{left:637px;top:73px;width:100px;height:100px;border-radius:50%;pointer-events:auto;cursor:pointer;
   box-shadow:0 0 0 3px #3a2410,0 0 0 9px #b98a45,0 0 0 11px #6a4520,0 6px 16px 9px rgba(0,0,0,.45);transition:box-shadow .8s ease-in-out}
 .tm-sub::before{content:"";position:absolute;inset:-9px;border-radius:50%;pointer-events:none;
@@ -362,9 +362,15 @@ html.tm-88on .tm-88{animation:tm-88 .95s ease-in-out 3}
   background:radial-gradient(circle at 34% 30%,rgba(255,255,255,.95) 0 16%,rgba(190,240,255,.3) 42%,rgba(190,240,255,.06) 68%,transparent 72%);
   box-shadow:inset 0 0 0 .5px rgba(200,245,255,.55);animation:tm-rise var(--d) ease-in-out var(--dl) infinite}
 @keyframes tm-rise{0%{opacity:0;transform:translate(0,0)}12%{opacity:var(--o)}30%{transform:translate(var(--w),-36px)}55%{transform:translate(calc(var(--w) * -.6),-66px)}80%{opacity:var(--o);transform:translate(var(--w),-96px)}100%{opacity:0;transform:translate(0,-112px)}}
-.tm-sub-sq{position:absolute;left:0;top:50%;width:210px;height:auto;max-width:none;mix-blend-mode:screen;opacity:0;transform:translate(54px,-42%);pointer-events:none}
-.tm-sub.pass .tm-sub-sq{animation:tm-squid 7.4s ease-in-out forwards}
-@keyframes tm-squid{0%{opacity:0;transform:translate(54px,-38%)}18%,80%{opacity:1}100%{opacity:0;transform:translate(-168px,-58%)}}
+.tm-sub-lb{position:absolute;left:var(--bx,50%);bottom:-58px;width:50px;height:50px;margin-left:-25px;border-radius:50%;opacity:0;pointer-events:none;
+  background:radial-gradient(circle,rgba(150,225,255,.05) 0 56%,rgba(170,235,255,.22) 66%,rgba(215,248,255,.6) 71%,rgba(215,248,255,.15) 73%,transparent 74%)}
+.tm-sub-lb img{position:absolute;left:50%;top:50%;width:30px;height:30px;margin:-15px 0 0 -15px;opacity:.9}
+.tm-sub-lb::after{content:"";position:absolute;inset:0;border-radius:50%;
+  background:radial-gradient(ellipse 30% 18% at 33% 24%,rgba(255,255,255,.9),transparent 72%),radial-gradient(ellipse 22% 10% at 64% 80%,rgba(255,255,255,.25),transparent 70%)}
+.tm-sub.pass .tm-sub-lb{animation:tm-lb var(--lbd,7s) ease-in-out forwards}
+.tm-sub-lb i{position:absolute;border-radius:50%;opacity:0;background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.9) 0 18%,rgba(190,240,255,.3) 45%,transparent 72%);box-shadow:inset 0 0 0 .5px rgba(200,245,255,.6);animation:tm-burp 2s ease-out forwards}
+@keyframes tm-burp{0%{opacity:0;transform:translate(0,0)}15%{opacity:.85}100%{opacity:0;transform:translate(0,-62px) scale(.7)}}
+@keyframes tm-lb{0%{opacity:0;transform:translate(0,0) scale(.85)}12%{opacity:1}32%{transform:translate(5px,-52px) scale(.96,1.04)}56%{transform:translate(-4px,-100px) scale(1.04,.96)}80%{opacity:1;transform:translate(4px,-145px) scale(.98,1.02)}100%{opacity:0;transform:translate(0,-180px) scale(1)}}
 @media (prefers-reduced-motion:reduce){.tm-sub-ray{animation:none}.tm-sub-bubs{display:none}}
 /* the jump: the fire-trail clip plays under the big gauge's glass, masked to its circle (where the close-ups show), eased in and out */
 .tm-jump{left:600px;top:299px;width:176px;height:176px;border-radius:50%;object-fit:cover;pointer-events:none;opacity:0;visibility:hidden;transform:scale(.92);
