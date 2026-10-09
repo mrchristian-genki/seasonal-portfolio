@@ -291,12 +291,12 @@
   "#00b493"
  ],
  "narratorLook": {
-  "look": "trail-cap",
+  "look": "ponytail",
   "fit": "existing",
-  "about": "a trucker cap with a GA leather patch, its front and brim in one colour and its mesh back in the other",
+  "about": "",
   "why": "",
   "prompt": "",
-  "bulb": false
+  "bulb": true
  },
  "narratorBackdrop": {
   "backdrop": "hawaii-coast",
