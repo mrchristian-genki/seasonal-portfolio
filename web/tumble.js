@@ -166,6 +166,8 @@
     lb.querySelector('img').src = 'browsers/' + name + '.png';
     lb.style.setProperty('--bx', (40 + Math.random() * 20).toFixed(0) + '%');
     lb.style.setProperty('--lbd', burp ? '9.5s' : '7s');
+    lb.style.setProperty('--bub', 'url(media/tm/bubble-' + (1 + Math.floor(Math.random() * 5)) + '.webp)');   // one of the five bubble renders
+    lb.style.setProperty('--brot', (Math.random() * 30 - 15).toFixed(0) + 'deg');
     Array.prototype.forEach.call(lb.querySelectorAll('i'), function (i) { i.remove(); });
     if (burp) for (var k = 0; k < 14; k++) {
       var i = document.createElement('i'), s = 2.5 + Math.random() * 5;
