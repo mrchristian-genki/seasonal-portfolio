@@ -287,6 +287,25 @@ html.tm-burst .tm-jw{animation:tm-jwb .8s ease-in-out 2}
 .tm-port::before{content:"";position:absolute;inset:-60%;background:repeating-conic-gradient(from 0deg,rgba(255,226,150,.9) 0 6deg,rgba(255,180,60,0) 6deg 18deg),radial-gradient(circle,#fff6d0,transparent 60%);
   filter:blur(5px);animation:tm-spin 9s linear infinite}
 @keyframes tm-spin{to{rotate:360deg}}
+/* a surge (the knobs on the right): the right-hand gauges sweep up and back, one after another, and a spike of energy
+   goes through the portholes: their light flares and whirls, rings of light pulse out, and a wash of radiance spills
+   into the room, all easing up and back down over about three seconds */
+.tm-glow{left:820px;top:-160px;width:760px;height:720px;pointer-events:none;opacity:0;mix-blend-mode:screen;
+  background:radial-gradient(ellipse 46% 50% at 66% 49%,rgba(255,236,180,.75),rgba(255,190,90,.28) 45%,transparent 72%)}
+.tm-pulse{left:calc(var(--x) * 1px);top:calc(var(--y) * 1px);width:calc(var(--w) * 1px);height:calc(var(--hh) * 1px);margin:calc(var(--hh) * -.5px) 0 0 calc(var(--w) * -.5px);
+  border-radius:50%;pointer-events:none;opacity:0;mix-blend-mode:screen;box-shadow:0 0 18px 6px rgba(255,230,160,.9),inset 0 0 22px 8px rgba(255,240,200,.8)}
+html.tm-surge .tm-port{animation:tm-port-surge 3s ease-in-out}
+html.tm-surge .tm-port::before{animation:tm-spin 9s linear infinite,tm-whirl 3s ease-in-out}
+html.tm-surge .tm-glow{animation:tm-glow 3s ease-in-out}
+html.tm-surge .tm-pulse{animation:tm-pulse 1.9s cubic-bezier(.2,.6,.3,1) .25s}
+html.tm-surge .tm-pulse.late{animation-delay:.75s}
+html.tm-surge .tm-nd[data-nd="w2"],html.tm-surge .tm-nd[data-nd="w3"],html.tm-surge .tm-nd[data-nd="w4"],html.tm-surge .tm-nd[data-nd="w5"]{animation:tm-wob 3s ease-in-out infinite alternate,tm-surge-nd 2.6s ease-in-out}
+html.tm-surge .tm-nd[data-nd="w3"]{animation-delay:-1s,.15s}html.tm-surge .tm-nd[data-nd="w4"]{animation-delay:-2s,.3s}html.tm-surge .tm-nd[data-nd="w5"]{animation-delay:0s,.45s}
+@keyframes tm-port-surge{0%,100%{opacity:.3;filter:none}35%,50%{opacity:1;filter:brightness(1.7) saturate(1.3)}}
+@keyframes tm-whirl{0%{transform:none}100%{transform:rotate(540deg)}}
+@keyframes tm-glow{0%,100%{opacity:0}35%,50%{opacity:.9}}
+@keyframes tm-pulse{0%{opacity:0;transform:scale(1)}15%{opacity:1}100%{opacity:0;transform:scale(2.3)}}
+@keyframes tm-surge-nd{0%,100%{transform:none}45%,60%{transform:rotate(100deg)}}
 .tm-scr{width:calc(var(--w) * 1px);height:calc(var(--hh) * 1px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border-radius:14px;overflow:hidden;
   font-family:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;color:#0a3550;text-align:center;
   background:repeating-linear-gradient(0deg,rgba(255,255,255,.07) 0 2px,rgba(0,0,0,.05) 2px 4px)}

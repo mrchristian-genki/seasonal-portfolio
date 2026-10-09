@@ -309,6 +309,9 @@
   function showSpeed() { hbs.forEach(function (h) { var m = /^s:(\d)/.exec(h.getAttribute('data-act')); if (m) h.classList.toggle('lit', +m[1] <= speed); }); }
   function stopPlay() { playing = false; clearTimeout(jwTimer); lit('[data-act="play"]', false); }
   function burst() { root.classList.remove('tm-burst'); void root.offsetWidth; root.classList.add('tm-burst'); setTimeout(function () { root.classList.remove('tm-burst'); }, 1700); }
+  // the knobs on the right: a surge through the right-hand gauges and the portholes (restarts on each turn)
+  var surgeT = 0;
+  function surge() { if (still) return; root.classList.remove('tm-surge'); void root.offsetWidth; root.classList.add('tm-surge'); clearTimeout(surgeT); surgeT = setTimeout(function () { root.classList.remove('tm-surge'); }, 3200); }
   function spin() { if (still) return; root.classList.add('tm-spin'); setTimeout(function () { root.classList.remove('tm-spin'); }, 1100); }
   lit('[data-act="play"]', false); lit('[data-act="all"]', true); lit('[data-act="power"]', true); lit('[data-act="ports"]', true); showSpeed(); sync();
   hbs.forEach(function (h) {
@@ -323,7 +326,7 @@
       else if (a === 'speed') { speed = speed % 5 + 1; showSpeed(); if (playing) tickJ(); var kk = ((parseFloat(h.style.getPropertyValue('--k')) || 0) + 72) % 360; h.style.setProperty('--k', kk + 'deg'); h.classList.add('turned'); }
       else if (a === 'lamp') { h.classList.toggle('lit'); burst(); }
       else if (a === 'go') hit88();
-      else if (a === 'spin') { spin(); var k = ((parseFloat(h.style.getPropertyValue('--k')) || 0) + 60) % 360; h.style.setProperty('--k', k + 'deg'); h.classList.add('turned'); }
+      else if (a === 'spin') { if (h.classList.contains('knob')) surge(); else spin(); var k = ((parseFloat(h.style.getPropertyValue('--k')) || 0) + 60) % 360; h.style.setProperty('--k', k + 'deg'); h.classList.add('turned'); }
       else if (a === 'ports') { var off = root.classList.toggle('tm-noports'); lit('[data-act="ports"]', !off); }
     });
   });
