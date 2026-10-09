@@ -101,14 +101,13 @@
     if ('ResizeObserver' in window) new ResizeObserver(function () { layTape(); }).observe(document.querySelector('main'));
   }
 
-  // the top: the readouts (where you're headed, today, your last visit) and the chart of what the browser can do
-  var tcNow = document.querySelector('[data-tc-now]'), tcLast = document.querySelector('[data-tc-last]');
+  // the top: the readouts (the past at the bottom of the fall, and today) and the chart of what the browser can do
+  var tcNow = document.querySelector('[data-tc-now]');
   var MON = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
   var stamp = function (d) { return MON[d.getMonth()] + ' ' + ('0' + d.getDate()).slice(-2) + ' ' + d.getFullYear() + ' ' + ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2); };
   if (tcNow) {
-    var tcNow2 = document.querySelector('[data-tc-now2]'), tcLast2 = document.querySelector('[data-tc-last2]');
+    var tcNow2 = document.querySelector('[data-tc-now2]');
     var tick = function () { tcNow.textContent = tcNow2.textContent = stamp(new Date()); }; tick(); setInterval(tick, 10000);
-    try { var last = localStorage.getItem('tumble-last'); if (last) tcLast.textContent = tcLast2.textContent = stamp(new Date(+last)); localStorage.setItem('tumble-last', String(Date.now())); } catch (e) {}
   }
   // the cockpit: the render scaled to cover its frame (left-aligned on wide screens, centred on the big dial on
   // phones); its needles swing from -120 to 120 degrees, for the year, the fall speed and the toolbox
