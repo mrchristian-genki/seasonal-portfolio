@@ -130,7 +130,7 @@
    "takenAt": "2020:04:18 15:06:33",
    "w": 960,
    "h": 540,
-   "use": "post",
+   "use": "skip",
    "cover": false,
    "from": "5541F35A-1200-48BC-9CAC-D0511BCFA086.MP4",
    "range": [
@@ -194,7 +194,7 @@
    "takenAt": null,
    "w": 960,
    "h": 540,
-   "use": "post",
+   "use": "skip",
    "cover": false,
    "from": "5063A8B1-AEFC-4092-B770-208AAD58708F.MP4",
    "range": [
@@ -210,7 +210,7 @@
    "takenAt": null,
    "w": 960,
    "h": 540,
-   "use": "post",
+   "use": "skip",
    "cover": false,
    "from": "5063A8B1-AEFC-4092-B770-208AAD58708F.MP4",
    "range": [
@@ -242,7 +242,7 @@
    "takenAt": null,
    "w": 960,
    "h": 540,
-   "use": "post",
+   "use": "skip",
    "cover": false,
    "from": "84308171-C6AB-4333-B71F-1EC39067CC93.MP4",
    "range": [
@@ -266,7 +266,7 @@
    "takenAt": null,
    "w": 1376,
    "h": 768,
-   "use": "post",
+   "use": "skip",
    "cover": false,
    "from": "Drone_character_hovering_and_waving_20261009124816.jpg"
   }
