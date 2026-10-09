@@ -303,9 +303,10 @@ html.tm-burst .tm-jw{animation:tm-jwb .8s ease-in-out 2}
 .tm-nd[data-nd="w2"]{animation-duration:2.2s}.tm-nd[data-nd="w3"]{animation-duration:3.7s;animation-delay:-1s}.tm-nd[data-nd="w4"]{animation-duration:2.7s;animation-delay:-2s}.tm-nd[data-nd="w5"]{animation-duration:4.1s}
 @keyframes tm-wob{0%{rotate:-60deg}30%{rotate:-20deg}55%{rotate:-35deg}100%{rotate:25deg}}
 html.tm-spin .tm-nd{transition:rotate 1s cubic-bezier(.2,.8,.3,1);rotate:400deg!important;animation:none}
-/* during the jump at 88 the big gauge's needle fades away (it looked like a glitch over the clip), and back after */
+/* the big gauge's needle fades away whenever something shows in the gauge's centre: the jump at 88 (it looked like a
+   glitch over the clip) and a browser's close-up; it eases back after */
 .tm-nd[data-nd="year"]{transition:rotate .5s cubic-bezier(.3,1.6,.5,1),opacity .8s ease-in-out}
-html.tm-at88 .tm-nd[data-nd="year"]{opacity:0;transition:opacity .6s ease-in-out}
+html.tm-at88 .tm-nd[data-nd="year"],.tm-close.on ~ .tm-nd[data-nd="year"]{opacity:0;transition:opacity .6s ease-in-out}
 .tm-flash{inset:0;background:radial-gradient(circle at 80% 30%,#fff,rgba(255,236,190,.7) 25%,transparent 65%);opacity:0;pointer-events:none}
 html.flux .tm-flash{animation:tm-flash .9s ease-out}
 @keyframes tm-flash{8%{opacity:1}100%{opacity:0}}
