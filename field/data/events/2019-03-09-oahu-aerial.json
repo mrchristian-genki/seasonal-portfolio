@@ -1,0 +1,271 @@
+{
+ "id": "2019-03-09-oahu-aerial",
+ "title": "Oahu Aerial",
+ "date": "2019-03-09",
+ "kind": "ride",
+ "place": "Oahu, Hawaii",
+ "status": "notes",
+ "summary": "",
+ "trailhead": null,
+ "links": [],
+ "track": null,
+ "photos": [
+  {
+   "src": "data/photos/2019-03-09-oahu-aerial/clip-15.mp4",
+   "poster": "data/photos/2019-03-09-oahu-aerial/clip-15.jpg",
+   "video": true,
+   "caption": "Looking down over the Mokes of the coasst of Kailua and Lanikai.",
+   "takenAt": "2017:03:09 14:21:47",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "01137C89-42E8-4739-8464-0C58CDDB48E0.MP4",
+   "range": [
+    11.2,
+    30.1
+   ]
+  },
+  {
+   "src": "data/photos/2019-03-09-oahu-aerial/clip-12.mp4",
+   "poster": "data/photos/2019-03-09-oahu-aerial/clip-12.jpg",
+   "video": true,
+   "caption": "Lanikai Beach at sunrise on Oahu.",
+   "takenAt": "2017:07:29 16:24:34",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "D7BBDE56-2C39-46F8-B2D5-BD216A45EFB1.MP4",
+   "range": [
+    0,
+    16.3
+   ]
+  },
+  {
+   "src": "data/photos/2019-03-09-oahu-aerial/clip-2.mp4",
+   "poster": "data/photos/2019-03-09-oahu-aerial/clip-2.jpg",
+   "video": true,
+   "caption": "Makapuu Beach on Oahu.",
+   "takenAt": "2019:05:07 22:24:49",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "0D8011A7-B0C5-4625-9AB6-0C658C871657.MP4",
+   "range": [
+    0,
+    14.9
+   ]
+  },
+  {
+   "src": "data/photos/2019-03-09-oahu-aerial/clip-1.mp4",
+   "poster": "data/photos/2019-03-09-oahu-aerial/clip-1.jpg",
+   "video": true,
+   "caption": "Manta Ray in Hawaii off the North Shore.",
+   "takenAt": "2019:05:23 14:39:20",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "D1809692-62E0-4930-9CA0-2B66627CD6AA.MP4",
+   "range": [
+    0,
+    7.9
+   ]
+  },
+  {
+   "src": "data/photos/2019-03-09-oahu-aerial/clip-6.mp4",
+   "poster": "data/photos/2019-03-09-oahu-aerial/clip-6.jpg",
+   "video": true,
+   "caption": "Unexpected visitor from the East Side.",
+   "takenAt": "2019:07:26 23:16:22",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "4627A149-D611-41EA-BA23-35CCB8F50EFF.MP4",
+   "range": [
+    0,
+    5.5
+   ]
+  },
+  {
+   "src": "data/photos/2019-03-09-oahu-aerial/clip-13.mp4",
+   "poster": "data/photos/2019-03-09-oahu-aerial/clip-13.jpg",
+   "video": true,
+   "caption": "Makapuu Riders",
+   "takenAt": "2020:04:10 19:47:11",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "D45B0B9A-45A2-40A6-AB72-82E71E342A49.MP4",
+   "range": [
+    5.5,
+    10.7
+   ]
+  },
+  {
+   "src": "data/photos/2019-03-09-oahu-aerial/clip-14.mp4",
+   "poster": "data/photos/2019-03-09-oahu-aerial/clip-14.jpg",
+   "video": true,
+   "caption": "Magic Island on Oahu.",
+   "takenAt": "2020:04:10 19:47:56",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "D45B0B9A-45A2-40A6-AB72-82E71E342A49.MP4",
+   "range": [
+    50.95,
+    59.4
+   ]
+  },
+  {
+   "src": "data/photos/2019-03-09-oahu-aerial/clip-9.mp4",
+   "poster": "data/photos/2019-03-09-oahu-aerial/clip-9.jpg",
+   "video": true,
+   "caption": "Cruising with the car on the shores of Oahu on the East side.",
+   "takenAt": "2020:04:18 15:06:33",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "5541F35A-1200-48BC-9CAC-D0511BCFA086.MP4",
+   "range": [
+    38.2,
+    47.7
+   ]
+  },
+  {
+   "src": "data/photos/2019-03-09-oahu-aerial/clip-4.mp4",
+   "poster": "data/photos/2019-03-09-oahu-aerial/clip-4.jpg",
+   "video": true,
+   "caption": "East side drive on Oahu.",
+   "takenAt": "2020:04:18 15:06:38",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "54C21556-620E-47A7-9E72-0179671FF3D4.MP4",
+   "range": [
+    0,
+    16.4
+   ]
+  },
+  {
+   "src": "data/photos/2019-03-09-oahu-aerial/clip-3.mp4",
+   "poster": "data/photos/2019-03-09-oahu-aerial/clip-3.jpg",
+   "video": true,
+   "caption": "The Kayak and the Hammock.",
+   "takenAt": null,
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "39F515C3-2F2D-4192-9087-71CD33FBE3E8.MP4",
+   "range": [
+    0,
+    11.5
+   ]
+  },
+  {
+   "src": "data/photos/2019-03-09-oahu-aerial/clip-5.mp4",
+   "poster": "data/photos/2019-03-09-oahu-aerial/clip-5.jpg",
+   "video": true,
+   "caption": "Snorkeling around the coves of Oahu on the North shore.",
+   "takenAt": null,
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "87A73BA6-30D0-47BA-A628-FF64842E54A4.MP4",
+   "range": [
+    0,
+    21.5
+   ]
+  },
+  {
+   "src": "data/photos/2019-03-09-oahu-aerial/clip-7.mp4",
+   "poster": "data/photos/2019-03-09-oahu-aerial/clip-7.jpg",
+   "video": true,
+   "caption": "More manta rays on the North shore of Oahu.",
+   "takenAt": null,
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "5063A8B1-AEFC-4092-B770-208AAD58708F.MP4",
+   "range": [
+    0,
+    10.7
+   ]
+  },
+  {
+   "src": "data/photos/2019-03-09-oahu-aerial/clip-8.mp4",
+   "poster": "data/photos/2019-03-09-oahu-aerial/clip-8.jpg",
+   "video": true,
+   "caption": "A pair of manta rays of the North shore of Oahu.",
+   "takenAt": null,
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "5063A8B1-AEFC-4092-B770-208AAD58708F.MP4",
+   "range": [
+    50.45,
+    60.2
+   ]
+  },
+  {
+   "src": "data/photos/2019-03-09-oahu-aerial/clip-10.mp4",
+   "poster": "data/photos/2019-03-09-oahu-aerial/clip-10.jpg",
+   "video": true,
+   "caption": "Shorebreak at Makapuu on Oahu.",
+   "takenAt": null,
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "30569F2E-51B5-4D60-A751-8B9F83AA56BB.MP4",
+   "range": [
+    0,
+    22.35
+   ]
+  },
+  {
+   "src": "data/photos/2019-03-09-oahu-aerial/clip-11.mp4",
+   "poster": "data/photos/2019-03-09-oahu-aerial/clip-11.jpg",
+   "video": true,
+   "caption": "Shorebreak riders on Makapuu beach on Oahu.",
+   "takenAt": null,
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "84308171-C6AB-4333-B71F-1EC39067CC93.MP4",
+   "range": [
+    0,
+    17.6
+   ]
+  }
+ ],
+ "fieldNotes": "",
+ "post": {
+  "title": "",
+  "body": ""
+ },
+ "episode": {
+  "title": "",
+  "script": "",
+  "audio": null
+ },
+ "questions": [],
+ "consent": "",
+ "source": "Rides/Oahu Aerial ",
+ "palette": [
+  "#34a3b2",
+  "#5d84d0"
+ ]
+}
