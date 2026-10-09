@@ -315,11 +315,11 @@ html.tm-dark .tm-jw{animation:none}html.tm-dark .tm-jw img.unlit{opacity:1}
 .tb-now-in{position:relative;z-index:2;max-width:1000px;margin:-40px auto 0;padding:0 20px;width:100%}
 .tb-now .tb-lede{max-width:62ch;color:#f1e6d8;text-shadow:0 1px 12px #000}
 /* the readouts, for phones and screen readers (on wide screens they're on the cockpit's screens) */
-.tm-panel{display:grid;grid-template-columns:repeat(3,auto);justify-content:start;gap:8px;margin:22px 0 0;padding:10px;border-radius:12px;background:rgba(10,12,16,.7);border:1px solid rgba(255,214,140,.35)}
+.tm-panel{display:grid;grid-template-columns:repeat(2,auto);justify-content:start;gap:8px;margin:22px 0 0;padding:10px;border-radius:12px;background:rgba(10,12,16,.7);border:1px solid rgba(255,214,140,.35)}
 .tc{margin:0;display:flex;flex-direction:column;gap:3px}
 .tc span{font:800 9px system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#cfd6dc;padding:2px 6px;background:#9a1b1b;border-radius:2px;text-align:center}
 .tc b{padding:4px 10px;border-radius:4px;background:#060606;border:1px solid #222;font:700 clamp(18px,3vw,24px)/1.1 ui-monospace,Menlo,Consolas,monospace;white-space:nowrap}
-.tc-dest b{color:#ff4b3a;text-shadow:0 0 8px #ff3b2a}.tc-now b{color:#4dff6a;text-shadow:0 0 8px #3dff5a}.tc-last b{color:#ffb31f;text-shadow:0 0 8px #ffaa1a}
+.tc-dest b{color:#ff4b3a;text-shadow:0 0 8px #ff3b2a}.tc-now b{color:#4dff6a;text-shadow:0 0 8px #3dff5a}
 @media (min-width:761px){.tm-panel{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);margin:0;padding:0;border:0}}
 /* the console's own buttons, levers and knobs, made live: each glows in its colour when it's on */
 .tm-hbs{inset:0}
