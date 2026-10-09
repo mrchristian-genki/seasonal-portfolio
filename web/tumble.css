@@ -340,6 +340,9 @@ html.tm-dark .tm-jw{animation:none}html.tm-dark .tm-jw img.unlit{opacity:1}
 .tm-88 b{font-size:64px;line-height:1;letter-spacing:.04em;text-shadow:0 0 10px #ff8a1a,0 0 26px #ff6a00}
 .tm-88 span{font:800 16px/1 system-ui,sans-serif;letter-spacing:.3em;margin-top:4px;text-shadow:0 0 8px #ff8a1a}
 html.tm-88on .tm-88{animation:tm-88 .95s ease-in-out 3}
+/* the jump: the fire-trail clip, on screen blend over everything (its black drops out), eased in and out */
+.tm-jump{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;mix-blend-mode:screen;pointer-events:none;z-index:60;opacity:0;visibility:hidden;transition:opacity .6s ease-in-out,visibility 0s .6s}
+html.tm-jumping .tm-jump{opacity:1;visibility:visible;transition:opacity .6s ease-in-out}
 @keyframes tm-88{0%,100%{opacity:0}45%,60%{opacity:1}}
 /* a jewel picked above: its button on the console swells into a big, slow, breathing glow */
 .tm-hb.mega::before{inset:-240%;opacity:1;animation:tm-mega 2.4s ease-in-out infinite}

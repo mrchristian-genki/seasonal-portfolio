@@ -121,13 +121,24 @@
   addEventListener('resize', fitRoom); fitRoom();
   function needle(k, v, max) { var n = room && room.querySelector('[data-nd="' + k + '"]'); if (n) n.style.setProperty('--a', (-120 + 240 * Math.max(0, Math.min(1, v / (max || 120)))).toFixed(1) + 'deg'); }
   needle('year', 2026 - shownYear, 29);
-  // hit 88: the dial reads 88 MPH three times, then the jump (the flash and the needles; the fire trail comes later)
-  var at88 = 0;
+  // hit 88: the dial reads 88 MPH three times, then the jump: the fire-trail clip plays over the cockpit while the needles
+  // spin; if the clip can't play, the flash stands in. Reduced motion gets the flash alone.
+  var at88 = 0, jumpV = document.querySelector('.tm-jump');
   function hit88() {
     if (at88) return;
     if (still) { flux(); return; }
     root.classList.add('tm-88on');
-    at88 = setTimeout(function () { root.classList.remove('tm-88on'); flux(); spin(); at88 = 0; }, 2900);
+    if (jumpV && jumpV.preload === 'none') { jumpV.preload = 'auto'; jumpV.load(); }
+    at88 = setTimeout(function () { root.classList.remove('tm-88on'); spin(); jump(); }, 2900);
+  }
+  function jump() {
+    if (!jumpV) { flux(); at88 = 0; return; }
+    var done = function () { root.classList.remove('tm-jumping'); setTimeout(function () { at88 = 0; }, 600); };
+    jumpV.onended = done; jumpV.onerror = null;
+    try { jumpV.currentTime = 0; } catch (e) {}
+    var p = jumpV.play();
+    root.classList.add('tm-jumping');
+    if (p && p.catch) p.catch(function () { root.classList.remove('tm-jumping'); flux(); at88 = 0; });
   }
   function flux() {
     if (root.classList.contains('flux')) return;
