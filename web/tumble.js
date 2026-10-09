@@ -126,7 +126,7 @@
   function hit88() {
     if (at88) return;
     if (still) { flux(); return; }
-    root.classList.add('tm-88on');
+    root.classList.add('tm-88on', 'tm-at88');   // tm-at88: the big gauge's needle fades away for the whole jump
     if (jumpV && jumpV.preload === 'none') { jumpV.preload = 'auto'; jumpV.load(); }
     at88 = setTimeout(function () { root.classList.remove('tm-88on'); spin(); jump(); }, 2900);
   }
@@ -136,11 +136,11 @@
   function jumpDone() {
     clearTimeout(jumpEnd); jumpEnd = 0;
     if (jumpV) { jumpV.onplaying = jumpV.onended = jumpV.onerror = jumpV.onpause = jumpV.onstalled = null; try { jumpV.pause(); } catch (e) {} }
-    root.classList.remove('tm-jumping');
+    root.classList.remove('tm-jumping', 'tm-at88');
     setTimeout(function () { at88 = 0; }, 600);
   }
   function jump() {
-    if (!jumpV) { flux(); at88 = 0; return; }
+    if (!jumpV) { flux(); root.classList.remove('tm-at88'); at88 = 0; return; }
     var shown = false;
     jumpV.onplaying = function () { shown = true; root.classList.add('tm-jumping'); };
     jumpV.onended = jumpV.onpause = jumpDone;
@@ -205,7 +205,7 @@
     sub.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); bubbleUp(null, false, true); } });
     bubbleLater(3500);
   }
-  addEventListener('pageshow', function (e) { if (e.persisted) { root.classList.remove('tm-jumping', 'tm-88on'); clearTimeout(at88); at88 = 0; jumpDone(); } });
+  addEventListener('pageshow', function (e) { if (e.persisted) { root.classList.remove('tm-jumping', 'tm-88on', 'tm-at88'); clearTimeout(at88); at88 = 0; jumpDone(); } });
   addEventListener('pagehide', function () { if (root.classList.contains('tm-jumping')) jumpDone(); });
 
   function flux() {
