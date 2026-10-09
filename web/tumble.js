@@ -258,6 +258,13 @@
     brbs.forEach(function (h) { h.classList.remove('mega'); });
     if (y < 1997) { if (end) tumbleTo(end.getBoundingClientRect().top + scrollY); } else goYear(y);
   }
+  // the Past screen (the first browser, 1990): a click tumbles all the way to the bottom
+  var past = document.querySelector('[data-tm-bottom]');
+  function goBottom() { if (end) tumbleTo(end.getBoundingClientRect().top + scrollY); }
+  if (past) {
+    past.addEventListener('click', goBottom);
+    past.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); goBottom(); } });
+  }
   if (close) {
     close.addEventListener('click', goHeld);
     close.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); goHeld(); } });
