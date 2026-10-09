@@ -164,7 +164,7 @@
     if (sub.classList.contains('pass')) { if (!name) return; sub.classList.remove('pass'); void lb.offsetWidth; }
     if (!name) { if (!lbQ.length) lbQ = LB.slice().sort(function () { return Math.random() - .5; }); name = lbQ.shift(); }
     lb.querySelector('img').src = 'browsers/' + name + '.png';
-    lb.style.setProperty('--bx', (34 + Math.random() * 32).toFixed(0) + '%');
+    lb.style.setProperty('--bx', (40 + Math.random() * 20).toFixed(0) + '%');
     lb.style.setProperty('--lbd', burp ? '9.5s' : '7s');
     Array.prototype.forEach.call(lb.querySelectorAll('i'), function (i) { i.remove(); });
     if (burp) for (var k = 0; k < 14; k++) {
