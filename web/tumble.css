@@ -362,14 +362,13 @@ html.tm-88on .tm-88{animation:tm-88 .95s ease-in-out 3}
   background:radial-gradient(circle at 34% 30%,rgba(255,255,255,.95) 0 16%,rgba(190,240,255,.3) 42%,rgba(190,240,255,.06) 68%,transparent 72%);
   box-shadow:inset 0 0 0 .5px rgba(200,245,255,.55);animation:tm-rise var(--d) ease-in-out var(--dl) infinite}
 @keyframes tm-rise{0%{opacity:0;transform:translate(0,0)}12%{opacity:var(--o)}30%{transform:translate(var(--w),-36px)}55%{transform:translate(calc(var(--w) * -.6),-66px)}80%{opacity:var(--o);transform:translate(var(--w),-96px)}100%{opacity:0;transform:translate(0,-112px)}}
-.tm-sub-lb{position:absolute;left:var(--bx,50%);bottom:-60px;width:54px;height:54px;margin-left:-27px;border-radius:50%;opacity:0;pointer-events:none;
-  background:radial-gradient(circle,rgba(150,225,255,.07) 0 60%,transparent 66%)}
-.tm-sub-lb img{position:absolute;left:50%;top:50%;width:30px;height:30px;margin:-15px 0 0 -15px;opacity:.9}
+.tm-sub-lb{position:absolute;left:var(--bx,50%);bottom:calc(-60px * var(--bs,1) - var(--by,0px));width:calc(54px * var(--bs,1));height:calc(54px * var(--bs,1));margin-left:calc(-27px * var(--bs,1));border-radius:50%;opacity:0;pointer-events:none;
+  background:radial-gradient(circle,rgba(150,225,255,.07) 0 60%,transparent 66%);animation:tm-lb var(--lbd,7s) ease-in-out forwards}
+.tm-sub-lb img{position:absolute;left:50%;top:50%;width:56%;height:56%;margin:-28% 0 0 -28%;opacity:.9}
 .tm-sub-lb::after{content:"";position:absolute;inset:0;background:var(--bub,url(media/tm/bubble-1.webp)) center/100% no-repeat;transform:rotate(var(--brot,0deg))}   /* one of Christian's five bubble renders (their black made transparent), over the logo so its glints sit in front */
-.tm-sub.pass .tm-sub-lb{animation:tm-lb var(--lbd,7s) ease-in-out forwards}
 .tm-sub-lb i{position:absolute;border-radius:50%;opacity:0;background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.9) 0 18%,rgba(190,240,255,.3) 45%,transparent 72%);box-shadow:inset 0 0 0 .5px rgba(200,245,255,.6);animation:tm-burp 2s ease-out forwards}
 @keyframes tm-burp{0%{opacity:0;transform:translate(0,0)}15%{opacity:.85}100%{opacity:0;transform:translate(0,-62px) scale(.7)}}
-@keyframes tm-lb{0%{opacity:0;transform:translate(0,0) scale(.85)}12%{opacity:1}32%{transform:translate(5px,-52px) scale(.96,1.04)}56%{transform:translate(-4px,-100px) scale(1.04,.96)}80%{opacity:1;transform:translate(4px,-145px) scale(.98,1.02)}100%{opacity:0;transform:translate(0,-180px) scale(1)}}
+@keyframes tm-lb{0%{opacity:0;transform:translate(0,0) scale(.85)}12%{opacity:1}32%{transform:translate(5px,-52px) scale(.96,1.04)}56%{transform:translate(-4px,-100px) scale(1.04,.96)}80%{opacity:1;transform:translate(4px,-145px) scale(.98,1.02)}100%{opacity:0;transform:translate(0,-215px) scale(1)}}
 @media (prefers-reduced-motion:reduce){.tm-sub-ray{animation:none}.tm-sub-bubs{display:none}}
 /* the jump: the fire-trail clip plays under the big gauge's glass, masked to its circle (where the close-ups show), eased in and out */
 .tm-jump{left:600px;top:299px;width:176px;height:176px;border-radius:50%;object-fit:cover;pointer-events:none;opacity:0;visibility:hidden;transform:scale(.92);
