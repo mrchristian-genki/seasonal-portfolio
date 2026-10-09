@@ -151,6 +151,33 @@
     var p = jumpV.play();
     if (p && p.catch) p.catch(function () { flux(); jumpDone(); });
   }
+  // the porthole: the squid glides past now and then (first after a few seconds, then every half a minute or so, only
+  // while the cockpit is on screen), or whenever it's tapped; with reduced motion it stays away
+  var sub = document.querySelector('.tm-sub'), sqV = sub && sub.querySelector('video'), sqT = 0, sqEnd = 0;
+  function squidBy() {
+    if (!sqV || still || sub.classList.contains('pass')) return;
+    if (sqV.preload === 'none') { sqV.preload = 'auto'; sqV.load(); }
+    try { sqV.currentTime = 0; } catch (e) {}
+    sqV.playbackRate = 0.7;
+    var p = sqV.play();
+    sub.classList.add('pass');
+    sqEnd = setTimeout(squidGone, 7500);
+    if (p && p.catch) p.catch(squidGone);
+  }
+  function squidGone() { clearTimeout(sqEnd); sub.classList.remove('pass'); try { sqV.pause(); } catch (e) {} }
+  function squidLater(ms) {
+    clearTimeout(sqT);
+    sqT = setTimeout(function () {
+      var r = sub.getBoundingClientRect();
+      if (!document.hidden && r.bottom > 0 && r.top < innerHeight) squidBy();
+      squidLater(24000 + Math.random() * 22000);
+    }, ms);
+  }
+  if (sub && !still) {
+    sub.addEventListener('click', squidBy);
+    sub.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); squidBy(); } });
+    squidLater(5000);
+  }
   addEventListener('pageshow', function (e) { if (e.persisted) { root.classList.remove('tm-jumping', 'tm-88on'); clearTimeout(at88); at88 = 0; jumpDone(); } });
   addEventListener('pagehide', function () { if (root.classList.contains('tm-jumping')) jumpDone(); });
 
