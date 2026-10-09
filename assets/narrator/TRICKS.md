@@ -179,6 +179,29 @@ along fully outstretched arms or up off the wrist: those go above her shoulders 
 
 ---
 
+## What the first takes taught us (Oct 9)
+
+Two takes came back: one made from her torso still (her chest, tubes and arms matched her video almost exactly), and
+one made from words alone (a lovely low roll, but a different chest, with a gear grille and no cyan tubes). So:
+
+- **Always start from `rest.jpg`.** Only the take made from her still matched her body; without it the generator
+  invents a different robot, and every splice would jump.
+- **The head doesn't matter.** The generators keep adding a head because her torso looks headless. Let them: her
+  video is cropped at the neck and her own head layer sits on top. Just ask that the head "stays still and faces
+  forward", so the neck doesn't sway.
+- **Use the cyan tubes as the ceiling.** "Never higher than the bottom of the glowing cyan tubes on her chest" is
+  something the generator can see, and it keeps the ball and hands out of the head zone. In the first take the ball
+  grew and rose up to her collar, and one hand went over her head.
+- **Keep the ball small:** "a small ball, the size of a plum, no wider than her palm". It grew to twice that.
+- **Empty hands at both ends:** the first and last frames are her rest pose with no ball. One take started with the
+  ball already in her hand.
+
+Add this to the opening when a take drifts:
+
+> Her head stays still and faces forward. The ball is small, the size of a plum, no wider than her palm, and it and
+> her hands always stay lower than the bottom of the glowing cyan tubes on her chest. Her hands are empty at the
+> start and at the end.
+
 ## Quick fixes when a take goes wrong
 
 - **The ball rises toward her head:** add "the ball stays below the top of her chest plate the whole time" and
