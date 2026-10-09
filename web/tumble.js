@@ -126,9 +126,20 @@
   function hit88() {
     if (at88) return;
     if (still) { flux(); return; }
-    root.classList.add('tm-88on', 'tm-at88');   // tm-at88: the big gauge's needle fades away for the whole jump
+    root.classList.add('tm-88on', 'tm-at88', 'tm-party');   // tm-at88: the big gauge's needle fades away for the whole jump; tm-party: the lights run
+    chaseOrder();
     if (jumpV && jumpV.preload === 'none') { jumpV.preload = 'auto'; jumpV.load(); }
-    at88 = setTimeout(function () { root.classList.remove('tm-88on'); spin(); jump(); }, 2900);
+    at88 = setTimeout(function () { root.classList.remove('tm-88on'); spin(); surge(); jump(); }, 2900);   // the jump brings the knobs' surge too
+  }
+  // 88 is an event: from the first flash to the end of the clip, every light on the desk and the jewels round the dial
+  // run in chasing waves, like outdoor Christmas lights: each one eases up and down a beat after its neighbour (along
+  // the desk from left to right, and round the ring of jewels)
+  var chased = false;
+  function chaseOrder() {
+    if (chased) return; chased = true;
+    [].slice.call(document.querySelectorAll('.tm-jw')).forEach(function (el, i) { el.style.setProperty('--ci', i); });
+    [].slice.call(document.querySelectorAll('.tm-hb')).sort(function (a, b) { return parseFloat(a.style.getPropertyValue('--x')) - parseFloat(b.style.getPropertyValue('--x')); })
+      .forEach(function (el, i) { el.style.setProperty('--ci', i); });
   }
   // the clip only shows once it is really playing, and always clears: on its end, a stall, an error, a pause, a time
   // limit, or the page coming back from the back/forward cache, so the gauge never stays black
@@ -136,11 +147,11 @@
   function jumpDone() {
     clearTimeout(jumpEnd); jumpEnd = 0;
     if (jumpV) { jumpV.onplaying = jumpV.onended = jumpV.onerror = jumpV.onpause = jumpV.onstalled = null; try { jumpV.pause(); } catch (e) {} }
-    root.classList.remove('tm-jumping', 'tm-at88');
+    root.classList.remove('tm-jumping', 'tm-at88', 'tm-party');
     setTimeout(function () { at88 = 0; }, 600);
   }
   function jump() {
-    if (!jumpV) { flux(); root.classList.remove('tm-at88'); at88 = 0; return; }
+    if (!jumpV) { flux(); root.classList.remove('tm-at88', 'tm-party'); at88 = 0; return; }
     var shown = false;
     jumpV.onplaying = function () { shown = true; root.classList.add('tm-jumping'); };
     jumpV.onended = jumpV.onpause = jumpDone;
@@ -205,7 +216,7 @@
     sub.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); bubbleUp(null, false, true); } });
     bubbleLater(3500);
   }
-  addEventListener('pageshow', function (e) { if (e.persisted) { root.classList.remove('tm-jumping', 'tm-88on', 'tm-at88'); clearTimeout(at88); at88 = 0; jumpDone(); } });
+  addEventListener('pageshow', function (e) { if (e.persisted) { root.classList.remove('tm-jumping', 'tm-88on', 'tm-at88', 'tm-party'); clearTimeout(at88); at88 = 0; jumpDone(); } });
   addEventListener('pagehide', function () { if (root.classList.contains('tm-jumping')) jumpDone(); });
 
   function flux() {
@@ -311,6 +322,9 @@
   function burst() { root.classList.remove('tm-burst'); void root.offsetWidth; root.classList.add('tm-burst'); setTimeout(function () { root.classList.remove('tm-burst'); }, 1700); }
   // the knobs on the right: a surge through the right-hand gauges and the portholes (restarts on each turn)
   var surgeT = 0;
+  // three turns of the knobs in quick succession (within two seconds) push it all the way: 88
+  var knobT = [];
+  function knobRush() { var now = Date.now(); knobT = knobT.filter(function (t) { return now - t < 2000; }); knobT.push(now); if (knobT.length >= 3) { knobT = []; hit88(); } }
   function surge() { if (still) return; root.classList.remove('tm-surge'); void root.offsetWidth; root.classList.add('tm-surge'); clearTimeout(surgeT); surgeT = setTimeout(function () { root.classList.remove('tm-surge'); }, 3200); goldBurst(); }
   // ...and the power rush blows a burst of golden bubbles up past the middle porthole: Christian's bubble renders turned
   // gold, big and small, each with its own place, pace and wobble, timed to the spike
@@ -339,7 +353,7 @@
       else if (a === 'speed') { speed = speed % 5 + 1; showSpeed(); if (playing) tickJ(); var kk = ((parseFloat(h.style.getPropertyValue('--k')) || 0) + 72) % 360; h.style.setProperty('--k', kk + 'deg'); h.classList.add('turned'); }
       else if (a === 'lamp') { h.classList.toggle('lit'); burst(); }
       else if (a === 'go') hit88();
-      else if (a === 'spin') { if (h.classList.contains('knob')) surge(); else spin(); var k = ((parseFloat(h.style.getPropertyValue('--k')) || 0) + 60) % 360; h.style.setProperty('--k', k + 'deg'); h.classList.add('turned'); }
+      else if (a === 'spin') { if (h.classList.contains('knob')) { surge(); knobRush(); } else spin(); var k = ((parseFloat(h.style.getPropertyValue('--k')) || 0) + 60) % 360; h.style.setProperty('--k', k + 'deg'); h.classList.add('turned'); }
       else if (a === 'ports') { var off = root.classList.toggle('tm-noports'); lit('[data-act="ports"]', !off); }
     });
   });
