@@ -27,22 +27,6 @@
    ]
   },
   {
-   "src": "data/photos/2026-10-09-a-l-t-a/clip-3.mp4",
-   "poster": "data/photos/2026-10-09-a-l-t-a/clip-3.jpg",
-   "video": true,
-   "caption": "A.L.T.A. underwater among mossy boulders and roots, light coming down from the surface. AI-generated.",
-   "takenAt": "2026:10:09 19:03:22",
-   "w": 960,
-   "h": 540,
-   "use": "post",
-   "cover": false,
-   "from": "gemini_generated_video_81cd64c8.mp4",
-   "range": [
-    0,
-    6.85
-   ]
-  },
-  {
    "src": "data/photos/2026-10-09-a-l-t-a/clip-4.mp4",
    "poster": "data/photos/2026-10-09-a-l-t-a/clip-4.jpg",
    "video": true,
@@ -72,6 +56,22 @@
    "range": [
     0,
     6.7
+   ]
+  },
+  {
+   "src": "data/photos/2026-10-09-a-l-t-a/clip-9.mp4",
+   "poster": "data/photos/2026-10-09-a-l-t-a/clip-9.jpg",
+   "video": true,
+   "caption": "A.L.T.A swimming off into the deep water.",
+   "takenAt": "2026:10:10 08:27:29",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "Robot_mermaid_swims_underwater_1080p_20261010082713.mp4",
+   "range": [
+    0,
+    7.8
    ]
   },
   {
