@@ -2118,12 +2118,13 @@
  "consent": "",
  "source": "Rides/October 10 2026",
  "palette": [
-  "#5ca8e0",
-  "#b28134"
+  "#ec8209",
+  "#ffc800"
  ],
  "dashboard": {
   "speed": false,
   "facts": false
  },
+ "paletteBy": "hand",
  "publishedAt": "2026-10-10T20:44:36Z"
 }
