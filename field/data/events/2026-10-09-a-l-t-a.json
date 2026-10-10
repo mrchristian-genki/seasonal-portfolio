@@ -19,7 +19,7 @@
    "w": 960,
    "h": 540,
    "use": "post",
-   "cover": true,
+   "cover": false,
    "from": "gemini_generated_video_f550393f.mp4",
    "range": [
     0,
@@ -121,19 +121,19 @@
    ]
   },
   {
-   "src": "data/photos/2026-10-09-a-l-t-a/clip-5.mp4",
-   "poster": "data/photos/2026-10-09-a-l-t-a/clip-5.jpg",
+   "src": "data/photos/2026-10-09-a-l-t-a/clip-10.mp4",
+   "poster": "data/photos/2026-10-09-a-l-t-a/clip-10.jpg",
    "video": true,
-   "caption": "Fish in a bowl.",
+   "caption": "A.L.T.A playing with some fish in the shallow water.",
    "takenAt": null,
    "w": 960,
    "h": 540,
    "use": "post",
-   "cover": false,
-   "from": "gemini_generated_video_A304E629.mp4",
+   "cover": true,
+   "from": "gemini_generated_video_A304E629.MP4",
    "range": [
     0,
-    10
+    9.85
    ]
   }
  ],
@@ -168,8 +168,8 @@
   "scene": ""
  },
  "palette": [
-  "#34a7b2",
-  "#5d88d0"
+  "#34b2ab",
+  "#b28134"
  ],
  "publishedAt": "2026-10-09T22:47:31Z",
  "social": {
