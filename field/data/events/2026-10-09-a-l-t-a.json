@@ -119,16 +119,6 @@
    "from": "Mermaid_automaton_character_turn…_20261009145724.jpg"
   },
   {
-   "src": "data/photos/2026-10-09-a-l-t-a/07.jpg",
-   "caption": "Swimming low over a sunken log in dark water. AI-generated.",
-   "takenAt": null,
-   "w": 1376,
-   "h": 768,
-   "use": "skip",
-   "cover": false,
-   "from": "Mermaid_robot_gliding_through_water_20261009145408.jpg"
-  },
-  {
    "src": "data/photos/2026-10-09-a-l-t-a/08.jpg",
    "caption": "Looking up toward the surface, pine branches overhead. AI-generated.",
    "takenAt": null,
@@ -137,76 +127,6 @@
    "use": "post",
    "cover": false,
    "from": "Mermaid_robot_looking_upward_20261009145357.jpg"
-  },
-  {
-   "src": "data/photos/2026-10-09-a-l-t-a/09.jpg",
-   "caption": "Holding out a small woven basket. AI-generated.",
-   "takenAt": null,
-   "w": 1376,
-   "h": 768,
-   "use": "skip",
-   "cover": false,
-   "from": "Mermaid_robot_offering_woven_basket_20261009145403.jpg"
-  },
-  {
-   "src": "data/photos/2026-10-09-a-l-t-a/10.jpg",
-   "caption": "A hand on a granite boulder in clear shallows, pines on the shore. AI-generated.",
-   "takenAt": null,
-   "w": 1376,
-   "h": 768,
-   "use": "skip",
-   "cover": false,
-   "from": "Mermaid_robot_resting_on_boulder_20261009145354.jpg"
-  },
-  {
-   "src": "data/photos/2026-10-09-a-l-t-a/11.jpg",
-   "caption": "Resting against the granite, half above the waterline. AI-generated.",
-   "takenAt": null,
-   "w": 1376,
-   "h": 768,
-   "use": "skip",
-   "cover": false,
-   "from": "Mermaid_robot_resting_on_boulder_20261009145750.jpg"
-  },
-  {
-   "src": "data/photos/2026-10-09-a-l-t-a/12.jpg",
-   "caption": "Peeking around a boulder, tail raised behind her. AI-generated.",
-   "takenAt": null,
-   "w": 1376,
-   "h": 768,
-   "use": "skip",
-   "cover": false,
-   "from": "Mermaid_robot_resting_on_boulder_20261009145806.jpg"
-  },
-  {
-   "src": "data/photos/2026-10-09-a-l-t-a/13.jpg",
-   "caption": "Caption to come.",
-   "takenAt": null,
-   "w": 1376,
-   "h": 768,
-   "use": "skip",
-   "cover": false,
-   "from": "Robot_mermaid_anchoring_news_bro…_20261009151653.jpg"
-  },
-  {
-   "src": "data/photos/2026-10-09-a-l-t-a/14.jpg",
-   "caption": "ALTA touching a fish.",
-   "takenAt": null,
-   "w": 1376,
-   "h": 768,
-   "use": "skip",
-   "cover": false,
-   "from": "Robot_mermaid_communicating_with…_20261009145400.jpg"
-  },
-  {
-   "src": "data/photos/2026-10-09-a-l-t-a/15.jpg",
-   "caption": "A close up view of ALTA.",
-   "takenAt": null,
-   "w": 1376,
-   "h": 768,
-   "use": "skip",
-   "cover": false,
-   "from": "Submerged_mechanical_figure_unde…_20261009145412.jpg"
   },
   {
    "src": "data/photos/2026-10-09-a-l-t-a/clip-1.mp4",
