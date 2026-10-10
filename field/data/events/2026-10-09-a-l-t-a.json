@@ -59,6 +59,22 @@
    ]
   },
   {
+   "src": "data/photos/2026-10-09-a-l-t-a/clip-6.mp4",
+   "poster": "data/photos/2026-10-09-a-l-t-a/clip-6.jpg",
+   "video": true,
+   "caption": "A.L.T.A in enjoying the warm sunshine.",
+   "takenAt": "2026:10:10 07:58:36",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": true,
+   "from": "Woman_closing_and_opening_eyes_20261010075823.mp4",
+   "range": [
+    0,
+    8.05
+   ]
+  },
+  {
    "src": "data/photos/2026-10-09-a-l-t-a/02.jpg",
    "caption": "Leaning on the ledge of a glass tank at a small microphone, trout swimming below. AI-generated.",
    "takenAt": null,
@@ -89,16 +105,6 @@
    "from": "Mermaid_automaton_character_turn…_20261009145724.jpg"
   },
   {
-   "src": "data/photos/2026-10-09-a-l-t-a/08.jpg",
-   "caption": "Looking up toward the surface, pine branches overhead. AI-generated.",
-   "takenAt": null,
-   "w": 1376,
-   "h": 768,
-   "use": "post",
-   "cover": false,
-   "from": "Mermaid_robot_looking_upward_20261009145357.jpg"
-  },
-  {
    "src": "data/photos/2026-10-09-a-l-t-a/clip-1.mp4",
    "poster": "data/photos/2026-10-09-a-l-t-a/clip-1.jpg",
    "video": true,
@@ -123,7 +129,7 @@
    "w": 960,
    "h": 540,
    "use": "post",
-   "cover": true,
+   "cover": false,
    "from": "gemini_generated_video_A304E629.mp4",
    "range": [
     0,
@@ -161,8 +167,8 @@
   "scene": ""
  },
  "palette": [
-  "#34b2b1",
-  "#b27d34"
+  "#329ab4",
+  "#5b7ad2"
  ],
  "publishedAt": "2026-10-09T22:47:31Z",
  "social": {
