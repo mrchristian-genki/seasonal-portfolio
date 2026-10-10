@@ -51,7 +51,7 @@
    "w": 960,
    "h": 540,
    "use": "post",
-   "cover": true,
+   "cover": false,
    "from": "Woman_closing_and_opening_eyes_20261010075823.mp4",
    "range": [
     0,
@@ -72,6 +72,38 @@
    "range": [
     0,
     7.8
+   ]
+  },
+  {
+   "src": "data/photos/2026-10-09-a-l-t-a/clip-12.mp4",
+   "poster": "data/photos/2026-10-09-a-l-t-a/clip-12.jpg",
+   "video": true,
+   "caption": "A.L.T.A waving.",
+   "takenAt": "2026:10:10 09:20:40",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": true,
+   "from": "gemini_generated_video_4290d2a0.mp4",
+   "range": [
+    2.8,
+    4.75
+   ]
+  },
+  {
+   "src": "data/photos/2026-10-09-a-l-t-a/clip-13.mp4",
+   "poster": "data/photos/2026-10-09-a-l-t-a/clip-13.jpg",
+   "video": true,
+   "caption": "A.L.T.A welcoming you to her pool.",
+   "takenAt": "2026:10:10 09:20:44",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "gemini_generated_video_4290d2a0.mp4",
+   "range": [
+    6.05,
+    9.8
    ]
   },
   {
@@ -168,8 +200,8 @@
   "scene": ""
  },
  "palette": [
-  "#329ab4",
-  "#5b7ad2"
+  "#34a8b2",
+  "#b26634"
  ],
  "publishedAt": "2026-10-09T22:47:31Z",
  "social": {
