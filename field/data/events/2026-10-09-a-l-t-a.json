@@ -51,7 +51,7 @@
    "w": 960,
    "h": 540,
    "use": "post",
-   "cover": false,
+   "cover": true,
    "from": "Woman_closing_and_opening_eyes_20261010075823.mp4",
    "range": [
     0,
@@ -83,7 +83,7 @@
    "w": 960,
    "h": 540,
    "use": "post",
-   "cover": true,
+   "cover": false,
    "from": "gemini_generated_video_4290d2a0.mp4",
    "range": [
     2.8,
@@ -188,20 +188,22 @@
  "source": "Rides/A.L.T.A",
  "narratorLook": {
   "look": "workshop-goggles",
-  "fit": "existing",
+  "fit": "category",
   "about": "brass workshop goggles pushed up on her forehead: the leather strap in one colour and the padded rims in the other",
   "why": "An AI build of a fellow brass automaton, not a ride, so goggles fit better than the ride category's helmet.",
   "prompt": "",
-  "bulb": true
+  "bulb": true,
+  "from": "mini-cast"
  },
  "narratorBackdrop": {
   "backdrop": "workshop-with-robots",
-  "fit": "existing",
-  "scene": ""
+  "fit": "category",
+  "scene": "",
+  "from": "mini-cast"
  },
  "palette": [
-  "#34a8b2",
-  "#b26634"
+  "#329ab4",
+  "#5b7ad2"
  ],
  "publishedAt": "2026-10-09T22:47:31Z",
  "social": {
