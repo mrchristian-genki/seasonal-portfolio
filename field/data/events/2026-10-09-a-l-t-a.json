@@ -11,19 +11,19 @@
  "track": null,
  "photos": [
   {
-   "src": "data/photos/2026-10-09-a-l-t-a/clip-2.mp4",
-   "poster": "data/photos/2026-10-09-a-l-t-a/clip-2.jpg",
+   "src": "data/photos/2026-10-09-a-l-t-a/clip-8.mp4",
+   "poster": "data/photos/2026-10-09-a-l-t-a/clip-8.jpg",
    "video": true,
-   "caption": "A.L.T.A in the deep water.",
+   "caption": "A.L.T.A showing her lights in the deep water.",
    "takenAt": "2026:10:09 18:54:08",
    "w": 960,
    "h": 540,
    "use": "post",
-   "cover": false,
+   "cover": true,
    "from": "gemini_generated_video_f550393f.mp4",
    "range": [
     0,
-    10.05
+    9.75
    ]
   },
   {
@@ -67,7 +67,7 @@
    "w": 960,
    "h": 540,
    "use": "post",
-   "cover": true,
+   "cover": false,
    "from": "Woman_closing_and_opening_eyes_20261010075823.mp4",
    "range": [
     0,
@@ -167,8 +167,8 @@
   "scene": ""
  },
  "palette": [
-  "#329ab4",
-  "#5b7ad2"
+  "#34a7b2",
+  "#5d88d0"
  ],
  "publishedAt": "2026-10-09T22:47:31Z",
  "social": {
