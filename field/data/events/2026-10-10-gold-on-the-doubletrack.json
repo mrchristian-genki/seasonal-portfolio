@@ -4,7 +4,7 @@
  "date": "2026-10-10",
  "kind": "ride",
  "place": "Lake Tahoe Nevada State Park",
- "status": "script",
+ "status": "published",
  "summary": "A late-morning return to the Marlette Lake trail from Spooner Lake Trailhead, now that it's open again: Christian rode with Marley, Helena walked with Sofi, and the aspens were at full gold. About seven miles, with more time stopped for the trees than riding.",
  "trailhead": "spooner-lake",
  "links": [],
@@ -2112,7 +2112,7 @@
  "episode": {
   "title": "The ride that kept stopping",
   "script": "Narrated by GlazyArray.\n\nIt was a little after ten on a clear October morning at Spooner Lake Trailhead, and the sky was the kind of blue that makes you squint.\n\nThe last time this show came up the trail toward Marlette Lake, it was just before the trail closed for repairs. Now it was open again. The ranger at the gate said every trail was open, every day. And it looked like everyone had heard. There were a lot more people than usual, and there were horses on the trail too.\n\nOn a shared trail, bikes yield to horses, and Christian always does. On the way back, not far from the start, Christian and Marley were stopped at a stream. He'd just had a granola bar when some riders came up on their horses. Friendly riders, and their horses. Christian looked at the spot he and Marley were in and saw it was the best place for the horses to get to the water. They were ready to go anyway. So they packed up and left it to them. He counted it lucky, getting to meet such beautiful creatures. That's good trail manners. It's also just paying attention.\n\nChristian rode, with Marley running alongside him and the bike. Ha-Leen-Ah walked, with Sofi, a black dog they were dog-sitting. They set out together. But a bike and a walker don't keep the same pace, so they split up, and then found each other again, many times, all along the way. Each of them carried their own snacks. It was an out-and-back trail, not a loop. A little bit together, a little bit apart, and together again.\n\nWithin half an hour the trail had turned into a hallway of white trunks and yellow leaves. Marley would trot ahead, stop, look back, and wait. Then trot ahead again. Christian stopped too. He took a picture of her standing in the middle of the road, small and brown against all that gold.\n\nHigher up, the trees opened onto a meadow of sage. Beyond it, a whole hillside of aspens had gone yellow and orange below the ridge, with a few dark firs standing in front like they'd been told to hold still for the photo.\n\n***\n\nAnd then, just after eleven, the ride became something else.\n\nChristian stopped riding and picked up the camera. He didn't just point it at the brightest tree. He waited for the light to come from behind the leaves, so they glowed, and he found the spots where dark pines stood behind them, so the gold had something to shine against. He turned the frame tall, so a single aspen could fill it from bottom to top. That's the part people don't see in a good photograph. It isn't the tree. It's knowing where to stand.\n\nA few minutes later, the walkers and the riders were together again on the road. Ha-Leen-Ah, smiling wide under her sun hat, and Sofi, who seemed to think the whole forest had been arranged for her.\n\n***\n\nThe way back ran through a thick stand of aspens that had turned almost entirely orange, the trail threading between them like a tunnel somebody had lit from the inside.\n\nBy the numbers, it was about seven miles, a little over nine hundred feet of climbing, with a high point near seven thousand seven hundred feet. His top speed was about twenty-two miles an hour. But here's the number I like best. He was moving for less than an hour, in a ride that took nearly two.\n\nSome rides are about getting somewhere. This one was about coming back, and then stopping, again and again, until the stopping was the whole point.",
-  "audio": null
+  "audio": "data/audio/2026-10-10-gold-on-the-doubletrack.mp3"
  },
  "questions": [],
  "consent": "",
@@ -2124,5 +2124,6 @@
  "dashboard": {
   "speed": false,
   "facts": false
- }
+ },
+ "publishedAt": "2026-10-10T20:44:36Z"
 }
