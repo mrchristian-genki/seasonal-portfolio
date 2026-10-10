@@ -35,7 +35,7 @@
    "w": 960,
    "h": 540,
    "use": "post",
-   "cover": true,
+   "cover": false,
    "from": "gemini_generated_video_eec18817.mp4",
    "range": [
     0,
@@ -51,7 +51,7 @@
    "w": 960,
    "h": 540,
    "use": "post",
-   "cover": false,
+   "cover": true,
    "from": "Woman_closing_and_opening_eyes_20261010075823.mp4",
    "range": [
     0,
@@ -168,8 +168,8 @@
   "scene": ""
  },
  "palette": [
-  "#34b280",
-  "#5dbfd0"
+  "#329ab4",
+  "#5b7ad2"
  ],
  "publishedAt": "2026-10-09T22:47:31Z",
  "social": {
