@@ -35,7 +35,7 @@
    "w": 960,
    "h": 540,
    "use": "post",
-   "cover": false,
+   "cover": true,
    "from": "gemini_generated_video_eec18817.mp4",
    "range": [
     0,
@@ -129,7 +129,7 @@
    "w": 960,
    "h": 540,
    "use": "post",
-   "cover": true,
+   "cover": false,
    "from": "gemini_generated_video_A304E629.MP4",
    "range": [
     0,
@@ -168,8 +168,8 @@
   "scene": ""
  },
  "palette": [
-  "#34b2ab",
-  "#b28134"
+  "#34b27b",
+  "#5dc4d0"
  ],
  "publishedAt": "2026-10-09T22:47:31Z",
  "social": {
