@@ -59,16 +59,6 @@
    ]
   },
   {
-   "src": "data/photos/2026-10-09-a-l-t-a/01.jpg",
-   "caption": "A.L.T.A. underwater among mossy boulders and roots, light coming down from the surface. AI-generated.",
-   "takenAt": null,
-   "w": 1376,
-   "h": 768,
-   "use": "skip",
-   "cover": false,
-   "from": "Automaton_mermaid_character_refe…_20261009145420.jpg"
-  },
-  {
    "src": "data/photos/2026-10-09-a-l-t-a/02.jpg",
    "caption": "Leaning on the ledge of a glass tank at a small microphone, trout swimming below. AI-generated.",
    "takenAt": null,
@@ -77,26 +67,6 @@
    "use": "post",
    "cover": false,
    "from": "Automaton_presenting_news_in_aqu…_20261009151628.jpg"
-  },
-  {
-   "src": "data/photos/2026-10-09-a-l-t-a/03.jpg",
-   "caption": "Mid-sentence at the edge of an indoor pool, with cameras and onlookers on the deck. AI-generated.",
-   "takenAt": null,
-   "w": 1376,
-   "h": 768,
-   "use": "skip",
-   "cover": false,
-   "from": "Copper_mermaid_automaton_present…_20261009151121.jpg"
-  },
-  {
-   "src": "data/photos/2026-10-09-a-l-t-a/04.jpg",
-   "caption": "The labeled turnaround: front, side and back.",
-   "takenAt": null,
-   "w": 1376,
-   "h": 768,
-   "use": "skip",
-   "cover": false,
-   "from": "Gemini_Generated_Image_bd1xybd1xybd1xyb.jpeg"
   },
   {
    "src": "data/photos/2026-10-09-a-l-t-a/05.jpg",
