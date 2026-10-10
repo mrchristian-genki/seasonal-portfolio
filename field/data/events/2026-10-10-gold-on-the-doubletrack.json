@@ -1948,6 +1948,22 @@
    "from": "IMG_7627.jpg"
   },
   {
+   "src": "data/photos/2026-10-10-gold-on-the-doubletrack/clip-7.mp4",
+   "poster": "data/photos/2026-10-10-gold-on-the-doubletrack/clip-7.jpg",
+   "video": true,
+   "caption": "Some beautiful horses on the trail.",
+   "takenAt": "2026:10:10 11:07:05",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "IMG_7630.MOV",
+   "range": [
+    0,
+    4.2
+   ]
+  },
+  {
    "src": "data/photos/2026-10-10-gold-on-the-doubletrack/04.jpg",
    "caption": "11:19. Backlit aspen leaves against the shadowed trunks behind them.",
    "takenAt": "2026:10:10 11:19:01",
