@@ -34,7 +34,7 @@ section.listen.alta audio{position:absolute;width:1px;height:1px;opacity:0;point
 .alta.has-pal .al-pearl,.alta.has-pal .al-tint{opacity:1}   /* a Note's colours on her crown and hair; without them she wears her own */
 .alta .al-eyes{left:29.167%;top:47.143%;width:41.667%;height:17.143%;-webkit-mask:url(/assets/alta/parts/head-lens.png?v=2) 0 0/100% 100% no-repeat;
   mask:url(/assets/alta/parts/head-lens.png?v=2) 0 0/100% 100% no-repeat}
-.alta .al-eyes img{inset:0;width:100%;height:100%;transform:translate(var(--gx,0%),var(--gy,0%)) scale(var(--dil,1));transition:transform .8s ease-in-out,filter .9s ease-in-out}
+.alta .al-eyes img{inset:0;width:100%;height:100%;transform:translate(var(--gx,0%),var(--gy,0%)) scale(var(--dil,1.06));transition:transform .8s ease-in-out,filter .9s ease-in-out}
 .alta .al-glow{inset:0;mix-blend-mode:color;opacity:0;transition:opacity .9s ease-in-out,background-color .9s ease-in-out}
 .alta .al-lids{left:27.778%;top:45.714%;width:44.444%;height:20%;opacity:0;transition:opacity 70ms ease-in-out}
 .alta.blink .al-lids{opacity:1}
@@ -49,6 +49,9 @@ section.listen.alta audio{position:absolute;width:1px;height:1px;opacity:0;point
 .alta .al-ctl button:hover{transform:translateY(-1px);box-shadow:0 0 14px rgba(63,208,192,.45)}
 .alta .al-ctl button svg{width:18px;height:18px;fill:currentColor}
 .alta .al-ctl .al-sm{width:36px;height:36px}
+/* Play pressed while she's underwater: the button breathes softly until she's back at the ledge and starts */
+.alta .al-ctl button.al-wait{animation:al-wait 1.8s ease-in-out infinite}
+@keyframes al-wait{50%{box-shadow:0 0 16px rgba(63,208,192,.6);background:rgba(20,70,70,.85)}}
 .alta .al-seek{flex:1;min-width:60px;accent-color:#3fd0c0}
 .alta .al-t{font:12px/1 ui-monospace,Menlo,monospace;color:#bfe3dd;white-space:nowrap}
 .alta .al-soon{position:absolute;z-index:3;left:0;right:0;bottom:0;padding:22px 16px 12px;font-size:14px;color:#cfeee8;background:linear-gradient(0deg,rgba(6,16,18,.8),rgba(6,16,18,0))}
@@ -60,4 +63,4 @@ section.listen.alta audio{position:absolute;width:1px;height:1px;opacity:0;point
   section.listen.alta>div:first-child{position:static;padding:10px 14px 8px;background:#0a1a1c}   /* the title above her, off her crown */
 }
 @media (max-width:560px){.alta .al-ctl{gap:6px;padding:16px 8px 8px}.alta .al-ctl .al-sm{display:none}section.listen.alta>div:first-child{padding:8px 12px}}
-@media (prefers-reduced-motion:reduce){.alta .al-dive,.alta .al-pearl,.alta .al-tint,.alta .al-tail,.alta .al-palms,.alta .al-head,.alta .al-eyes img,.alta .al-glow,.alta .al-lids,.alta .al-mouth img,.alta .al-ctl button{transition:none}}
+@media (prefers-reduced-motion:reduce){.alta .al-ctl button.al-wait{animation:none}.alta .al-dive,.alta .al-pearl,.alta .al-tint,.alta .al-tail,.alta .al-palms,.alta .al-head,.alta .al-eyes img,.alta .al-glow,.alta .al-lids,.alta .al-mouth img,.alta .al-ctl button{transition:none}}
