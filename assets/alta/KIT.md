@@ -321,6 +321,12 @@ frame** `alta-under.jpg`.
 > softly in the water; a trout glides past behind her. She stays near the front of the tank and never goes behind the
 > rocks or out of frame. Slow, eased motion with no jitter. The last frame matches the first.
 
+**Built (Oct 11):** `parts/dive.mp4` joins the two takes Christian made: the Gemini one's opening (she lets go of the
+ledge, from her exact rest pose) blended over half a second into the Flow one, which takes her all the way under.
+`rise.mp4` is it backwards; `hover.mp4` ping-pongs its last second for her pause underwater. Her player dives every
+30 to 60 seconds while she isn't talking. (A swim loop would replace the hover; the Flow take also has a few bubbles
+rising above the ledge in the air.)
+
 **Check before sending:** clip 1's first frame matches her rest still, and clip 2's first and last frames match clip 1's
 last. A tool with a last-frame setting makes this easy; if yours doesn't, send them anyway and Claude finds the closest
 frames and cross-fades the seams.

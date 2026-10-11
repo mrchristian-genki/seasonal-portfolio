@@ -7,12 +7,13 @@
    - Without an episode yet she still waits in her tank, and says her introduction is on its way.
    - On a Note with a palette, her crown's filigree and the botanicals in her hair wear its two colours (no hats: her
      masks are head-flair-a/b, pearl versions of those parts, dyed with multiply).
+   - Now and then, while she isn't talking, she dives: sinks below the ledge, hovers, and rises the same way.
    - With reduced motion she holds still: no tail, glances, blinks or gestures; only her mouth moves.
    Built for each such bar on the page, and for any that arrive later (a Note opened in the homepage's story window,
    her Workshop window). GlazyArray's player (js/narrator.js) leaves these bars to her. */
 (function () {
   'use strict';
-  var P = '/assets/alta/parts/', V = '?v=3';
+  var P = '/assets/alta/parts/', V = '?v=4';
   var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var SHAPES = ['smile', 'neutral', 'ah', 'oh', 'oo', 'ee', 'laugh'];
   var IC = {
@@ -65,6 +66,41 @@
       eyes.style.setProperty('--gy', away ? ((Math.random() - .4) * 4).toFixed(1) + '%' : '0%');
       setTimeout(glance, away ? 900 + Math.random() * 900 : 2200 + Math.random() * 3200);
     })();
+
+    // the idle dive: now and then, while she isn't talking, she lets go of the ledge, sinks below it, hovers near the
+    // glass, and rises the way she went down (rise.mp4 is dive.mp4 backwards). Her own video head shows meanwhile; her
+    // layered head fades out as she goes and back in once she's up. Play mid-dive brings her straight back up.
+    var dv = { state: 'up', t: 0 }, ready = false;
+    var V3 = ['dive', 'hover', 'rise'].map(function (k) { var v = document.createElement('video'); v.className = 'al-dive'; v.muted = true; v.playsInline = true; v.preload = 'none'; v.setAttribute('playsinline', ''); if (k === 'hover') v.loop = true; v.dataset.k = k; st.appendChild(v); return v; });
+    var vDive = V3[0], vHover = V3[1], vRise = V3[2];
+    function load() { if (ready) return; ready = true; V3.forEach(function (v) { v.src = P + v.dataset.k + '.mp4' + V; v.preload = 'auto'; }); }
+    function showV(v) { V3.forEach(function (x) { x.classList.toggle('on', x === v); }); }
+    function surfaced() { dv.state = 'up'; head.classList.remove('gone'); setTimeout(function () { if (dv.state === 'up') V3.forEach(function (x) { x.classList.remove('on'); x.pause(); }); }, 300); plan(); }
+    function rise(rate) {
+      if (dv.state === 'rise' || dv.state === 'up') return;
+      var from = dv.state === 'dive' && vDive.duration ? Math.max(0, vDive.duration - vDive.currentTime) : 0;
+      dv.state = 'rise'; clearTimeout(dv.t); vRise.playbackRate = rate || 1;
+      // from where she is: the dive's time, mirrored (the rise is the dive backwards); once it can seek there
+      var start = function () {
+        vRise.currentTime = from;
+        var go = function () { vRise.removeEventListener('seeked', go); var p = vRise.play(); if (p && p.catch) p.catch(function () {}); showV(vRise); vDive.pause(); vHover.pause(); };
+        if (from > 0) vRise.addEventListener('seeked', go); else go();
+      };
+      if (vRise.readyState >= 1) start(); else vRise.addEventListener('loadedmetadata', start, { once: true });
+    }
+    function dive() {
+      if (still || dv.state !== 'up' || isTalking() || !bar.isConnected) return plan();
+      load(); dv.state = 'dive'; vDive.currentTime = 0;
+      var go = function () { vDive.removeEventListener('playing', go); if (dv.state !== 'dive') return; showV(vDive); head.classList.add('gone'); palms.classList.remove('on'); };
+      vDive.addEventListener('playing', go); var p = vDive.play(); if (p && p.catch) p.catch(function () { dv.state = 'up'; plan(); });
+    }
+    vDive.addEventListener('ended', function () { if (dv.state !== 'dive') return; dv.state = 'hover'; vHover.currentTime = 0; vHover.play().catch(function () {}); showV(vHover);
+      dv.t = setTimeout(function () { rise(1); }, 5000 + Math.random() * 5000); });
+    vRise.addEventListener('ended', function () { if (dv.state === 'rise') surfaced(); });
+    function plan() { clearTimeout(dv.t); if (still || dv.state !== 'up') return; dv.t = setTimeout(dive, 30000 + Math.random() * 30000); }
+    var isTalking = function () { return false; };
+    bar.altaDive = dive;   // for testing, and for a page that wants to cue it
+    if (!still) plan();
 
     if (!audio) {   // no episode yet: she waits in her tank
       var soon = document.createElement('p'); soon.className = 'al-soon'; soon.textContent = bar.getAttribute('data-soon') || 'Her introduction is on its way.';
@@ -127,12 +163,14 @@
       clearTimeout(gT); if (still || !talking) return;
       gT = setTimeout(function () { if (!talking) return; palms.currentTime = 0; palms.classList.add('on'); palms.play().catch(function () {}); gestures(); }, 12000 + Math.random() * 10000);
     }
+    isTalking = function () { return talking; };
     audio.addEventListener('play', function () {
+      rise(1.6);   // underwater when Play is pressed: straight back up, a little quicker
       listen(); if (ctx && ctx.state === 'suspended') ctx.resume();
       talking = true; glow.style.backgroundColor = '#2fe8c0'; glow.style.opacity = '.35'; eyes.style.setProperty('--dil', '1.05');
       gestures(); if (!raf) raf = requestAnimationFrame(tick);
     });
-    ['pause', 'ended'].forEach(function (t) { audio.addEventListener(t, function () { talking = false; clearTimeout(gT); glow.style.opacity = '0'; eyes.style.removeProperty('--dil'); }); });
+    ['pause', 'ended'].forEach(function (t) { audio.addEventListener(t, function () { talking = false; clearTimeout(gT); glow.style.opacity = '0'; eyes.style.removeProperty('--dil'); plan(); }); });
   }
 
   function scan(root) { (root.querySelectorAll ? root : document).querySelectorAll('section.listen.alta').forEach(build); }
