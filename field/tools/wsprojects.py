@@ -19,14 +19,15 @@ Photos and clips are named as publish.mjs publishes them to play/media.
 
   python3 field/tools/wsprojects.py
 """
-import datetime, json, os
+import datetime, hashlib, json, os
 
 
-def b36(n):
-    d = '0123456789abcdefghijklmnopqrstuvwxyz'; out = ''
-    while True:
-        n, r = divmod(n, 36); out = d[r] + out
-        if not n: return out
+def vtag(F, *files):
+    """a published picture's cache tag, from what's in its files (as publish.mjs makes it): a reordered Note reuses names"""
+    h = hashlib.sha1()
+    for f in files:
+        with open(os.path.join(F, f), 'rb') as fh: h.update(fh.read())
+    return h.hexdigest()[:8]
 
 
 def published(e):
@@ -35,10 +36,10 @@ def published(e):
     for i, ph in enumerate(x for x in e.get('photos') or [] if x.get('use') != 'skip'):
         base = f"play/media/{e['id']}/{i + 1:02d}"
         if ph.get('video'):
-            tag = '?v=' + b36(os.path.getsize(os.path.join(F, ph['src']))) + b36(os.path.getsize(os.path.join(F, ph['poster'])))
+            tag = '?v=' + vtag(F, ph['src'], ph['poster'])
             out.append({'type': 'video', 'src': base + '.mp4' + tag, 'poster': base + '.jpg' + tag, 'w': ph.get('w'), 'h': ph.get('h'), 'caption': ph.get('caption', '')})
         else:
-            out.append({'type': 'image', 'src': base + '.jpg', 'caption': ph.get('caption', '')})
+            out.append({'type': 'image', 'src': base + '.jpg?v=' + vtag(F, ph['src']), 'caption': ph.get('caption', '')})
     return out
 
 
@@ -48,7 +49,7 @@ def by_name(e):
     for ph, m in zip((x for x in e.get('photos') or [] if x.get('use') != 'skip'), published(e)):
         out[ph['src'].split('/')[-1]] = m
         if ph.get('video') and ph.get('poster'):
-            out.setdefault(ph['poster'].split('/')[-1], {'type': 'image', 'src': m['poster'].split('?')[0][:-4] + '.jpg', 'caption': m['caption']})
+            out.setdefault(ph['poster'].split('/')[-1], {'type': 'image', 'src': m['poster'], 'caption': m['caption']})
     return out
 
 

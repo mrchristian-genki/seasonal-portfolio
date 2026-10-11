@@ -163,6 +163,8 @@ const foot = (rel) => `<footer class="foot"><p>${esc(show.narrationNote)}</p>
 </html>
 `;
 
+// a published picture's cache tag, from what's in its files (field/tools/wsprojects.py makes the same one)
+const vtag = (...files) => { const h = createHash('sha1'); files.forEach((f) => h.update(fs.readFileSync(path.join(FIELD, f)))); return h.digest('hex').slice(0, 8); };
 const pages = [];
 const still = (c) => (c.video ? c.poster : c.src).replace('../', '');   // a cover's picture: a loop's poster frame
 for (const e of events) {
@@ -175,11 +177,13 @@ for (const e of events) {
       fs.copyFileSync(path.join(FIELD, p.src), path.join(media, base + '.mp4'));
       fs.copyFileSync(path.join(FIELD, p.poster), path.join(media, base + '.jpg'));
       // same name, new clip or new poster frame: let caches go
-      const tag = '?v=' + fs.statSync(path.join(FIELD, p.src)).size.toString(36) + fs.statSync(path.join(FIELD, p.poster)).size.toString(36);
+      const tag = '?v=' + vtag(p.src, p.poster);
       return { src: `../media/${e.id}/${base}.mp4${tag}`, poster: `../media/${e.id}/${base}.jpg${tag}`, abs: `${show.siteUrl}media/${e.id}/${base}.jpg${tag}`, caption: p.caption || '', w: p.w, h: p.h, cover: !!p.cover, video: true, ai: !!p.ai, table: p.table || null, after: p.after, file: path.basename(p.src), at: p.at || null };
     }
     fs.copyFileSync(path.join(FIELD, p.src), path.join(media, name));
-    return { src: `../media/${e.id}/${name}`, abs: `${show.siteUrl}media/${e.id}/${name}`, caption: p.caption || '', w: p.w, h: p.h, cover: !!p.cover, ai: !!p.ai, strip: p.strip || 0, file: path.basename(p.src), at: p.at || null };
+    // a photo's name is its place in the Note, so after a reorder the same name holds another picture: its tag tells caches
+    const tag = '?v=' + vtag(p.src);
+    return { src: `../media/${e.id}/${name}${tag}`, abs: `${show.siteUrl}media/${e.id}/${name}${tag}`, caption: p.caption || '', w: p.w, h: p.h, cover: !!p.cover, ai: !!p.ai, strip: p.strip || 0, file: path.basename(p.src), at: p.at || null };
   });
   // the cover heads the post: a photo, or a loop playing silently (its poster frame stands in for it on cards and shares)
   const cover = photos.find((p) => p.cover) || photos.find((p) => !p.video) || null;
