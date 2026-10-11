@@ -289,6 +289,11 @@ both a first and a last frame, so it has to get there.
 
 **Check:** nothing of her shows above the ledge; her crown is at least a head's height below the water's surface.
 
+**Done by Claude instead (Oct 11):** the image editors kept her at the ledge (they treat her position as part of "the same
+image"), so `assets/alta/alta-under.jpg` was built from parts: the empty tank (its trout painted out where she hovers),
+her front view cut from the clean turnaround (arms at her sides), set below the water's surface at the size she is at
+the ledge, graded to the tank's water, with a few bubbles rising from her crown. Use it as the clip's last frame.
+
 **Step 2, the clip** (`dive-down.mp4`, image to video, 8 s): **first frame** the still of her at the ledge, **last
 frame** `alta-under.jpg`.
 
