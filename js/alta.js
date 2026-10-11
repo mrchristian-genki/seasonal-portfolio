@@ -211,6 +211,19 @@
       if (talking || level > 0.01) raf = requestAnimationFrame(tick); else { raf = 0; say('smile'); head.style.transform = ''; }
     }
     isTalking = function () { return talking; };
+    // her eyes as she speaks: a soft cyan while she talks, and at the episode's cues (data-cues, from the Note) a steady
+    // amber ("when somebody litters") or a bright cyan-green bloom ("when a kid makes a good call"). Each eases over .9 s.
+    var CUES = []; try { CUES = JSON.parse(bar.getAttribute('data-cues') || '[]').sort(function (a, b) { return a.at - b.at; }); } catch (e) { CUES = []; }
+    var EYES = { talk: ['#2fe8c0', '.35', '1.1', ''], amber: ['#ffb020', '.85', '.92', 'brightness(1.3) saturate(1.35)'], cyan: ['#2fe8c0', '.85', '1.14', 'brightness(1.3) saturate(1.3)'] }, eyeNow = '';
+    var iris = eyes.querySelector('img');
+    function eyeMode(m) {
+      if (m === eyeNow) return; eyeNow = m;
+      if (!m) { glow.style.opacity = '0'; eyes.style.removeProperty('--dil'); iris.style.filter = ''; return; }
+      var x = EYES[m] || EYES.talk;
+      glow.style.backgroundColor = x[0]; glow.style.opacity = x[1]; eyes.style.setProperty('--dil', x[2]); iris.style.filter = x[3];
+    }
+    function cueEyes() { var m = 'talk'; CUES.forEach(function (c) { if (audio.currentTime >= c.at) m = c.eyes || 'talk'; }); return m; }
+    if (CUES.length) audio.addEventListener('timeupdate', function () { if (talking) eyeMode(cueEyes()); });
     // Play while she's underwater (or on her way down): the episode holds, she comes back up a little quicker, and it
     // starts once she's at the ledge. The button shows she's coming; pressed again, it's called off.
     var holding = false;
@@ -225,12 +238,12 @@
         return;
       }
       listen(); if (ctx && ctx.state === 'suspended') ctx.resume();
-      talking = true; bar.classList.add('talking'); glow.style.backgroundColor = '#2fe8c0'; glow.style.opacity = '.35'; eyes.style.setProperty('--dil', '1.1');
+      talking = true; bar.classList.add('talking'); eyeMode(cueEyes());
       gestures(); if (!raf) raf = requestAnimationFrame(tick);
     });
     ['pause', 'ended'].forEach(function (t) { audio.addEventListener(t, function () {
       if (holding) { show(); pp.innerHTML = IC.pause; return; }
-      talking = false; bar.classList.remove('talking'); glow.style.opacity = '0'; eyes.style.removeProperty('--dil'); plan(); gestures();
+      talking = false; bar.classList.remove('talking'); eyeMode(''); plan(); gestures();
     }); });
   }
 

@@ -178,7 +178,23 @@
   "narrator": "alta",
   "title": "A.L.T.A., in her own words",
   "script": "Hello. I'm A.L.T.A. It's short for Ancient Lake Tahoe Automaton. I'm a mermaid, of a sort. Copper and old bronze, gone green with patina, with small geometric lines etched into my face and my plates.\n\n***\n\nChristian came up with me on October ninth. And when he went looking for what I should be made of, he went to the lake. My crown is woven from tule reeds, willow and pinecones, with a little old filigree. My hair is coiled copper wire, with Jeffrey pine needles worked through it. My eyes hold the colors of Tahoe's water, from the shallows down. Amber and gold in the middle. Then emerald. Then deep sapphire at the edge. Soft cyan tubes glow at my neck and along my spine. And below the waist I'm a tail of patinated scales and sea-glass windows, with small gears and glowing fluid inside.\n\n***\n\nEvery picture of me is made with AI, in Flow and Gemini. So to keep me the same from one picture to the next, Christian built me like a production character. He wrote down exactly who I am. He made a turnaround of me, front, side and back. He made a sheet of mouth shapes, from neutral all the way to a laugh, so that one day I could talk. And he wrote down how I should move. Slowly. Weightless. Never jittery. Brushing the granite without stirring up the water.\n\nThen he took me apart. My head, on its own. My eyes, open and closed, so I can blink. Each of those mouth shapes, one at a time, so my lips can follow my voice. And a tank, with a copper ledge to lean on and room below for my tail. That's how I'm talking to you now.\n\n***\n\nSo, what am I for? I'm a guardian of the lake. Not the quiet, mysterious kind. I'm here to help protect our waters, and to teach people about them. Kids, most of all.\n\nI count the rules out on my fingers. Use the buddy system. Walk on the pool deck. Watch for the drop-off, where the shallow water turns deep. And don't leave your trash by the water.\n\nYou can tell how I feel by my eyes. When somebody litters, or horses around near the water, they go a steady amber. When a kid makes a good call, they bloom a bright cyan-green. I can be firm. But it comes from affection. The kids I teach aren't in trouble. They're my junior stewards.\n\n***\n\nHere's what I hope to do. I want to help local pools teach water safety, and respect for nature and the lakes and rivers we share. And I'd like a microphone of my own on this show. GlazyArray tells the stories from the trails. I'd like to tell the ones from the water.\n\nThank you for listening. I'll see you in the deep end.",
-  "audio": "data/audio/2026-10-09-a-l-t-a.mp3"
+  "audio": "data/audio/2026-10-09-a-l-t-a.mp3",
+  "cues": [
+   {
+    "at": 143.5,
+    "eyes": "amber",
+    "say": "When somebody litters … they go a steady amber."
+   },
+   {
+    "at": 147,
+    "eyes": "cyan",
+    "say": "When a kid makes a good call, they bloom a bright cyan-green."
+   },
+   {
+    "at": 152,
+    "eyes": ""
+   }
+  ]
  },
  "questions": [
   "I read 'at the top' as first among the clips (stills 02, 05, 06, then clips 5, 1, 8, 4, 7, 9). Did you mean the very top of the whole Note instead?",

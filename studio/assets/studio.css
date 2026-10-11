@@ -655,3 +655,6 @@ dialog.pfp::backdrop{background:rgba(20,12,6,.7)}
 .wso button:disabled{opacity:.35;cursor:default}
 @media (max-width:560px){.wso [data-top]{display:none}}
 @media (prefers-reduced-motion:reduce){.wso li{transition:none}}
+/* who narrates a category's Notes (studio.js renderCats): a narrow column beside its look and backdrop */
+.panel.cats .catl .catc:has(select[data-catnar]){flex:0 1 150px}
+.panel.cats .catnd{flex:0 0 260px;margin:0}

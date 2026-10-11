@@ -63,6 +63,19 @@ const lookAttr = (e) => {
   const pa = pal.length ? ` data-palette="${pal.join(' ')}"` : '';
   return own + bd + prefer + noh + pa + ` data-cats="${esc(cats.concat(kind ? [kind] : []).join(' '))}"`;
 };
+// Who narrates a Note (Christian, Oct 11, 2026): its own choice (episode.narrator), else its categories' (looks.json
+// "categoryNarrators"), else the site default, else GlazyArray: the same rule as her looks (assets/narrator/resolve.js)
+let RES = null;
+const narratorOf = (e) => {
+  RES = RES || { R: createRequire(import.meta.url)('../../assets/narrator/resolve.js'), J: readJSON(path.join(SITE, 'assets/narrator/looks.json')) };
+  const cats = tagsOf(e).filter((t) => !/^\d{4}$/.test(t)), kind = cats.shift(); if (kind) cats.push(kind);
+  return RES.R.pick(RES.J, { narrator: e.episode && e.episode.narrator, cats, prefer: e.narratorLook && e.narratorLook.fit === 'category' && e.narratorLook.from }).narrator.name;
+};
+// moments in an episode her player acts on (js/alta.js): [{at: seconds, eyes: 'amber' | 'cyan' | ''}], from the Note
+const cueAttr = (e) => {
+  const c = (e.episode && Array.isArray(e.episode.cues) ? e.episode.cues : []).filter((x) => x && isFinite(x.at)).map((x) => ({ at: +x.at, eyes: x.eyes || '' }));
+  return c.length ? ` data-cues="${esc(JSON.stringify(c))}"` : '';
+};
 // a Note's palette alone, for A.L.T.A.'s bar: her crown's filigree and the botanicals in her hair take its two colours
 const palAttr = (e) => { const pal = (Array.isArray(e.palette) ? e.palette : []).filter((c) => /^#[0-9a-f]{6}$/i.test(c)).slice(0, 2); return pal.length ? ` data-palette="${pal.join(' ')}"` : ''; };
 const paras = (t) => String(t || '').split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
@@ -160,9 +173,9 @@ const foot = (rel) => `<footer class="foot"><p>${esc(show.narrationNote)}</p>
 <script src="${rel}../js/motion.js?v=1" defer></script>
 <script src="${rel}play.js?v=${V}" defer></script>
 <script src="${rel}../js/lake.js?v=4" defer></script>
-<script src="${rel}../assets/narrator/resolve.js?v=1" defer></script>
+<script src="${rel}../assets/narrator/resolve.js?v=2" defer></script>
 <script src="${rel}../js/narrator.js?v=43" defer></script>
-<script src="${rel}../js/alta.js?v=7" defer></script>
+<script src="${rel}../js/alta.js?v=8" defer></script>
 </body>
 </html>
 `;
@@ -196,9 +209,9 @@ for (const e of events) {
     fs.copyFileSync(path.join(FIELD, e.episode.audio), path.join(media, 'episode.mp3'));
     audio = { src: `../media/${e.id}/episode.mp3`, abs: `${show.siteUrl}media/${e.id}/episode.mp3`, bytes: fs.statSync(path.join(media, 'episode.mp3')).size, sec: mp3Seconds(path.join(media, 'episode.mp3')) };
   }
-  // a Note A.L.T.A. tells herself (e.episode.narrator "alta"): her tank is its Listen bar (js/alta.js), there even
-  // before her episode is recorded
-  const alta = e.episode && e.episode.narrator === 'alta';
+  // a Note A.L.T.A. narrates (its own choice, or its category's): her tank is its Listen bar (js/alta.js); on a Note
+  // that chose her itself, there even before her episode is recorded
+  const alta = narratorOf(e) === 'alta' && (!!audio || (e.episode && e.episode.narrator === 'alta'));
   const t = e.track || null, s = t && t.stats;
   if (t) fs.writeFileSync(path.join(OUT, 'data', e.id + '.json'), JSON.stringify({ kind: e.kind, stats: s, line: t.line, profile: t.profile, shownKm: t.trim && t.trim.shownKm, show: e.dashboard || null }) + '\n');
 
@@ -295,7 +308,7 @@ ${e.summary ? `<p class="mag-deck">${esc(e.summary)}</p>` : ''}
 ` : ''}${F ? '' : '<p class="kicker">'}${F ? '' : `<span class="kind ${esc(e.kind)}">${KIND[e.kind] || esc(e.kind)}</span> · <time datetime="${esc(e.date)}">${day(e.date, true)}</time>${e.place ? ` · ${esc(e.place)}` : ''}</p>
 <h1>${esc(e.post && e.post.title || e.title)}</h1>
 ${e.summary ? `<p class="lede">${esc(e.summary)}</p>` : ''}`}
-${alta ? `<section class="listen alta" data-narrator="alta"${palAttr(e)} aria-label="${audio ? 'Listen to the episode' : 'A.L.T.A. in her tank'}"><div><span class="listen-label">${audio ? `Listen · ${mmss(audio.sec)}` : 'Coming soon'}</span><b>${esc(e.episode.title || e.title)}</b></div>
+${alta ? `<section class="listen alta" data-narrator="alta"${palAttr(e)}${cueAttr(e)} aria-label="${audio ? 'Listen to the episode' : 'A.L.T.A. in her tank'}"><div><span class="listen-label">${audio ? `Listen · ${mmss(audio.sec)}` : 'Coming soon'}</span><b>${esc(e.episode.title || e.title)}</b></div>
 ${audio ? `<audio controls preload="metadata" src="${esc(audio.src)}"></audio>` : ''}</section>` : audio ? `<section class="listen" aria-label="Listen to the episode"${lookAttr(e)}><div><span class="listen-label">Listen · ${mmss(audio.sec)}</span><b>${esc(e.episode.title || e.title)}</b></div>
 <audio controls preload="metadata" src="${esc(audio.src)}"></audio></section>` : ''}
 ${cover && !F ? fig(cover, 'cover') : ''}${coverStrip ? '\n' + fig(coverStrip, 'photo strip') : ''}

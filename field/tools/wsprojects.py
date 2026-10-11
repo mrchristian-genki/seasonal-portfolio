@@ -58,6 +58,26 @@ EVENTS = os.path.join(ROOT, 'field', 'data', 'events')
 OUT = os.path.join(ROOT, 'assets', 'workshop', 'projects.json')
 
 
+LOOKS = None
+def narrator(e):
+    """who narrates a Note, by the site's one rule (assets/narrator/resolve.js): its own choice (episode.narrator), its
+    categories' (looks.json "categoryNarrators": the ticked one, then priority, then the latest changed), the default"""
+    global LOOKS
+    if LOOKS is None:
+        with open(os.path.join(ROOT, 'assets', 'narrator', 'looks.json'), encoding='utf-8') as f: LOOKS = json.load(f)
+    have = ('glazyarray', 'alta')
+    own = (e.get('episode') or {}).get('narrator')
+    if own in have: return own
+    kind = {'ride': 'ride', 'hike': 'hike', 'forage': 'foraging', 'make': 'mini-cast'}.get(e.get('kind'), e.get('kind') or '')
+    cats = [t for t in (e.get('tags') or []) if not re.match(r'^\d{4}$', str(t))] + ([kind] if kind else [])
+    m, rank, stamp = LOOKS.get('categoryNarrators', {}), LOOKS.get('categoryRank', {}), LOOKS.get('categoryStamp', {})
+    L = e.get('narratorLook') or {}; prefer = L.get('from') if L.get('fit') == 'category' else None
+    c = [(x, m[x], i) for i, x in enumerate(cats) if m.get(x) in have]
+    c.sort(key=lambda t: (t[0] != prefer, -rank.get(t[0], 0), ''.join(chr(0x10FFFF - ord(ch)) for ch in stamp.get(t[0], '')), t[2]))
+    if c: return c[0][1]
+    d = (LOOKS.get('defaults') or {}).get('narrator')
+    return d if d in have else 'glazyarray'
+
 def load(i):
     try: return json.load(open(os.path.join(EVENTS, i + '.json'), encoding='utf-8'))
     except (OSError, ValueError): return None
@@ -107,11 +127,14 @@ for e in notes:
     if img: p['share'] = {'image': img, 'w': pic.get('w'), 'h': pic.get('h'), 'alt': pic.get('caption') or p['name']}
     # told by A.L.T.A. herself: her tank opens the window (js/alta.js), with her episode once it's recorded
     ep = e.get('episode') or {}
-    if ep.get('narrator') == 'alta':
+    has_audio = bool(ep.get('audio') and os.path.exists(os.path.join(ROOT, 'field', ep['audio'])))
+    if narrator(e) == 'alta' and (has_audio or ep.get('narrator') == 'alta'):
         p['narrator'] = 'alta'; p['episodeTitle'] = ep.get('title') or p['title']
         pal = [c for c in (e.get('palette') or []) if isinstance(c, str) and re.match(r'^#[0-9a-fA-F]{6}$', c)][:2]
+        cues = [{'at': float(c['at']), 'eyes': c.get('eyes') or ''} for c in (ep.get('cues') or []) if isinstance(c, dict) and isinstance(c.get('at'), (int, float))]
+        if cues: p['cues'] = cues   # moments her eyes change colour as she speaks
         if pal: p['palette'] = pal   # her crown's filigree and the botanicals in her hair take the Note's colours
-        if ep.get('audio') and os.path.exists(os.path.join(ROOT, 'field', ep['audio'])): p['audio'] = f"play/media/{e['id']}/episode.mp3"
+        if has_audio: p['audio'] = f"play/media/{e['id']}/episode.mp3"
     projects.append(p)
 with open(OUT, 'w', encoding='utf-8') as f:
     json.dump(projects, f, indent=1, ensure_ascii=False)
