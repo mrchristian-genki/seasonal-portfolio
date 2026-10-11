@@ -26,6 +26,18 @@ section.listen.alta audio{position:absolute;width:1px;height:1px;opacity:0;point
 .alta .al-head.gone{opacity:0}   /* her idle dive: her own video head shows while she's down */
 .alta .al-dive{left:0;top:0;width:100%;height:100%;object-fit:fill;opacity:0;transition:opacity .4s ease-in-out;z-index:2;pointer-events:none}
 .alta .al-dive.on{opacity:1}
+/* a backdrop behind her tank (data-bd; js/alta.js): the scene fills the stage, her still without the hall (rest-cut)
+   lies over it, and her gesture, dive and rise play through canvases that use their masks (the videos themselves
+   play unseen). Underwater clips just hide everything above the ledge (37.8% down), where nothing of her is. */
+.alta .al-stage.al-has-bd{background:#0a1a1c var(--al-bd) center/cover no-repeat}
+.alta .al-restcut{left:0;top:0;width:100%;height:100%;opacity:1;transition:opacity .4s ease-in-out}
+.alta .al-under .al-restcut{opacity:0}
+.alta .al-src{opacity:0!important}
+.alta .al-palms-c{left:31.977%;top:0;width:37.209%;height:47.917%;opacity:0;transition:opacity .5s ease-in-out;pointer-events:none}
+.alta .al-palms.on+.al-palms-c{opacity:1}
+.alta .al-dive-c{left:0;top:0;width:100%;height:100%;opacity:0;transition:opacity .4s ease-in-out;z-index:2;pointer-events:none}
+.alta .al-dive.on+.al-dive-c{opacity:1}
+.alta .al-has-bd .al-dive[data-k=hover],.alta .al-has-bd .al-dive[data-k=glide],.alta .al-has-bd .al-dive[data-k=glow]{-webkit-mask:linear-gradient(#0000 0,#0000 37.6%,#000 37.9%);mask:linear-gradient(#0000 0,#0000 37.6%,#000 37.9%)}
 .alta .al-base{inset:0;width:100%;height:100%}
 .alta .al-pearl{inset:0;width:100%;height:100%;opacity:0;transition:opacity .9s ease-in-out}
 .alta .al-tint{inset:0;mix-blend-mode:multiply;opacity:0;transition:opacity .9s ease-in-out}
@@ -66,4 +78,4 @@ section.listen.alta audio{position:absolute;width:1px;height:1px;opacity:0;point
   section.listen.alta>div:first-child{position:static;padding:10px 14px 8px;background:#0a1a1c}   /* the title above her, off her crown */
 }
 @media (max-width:560px){.alta .al-ctl{gap:6px;padding:16px 8px 8px}.alta .al-ctl .al-sm{display:none}section.listen.alta>div:first-child{padding:8px 12px}}
-@media (prefers-reduced-motion:reduce){.alta .al-ctl button.al-wait{animation:none}.alta .al-rest{transition:none}.alta .al-dive,.alta .al-pearl,.alta .al-tint,.alta .al-tail,.alta .al-palms,.alta .al-head,.alta .al-eyes img,.alta .al-glow,.alta .al-lids,.alta .al-mouth img,.alta .al-ctl button{transition:none}}
+@media (prefers-reduced-motion:reduce){.alta .al-ctl button.al-wait{animation:none}.alta .al-restcut,.alta .al-palms-c,.alta .al-dive-c{transition:none}.alta .al-rest{transition:none}.alta .al-dive,.alta .al-pearl,.alta .al-tint,.alta .al-tail,.alta .al-palms,.alta .al-head,.alta .al-eyes img,.alta .al-glow,.alta .al-lids,.alta .al-mouth img,.alta .al-ctl button{transition:none}}

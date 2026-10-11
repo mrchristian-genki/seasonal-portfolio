@@ -68,15 +68,30 @@ def narrator(e):
     have = ('glazyarray', 'alta')
     own = (e.get('episode') or {}).get('narrator')
     if own in have: return own
+    m = LOOKS.get('categoryNarrators', {})
+    c = by_cats(e, m, have)
+    if c: return c
+    d = (LOOKS.get('defaults') or {}).get('narrator')
+    return d if d in have else 'glazyarray'
+
+def by_cats(e, m, have):
+    """the value a Note's categories give it from map m (looks.json): the ticked one, then priority, then the latest changed"""
+    rank, stamp = LOOKS.get('categoryRank', {}), LOOKS.get('categoryStamp', {})
     kind = {'ride': 'ride', 'hike': 'hike', 'forage': 'foraging', 'make': 'mini-cast'}.get(e.get('kind'), e.get('kind') or '')
     cats = [t for t in (e.get('tags') or []) if not re.match(r'^\d{4}$', str(t))] + ([kind] if kind else [])
-    m, rank, stamp = LOOKS.get('categoryNarrators', {}), LOOKS.get('categoryRank', {}), LOOKS.get('categoryStamp', {})
     L = e.get('narratorLook') or {}; prefer = L.get('from') if L.get('fit') == 'category' else None
     c = [(x, m[x], i) for i, x in enumerate(cats) if m.get(x) in have]
     c.sort(key=lambda t: (t[0] != prefer, -rank.get(t[0], 0), ''.join(chr(0x10FFFF - ord(ch)) for ch in stamp.get(t[0], '')), t[2]))
-    if c: return c[0][1]
-    d = (LOOKS.get('defaults') or {}).get('narrator')
-    return d if d in have else 'glazyarray'
+    return c[0][1] if c else None
+
+def tank(e):
+    """the scene behind A.L.T.A.'s tank on a Note (resolve.js): its own, its categories', the default; a path, or None"""
+    narrator(e)   # loads looks.json
+    tks = {b['name']: b for b in LOOKS.get('tankBackdrops', []) if b.get('name') and b.get('file')}
+    n = e.get('altaBackdrop') if e.get('altaBackdrop') in tks else by_cats(e, LOOKS.get('categoryTanks', {}), tks) or (LOOKS.get('defaults') or {}).get('tank')
+    b = tks.get(n)
+    if not b or not re.match(r'^[\w.-]+\.(webp|jpg|png)$', b['file']) or not os.path.exists(os.path.join(ROOT, 'assets', 'alta', 'backdrops', b['file'])): return None
+    return f"/assets/alta/backdrops/{b['file']}" + (f"?v={b['v']}" if b.get('v') else '')
 
 def load(i):
     try: return json.load(open(os.path.join(EVENTS, i + '.json'), encoding='utf-8'))
@@ -132,7 +147,9 @@ for e in notes:
         p['narrator'] = 'alta'; p['episodeTitle'] = ep.get('title') or p['title']
         pal = [c for c in (e.get('palette') or []) if isinstance(c, str) and re.match(r'^#[0-9a-fA-F]{6}$', c)][:2]
         cues = [{'at': float(c['at']), 'eyes': c.get('eyes') or ''} for c in (ep.get('cues') or []) if isinstance(c, dict) and isinstance(c.get('at'), (int, float))]
-        if cues: p['cues'] = cues   # moments her eyes change colour as she speaks
+        if cues: p['cues'] = cues
+        bd = tank(e)
+        if bd: p['tank'] = bd   # the scene behind her glass   # moments her eyes change colour as she speaks
         if pal: p['palette'] = pal   # her crown's filigree and the botanicals in her hair take the Note's colours
         if has_audio: p['audio'] = f"play/media/{e['id']}/episode.mp3"
     projects.append(p)
