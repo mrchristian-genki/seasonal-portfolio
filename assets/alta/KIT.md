@@ -255,6 +255,10 @@ her head template (prompt 1 above), never new renders.
 > saturated cyan (#00FFFF), keeping their shading and gloss. The magenta stays magenta; everything else stays exactly
 > as it is, including the green background.
 
+**Done (Oct 11):** `parts/head-flair-a.webp` (the filigree) and `head-flair-b.webp` (the botanicals, the braid and the
+pearls), pearl versions of those parts that her player dyes with the Note's two colours (`data-palette`); without a
+palette she wears her own.
+
 **Send back** the image from prompt B as `alta-colours.png`. Claude takes the magenta and cyan as her two masks, and
 makes those parts a neutral pearl so each Note's colours dye them cleanly, in her player and her Workshop window.
 

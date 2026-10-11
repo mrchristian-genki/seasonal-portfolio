@@ -109,6 +109,8 @@ for e in notes:
     ep = e.get('episode') or {}
     if ep.get('narrator') == 'alta':
         p['narrator'] = 'alta'; p['episodeTitle'] = ep.get('title') or p['title']
+        pal = [c for c in (e.get('palette') or []) if isinstance(c, str) and re.match(r'^#[0-9a-fA-F]{6}$', c)][:2]
+        if pal: p['palette'] = pal   # her crown's filigree and the botanicals in her hair take the Note's colours
         if ep.get('audio') and os.path.exists(os.path.join(ROOT, 'field', ep['audio'])): p['audio'] = f"play/media/{e['id']}/episode.mp3"
     projects.append(p)
 with open(OUT, 'w', encoding='utf-8') as f:
