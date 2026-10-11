@@ -1,5 +1,7 @@
 Reference only. The library of made-up feature magazines for Field Notes (researched Oct 9, 2026).
 
+Built so far (Oct 11, 2026): eleven templates any Note can wear, picked in the Studio's Magazine template panel. Their list, defaults and wanted parts are in field/data/magazines.json, their looks in css/feature.css (.mag-<id>), and the building blocks (specs, stats, goodbad, verdict, box, callouts, steps, timeline, code) in field/tools/publish.mjs.
+
 # Feature Magazine Template Library: Research and Proposals
 
 Reference for building the "Feature" magazine wrappers on christiangehrke.com Field Notes. Each family below is an **original, fictional magazine** that borrows genre conventions only: voice, article formats and common layout devices. None of them copies a real title's name, logo, masthead lettering, cover trade dress or signature layout.

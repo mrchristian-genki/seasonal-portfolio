@@ -285,6 +285,7 @@ try {
                 'statuses' => $show['statuses'] ?? [],
                 'audioPrompt' => $show['audioPrompt'] ?? '',
                 'siteUrl' => $show['siteUrl'] ?? '',
+                'magazines' => (json_decode($gh->read('field/data/magazines.json') ?? '{}', true)['templates'] ?? []),   // the Magazine template panel's choices
                 'me' => studio_me(),
             ]);
 
@@ -452,6 +453,13 @@ try {
             $looks['_backdrops'] = ['backdrops' => array_map(fn($b) => ['name' => $b['name'] ?? '', 'about' => $b['about'] ?? ''], (array) ($lj['backdrops'] ?? [])), 'categoryBackdrops' => (array) ($lj['categoryBackdrops'] ?? [])];
             $draft = (new Drafter($cfg, $guide))->draft($body['facts'] ?? [], $body['thumbs'] ?? [], $looks);
             json_out(['draft' => $draft]);
+
+        // A magazine template's missing parts (the Magazine template panel): cover text, blocks, a Q&A, subheads and a
+        // pull quote marked in the post, and prompts for the pictures it still needs, all from the Note itself.
+        case 'POST feature':
+            @set_time_limit(240);
+            $guide = $gh->read('field/SHOW-GUIDE.md') ?? '';
+            json_out(['feature' => (new Drafter($cfg, $guide))->feature((array) ($body['note'] ?? []), (array) ($body['template'] ?? []), array_values(array_map('strval', (array) ($body['missing'] ?? []))), (string) ($body['instruction'] ?? ''))]);
 
         // The Social panel's captions (Instagram and Facebook), from the written Note.
         case 'POST social':

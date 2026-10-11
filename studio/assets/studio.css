@@ -572,3 +572,49 @@ dialog.pfp::backdrop{background:rgba(20,12,6,.7)}
 .ga-catedit input{flex:1 1 160px;min-width:140px}
 .panel.cats .lookg .ga-def{display:inline-flex;gap:5px;align-items:center;justify-content:center;width:auto}
 .panel.cats .lookg .ga-def input{width:auto;padding:0;margin:0;flex:none;border-radius:3px}
+/* the photos' order: ↑ ↓ on each (an exposure strip moves with its photo); the moved one glows, then the glow eases away */
+.ph{transition:box-shadow .9s ease-in-out,border-color .9s ease-in-out}
+.ph.moved{box-shadow:0 0 0 3px rgba(227,161,43,.85),0 6px 18px -8px rgba(227,161,43,.9);border-color:#e3a12b}
+.ph .opts .phMv{display:inline-flex;gap:2px;margin-left:auto}
+.ph .opts .phMv .link{font-size:18px;line-height:1;padding:2px 7px;border-radius:6px;transition:background-color .6s ease-in-out}
+.ph .opts .phMv .link:hover:not(:disabled){background:rgba(0,0,0,.06)}
+.ph .opts .phMv .link:disabled{opacity:.3;cursor:default}
+.ph .phAt{font-size:13px;padding:5px 8px}
+#photoOrderHint{margin:10px 0 0}
+/* the Magazine template panel */
+.magGal{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin:10px 0 4px}
+.magCard{display:flex;flex-direction:column;gap:4px;padding:0 12px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;overflow:hidden;transition:transform .6s ease-in-out,box-shadow .6s ease-in-out}
+.magCard:hover{transform:translateY(-2px);box-shadow:0 8px 18px -12px rgba(0,0,0,.45)}
+.magCard.on{border-color:#e3a12b;box-shadow:0 0 0 2px rgba(227,161,43,.6)}
+.magSw{display:flex;height:8px;margin:0 -12px 6px} .magSw i{flex:1}
+.magNow .magSw{width:46px;height:46px;margin:0;border-radius:8px;overflow:hidden;flex:none;flex-direction:column}
+.magMast{font:900 19px/1.05 Georgia,"Times New Roman",serif;letter-spacing:.02em}
+.magCat{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)}
+.magCard small{color:var(--ink2);font-size:13px;line-height:1.35}
+.magWants{display:flex;flex-wrap:wrap;gap:4px;margin:2px 0 6px} .magWants em{font-style:normal;font-size:11px;padding:2px 7px;border-radius:999px;background:rgba(0,0,0,.06);color:var(--ink2)}
+.magCard .magUse{margin-top:auto;align-self:flex-start}
+.magNow{display:flex;align-items:center;gap:12px;flex-wrap:wrap} .magNow>div:nth-child(2){flex:1 1 200px;display:flex;flex-direction:column} .magNow b{font:900 20px/1.1 Georgia,serif} .magNow small{color:var(--ink3)}
+.magPickBox{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows .8s ease-in-out,opacity .8s ease-in-out}
+.magPickBox>div{overflow:hidden;min-height:0}
+.magPickBox.open{grid-template-rows:1fr;opacity:1}
+.magNeeds{list-style:none;margin:6px 0 12px;padding:0;display:grid;gap:4px}
+.magNeeds li{display:flex;align-items:baseline;gap:8px;padding:5px 8px;border-radius:8px;transition:background-color .8s ease-in-out}
+.magNeeds li>span:nth-child(2){flex:1;display:flex;flex-direction:column} .magNeeds small{color:var(--ink3)}
+.magNeeds li.no{background:rgba(227,161,43,.1)} .magNeeds li.ok{color:var(--ink2)}
+.magTick{width:16px;text-align:center;font-weight:800} .magNeeds li.ok .magTick{color:#4a8a3a} .magNeeds li.no .magTick{color:#b7791f}
+.magNeeds em{font-style:normal;font-size:12px;color:var(--ink3);white-space:nowrap}
+.magQs,.magRenders{margin:12px 0;padding:10px 14px;border-radius:10px;background:rgba(0,0,0,.035)}
+.magQs h3,.magRenders h3{margin-top:0} .magQs ul{margin:0;padding-left:20px}
+.magRender{padding:8px 0;border-top:1px solid var(--line)} .magRender p{margin:4px 0;font-size:14px;white-space:pre-wrap}
+.magParts{list-style:none;margin:6px 0 10px;padding:0;display:flex;flex-direction:column;gap:6px}
+.magPart{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.5)}
+.magPart>span:first-child{flex:1 1 200px;min-width:0;display:flex;flex-direction:column;overflow-wrap:anywhere} .magPart small{color:var(--ink3)}
+.magBefore{flex:0 1 240px;min-width:0;font-size:13px;padding:5px 8px}
+.magEdBox{flex:1 1 100%}
+.magEdBox textarea,#magAll{font:13px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace}
+.mcPlace{position:relative;max-width:520px;margin:6px 0} .mcPlace img{display:block;width:100%;border-radius:6px;cursor:crosshair}
+.mcPlace i{position:absolute;transform:translate(-50%,-50%);width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:#d4521c;color:#fff;font:800 12px/1 system-ui,sans-serif;font-style:normal;box-shadow:0 0 0 2px #fff;pointer-events:none}
+.magJson{margin:10px 0} .magJson summary{cursor:pointer;color:var(--ink2)}
+#magOff{margin-top:10px}
+@media (prefers-reduced-motion:reduce){.ph,.magCard,.magPickBox,.magNeeds li{transition:none}.magCard:hover{transform:none}}
+#magAddT{width:auto;flex:0 1 280px}

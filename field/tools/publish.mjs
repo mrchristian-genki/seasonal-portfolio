@@ -30,8 +30,10 @@ const V = Date.now().toString(36);   // cache tag for the shared css/js
 
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const KIND = { ride: 'Ride', hike: 'Hike', forage: 'Foraging walk', make: 'Mini-Cast' };
-// the web fonts a feature's magazine theme brings (css/feature.css .mag-<theme>), loaded only on its page
-const THEME_FONTS = { paradox: 'family=Alfa+Slab+One&family=Roboto+Slab:wght@400;600;800&family=Roboto+Condensed:wght@700' };
+// the web fonts a feature's magazine theme brings (css/feature.css .mag-<theme>), loaded only on its page: from the
+// magazine templates (field/data/magazines.json), the ones the Studio's Magazine template panel offers
+const THEME_FONTS = Object.fromEntries(((() => { try { return JSON.parse(fs.readFileSync(new URL('../data/magazines.json', import.meta.url), 'utf8')).templates; } catch { return []; } })() || [])
+  .filter((t) => t.fonts).map((t) => [t.id, t.fonts]));
 // a Note's tags, for Play's filters and its address words: what kind it is, its own tags (field/data/events, "tags"),
 // and its year. Lowercase words with dashes, so they read well in a link (?spring+notes+grid+with-marley).
 const KIND_TAG = { ride: 'ride', hike: 'hike', forage: 'foraging', make: 'mini-cast' };
@@ -198,7 +200,7 @@ for (const e of events) {
   // the cover's included.
   const coverStrip = cover && photos[photos.indexOf(cover) + 1] && photos[photos.indexOf(cover) + 1].strip ? photos[photos.indexOf(cover) + 1] : null;
   const FB = (e.feature && e.feature.masthead && Array.isArray(e.feature.blocks)) ? e.feature.blocks : [];
-  const held = new Set(FB.map((b) => b.photo).filter(Boolean));   // pictures a feature's block shows inside itself
+  const held = new Set(FB.flatMap((b) => [b.photo].concat((b.type === 'steps' && b.items || []).map((x) => x.photo))).filter(Boolean));   // pictures a feature's block shows inside itself
   const ps = paras(e.post && e.post.body), table = photos.filter((p) => p.table), loose = photos.filter((p) => p !== cover && p !== coverStrip && !p.table && !p.at && !held.has(p.file));
   const tall = (p) => p.w && p.h && p.h > p.w * 1.1;
   const inline = [];
@@ -230,6 +232,13 @@ for (const e of events) {
     if (b.type === 'specs') return `<aside class="mag-specs">${b.title ? `<h3>${esc(b.title)}</h3>` : ''}<dl>${(b.rows || []).map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>${b.note ? `<p>${esc(b.note)}</p>` : ''}</aside>\n`;
     if (b.type === 'box') { const ph = b.photo && byFile(b.photo); return `<aside class="mag-box">${b.kicker ? `<p class="mag-box-k">${esc(b.kicker)}</p>` : ''}${b.title ? `<h3>${esc(b.title)}</h3>` : ''}${paras(b.text).map((t) => `<p>${esc(t)}</p>`).join('')}${ph ? fig(ph) : ''}</aside>\n`; }
     if (b.type === 'verdict') return `<section class="mag-verdict"><h2>${esc(b.title || 'The verdict')}</h2><div class="mv-top">${b.score ? `<p class="mv-score"><b>${esc(b.score)}</b>${b.outOf ? `<span>${esc(b.outOf)}</span>` : ''}</p>` : ''}${b.seal ? `<p class="mv-seal">${esc(b.seal)}</p>` : ''}</div>${(b.scores || []).length ? `<ul class="mv-bars">${b.scores.map(([l, v, max]) => `<li><span>${esc(l)}</span><i style="--v:${Math.max(0, Math.min(1, Number(v) / Number(max || 10))).toFixed(3)}"></i><b>${esc(v)}</b></li>`).join('')}</ul>` : ''}${paras(b.text).map((t) => `<p>${esc(t)}</p>`).join('')}</section>\n`;
+    // a stats strip ("stats": items of [figure, label]), good and bad ("goodbad"), numbered steps ("steps": items of
+    // {title, text, photo}), a timeline ("timeline": items of [when, what]) and a code or prompt block ("code")
+    if (b.type === 'stats') return `<aside class="mag-stats">${b.title ? `<h3>${esc(b.title)}</h3>` : ''}<ul>${(b.items || []).map(([v, l]) => `<li><b>${esc(v)}</b><span>${esc(l)}</span></li>`).join('')}</ul>${b.note ? `<p>${esc(b.note)}</p>` : ''}</aside>\n`;
+    if (b.type === 'goodbad') return `<aside class="mag-gb">${b.title ? `<h3>${esc(b.title)}</h3>` : ''}<div><section class="gb-good"><h4>${esc(b.goodTitle || 'Good')}</h4><ul>${(b.good || []).map((x) => `<li>${esc(x)}</li>`).join('')}</ul></section><section class="gb-bad"><h4>${esc(b.badTitle || 'Bad')}</h4><ul>${(b.bad || []).map((x) => `<li>${esc(x)}</li>`).join('')}</ul></section></div></aside>\n`;
+    if (b.type === 'steps') return `<section class="mag-steps">${b.title ? `<h3>${esc(b.title)}</h3>` : ''}<ol>${(b.items || []).map((x) => { const ph = x.photo && byFile(x.photo); return `<li>${x.title ? `<b>${esc(x.title)}</b>` : ''}${paras(x.text).map((t) => `<p>${esc(t)}</p>`).join('')}${ph ? fig(ph) : ''}</li>`; }).join('')}</ol></section>\n`;
+    if (b.type === 'timeline') return `<section class="mag-time">${b.title ? `<h3>${esc(b.title)}</h3>` : ''}<ol>${(b.items || []).map(([w, t]) => `<li><time>${esc(w)}</time><p>${esc(t)}</p></li>`).join('')}</ol></section>\n`;
+    if (b.type === 'code') return `<figure class="mag-code">${b.file ? `<figcaption class="mc-file">${esc(b.file)}</figcaption>` : ''}<pre><code>${esc(b.code || '')}</code></pre>${b.note ? `<figcaption>${esc(b.note)}</figcaption>` : ''}</figure>\n`;
     if (b.type === 'callouts') { const ph = b.photo && byFile(b.photo); if (!ph) return ''; return `<figure class="mag-callouts"><div class="mc-pic"><img src="${esc(ph.src)}" alt="${esc(ph.caption)}" width="${ph.w}" height="${ph.h}" loading="lazy">${(b.items || []).map((x, k) => `<span class="mc-dot${Number(x.x) > 62 ? ' flip' : ''}" style="--x:${Number(x.x)}%;--y:${Number(x.y)}%"><i>${k + 1}</i><b>${esc(x.label)}</b></span>`).join('')}</div><figcaption>${b.title ? `<b>${esc(b.title)}</b> ` : ''}${ph.ai ? '<span class="ai-badge">Made with AI</span> ' : ''}${esc(ph.caption)}</figcaption></figure>\n`; }
     return '';
   };
