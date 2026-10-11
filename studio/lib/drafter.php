@@ -143,6 +143,98 @@ final class Drafter
         throw new RuntimeException('Claude sent back something that was not a set of captions.');
     }
 
+    private const FEATURE = [
+        'type' => 'object',
+        'properties' => [
+            'masthead' => ['type' => 'string'], 'tagline' => ['type' => 'string'], 'issue' => ['type' => 'string'],
+            'label' => ['type' => 'string'], 'byline' => ['type' => 'string'],
+            'cover_lines' => ['type' => 'array', 'items' => ['type' => 'string'], 'description' => '3 to 5 cover lines, each pointing at something really in the Note.'],
+            'summary' => ['type' => 'string', 'description' => 'The card summary (the feature\'s standfirst), only when asked for.'],
+            'post_body' => ['type' => 'string', 'description' => 'Only when subheads or a pull quote are asked for: the post exactly as given, word for word, with "## " subhead lines and/or one "> " pull-quote paragraph added between its paragraphs. Empty otherwise.'],
+            'blocks' => [
+                'type' => 'array',
+                'description' => 'Only the building blocks asked for, one each.',
+                'items' => [
+                    'type' => 'object',
+                    'properties' => [
+                        'type' => ['type' => 'string', 'enum' => ['specs', 'stats', 'goodbad', 'verdict', 'box', 'steps', 'timeline', 'code']],
+                        'title' => ['type' => 'string'],
+                        'before' => ['type' => 'string', 'description' => 'The subhead (without "## ") this block sits before; empty for the end of the story.'],
+                        'kicker' => ['type' => 'string', 'description' => 'box: a small label above its title.'],
+                        'text' => ['type' => 'string', 'description' => 'box and verdict: paragraphs separated by a blank line.'],
+                        'note' => ['type' => 'string', 'description' => 'specs, stats and code: a short line under it.'],
+                        'pairs' => ['type' => 'array', 'items' => ['type' => 'array', 'items' => ['type' => 'string']], 'description' => 'specs: [label, value] rows. stats: [figure, label]. timeline: [when, what happened].'],
+                        'good' => ['type' => 'array', 'items' => ['type' => 'string']],
+                        'bad' => ['type' => 'array', 'items' => ['type' => 'string']],
+                        'score' => ['type' => 'string'], 'out_of' => ['type' => 'string'], 'seal' => ['type' => 'string', 'description' => 'verdict: a few words for its round seal.'],
+                        'scores' => ['type' => 'array', 'items' => ['type' => 'object', 'properties' => ['label' => ['type' => 'string'], 'value' => ['type' => 'number'], 'max' => ['type' => 'number']], 'required' => ['label', 'value', 'max'], 'additionalProperties' => false]],
+                        'steps' => ['type' => 'array', 'items' => ['type' => 'object', 'properties' => ['title' => ['type' => 'string'], 'text' => ['type' => 'string']], 'required' => ['title', 'text'], 'additionalProperties' => false]],
+                        'file' => ['type' => 'string', 'description' => 'code: its file name or "Prompt".'],
+                        'code' => ['type' => 'string', 'description' => 'code: the code or prompt, only as it appears in the Note.'],
+                    ],
+                    'required' => ['type', 'title'],
+                    'additionalProperties' => false,
+                ],
+            ],
+            'qa' => [
+                'type' => 'object',
+                'properties' => ['title' => ['type' => 'string'], 'items' => ['type' => 'array', 'items' => ['type' => 'object', 'properties' => ['q' => ['type' => 'string'], 'a' => ['type' => 'string']], 'required' => ['q', 'a'], 'additionalProperties' => false]]],
+                'required' => ['title', 'items'],
+                'additionalProperties' => false,
+            ],
+            'spotted' => ['type' => 'array', 'items' => ['type' => 'object', 'properties' => ['label' => ['type' => 'string'], 'text' => ['type' => 'string'], 'url' => ['type' => 'string']], 'required' => ['label', 'text', 'url'], 'additionalProperties' => false]],
+            'renders' => ['type' => 'array', 'description' => 'One image prompt per picture the template still needs, when pictures are asked for.', 'items' => ['type' => 'object', 'properties' => ['for' => ['type' => 'string', 'description' => 'What it is for, in a few words (the cover, the callouts cutaway, a step).'], 'prompt' => ['type' => 'string']], 'required' => ['for', 'prompt'], 'additionalProperties' => false]],
+            'questions' => ['type' => 'array', 'items' => ['type' => 'string'], 'description' => 'What Christian should answer or confirm: anything the Note doesn\'t say that a part needs.'],
+        ],
+        'required' => ['masthead', 'tagline', 'issue', 'label', 'byline', 'cover_lines', 'summary', 'post_body', 'blocks', 'qa', 'spotted', 'renders', 'questions'],
+        'additionalProperties' => false,
+    ];
+
+    /** A magazine template's missing parts for a Note (the Studio's Magazine template panel). $missing names them. */
+    public function feature(array $note, array $template, array $missing, string $instruction = ''): array
+    {
+        $client = new Client(apiKey: $this->cfg['anthropic_api_key'], baseUrl: $this->cfg['anthropic_base_url'] ?? null);
+        $system = <<<TXT
+You dress one Field Note on christiangehrke.com as a feature in a made-up magazine (the template given), writing only the parts that are missing. The show guide below is the authority; follow its hard rules exactly.
+
+- The magazine voice is costume, not new facts. Every fact, number, name, date and quote comes from the Note as given (Christian's notes, the post, the captions, the track's figures). Never invent people, results, specs, scores, prices, dates or feelings. When a part needs something the Note doesn't say, leave that piece out and ask about it in questions.
+- Cover lines and box titles must point at things really in the Note.
+- The byline is always GlazyArray (with a staff title that suits the magazine). She is the narrator; Marley is "she".
+- People stay anonymous unless the Note says they agreed to be named. Never mention home, a street, a neighbourhood or when the house is empty.
+- Q&A answers are Christian's own words: use his sentences from the notes or the post, trimmed but not reworded. If there are no words of his for a question, don't ask it.
+- A verdict's score and sub-scores only when the Note gives a judgement to base them on; say in questions that Christian should check them.
+- post_body: only when "subheads" or "pull" is asked for. Return the post exactly as given, every paragraph word for word and in order, adding only "## " subhead lines (2 to 5, short) and, for "pull", one "> " paragraph that repeats a striking sentence from the post word for word. Otherwise return an empty string.
+- Fill only what is listed as missing. Return empty strings and empty lists for everything else.
+- renders: when "pictures" or "cover" is missing, one image prompt per picture still needed, for an AI image model, in the style the template's format suggests and of things the Note describes. No brands, logos, text, letters or numbers inside the image. GlazyArray appears only when the Note is about her.
+- Use the template's section titles where they fit.
+
+The show guide:
+
+{$this->showGuide}
+TXT;
+        $msg = "The magazine template, as JSON:\n" . json_encode($template, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) .
+            "\n\nThe Note, as JSON:\n" . json_encode($note, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) .
+            "\n\nMissing (write only these): " . implode(', ', $missing) . ($instruction !== '' ? "\n\nInstruction: $instruction" : '');
+        $message = $client->beta->messages->create(
+            model: self::MODEL,
+            maxTokens: 16000,
+            system: $system,
+            messages: [['role' => 'user', 'content' => $msg]],
+            outputConfig: ['effort' => 'medium', 'format' => ['type' => 'json_schema', 'schema' => self::FEATURE]],
+            fallbacks: 'default',
+            betas: ['server-side-fallback-2026-07-01'],
+        );
+        if ($message->stopReason === 'refusal') throw new RuntimeException('Claude declined to write these parts.');
+        if ($message->stopReason === 'max_tokens') throw new RuntimeException('The answer ran out of room before it finished. Try again with fewer parts.');
+        foreach ($message->content as $block) {
+            if ($block->type === 'text') {
+                $out = json_decode($block->text, true);
+                if (is_array($out)) return $out;
+            }
+        }
+        throw new RuntimeException('Claude sent back something that was not the feature\'s parts.');
+    }
+
     /** Her looks as the site has them (assets/narrator/looks.json): name, what it is, and whether it's a holiday or hair day. */
     /** Her looks as the site has them (assets/narrator/looks.json): name, and what it is. */
     private static function looks(array $looks): array

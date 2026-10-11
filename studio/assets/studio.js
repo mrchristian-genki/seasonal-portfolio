@@ -729,10 +729,11 @@
         '<h3 class="ga-h">Her cap</h3><div id="lookBox"></div><h3 class="ga-h">The backdrop</h3><div id="bdBox"></div></details>') +
       (hasScript ? '' : audioPanel) +
       fold('photos', 'Photos', [nPh ? nPh + ' photo' + (nPh > 1 ? 's' : '') : '', nLoop ? nLoop + ' loop' + (nLoop > 1 ? 's' : '') : ''].filter(Boolean).join(' · '), !isLive,
-        (later ? '' : dropPhotos) + '<div id="photos" class="photos"></div>' + (later ? '<p class="muted" id="noPhotos">No photos yet. Add some under Add more.</p>' : '')) +
+        (later ? '' : dropPhotos) + '<p class="muted" id="photoOrderHint">The post shows them in this order, top to bottom: ↑ and ↓ move one. Once the post has subheads ("## " lines), each can sit right under one.</p><div id="photos" class="photos"></div>' + (later ? '<p class="muted" id="noPhotos">No photos yet. Add some under Add more.</p>' : '')) +
       (E.id ? fold('social', 'Social', E.social && E.social.instagram ? 'captions written' : isLive ? 'next: share it' : 'Instagram and Facebook', false, '<div id="socialBox"></div>') : '') +
       (trackTop ? fold('track', 'Track', E.track ? 'on the map' : '', !isLive, '<div id="track"></div>') : '') +
       fold('loops', 'Video loops', '', false, '<div id="loopBox"></div>') +
+      fold('magazine', 'Magazine template', magHint(), false, '<div id="magBox"></div>') +
       fold('feature', 'Workshop feature', E.workshop ? (E.workshop.name || 'on the Workshop tab') : 'not a feature', false, '<div id="featBox"></div>') +
       (later ? fold('more', 'Add more', 'photos' + (trackTop ? '' : ', a track'), false, '<p class="muted">Only if you want to add to what\'s here.</p>' + (trackTop ? '' : '<h3>Track</h3><div id="track"></div>') + '<h3>Photos</h3>' + dropPhotos) : '') +
       '<footer class="savebar"><span id="saveState" class="muted">' + (E.id ? 'Saved' : 'Not saved yet') + '</span>' +
@@ -752,6 +753,8 @@
     driveAudio().then(function () { renderDriveFiles(); renderVoiceNotes(); renderNext(); });
     ['postBody', 'epScript', 'fieldNotes'].forEach(function (k) { $('#' + k).addEventListener('change', renderNext); });
     $('#postBody').addEventListener('change', renderFeature);   // the feature's "after paragraph" picks follow the paragraphs
+    $('#postBody').addEventListener('change', function () { collect(); renderPhotos(); });    // the photos' "under a subhead" picks follow the subheads (and the template's checklist)
+    $('#summary').addEventListener('change', renderMag);
     renderNext();
     var dp = $('#drop-photos');
     ['dragover', 'dragenter'].forEach(function (t) { dp.addEventListener(t, function (ev) { ev.preventDefault(); dp.classList.add('on'); }); });
@@ -1126,6 +1129,7 @@
       p.caption = $('textarea', d).value.trim();
       p.use = $('.use', d).checked ? (p.use === 'skip' ? 'post' : (p.use || 'post')) : 'skip';
       p.cover = $('.cover', d).checked;
+      var a = $('.phAt', d); if (a) { if (a.value) p.at = a.value; else delete p.at; }
     });
   }
 
@@ -1352,9 +1356,36 @@
   }
 
   // ---------- photos ----------
+  // The post shows its photos and loops top to bottom in this order (an HDR photo's exposure strip moves with it), so
+  // ↑ and ↓ on each one set the order. Once the post has "## " subheads, each picture can also sit right under one.
+  function photoUnits() { var u = []; E.photos.forEach(function (p, i) { if (p.strip && u.length) u[u.length - 1].push(i); else u.push([i]); }); return u; }
+  function movePhoto(i, d) {
+    collect();
+    var U = photoUnits(), k = -1;
+    U.forEach(function (u, j) { if (u[0] === i) k = j; });
+    var j = k + d; if (k < 0 || j < 0 || j >= U.length) return;
+    var a = U[k]; U[k] = U[j]; U[j] = a;
+    var moved = photoName(E.photos[i]), all = E.photos.slice();
+    E.photos = [].concat.apply([], U.map(function (u) { return u.map(function (x) { return all[x]; }); }));
+    markDirty(); renderPhotos();
+    // the moved one glows, then the glow eases away
+    var c = $$('.ph', $('#photos')).filter(function (el) { return photoName(E.photos[+el.getAttribute('data-i')]) === moved; })[0];
+    if (c) { c.classList.add('moved'); setTimeout(function () { c.classList.remove('moved'); }, 900); var b = $(d < 0 ? '.phUp' : '.phDn', c); if (b && !b.disabled) b.focus(); }
+  }
+  function subheads() { return ($('#postBody') ? $('#postBody').value : E.post.body || '').split(/\n\s*\n/).map(function (t) { return t.trim(); }).filter(function (t) { return /^## /.test(t); }).map(function (t) { return t.slice(3).trim(); }); }
   function renderPhotos() {
     var box = $('#photos'), none = $('#noPhotos');
     if (none) none.hidden = E.photos.length > 0;   // photos brought in after the page was drawn
+    var U = photoUnits(), first = U.length ? U[0][0] : -1, last = U.length ? U[U.length - 1][0] : -1, subs = subheads();
+    var oh = $('#photoOrderHint');
+    if (oh) oh.hidden = E.photos.length < 2;
+    var mv = function (i) { return '<span class="phMv"><button type="button" class="link phUp" aria-label="Move earlier" title="Earlier in the post"' + (i === first ? ' disabled' : '') + '>↑</button><button type="button" class="link phDn" aria-label="Move later" title="Later in the post"' + (i === last ? ' disabled' : '') + '>↓</button></span>'; };
+    var at = function (p) {
+      if (!subs.length || p.table) return '';
+      var cur = p.at || '', known = !cur || subs.indexOf(cur) >= 0;
+      return '<select class="phAt" aria-label="Where it sits"><option value="">Spread through the story</option>' + subs.map(function (t) { return '<option value="' + esc(t) + '"' + (t === cur ? ' selected' : '') + '>Under "' + esc(t) + '"</option>'; }).join('') +
+        (known ? '' : '<option value="' + esc(cur) + '" selected>Under "' + esc(cur) + '" (not in the post now)</option>') + '</select>';
+    };
     box.innerHTML = E.photos.map(function (p, i) {
       var n = photoName(p), clip = !!p.video;
       // a bracket's exposure strip spans the row, whole, right under its HDR photo, so it reads as the three shots it is
@@ -1374,11 +1405,15 @@
         '<textarea rows="2" placeholder="Caption">' + esc(p.caption) + '</textarea>' +
         '<div class="opts"><label><input type="checkbox" class="use"' + (p.use !== 'skip' ? ' checked' : '') + '> Use</label>' +
         '<label><input type="radio" name="cover" class="cover"' + (p.cover ? ' checked' : '') + '> Cover</label>' + (clip ? '<button type="button" class="link pfBtn">Poster frame</button>' : '') +
-        '<button class="link rm">Remove</button></div></div></div>';
+        '<button class="link rm">Remove</button>' + mv(i) + '</div>' + at(p) + '</div></div>';
     }).join('');
     $$('.ph', box).forEach(function (d) {
       $('textarea', d).addEventListener('input', markDirty);
-      $$('input', d).forEach(function (i) { i.addEventListener('change', function () { markDirty(); collect(); d.classList.toggle('off', !$('.use', d).checked); if (i.classList.contains('cover')) repalette(); renderFeature(); }); });
+      $$('input', d).forEach(function (i) { i.addEventListener('change', function () { markDirty(); collect(); d.classList.toggle('off', !$('.use', d).checked); if (i.classList.contains('cover')) repalette(); renderFeature(); renderMag(); }); });
+      var pa = $('.phAt', d); if (pa) pa.onchange = function () { markDirty(); collect(); };
+      var pu = $('.phUp', d), pd = $('.phDn', d), ix = +d.getAttribute('data-i');
+      if (pu) pu.onclick = function () { movePhoto(ix, -1); };
+      if (pd) pd.onclick = function () { movePhoto(ix, 1); };
       $('textarea', d).addEventListener('change', renderFeature);
       $('.rm', d).onclick = function () {
         if (!confirm('Remove this photo from the entry?')) return;
@@ -1401,7 +1436,7 @@
           .then(function (b) { v.src = URL.createObjectURL(b); v.play(); }).catch(function () { toast('Couldn\'t load that clip.', true); });
       };
     });
-    renderFeature();
+    renderFeature(); renderMag();
   }
 
   // ---------- the Workshop feature: this Note as one of the big projects on the Workshop tab (E.workshop). The
@@ -1482,6 +1517,235 @@
       $('.wsDn', li).onclick = function () { P.list.splice(k + 1, 0, P.list.splice(k, 1)[0]); save(); renderFeature(); };
     });
     $('#wsOff').onclick = function () { if (!confirm('Take this Note off the Workshop tab? Its pull quote, numbers and picture places go too.')) return; delete E.workshop; markDirty(); renderFeature(); };
+  }
+  // ---------- the Magazine template: this Note dressed as a feature in one of the made-up magazines
+  // (field/data/magazines.json; e.feature, built by field/tools/publish.mjs, looks in css/feature.css). Pick any
+  // template; the checklist shows what that template wants that the Note doesn't have yet, and Claude can write the
+  // missing words from the Note (never new facts) and the prompts for pictures still to be made ----------
+  var MAG_OPEN = false;   // the template picker, opened on a Note that already has one
+  var MAG_BUSY = false;
+  var MAG_WANTS = { specs: 'A spec box', stats: 'A stats strip', goodbad: 'Good and bad', verdict: 'A verdict with a score', box: 'A sidebar box',
+    callouts: 'A picture with numbered callouts', steps: 'Numbered steps', timeline: 'A timeline', code: 'A code or prompt block', qa: 'A Q&A', spotted: 'A Spotted box' };
+  function mags() { return (CFG && CFG.magazines) || []; }
+  function magOf(F) { var id = F && F.theme || 'riveting'; return mags().filter(function (t) { return t.id === id; })[0] || null; }
+  function magHint() {
+    var F = E.feature, t = F && F.masthead ? magOf(F) : null;
+    if (!F || !F.masthead) return 'any Note can be a magazine feature';
+    var n = magNeeds(F, t).filter(function (x) { return !x.ok; }).length;
+    return F.masthead + (n ? ' · ' + n + ' to add' : ' · ready');
+  }
+  function magNeeds(F, t) {
+    var body = $('#postBody') ? $('#postBody').value : E.post.body || '';
+    var ps = body.split(/\n\s*\n/).map(function (x) { return x.trim(); }).filter(Boolean);
+    var used = E.photos.filter(function (p) { return p.use !== 'skip' && !p.strip; }), cov = used.filter(function (p) { return p.cover; })[0];
+    var B = F.blocks || [], has = function (ty) { return B.some(function (b) { return b.type === ty; }); };
+    var T = (t && t.titles) || {}, want = (t && t.pictures) || 4, pics = used.length - (cov ? 1 : 0);
+    var sum = $('#summary') ? $('#summary').value.trim() : E.summary;
+    var out = [
+      { k: 'masthead', l: 'Masthead', ok: !!F.masthead, by: 'claude' },
+      { k: 'tagline', l: 'Tagline', ok: !!F.tagline, by: 'claude' },
+      { k: 'issue', l: 'Issue name', ok: !!F.issue, by: 'claude' },
+      { k: 'label', l: 'Section label over the headline', ok: !!F.label, by: 'claude' },
+      { k: 'byline', l: 'Byline', ok: !!F.byline, by: 'claude' },
+      { k: 'coverLines', l: 'Cover lines (3 to 5)', ok: (F.coverLines || []).filter(Boolean).length >= 3, by: 'claude' },
+      { k: 'summary', l: 'Card summary (the standfirst)', ok: !!sum, by: 'claude' },
+      { k: 'subheads', l: 'Subheads in the post ("## " lines)', ok: ps.filter(function (x) { return /^## /.test(x); }).length >= 2, by: 'claude' },
+      { k: 'pull', l: 'A pull quote in the post (a "> " line)', ok: ps.some(function (x) { return /^> /.test(x); }), by: 'claude' },
+      { k: 'cover', l: 'A cover picture', ok: !!cov, by: 'picture', why: 'Tick Cover on a photo or loop under Photos' }
+    ];
+    ((t && t.wants) || []).forEach(function (w) {
+      var ok = w === 'qa' ? !!(F.qa && (F.qa.items || []).length) : w === 'spotted' ? (F.spotted || []).length > 0 : has(w);
+      out.push({ k: w, l: (MAG_WANTS[w] || w) + (T[w] ? ': "' + T[w] + '"' : ''), ok: ok, by: w === 'callouts' ? 'hand' : 'claude',
+        why: w === 'callouts' ? 'Add one under Edit the parts: pick a picture, then click it to place each label' : w === 'qa' ? 'Its answers come from your own words in the notes' : '' });
+    });
+    out.push({ k: 'pictures', l: 'At least ' + want + ' pictures besides the cover (' + pics + ' now)', ok: pics >= want, by: 'picture', why: pics < want ? (want - pics) + ' more: photos, loops or renders' : '' });
+    return out;
+  }
+  function magNote() {   // what Claude is shown: the Note as it stands in the editor
+    collect();
+    var s = E.track && E.track.stats;
+    return { title: E.title, date: E.date, kind: E.kind, place: E.place, whoAppears: E.consent, notes: E.fieldNotes, summary: E.summary,
+      postTitle: E.post.title, postBody: E.post.body, episodeScript: E.episode.script,
+      figures: s ? { distanceMiles: mi(s.distanceKm), highPointFeet: ft(s.maxEleM), movingTime: dur(s.movingSec) } : null,
+      photos: E.photos.filter(function (p) { return p.use !== 'skip' && !p.strip; }).map(function (p) { return { file: photoName(p), caption: p.caption || '', loop: !!p.video, ai: !!p.ai, cover: !!p.cover }; }),
+      feature: E.feature };
+  }
+  function magBlock(b) {   // Claude's block (flat fields) as publish.mjs wants it
+    var o = { type: b.type }, set = function (k, v) { if (v != null && v !== '' && !(Array.isArray(v) && !v.length)) o[k] = v; };
+    set('title', b.title); set('before', b.before);
+    if (b.type === 'specs') { set('rows', b.pairs); set('note', b.note); }
+    else if (b.type === 'stats' || b.type === 'timeline') { set('items', b.pairs); set('note', b.note); }
+    else if (b.type === 'goodbad') { set('good', b.good); set('bad', b.bad); }
+    else if (b.type === 'verdict') { set('score', b.score); set('outOf', b.out_of); set('seal', b.seal); set('scores', (b.scores || []).map(function (x) { return [x.label, x.value, x.max]; })); set('text', b.text); }
+    else if (b.type === 'box') { set('kicker', b.kicker); set('text', b.text); }
+    else if (b.type === 'steps') set('items', b.steps);
+    else if (b.type === 'code') { set('file', b.file); set('code', b.code); set('note', b.note); }
+    return o;
+  }
+  // the post with subheads and a pull quote added is only taken when its own words are all still there, in order
+  function sameWords(a, b) {
+    var plain = function (t) { return t.split(/\n\s*\n/).map(function (x) { return x.trim(); }).filter(function (x) { return x && !/^## /.test(x) && !/^> /.test(x); }).map(function (x) { return x.replace(/\s+/g, ' '); }).join('\n'); };
+    return plain(a) === plain(b);
+  }
+  function magApply(t) {
+    collect();
+    var F = E.feature || {}, old = magOf(F) || {};
+    var keep = function (k) { return F[k] && F[k] !== old[k]; };   // what was written for this Note stays; the old template's defaults change
+    F.theme = t.id;
+    ['masthead', 'tagline', 'issue', 'label', 'byline'].forEach(function (k) { if (!keep(k) && t[k]) F[k] = t[k]; });
+    F.blocks = F.blocks || [];   // the parts keep their own titles: they were written for what they say
+    E.feature = F; MAG_OPEN = false; markDirty(); renderMag();
+    var n = magNeeds(F, t).filter(function (x) { return !x.ok; }).length;
+    toast(t.masthead + ' it is. ' + (n ? n + ' thing' + (n > 1 ? 's' : '') + ' to add: see the checklist.' : 'Nothing missing.'));
+  }
+  function magWrite(missing, t, btn) {
+    if (MAG_BUSY) return; MAG_BUSY = true;
+    btn.disabled = true; btn.textContent = 'Claude is writing…';
+    api('feature', { note: magNote(), template: t, missing: missing }).then(function (r) {
+      var x = r.feature || {}, F = E.feature, got = [], miss = {};
+      missing.forEach(function (k) { miss[k] = 1; });
+      ['masthead', 'tagline', 'issue', 'label', 'byline'].forEach(function (k) { if (miss[k] && x[k]) { F[k] = x[k]; got.push(k); } });
+      if (miss.coverLines && (x.cover_lines || []).length) { F.coverLines = x.cover_lines.slice(0, 5); got.push('cover lines'); }
+      if (miss.summary && x.summary) { E.summary = x.summary; if ($('#summary')) $('#summary').value = x.summary; got.push('summary'); }
+      if ((miss.subheads || miss.pull) && x.post_body) {
+        var cur = $('#postBody').value;
+        if (sameWords(cur, x.post_body)) { $('#postBody').value = x.post_body.trim(); E.post.body = x.post_body.trim(); got.push(miss.subheads && miss.pull ? 'subheads and a pull quote' : miss.subheads ? 'subheads' : 'a pull quote'); }
+        else toast('Claude changed some of the post\'s words, so its subheads and pull quote weren\'t added. Try again.', true);
+      }
+      (x.blocks || []).forEach(function (b) { if (miss[b.type] && !(F.blocks || []).some(function (y) { return y.type === b.type; })) { (F.blocks = F.blocks || []).push(magBlock(b)); got.push(MAG_WANTS[b.type].toLowerCase()); } });
+      if (miss.qa && x.qa && (x.qa.items || []).length) { F.qa = { title: x.qa.title || (t.titles || {}).qa || 'Questions', items: x.qa.items }; got.push('a Q&A'); }
+      if (miss.spotted && (x.spotted || []).length) { F.spotted = x.spotted.map(function (y) { var o = { label: y.label, text: y.text }; if (y.url) o.url = y.url; return o; }); got.push('Spotted'); }
+      if ((x.renders || []).length) F.renders = x.renders;
+      F.questions = x.questions || [];
+      markDirty(); collect(); renderPhotos();
+      toast(got.length ? 'Added ' + got.join(', ') + '. Read them over before you publish.' : 'Nothing new came back. See Claude\'s questions.', !got.length);
+    }).catch(function (err) { toast('Couldn\'t write them: ' + err.message, true); })
+      .then(function () { MAG_BUSY = false; renderMag(); });
+  }
+  function magGallery(cur) {
+    return '<div class="magGal">' + mags().map(function (t) {
+      var sw = (t.swatches || []).map(function (c) { return '<i style="background:' + esc(c) + '"></i>'; }).join('');
+      var on = cur && cur.id === t.id;
+      return '<div class="magCard' + (on ? ' on' : '') + '" data-id="' + esc(t.id) + '"><div class="magSw">' + sw + '</div>' +
+        '<b class="magMast" style="color:' + esc((t.swatches || [])[0] || '#000') + '">' + esc(t.masthead) + '</b><span class="magCat">' + esc(t.category) + '</span>' +
+        '<small>' + esc(t.format) + '</small><span class="magWants">' + (t.wants || []).map(function (w) { return '<em>' + esc((MAG_WANTS[w] || w).replace(/^(A|An) /, '')) + '</em>'; }).join('') + '</span>' +
+        '<button type="button" class="small magUse"' + (on ? ' disabled' : '') + '>' + (on ? 'In use' : 'Use this template') + '</button></div>';
+    }).join('') + '</div>';
+  }
+  function renderMag() {
+    var box = $('#magBox'); if (!box || !E) return;
+    var hs = $('#f-magazine > summary small'); if (hs) hs.textContent = magHint();
+    var F = E.feature && E.feature.masthead ? E.feature : null, t = F ? magOf(F) : null;
+    if (!mags().length) { box.innerHTML = '<p class="muted">No magazine templates found (field/data/magazines.json).</p>'; return; }
+    if (!F) {
+      box.innerHTML = '<p class="muted">Dress this Note as a feature in one of the made-up magazines: its cover becomes a magazine cover, its post the cover story, with the template\'s look and building blocks. Pick one; the checklist then shows what it still needs, and Claude can write the missing parts from the Note.</p>' + magGallery(null);
+    } else {
+      var N = magNeeds(F, t), todo = N.filter(function (x) { return !x.ok; });
+      var canWrite = todo.filter(function (x) { return x.by === 'claude' || x.by === 'picture'; }).map(function (x) { return x.k; });
+      var inp = function (k, ph) { return '<input class="magF" data-k="' + k + '" value="' + esc(F[k] || '') + '" placeholder="' + esc(ph || '') + '">'; };
+      box.innerHTML =
+        '<div class="magNow"><div class="magSw">' + ((t && t.swatches) || []).map(function (c) { return '<i style="background:' + esc(c) + '"></i>'; }).join('') + '</div>' +
+          '<div><b>' + esc(t ? t.masthead : F.theme || 'RIVETING TONE') + '</b><small>' + esc(t ? t.category + ' · ' + t.format : '') + '</small></div>' +
+          '<button type="button" class="small" id="magPick">' + (MAG_OPEN ? 'Keep this one' : 'Change template') + '</button></div>' +
+        '<div class="magPickBox' + (MAG_OPEN ? ' open' : '') + '"' + (MAG_OPEN ? '' : ' inert') + '><div><p class="muted">Switching keeps everything written for this Note; only the template\'s own defaults change. Parts the new one doesn\'t usually have stay in, and you can remove them below.</p>' + magGallery(t) + '</div></div>' +
+        '<h3>' + (todo.length ? 'What it still needs' : 'Everything it needs is here') + '</h3><ul class="magNeeds">' + N.map(function (x) {
+          return '<li class="' + (x.ok ? 'ok' : 'no') + '"><span class="magTick" aria-hidden="true">' + (x.ok ? '✓' : '○') + '</span><span>' + esc(x.l) +
+            (!x.ok && x.why ? '<small>' + esc(x.why) + '</small>' : '') + '</span>' + (x.ok ? '' : '<em>' + (x.by === 'claude' ? 'Claude can write it' : x.by === 'picture' ? 'needs a picture' : 'by hand') + '</em>') + '</li>';
+        }).join('') + '</ul>' +
+        (canWrite.length ? '<div class="row"><button type="button" class="primary" id="magWrite"' + (MAG_BUSY ? ' disabled' : '') + '>' + (MAG_BUSY ? 'Claude is writing…' : 'Write the missing parts with Claude') + '</button><span class="muted">From the Note only: your notes, the post, the captions, the track. Picture prompts come with it.</span></div>' : '') +
+        ((F.questions || []).length ? '<div class="magQs"><h3>Claude asks</h3><ul>' + F.questions.map(function (q) { return '<li>' + esc(q) + '</li>'; }).join('') + '</ul></div>' : '') +
+        ((F.renders || []).length ? '<div class="magRenders"><h3>Pictures to make</h3><p class="muted">Paste a prompt into your image tool, then add the result under Photos. No text or logos inside a render.</p>' + F.renders.map(function (r, i) {
+          return '<div class="magRender"><b>' + esc(r.for) + '</b><p>' + esc(r.prompt) + '</p><button type="button" class="link magCopy" data-i="' + i + '">Copy</button> <button type="button" class="link magDone" data-i="' + i + '">Done, remove it</button></div>';
+        }).join('') + '</div>' : '') +
+        '<h3>The cover</h3><div class="grid2">' + field('Masthead', inp('masthead', t && t.masthead)) + field('Tagline', inp('tagline', t && t.tagline)) +
+          field('Issue', inp('issue', t && t.issue)) + field('Label over the headline', inp('label', t && t.label)) + field('Byline', inp('byline', t && t.byline)) + '</div>' +
+        field('Cover lines', '<textarea class="magF" data-k="coverLines" rows="4" placeholder="One per line, 3 to 5. The first is set large.">' + esc((F.coverLines || []).join('\n')) + '</textarea>', 'Each one points at something really in the Note.') +
+        '<h3>The parts</h3>' + magParts(F) +
+        '<button type="button" class="link" id="magOff">Take the magazine look off</button>';
+    }
+    // wiring
+    $$('.magUse', box).forEach(function (b) { b.onclick = function () { var id = b.closest('.magCard').getAttribute('data-id'); magApply(mags().filter(function (t) { return t.id === id; })[0]); }; });
+    if (!F) return;
+    $('#magPick').onclick = function () {   // the picker eases open and shut (css .magPickBox)
+      MAG_OPEN = !MAG_OPEN; var pb = $('.magPickBox', box);
+      pb.classList.toggle('open', MAG_OPEN); pb.inert = !MAG_OPEN; this.textContent = MAG_OPEN ? 'Keep this one' : 'Change template';
+    };
+    $$('.magF', box).forEach(function (el) { el.addEventListener('input', function () {
+      var k = el.getAttribute('data-k');
+      if (k === 'coverLines') F.coverLines = el.value.split('\n').map(function (l) { return l.trim(); }).filter(Boolean); else F[k] = el.value.trim();
+      markDirty();
+    }); el.addEventListener('change', function () { renderMag(); }); });
+    var w = $('#magWrite'); if (w) w.onclick = function () { magWrite(magNeeds(F, t).filter(function (x) { return !x.ok && x.by !== 'hand'; }).map(function (x) { return x.k; }), t, w); };
+    $$('.magCopy', box).forEach(function (b) { b.onclick = function () { navigator.clipboard.writeText(F.renders[+b.getAttribute('data-i')].prompt).then(function () { toast('Prompt copied.'); }); }; });
+    $$('.magDone', box).forEach(function (b) { b.onclick = function () { F.renders.splice(+b.getAttribute('data-i'), 1); if (!F.renders.length) delete F.renders; markDirty(); renderMag(); }; });
+    magPartsWire(F, box);
+    $('#magOff').onclick = function () {
+      if (!confirm('Take the magazine look off this Note? Its cover text, blocks, Q&A and Spotted box go too (the post and photos stay).')) return;
+      delete E.feature; markDirty(); renderMag();
+    };
+  }
+  // the feature's building blocks, in story order: each sits before the subhead it names (or at the end); ↑ ↓ change
+  // the order among those at one spot, Edit opens its fields as JSON, and a callouts block places labels by click
+  function magParts(F) {
+    var subs = subheads(), B = F.blocks || [];
+    var row = function (b, i) {
+      var sum = b.type === 'callouts' ? (b.photo || 'no picture yet') + ' · ' + (b.items || []).length + ' labels' : b.type === 'specs' ? (b.rows || []).length + ' rows' : (b.items || []).length ? b.items.length + ' items' : b.text ? b.text.slice(0, 60) : '';
+      return '<li class="magPart" data-i="' + i + '"><span><b>' + esc(MAG_WANTS[b.type] || b.type) + (b.title ? ': ' + esc(b.title) : '') + '</b><small>' + esc(sum) + '</small></span>' +
+        '<select class="magBefore" aria-label="Where it sits"><option value="">At the end of the story</option>' + subs.map(function (s) { return '<option value="' + esc(s) + '"' + (s === b.before ? ' selected' : '') + '>Before "' + esc(s) + '"</option>'; }).join('') +
+          (b.before && subs.indexOf(b.before) < 0 ? '<option value="' + esc(b.before) + '" selected>Before "' + esc(b.before) + '" (not in the post now)</option>' : '') + '</select>' +
+        '<span class="wsMv"><button type="button" class="link magUp" aria-label="Earlier"' + (i ? '' : ' disabled') + '>↑</button><button type="button" class="link magDn" aria-label="Later"' + (i < B.length - 1 ? '' : ' disabled') + '>↓</button></span>' +
+        '<button type="button" class="link magEd">Edit</button><button type="button" class="link magRm">Remove</button>' +
+        '<div class="magEdBox" hidden></div></li>';
+    };
+    var types = Object.keys(MAG_WANTS).filter(function (k) { return k !== 'qa' && k !== 'spotted'; });
+    return '<ul class="magParts">' + B.map(row).join('') + '</ul>' +
+      '<div class="row"><select id="magAddT">' + types.map(function (k) { return '<option value="' + k + '">' + esc(MAG_WANTS[k]) + '</option>'; }).join('') + '</select><button type="button" class="small" id="magAdd">Add a part</button></div>' +
+      '<details class="magJson"><summary>Q&A, Spotted and everything else, as JSON</summary><textarea id="magAll" rows="14" spellcheck="false">' + esc(JSON.stringify({ qa: F.qa || null, spotted: F.spotted || [], lookbook: F.lookbook || null }, null, 2)) + '</textarea><small class="muted">Saved when you click out of it, if it reads as JSON.</small></details>';
+  }
+  var MAG_EMPTY = { specs: { rows: [['', '']] }, stats: { items: [['', '']] }, goodbad: { good: [''], bad: [''] }, verdict: { score: '', outOf: '/10', seal: '', scores: [], text: '' },
+    box: { kicker: '', text: '' }, callouts: { photo: '', items: [] }, steps: { items: [{ title: '', text: '' }] }, timeline: { items: [['', '']] }, code: { file: '', code: '', note: '' } };
+  function magPartsWire(F, box) {
+    var B = F.blocks = F.blocks || [];
+    $$('.magPart', box).forEach(function (li) {
+      var i = +li.getAttribute('data-i'), b = B[i];
+      $('.magBefore', li).onchange = function () { if (this.value) b.before = this.value; else delete b.before; markDirty(); };
+      $('.magUp', li).onclick = function () { B.splice(i - 1, 0, B.splice(i, 1)[0]); markDirty(); renderMag(); };
+      $('.magDn', li).onclick = function () { B.splice(i + 1, 0, B.splice(i, 1)[0]); markDirty(); renderMag(); };
+      $('.magRm', li).onclick = function () { if (!confirm('Remove this part?')) return; B.splice(i, 1); markDirty(); renderMag(); };
+      $('.magEd', li).onclick = function () {
+        var ed = $('.magEdBox', li);
+        if (!ed.hidden) { ed.hidden = true; ed.innerHTML = ''; return; }
+        var pics = E.photos.filter(function (p) { return !p.strip && !p.video; });
+        ed.innerHTML = (b.type === 'callouts' ? '<label class="f"><span>Picture</span><select class="mcPic"><option value="">Pick one</option>' + pics.map(function (p) { var n = photoName(p); return '<option' + (n === b.photo ? ' selected' : '') + '>' + esc(n) + '</option>'; }).join('') + '</select></label>' +
+            '<div class="mcPlace">' + (b.photo ? '<img src="' + esc(photoUrl(pics.filter(function (p) { return photoName(p) === b.photo; })[0] || {})) + '" alt="">' + (b.items || []).map(function (x, k) { return '<i style="left:' + Number(x.x) + '%;top:' + Number(x.y) + '%">' + (k + 1) + '</i>'; }).join('') : '') + '</div>' +
+            (b.photo ? '<small class="muted">Click the picture to add a label there; then name it in the JSON (x and y are percentages across and down).</small>' : '') : '') +
+          '<textarea class="magPartJ" rows="10" spellcheck="false">' + esc(JSON.stringify(b, null, 2)) + '</textarea><div class="row"><button type="button" class="small magPartOk">Keep these changes</button><span class="muted magPartErr"></span></div>';
+        ed.hidden = false;
+        var ta = $('.magPartJ', ed);
+        $('.magPartOk', ed).onclick = function () {
+          try { var nb = JSON.parse(ta.value); if (!nb || typeof nb !== 'object' || !nb.type) throw new Error('it needs a "type"'); B[i] = nb; markDirty(); renderMag(); toast('Part changed. Save to keep it.'); }
+          catch (err) { $('.magPartErr', ed).textContent = 'That isn\'t valid JSON: ' + err.message; }
+        };
+        var sel = $('.mcPic', ed); if (sel) sel.onchange = function () { try { b = JSON.parse(ta.value); } catch (e) {} b.photo = this.value; B[i] = b; markDirty(); renderMag(); $('.magEd', $$('.magPart', $('#magBox'))[i]).click(); };
+        var pl = $('.mcPlace img', ed); if (pl) pl.onclick = function (ev) {
+          var r = pl.getBoundingClientRect(), x = Math.round((ev.clientX - r.left) / r.width * 100), y = Math.round((ev.clientY - r.top) / r.height * 100);
+          try { b = JSON.parse(ta.value); } catch (e) {}
+          (b.items = b.items || []).push({ x: x, y: y, label: 'Label ' + ((b.items || []).length + 1) });
+          ta.value = JSON.stringify(b, null, 2);
+          var dot = document.createElement('i'); dot.style.left = x + '%'; dot.style.top = y + '%'; dot.textContent = b.items.length; pl.parentNode.appendChild(dot);
+        };
+      };
+    });
+    $('#magAdd').onclick = function () {
+      var ty = $('#magAddT').value, T = (magOf(F) || {}).titles || {};
+      B.push(Object.assign({ type: ty, title: T[ty] || '' }, JSON.parse(JSON.stringify(MAG_EMPTY[ty] || {}))));
+      markDirty(); renderMag();
+      var last = $$('.magPart', $('#magBox')).pop(); if (last) $('.magEd', last).click();
+    };
+    var all = $('#magAll'); if (all) all.addEventListener('change', function () {
+      try { var j = JSON.parse(all.value); ['qa', 'spotted', 'lookbook'].forEach(function (k) { if (j[k] == null || (Array.isArray(j[k]) && !j[k].length)) delete F[k]; else F[k] = j[k]; }); markDirty(); renderMag(); toast('Changed. Save to keep it.'); }
+      catch (err) { toast('That isn\'t valid JSON: ' + err.message, true); }
+    });
   }
   function clipView(p, n) {
     var c = clipsNew[n], pn = p.poster ? p.poster.split('/').pop() : '', pk = posterNew[pn];

@@ -121,6 +121,43 @@ html.night-page .feature .mag-spot{border-color:#3a5157}
 .feature .mag-callouts figcaption b{font-style:normal;font-family:var(--mg-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--mg-ink)}
 @media (max-width:640px){.feature .mc-dot b{display:none}}   /* small screens: just the numbers; the caption lists them */
 @media (min-width:900px){main.feature .mag-callouts,main.feature .mag-verdict{margin-left:-60px;margin-right:-60px}}
+/* more building blocks: a stats strip, good and bad, numbered steps, a timeline, a code or prompt block */
+.feature{--mg-mono:"JetBrains Mono","IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.feature .mag-stats,.feature .mag-gb,.feature .mag-steps,.feature .mag-time{margin:1.6em 0}
+.feature .mag-stats h3,.feature .mag-gb h3,.feature .mag-steps h3,.feature .mag-time h3{margin:0 0 10px;font:800 15px/1.25 var(--mg-sans);letter-spacing:.14em;text-transform:uppercase;color:var(--mg-red)}
+.feature .mag-stats ul{list-style:none;margin:0;padding:14px 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:14px 10px;border-top:3px solid var(--mg-ink);border-bottom:1px solid var(--mg-ink)}
+.feature .mag-stats li{margin:0;text-align:center}
+.feature .mag-stats b{display:block;font:900 clamp(28px,4.6vw,42px)/1 var(--mg-serif);color:var(--mg-ink)}
+.feature .mag-stats span{display:block;margin-top:5px;font:700 12px/1.3 var(--mg-sans);letter-spacing:.1em;text-transform:uppercase;color:var(--mg-ink2)}
+.feature .mag-stats>p{margin:8px 0 0;font:italic 14px/1.45 var(--mg-text);color:var(--mg-ink3)}
+.feature .mag-gb>div{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.feature .mag-gb section{padding:14px 16px;border-radius:4px;border-top:4px solid var(--mg-ink)}
+.feature .mag-gb .gb-good{background:rgba(46,140,90,.09);border-top-color:#2e8c5a}
+.feature .mag-gb .gb-bad{background:rgba(200,51,92,.08);border-top-color:var(--mg-red)}
+.feature .mag-gb h4{margin:0 0 8px;font:800 13px/1.2 var(--mg-sans);letter-spacing:.14em;text-transform:uppercase;color:var(--mg-ink)}
+.feature .mag-gb ul{margin:0;padding:0 0 0 18px}
+.feature .mag-gb li{margin:0 0 6px;font:16px/1.45 var(--mg-text);color:var(--mg-ink)}
+.feature .mag-gb .gb-good li::marker{content:"+  ";font-weight:800;color:#2e8c5a}
+.feature .mag-gb .gb-bad li::marker{content:"\2212  ";font-weight:800;color:var(--mg-red)}
+@media (max-width:520px){.feature .mag-gb>div{grid-template-columns:1fr}}
+.feature .mag-steps ol{list-style:none;margin:0;padding:0;counter-reset:st;display:grid;gap:16px}
+.feature .mag-steps li{counter-increment:st;position:relative;margin:0;padding:0 0 0 52px}
+.feature .mag-steps li::before{content:counter(st);position:absolute;left:0;top:0;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--mg-red);color:#fff;font:800 16px/1 var(--mg-sans)}
+.feature .mag-steps li b{display:block;margin:6px 0 4px;font:800 16px/1.3 var(--mg-sans);color:var(--mg-ink)}
+.feature .mag-steps li p{margin:0 0 8px;font:16.5px/1.6 var(--mg-text);color:var(--mg-ink)}
+.feature .mag-steps li figure{margin:8px 0 0}
+.feature .mag-time ol{list-style:none;margin:0;padding:0 0 0 18px;border-left:3px solid var(--mg-ink);display:grid;gap:14px}
+.feature .mag-time li{position:relative;margin:0}
+.feature .mag-time li::before{content:"";position:absolute;left:-26px;top:5px;width:13px;height:13px;border-radius:50%;background:var(--mg-red);box-shadow:0 0 0 3px var(--mg-paper,#fff)}
+.feature .mag-time time{display:block;font:600 13px/1.3 var(--mg-mono);letter-spacing:.02em;color:var(--mg-red)}
+.feature .mag-time p{margin:3px 0 0;font:16.5px/1.55 var(--mg-text);color:var(--mg-ink)}
+.feature .mag-code{margin:1.6em 0}
+.feature .mag-code pre{margin:0;padding:16px 18px;border-radius:0 6px 6px 6px;background:#14181d;color:#e8edf2;overflow-x:auto;font:500 14px/1.6 var(--mg-mono);white-space:pre-wrap;overflow-wrap:anywhere}
+.feature .mag-code .mc-file{display:inline-block;margin:0;padding:5px 12px;border-radius:6px 6px 0 0;background:#14181d;color:#9fb3c8;font:600 12px/1.2 var(--mg-mono)}
+.feature .mag-code figcaption:not(.mc-file){margin:8px 0 0;font:italic 14px/1.45 var(--mg-text);color:var(--mg-ink2)}
+html.night-page .feature .mag-gb .gb-good{background:rgba(70,190,120,.1)}
+html.night-page .feature .mag-gb .gb-bad{background:rgba(240,109,147,.1)}
+html.night-page .feature .mag-time li::before{box-shadow:0 0 0 3px #10161d}
 html.night-page .feature .mag-specs,html.night-page .feature .mag-box{background:rgba(255,255,255,.04);border-color:var(--mg-rule)}
 html.night-page .feature .mv-bars i{background:linear-gradient(90deg,var(--mg-red) calc(var(--v) * 100%),rgba(255,255,255,.12) 0)}
 
@@ -167,3 +204,176 @@ html.night-page .feature.mag-paradox .mag-specs,html.night-page .feature.mag-par
 html.night-page .feature.mag-paradox .mag-specs h3{background:#f3e7cf;color:#2a2016}
 html.night-page .feature.mag-paradox .mag-box{background:#262a17}
 html.night-page .feature.mag-paradox .mag-qa dd{background:#5a4632}
+
+/* The other magazine templates (field/data/magazines.json, picked in the Studio's Magazine template panel). Each is a
+   made-up magazine (assets/features/MAGAZINES.md) and only re-colours and re-types the shared parts above. Night
+   mode keeps each one's accent (the base night rule would turn it pink). */
+
+/* UNTETHERED (adventure): basalt, bone and signal orange; a tall condensed masthead */
+.feature.mag-untethered{--mg-ink:#2b2a28;--mg-ink2:#55524d;--mg-ink3:#8a857c;--mg-red:#f25c05;--mg-gold:#efe8dc;--mg-rule:#2b2a28;
+  --mg-serif:"Anton","Impact","Arial Narrow",sans-serif;--mg-text:"Source Serif 4",Charter,Georgia,serif;--mg-sans:"Barlow Condensed","Arial Narrow",Arial,sans-serif}
+.feature.mag-untethered .mag-mast{font:400 clamp(34px,9.6vw,92px)/.9 var(--mg-serif);letter-spacing:.03em;color:var(--mg-gold)}
+.feature.mag-untethered .mag-head h1,.feature.mag-untethered .mag-verdict h2,.feature.mag-untethered .mag-qa h2{font-weight:400;text-transform:uppercase;letter-spacing:.01em}
+.feature.mag-untethered .mag-label{border:0;padding:3px 10px;background:var(--mg-red);color:#fff}
+.feature.mag-untethered .pull p{font:400 clamp(26px,3.8vw,38px)/1.1 var(--mg-serif);font-style:normal;text-transform:uppercase;color:var(--mg-red)}
+.feature.mag-untethered .mag-stats ul{border-top-color:var(--mg-red)}
+.feature.mag-untethered .mag-stats b{font-weight:400}
+.feature.mag-untethered .mag-box{border:0;border-left:8px solid var(--mg-red);background:#efe8dc}
+html.night-page .feature.mag-untethered{--mg-red:#ff7a2e}
+html.night-page .feature.mag-untethered .mag-box{background:#24221f}
+
+/* LINE OF SIGHT (drones): night navy, dusk orange and a HUD green in monospace readouts */
+.feature.mag-lineofsight{--mg-ink:#0b1d33;--mg-ink2:#36506e;--mg-ink3:#6f86a1;--mg-red:#e07a2f;--mg-gold:#7cfc9a;--mg-rule:#0b1d33;--los-hud:#7cfc9a;
+  --mg-serif:"Chakra Petch","Eurostile","Arial Narrow",sans-serif;--mg-text:"Inter","Helvetica Neue",Arial,sans-serif;--mg-sans:"Chakra Petch","Arial Narrow",Arial,sans-serif;--mg-mono:"JetBrains Mono",ui-monospace,Menlo,monospace}
+.feature.mag-lineofsight .mag-cover{background:#0b1d33}
+.feature.mag-lineofsight .mag-mast{font:700 clamp(30px,8vw,76px)/.9 var(--mg-serif);letter-spacing:.08em;text-shadow:0 0 18px rgba(124,252,154,.35)}
+.feature.mag-lineofsight .mag-tag{font:500 clamp(10px,1.4vw,13px)/1.3 var(--mg-mono);font-style:normal;letter-spacing:.08em;text-transform:uppercase;color:#cfe9ff}
+.feature.mag-lineofsight .mag-issue{background:transparent;border:1px solid var(--los-hud);color:var(--los-hud);font-family:var(--mg-mono)}
+.feature.mag-lineofsight .mag-head h1{font-weight:700;letter-spacing:.01em}
+.feature.mag-lineofsight .post>p{font-size:18px;line-height:1.75}
+.feature.mag-lineofsight .post>p:first-child::first-letter{font-weight:700}
+.feature.mag-lineofsight .mag-specs,.feature.mag-lineofsight .mag-stats ul{background:#0b1d33;border-color:#0b1d33;color:#e6f1ff}
+.feature.mag-lineofsight .mag-specs{border-radius:6px}
+.feature.mag-lineofsight .mag-specs dt{color:#9fb6d0;font-family:var(--mg-mono);font-weight:500;text-transform:none}
+.feature.mag-lineofsight .mag-specs dd,.feature.mag-lineofsight .mag-stats b{color:var(--los-hud);font-family:var(--mg-mono)}
+.feature.mag-lineofsight .mag-specs dl>div{border-bottom-color:rgba(124,252,154,.2)}
+.feature.mag-lineofsight .mag-stats ul{padding:16px 12px;border-radius:6px}
+.feature.mag-lineofsight .mag-stats span{color:#9fb6d0}
+.feature.mag-lineofsight .mag-box{border:1px dashed var(--mg-red);background:rgba(244,162,89,.08)}
+html.night-page .feature.mag-lineofsight{--mg-red:#f4a259}
+
+/* HEAT SINK (tech): white, carbon black and a volt green score */
+.feature.mag-heatsink{--mg-ink:#111;--mg-ink2:#444;--mg-ink3:#777;--mg-red:#111;--mg-gold:#c6ff00;--mg-rule:#111;--hs-volt:#c6ff00;
+  --mg-serif:"Archivo Black","Arial Black",Arial,sans-serif;--mg-text:"Inter","Helvetica Neue",Arial,sans-serif;--mg-sans:"Inter","Helvetica Neue",Arial,sans-serif;--mg-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace}
+.feature.mag-heatsink .mag-mast{font:400 clamp(32px,9vw,86px)/.86 var(--mg-serif);letter-spacing:-.02em;text-transform:uppercase}
+.feature.mag-heatsink .mag-issue{background:var(--hs-volt);color:#111}
+.feature.mag-heatsink .mag-label{border:0;padding:4px 10px;background:#111;color:var(--hs-volt)}
+.feature.mag-heatsink .mag-head h1{font-weight:400;letter-spacing:-.02em}
+.feature.mag-heatsink .mag-deck{font-style:normal}
+.feature.mag-heatsink .post>p{font-size:18px;line-height:1.7}
+.feature.mag-heatsink .post>p:first-child::first-letter{font-weight:400;background:var(--hs-volt);padding:4px 8px 0;margin-top:4px}
+.feature.mag-heatsink .post h2.sub::before{background:var(--hs-volt);height:6px}
+.feature.mag-heatsink .pull p{font-weight:400;font-style:normal;letter-spacing:-.01em}
+.feature.mag-heatsink .mag-specs{border-width:3px;background:#fff}
+.feature.mag-heatsink .mag-specs dd{font-family:var(--mg-mono);font-weight:500}
+.feature.mag-heatsink .mv-score b{font-weight:400;background:var(--hs-volt);padding:6px 10px 2px;color:#111}
+.feature.mag-heatsink .mv-seal{border:3px solid #111;color:#111;background:var(--hs-volt)}
+.feature.mag-heatsink .mv-bars i{background:linear-gradient(90deg,#111 calc(var(--v) * 100%),rgba(0,0,0,.08) 0)}
+.feature.mag-heatsink .mag-gb .gb-good{border-top-color:#111;background:rgba(198,255,0,.22)}
+.feature.mag-heatsink .mag-gb .gb-good li::marker{color:#111}
+.feature.mag-heatsink .mag-steps li::before,.feature.mag-heatsink .mc-dot i{background:#111;color:var(--hs-volt)}
+html.night-page .feature.mag-heatsink{--mg-red:#c6ff00}
+html.night-page .feature.mag-heatsink .mag-specs{background:rgba(255,255,255,.04)}
+html.night-page .feature.mag-heatsink .mv-bars i{background:linear-gradient(90deg,var(--hs-volt) calc(var(--v) * 100%),rgba(255,255,255,.12) 0)}
+html.night-page .feature.mag-heatsink .mag-label{background:var(--hs-volt);color:#111}
+
+/* CONTOUR LINES (hiking): moss, sand, sky and ochre, a slab masthead over contour rules */
+.feature.mag-contour{--mg-ink:#2c3b2e;--mg-ink2:#4f6352;--mg-ink3:#7d8c7f;--mg-red:#b07a26;--mg-gold:#e9dfc9;--mg-rule:#3e5641;--ct-moss:#3e5641;--ct-sky:#8fb8de;--mg-paper:#fff;
+  --mg-serif:"Zilla Slab","Rockwell",Georgia,serif;--mg-text:"Source Serif 4",Charter,Georgia,serif;--mg-sans:"Barlow","Helvetica Neue",Arial,sans-serif}
+.feature.mag-contour .mag-mast{font:700 clamp(30px,8.4vw,80px)/.9 var(--mg-serif);letter-spacing:.01em}
+.feature.mag-contour .mag-top::after{content:"";display:block;width:min(50%,440px);height:14px;margin:8px 0 4px;
+  background:repeating-linear-gradient(180deg,rgba(233,223,201,.9) 0 2px,transparent 2px 5px)}
+.feature.mag-contour .mag-issue{background:var(--ct-moss)}
+.feature.mag-contour .mag-label{color:var(--ct-moss);border-bottom-color:var(--mg-red)}
+.feature.mag-contour .mag-head h1{font-weight:700;letter-spacing:0}
+.feature.mag-contour .post h2.sub{color:var(--ct-moss)}
+.feature.mag-contour .post h2.sub::before{height:6px;background:repeating-linear-gradient(180deg,var(--mg-red) 0 2px,transparent 2px 4px)}
+.feature.mag-contour .mag-stats ul{border-top-color:var(--ct-moss);background:linear-gradient(180deg,rgba(143,184,222,.14),transparent)}
+.feature.mag-contour .mag-stats b{font-weight:700;color:var(--ct-moss)}
+.feature.mag-contour .mag-box{border:0;border-radius:8px;background:#efe8d6;border-left:6px solid var(--ct-sky)}
+.feature.mag-contour .mag-time ol{border-left-color:var(--ct-moss)}
+html.night-page .feature.mag-contour{--mg-red:#d9a64a;--ct-moss:#9cc09f}
+html.night-page .feature.mag-contour .mag-box{background:#1f2a22}
+
+/* COL & COBBLE (biking): cream, oxblood and road grey, an elegant serif with spaced capitals */
+.feature.mag-colcobble{--mg-ink:#2a2324;--mg-ink2:#50555b;--mg-ink3:#7c8086;--mg-red:#6d1f2b;--mg-gold:#f3eee3;--mg-rule:#6d1f2b;
+  --mg-serif:"Playfair Display",Didot,Georgia,serif;--mg-text:"Libre Baskerville",Baskerville,Georgia,serif;--mg-sans:"Josefin Sans","Futura","Helvetica Neue",Arial,sans-serif}
+.feature.mag-colcobble .mag-mast{font:italic 700 clamp(30px,8.4vw,80px)/.92 var(--mg-serif);text-transform:none;letter-spacing:0}
+.feature.mag-colcobble .mag-issue{background:var(--mg-red)}
+.feature.mag-colcobble .mag-label{letter-spacing:.32em}
+.feature.mag-colcobble .post>p{font-size:17.5px;line-height:1.85}
+.feature.mag-colcobble .post h2.sub{letter-spacing:.3em}
+.feature.mag-colcobble .pull{border-top:1px solid var(--mg-red);border-bottom:1px solid var(--mg-red)}
+.feature.mag-colcobble .pull p{color:var(--mg-red)}
+.feature.mag-colcobble .mag-stats ul{border-top:1px solid var(--mg-red);border-bottom:1px solid var(--mg-red)}
+.feature.mag-colcobble .mag-stats b{font-style:italic;color:var(--mg-red)}
+.feature.mag-colcobble .mag-box{border:1px solid var(--mg-red);background:#f3eee3}
+.feature.mag-colcobble .mag-gb .gb-bad{border-top-color:var(--mg-red)}
+html.night-page .feature.mag-colcobble{--mg-red:#d0606f}
+html.night-page .feature.mag-colcobble .mag-box{background:#241c1d}
+
+/* HIDDEN LAYER (AI): paper, graphite, electric violet and teal; a light italic serif and mono asides */
+.feature.mag-hiddenlayer{--mg-ink:#222;--mg-ink2:#4a4a52;--mg-ink3:#7c7c86;--mg-red:#6c3bff;--mg-gold:#fafaf7;--mg-rule:#222;--hl-teal:#00b3a4;
+  --mg-serif:"Instrument Serif",Didot,Georgia,serif;--mg-text:"Inter","Helvetica Neue",Arial,sans-serif;--mg-sans:"Inter","Helvetica Neue",Arial,sans-serif;--mg-mono:"JetBrains Mono",ui-monospace,Menlo,monospace}
+.feature.mag-hiddenlayer .mag-mast{font:400 clamp(36px,9.4vw,92px)/.9 var(--mg-serif);letter-spacing:-.01em;text-transform:none}
+.feature.mag-hiddenlayer .mag-tag{font-family:var(--mg-mono);font-style:normal;font-size:clamp(10px,1.3vw,13px)}
+.feature.mag-hiddenlayer .mag-issue{background:linear-gradient(90deg,#6c3bff,#00b3a4)}
+.feature.mag-hiddenlayer .mag-head h1{font-weight:400;font-style:italic;letter-spacing:0;font-size:clamp(40px,7.4vw,72px)}
+.feature.mag-hiddenlayer .post>p{font-size:17.5px;line-height:1.75}
+.feature.mag-hiddenlayer .post>p:first-child::first-letter{font-weight:400;font-style:italic}
+.feature.mag-hiddenlayer .post h2.sub::before{background:linear-gradient(90deg,#6c3bff,#00b3a4);height:4px}
+.feature.mag-hiddenlayer .pull p{font-weight:400}
+.feature.mag-hiddenlayer .mag-box{border:0;border-left:3px solid var(--hl-teal);background:rgba(0,179,164,.07);border-radius:0 6px 6px 0}
+.feature.mag-hiddenlayer .mag-box h3,.feature.mag-hiddenlayer .mag-specs dt{font-family:var(--mg-mono);font-weight:500;letter-spacing:.04em}
+.feature.mag-hiddenlayer .mag-code pre{background:#17142b;color:#e6e1ff}
+.feature.mag-hiddenlayer .mag-code .mc-file{background:#17142b;color:#a993ff}
+.feature.mag-hiddenlayer .mag-steps li::before{background:linear-gradient(135deg,#6c3bff,#00b3a4)}
+html.night-page .feature.mag-hiddenlayer{--mg-red:#9a7bff}
+
+/* BRUSH ENGINE (digital art): charcoal and canvas with a warm painted accent; a wide expressive display face */
+.feature.mag-brushengine{--mg-ink:#1c1c21;--mg-ink2:#46464f;--mg-ink3:#7a7a84;--mg-red:#e8603c;--mg-gold:#ffd6a0;--mg-rule:#1c1c21;
+  --mg-serif:"Syne","Avenir Next","Helvetica Neue",Arial,sans-serif;--mg-text:"Work Sans","Helvetica Neue",Arial,sans-serif;--mg-sans:"Work Sans","Helvetica Neue",Arial,sans-serif}
+.feature.mag-brushengine .mag-cover{background:#1c1c21}
+.feature.mag-brushengine .mag-mast{font:800 clamp(30px,8.6vw,82px)/.88 var(--mg-serif);letter-spacing:-.01em}
+.feature.mag-brushengine .mag-issue{background:linear-gradient(90deg,#e8603c,#c13b8a)}
+.feature.mag-brushengine .mag-head h1{font-weight:800;letter-spacing:-.02em}
+.feature.mag-brushengine .mag-deck{font-style:normal}
+.feature.mag-brushengine .post>p{font-size:17.5px;line-height:1.75}
+.feature.mag-brushengine .post>p:first-child::first-letter{font-weight:800;color:var(--mg-red)}
+.feature.mag-brushengine .post h2.sub::before{height:6px;border-radius:3px;background:linear-gradient(90deg,#e8603c,#c13b8a,#3b6fe0)}
+.feature.mag-brushengine .pull p{font-weight:800;font-style:normal;letter-spacing:-.01em}
+.feature.mag-brushengine .mag-box{border:0;border-radius:14px;background:#1c1c21;color:#f4f1ea}
+.feature.mag-brushengine .mag-box p{color:#f4f1ea}
+.feature.mag-brushengine .mag-box h3{color:var(--mg-gold)}
+.feature.mag-brushengine .mag-steps li::before{border-radius:12px 12px 12px 4px;background:linear-gradient(135deg,#e8603c,#c13b8a)}
+html.night-page .feature.mag-brushengine{--mg-red:#ff7a59}
+html.night-page .feature.mag-brushengine .mag-box{background:#26262d}
+
+/* SOURCE ORDER (web development): paper, ink, link blue and a highlighter yellow; code in a mono tab */
+.feature.mag-sourceorder{--mg-ink:#1b1f24;--mg-ink2:#454c55;--mg-ink3:#7a828c;--mg-red:#2b59ff;--mg-gold:#ffe45c;--mg-rule:#1b1f24;
+  --mg-serif:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;--mg-text:"Source Serif 4",Charter,Georgia,serif;--mg-sans:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;--mg-mono:"JetBrains Mono",ui-monospace,Menlo,monospace}
+.feature.mag-sourceorder .mag-mast{font:800 clamp(30px,8.4vw,80px)/.9 var(--mg-serif);letter-spacing:-.03em;text-transform:none}
+.feature.mag-sourceorder .mag-mast::before{content:"<";opacity:.55}
+.feature.mag-sourceorder .mag-mast::after{content:" />";opacity:.55}
+.feature.mag-sourceorder .mag-issue{background:var(--mg-gold);color:#1b1f24;font-family:var(--mg-mono);text-transform:none;letter-spacing:0}
+.feature.mag-sourceorder .mag-label{font-family:var(--mg-mono);letter-spacing:.06em;text-transform:none}
+.feature.mag-sourceorder .mag-head h1{font-weight:800;letter-spacing:-.03em}
+.feature.mag-sourceorder .post h2.sub{font-family:var(--mg-mono);font-weight:600;letter-spacing:.02em;text-transform:none}
+.feature.mag-sourceorder .post h2.sub::before{content:"## ";display:inline;width:auto;height:auto;margin:0;background:none;color:var(--mg-ink3)}
+.feature.mag-sourceorder .pull p{font-weight:800;font-style:normal;letter-spacing:-.02em;background:linear-gradient(180deg,transparent 58%,rgba(255,228,92,.85) 58%);display:inline;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.feature.mag-sourceorder .mag-box{border:2px solid var(--mg-ink);border-radius:8px;background:rgba(255,228,92,.18)}
+.feature.mag-sourceorder .mag-time time{color:var(--mg-red)}
+html.night-page .feature.mag-sourceorder{--mg-red:#7d9bff}
+html.night-page .feature.mag-sourceorder .mag-box{background:rgba(255,228,92,.07)}
+html.night-page .feature.mag-sourceorder .pull p{background:linear-gradient(180deg,transparent 58%,rgba(255,228,92,.3) 58%)}
+
+/* STUDIO FLOOR (showcase): linen, black and one red accent; a high-contrast Bodoni masthead */
+.feature.mag-studiofloor{--mg-ink:#121212;--mg-ink2:#3d3d3d;--mg-ink3:#767676;--mg-red:#d1495b;--mg-gold:#f5f2ec;--mg-rule:#121212;
+  --mg-serif:"Bodoni Moda","Bodoni 72",Didot,Georgia,serif;--mg-text:"Bodoni Moda","Bodoni 72",Didot,Georgia,serif;--mg-sans:"Inter","Helvetica Neue",Arial,sans-serif}
+.feature.mag-studiofloor .mag-mast{font:900 clamp(32px,9vw,86px)/.88 var(--mg-serif);letter-spacing:.04em}
+.feature.mag-studiofloor .mag-tag{font-style:italic}
+.feature.mag-studiofloor .mag-issue{background:#121212}
+.feature.mag-studiofloor .mag-label{border-bottom:1px solid var(--mg-ink);color:var(--mg-ink);letter-spacing:.34em}
+.feature.mag-studiofloor .mag-head h1{font-weight:900;letter-spacing:-.01em}
+.feature.mag-studiofloor .post>p{font-family:var(--mg-sans);font-size:17.5px;line-height:1.75}
+.feature.mag-studiofloor .post>p:first-child::first-letter{font:900 92px/.78 var(--mg-serif);color:var(--mg-ink)}
+.feature.mag-studiofloor .post h2.sub{color:var(--mg-ink);letter-spacing:.3em}
+.feature.mag-studiofloor .post h2.sub::before{background:var(--mg-red)}
+.feature.mag-studiofloor .pull{border-top:1px solid var(--mg-ink);border-bottom:1px solid var(--mg-ink)}
+.feature.mag-studiofloor .pull p{font-weight:500;font-style:italic}
+.feature.mag-studiofloor .mag-qa{background:#f5f2ec;border-top:1px solid var(--mg-ink)}
+.feature.mag-studiofloor .mag-qa dd{background:#121212}
+.feature.mag-studiofloor .mag-box{border:1px solid var(--mg-ink);background:#f5f2ec}
+html.night-page .feature.mag-studiofloor{--mg-red:#ef6f80}
+html.night-page .feature.mag-studiofloor .mag-qa,html.night-page .feature.mag-studiofloor .mag-box{background:#1b1b1b}
+html.night-page .feature.mag-studiofloor .mag-qa dd{background:#3d3d3d}
