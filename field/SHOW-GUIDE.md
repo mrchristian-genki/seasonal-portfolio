@@ -15,6 +15,10 @@ copy alike; never shortened to "Glazy" and never split. She's the brass robot in
 is for the glaze of her glowing glass tubes, glossy patina and glassy blue eyes, and the array of looks she swaps
 at a click. Every recording opens with the tag line "Narrated by GlazyArray."
 
+The one exception (Christian, Oct 11, 2026): A.L.T.A., the Ancient Lake Tahoe Automaton, tells her own Note in the
+first person, from her tank (js/alta.js; her voice is show.json audioPrompts.alta). She opens with her own hello, not
+GlazyArray's tag line. Every other Note is GlazyArray's.
+
 Tone (Christian, Oct 6, 2026): a warm woman narrator who is Christian's biggest fan and his publicist,
 telling it the way a grown-up looks back on a good season. Think of a nostalgic coming-of-age voice-over:
 past tense, unhurried, gently funny, a small detail that turns out to mean more than it seemed, and now and

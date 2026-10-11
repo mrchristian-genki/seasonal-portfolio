@@ -59,7 +59,7 @@
       dlg = document.createElement('dialog'); dlg.className = 'wsm'; document.body.appendChild(dlg);
       if (window.softDialog && dlg.showModal) softDialog(dlg, 450);   // it fades out as it closes
       dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });   // a click on the dimmed page closes it
-      dlg.addEventListener('close', function () { OPEN = null; setAddr(null); clearTimeout(dlg._swap); dlg.classList.remove('swap'); [].forEach.call(dlg.querySelectorAll('video'), function (v) { v.pause(); }); });
+      dlg.addEventListener('close', function () { OPEN = null; setAddr(null); clearTimeout(dlg._swap); [].forEach.call(dlg.querySelectorAll('audio'), function (a) { a.pause(); }); dlg.classList.remove('swap'); [].forEach.call(dlg.querySelectorAll('video'), function (v) { v.pause(); }); });
     }
     if (dlg.open && !still && !dlg.classList.contains('shut')) {   // the next feature: the last fades out, this one fades in at its top
       dlg.classList.add('swap'); clearTimeout(dlg._swap);
@@ -89,9 +89,12 @@
       (p.slug ? '<button type="button" class="btn wsm-share">Share this project</button>' : '');
     dlg.innerHTML = '<div class="wsm-bar"><button type="button" class="wsm-x" aria-label="Close">×</button></div>' +
       '<article class="feature wsf">' +
-      '<header class="mag-cover wsf-cover"><div class="mag-img">' + pic(cover) + '</div>' +
+      // told by A.L.T.A. herself: her tank opens the window instead of the cover (js/alta.js)
+      (p.narrator === 'alta' ? '<section class="listen alta wsf-alta" data-narrator="alta" aria-label="' + (p.audio ? 'Listen to her episode' : 'A.L.T.A. in her tank') + '"><div><span class="listen-label">' +
+        (p.audio ? 'Listen' : 'Coming soon') + '</span><b>' + esc(p.episodeTitle || p.title || p.name) + '</b></div>' + (p.audio ? '<audio controls preload="metadata" src="' + esc(p.audio) + '"></audio>' : '') + '</section>'
+      : '<header class="mag-cover wsf-cover"><div class="mag-img">' + pic(cover) + '</div>' +
       '<div class="mag-top"><span class="wsf-mast">The Workshop</span><span class="mag-tag">Project ' + (n + 1) + ' of ' + P.length + '</span></div></header>' +
-      (cover.caption ? '<p class="mag-cap">' + esc(cover.caption) + '</p>' : '') +
+      (cover.caption ? '<p class="mag-cap">' + esc(cover.caption) + '</p>' : '')) +
       '<div class="mag-head"><p class="mag-label">' + esc(p.name) + ' · Case study</p><h1>' + esc(p.title || p.name) + '</h1><p class="mag-deck">' + esc(p.summary) + '</p>' +
       '<p class="mag-byline"><span>Words and pictures by Christian Gehrke</span><span>' + esc(p.date) + '</span></p></div>' +
       '<div class="post">' + body + '</div>' +
@@ -127,7 +130,7 @@
     }, 5200);
   }
   function start() {
-    fetch('assets/workshop/projects.json?v=6').then(function (r) { return r.json(); }).then(function (list) {
+    fetch('assets/workshop/projects.json?v=7').then(function (r) { return r.json(); }).then(function (list) {
       P = list; P.forEach(function (p, i) { var c = card(p, i); box.appendChild(c); cards.push(c); });
       if (!still) { play(cards[0], true); tour(); }
       // a project's own address opens its window

@@ -768,7 +768,7 @@
     $('#publish').onclick = publish;
     $('#copyPrompt').onclick = function () {
       collect();
-      var p = (CFG.audioPrompt || '').replace('{{title}}', E.episode.title || E.title).replace('{{script}}', E.episode.script);
+      var p = ((E.episode.narrator && CFG.audioPrompts && CFG.audioPrompts[E.episode.narrator]) || CFG.audioPrompt || '').replace('{{title}}', E.episode.title || E.title).replace('{{script}}', E.episode.script);
       navigator.clipboard.writeText(p).then(function () { toast('Audio prompt copied.'); });
     };
   }

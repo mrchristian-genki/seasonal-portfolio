@@ -284,6 +284,7 @@ try {
                 'trailheads' => $trail['trailheads'] ?? [],
                 'statuses' => $show['statuses'] ?? [],
                 'audioPrompt' => $show['audioPrompt'] ?? '',
+                'audioPrompts' => $show['audioPrompts'] ?? new stdClass(),   // a Note told by someone else (episode.narrator): their own voice
                 'siteUrl' => $show['siteUrl'] ?? '',
                 'magazines' => (json_decode($gh->read('field/data/magazines.json') ?? '{}', true)['templates'] ?? []),   // the Magazine template panel's choices
                 'me' => studio_me(),
