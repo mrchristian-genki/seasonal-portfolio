@@ -7,6 +7,25 @@
   var box = document.querySelector('[data-wscards]'); if (!box) return;
   var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches, P = [], cards = [], dlg = null;
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  // Each project has its own address, ?workshop+<slug> (share.php gives it the project's own share card): opening
+  // its window puts the slug in the address, closing takes it out, and a visit to the address opens it.
+  var OPEN = null;
+  function words() { return decodeURIComponent(location.search.slice(1)).split(/[+&,;\s]+/).filter(Boolean); }
+  function isSlug(w) { return P.some(function (p) { return p.slug === w.toLowerCase(); }); }
+  function setAddr(p) {
+    var ws = words().filter(function (w) { return !isSlug(w); });
+    if (p) { if (ws.map(function (w) { return w.toLowerCase(); }).indexOf('workshop') < 0) ws.unshift('workshop'); ws.push(p.slug); }
+    try { history.replaceState(history.state, '', location.pathname + (ws.length ? '?' + ws.join('+') : '') + location.hash); } catch (e) {}
+  }
+  window.__wsWord = function () { return OPEN ? [OPEN.slug] : []; };   // scene.js keeps it when it rewrites the address
+  function link(p) { return location.origin + location.pathname + '?workshop+' + p.slug; }
+  function share(p, btn) {
+    var url = link(p), t = (p.title || p.name) + ' · The Workshop';
+    if (navigator.share) { navigator.share({ title: t, text: p.tagline || p.summary, url: url }).catch(function () {}); return; }
+    var done = function () { var o = btn.textContent; btn.textContent = 'Link copied'; btn.classList.add('ok'); setTimeout(function () { btn.textContent = o; btn.classList.remove('ok'); }, 2200); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(done, function () { prompt('Copy this link:', url); });
+    else prompt('Copy this link:', url);
+  }
   function play(c, on) {
     var v = c.querySelector('video'); if (!v) return;
     if (on) { if (!v.src) v.src = v.getAttribute('data-src'); c.classList.add('on'); var p = v.play(); if (p && p.catch) p.catch(function () {}); }
@@ -40,7 +59,7 @@
       dlg = document.createElement('dialog'); dlg.className = 'wsm'; document.body.appendChild(dlg);
       if (window.softDialog && dlg.showModal) softDialog(dlg, 450);   // it fades out as it closes
       dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });   // a click on the dimmed page closes it
-      dlg.addEventListener('close', function () { clearTimeout(dlg._swap); dlg.classList.remove('swap'); [].forEach.call(dlg.querySelectorAll('video'), function (v) { v.pause(); }); });
+      dlg.addEventListener('close', function () { OPEN = null; setAddr(null); clearTimeout(dlg._swap); dlg.classList.remove('swap'); [].forEach.call(dlg.querySelectorAll('video'), function (v) { v.pause(); }); });
     }
     if (dlg.open && !still && !dlg.classList.contains('shut')) {   // the next feature: the last fades out, this one fades in at its top
       dlg.classList.add('swap'); clearTimeout(dlg._swap);
@@ -52,6 +71,7 @@
     dlg.scrollTop = 0;
   }
   function fill(p) {
+    OPEN = p; if (p.slug) setAddr(p);
     var n = P.indexOf(p), next = P[(n + 1) % P.length], cover = p.card || p.media[0], rest = p.media.filter(function (m) { return m.src !== cover.src; });
     var story = (p.story && p.story.length ? p.story : [p.summary]).map(function (t) { return '<p>' + esc(t) + '</p>'; });
     // the clips go between the paragraphs, spread through the story; the pull quote after the second paragraph
@@ -65,7 +85,8 @@
     }).join('');
     var links = (p.tool ? '<a class="btn solid" href="' + esc(p.tool.url) + '"' + (p.tool.url.charAt(0) === '#' ? '' : ' target="_blank" rel="noopener"') + '>' + esc(p.tool.label) + '</a>' : '') +
       (p.extra ? '<a class="btn solid" href="' + esc(p.extra.url) + '">' + esc(p.extra.label) + '</a>' : '') +
-      '<a class="btn" href="' + esc(p.note) + '">Listen to its episode</a>';
+      '<a class="btn" href="' + esc(p.note) + '">Listen to its episode</a>' +
+      (p.slug ? '<button type="button" class="btn wsm-share">Share this project</button>' : '');
     dlg.innerHTML = '<div class="wsm-bar"><button type="button" class="wsm-x" aria-label="Close">×</button></div>' +
       '<article class="feature wsf">' +
       '<header class="mag-cover wsf-cover"><div class="mag-img">' + pic(cover) + '</div>' +
@@ -80,6 +101,7 @@
       '</article>';
     dlg.querySelector('.wsm-x').onclick = function () { dlg.close(); };
     dlg.querySelector('.wsf-next').onclick = function () { open(next); };
+    var sb = dlg.querySelector('.wsm-share'); if (sb) sb.onclick = function () { share(p, sb); };
     [].forEach.call(dlg.querySelectorAll('.wsm-links a[href^="#"]'), function (a) { a.onclick = function () { dlg.close(); }; });
     // each clip plays while it's on screen in the window
     var vids = dlg.querySelectorAll('video');
@@ -105,11 +127,16 @@
     }, 5200);
   }
   function start() {
-    fetch('assets/workshop/projects.json?v=5').then(function (r) { return r.json(); }).then(function (list) {
+    fetch('assets/workshop/projects.json?v=6').then(function (r) { return r.json(); }).then(function (list) {
       P = list; P.forEach(function (p, i) { var c = card(p, i); box.appendChild(c); cards.push(c); });
       if (!still) { play(cards[0], true); tour(); }
+      // a project's own address opens its window
+      var want = P.filter(function (p) { return words().some(function (w) { return w.toLowerCase() === p.slug; }); })[0];
+      if (want) open(want);
     }).catch(function () { box.hidden = true; });
   }
-  if ('IntersectionObserver' in window) new IntersectionObserver(function (es, o) { if (es.some(function (e) { return e.isIntersecting; })) { o.disconnect(); start(); } }, { rootMargin: '300px' }).observe(box);
+  var named = /(^|[?+&,;\s])workshop([+&,;\s]|$)/i.test(decodeURIComponent(location.search)) && words().length > 1;
+  if (named) start();
+  else if ('IntersectionObserver' in window) new IntersectionObserver(function (es, o) { if (es.some(function (e) { return e.isIntersecting; })) { o.disconnect(); start(); } }, { rootMargin: '300px' }).observe(box);
   else start();
 })();

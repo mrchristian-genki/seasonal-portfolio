@@ -11,8 +11,31 @@ if ($home === false) { http_response_code(500); exit; }
 header('Content-Type: text/html; charset=UTF-8');
 
 $words = preg_split('/[+&,;\s]+/', strtolower(rawurldecode($_SERVER['QUERY_STRING'] ?? '')), -1, PREG_SPLIT_NO_EMPTY);
-$page = null;
-foreach ($words as $w) {
+$page = null; $item = null;
+$H = fn($v) => htmlspecialchars((string) $v, ENT_QUOTES);
+// A Workshop project (?workshop+<slug>, set by js/ws-cards.js when its window opens): its name, summary and cover picture
+// (assets/workshop/projects.json, built from its Note by field/tools/wsprojects.py).
+if (in_array('workshop', array_map(fn($w) => explode('=', $w)[0], $words), true)) {
+  $projects = json_decode((string) @file_get_contents("$root/assets/workshop/projects.json"), true) ?: [];
+  foreach ($projects as $p) {
+    if (empty($p['slug']) || !in_array($p['slug'], $words, true)) continue;
+    $site = 'https://www.christiangehrke.com/';
+    $t = $H(($p['title'] ?? $p['name']) . ' · The Workshop · Christian Gehrke');
+    $d = $H(($p['tagline'] ? $p['tagline'] . '. ' : '') . ($p['summary'] ?? ''));
+    $url = $H($site . '?workshop+' . $p['slug']);
+    $sh = $p['share'] ?? null;
+    $img = $sh ? $H($site . $sh['image']) : $H($site . 'og-workshop.jpg?v=1');
+    $wh = $sh && !empty($sh['w']) && !empty($sh['h']) ? '<meta property="og:image:width" content="' . (int) $sh['w'] . '"><meta property="og:image:height" content="' . (int) $sh['h'] . '">' : '';
+    $alt = $H($sh['alt'] ?? $p['name']);
+    $item = "<head><title>$t</title><meta name=\"description\" content=\"$d\"><link rel=\"canonical\" href=\"$url\">"
+      . "<meta property=\"og:type\" content=\"article\"><meta property=\"og:site_name\" content=\"Christian Gehrke\"><meta property=\"og:title\" content=\"$t\">"
+      . "<meta property=\"og:description\" content=\"$d\"><meta property=\"og:url\" content=\"$url\"><meta property=\"og:image\" content=\"$img\">$wh"
+      . "<meta property=\"og:image:alt\" content=\"$alt\"><meta name=\"twitter:card\" content=\"summary_large_image\"><meta name=\"twitter:title\" content=\"$t\">"
+      . "<meta name=\"twitter:description\" content=\"$d\"><meta name=\"twitter:image\" content=\"$img\"><meta name=\"twitter:image:alt\" content=\"$alt\"></head>";
+    break;
+  }
+}
+if (!$item) foreach ($words as $w) {
   $w = explode('=', $w)[0];
   if (!preg_match('/^[a-z0-9][a-z0-9-]{1,80}$/', $w)) continue;
   foreach (["play/$w/index.html", "play/daydreams/$w/index.html"] as $f)
@@ -25,7 +48,7 @@ $TABS = [
   'web' => ['The Tumble · Christian Gehrke', 'Scroll down and fall back in time: twenty-nine years of web development, era by era, from container queries to table layouts.',
     'web/og-tumble.jpg?v=1', 'The Tumble: a retro time machine console of copper, glowing jewel buttons and teal dials.'],
 ];
-if (!$page) foreach ($words as $w) {
+if (!$page && !$item) foreach ($words as $w) {
   $w = explode('=', $w)[0];
   if (!isset($TABS[$w])) continue;
   [$t, $d, $img, $alt] = array_map(fn($v) => htmlspecialchars($v, ENT_QUOTES), $TABS[$w]);
