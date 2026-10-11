@@ -153,7 +153,7 @@ final class Drafter
             'post_body' => ['type' => 'string', 'description' => 'Only when subheads or a pull quote are asked for: the post exactly as given, word for word, with "## " subhead lines and/or one "> " pull-quote paragraph added between its paragraphs. Empty otherwise.'],
             'blocks' => [
                 'type' => 'array',
-                'description' => 'Only the building blocks asked for, one each.',
+                'description' => 'Only the building blocks asked for, one each. Fill the fields its type uses; leave the others empty ("" or []).',
                 'items' => [
                     'type' => 'object',
                     'properties' => [
@@ -172,7 +172,8 @@ final class Drafter
                         'file' => ['type' => 'string', 'description' => 'code: its file name or "Prompt".'],
                         'code' => ['type' => 'string', 'description' => 'code: the code or prompt, only as it appears in the Note.'],
                     ],
-                    'required' => ['type', 'title'],
+                    // every field required (empty when a block doesn't use it): optional fields make the schema "too complex"
+                    'required' => ['type', 'title', 'before', 'kicker', 'text', 'note', 'pairs', 'good', 'bad', 'score', 'out_of', 'seal', 'scores', 'steps', 'file', 'code'],
                     'additionalProperties' => false,
                 ],
             ],
