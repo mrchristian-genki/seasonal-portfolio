@@ -27,6 +27,8 @@ p{margin:0 0 12px;color:var(--ink2);max-width:60ch}
 .eyes{position:absolute;left:29.167%;top:47.143%;width:41.667%;height:17.143%;-webkit-mask:url(parts/head-lens.png) 0 0/100% 100% no-repeat;mask:url(parts/head-lens.png) 0 0/100% 100% no-repeat}
 .eyes img{inset:0;width:100%;height:100%;transition:transform .8s ease-in-out,filter .9s ease-in-out}
 .eyes .glow{position:absolute;inset:0;mix-blend-mode:color;opacity:0;transition:opacity .9s ease-in-out,background-color .9s ease-in-out}
+.lids{left:27.778%;top:45.714%;width:44.444%;height:20%;opacity:0;transition:opacity 70ms ease-in-out}
+.lids.on{opacity:1}
 .mouth{position:absolute;left:35.278%;top:67.286%;width:29.583%;height:19%}
 .mouth img{inset:0;width:100%;height:100%;opacity:0;transition:opacity 90ms ease-in-out}
 .mouth img.on{opacity:1}
@@ -34,7 +36,7 @@ p{margin:0 0 12px;color:var(--ink2);max-width:60ch}
 button{font:inherit;color:var(--ink);background:var(--btn);border:1px solid var(--line);border-radius:999px;padding:8px 14px;cursor:pointer;transition:transform .5s ease-in-out,border-color .6s ease-in-out}
 button:hover{transform:translateY(-1px);border-color:var(--accent)}
 .note{font-size:13px}
-@media (prefers-reduced-motion: reduce){.palms,.eyes img,.eyes .glow,.mouth img,button{transition:none}}
+@media (prefers-reduced-motion: reduce){.lids,.palms,.eyes img,.eyes .glow,.mouth img,button{transition:none}}
 </style>
 </head>
 <body>
@@ -46,6 +48,7 @@ button:hover{transform:translateY(-1px);border-color:var(--accent)}
   <div class="head" aria-hidden="true">
     <img class="base" src="parts/head-base.webp" alt="">
     <div class="eyes"><img id="iris" src="parts/head-iris.webp" alt=""><i class="glow" id="glow"></i></div>
+    <img class="lids" id="lids" src="parts/head-lids.webp" alt="">
     <div class="mouth" id="mouth"></div>
   </div>
 </div>
@@ -56,7 +59,7 @@ button:hover{transform:translateY(-1px);border-color:var(--accent)}
   <button type="button" data-eyes="cyan">Cyan-green bloom</button>
   <button type="button" data-eyes="">Her own eyes</button>
 </div>
-<p class="note">Still to come: her eyes closed (for blinks). "mm" uses her neutral mouth for now.</p>
+<p class="note">"mm" uses her neutral mouth for now.</p>
 <script>
 (function () {
   'use strict';
@@ -86,6 +89,10 @@ button:hover{transform:translateY(-1px);border-color:var(--accent)}
     var r = Math.random(); gx = r < .35 ? 0 : (Math.random() - .5) * 7; gy = (Math.random() - .5) * 4; paint();
     setTimeout(glance, 2200 + Math.random() * 3200);
   })();
+  // she blinks every few seconds, now and then twice: a quick ease shut and open
+  var lids = document.getElementById('lids');
+  function blink(then) { lids.classList.add('on'); setTimeout(function () { lids.classList.remove('on'); if (then) setTimeout(then, 180); }, 130); }
+  if (!still) (function next() { setTimeout(function () { blink(Math.random() < .2 ? function () { blink(); } : null); next(); }, 2800 + Math.random() * 3600); })();
   // her notes: a steady amber for littering, a cyan-green bloom for a good call; the rings narrow or dilate
   [].forEach.call(document.querySelectorAll('[data-eyes]'), function (b) {
     b.onclick = function () {

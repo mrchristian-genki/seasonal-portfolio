@@ -189,8 +189,11 @@ From the first renders, in `assets/alta/parts/`, layered in `assets/alta/preview
   back to the still.
 - **`layout.json`:** where each part sits on the 1376 × 768 frame.
 
-**Still needed:** her eyes closed (prompt 2b) for blinks. The "hand to her chin" and "hand by her face" clips bring a
-hand up where her head layer sits, so they don't layer; ask for those again with the hands kept low (part 5).
+- **`head-lids.webp`:** her eyes closed, colour-matched to the template, so she blinks every few seconds (sometimes
+  twice).
+
+**Still needed:** the "hand to her chin" and "hand by her face" clips bring a hand up where her head layer sits, so
+they don't layer; ask for those again with the hands kept low (part 5).
 
 ## Quick fixes
 
