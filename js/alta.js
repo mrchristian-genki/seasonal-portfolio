@@ -13,7 +13,7 @@
    her Workshop window). GlazyArray's player (js/narrator.js) leaves these bars to her. */
 (function () {
   'use strict';
-  var P = '/assets/alta/parts/', V = '?v=9';
+  var P = '/assets/alta/parts/', V = '?v=10';
   var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var GESTURES = ['palms'];   // her gesture clips in parts/ (KIT.md Round 2 adds more)
   var SHAPES = ['smile', 'neutral', 'ah', 'oh', 'oo', 'ee', 'laugh'];
@@ -145,7 +145,7 @@
     vDive.addEventListener('ended', function () {
       if (dv.state !== 'dive') return;
       var pick = [vHover, vGlide, vGlow].filter(function (v) { return v !== last; });
-      var v = pick[Math.floor(Math.random() * pick.length)]; last = v;
+      var v = { hover: vHover, glide: vGlide, glow: vGlow }[want] || pick[Math.floor(Math.random() * pick.length)]; last = v; want = '';
       dv.state = 'under'; dv.v = v; v.currentTime = 0; v.playbackRate = 1; play(v); showV(v);
       if (v === vHover) dv.t = setTimeout(function () { rise(1); }, 5000 + Math.random() * 5000);
     });
@@ -154,6 +154,26 @@
     function plan() { clearTimeout(dv.t); if (still || dv.state !== 'up') return; dv.t = setTimeout(dive, 30000 + Math.random() * 30000); }
     var isTalking = function () { return false; };
     bar.altaDive = dive;   // for testing, and for a page that wants to cue it
+    // her eye moods (a soft cyan while she talks; a steady amber; a bright cyan-green bloom), each easing over .9 s
+    var EYES = { talk: ['#2fe8c0', '.35', '1.1', ''], amber: ['#ffb020', '.85', '.92', 'brightness(1.3) saturate(1.35)'], cyan: ['#2fe8c0', '.85', '1.14', 'brightness(1.3) saturate(1.3)'] }, eyeNow = '';
+    var iris = eyes.querySelector('img');
+    function eyeMode(m) {
+      if (m === eyeNow) return; eyeNow = m;
+      if (!m) { glow.style.opacity = '0'; eyes.style.removeProperty('--dil'); iris.style.filter = ''; return; }
+      var x = EYES[m] || EYES.talk;
+      glow.style.backgroundColor = x[0]; glow.style.opacity = x[1]; eyes.style.setProperty('--dil', x[2]); iris.style.filter = x[3];
+    }
+    // a page that shows her parts (the Parts Catalog) can cue each one: a dive with a chosen routine underwater, a
+    // gesture, an eye mood, a mouth shape, a blink
+    var want = '';
+    bar.alta = {
+      dive: function (k) { want = k || ''; if (dv.state === 'up') { clearTimeout(dv.t); dive(); } },
+      gesture: function () { if (dv.state === 'up') { palms.classList.remove('on'); gesture(); } },
+      eyes: function (m) { eyeMode(m || ''); },
+      say: function (k) { bar.classList.toggle('talking', k !== 'rest'); say(k === 'rest' ? 'smile' : k); },
+      blink: function () { bar.classList.add('blink'); setTimeout(function () { bar.classList.remove('blink'); }, 130); },
+      state: function () { return dv.state; }
+    };
     if (!still) { plan(); gestures(); }
 
     if (!audio) {   // no episode yet: she waits in her tank
@@ -214,14 +234,6 @@
     // her eyes as she speaks: a soft cyan while she talks, and at the episode's cues (data-cues, from the Note) a steady
     // amber ("when somebody litters") or a bright cyan-green bloom ("when a kid makes a good call"). Each eases over .9 s.
     var CUES = []; try { CUES = JSON.parse(bar.getAttribute('data-cues') || '[]').sort(function (a, b) { return a.at - b.at; }); } catch (e) { CUES = []; }
-    var EYES = { talk: ['#2fe8c0', '.35', '1.1', ''], amber: ['#ffb020', '.85', '.92', 'brightness(1.3) saturate(1.35)'], cyan: ['#2fe8c0', '.85', '1.14', 'brightness(1.3) saturate(1.3)'] }, eyeNow = '';
-    var iris = eyes.querySelector('img');
-    function eyeMode(m) {
-      if (m === eyeNow) return; eyeNow = m;
-      if (!m) { glow.style.opacity = '0'; eyes.style.removeProperty('--dil'); iris.style.filter = ''; return; }
-      var x = EYES[m] || EYES.talk;
-      glow.style.backgroundColor = x[0]; glow.style.opacity = x[1]; eyes.style.setProperty('--dil', x[2]); iris.style.filter = x[3];
-    }
     function cueEyes() { var m = 'talk'; CUES.forEach(function (c) { if (audio.currentTime >= c.at) m = c.eyes || 'talk'; }); return m; }
     if (CUES.length) audio.addEventListener('timeupdate', function () { if (talking) eyeMode(cueEyes()); });
     // Play while she's underwater (or on her way down): the episode holds, she comes back up a little quicker, and it
