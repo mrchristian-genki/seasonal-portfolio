@@ -1,0 +1,44 @@
+/* A.L.T.A.'s player (js/alta.js): her Listen bar is her tank. Her whole scene runs the bar's width, 16:9: the tank
+   with her at the ledge (her painted head erased), her tail looping under the ledge, her head in layers on her
+   collar (irises in a lens, lids, mouth shapes), and a gesture now and then over her torso. The play controls sit
+   on the water at the bottom. Positions are shares of her 1376 x 768 frame (assets/alta/parts/layout.json).
+   Every change eases; with reduced motion she holds still and only her mouth moves. */
+section.listen.alta{display:block;padding:0;overflow:hidden;border-radius:16px;background:#0a1a1c;color:#e8f1ef;position:relative}
+section.listen.alta>div:first-child{position:absolute;z-index:3;left:0;right:0;top:0;padding:12px 16px 26px;
+  background:linear-gradient(180deg,rgba(6,16,18,.72),rgba(6,16,18,0));display:flex;flex-direction:column;gap:2px;pointer-events:none}
+section.listen.alta .listen-label{color:#9fe6da}
+section.listen.alta b{color:#fff}
+.al-by{font-size:12px;color:#bfe3dd;letter-spacing:.04em}
+section.listen.alta audio{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.al-stage{position:relative;width:100%;aspect-ratio:1376/768;background:#0a1a1c url(/assets/alta/parts/rest.webp?v=1) center/100% 100% no-repeat}
+.al-stage>*{position:absolute}
+.al-tail{left:0;top:45.833%;width:100%;height:54.167%;object-fit:fill;-webkit-mask:linear-gradient(#0000 0,#000 4%);mask:linear-gradient(#0000 0,#000 4%);
+  opacity:0;transition:opacity .8s ease-in-out}
+.al-tail.on{opacity:1}
+.al-palms{left:31.977%;top:0;width:37.209%;height:47.917%;opacity:0;transition:opacity .5s ease-in-out}
+.al-palms.on{opacity:1}
+.al-head{left:41.43%;top:5.947%;width:17.529%;height:30.534%;transform-origin:50% 92%;transition:transform .7s ease-in-out}
+.al-head img,.al-head i{position:absolute;display:block}
+.al-base{inset:0;width:100%;height:100%}
+.al-eyes{left:29.167%;top:47.143%;width:41.667%;height:17.143%;-webkit-mask:url(/assets/alta/parts/head-lens.png?v=2) 0 0/100% 100% no-repeat;
+  mask:url(/assets/alta/parts/head-lens.png?v=2) 0 0/100% 100% no-repeat}
+.al-eyes img{inset:0;width:100%;height:100%;transform:translate(var(--gx,0%),var(--gy,0%)) scale(var(--dil,1));transition:transform .8s ease-in-out,filter .9s ease-in-out}
+.al-glow{inset:0;mix-blend-mode:color;opacity:0;transition:opacity .9s ease-in-out,background-color .9s ease-in-out}
+.al-lids{left:27.778%;top:45.714%;width:44.444%;height:20%;opacity:0;transition:opacity 70ms ease-in-out}
+.alta.blink .al-lids{opacity:1}
+.al-mouth{left:35.278%;top:67.286%;width:29.583%;height:19%}
+.al-mouth img{inset:0;width:100%;height:100%;opacity:0;transition:opacity 80ms ease-in-out}
+.al-mouth img.on{opacity:1}
+/* the controls, on the water */
+.al-ctl{position:absolute;z-index:3;left:0;right:0;bottom:0;display:flex;align-items:center;gap:10px;padding:22px 14px 12px;
+  background:linear-gradient(0deg,rgba(6,16,18,.8),rgba(6,16,18,0))}
+.al-ctl button{flex:none;width:44px;height:44px;border-radius:50%;border:1px solid rgba(159,230,218,.5);background:rgba(10,40,42,.75);color:#e8fffb;cursor:pointer;
+  display:grid;place-items:center;transition:transform .5s ease-in-out,background-color .6s ease-in-out,box-shadow .7s ease-in-out}
+.al-ctl button:hover{transform:translateY(-1px);box-shadow:0 0 14px rgba(63,208,192,.45)}
+.al-ctl button svg{width:18px;height:18px;fill:currentColor}
+.al-ctl .al-sm{width:36px;height:36px}
+.al-seek{flex:1;min-width:60px;accent-color:#3fd0c0}
+.al-t{font:12px/1 ui-monospace,Menlo,monospace;color:#bfe3dd;white-space:nowrap}
+.al-soon{position:absolute;z-index:3;left:0;right:0;bottom:0;padding:22px 16px 12px;font-size:14px;color:#cfeee8;background:linear-gradient(0deg,rgba(6,16,18,.8),rgba(6,16,18,0))}
+@media (max-width:560px){.al-ctl{gap:6px;padding:16px 8px 8px}.al-ctl .al-sm{display:none}section.listen.alta>div:first-child{padding:8px 12px 18px}}
+@media (prefers-reduced-motion:reduce){.al-tail,.al-palms,.al-head,.al-eyes img,.al-glow,.al-lids,.al-mouth img,.al-ctl button{transition:none}}

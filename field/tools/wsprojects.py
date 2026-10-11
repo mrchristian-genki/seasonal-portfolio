@@ -105,6 +105,11 @@ for e in notes:
     pic = p['card'] or {}
     img = pic.get('poster') or pic.get('src')
     if img: p['share'] = {'image': img, 'w': pic.get('w'), 'h': pic.get('h'), 'alt': pic.get('caption') or p['name']}
+    # told by A.L.T.A. herself: her tank opens the window (js/alta.js), with her episode once it's recorded
+    ep = e.get('episode') or {}
+    if ep.get('narrator') == 'alta':
+        p['narrator'] = 'alta'; p['episodeTitle'] = ep.get('title') or p['title']
+        if ep.get('audio') and os.path.exists(os.path.join(ROOT, 'field', ep['audio'])): p['audio'] = f"play/media/{e['id']}/episode.mp3"
     projects.append(p)
 with open(OUT, 'w', encoding='utf-8') as f:
     json.dump(projects, f, indent=1, ensure_ascii=False)

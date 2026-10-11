@@ -195,6 +195,38 @@ From the first renders, in `assets/alta/parts/`, layered in `assets/alta/preview
 **Still needed:** the "hand to her chin" and "hand by her face" clips bring a hand up where her head layer sits, so
 they don't layer; ask for those again with the hands kept low (part 5).
 
+## Round 2: the new scenes (Oct 11)
+
+Her player plays these over her torso while she talks, with her head layer on top, so **her hands must stay in the
+green** in `gesture-safe-area.jpg`: below the top of her shoulders beside her head, and never in front of or behind
+her head (the red). The two that went wrong ("hand to her chin", "hand by her face") brought a hand into the red.
+
+**Start every one from the same still:** the picture of her at the ledge (the one the tank and her rest pose came from),
+as the first frame, 16:9, 6 to 8 seconds. Each ends back in that rest pose, both forearms on the ledge.
+
+**Paste this before each scene:**
+
+> A short, smooth clip from this exact image, starting and ending in this exact pose: both forearms resting on the
+> copper ledge. Locked camera, no zoom or pan. Slow, weightless, eased motion with no snapping or jitter. Her head
+> stays perfectly still, facing the camera. Her hands and arms stay low: no higher than the top of her shoulders, and
+> never in front of, beside or behind her head or face. Her articulated copper fingers bend only at the joints, five
+> fingers on each hand. Below the ledge her tail keeps sculling gently. The water, the fish and the hall behind her
+> carry on as they are.
+
+| File | The scene |
+|---|---|
+| `gest-count.mp4` | She lifts one forearm a little off the ledge and counts three rules on her fingers at chest height, one finger at a time, then lays it back down. |
+| `gest-think.mp4` (replaces "hand to her chin") | She taps one fingertip on the ledge twice, slowly, as if weighing a thought, then rests her hand flat again. |
+| `gest-wave.mp4` (replaces "hand by her face") | A small, warm wave from the wrist, her forearm still on the ledge, fingers rising no higher than her shoulder, then rest. |
+| `gest-point.mp4` | She points to one side, low and level at the height of the ledge, as if toward a sign beside the tank, then rests. |
+| `gest-tap.mp4` | She taps the glass of the ledge in front of her twice with one fingertip: "look here". Then rests. |
+| `gest-beckon.mp4` | One hand, palm up, low over the ledge, beckons gently twice: "come and see". |
+| `gest-lean.mp4` | She leans toward the camera a little, both hands staying flat on the ledge, as if about to share a secret, and settles back. |
+| `gest-celebrate.mp4` | A happy little clap of both hands just above the ledge, twice, then rest. |
+
+**Send back** the clips you like. Claude erases her video head, checks every frame keeps her hands in the green, and
+cuts each so it fades back to her rest pose, like the open-palms one.
+
 ## Quick fixes
 
 - **Her face shifts between head parts:** say "same image, exactly as it is" again, and edit the template, never a
