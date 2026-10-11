@@ -13,7 +13,7 @@
    her Workshop window). GlazyArray's player (js/narrator.js) leaves these bars to her. */
 (function () {
   'use strict';
-  var P = '/assets/alta/parts/', V = '?v=4';
+  var P = '/assets/alta/parts/', V = '?v=5';
   var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var SHAPES = ['smile', 'neutral', 'ah', 'oh', 'oo', 'ee', 'laugh'];
   var IC = {

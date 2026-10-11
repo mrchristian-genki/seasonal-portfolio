@@ -162,7 +162,7 @@ const foot = (rel) => `<footer class="foot"><p>${esc(show.narrationNote)}</p>
 <script src="${rel}../js/lake.js?v=4" defer></script>
 <script src="${rel}../assets/narrator/resolve.js?v=1" defer></script>
 <script src="${rel}../js/narrator.js?v=43" defer></script>
-<script src="${rel}../js/alta.js?v=3" defer></script>
+<script src="${rel}../js/alta.js?v=4" defer></script>
 </body>
 </html>
 `;
