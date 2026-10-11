@@ -38,6 +38,9 @@ section.listen.alta audio{position:absolute;width:1px;height:1px;opacity:0;point
 .alta .al-glow{inset:0;mix-blend-mode:color;opacity:0;transition:opacity .9s ease-in-out,background-color .9s ease-in-out}
 .alta .al-lids{left:27.778%;top:45.714%;width:44.444%;height:20%;opacity:0;transition:opacity 70ms ease-in-out}
 .alta.blink .al-lids{opacity:1}
+.alta .al-rest{inset:0;width:100%;height:100%;z-index:1;opacity:1;transition:opacity .8s ease-in-out}   /* her resting face, over her eyes and mouth (its eye openings let her irises glance through); it eases away while she talks */
+.alta.talking .al-rest{opacity:0}
+.alta .al-lids{z-index:2}
 .alta .al-mouth{left:35.278%;top:67.286%;width:29.583%;height:19%}
 .alta .al-mouth img{inset:0;width:100%;height:100%;opacity:0;transition:opacity 80ms ease-in-out}
 .alta .al-mouth img.on{opacity:1}
@@ -63,4 +66,4 @@ section.listen.alta audio{position:absolute;width:1px;height:1px;opacity:0;point
   section.listen.alta>div:first-child{position:static;padding:10px 14px 8px;background:#0a1a1c}   /* the title above her, off her crown */
 }
 @media (max-width:560px){.alta .al-ctl{gap:6px;padding:16px 8px 8px}.alta .al-ctl .al-sm{display:none}section.listen.alta>div:first-child{padding:8px 12px}}
-@media (prefers-reduced-motion:reduce){.alta .al-ctl button.al-wait{animation:none}.alta .al-dive,.alta .al-pearl,.alta .al-tint,.alta .al-tail,.alta .al-palms,.alta .al-head,.alta .al-eyes img,.alta .al-glow,.alta .al-lids,.alta .al-mouth img,.alta .al-ctl button{transition:none}}
+@media (prefers-reduced-motion:reduce){.alta .al-ctl button.al-wait{animation:none}.alta .al-rest{transition:none}.alta .al-dive,.alta .al-pearl,.alta .al-tint,.alta .al-tail,.alta .al-palms,.alta .al-head,.alta .al-eyes img,.alta .al-glow,.alta .al-lids,.alta .al-mouth img,.alta .al-ctl button{transition:none}}

@@ -436,6 +436,50 @@ say "same image, exactly as it is" again.
 more as she talks. Her gestures now play while she waits at the ledge too, every 20 to 40 seconds; the Round 2 clips
 give her more than the open palms, and each one Claude adds joins both.
 
+**Built (Oct 11):** Christian's smiling-eyes edit (which kept the warm smile too) is `parts/head-rest.webp`: the
+changed face only (eyes, cheeks, smile), feathered, with the eye openings cut out so her irises still glance and
+dilate behind her new lids. It's her face at rest; it eases away while she talks (her mouth shapes take over) and
+back when she stops, and her blink closes over it.
+
+## Round 7: gestures while she waits (Oct 11)
+
+While nobody is listening she now does a gesture every 20 to 40 seconds. These invite people in. They are cut
+exactly like Round 2's, so **the same rules, stricter:**
+
+- **Her hands stay inside the green box** in `gesture-safe-area.jpg`: no higher than the top of her shoulders, no
+  lower than the bottom of the copper ledge, and no wider than her elbows plus a hand. Outside it, a hand is cut off
+  (her gesture layer is only that box), and on phones the sides of her scene are cropped as well.
+- **Never near her head or neck** (the notch in the box): her head is a separate layer on top and a hand there
+  vanishes behind it. No hand to her face, ear, chin, crown or mouth, no shush, no cupped ear.
+- **Her head and shoulders stay perfectly still,** facing the camera. A lean or a nod moves her neck off her head layer.
+- **Start and end in her exact rest pose,** both forearms on the ledge, so each fades in and out cleanly.
+
+**Settings:** image to video, 6 s, first frame (and last frame, if your tool has one) the still of her at the ledge.
+
+**Paste this before each one:**
+
+> A short, smooth clip from this exact image, starting and ending in this exact pose: both forearms resting on the
+> copper ledge. Locked camera, no zoom or pan. Her head, neck and shoulders stay perfectly still, facing the camera,
+> with a soft closed smile. Only her forearms and hands move, slowly and gracefully, with eased motion and no jitter.
+> Her hands stay low and close: never above her shoulders, never near her face, head or neck, never below the copper
+> ledge, and never further out to the sides than her elbows. Five articulated copper fingers on each hand, bending
+> only at the joints. Below the ledge her tail keeps sculling gently; the water, the fish and the hall carry on.
+
+| File | The gesture |
+|---|---|
+| `gest-play.mp4` | "Press play": she points down and to her right (our left), low along the ledge toward its front corner, and holds it a moment with a little encouraging bounce of the finger, then rests. |
+| `gest-come.mp4` | "Come and listen": both hands, palms up, lift just off the ledge and beckon gently toward herself twice, then rest. |
+| `gest-heart.mp4` | "From the heart": one hand rises to rest flat on the middle of her chest, below her collar, for a moment, then returns to the ledge. |
+| `gest-drum.mp4` | "Waiting for you": she drums her fingertips on the ledge, slowly and playfully, one hand then the other, then rests. |
+| `gest-pat.mp4` | "Sit here": she pats the top of the ledge in front of her twice with an open palm, as if inviting someone to sit, then rests. |
+| `gest-stretch.mp4` | A lazy stretch: both forearms slide out along the ledge and her fingers spread, then they slide back. No higher than the ledge. |
+
+From Round 2, `gest-wave`, `gest-beckon`, `gest-tap` and `gest-celebrate` suit waiting too.
+
+**Check before sending:** step through it; if a fingertip ever crosses into the red, or her head or shoulders shift,
+make it again. Claude erases her video head, checks every frame against the box, trims each to fade from and back to
+her rest pose, and adds it to her list.
+
 ## Quick fixes
 
 - **Her face shifts between head parts:** say "same image, exactly as it is" again, and edit the template, never a
