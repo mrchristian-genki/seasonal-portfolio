@@ -30,6 +30,9 @@ Log in, then:
   `field/data/photos/<id>/`). Set Status to **Published** and save to put it live: the deploy workflow
   rebuilds Play and uploads it in about a minute.
 
+- **Workshop order** (owner, under the Drive inbox): the Workshop tab's projects first to last; move any one up,
+  down or to the top, then **Save the order** (one commit renumbers every project's place on the tab).
+- **Long lists go a page at a time:** the notes 12 to a page, the Drive inbox 8, with Previous, the page numbers and Next.
 - **Bring in from Drive** (top of the list): copies new files from the Google Drive folder `Rides` (at
   the top of My Drive) to the server with rclone, in the background. One way only, never deletes anything on either side, and
   skips files it already has, so pressing it again only fetches what's new. Files land in

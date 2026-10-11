@@ -18,23 +18,25 @@
   //    the rest of the site: ?spring+daydreams, ?spring+daydreams+fake-tahoe, ?notes, ?above…
   var SECTIONS = ['notes', 'dose', 'above', 'daydreams'];
   var LIMIT = { notes: 3, dose: 4, above: 8, daydreams: 8 };
-  var H = null, state = { view: 'all', item: null, layout: 'list', tags: [], order: 'new' };
+  var H = null, state = { view: 'all', item: null, layout: 'list', tags: [], order: 'new', page: 1 };
+  var PER = 9;   // Field Notes on their own, a page at a time (?spring+notes+list+p2)
   // Field Notes, opened on their own: a grid or a list, filtered by tags (all of the chosen ones), newest or
   // oldest first. All of it is in the address too, so any combination can be shared:
   // ?spring+notes+grid, ?spring+notes+list+ride+with-marley, ?spring+notes+oldest+2024
   var LAYOUTS = ['grid', 'list'], ORDERS = ['oldest'];
   function allTags() { var t = {}; (H ? H.episodes : []).forEach(function (e) { (e.tags || []).forEach(function (x) { t[x] = (t[x] || 0) + 1; }); }); return t; }
-  function isNoteWord(w) { return LAYOUTS.indexOf(w) >= 0 || ORDERS.indexOf(w) >= 0 || (H && allTags()[w] > 0); }
+  function isNoteWord(w) { return LAYOUTS.indexOf(w) >= 0 || ORDERS.indexOf(w) >= 0 || /^p\d+$/.test(w) || (H && allTags()[w] > 0); }
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var FADE = reduce ? 0 : 450;
 
   function words() { return (decodeURIComponent(location.search.slice(1)).toLowerCase().split(/[+&,;\s]+/)).map(function (w) { return w.split('=')[0]; }).filter(Boolean); }
   function readURL() {
-    var ws = words(), v = 'all', item = null, layout = 'list', tags = [], order = 'new', tagSet = allTags();
+    var ws = words(), v = 'all', item = null, layout = 'list', tags = [], order = 'new', page = 1, tagSet = allTags();
     ws.forEach(function (w) { if (SECTIONS.indexOf(w) >= 0) v = w; });
     ws.forEach(function (w) {
       if (LAYOUTS.indexOf(w) >= 0) layout = w;
       else if (w === 'oldest') order = 'old';
+      else if (/^p\d+$/.test(w)) page = Math.max(1, +w.slice(1));
       else if (tagSet[w] && tags.indexOf(w) < 0) tags.push(w);
     });
     if (v === 'all' && (tags.length || ws.indexOf('grid') >= 0 || ws.indexOf('list') >= 0 || order === 'old')) v = 'notes';   // a note word alone opens the notes
@@ -42,12 +44,12 @@
       if (H.daydreams && H.daydreams.series.some(function (s) { return s.key === w; })) { item = w; if (v === 'all') v = 'daydreams'; }
       if (H.episodes.some(function (e) { return e.id === w; })) { item = w; if (v === 'all') v = 'notes'; }
     });
-    return { view: v, item: item, layout: layout, tags: tags, order: order };
+    return { view: v, item: item, layout: layout, tags: tags, order: order, page: page };
   }
   // Words for scene.js to keep, and our own writes to the address.
   window.__playWords = function () {
     var w = []; if (state.view !== 'all') w.push(state.view);
-    if (state.view === 'notes') { w.push(state.layout); if (state.order === 'old') w.push('oldest'); w = w.concat(state.tags); }
+    if (state.view === 'notes') { w.push(state.layout); if (state.order === 'old') w.push('oldest'); w = w.concat(state.tags); if (state.page > 1) w.push('p' + state.page); }
     if (state.item) w.push(state.item); return w;
   };
   function writeURL(push) {
@@ -82,10 +84,10 @@
   function serie(s, i) {
     return '<button type="button" class="pi-serie pi-in" data-series="' + esc(s.key) + '"><img src="' + esc(s.cover.poster || s.cover.src) + '" alt="" loading="lazy" width="' + s.cover.w + '" height="' + s.cover.h + '"><span><b>' + esc(s.title) + '</b><i>' + s.count + '</i></span></button>';
   }
-  function section(id, title, badge, sub, items, all, cls) {
+  function section(id, title, badge, sub, items, all, cls, pager) {
     var n = all.length, lim = state.view === id ? n : LIMIT[id];
     return '<section class="pi-sec" data-sec="' + id + '"><h3>' + esc(title) + (badge || '') + '</h3><p class="pi-sub">' + sub + '</p>' +
-      '<div class="' + cls + '">' + items(all.slice(0, lim)) + '</div>' +
+      '<div class="' + cls + '">' + items(all.slice(0, lim)) + '</div>' + (pager || '') +
       (state.view === 'all' && n > 0 ? '<p class="pi-more"><button type="button" data-pi-view="' + id + '">' + (n > lim ? 'View all ' + n + ' →' : 'Open ' + esc(title) + ' →') + '</button></p>'
         : state.view === id ? '<p class="pi-more"><button type="button" data-pi-view="all">← Back to everything in Play</button></p>' : '') + '</section>';
   }
@@ -95,9 +97,12 @@
       if (state.view !== 'notes') return section('notes', h.fieldNotes.title, '', esc(h.fieldNotes.about), function (a) { return a.map(episode).join(''); }, h.episodes, 'pi-eps');
       var list = h.episodes.filter(function (e) { return state.tags.every(function (t) { return (e.tags || []).indexOf(t) >= 0; }); });
       if (state.order === 'old') list = list.slice().reverse();
-      return section('notes', h.fieldNotes.title, '', esc(h.fieldNotes.about) + notesTools(list.length),
+      var pages = Math.max(1, Math.ceil(list.length / PER));
+      state.page = Math.min(Math.max(1, state.page), pages);
+      var from = (state.page - 1) * PER, shown = list.slice(from, from + PER);
+      return section('notes', h.fieldNotes.title, '', esc(h.fieldNotes.about) + notesTools(list.length, from, shown.length),
         function (a) { return a.length ? a.map(episode).join('') : '<p class="pi-sub">Nothing has all of those tags. <button type="button" class="pi-clear" data-pi-tag="">Clear the tags</button></p>'; },
-        list, 'pi-eps ' + (state.layout === 'grid' ? 'pi-eps-grid' : 'pi-eps-list'));
+        shown, 'pi-eps ' + (state.layout === 'grid' ? 'pi-eps-grid' : 'pi-eps-list'), pager(state.page, pages));
     }
     if (id === 'dose' && h.daily) return section('dose', h.daily.title, '', esc(h.daily.about) + ' <a href="' + esc(h.daily.channel) + '" target="_blank" rel="noopener">On YouTube</a>', function (a) { return a.map(video).join(''); }, h.daily.videos, 'pi-yt');
     if (id === 'above' && h.above) return section('above', h.above.title, ' ' + REAL, esc(h.above.about), function (a) { return a.map(tile).join(''); }, h.above.items, 'pi-grid');
@@ -108,13 +113,26 @@
   var TAG_NAMES = { 'lake-tahoe': 'Lake Tahoe', 'mini-cast': 'Mini-Cast', 'with-marley': 'With Marley', 'with-helena': 'With Helena' };
   function tagName(t) { return TAG_NAMES[t] || (/^\d{4}$/.test(t) ? t : t.replace(/^with-/, 'with ').replace(/-/g, ' ').replace(/^./, function (c) { return c.toUpperCase(); })); }
   // the Field Notes toolbar: grid or list, newest or oldest, and the tags with how many notes carry each
-  function notesTools(n) {
+  // Previous, the page numbers (the first, the last and those either side of this one), Next
+  function pager(page, pages) {
+    if (pages < 2) return '';
+    var b = function (p, label, cls, aria) { return '<button type="button" data-pi-page="' + p + '"' + (cls ? ' class="' + cls + '"' : '') + (aria ? ' aria-label="' + aria + '"' : '') + (p === page && !cls ? ' aria-current="page"' : '') + '>' + label + '</button>'; };
+    var out = [], last = 0;
+    for (var p = 1; p <= pages; p++) {
+      if (p !== 1 && p !== pages && Math.abs(p - page) > 1) continue;
+      if (p - last > 1) out.push('<span class="pi-gap" aria-hidden="true">…</span>');
+      out.push(b(p, p, '', 'Page ' + p)); last = p;
+    }
+    return '<nav class="pi-pager" aria-label="Pages of Field Notes">' + (page > 1 ? b(page - 1, '← Previous', 'pi-step', '') : '<span class="pi-step"></span>') +
+      '<span class="pi-pages">' + out.join('') + '</span>' + (page < pages ? b(page + 1, 'Next →', 'pi-step', '') : '<span class="pi-step"></span>') + '</nav>';
+  }
+  function notesTools(n, from, shown) {
     var tags = allTags(), names = Object.keys(tags).sort(function (a, b) {
       var ya = /^\d{4}$/.test(a), yb = /^\d{4}$/.test(b); if (ya !== yb) return ya ? 1 : -1; if (ya) return b.localeCompare(a); return tags[b] - tags[a] || a.localeCompare(b); });
     var seg = function (attr, v, label, on) { return '<button type="button" ' + attr + '="' + v + '" aria-pressed="' + on + '">' + label + '</button>'; };
     return '</p><div class="pi-tools"><span class="pi-seg" role="group" aria-label="Layout">' + seg('data-pi-layout', 'grid', 'Grid', state.layout === 'grid') + seg('data-pi-layout', 'list', 'List', state.layout === 'list') + '</span>' +
       '<span class="pi-seg" role="group" aria-label="Order">' + seg('data-pi-order', 'new', 'Newest', state.order === 'new') + seg('data-pi-order', 'old', 'Oldest', state.order === 'old') + '</span>' +
-      '<span class="pi-count">' + n + ' of ' + H.episodes.length + '</span></div>' +
+      '<span class="pi-count">' + (n > shown ? (from + 1) + '–' + (from + shown) + ' of ' + n + (n < H.episodes.length ? ' (' + H.episodes.length + ' in all)' : '') : n + ' of ' + H.episodes.length) + '</span></div>' +
       '<div class="pi-tags pi-tagbar" role="group" aria-label="Tags">' + (state.tags.length ? '<button type="button" class="pi-clear" data-pi-tag="">All</button>' : '') +
       names.map(function (t) { return '<button type="button" data-pi-tag="' + esc(t) + '"' + (state.tags.indexOf(t) >= 0 ? ' class="on" aria-pressed="true"' : ' aria-pressed="false"') + '>' + esc(tagName(t)) + ' <i>' + tags[t] + '</i></button>'; }).join('') + '</div><p hidden>';
   }
@@ -142,7 +160,7 @@
   }
   function setView(v, push) {
     if (v === state.view) v = 'all';          // the active chip again goes back to everything
-    state.view = v; state.item = null; if (v !== 'notes') state.tags = []; render(); writeURL(push !== false);
+    state.view = v; state.item = null; state.page = 1; if (v !== 'notes') state.tags = []; render(); writeURL(push !== false);
   }
 
   // Short clips loop only while on screen (never with reduced motion).
@@ -219,20 +237,25 @@
   }
 
   // a change inside the notes (layout, order, tags) redraws them in place, without the fade or a scroll
-  function notesChanged() {
+  function notesChanged(top) {
     var st = box.querySelector('.pi-stage');
     if (st) { st.innerHTML = sectionHTML('notes') + '<p class="pi-note">' + esc(H.fieldNotes.note) + '</p>'; watch(box); } else render();
     writeURL(false);
+    // a new page: back up to the top of the notes when it's out of sight, with the page's own eased scroll
+    var sec = top && box.querySelector('.pi-sec[data-sec="notes"]');
+    if (sec && sec.getBoundingClientRect().top < 0) { if (window.easeScroll) easeScroll.to(sec); else sec.scrollIntoView({ block: 'start' }); }
   }
   function wire() {
     box.addEventListener('click', function (ev) {
       var t = ev.target, b;
       if ((b = t.closest('[data-pi-view]'))) { setView(b.getAttribute('data-pi-view')); return; }
+      if ((b = t.closest('[data-pi-page]'))) { state.page = +b.getAttribute('data-pi-page'); notesChanged(true); return; }
       if ((b = t.closest('[data-pi-layout]'))) { state.layout = b.getAttribute('data-pi-layout'); notesChanged(); return; }
-      if ((b = t.closest('[data-pi-order]'))) { state.order = b.getAttribute('data-pi-order'); notesChanged(); return; }
+      if ((b = t.closest('[data-pi-order]'))) { state.order = b.getAttribute('data-pi-order'); state.page = 1; notesChanged(); return; }
       if ((b = t.closest('[data-pi-tag]'))) {
         var tg = b.getAttribute('data-pi-tag'), at = state.tags.indexOf(tg);
         if (!tg) state.tags = []; else if (at >= 0) state.tags.splice(at, 1); else state.tags.push(tg);
+        state.page = 1;
         if (state.view !== 'notes') state.view = 'notes';
         notesChanged(); return;
       }
@@ -241,8 +264,8 @@
     });
     addEventListener('popstate', function () {
       if (!view.classList.contains('on')) return;
-      var s = readURL(), notesMoved = s.layout !== state.layout || s.order !== state.order || s.tags.join() !== state.tags.join();
-      state.layout = s.layout; state.order = s.order; state.tags = s.tags;
+      var s = readURL(), notesMoved = s.layout !== state.layout || s.order !== state.order || s.tags.join() !== state.tags.join() || s.page !== state.page;
+      state.layout = s.layout; state.order = s.order; state.tags = s.tags; state.page = s.page;
       if (s.view !== state.view) { state.view = s.view; render(); } else if (notesMoved && s.view === 'notes') notesChanged();
       state.item = s.item;
       [mdlg, sdlg].forEach(function (d) { if (d && d.open && !s.item) d.close(); });
@@ -367,7 +390,7 @@
   function load() {
     if (loaded) return; loaded = true;
     fetch(box.getAttribute('data-hub'), { cache: 'no-cache' }).then(function (r) { if (!r.ok) throw 0; return r.json(); }).then(function (h) {
-      H = h; var s = readURL(); state.view = s.view; state.layout = s.layout; state.tags = s.tags; state.order = s.order;
+      H = h; var s = readURL(); state.view = s.view; state.layout = s.layout; state.tags = s.tags; state.order = s.order; state.page = s.page;
       render(true); wire();
       if (s.item) openItem(s.item);
     }).catch(function () { loaded = false; box.innerHTML = '<p class="pi-sub"><a href="play/">Open Play</a></p>'; });

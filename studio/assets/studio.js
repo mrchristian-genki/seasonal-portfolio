@@ -172,7 +172,7 @@
     app.innerHTML = '<div class="head"><h1>Field Notes</h1>' + tabs + '<span class="me">' + esc(CFG.me ? CFG.me.name : '') + (owner() ? '' : ' · editor') + '</span>' +
       (tab === 'notes' ? '<button id="new" class="primary">New entry</button>' : '') + '</div>' +
       '<section id="queue" class="panel queue" hidden></section><section id="peopleBox" class="panel people"' + (tab === 'people' ? '' : ' hidden') + '></section><section id="catsBox" class="panel cats"' + (tab === 'categories' ? '' : ' hidden') + '></section>' +
-      '<section id="drive" class="panel drive"' + (tab === 'notes' ? '' : ' hidden') + '><p class="muted">Checking Google Drive…</p></section><div id="list" class="cards"' + (tab === 'notes' ? '' : ' hidden') + '><p class="muted">Loading entries…</p></div>';
+      '<section id="drive" class="panel drive"' + (tab === 'notes' ? '' : ' hidden') + '><p class="muted">Checking Google Drive…</p></section><section id="wsOrder" class="panel wsorder" hidden></section><div id="list" class="cards"' + (tab === 'notes' ? '' : ' hidden') + '><p class="muted">Loading entries…</p></div>';
     if ($('#new')) $('#new').onclick = function () { edit(null); };
     $$('.tabs [data-tab]').forEach(function (b) { b.onclick = function () { showList(b.getAttribute('data-tab')); }; });
     if (tab === 'people') renderPeople();
@@ -194,7 +194,68 @@
         $$('button[data-id]', q).forEach(function (b) { b.onclick = function () { edit(b.getAttribute('data-id')); }; });
       }
       renderGrid(j.entries, st);
+      if (owner()) renderWsOrder(j.entries);
     }).catch(function (err) { $('#list').innerHTML = '<p class="err">' + esc(err.message) + '</p>'; });
+  }
+
+  // Page buttons for a long list: Previous, the page numbers (first, last and either side of this one), Next.
+  // pager(box, page, pages, go): fills box (empty when one page does it) and calls go(page) on a click.
+  function pager(box, page, pages, go) {
+    if (!box) return;
+    if (pages < 2) { box.innerHTML = ''; box.hidden = true; return; }
+    var nums = [], last = 0;
+    for (var p = 1; p <= pages; p++) {
+      if (p !== 1 && p !== pages && Math.abs(p - page) > 1) continue;
+      if (p - last > 1) nums.push('<span class="pg-gap">…</span>');
+      nums.push('<button type="button" data-pg="' + p + '"' + (p === page ? ' aria-current="page"' : '') + ' aria-label="Page ' + p + '">' + p + '</button>'); last = p;
+    }
+    box.hidden = false;
+    box.innerHTML = '<button type="button" class="pg-step" data-pg="' + (page - 1) + '"' + (page > 1 ? '' : ' disabled') + '>← Previous</button><span class="pg-nums">' + nums.join('') +
+      '</span><button type="button" class="pg-step" data-pg="' + (page + 1) + '"' + (page < pages ? '' : ' disabled') + '>Next →</button>';
+    $$('button[data-pg]', box).forEach(function (b) { b.onclick = function () { go(+b.getAttribute('data-pg')); }; });
+  }
+  // back up to a list's top when a new page leaves it out of sight, with the site's eased scroll
+  function toTop(el) { if (el && el.getBoundingClientRect().top < 0) { if (window.easeScroll) easeScroll.to(el); else el.scrollIntoView({ block: 'start' }); } }
+
+  // ---------- the Workshop tab's order (owner): its projects first to last, moved up or down, saved together ----------
+  function renderWsOrder(all) {
+    var box = $('#wsOrder'); if (!box) return;
+    var ws = all.filter(function (e) { return e.ws; }).sort(function (a, b) { return (a.ws.order || 999) - (b.ws.order || 999) || (a.id < b.id ? -1 : 1); });
+    if (ws.length < 2) { box.hidden = true; return; }
+    var ids = ws.map(function (e) { return e.id; }), was = ids.join(), byId = {}, moved = null;
+    ws.forEach(function (e) { byId[e.id] = e; });
+    var open = box.querySelector('details') ? box.querySelector('details').open : false;
+    box.hidden = false;
+    function draw() {
+      var changed = ids.join() !== was;
+      box.innerHTML = '<details' + (open ? ' open' : '') + '><summary><h2>Workshop order</h2> <small class="muted">' + ws.length + ' projects · the order of the cards on the Workshop tab</small></summary>' +
+        '<ol class="wso">' + ids.map(function (id, i) {
+          var e = byId[id];
+          return '<li data-id="' + esc(id) + '"><span class="wso-n">' + (i + 1) + '</span><span class="wso-t"><b>' + esc(e.ws.name || e.title || id) + '</b><small>' + esc(e.date) + (e.status !== 'published' ? ' · not published yet, so not on the tab' : '') + '</small></span>' +
+            '<button type="button" class="small" data-mv="-1"' + (i ? '' : ' disabled') + ' aria-label="Move ' + esc(e.ws.name || e.title) + ' up">↑</button><button type="button" class="small" data-mv="1"' + (i < ids.length - 1 ? '' : ' disabled') + ' aria-label="Move ' + esc(e.ws.name || e.title) + ' down">↓</button>' +
+            '<button type="button" class="small" data-top' + (i ? '' : ' disabled') + '>To the top</button></li>';
+        }).join('') + '</ol><div class="row"><button type="button" class="primary" id="wsoSave"' + (changed ? '' : ' disabled') + '>Save the order</button>' +
+        (changed ? '<button type="button" class="link" id="wsoUndo">Undo</button>' : '') + '<small class="muted">The site updates on the next deploy.</small></div></details>';
+      box.querySelector('details').ontoggle = function () { open = this.open; };
+      $$('.wso li', box).forEach(function (li) {
+        var id = li.getAttribute('data-id'), at = ids.indexOf(id);
+        var go = function (to) { ids.splice(at, 1); ids.splice(to, 0, id); moved = id; draw(); };
+        $$('[data-mv]', li).forEach(function (b) { b.onclick = function () { go(at + +b.getAttribute('data-mv')); }; });
+        li.querySelector('[data-top]').onclick = function () { go(0); };
+      });
+      // the one just moved glows, easing in and then away
+      var mv = moved && box.querySelector('.wso li[data-id="' + moved + '"]');
+      if (mv) { requestAnimationFrame(function () { requestAnimationFrame(function () { mv.classList.add('moved'); }); }); setTimeout(function () { mv.classList.remove('moved'); }, 1400); }
+      var u = $('#wsoUndo'); if (u) u.onclick = function () { ids = was.split(','); moved = null; draw(); };
+      $('#wsoSave').onclick = function () {
+        var b = this; b.disabled = true; b.textContent = 'Saving…';
+        api('wsorder', { ids: ids }).then(function () {
+          ids.forEach(function (id, i) { byId[id].ws.order = i + 1; }); was = ids.join(); moved = null; draw();
+          toast('Workshop order saved. The site updates on the next deploy.');
+        }).catch(function (err) { toast(err.message, true); b.disabled = false; b.textContent = 'Save the order'; });
+      };
+    }
+    draw();
   }
 
   // ---------- the notes, as a grid of covers (or a compact list), with search, filters and sorting ----------
@@ -216,8 +277,11 @@
       '<span class="lview" role="group" aria-label="View"><button type="button" data-v="grid" aria-pressed="' + (LV.view !== 'list') + '">Grid</button><button type="button" data-v="list" aria-pressed="' + (LV.view === 'list') + '">List</button></span>' +
       '<small id="lcount"></small>';
     list.parentNode.insertBefore(tools, list);
-    var order = { notes: 0, draft: 1, script: 2, audio: 3, published: 4 };
-    var draw = function () {
+    var pg = document.createElement('nav'); pg.className = 'pager'; pg.setAttribute('aria-label', 'Pages of notes'); pg.hidden = true;
+    list.parentNode.insertBefore(pg, list.nextSibling);
+    var order = { notes: 0, draft: 1, script: 2, audio: 3, published: 4 }, page = 1, PER = 12;
+    var draw = function (keepPage) {
+      if (!keepPage) page = 1;
       var q = (LV.q || '').trim().toLowerCase();
       var rows = all.filter(function (e) {
         if (q && (e.title + ' ' + e.place + ' ' + e.summary + ' ' + e.id).toLowerCase().indexOf(q) < 0) return false;
@@ -238,7 +302,11 @@
         return a.date < b.date ? 1 : a.date > b.date ? -1 : 0;
       });
       list.className = 'cards' + (LV.view === 'list' ? '' : ' grid');
-      $('#lcount').textContent = rows.length === all.length ? all.length + ' notes' : rows.length + ' of ' + all.length + ' notes';
+      var pages = Math.max(1, Math.ceil(rows.length / PER)); page = Math.min(page, pages);
+      var from = (page - 1) * PER, total = rows.length;
+      $('#lcount').textContent = (total > PER ? (from + 1) + '–' + Math.min(total, from + PER) + ' of ' : '') + (total === all.length ? all.length + ' notes' : total + (total > PER ? '' : ' of ' + all.length) + ' notes' + (total > PER ? ' (' + all.length + ' in all)' : ''));
+      rows = rows.slice(from, from + PER);
+      pager(pg, page, pages, function (p) { page = p; draw(true); toTop(tools); });
       list.innerHTML = rows.length ? rows.map(function (e) {
         var img = LV.view !== 'list' ? '<span class="cv">' + (e.cover ? '<img loading="lazy" alt="" src="api.php?a=photo&id=' + encodeURIComponent(e.id) + '&n=' + encodeURIComponent(e.cover) + '">' : '<i>' + esc(KIND_NAMES[e.kind] || e.kind || 'Note') + '</i>') + '</span>' : '';
         var media = [e.photos ? e.photos + ' photo' + (e.photos === 1 ? '' : 's') : '', e.loops ? e.loops + ' loop' + (e.loops === 1 ? '' : 's') : '', e.audio ? 'audio' : ''].filter(Boolean).join(' · ');
@@ -251,7 +319,7 @@
     };
     $('#lq').oninput = function () { LV.q = this.value; saveLV(); draw(); };
     [['lstat', 'stat'], ['lkind', 'kind'], ['lyear', 'year'], ['lsort', 'sort']].forEach(function (x) { $('#' + x[0]).onchange = function () { LV[x[1]] = this.value; saveLV(); draw(); }; });
-    $$('.lview button', tools).forEach(function (b) { b.onclick = function () { LV.view = b.getAttribute('data-v'); saveLV(); $$('.lview button', tools).forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); }); draw(); }; });
+    $$('.lview button', tools).forEach(function (b) { b.onclick = function () { LV.view = b.getAttribute('data-v'); saveLV(); $$('.lview button', tools).forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); }); draw(true); }; });
     draw();
   }
 
@@ -418,7 +486,7 @@
   }
 
   // ---------- Google Drive: new files come to the server with rclone (one way, never deletes) ----------
-  var drivePoll = null, lastDrive = null, ENTRIES = null, INBOX = null;
+  var drivePoll = null, lastDrive = null, ENTRIES = null, INBOX = null, INBOX_PAGE = 1, INBOX_PER = 8;
   function size(b) { return b >= 1073741824 ? (b / 1073741824).toFixed(1) + ' GB' : b >= 1048576 ? Math.round(b / 1048576) + ' MB' : Math.max(1, Math.round(b / 1024)) + ' KB'; }
   function when(t) { return t ? new Date(t * 1000).toLocaleString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) : ''; }
   function driveStatus() {
@@ -436,13 +504,15 @@
     else line = 'Not brought in yet.';
     // folders, plus loose files only once they belong to a note (the rest is left for tidying in Drive)
     var items = j.inbox.filter(function (f) { return f.dir || f.note; });
-    var inbox = items.length ? '<ul class="inbox">' + items.slice(0, 30).map(inboxRow).join('') + '</ul>' : '';
+    var pages = Math.max(1, Math.ceil(items.length / INBOX_PER)); INBOX_PAGE = Math.min(INBOX_PAGE, pages);
+    var inbox = items.length ? '<ul class="inbox">' + items.slice((INBOX_PAGE - 1) * INBOX_PER, INBOX_PAGE * INBOX_PER).map(inboxRow).join('') + '</ul><nav class="pager" id="inboxPg" aria-label="Pages of the Drive inbox" hidden></nav>' : '';
     d.innerHTML = '<div class="drive-head"><div><h2>Google Drive</h2><p class="muted">Watching ' + names + '. New files are copied to the server; nothing is deleted on either side.</p></div>' +
       '<button id="driveGo" class="primary"' + (j.running || !j.ready ? ' disabled' : '') + '>' + (j.running ? 'Bringing in…' : 'Bring in from Drive') + '</button></div>' +
       (j.problem ? '<p class="err">' + esc(j.problem) + '</p>' : '<p class="drive-line">' + line + '</p>') +
       (j.errors.length ? '<p class="err">' + j.errors.map(esc).join('<br>') + '</p>' : '') + inbox +
       ((j.ignored || []).length && owner() ? '<details class="ignored"><summary>Ignored (' + j.ignored.length + ')</summary><ul>' + j.ignored.map(function (x) {
         return '<li>' + esc(x.source) + ' <small>' + esc(when(x.at)) + (x.dropped ? ' · server copy deleted' : '') + '</small> <button class="link unignore" data-src="' + esc(x.source) + '">Restore</button></li>'; }).join('') + '</ul></details>' : '');
+    pager($('#inboxPg'), INBOX_PAGE, pages, function (p) { INBOX_PAGE = p; renderDrive(lastDrive); toTop($('#drive .inbox')); });
     var b = $('#driveGo');
     if (b) b.onclick = function () {
       b.disabled = true; b.textContent = 'Starting…';
