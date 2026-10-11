@@ -13,8 +13,9 @@
    her Workshop window). GlazyArray's player (js/narrator.js) leaves these bars to her. */
 (function () {
   'use strict';
-  var P = '/assets/alta/parts/', V = '?v=7';
+  var P = '/assets/alta/parts/', V = '?v=8';
   var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var GESTURES = ['palms'];   // her gesture clips in parts/ (KIT.md Round 2 adds more)
   var SHAPES = ['smile', 'neutral', 'ah', 'oh', 'oo', 'ee', 'laugh'];
   var IC = {
     play: '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>', pause: '<svg viewBox="0 0 24 24"><path d="M7 5h4v14H7zm6 0h4v14h-4z"/></svg>',
@@ -45,9 +46,10 @@
     function say(k) { if (k === cur || !M[k]) return; M[cur].classList.remove('on'); M[k].classList.add('on'); cur = k; }
 
     // her tail, while she's on screen
+    var onScreen = !('IntersectionObserver' in window);
     if (!still) {
       tail.src = P + 'tail.mp4' + V;
-      var vis = function (on) { if (on) { tail.preload = 'auto'; var p = tail.play(); if (p && p.catch) p.catch(function () {}); tail.classList.add('on'); } else tail.pause(); };
+      var vis = function (on) { onScreen = on; if (on) { tail.preload = 'auto'; var p = tail.play(); if (p && p.catch) p.catch(function () {}); tail.classList.add('on'); } else tail.pause(); };
       if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { vis(es[0].isIntersecting); }).observe(st); else vis(true);
     }
     // blinks and glances
@@ -67,6 +69,29 @@
       setTimeout(glance, away ? 900 + Math.random() * 900 : 2200 + Math.random() * 3200);
     })();
 
+    // her gestures, laid over her torso: one now and then while she talks, and now and then while she waits at the
+    // ledge too. Each fades in, plays once and fades back to her rest pose. GESTURES are the clips in parts/.
+    var gT = 0, gestKey = '';
+    if (!still) palms.addEventListener('timeupdate', function () { if (palms.duration && palms.currentTime > palms.duration - 0.6) palms.classList.remove('on'); });
+    function gesture() {
+      if (still || palms.classList.contains('on')) return;
+      var k = GESTURES[Math.floor(Math.random() * GESTURES.length)];
+      if (k !== gestKey) { gestKey = k; palms.src = P + k + '.mp4' + V; }
+      palms.preload = 'auto'; palms.currentTime = 0;
+      var p = palms.play();
+      var on = function () { palms.classList.add('on'); };
+      if (p && p.then) p.then(on, function () {}); else on();
+    }
+    function gestures() {
+      clearTimeout(gT); if (still) return;
+      var t = isTalking();
+      gT = setTimeout(function () {
+        if (!bar.isConnected) return;
+        if (isTalking() || (dv.state === 'up' && onScreen && !document.hidden)) gesture();
+        gestures();
+      }, t ? 12000 + Math.random() * 10000 : 20000 + Math.random() * 20000);
+    }
+
     // the idle dive: now and then, while she isn't talking, she lets go of the ledge and sinks below it, does one thing
     // underwater, and rises the way she went down (rise.mp4 is dive.mp4 backwards). Underwater she hovers near the glass,
     // glides a lap of the tank, or meditates and glows (glow.mp4: it comes up, holds, and fades back down); each starts and
@@ -77,7 +102,8 @@
     var vDive = V3[0], vHover = V3[1], vGlide = V3[2], vGlow = V3[3], vRise = V3[4];
     function load() { if (ready) return; ready = true; V3.forEach(function (v) { v.src = P + v.dataset.k + '.mp4' + V; v.preload = 'auto'; }); }
     function showV(v) { V3.forEach(function (x) { x.classList.toggle('on', x === v); }); }
-    function surfaced() { dv.state = 'up'; head.classList.remove('gone'); setTimeout(function () { if (dv.state === 'up') V3.forEach(function (x) { x.classList.remove('on'); x.pause(); }); }, 300); plan(); }
+    var onUp = null;   // Play pressed while she was under: the episode starts once she's back at the ledge
+    function surfaced() { dv.state = 'up'; head.classList.remove('gone'); if (onUp) { var f = onUp; onUp = null; f(); } setTimeout(function () { if (dv.state === 'up') V3.forEach(function (x) { x.classList.remove('on'); x.pause(); }); }, 300); plan(); }
     function play(v) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
     function rise(rate) {
       if (dv.state === 'rise' || dv.state === 'up' || dv.state === 'calm') return;
@@ -108,7 +134,7 @@
       if (vRise.readyState >= 1) start(); else vRise.addEventListener('loadedmetadata', start, { once: true });
     }
     function dive() {
-      if (still || dv.state !== 'up' || isTalking() || !bar.isConnected) return plan();
+      if (still || dv.state !== 'up' || isTalking() || !bar.isConnected || palms.classList.contains('on')) return plan();
       load(); dv.state = 'dive'; vDive.currentTime = 0;
       var go = function () { vDive.removeEventListener('playing', go); if (dv.state !== 'dive') return; showV(vDive); head.classList.add('gone'); palms.classList.remove('on'); };
       vDive.addEventListener('playing', go); var p = vDive.play(); if (p && p.catch) p.catch(function () { dv.state = 'up'; plan(); });
@@ -127,7 +153,7 @@
     function plan() { clearTimeout(dv.t); if (still || dv.state !== 'up') return; dv.t = setTimeout(dive, 30000 + Math.random() * 30000); }
     var isTalking = function () { return false; };
     bar.altaDive = dive;   // for testing, and for a page that wants to cue it
-    if (!still) plan();
+    if (!still) { plan(); gestures(); }
 
     if (!audio) {   // no episode yet: she waits in her tank
       var soon = document.createElement('p'); soon.className = 'al-soon'; soon.textContent = bar.getAttribute('data-soon') || 'Her introduction is on its way.';
@@ -148,7 +174,7 @@
       var on = !audio.paused; pp.innerHTML = on ? IC.pause : IC.play; pp.setAttribute('aria-label', on ? 'Pause' : 'Play');
     }
     ['timeupdate', 'play', 'pause', 'loadedmetadata', 'ended'].forEach(function (e) { audio.addEventListener(e, show); });
-    pp.onclick = function () { if (audio.paused) audio.play().catch(function () {}); else audio.pause(); };
+    pp.onclick = function () { if (holding) { onUp = null; hold(false); return; } if (audio.paused) audio.play().catch(function () {}); else audio.pause(); };
     c.querySelector('.al-b').onclick = function () { audio.currentTime = Math.max(0, audio.currentTime - 15); };
     c.querySelector('.al-f').onclick = function () { audio.currentTime = Math.min(audio.duration || 0, audio.currentTime + 15); };
     seek.oninput = function () { drag = true; if (audio.duration) t0.textContent = clock(seek.value / 1000 * audio.duration); };
@@ -183,21 +209,28 @@
       if (!still) head.style.transform = 'rotate(' + (Math.sin(now / 800) * 1.2 * level).toFixed(2) + 'deg) translateY(' + (-level * 1.2).toFixed(2) + '%)';
       if (talking || level > 0.01) raf = requestAnimationFrame(tick); else { raf = 0; say('smile'); head.style.transform = ''; }
     }
-    // a gesture now and then while she talks: her palms open, then she settles back to the ledge
-    var gT = 0;
-    if (!still) { palms.src = P + 'palms.mp4' + V; palms.addEventListener('timeupdate', function () { if (palms.duration && palms.currentTime > palms.duration - 0.6) palms.classList.remove('on'); }); }
-    function gestures() {
-      clearTimeout(gT); if (still || !talking) return;
-      gT = setTimeout(function () { if (!talking) return; palms.currentTime = 0; palms.classList.add('on'); palms.play().catch(function () {}); gestures(); }, 12000 + Math.random() * 10000);
-    }
     isTalking = function () { return talking; };
+    // Play while she's underwater (or on her way down): the episode holds, she comes back up a little quicker, and it
+    // starts once she's at the ledge. The button shows she's coming; pressed again, it's called off.
+    var holding = false;
+    function hold(on) {
+      holding = on; pp.classList.toggle('al-wait', on);
+      if (on) { pp.setAttribute('aria-label', 'Starting when she\'s back up (press to cancel)'); pp.innerHTML = IC.pause; } else show();
+    }
     audio.addEventListener('play', function () {
-      rise(1.6);   // underwater when Play is pressed: straight back up, a little quicker
+      if (dv.state !== 'up') {
+        audio.pause(); listen(); hold(true); rise(1.6);
+        onUp = function () { if (!holding) return; hold(false); var p = audio.play(); if (p && p.catch) p.catch(function () {}); };
+        return;
+      }
       listen(); if (ctx && ctx.state === 'suspended') ctx.resume();
-      talking = true; glow.style.backgroundColor = '#2fe8c0'; glow.style.opacity = '.35'; eyes.style.setProperty('--dil', '1.05');
+      talking = true; glow.style.backgroundColor = '#2fe8c0'; glow.style.opacity = '.35'; eyes.style.setProperty('--dil', '1.1');
       gestures(); if (!raf) raf = requestAnimationFrame(tick);
     });
-    ['pause', 'ended'].forEach(function (t) { audio.addEventListener(t, function () { talking = false; clearTimeout(gT); glow.style.opacity = '0'; eyes.style.removeProperty('--dil'); plan(); }); });
+    ['pause', 'ended'].forEach(function (t) { audio.addEventListener(t, function () {
+      if (holding) { show(); pp.innerHTML = IC.pause; return; }
+      talking = false; glow.style.opacity = '0'; eyes.style.removeProperty('--dil'); plan(); gestures();
+    }); });
   }
 
   function scan(root) { (root.querySelectorAll ? root : document).querySelectorAll('section.listen.alta').forEach(build); }

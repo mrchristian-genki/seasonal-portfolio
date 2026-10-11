@@ -410,6 +410,32 @@ the still hall stands in, so no bubbles show in the air. Underwater she now hove
 one twice in a row, then rises. Play pressed mid-routine finishes it quickly first: the glow fades down, the lap
 hurries home. Still to make: the twirl, trout, glass, peek, pebble, ring and roll.
 
+## Round 6: a friendlier resting face (Oct 11)
+
+Her resting face is her template's own: a small closed smile and wide-open eyes. Two edits of **the head template**
+(the green-background image from prompt 1, never a later edit) give her a warmer one. Claude makes them her face at
+rest, keeps the current parts for talking, and fades between the two.
+
+**6a. A warm smile** (`mouth-warm.png`):
+
+> Same image, exactly as it is: same camera, face, eyes, crown, hair and green background. Change only her mouth: a
+> warm, friendly closed-mouth smile, wider than now, the corners turned gently up, her copper cheeks lifted a little
+> as a real smile lifts them. Her lips keep their patina and soft sheen. Nothing else moves.
+
+**6b. Smiling eyes** (`head-soft.png`):
+
+> Same image, exactly as it is: same camera, face, mouth, crown, hair and green background. Change only her eyelids:
+> her upper copper eyelids lower just a little, about a quarter of the way over her irises, and her lower lids lift
+> slightly, as eyes do in a warm, kind smile. Her irises stay exactly where they are, the same size and colours,
+> still looking straight ahead. Relaxed, not sleepy, not squinting.
+
+**Check:** lay each over the template; only the mouth (6a) or the eyelids (6b) should change. If her face shifts,
+say "same image, exactly as it is" again.
+
+**Done already in code (Oct 11):** her irises sit 6% larger at rest (a softer, less staring look), and bloom a little
+more as she talks. Her gestures now play while she waits at the ledge too, every 20 to 40 seconds; the Round 2 clips
+give her more than the open palms, and each one Claude adds joins both.
+
 ## Quick fixes
 
 - **Her face shifts between head parts:** say "same image, exactly as it is" again, and edit the template, never a
