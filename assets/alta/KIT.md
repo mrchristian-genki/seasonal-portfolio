@@ -398,6 +398,18 @@ closest to the start and cross-fades the seam.
 reaches the surface, and nothing moves above the copper ledge. If bubbles still show in the air, Claude can paint them out
 as for the dive, but a clean take is better.
 
+**Built (Oct 11):**
+- `parts/glide.mp4` is the lap from Christian's Flow take.
+- `parts/glow.mp4` is her meditation:
+  - the glow coming up (a Gemini take, start picture to glowing)
+  - her held glow (a second take: she meditates at full glow, her tail swaying)
+  - the glow coming up again, played backwards, so she fades to calm.
+
+Both are lined up to her dive. Their first and last half-seconds blend into the dive's last frame, and above the ledge
+the still hall stands in, so no bubbles show in the air. Underwater she now hovers, glides or glows, never the same
+one twice in a row, then rises. Play pressed mid-routine finishes it quickly first: the glow fades down, the lap
+hurries home. Still to make: the twirl, trout, glass, peek, pebble, ring and roll.
+
 ## Quick fixes
 
 - **Her face shifts between head parts:** say "same image, exactly as it is" again, and edit the template, never a
