@@ -629,3 +629,29 @@ dialog.pfp::backdrop{background:rgba(20,12,6,.7)}
 .swK img,.swK .wsNo{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:5px;display:block}
 .swK small{font-size:11px;color:var(--ink3);overflow-wrap:anywhere;font-weight:500}
 @media (prefers-reduced-motion:reduce){.swK{transition:none}.swK:hover{transform:none}}
+/* a long list a page at a time: Previous, the page numbers, Next (studio.js pager); the jump back up is the
+   site's eased scroll, clear of the sticky bar */
+.pager{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:14px 0 6px}
+.pager .pg-nums{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px}
+.pager button{min-width:38px;height:38px;padding:0 12px;transition:background-color .6s ease-in-out,color .6s ease-in-out,border-color .6s ease-in-out,opacity .6s ease-in-out}
+.pager button:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+.pager button[aria-current="page"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.pager button:disabled{opacity:.35;cursor:default}
+.pager .pg-gap{color:var(--ink3)}
+.ltools,#drive .inbox{scroll-margin-top:84px}
+@media (max-width:560px){.pager .pg-step{padding:0 10px;font-size:14px}}
+@media (prefers-reduced-motion:reduce){.pager button{transition:none}}
+/* the Workshop tab's order (studio.js renderWsOrder): a numbered list, each with up, down and to the top; the
+   one just moved glows, then the glow eases away */
+.wsorder summary{cursor:pointer;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.wsorder summary h2{display:inline;margin:0}
+.wso{list-style:none;margin:12px 0;padding:0;display:grid;gap:6px}
+.wso li{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:12px;padding:8px 10px;background:#fff;transition:box-shadow .9s ease-in-out,border-color .9s ease-in-out}
+.wso li.moved{border-color:var(--accent);box-shadow:0 0 0 3px var(--soft)}
+.wso-n{font:800 18px var(--display);color:var(--ink3);min-width:24px;text-align:center}
+.wso-t{flex:1;min-width:0;display:flex;flex-direction:column}
+.wso-t b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wso-t small{color:var(--ink3)}
+.wso button:disabled{opacity:.35;cursor:default}
+@media (max-width:560px){.wso [data-top]{display:none}}
+@media (prefers-reduced-motion:reduce){.wso li{transition:none}}

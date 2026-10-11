@@ -125,7 +125,7 @@
  },
  "palette": ["#25c0ad", "#b26e34"],
  "workshop": {
-  "order": 1,
+  "order": 2,
   "name": "The whole machine",
   "tagline": "How the lake, the Parts Catalog, the Workshop, the Studio and ProPre fit together",
   "pull": "Each one is good alone, but it's the pipes between them that make it feel alive.",

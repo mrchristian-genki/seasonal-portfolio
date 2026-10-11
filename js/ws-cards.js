@@ -130,7 +130,7 @@
     }, 5200);
   }
   function start() {
-    fetch('assets/workshop/projects.json?v=7').then(function (r) { return r.json(); }).then(function (list) {
+    fetch('assets/workshop/projects.json?v=8').then(function (r) { return r.json(); }).then(function (list) {
       P = list; P.forEach(function (p, i) { var c = card(p, i); box.appendChild(c); cards.push(c); });
       if (!still) { play(cards[0], true); tour(); }
       // a project's own address opens its window

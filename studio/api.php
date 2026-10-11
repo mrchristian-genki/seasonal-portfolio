@@ -73,7 +73,9 @@ function list_row(array $e): array {
     return ['id' => $e['id'], 'title' => $e['title'] ?? '', 'date' => $e['date'] ?? '', 'kind' => $e['kind'] ?? '',
         'status' => $e['status'] ?? 'notes', 'photos' => count($e['photos'] ?? []) - $loops, 'loops' => $loops, 'summary' => $e['summary'] ?? '',
         'place' => trim(explode(',', (string) ($e['place'] ?? ''))[0]), 'audio' => !empty($e['episode']['audio']),
-        'cover' => preg_match('/^[a-z0-9-]{1,40}\.jpg$/', $cover) ? $cover : '', 'cats' => note_cats($e), 'look' => (string) ($e['narratorLook']['look'] ?? '')];
+        'cover' => preg_match('/^[a-z0-9-]{1,40}\.jpg$/', $cover) ? $cover : '', 'cats' => note_cats($e), 'look' => (string) ($e['narratorLook']['look'] ?? ''),
+        // a Workshop project: its name and place on the tab (field/tools/wsprojects.py sorts by it, empty last)
+        'ws' => is_array($e['workshop'] ?? null) ? ['name' => (string) ($e['workshop']['name'] ?? ''), 'order' => (int) ($e['workshop']['order'] ?? 0)] : null];
 }
 /** A Note's categories, as Play's filters have them (field/tools/publish.mjs tagsOf, without the year): its own tags, then its kind. */
 function note_cats(array $e): array {
@@ -553,6 +555,23 @@ try {
             json_out(['users' => array_map(fn($u) => ['name' => $u['name'], 'user' => $u['user'] ?? studio_username($u['name']), 'added' => $u['added'] ?? null], studio_users())]);
 
         // the Studio's Categories area: give categories a look, or add a look (owner only)
+        // The Workshop tab's order: the projects' ids, first to last; each Note's workshop.order becomes its place.
+        // One commit for all of them; a Note in review keeps its review copy (its order is set when it's approved).
+        case 'POST wsorder':
+            owner_only();
+            $ids = array_values(array_filter((array) ($body['ids'] ?? []), fn($x) => is_string($x) && valid_id($x)));
+            if (!$ids) json_fail('No projects to order.');
+            $files = [];
+            foreach ($ids as $i => $id) {
+                $e = json_decode($gh->read(EVENTS . "/$id.json") ?? 'null', true);
+                if (!is_array($e) || !is_array($e['workshop'] ?? null)) continue;
+                if ((int) ($e['workshop']['order'] ?? 0) === $i + 1) continue;
+                $e['workshop']['order'] = $i + 1;
+                $files[EVENTS . "/$id.json"] = ['text' => repo_json($e)];
+            }
+            if (!$files) json_out(['ok' => true, 'commit' => null]);
+            json_out(['ok' => true, 'commit' => $gh->commit($files, 'Studio: the Workshop order')]);
+
         case 'POST looks':
             owner_only();
             $files = [];
