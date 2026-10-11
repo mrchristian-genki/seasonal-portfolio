@@ -227,6 +227,71 @@ as the first frame, 16:9, 6 to 8 seconds. Each ends back in that rest pose, both
 **Send back** the clips you like. Claude erases her video head, checks every frame keeps her hands in the green, and
 cuts each so it fades back to her rest pose, like the open-palms one.
 
+## Round 3: her colours, matched to each Note (Oct 11)
+
+GlazyArray wears a look on each Note, and two of its parts take the Note's two colours (from its hero picture). A.L.T.A.
+wears no hats or caps: she always wears her own crown and hair. Instead, **two groups of the things already in her hair
+take the Note's colours**, the way GlazyArray's flair does:
+
+- **Colour A: the filigree.** The ornate metal centrepiece at the front of her crown and the filigree band it sits on.
+- **Colour B: the botanicals.** The leafy sprigs and ribbon-like lake plants around her ears and through her hair.
+
+Everything else stays her own: the reeds and cattails, the pinecones, the copper-wire hair, the pearls, her face and her
+eyes. The same two prompts as GlazyArray's looks (`assets/narrator/looks/PROMPTS.md`) make clean masks. Both are edits of
+her head template (prompt 1 above), never new renders.
+
+**Prompt A** (on the template):
+
+> Same image, exactly as it is: same camera, same face, eyes, crown, hair and flat chroma green background (#00B140).
+> Change only the colour of two things, keeping their exact shapes, shading, gloss and detail: the ornate filigree
+> centrepiece at the front of her crown and the filigree band beneath it become a bright saturated magenta (#FF00FF),
+> like enamelled metal; the leafy sprigs and ribbon-like lake plants around her ears and through her hair become a
+> plain pearl white. The reeds, cattails, pinecones, copper-wire hair, pearls, her face and her eyes stay exactly as
+> they are.
+
+**Prompt B** (on the image prompt A made):
+
+> Same image, exactly as it is. Change only the pearl-white leafy sprigs and ribbon-like lake plants to a bright
+> saturated cyan (#00FFFF), keeping their shading and gloss. The magenta stays magenta; everything else stays exactly
+> as it is, including the green background.
+
+**Send back** the image from prompt B as `alta-colours.png`. Claude takes the magenta and cyan as her two masks, and
+makes those parts a neutral pearl so each Note's colours dye them cleanly, in her player and her Workshop window.
+
+## Round 4: the idle dive (Oct 11)
+
+While she waits to narrate, now and then she **sinks down behind the ledge, swims close to the front glass, and comes
+back up the same way she went down**, to rest at the ledge again. Two clips make it:
+
+1. **`dive-down.mp4`:** from her rest pose at the ledge down into the water, ending with her hovering below the ledge,
+   close to the front glass, facing the camera.
+2. **`dive-swim.mp4`:** a loop underwater that starts and ends on the last frame of the dive-down clip.
+
+Her return is the dive-down clip played backwards (Claude makes the reversed copy), so she comes up exactly the way she
+went down. During the dive her own video head is shown, since she isn't talking; her layered head takes over again at
+the ledge. If Play is pressed mid-dive, she comes straight back up before she starts talking.
+
+**Clip 1, dive-down** (image to video, first frame: the still of her at the ledge, 8 s):
+
+> A smooth, weightless clip from this exact image. Locked camera, no zoom or pan. She lets go of the copper ledge,
+> lowers her arms, and sinks slowly straight down behind the ledge into the water, as if exhaling, her crown passing
+> below the ledge last. Under the water she settles close to the front glass, facing the camera, about the middle
+> of the tank, her tail gently sculling, her arms relaxed at her sides, a soft calm smile. Slow, eased motion with no
+> jitter; a few small bubbles rise. The tank, the ledge, the rocks, the logs and the hall behind her stay exactly as
+> they are. She ends hovering still, facing the camera.
+
+**Clip 2, dive-swim** (image to video, first and last frame: the last frame of clip 1, 8 s):
+
+> A seamless loop from this exact image. Locked camera, no zoom or pan. Underwater, she swims a slow, graceful loop
+> close to the front glass: a gentle turn to one side, along the front of the tank, and back to exactly where she
+> started, facing the camera, hovering. Her tail sweeps in long, smooth, weightless arcs; her crown and hair drift
+> softly in the water; a trout glides past behind her. She stays near the front of the tank and never goes behind the
+> rocks or out of frame. Slow, eased motion with no jitter. The last frame matches the first.
+
+**Check before sending:** clip 1's first frame matches her rest still, and clip 2's first and last frames match clip 1's
+last. A tool with a last-frame setting makes this easy; if yours doesn't, send them anyway and Claude finds the closest
+frames and cross-fades the seams.
+
 ## Quick fixes
 
 - **Her face shifts between head parts:** say "same image, exactly as it is" again, and edit the template, never a
