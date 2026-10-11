@@ -90,7 +90,7 @@
     dlg.innerHTML = '<div class="wsm-bar"><button type="button" class="wsm-x" aria-label="Close">×</button></div>' +
       '<article class="feature wsf">' +
       // told by A.L.T.A. herself: her tank opens the window instead of the cover (js/alta.js)
-      (p.narrator === 'alta' ? '<section class="listen alta wsf-alta" data-narrator="alta"' + (p.palette ? ' data-palette="' + esc(p.palette.join(' ')) + '"' : '') + ' aria-label="' + (p.audio ? 'Listen to her episode' : 'A.L.T.A. in her tank') + '"><div><span class="listen-label">' +
+      (p.narrator === 'alta' ? '<section class="listen alta wsf-alta" data-narrator="alta"' + (p.palette ? ' data-palette="' + esc(p.palette.join(' ')) + '"' : '') + (p.cues ? ' data-cues="' + esc(JSON.stringify(p.cues)) + '"' : '') + ' aria-label="' + (p.audio ? 'Listen to her episode' : 'A.L.T.A. in her tank') + '"><div><span class="listen-label">' +
         (p.audio ? 'Listen' : 'Coming soon') + '</span><b>' + esc(p.episodeTitle || p.title || p.name) + '</b></div>' + (p.audio ? '<audio controls preload="metadata" src="' + esc(p.audio) + '"></audio>' : '') + '</section>'
       : '<header class="mag-cover wsf-cover"><div class="mag-img">' + pic(cover) + '</div>' +
       '<div class="mag-top"><span class="wsf-mast">The Workshop</span><span class="mag-tag">Project ' + (n + 1) + ' of ' + P.length + '</span></div></header>' +
@@ -130,7 +130,7 @@
     }, 5200);
   }
   function start() {
-    fetch('assets/workshop/projects.json?v=8').then(function (r) { return r.json(); }).then(function (list) {
+    fetch('assets/workshop/projects.json?v=9').then(function (r) { return r.json(); }).then(function (list) {
       P = list; P.forEach(function (p, i) { var c = card(p, i); box.appendChild(c); cards.push(c); });
       if (!still) { play(cards[0], true); tour(); }
       // a project's own address opens its window

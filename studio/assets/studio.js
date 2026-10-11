@@ -346,7 +346,7 @@
   // new ones as soon as a Note has them, and the look each one gives GlazyArray (looks.json "categories"). Most have
   // none. A Note's own look beats its category's, which beats the holiday look. Her looks are here too, with a way to
   // add one from a render. ----------
-  var CATP = {}, CATBP = {}, CATRP = {}, DEFP = {}, HOLBP = {}, NEWCATP = {}, CATNEWLOOK = null, CATNEWBD = null;   // pending: looks, backdrops, priorities, defaults, holiday backdrops
+  var CATP = {}, CATBP = {}, CATRP = {}, CATNP = {}, DEFP = {}, HOLBP = {}, NEWCATP = {}, CATNEWLOOK = null, CATNEWBD = null;   // pending: looks, backdrops, priorities, defaults, holiday backdrops
   function renderCats() {
     var box = $('#catsBox'); box.innerHTML = '<p class="muted">Loading…</p>';
     LOOKS = null; renderLookData().then(function (r) {
@@ -361,7 +361,9 @@
       var bsrc = function (n) { var b = bds.filter(function (x) { return x.name === n; })[0]; return b ? bdSrc(b) : ''; };
       var opts = '<option value="">No look</option><option value="curls">curls</option>' + list.map(function (l) { return '<option value="' + esc(l.name) + '">' + esc(l.name + (l.about ? ' · ' + l.about : '')) + '</option>'; }).join('');
       var src = function (n) { var l = list.filter(function (x) { return x.name === n; })[0]; return n === 'curls' ? '/assets/narrator/head-base.webp' : l ? '/assets/narrator/looks/' + esc(l.file) + (l.v ? '?r=' + esc(l.v) : '') : ''; };
-      var pending = Object.keys(CATP).length + Object.keys(CATBP).length + Object.keys(CATRP).length + Object.keys(DEFP).length + Object.keys(HOLBP).length + Object.keys(NEWCATP).length;
+      var cnar = J.categoryNarrators || {}, nv = function (c) { return c in CATNP ? CATNP[c] : (cnar[c] || ''); };
+      var NOPTS = '<option value="">The default</option><option value="glazyarray">GlazyArray</option><option value="alta">A.L.T.A.</option>';
+      var pending = Object.keys(CATNP).length + Object.keys(CATP).length + Object.keys(CATBP).length + Object.keys(CATRP).length + Object.keys(DEFP).length + Object.keys(HOLBP).length + Object.keys(NEWCATP).length;
       box.innerHTML = '<h2>Categories</h2><p class="muted">Every category the Notes use: their kind (Ride, Hike, Mini-Cast) and their own tags. Give one a look and a backdrop and GlazyArray wears them on every Note in it. What she wears is decided in this order: a holiday on its dates (on every Note, unless the Note ignores holidays), the Note\'s own, its categories (the one ticked on the Note, then the highest priority here, then the one changed last), then the defaults ticked below.</p>' +
         '<ul class="catl">' + names.map(function (c) {
           var v = c in CATP ? CATP[c] : (cats[c] || ''), im = v && src(v);
@@ -369,8 +371,11 @@
           return '<li><span class="catn"><b>' + esc(catName(c)) + '</b><small>' + count[c] + ' Note' + (count[c] === 1 ? '' : 's') + '</small></span>' +
             '<span class="catc"><small>Her look</small><span>' + (im ? '<img alt="" src="' + im + '">' : '<i class="noimg"></i>') + '<select data-cat="' + esc(c) + '">' + opts + '</select></span></span>' +
             '<span class="catc"><small>Backdrop</small><span>' + (bim ? '<img class="bd" alt="" src="' + bim + '">' : '<i class="noimg bd"></i>') + '<select data-catbd="' + esc(c) + '">' + bdopts + '</select></span></span>' +
+            '<span class="catc"><small>Narrator</small><span><select data-catnar="' + esc(c) + '">' + NOPTS + '</select></span></span>' +
             '<span class="catc catr"><small>Priority</small><input type="number" min="0" max="9" step="1" data-catr="' + esc(c) + '" value="' + rk(c) + '" title="0 to 9: when a Note\'s categories disagree, the higher wins"></span></li>';
         }).join('') + '</ul>' +
+        '<div class="row"><label class="f catnd"><span>Who narrates when nothing else says</span><select id="defNar"><option value="">GlazyArray</option><option value="alta">A.L.T.A.</option></select></label>' +
+          '<span class="muted">A Note can choose its own narrator in its Episode script panel; otherwise its categories\' narrator tells it (the highest priority wins), else this one.</span></div>' +
         '<div class="row"><input id="newCat" placeholder="A new category, e.g. Night ride" maxlength="40"><button type="button" id="newCatAdd">Add the category</button><span class="muted">Then give it a look, a backdrop and a priority above, save, and add it to Notes in their style panel.</span></div>' +
         '<div class="row"><button type="button" class="primary" id="catSave"' + (pending ? '' : ' disabled') + '>Save the categories' + (pending ? ' (' + pending + ')' : '') + '</button><span class="muted">Live in about a minute.</span></div>' +
         '<h3>Holidays</h3><p class="muted">On its dates a holiday dresses every Note, except the ones that ignore holidays. Give one a backdrop and that shows too.</p><ul class="catl">' + hols.map(function (h) {
@@ -394,6 +399,12 @@
         field('Image prompt', '<textarea id="nbPrompt" rows="5" readonly></textarea>') + '<div class="row"><button type="button" id="nbCopy">Copy the image prompt</button></div>' + bdTpl() +
         '<label class="drop ga-drop" id="nbDrop"><input type="file" id="nbFile" accept="image/png,image/jpeg,image/webp" hidden><b>Bring the render here</b> <span class="muted">or drop it here</span></label><div id="nbOut"></div>' +
         '<div class="row"><button type="button" class="primary" id="nbAdd" disabled>Add the backdrop</button></div>';
+      $$('.catl select[data-catnar]', box).forEach(function (sel) {
+        var c = sel.getAttribute('data-catnar'); sel.value = nv(c);
+        sel.onchange = function () { if (sel.value === (cnar[c] || '')) delete CATNP[c]; else CATNP[c] = sel.value; renderCats(); };
+      });
+      var dn = $('#defNar'); dn.value = df('narrator') === 'alta' ? 'alta' : '';
+      dn.onchange = function () { if (dn.value === (defs.narrator || '')) delete DEFP.narrator; else DEFP.narrator = dn.value; renderCats(); };
       $$('.catl select[data-catbd]', box).forEach(function (sel) {
         var c = sel.getAttribute('data-catbd'); sel.value = c in CATBP ? CATBP[c] : (bcats[c] || '');
         sel.onchange = function () { if (sel.value === (bcats[c] || '')) delete CATBP[c]; else CATBP[c] = sel.value; renderCats(); };
@@ -427,8 +438,8 @@
       $('#catSave').onclick = function () {
         var b = this; b.disabled = true; b.textContent = 'Saving…';
         var ne = function (o) { return Object.keys(o).length ? o : null; };
-        api('looks', { categoryLooks: ne(CATP), categoryBackdrops: ne(CATBP), categoryRank: ne(CATRP), defaults: ne(DEFP), holidayBackdrops: ne(HOLBP), categoryNames: ne(NEWCATP) })
-          .then(function () { CATP = {}; CATBP = {}; CATRP = {}; DEFP = {}; HOLBP = {}; NEWCATP = {}; LOOKS = null; toast('Saved. The site updates in about a minute.'); renderCats(); })
+        api('looks', { categoryNarrators: ne(CATNP), categoryLooks: ne(CATP), categoryBackdrops: ne(CATBP), categoryRank: ne(CATRP), defaults: ne(DEFP), holidayBackdrops: ne(HOLBP), categoryNames: ne(NEWCATP) })
+          .then(function () { CATNP = {}; CATP = {}; CATBP = {}; CATRP = {}; DEFP = {}; HOLBP = {}; NEWCATP = {}; LOOKS = null; toast('Saved. The site updates in about a minute.'); renderCats(); })
           .catch(function (err) { toast(err.message, true); b.disabled = false; b.textContent = 'Save the categories'; });
       };
       // Add a backdrop
@@ -793,7 +804,9 @@
         '<div id="questions"></div></div>') +
       fold('post', 'Post', E.post.title || '', !isLive, field('Card summary', '<textarea id="summary" rows="2">' + esc(E.summary) + '</textarea>') +
         field('Title', '<input id="postTitle" value="' + esc(E.post.title) + '">') + field('Text', '<textarea id="postBody" rows="14">' + esc(E.post.body) + '</textarea>', 'First person. A blank line between paragraphs. End with "What I learned: …" when there is something real.')) +
-      fold('episode', 'Episode script', E.episode.title || '', !isLive, field('Title', '<input id="epTitle" value="' + esc(E.episode.title) + '">') + field('Script', '<textarea id="epScript" rows="16">' + esc(E.episode.script) + '</textarea>', '<span id="epCount"></span>')) +
+      fold('episode', 'Episode script', E.episode.title || '', !isLive, field('Title', '<input id="epTitle" value="' + esc(E.episode.title) + '">') +
+        field('Narrator', '<select id="epNarrator"><option value="">From its categories</option><option value="glazyarray"' + (E.episode.narrator === 'glazyarray' ? ' selected' : '') + '>GlazyArray</option>' +
+          '<option value="alta"' + (E.episode.narrator === 'alta' ? ' selected' : '') + '>A.L.T.A.</option></select>', '<span id="epWho"></span>') + field('Script', '<textarea id="epScript" rows="16">' + esc(E.episode.script) + '</textarea>', '<span id="epCount"></span>')) +
       fold('look', 'GlazyArray\'s style', [E.narratorLook ? E.narratorLook.look : '', E.narratorBackdrop ? E.narratorBackdrop.backdrop : ''].filter(Boolean).join(' · ') || 'from her categories or the holiday', false,
         '<div id="styleBox"></div><details class="ga-own" id="gaOwn"' + (gaOwnOpen() ? ' open' : '') + '><summary>Or give this Note its own cap or backdrop</summary>' +
         '<h3 class="ga-h">Her cap</h3><div id="lookBox"></div><h3 class="ga-h">The backdrop</h3><div id="bdBox"></div></details>') +
@@ -836,9 +849,17 @@
     renderLook(); renderBd();
     $('#save').onclick = save;
     $('#publish').onclick = publish;
+    // who tells it: its own choice, else its categories' (the site's one rule), shown under the picker; her voice prompt follows
+    var who = function () {
+      return renderLookData().then(function (r) { var p = window.GAResolve && GAResolve.pick(r[3], { narrator: E.episode.narrator, cats: noteCats() }); return p ? p.narrator : { name: E.episode.narrator || 'glazyarray', why: '' }; });
+    };
+    var whoNow = NARNOW = E.episode.narrator || 'glazyarray';
+    var showWho = function () { who().then(function (n) { whoNow = NARNOW = n.name; var w = $('#epWho'); if (w) w.textContent = (n.name === 'alta' ? 'A.L.T.A.' : 'GlazyArray') + ' tells it' + (n.why ? ' (' + n.why + ')' : '') + '. The audio prompt is in their voice.'; }); };
+    $('#epNarrator').onchange = function () { collect(); markDirty(); showWho(); };
+    showWho();
     $('#copyPrompt').onclick = function () {
-      collect();
-      var p = ((E.episode.narrator && CFG.audioPrompts && CFG.audioPrompts[E.episode.narrator]) || CFG.audioPrompt || '').replace('{{title}}', E.episode.title || E.title).replace('{{script}}', E.episode.script);
+      collect();   // copied at once (Safari only lets a click write to the clipboard), in the voice worked out above
+      var p = ((CFG.audioPrompts && CFG.audioPrompts[whoNow]) || CFG.audioPrompt || '').replace('{{title}}', E.episode.title || E.title).replace('{{script}}', E.episode.script);
       navigator.clipboard.writeText(p).then(function () { toast('Audio prompt copied.'); });
     };
   }
@@ -1005,7 +1026,7 @@
   }
   // what she wears on this Note, by the site's one rule (/assets/narrator/resolve.js): a holiday on its dates unless the
   // Note ignores holidays, the Note's own, its categories (the ticked one, then priority, then the latest changed), the default
-  var LOOKJ = null;
+  var LOOKJ = null, NARNOW = 'glazyarray';   // who tells the open Note, as the site decides it (render's showWho)
   function gaPick(J) {
     if (!window.GAResolve || !E) return null;
     var L = E.narratorLook, B = E.narratorBackdrop;
@@ -1193,6 +1214,7 @@
     E.consent = $('#consent').value.trim(); E.fieldNotes = $('#fieldNotes').value; E.summary = $('#summary').value.trim();
     E.post.title = $('#postTitle').value.trim(); E.post.body = $('#postBody').value.trim();
     E.episode.title = $('#epTitle').value.trim(); E.episode.script = $('#epScript').value.trim();
+    var nv = $('#epNarrator') ? $('#epNarrator').value : ''; if (nv) E.episode.narrator = nv; else delete E.episode.narrator;
     if (!E.id) E.date = $('#date').value;
     $$('.ph').forEach(function (d) {
       var p = E.photos[+d.getAttribute('data-i')]; if (!p) return;
@@ -2765,6 +2787,7 @@
       var facts = { title: E.title, date: E.date, kind: E.kind, place: E.place, whoAppears: E.consent, notes: E.fieldNotes, figures: figures(),
         photos: E.photos.filter(function (p) { return p.use !== 'skip'; }).map(function (p) { return { file: photoName(p), takenAt: p.takenAt || null, video: !!p.video, caption: p.caption || '' }; }),
         currentDraft: (E.post.body || E.episode.script) ? { summary: E.summary, post: E.post, episode: { title: E.episode.title, script: E.episode.script } } : null,
+        narrator: NARNOW === 'alta' ? 'A.L.T.A.' : 'GlazyArray',   // who tells the episode (its own choice or its categories'): the script is in their voice
         narratorLook: E.narratorLook ? E.narratorLook.look : null, narratorBackdrop: E.narratorBackdrop ? E.narratorBackdrop.backdrop : null,   // her look already chosen: Claude keeps it (fit existing) unless asked
         instruction: opts.instruction || $('#instr').value.trim() };
       return api('draft', { facts: facts, thumbs: thumbs });

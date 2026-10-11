@@ -15,9 +15,12 @@ copy alike; never shortened to "Glazy" and never split. She's the brass robot in
 is for the glaze of her glowing glass tubes, glossy patina and glassy blue eyes, and the array of looks she swaps
 at a click. Every recording opens with the tag line "Narrated by GlazyArray."
 
-The one exception (Christian, Oct 11, 2026): A.L.T.A., the Ancient Lake Tahoe Automaton, tells her own Note in the
-first person, from her tank (js/alta.js; her voice is show.json audioPrompts.alta). She opens with her own hello, not
-GlazyArray's tag line. Every other Note is GlazyArray's.
+Who narrates (Christian, Oct 11, 2026): GlazyArray, unless a Note or its category chooses A.L.T.A., the Ancient Lake
+Tahoe Automaton (the Studio: a Note's Episode script panel, or the Categories tab; assets/narrator/resolve.js decides,
+like her looks). The entry says which ("narrator"). A.L.T.A. tells her own Note in the first person, from her tank
+(js/alta.js; her voice is show.json audioPrompts.alta), opening with her own hello. On any other Note she narrates, she
+tells Christian's story the way GlazyArray would, in the third person and in this guide's tone, in her own voice: warm,
+calm, a lake guardian who notices the water; it opens with "Narrated by A.L.T.A." instead of GlazyArray's tag line.
 
 Tone (Christian, Oct 6, 2026): a warm woman narrator who is Christian's biggest fan and his publicist,
 telling it the way a grown-up looks back on a good season. Think of a nostalgic coming-of-age voice-over:

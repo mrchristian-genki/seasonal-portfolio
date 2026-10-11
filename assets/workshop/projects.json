@@ -121,6 +121,20 @@
   },
   "narrator": "alta",
   "episodeTitle": "A.L.T.A., in her own words",
+  "cues": [
+   {
+    "at": 143.5,
+    "eyes": "amber"
+   },
+   {
+    "at": 147.0,
+    "eyes": "cyan"
+   },
+   {
+    "at": 152.0,
+    "eyes": ""
+   }
+  ],
   "palette": [
    "#329ab4",
    "#5b7ad2"

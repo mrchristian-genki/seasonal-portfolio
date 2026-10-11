@@ -10,8 +10,12 @@
      4. The site's default, ticked in the Studio's Categories tab like a Note's poster (looks.json "defaults": a
         look and a backdrop). With no default look ticked, the holiday coming up next (or her curls).
 
+   Who narrates a Note (Christian, Oct 11, 2026) follows the same order without holidays: the Note's own choice
+   (episode.narrator), its categories (looks.json "categoryNarrators"), the site default ("defaults.narrator"), else
+   GlazyArray. NARRATORS are the ones with a player: GlazyArray (js/narrator.js) and A.L.T.A. (js/alta.js).
+
    So there is never nothing unless there is nothing at all. pick() also says where each came from, for the Studio.
-   note = { look, backdrop, cats: [...], prefer, ignoreHolidays }; date = a Date (today by default). */
+   note = { look, backdrop, narrator, cats: [...], prefer, ignoreHolidays }; date = a Date (today by default). */
 (function (root) {
   'use strict';
   function mmdd(d) { return ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); }
@@ -53,8 +57,15 @@
       if (cb) bd = { name: cb.v, from: 'category', cat: cb.c, why: 'from ' + cb.c + (rank[cb.c] ? ' (priority ' + rank[cb.c] + ')' : '') };
       else if (dflt && bds[dflt]) bd = { name: dflt, from: 'default', why: 'the site default' };
     }
-    return { look: look, backdrop: bd, holiday: on ? on.name : null };
+    // who narrates it
+    var nar, nc = byCats(J.categoryNarrators || {}, NARRATORS), dn = J.defaults && J.defaults.narrator;
+    if (note.narrator && NARRATORS[note.narrator]) nar = { name: note.narrator, from: 'note', why: 'this Note\'s own' };
+    else if (nc) nar = { name: nc.v, from: 'category', cat: nc.c, why: 'from ' + nc.c + (rank[nc.c] ? ' (priority ' + rank[nc.c] + ')' : '') };
+    else if (dn && NARRATORS[dn]) nar = { name: dn, from: 'default', why: 'the site default' };
+    else nar = { name: 'glazyarray', from: 'default', why: 'GlazyArray, the show\'s narrator' };
+    return { look: look, backdrop: bd, narrator: nar, holiday: on ? on.name : null };
   }
-  var api = { pick: pick, mmdd: mmdd };
+  var NARRATORS = { glazyarray: 'GlazyArray', alta: 'A.L.T.A.' };
+  var api = { pick: pick, mmdd: mmdd, NARRATORS: NARRATORS };
   if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.GAResolve = api;
 })(this);
