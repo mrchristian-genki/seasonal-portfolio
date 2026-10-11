@@ -480,6 +480,37 @@ From Round 2, `gest-wave`, `gest-beckon`, `gest-tap` and `gest-celebrate` suit w
 make it again. Claude erases her video head, checks every frame against the box, trims each to fade from and back to
 her rest pose, and adds it to her list.
 
+## Round 8: scenes behind her tank (Oct 11)
+
+Like GlazyArray's backdrops, a Note (or a whole category) can set A.L.T.A.'s tank somewhere new: the hall behind the
+glass becomes the scene. Everything above the copper ledge is the scene; everything below it stays her tank, and she
+stays in front (her still, her gestures and her dives are cut out of the hall frame by frame: `rest-cut.webp`,
+`palms-cut.mp4`, `dive-cut.mp4`, `rise-cut.mp4`).
+
+**Size:** 1376 x 768 (16:9), the same frame as her tank. **Only the top 38% shows** (the green band in
+`assets/alta/kit/tank-backdrop-guide.jpg`, down to the red line); the rest is hidden behind the ledge and the water.
+So whatever matters sits in the top third of the picture.
+
+**The prompt** (fill in the place):
+
+> A softly blurred photograph of [THE PLACE], seen from about table height, as if from behind a large aquarium
+> standing in the room. Wide 16:9. The camera looks straight ahead, level. The far wall, the horizon or the treeline
+> sits about a third of the way down the frame, and everything that matters is in the top third; the lower part is
+> plain floor or ground. Shallow depth of field: the whole scene gently out of focus, like the background of a
+> portrait, with soft, natural light. No people, no animals, no text, signs, logos or brands. Colours that sit well
+> beside a teal-green tank and weathered copper.
+
+Places that fit her: a sandy Lake Tahoe beach at dusk, a pool deck (her water-safety lessons), a classroom, a library,
+a pine forest, a boathouse, a bike shop, a trailhead.
+
+**Check:** lay the render under the guide: the band shows the part you want, and nothing sharp or busy sits right
+behind where her head is (the middle of the band).
+
+**Send back** each scene with a one-word name (`lakeshore`, `pool-deck`). Claude adds it to her scenes (looks.json
+`tankBackdrops`, the file in `assets/alta/backdrops/`); then the Studio picks it: a Note's Episode script panel
+("Behind her tank", once A.L.T.A. tells it), or the Categories tab ("Her tank", and a default). Without one, she keeps
+the hall.
+
 ## Quick fixes
 
 - **Her face shifts between head parts:** say "same image, exactly as it is" again, and edit the template, never a

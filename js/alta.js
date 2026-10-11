@@ -13,7 +13,7 @@
    her Workshop window). GlazyArray's player (js/narrator.js) leaves these bars to her. */
 (function () {
   'use strict';
-  var P = '/assets/alta/parts/', V = '?v=10';
+  var P = '/assets/alta/parts/', V = '?v=11';
   var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var GESTURES = ['palms'];   // her gesture clips in parts/ (KIT.md Round 2 adds more)
   var SHAPES = ['smile', 'neutral', 'ah', 'oh', 'oo', 'ee', 'laugh'];
@@ -22,6 +22,34 @@
     back: '<svg viewBox="0 0 24 24"><path d="M12 5V2L7 6l5 4V7a6 6 0 1 1-6 6H4a8 8 0 1 0 8-8z"/></svg>', fwd: '<svg viewBox="0 0 24 24"><path d="M12 5V2l5 4-5 4V7a6 6 0 1 0 6 6h2a8 8 0 1 1-8-8z"/></svg>' };
   var ctx = null;
   function clock(s) { s = Math.max(0, Math.round(s || 0)); return Math.floor(s / 60) + ':' + ('0' + s % 60).slice(-2); }
+
+  // A video whose bottom half is its own mask (white is her, black is the hall behind her), drawn into a canvas with
+  // that mask as its alpha, so a backdrop shows through where the hall was. The video plays, hidden; the canvas sits
+  // right after it and shows each frame. Null where WebGL isn't available (then she keeps the hall).
+  function alphaCanvas(v) {
+    var c = document.createElement('canvas'), gl = c.getContext('webgl', { premultipliedAlpha: false, alpha: true });
+    if (!gl) return null;
+    var sh = function (t, src) { var o = gl.createShader(t); gl.shaderSource(o, src); gl.compileShader(o); return o; }, pr = gl.createProgram();
+    gl.attachShader(pr, sh(gl.VERTEX_SHADER, 'attribute vec2 p;varying vec2 u;void main(){u=vec2(p.x*.5+.5,.5-p.y*.5);gl_Position=vec4(p,0.,1.);}'));
+    gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, 'precision mediump float;varying vec2 u;uniform sampler2D t;void main(){vec3 c=texture2D(t,vec2(u.x,u.y*.5)).rgb;float a=texture2D(t,vec2(u.x,.5+u.y*.5)).r;gl_FragColor=vec4(c,a);}'));
+    gl.linkProgram(pr); gl.useProgram(pr);
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer()); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+    var loc = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    gl.bindTexture(gl.TEXTURE_2D, gl.createTexture());
+    [gl.TEXTURE_WRAP_S, gl.TEXTURE_WRAP_T].forEach(function (k) { gl.texParameteri(gl.TEXTURE_2D, k, gl.CLAMP_TO_EDGE); });
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    function draw() {
+      if (v.readyState < 2 || !v.videoWidth) return;
+      if (c.width !== v.videoWidth || c.height !== v.videoHeight / 2) { c.width = v.videoWidth; c.height = v.videoHeight / 2; gl.viewport(0, 0, c.width, c.height); }
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, v); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    }
+    var rvfc = 'requestVideoFrameCallback' in v;
+    function loop() { draw(); if (!v.paused && !v.ended) { if (rvfc) v.requestVideoFrameCallback(loop); else requestAnimationFrame(loop); } }
+    ['play', 'seeked', 'loadeddata'].forEach(function (e) { v.addEventListener(e, loop); });
+    c.className = v.className.split(' ')[0] + '-c'; c.setAttribute('aria-hidden', 'true');
+    v.classList.add('al-src'); v.parentNode.insertBefore(c, v.nextSibling);
+    return c;
+  }
 
   function build(bar) {
     if (bar.querySelector('.al-stage')) return;
@@ -36,11 +64,20 @@
       SHAPES.map(function (k) { return '<img data-m="' + k + '" src="' + P + 'mouth-' + k + '.webp' + V + '" alt=""' + (k === 'smile' ? ' class="on"' : '') + '>'; }).join('') + '</div>' +
       '<img class="al-rest" src="' + P + 'head-rest.webp' + V + '" alt=""></div>';   // her resting face: smiling eyes and a warm smile
     bar.insertBefore(st, bar.children[1] || null);
+    // a backdrop behind her tank (data-bd: the scene for this Note, as the site picks it; assets/alta/KIT.md Round 8):
+    // her still without the hall (rest-cut), and her gesture, dive and rise with their masks (*-cut.mp4), over the scene
+    var bd = bar.getAttribute('data-bd'), CUT = {};
+    if (bd && /^\/assets\/alta\/backdrops\/[\w.-]+\.(webp|jpg|png)(\?[\w.=-]*)?$/.test(bd) && !!document.createElement('canvas').getContext('webgl')) {
+      st.classList.add('al-has-bd'); st.style.setProperty('--al-bd', 'url(' + bd + ')');
+      var rc = document.createElement('img'); rc.className = 'al-restcut'; rc.alt = ''; rc.src = P + 'rest-cut.webp' + V; st.insertBefore(rc, st.firstChild);
+      CUT = { palms: 1, dive: 1, rise: 1 };
+    }
     // the Note's two colours (data-palette, from its hero): her crown's filigree takes the first, her hair's botanicals the second
     var pal = (bar.getAttribute('data-palette') || '').split(' ').filter(function (c) { return /^#[0-9a-f]{6}$/i.test(c); });
     if (pal.length) { bar.style.setProperty('--al1', pal[0]); bar.style.setProperty('--al2', pal[1] || pal[0]); bar.classList.add('has-pal'); }
     var lbl = bar.querySelector('.listen-label');
     if (lbl && !bar.querySelector('.al-by')) { var by = document.createElement('span'); by.className = 'al-by'; by.textContent = 'Narrated by A.L.T.A.'; lbl.parentNode.appendChild(by); }
+    var cutSrc = function (k) { return P + k + (CUT[k] || (CUT.palms && GESTURES.indexOf(k) >= 0) ? '-cut' : '') + '.mp4' + V; };
     var tail = st.querySelector('.al-tail'), palms = st.querySelector('.al-palms'), head = st.querySelector('.al-head'), glow = st.querySelector('.al-glow'), eyes = st.querySelector('.al-eyes');
     var M = {}; [].forEach.call(st.querySelectorAll('.al-mouth img'), function (i) { M[i.getAttribute('data-m')] = i; });
     var cur = 'smile';
@@ -73,11 +110,12 @@
     // her gestures, laid over her torso: one now and then while she talks, and now and then while she waits at the
     // ledge too. Each fades in, plays once and fades back to her rest pose. GESTURES are the clips in parts/.
     var gT = 0, gestKey = '';
+    if (CUT.palms) alphaCanvas(palms);
     if (!still) palms.addEventListener('timeupdate', function () { if (palms.duration && palms.currentTime > palms.duration - 0.6) palms.classList.remove('on'); });
     function gesture() {
       if (still || palms.classList.contains('on')) return;
       var k = GESTURES[Math.floor(Math.random() * GESTURES.length)];
-      if (k !== gestKey) { gestKey = k; palms.src = P + k + '.mp4' + V; }
+      if (k !== gestKey) { gestKey = k; palms.src = cutSrc(k); }
       palms.preload = 'auto'; palms.currentTime = 0;
       var p = palms.play();
       var on = function () { palms.classList.add('on'); };
@@ -101,10 +139,11 @@
     var dv = { state: 'up', t: 0, v: null }, ready = false, GLOW_IN = 10;
     var V3 = ['dive', 'hover', 'glide', 'glow', 'rise'].map(function (k) { var v = document.createElement('video'); v.className = 'al-dive'; v.muted = true; v.playsInline = true; v.preload = 'none'; v.setAttribute('playsinline', ''); if (k === 'hover') v.loop = true; v.dataset.k = k; st.appendChild(v); return v; });
     var vDive = V3[0], vHover = V3[1], vGlide = V3[2], vGlow = V3[3], vRise = V3[4];
-    function load() { if (ready) return; ready = true; V3.forEach(function (v) { v.src = P + v.dataset.k + '.mp4' + V; v.preload = 'auto'; }); }
-    function showV(v) { V3.forEach(function (x) { x.classList.toggle('on', x === v); }); }
+    function load() { if (ready) return; ready = true; V3.forEach(function (v) { v.src = cutSrc(v.dataset.k); v.preload = 'auto'; }); }
+    function showV(v) { V3.forEach(function (x) { x.classList.toggle('on', x === v); }); st.classList.toggle('al-under', !!v); }
+    if (CUT.dive) { alphaCanvas(vDive); alphaCanvas(vRise); }
     var onUp = null;   // Play pressed while she was under: the episode starts once she's back at the ledge
-    function surfaced() { dv.state = 'up'; head.classList.remove('gone'); if (onUp) { var f = onUp; onUp = null; f(); } setTimeout(function () { if (dv.state === 'up') V3.forEach(function (x) { x.classList.remove('on'); x.pause(); }); }, 300); plan(); }
+    function surfaced() { dv.state = 'up'; head.classList.remove('gone'); if (onUp) { var f = onUp; onUp = null; f(); } setTimeout(function () { if (dv.state === 'up') { V3.forEach(function (x) { x.classList.remove('on'); x.pause(); }); st.classList.remove('al-under'); } }, 300); plan(); }
     function play(v) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
     function rise(rate) {
       if (dv.state === 'rise' || dv.state === 'up' || dv.state === 'calm') return;

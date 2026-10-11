@@ -66,10 +66,16 @@ const lookAttr = (e) => {
 // Who narrates a Note (Christian, Oct 11, 2026): its own choice (episode.narrator), else its categories' (looks.json
 // "categoryNarrators"), else the site default, else GlazyArray: the same rule as her looks (assets/narrator/resolve.js)
 let RES = null;
-const narratorOf = (e) => {
+const pickFor = (e) => {
   RES = RES || { R: createRequire(import.meta.url)('../../assets/narrator/resolve.js'), J: readJSON(path.join(SITE, 'assets/narrator/looks.json')) };
   const cats = tagsOf(e).filter((t) => !/^\d{4}$/.test(t)), kind = cats.shift(); if (kind) cats.push(kind);
-  return RES.R.pick(RES.J, { narrator: e.episode && e.episode.narrator, cats, prefer: e.narratorLook && e.narratorLook.fit === 'category' && e.narratorLook.from }).narrator.name;
+  return RES.R.pick(RES.J, { narrator: e.episode && e.episode.narrator, tank: e.altaBackdrop, cats, prefer: e.narratorLook && e.narratorLook.fit === 'category' && e.narratorLook.from });
+};
+const narratorOf = (e) => pickFor(e).narrator.name;
+// the scene behind A.L.T.A.'s tank on this Note (KIT.md Round 8), when it has one and its file is there
+const bdAttr = (e) => {
+  const t = pickFor(e).tank;
+  return t && /^[\w.-]+\.(webp|jpg|png)$/.test(t.file || '') && fs.existsSync(path.join(SITE, 'assets/alta/backdrops', t.file)) ? ` data-bd="/assets/alta/backdrops/${t.file}${t.v ? '?v=' + t.v : ''}"` : '';
 };
 // moments in an episode her player acts on (js/alta.js): [{at: seconds, eyes: 'amber' | 'cyan' | ''}], from the Note
 const cueAttr = (e) => {
@@ -155,7 +161,7 @@ ${ICONS}
 <link rel="stylesheet" href="${rel}../css/logo.css?v=11">
 <link rel="stylesheet" href="${rel}../css/lake.css?v=2">
 <link rel="stylesheet" href="${rel}../css/narrator.css?v=33">
-<link rel="stylesheet" href="${rel}../css/alta.css?v=7">
+<link rel="stylesheet" href="${rel}../css/alta.css?v=8">
 <script>/* Logo season from the calendar, as on About. */document.documentElement.dataset.season=["winter","winter","spring","spring","spring","summer","summer","summer","fall","fall","fall","winter"][new Date().getMonth()];</script>
 <link rel="stylesheet" href="${rel}../css/route-dash.css?v=${V}">
 </head>
@@ -173,9 +179,9 @@ const foot = (rel) => `<footer class="foot"><p>${esc(show.narrationNote)}</p>
 <script src="${rel}../js/motion.js?v=1" defer></script>
 <script src="${rel}play.js?v=${V}" defer></script>
 <script src="${rel}../js/lake.js?v=4" defer></script>
-<script src="${rel}../assets/narrator/resolve.js?v=2" defer></script>
+<script src="${rel}../assets/narrator/resolve.js?v=3" defer></script>
 <script src="${rel}../js/narrator.js?v=43" defer></script>
-<script src="${rel}../js/alta.js?v=9" defer></script>
+<script src="${rel}../js/alta.js?v=10" defer></script>
 </body>
 </html>
 `;
@@ -308,7 +314,7 @@ ${e.summary ? `<p class="mag-deck">${esc(e.summary)}</p>` : ''}
 ` : ''}${F ? '' : '<p class="kicker">'}${F ? '' : `<span class="kind ${esc(e.kind)}">${KIND[e.kind] || esc(e.kind)}</span> · <time datetime="${esc(e.date)}">${day(e.date, true)}</time>${e.place ? ` · ${esc(e.place)}` : ''}</p>
 <h1>${esc(e.post && e.post.title || e.title)}</h1>
 ${e.summary ? `<p class="lede">${esc(e.summary)}</p>` : ''}`}
-${alta ? `<section class="listen alta" data-narrator="alta"${palAttr(e)}${cueAttr(e)} aria-label="${audio ? 'Listen to the episode' : 'A.L.T.A. in her tank'}"><div><span class="listen-label">${audio ? `Listen · ${mmss(audio.sec)}` : 'Coming soon'}</span><b>${esc(e.episode.title || e.title)}</b></div>
+${alta ? `<section class="listen alta" data-narrator="alta"${palAttr(e)}${cueAttr(e)}${bdAttr(e)} aria-label="${audio ? 'Listen to the episode' : 'A.L.T.A. in her tank'}"><div><span class="listen-label">${audio ? `Listen · ${mmss(audio.sec)}` : 'Coming soon'}</span><b>${esc(e.episode.title || e.title)}</b></div>
 ${audio ? `<audio controls preload="metadata" src="${esc(audio.src)}"></audio>` : ''}</section>` : audio ? `<section class="listen" aria-label="Listen to the episode"${lookAttr(e)}><div><span class="listen-label">Listen · ${mmss(audio.sec)}</span><b>${esc(e.episode.title || e.title)}</b></div>
 <audio controls preload="metadata" src="${esc(audio.src)}"></audio></section>` : ''}
 ${cover && !F ? fig(cover, 'cover') : ''}${coverStrip ? '\n' + fig(coverStrip, 'photo strip') : ''}

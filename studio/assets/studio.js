@@ -346,7 +346,7 @@
   // new ones as soon as a Note has them, and the look each one gives GlazyArray (looks.json "categories"). Most have
   // none. A Note's own look beats its category's, which beats the holiday look. Her looks are here too, with a way to
   // add one from a render. ----------
-  var CATP = {}, CATBP = {}, CATRP = {}, CATNP = {}, DEFP = {}, HOLBP = {}, NEWCATP = {}, CATNEWLOOK = null, CATNEWBD = null;   // pending: looks, backdrops, priorities, defaults, holiday backdrops
+  var CATP = {}, CATBP = {}, CATRP = {}, CATNP = {}, CATTP = {}, DEFP = {}, HOLBP = {}, NEWCATP = {}, CATNEWLOOK = null, CATNEWBD = null;   // pending: looks, backdrops, priorities, defaults, holiday backdrops
   function renderCats() {
     var box = $('#catsBox'); box.innerHTML = '<p class="muted">Loading…</p>';
     LOOKS = null; renderLookData().then(function (r) {
@@ -363,7 +363,10 @@
       var src = function (n) { var l = list.filter(function (x) { return x.name === n; })[0]; return n === 'curls' ? '/assets/narrator/head-base.webp' : l ? '/assets/narrator/looks/' + esc(l.file) + (l.v ? '?r=' + esc(l.v) : '') : ''; };
       var cnar = J.categoryNarrators || {}, nv = function (c) { return c in CATNP ? CATNP[c] : (cnar[c] || ''); };
       var NOPTS = '<option value="">The default</option><option value="glazyarray">GlazyArray</option><option value="alta">A.L.T.A.</option>';
-      var pending = Object.keys(CATNP).length + Object.keys(CATP).length + Object.keys(CATBP).length + Object.keys(CATRP).length + Object.keys(DEFP).length + Object.keys(HOLBP).length + Object.keys(NEWCATP).length;
+      // A.L.T.A.'s tank backdrops (looks.json tankBackdrops, files in assets/alta/backdrops): a column once there are any
+      var tanks = J.tankBackdrops || [], ctank = J.categoryTanks || {}, tv = function (c) { return c in CATTP ? CATTP[c] : (ctank[c] || ''); };
+      var TOPTS = '<option value="">The default</option>' + tanks.map(function (b) { return '<option value="' + esc(b.name) + '">' + esc(b.name + (b.about ? ' · ' + b.about : '')) + '</option>'; }).join('');
+      var pending = Object.keys(CATTP).length + Object.keys(CATNP).length + Object.keys(CATP).length + Object.keys(CATBP).length + Object.keys(CATRP).length + Object.keys(DEFP).length + Object.keys(HOLBP).length + Object.keys(NEWCATP).length;
       box.innerHTML = '<h2>Categories</h2><p class="muted">Every category the Notes use: their kind (Ride, Hike, Mini-Cast) and their own tags. Give one a look and a backdrop and GlazyArray wears them on every Note in it. What she wears is decided in this order: a holiday on its dates (on every Note, unless the Note ignores holidays), the Note\'s own, its categories (the one ticked on the Note, then the highest priority here, then the one changed last), then the defaults ticked below.</p>' +
         '<ul class="catl">' + names.map(function (c) {
           var v = c in CATP ? CATP[c] : (cats[c] || ''), im = v && src(v);
@@ -372,9 +375,11 @@
             '<span class="catc"><small>Her look</small><span>' + (im ? '<img alt="" src="' + im + '">' : '<i class="noimg"></i>') + '<select data-cat="' + esc(c) + '">' + opts + '</select></span></span>' +
             '<span class="catc"><small>Backdrop</small><span>' + (bim ? '<img class="bd" alt="" src="' + bim + '">' : '<i class="noimg bd"></i>') + '<select data-catbd="' + esc(c) + '">' + bdopts + '</select></span></span>' +
             '<span class="catc"><small>Narrator</small><span><select data-catnar="' + esc(c) + '">' + NOPTS + '</select></span></span>' +
+            (tanks.length ? '<span class="catc"><small>Her tank</small><span><select data-cattank="' + esc(c) + '">' + TOPTS + '</select></span></span>' : '') +
             '<span class="catc catr"><small>Priority</small><input type="number" min="0" max="9" step="1" data-catr="' + esc(c) + '" value="' + rk(c) + '" title="0 to 9: when a Note\'s categories disagree, the higher wins"></span></li>';
         }).join('') + '</ul>' +
         '<div class="row"><label class="f catnd"><span>Who narrates when nothing else says</span><select id="defNar"><option value="">GlazyArray</option><option value="alta">A.L.T.A.</option></select></label>' +
+          (tanks.length ? '<label class="f catnd"><span>Behind her tank when nothing else says</span><select id="defTank"><option value="">The hall (her own)</option>' + TOPTS.replace('<option value="">The default</option>', '') + '</select></label>' : '') +
           '<span class="muted">A Note can choose its own narrator in its Episode script panel; otherwise its categories\' narrator tells it (the highest priority wins), else this one.</span></div>' +
         '<div class="row"><input id="newCat" placeholder="A new category, e.g. Night ride" maxlength="40"><button type="button" id="newCatAdd">Add the category</button><span class="muted">Then give it a look, a backdrop and a priority above, save, and add it to Notes in their style panel.</span></div>' +
         '<div class="row"><button type="button" class="primary" id="catSave"' + (pending ? '' : ' disabled') + '>Save the categories' + (pending ? ' (' + pending + ')' : '') + '</button><span class="muted">Live in about a minute.</span></div>' +
@@ -403,6 +408,11 @@
         var c = sel.getAttribute('data-catnar'); sel.value = nv(c);
         sel.onchange = function () { if (sel.value === (cnar[c] || '')) delete CATNP[c]; else CATNP[c] = sel.value; renderCats(); };
       });
+      $$('.catl select[data-cattank]', box).forEach(function (sel) {
+        var c = sel.getAttribute('data-cattank'); sel.value = tv(c);
+        sel.onchange = function () { if (sel.value === (ctank[c] || '')) delete CATTP[c]; else CATTP[c] = sel.value; renderCats(); };
+      });
+      var dtk = $('#defTank'); if (dtk) { dtk.value = df('tank') || ''; dtk.onchange = function () { if (dtk.value === (defs.tank || '')) delete DEFP.tank; else DEFP.tank = dtk.value; renderCats(); }; }
       var dn = $('#defNar'); dn.value = df('narrator') === 'alta' ? 'alta' : '';
       dn.onchange = function () { if (dn.value === (defs.narrator || '')) delete DEFP.narrator; else DEFP.narrator = dn.value; renderCats(); };
       $$('.catl select[data-catbd]', box).forEach(function (sel) {
@@ -438,8 +448,8 @@
       $('#catSave').onclick = function () {
         var b = this; b.disabled = true; b.textContent = 'Saving…';
         var ne = function (o) { return Object.keys(o).length ? o : null; };
-        api('looks', { categoryNarrators: ne(CATNP), categoryLooks: ne(CATP), categoryBackdrops: ne(CATBP), categoryRank: ne(CATRP), defaults: ne(DEFP), holidayBackdrops: ne(HOLBP), categoryNames: ne(NEWCATP) })
-          .then(function () { CATNP = {}; CATP = {}; CATBP = {}; CATRP = {}; DEFP = {}; HOLBP = {}; NEWCATP = {}; LOOKS = null; toast('Saved. The site updates in about a minute.'); renderCats(); })
+        api('looks', { categoryTanks: ne(CATTP), categoryNarrators: ne(CATNP), categoryLooks: ne(CATP), categoryBackdrops: ne(CATBP), categoryRank: ne(CATRP), defaults: ne(DEFP), holidayBackdrops: ne(HOLBP), categoryNames: ne(NEWCATP) })
+          .then(function () { CATTP = {}; CATNP = {}; CATP = {}; CATBP = {}; CATRP = {}; DEFP = {}; HOLBP = {}; NEWCATP = {}; LOOKS = null; toast('Saved. The site updates in about a minute.'); renderCats(); })
           .catch(function (err) { toast(err.message, true); b.disabled = false; b.textContent = 'Save the categories'; });
       };
       // Add a backdrop
@@ -806,7 +816,8 @@
         field('Title', '<input id="postTitle" value="' + esc(E.post.title) + '">') + field('Text', '<textarea id="postBody" rows="14">' + esc(E.post.body) + '</textarea>', 'First person. A blank line between paragraphs. End with "What I learned: …" when there is something real.')) +
       fold('episode', 'Episode script', E.episode.title || '', !isLive, field('Title', '<input id="epTitle" value="' + esc(E.episode.title) + '">') +
         field('Narrator', '<select id="epNarrator"><option value="">From its categories</option><option value="glazyarray"' + (E.episode.narrator === 'glazyarray' ? ' selected' : '') + '>GlazyArray</option>' +
-          '<option value="alta"' + (E.episode.narrator === 'alta' ? ' selected' : '') + '>A.L.T.A.</option></select>', '<span id="epWho"></span>') + field('Script', '<textarea id="epScript" rows="16">' + esc(E.episode.script) + '</textarea>', '<span id="epCount"></span>')) +
+          '<option value="alta"' + (E.episode.narrator === 'alta' ? ' selected' : '') + '>A.L.T.A.</option></select>', '<span id="epWho"></span>') +
+        '<div id="epTankBox"></div>' + field('Script', '<textarea id="epScript" rows="16">' + esc(E.episode.script) + '</textarea>', '<span id="epCount"></span>')) +
       fold('look', 'GlazyArray\'s style', [E.narratorLook ? E.narratorLook.look : '', E.narratorBackdrop ? E.narratorBackdrop.backdrop : ''].filter(Boolean).join(' · ') || 'from her categories or the holiday', false,
         '<div id="styleBox"></div><details class="ga-own" id="gaOwn"' + (gaOwnOpen() ? ' open' : '') + '><summary>Or give this Note its own cap or backdrop</summary>' +
         '<h3 class="ga-h">Her cap</h3><div id="lookBox"></div><h3 class="ga-h">The backdrop</h3><div id="bdBox"></div></details>') +
@@ -856,6 +867,19 @@
     var whoNow = NARNOW = E.episode.narrator || 'glazyarray';
     var showWho = function () { who().then(function (n) { whoNow = NARNOW = n.name; var w = $('#epWho'); if (w) w.textContent = (n.name === 'alta' ? 'A.L.T.A.' : 'GlazyArray') + ' tells it' + (n.why ? ' (' + n.why + ')' : '') + '. The audio prompt is in their voice.'; }); };
     $('#epNarrator').onchange = function () { collect(); markDirty(); showWho(); };
+    // the scene behind A.L.T.A.'s tank, when she tells it and there are scenes to pick from (looks.json tankBackdrops)
+    var showTank = function () {
+      Promise.all([renderLookData(), who()]).then(function (rr) {
+        var r = rr[0];
+        var J = r[3] || {}, tanks = J.tankBackdrops || [], b = $('#epTankBox'); if (!b) return;
+        if (!tanks.length || rr[1].name !== 'alta') { b.innerHTML = ''; return; }
+        var p = window.GAResolve && GAResolve.pick(J, { tank: E.altaBackdrop, cats: noteCats() }), t = p && p.tank;
+        b.innerHTML = field('Behind her tank', '<select id="epTank"><option value="">From its categories</option>' + tanks.map(function (x) { return '<option value="' + esc(x.name) + '"' + (E.altaBackdrop === x.name ? ' selected' : '') + '>' + esc(x.name + (x.about ? ' · ' + x.about : '')) + '</option>'; }).join('') + '</select>',
+          t ? esc(t.name) + ' (' + esc(t.why) + ')' : 'The hall, her own');
+        $('#epTank').onchange = function () { if (this.value) E.altaBackdrop = this.value; else delete E.altaBackdrop; markDirty(); showTank(); };
+      }).catch(function (e) { console.error('tank', e); });
+    };
+    var showWho0 = showWho; showWho = function () { showWho0(); showTank(); };
     showWho();
     $('#copyPrompt').onclick = function () {
       collect();   // copied at once (Safari only lets a click write to the clipboard), in the voice worked out above
