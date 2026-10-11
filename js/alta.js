@@ -5,12 +5,14 @@
    - She blinks every few seconds, her irises glance, her tail sculls under the ledge, and while she talks she opens
      her palms now and then. Her eyes bloom cyan-green as she starts, and settle back when she stops.
    - Without an episode yet she still waits in her tank, and says her introduction is on its way.
+   - On a Note with a palette, her crown's filigree and the botanicals in her hair wear its two colours (no hats: her
+     masks are head-flair-a/b, pearl versions of those parts, dyed with multiply).
    - With reduced motion she holds still: no tail, glances, blinks or gestures; only her mouth moves.
    Built for each such bar on the page, and for any that arrive later (a Note opened in the homepage's story window,
    her Workshop window). GlazyArray's player (js/narrator.js) leaves these bars to her. */
 (function () {
   'use strict';
-  var P = '/assets/alta/parts/', V = '?v=2';
+  var P = '/assets/alta/parts/', V = '?v=3';
   var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var SHAPES = ['smile', 'neutral', 'ah', 'oh', 'oo', 'ee', 'laugh'];
   var IC = {
@@ -26,10 +28,14 @@
     st.innerHTML = '<video class="al-tail" muted loop playsinline preload="none"></video>' +
       '<video class="al-palms" muted playsinline preload="none"></video>' +
       '<div class="al-head"><img class="al-base" src="' + P + 'head-base.webp' + V + '" alt="">' +
+      ['a', 'b'].map(function (k) { return '<img class="al-pearl" src="' + P + 'head-flair-' + k + '.webp' + V + '" alt=""><i class="al-tint al-tint-' + k + '"></i>'; }).join('') +
       '<div class="al-eyes" style="position:absolute"><img src="' + P + 'head-iris.webp' + V + '" alt=""><i class="al-glow"></i></div>' +
       '<img class="al-lids" src="' + P + 'head-lids.webp' + V + '" alt=""><div class="al-mouth" style="position:absolute">' +
       SHAPES.map(function (k) { return '<img data-m="' + k + '" src="' + P + 'mouth-' + k + '.webp' + V + '" alt=""' + (k === 'smile' ? ' class="on"' : '') + '>'; }).join('') + '</div></div>';
     bar.insertBefore(st, bar.children[1] || null);
+    // the Note's two colours (data-palette, from its hero): her crown's filigree takes the first, her hair's botanicals the second
+    var pal = (bar.getAttribute('data-palette') || '').split(' ').filter(function (c) { return /^#[0-9a-f]{6}$/i.test(c); });
+    if (pal.length) { bar.style.setProperty('--al1', pal[0]); bar.style.setProperty('--al2', pal[1] || pal[0]); bar.classList.add('has-pal'); }
     var lbl = bar.querySelector('.listen-label');
     if (lbl && !bar.querySelector('.al-by')) { var by = document.createElement('span'); by.className = 'al-by'; by.textContent = 'Narrated by A.L.T.A.'; lbl.parentNode.appendChild(by); }
     var tail = st.querySelector('.al-tail'), palms = st.querySelector('.al-palms'), head = st.querySelector('.al-head'), glow = st.querySelector('.al-glow'), eyes = st.querySelector('.al-eyes');

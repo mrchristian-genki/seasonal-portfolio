@@ -63,6 +63,8 @@ const lookAttr = (e) => {
   const pa = pal.length ? ` data-palette="${pal.join(' ')}"` : '';
   return own + bd + prefer + noh + pa + ` data-cats="${esc(cats.concat(kind ? [kind] : []).join(' '))}"`;
 };
+// a Note's palette alone, for A.L.T.A.'s bar: her crown's filigree and the botanicals in her hair take its two colours
+const palAttr = (e) => { const pal = (Array.isArray(e.palette) ? e.palette : []).filter((c) => /^#[0-9a-f]{6}$/i.test(c)).slice(0, 2); return pal.length ? ` data-palette="${pal.join(' ')}"` : ''; };
 const paras = (t) => String(t || '').split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
 
 // MP3 length from its frames (CBR): bytes after any ID3 tag × 8 / bitrate.
@@ -140,7 +142,7 @@ ${ICONS}
 <link rel="stylesheet" href="${rel}../css/logo.css?v=11">
 <link rel="stylesheet" href="${rel}../css/lake.css?v=2">
 <link rel="stylesheet" href="${rel}../css/narrator.css?v=33">
-<link rel="stylesheet" href="${rel}../css/alta.css?v=1">
+<link rel="stylesheet" href="${rel}../css/alta.css?v=2">
 <script>/* Logo season from the calendar, as on About. */document.documentElement.dataset.season=["winter","winter","spring","spring","spring","summer","summer","summer","fall","fall","fall","winter"][new Date().getMonth()];</script>
 <link rel="stylesheet" href="${rel}../css/route-dash.css?v=${V}">
 </head>
@@ -160,7 +162,7 @@ const foot = (rel) => `<footer class="foot"><p>${esc(show.narrationNote)}</p>
 <script src="${rel}../js/lake.js?v=4" defer></script>
 <script src="${rel}../assets/narrator/resolve.js?v=1" defer></script>
 <script src="${rel}../js/narrator.js?v=43" defer></script>
-<script src="${rel}../js/alta.js?v=1" defer></script>
+<script src="${rel}../js/alta.js?v=2" defer></script>
 </body>
 </html>
 `;
@@ -293,7 +295,7 @@ ${e.summary ? `<p class="mag-deck">${esc(e.summary)}</p>` : ''}
 ` : ''}${F ? '' : '<p class="kicker">'}${F ? '' : `<span class="kind ${esc(e.kind)}">${KIND[e.kind] || esc(e.kind)}</span> · <time datetime="${esc(e.date)}">${day(e.date, true)}</time>${e.place ? ` · ${esc(e.place)}` : ''}</p>
 <h1>${esc(e.post && e.post.title || e.title)}</h1>
 ${e.summary ? `<p class="lede">${esc(e.summary)}</p>` : ''}`}
-${alta ? `<section class="listen alta" data-narrator="alta" aria-label="${audio ? 'Listen to the episode' : 'A.L.T.A. in her tank'}"><div><span class="listen-label">${audio ? `Listen · ${mmss(audio.sec)}` : 'Coming soon'}</span><b>${esc(e.episode.title || e.title)}</b></div>
+${alta ? `<section class="listen alta" data-narrator="alta"${palAttr(e)} aria-label="${audio ? 'Listen to the episode' : 'A.L.T.A. in her tank'}"><div><span class="listen-label">${audio ? `Listen · ${mmss(audio.sec)}` : 'Coming soon'}</span><b>${esc(e.episode.title || e.title)}</b></div>
 ${audio ? `<audio controls preload="metadata" src="${esc(audio.src)}"></audio>` : ''}</section>` : audio ? `<section class="listen" aria-label="Listen to the episode"${lookAttr(e)}><div><span class="listen-label">Listen · ${mmss(audio.sec)}</span><b>${esc(e.episode.title || e.title)}</b></div>
 <audio controls preload="metadata" src="${esc(audio.src)}"></audio></section>` : ''}
 ${cover && !F ? fig(cover, 'cover') : ''}${coverStrip ? '\n' + fig(coverStrip, 'photo strip') : ''}
