@@ -9,8 +9,8 @@
   "tool": null,
   "card": {
    "type": "video",
-   "src": "play/media/2026-10-06-the-whole-machine/01.mp4?v=irrk2dws",
-   "poster": "play/media/2026-10-06-the-whole-machine/01.jpg?v=irrk2dws",
+   "src": "play/media/2026-10-06-the-whole-machine/01.mp4?v=81bfb07d",
+   "poster": "play/media/2026-10-06-the-whole-machine/01.jpg?v=81bfb07d",
    "w": 1280,
    "h": 720,
    "caption": "The whole automaton on the bench: the heart lights, a pulse runs through the glass veins, the hands shape a bird out of light, and it flies into the lake."
@@ -18,55 +18,55 @@
   "media": [
    {
     "type": "video",
-    "src": "play/media/2026-10-06-the-whole-machine/01.mp4?v=irrk2dws",
-    "poster": "play/media/2026-10-06-the-whole-machine/01.jpg?v=irrk2dws",
+    "src": "play/media/2026-10-06-the-whole-machine/01.mp4?v=81bfb07d",
+    "poster": "play/media/2026-10-06-the-whole-machine/01.jpg?v=81bfb07d",
     "w": 1280,
     "h": 720,
     "caption": "The whole automaton on the bench: the heart lights, a pulse runs through the glass veins, the hands shape a bird out of light, and it flies into the lake."
    },
    {
     "type": "video",
-    "src": "play/media/2026-10-06-the-whole-machine/02.mp4?v=hd8l2p6o",
-    "poster": "play/media/2026-10-06-the-whole-machine/02.jpg?v=hd8l2p6o",
+    "src": "play/media/2026-10-06-the-whole-machine/02.mp4?v=e70b1973",
+    "poster": "play/media/2026-10-06-the-whole-machine/02.jpg?v=e70b1973",
     "w": 1280,
     "h": 720,
     "caption": "The eye: ProPre, where a beautiful picture is broken down into lines for someone to colour back in."
    },
    {
     "type": "video",
-    "src": "play/media/2026-10-06-the-whole-machine/03.mp4?v=jzjm2kv3",
-    "poster": "play/media/2026-10-06-the-whole-machine/03.jpg?v=jzjm2kv3",
+    "src": "play/media/2026-10-06-the-whole-machine/03.mp4?v=0c82b5c5",
+    "poster": "play/media/2026-10-06-the-whole-machine/03.jpg?v=0c82b5c5",
     "w": 1280,
     "h": 720,
     "caption": "The face: the lake on the front of the site, turning through the seasons."
    },
    {
     "type": "video",
-    "src": "play/media/2026-10-06-the-whole-machine/04.mp4?v=1aeed2x7g",
-    "poster": "play/media/2026-10-06-the-whole-machine/04.jpg?v=1aeed2x7g",
+    "src": "play/media/2026-10-06-the-whole-machine/04.mp4?v=c952a7fe",
+    "poster": "play/media/2026-10-06-the-whole-machine/04.jpg?v=c952a7fe",
     "w": 1280,
     "h": 720,
     "caption": "The memory: the Parts Catalog, a drawer for every piece the lake is built from."
    },
    {
     "type": "video",
-    "src": "play/media/2026-10-06-the-whole-machine/05.mp4?v=mm3d2ogr",
-    "poster": "play/media/2026-10-06-the-whole-machine/05.jpg?v=mm3d2ogr",
+    "src": "play/media/2026-10-06-the-whole-machine/05.mp4?v=d8c5dcc8",
+    "poster": "play/media/2026-10-06-the-whole-machine/05.jpg?v=d8c5dcc8",
     "w": 1280,
     "h": 720,
     "caption": "The hands: the Workshop, where a picture becomes a new part."
    },
    {
     "type": "video",
-    "src": "play/media/2026-10-06-the-whole-machine/06.mp4?v=k5sg2z2m",
-    "poster": "play/media/2026-10-06-the-whole-machine/06.jpg?v=k5sg2z2m",
+    "src": "play/media/2026-10-06-the-whole-machine/06.mp4?v=63921058",
+    "poster": "play/media/2026-10-06-the-whole-machine/06.jpg?v=63921058",
     "w": 1600,
     "h": 448,
     "caption": "The heart: the Studio, pumping each day through to a Field Note in the liquid of the moment."
    },
    {
     "type": "image",
-    "src": "play/media/2026-10-06-the-whole-machine/07.jpg",
+    "src": "play/media/2026-10-06-the-whole-machine/07.jpg?v=48befd99",
     "caption": "The whole machine at rest: a head of drawers with the lake in a porthole and a prism for an eye, the heart behind glass, the veins of liquid running out to its hands."
    }
   ],
@@ -95,7 +95,14 @@
    "The heart is the Studio. A day out comes in as a track and a pile of photos, and goes out as a Field Note, with its post, its episode and its share card. The liquid in its pipes is the same idea as blood: the content is what keeps the whole thing alive, and the Studio is what moves it around.",
    "In the render, the heart beats once, the light runs out through the glass veins, the hands shape a bird, and the bird flies into the lake. That's the whole machine. A day comes in, it's shaped, it's kept, and it ends up somewhere you can see it.",
    "What I learned: none of these parts is the portfolio on its own. Each one is good alone, but it's the pipes between them that make it feel alive."
-  ]
+  ],
+  "slug": "the-whole-machine",
+  "share": {
+   "image": "play/media/2026-10-06-the-whole-machine/01.jpg?v=81bfb07d",
+   "w": 1280,
+   "h": 720,
+   "alt": "The whole automaton on the bench: the heart lights, a pulse runs through the glass veins, the hands shape a bird out of light, and it flies into the lake."
+  }
  },
  {
   "id": "2026-10-05-the-studio-river",
@@ -110,8 +117,8 @@
   },
   "card": {
    "type": "video",
-   "src": "play/media/2026-10-05-the-studio-river/02.mp4?v=o3ei23jb",
-   "poster": "play/media/2026-10-05-the-studio-river/02.jpg?v=o3ei23jb",
+   "src": "play/media/2026-10-05-the-studio-river/02.mp4?v=bb4c6385",
+   "poster": "play/media/2026-10-05-the-studio-river/02.jpg?v=bb4c6385",
    "w": 960,
    "h": 540,
    "caption": "Blue to green at night: the heart pumps the green through its tubes, and the page skin goes from steel to verdigris once the river has changed."
@@ -119,40 +126,40 @@
   "media": [
    {
     "type": "video",
-    "src": "play/media/2026-10-05-the-studio-river/03.mp4?v=nlme26nr",
-    "poster": "play/media/2026-10-05-the-studio-river/03.jpg?v=nlme26nr",
+    "src": "play/media/2026-10-05-the-studio-river/03.mp4?v=5266fe2d",
+    "poster": "play/media/2026-10-05-the-studio-river/03.jpg?v=5266fe2d",
     "w": 960,
     "h": 540,
     "caption": "Green to orange at night, the heart filling orange and the rivets in the rails refilling with the new colour."
    },
    {
     "type": "video",
-    "src": "play/media/2026-10-05-the-studio-river/01.mp4?v=mjt423du",
-    "poster": "play/media/2026-10-05-the-studio-river/01.jpg?v=mjt423du",
+    "src": "play/media/2026-10-05-the-studio-river/01.mp4?v=50ef0213",
+    "poster": "play/media/2026-10-05-the-studio-river/01.jpg?v=50ef0213",
     "w": 960,
     "h": 540,
     "caption": "DAY/NIGHT: the dusk clip plays once, the tube on the bank flickers on, and the dial turns to the moon."
    },
    {
     "type": "video",
-    "src": "play/media/2026-10-05-the-studio-river/02.mp4?v=o3ei23jb",
-    "poster": "play/media/2026-10-05-the-studio-river/02.jpg?v=o3ei23jb",
+    "src": "play/media/2026-10-05-the-studio-river/02.mp4?v=bb4c6385",
+    "poster": "play/media/2026-10-05-the-studio-river/02.jpg?v=bb4c6385",
     "w": 960,
     "h": 540,
     "caption": "Blue to green at night: the heart pumps the green through its tubes, and the page skin goes from steel to verdigris once the river has changed."
    },
    {
     "type": "video",
-    "src": "play/media/2026-10-05-the-studio-river/04.mp4?v=qlhs2al2",
-    "poster": "play/media/2026-10-05-the-studio-river/04.jpg?v=qlhs2al2",
+    "src": "play/media/2026-10-05-the-studio-river/04.mp4?v=1609a733",
+    "poster": "play/media/2026-10-05-the-studio-river/04.jpg?v=1609a733",
     "w": 960,
     "h": 540,
     "caption": "Orange back to blue by day, closing the loop."
    },
    {
     "type": "video",
-    "src": "play/media/2026-10-05-the-studio-river/05.mp4?v=23n0b2q7n",
-    "poster": "play/media/2026-10-05-the-studio-river/05.jpg?v=23n0b2q7n",
+    "src": "play/media/2026-10-05-the-studio-river/05.mp4?v=13928ce5",
+    "poster": "play/media/2026-10-05-the-studio-river/05.jpg?v=13928ce5",
     "w": 1280,
     "h": 780,
     "caption": "The two toggles: DAY/NIGHT plays dusk or dawn, and CHANGE LIQUID only goes one way round, blue to green to orange and back to blue, the jewel lamps and the rails following.",
@@ -160,14 +167,14 @@
    },
    {
     "type": "image",
-    "src": "play/media/2026-10-05-the-studio-river/06.jpg",
+    "src": "play/media/2026-10-05-the-studio-river/06.jpg?v=8f91a0e2",
     "caption": "The valves that were cut: bypass valves with lit glass windows, fun to build and wrong to keep, back under the dust sheet.",
     "after": 8
    },
    {
     "type": "video",
-    "src": "play/media/2026-10-05-the-studio-river/07.mp4?v=esoqo56",
-    "poster": "play/media/2026-10-05-the-studio-river/07.jpg?v=esoqo56",
+    "src": "play/media/2026-10-05-the-studio-river/07.mp4?v=435538f3",
+    "poster": "play/media/2026-10-05-the-studio-river/07.jpg?v=435538f3",
     "w": 992,
     "h": 288,
     "caption": "The STUDIO letters filling with the liquid, a slow wave running through them; on every change they drain and fill again.",
@@ -175,7 +182,7 @@
    },
    {
     "type": "image",
-    "src": "play/media/2026-10-05-the-studio-river/08.jpg",
+    "src": "play/media/2026-10-05-the-studio-river/08.jpg?v=e020f9f4",
     "caption": "One page, three liquids: steel on slate for blue, gold on walnut for orange, verdigris on bronze for green.",
     "after": 6
    }
@@ -205,7 +212,14 @@
    "Then the liquid started spreading. The rivets in the brass rails fill with its colour. The page itself shifts: gold on walnut for orange, steel on slate for blue, verdigris on bronze for green. The STUDIO letters fill with it too, a slow wave running through them, borrowed from an old CSS trick for text filling with water. On every change they drain and fill again.",
    "Even the links remember. The address carries the look, so a link shared at night with the orange liquid opens that way, and its preview card shows it.",
    "What I learned: less is more, again. The valves were fun to build and wrong to keep. And it only feels like one machine when the light agrees everywhere, so measure the light once and paint it back the same way in every clip."
-  ]
+  ],
+  "slug": "the-studio",
+  "share": {
+   "image": "play/media/2026-10-05-the-studio-river/02.jpg?v=bb4c6385",
+   "w": 960,
+   "h": 540,
+   "alt": "Blue to green at night: the heart pumps the green through its tubes, and the page skin goes from steel to verdigris once the river has changed."
+  }
  },
  {
   "id": "2026-10-06-the-propre-engine",
@@ -220,8 +234,8 @@
   },
   "card": {
    "type": "video",
-   "src": "play/media/2026-10-06-the-propre-engine/01.mp4?v=hd8l2p6o",
-   "poster": "play/media/2026-10-06-the-propre-engine/01.jpg?v=hd8l2p6o",
+   "src": "play/media/2026-10-06-the-propre-engine/01.mp4?v=e70b1973",
+   "poster": "play/media/2026-10-06-the-propre-engine/01.jpg?v=e70b1973",
    "w": 1280,
    "h": 720,
    "caption": "The prism: a beautiful painting breaks down into black and white lines, and the colour comes back in. That's a coloring book, and that's what ProPre does."
@@ -229,52 +243,52 @@
   "media": [
    {
     "type": "video",
-    "src": "play/media/2026-10-06-the-propre-engine/01.mp4?v=hd8l2p6o",
-    "poster": "play/media/2026-10-06-the-propre-engine/01.jpg?v=hd8l2p6o",
+    "src": "play/media/2026-10-06-the-propre-engine/01.mp4?v=e70b1973",
+    "poster": "play/media/2026-10-06-the-propre-engine/01.jpg?v=e70b1973",
     "w": 1280,
     "h": 720,
     "caption": "The prism: a beautiful painting breaks down into black and white lines, and the colour comes back in. That's a coloring book, and that's what ProPre does."
    },
    {
     "type": "video",
-    "src": "play/media/2026-10-06-the-propre-engine/02.mp4?v=jo0y2lyj",
-    "poster": "play/media/2026-10-06-the-propre-engine/02.jpg?v=jo0y2lyj",
+    "src": "play/media/2026-10-06-the-propre-engine/02.mp4?v=2242c999",
+    "poster": "play/media/2026-10-06-the-propre-engine/02.jpg?v=2242c999",
     "w": 960,
     "h": 540,
     "caption": "The Coloring Book Catalog: every title, published or in progress. Each card shows the black and white lines; tap it and the beauty fills back in."
    },
    {
     "type": "video",
-    "src": "play/media/2026-10-06-the-propre-engine/03.mp4?v=4814std",
-    "poster": "play/media/2026-10-06-the-propre-engine/03.jpg?v=4814std",
+    "src": "play/media/2026-10-06-the-propre-engine/03.mp4?v=159e3c84",
+    "poster": "play/media/2026-10-06-the-propre-engine/03.jpg?v=159e3c84",
     "w": 960,
     "h": 540,
     "caption": "Prompt Generator: an object, a lens and an edition become the brief for a 40-page prompt catalog."
    },
    {
     "type": "video",
-    "src": "play/media/2026-10-06-the-propre-engine/04.mp4?v=571tqq9",
-    "poster": "play/media/2026-10-06-the-propre-engine/04.jpg?v=571tqq9",
+    "src": "play/media/2026-10-06-the-propre-engine/04.mp4?v=83917364",
+    "poster": "play/media/2026-10-06-the-propre-engine/04.jpg?v=83917364",
     "w": 960,
     "h": 540,
     "caption": "Cover: seven colour pages tile the strips, and the spine is worked out from the page count, 0.090 inches for 40 pages on white paper."
    },
    {
     "type": "image",
-    "src": "play/media/2026-10-06-the-propre-engine/05.jpg",
+    "src": "play/media/2026-10-06-the-propre-engine/05.jpg?v=3263e571",
     "caption": "What the Cover tab builds: the full wraparound PDF, back, spine and front, 17.34 by 8.75 inches with bleed."
    },
    {
     "type": "video",
-    "src": "play/media/2026-10-06-the-propre-engine/06.mp4?v=54llw8i",
-    "poster": "play/media/2026-10-06-the-propre-engine/06.jpg?v=54llw8i",
+    "src": "play/media/2026-10-06-the-propre-engine/06.mp4?v=ac59caf7",
+    "poster": "play/media/2026-10-06-the-propre-engine/06.jpg?v=ac59caf7",
     "w": 960,
     "h": 540,
     "caption": "Kindle Cover: two images, a title, and a live preview of the 1,600 by 2,560 ebook cover."
    },
    {
     "type": "image",
-    "src": "play/media/2026-10-06-the-propre-engine/07.jpg",
+    "src": "play/media/2026-10-06-the-propre-engine/07.jpg?v=32b89e78",
     "caption": "A printer’s proof of a colouring page: the dashed safe zone, the art running past the trim into the bleed, and a loupe to check it. Every rule in ProPre is a mistake made once.",
     "after": 5
    }
@@ -304,7 +318,14 @@
    "Then the books needed a home, so I built the Coloring Book Catalog. It reads a spreadsheet, so adding a book is adding a row. 101 titles so far, 8 in print and 93 on the way. Each card shows the line art, and a tap fills it with colour.",
    "This week I gave it a proper repository. The live page had drifted ahead of its own source files, so the sources were rebuilt from it until a build matched the live page byte for byte. Its AI calls now go through the Studio's login instead of a token in the page.",
    "What I learned: build the tool before the hundredth book, not after. Every rule I wrote into ProPre is a mistake I only had to make once, and every one of them protects the same thing: the beautiful picture at the start, so there's something worth building back up at the end."
-  ]
+  ],
+  "slug": "propre-engine",
+  "share": {
+   "image": "play/media/2026-10-06-the-propre-engine/01.jpg?v=e70b1973",
+   "w": 1280,
+   "h": 720,
+   "alt": "The prism: a beautiful painting breaks down into black and white lines, and the colour comes back in. That's a coloring book, and that's what ProPre does."
+  }
  },
  {
   "id": "2026-10-06-the-parts-catalog",
@@ -319,8 +340,8 @@
   },
   "card": {
    "type": "video",
-   "src": "play/media/2026-10-06-the-parts-catalog/01.mp4?v=1aeed2x7g",
-   "poster": "play/media/2026-10-06-the-parts-catalog/01.jpg?v=1aeed2x7g",
+   "src": "play/media/2026-10-06-the-parts-catalog/01.mp4?v=c952a7fe",
+   "poster": "play/media/2026-10-06-the-parts-catalog/01.jpg?v=c952a7fe",
    "w": 1280,
    "h": 720,
    "caption": "The memory: a head of tiny drawers on the workbench, each one opening to show a paper figure stirring inside. The Catalog is where the site keeps every part it knows how to build."
@@ -328,40 +349,40 @@
   "media": [
    {
     "type": "video",
-    "src": "play/media/2026-10-06-the-parts-catalog/01.mp4?v=1aeed2x7g",
-    "poster": "play/media/2026-10-06-the-parts-catalog/01.jpg?v=1aeed2x7g",
+    "src": "play/media/2026-10-06-the-parts-catalog/01.mp4?v=c952a7fe",
+    "poster": "play/media/2026-10-06-the-parts-catalog/01.jpg?v=c952a7fe",
     "w": 1280,
     "h": 720,
     "caption": "The memory: a head of tiny drawers on the workbench, each one opening to show a paper figure stirring inside. The Catalog is where the site keeps every part it knows how to build."
    },
    {
     "type": "video",
-    "src": "play/media/2026-10-06-the-parts-catalog/02.mp4?v=587n1hkl",
-    "poster": "play/media/2026-10-06-the-parts-catalog/02.jpg?v=587n1hkl",
+    "src": "play/media/2026-10-06-the-parts-catalog/02.mp4?v=d97532e5",
+    "poster": "play/media/2026-10-06-the-parts-catalog/02.jpg?v=d97532e5",
     "w": 960,
     "h": 540,
     "caption": "The deep-sea header: Marley in her jellyfish, the diver, and the creatures lifted out of the painting."
    },
    {
     "type": "video",
-    "src": "play/media/2026-10-06-the-parts-catalog/03.mp4?v=8hb31oze",
-    "poster": "play/media/2026-10-06-the-parts-catalog/03.jpg?v=8hb31oze",
+    "src": "play/media/2026-10-06-the-parts-catalog/03.mp4?v=764ca764",
+    "poster": "play/media/2026-10-06-the-parts-catalog/03.jpg?v=764ca764",
     "w": 960,
     "h": 540,
     "caption": "Four live cards at once: the buck acting out a story, the doe in a winter blizzard, the elk at night and the bear foraging."
    },
    {
     "type": "video",
-    "src": "play/media/2026-10-06-the-parts-catalog/04.mp4?v=99a01g4l",
-    "poster": "play/media/2026-10-06-the-parts-catalog/04.jpg?v=99a01g4l",
+    "src": "play/media/2026-10-06-the-parts-catalog/04.mp4?v=d03005fb",
+    "poster": "play/media/2026-10-06-the-parts-catalog/04.jpg?v=d03005fb",
     "w": 960,
     "h": 540,
     "caption": "Search narrows 60 parts as you type: fox, then snow."
    },
    {
     "type": "video",
-    "src": "play/media/2026-10-06-the-parts-catalog/05.mp4?v=ilhe2ehf",
-    "poster": "play/media/2026-10-06-the-parts-catalog/05.jpg?v=ilhe2ehf",
+    "src": "play/media/2026-10-06-the-parts-catalog/05.mp4?v=0c57410a",
+    "poster": "play/media/2026-10-06-the-parts-catalog/05.jpg?v=0c57410a",
     "w": 1280,
     "h": 720,
     "caption": "A drawer for every part: a paper buck in his own lit drawer, lowering his head to graze and looking up again.",
@@ -369,8 +390,8 @@
    },
    {
     "type": "video",
-    "src": "play/media/2026-10-06-the-parts-catalog/06.mp4?v=ec4s2cdx",
-    "poster": "play/media/2026-10-06-the-parts-catalog/06.jpg?v=ec4s2cdx",
+    "src": "play/media/2026-10-06-the-parts-catalog/06.mp4?v=fd7e903c",
+    "poster": "play/media/2026-10-06-the-parts-catalog/06.jpg?v=fd7e903c",
     "w": 1280,
     "h": 720,
     "caption": "Another drawer: a paper fox with wings, stretching them in the glow, the way each card wakes when it comes into view.",
@@ -378,8 +399,8 @@
    },
    {
     "type": "video",
-    "src": "play/media/2026-10-06-the-parts-catalog/07.mp4?v=18tpq1pjm",
-    "poster": "play/media/2026-10-06-the-parts-catalog/07.jpg?v=18tpq1pjm",
+    "src": "play/media/2026-10-06-the-parts-catalog/07.mp4?v=feefe1ab",
+    "poster": "play/media/2026-10-06-the-parts-catalog/07.jpg?v=feefe1ab",
     "w": 1280,
     "h": 720,
     "caption": "The giant paper squid that took the whale’s place in the deep-sea header, with a shoal of paper fish.",
@@ -387,8 +408,8 @@
    },
    {
     "type": "video",
-    "src": "play/media/2026-10-06-the-parts-catalog/08.mp4?v=19uwo8ea",
-    "poster": "play/media/2026-10-06-the-parts-catalog/08.jpg?v=19uwo8ea",
+    "src": "play/media/2026-10-06-the-parts-catalog/08.mp4?v=8d56a9ed",
+    "poster": "play/media/2026-10-06-the-parts-catalog/08.jpg?v=8d56a9ed",
     "w": 506,
     "h": 430,
     "caption": "One card, every control: the buck grazing and walking off in summer, rain beading on him in a tempest, then his winter coat in a blizzard (twice speed).",
@@ -419,7 +440,14 @@
    "I cut something here too. There used to be a toggle between flat silhouettes and origami. The origami won, so the silhouettes went.",
    "The header came last: a deep-sea scene with Marley floating in a jellyfish, a diver beside her, and two dozen creatures I lifted out of the painting so they could move on their own, down to an anglerfish with a glowing lure. A whale was the first idea and a dead end. A giant paper squid took its place.",
    "What I learned: build the parts where you can see them alone. A deer that looks right on its own card looks right on the lake, and when something breaks, there's exactly one drawer to open."
-  ]
+  ],
+  "slug": "the-parts-catalog",
+  "share": {
+   "image": "play/media/2026-10-06-the-parts-catalog/01.jpg?v=c952a7fe",
+   "w": 1280,
+   "h": 720,
+   "alt": "The memory: a head of tiny drawers on the workbench, each one opening to show a paper figure stirring inside. The Catalog is where the site keeps every part it knows how to build."
+  }
  },
  {
   "id": "2026-10-06-the-workshop",
@@ -434,8 +462,8 @@
   },
   "card": {
    "type": "video",
-   "src": "play/media/2026-10-06-the-workshop/01.mp4?v=mm3d2ogr",
-   "poster": "play/media/2026-10-06-the-workshop/01.jpg?v=mm3d2ogr",
+   "src": "play/media/2026-10-06-the-workshop/01.mp4?v=d8c5dcc8",
+   "poster": "play/media/2026-10-06-the-workshop/01.jpg?v=d8c5dcc8",
    "w": 1280,
    "h": 720,
    "caption": "The hands: brass hands shaping a glowing eagle out of light, the way the Workshop turns a picture into a new part for the lake."
@@ -443,16 +471,16 @@
   "media": [
    {
     "type": "video",
-    "src": "play/media/2026-10-06-the-workshop/01.mp4?v=mm3d2ogr",
-    "poster": "play/media/2026-10-06-the-workshop/01.jpg?v=mm3d2ogr",
+    "src": "play/media/2026-10-06-the-workshop/01.mp4?v=d8c5dcc8",
+    "poster": "play/media/2026-10-06-the-workshop/01.jpg?v=d8c5dcc8",
     "w": 1280,
     "h": 720,
     "caption": "The hands: brass hands shaping a glowing eagle out of light, the way the Workshop turns a picture into a new part for the lake."
    },
    {
     "type": "video",
-    "src": "play/media/2026-10-06-the-workshop/02.mp4?v=4l4o1kp9",
-    "poster": "play/media/2026-10-06-the-workshop/02.jpg?v=4l4o1kp9",
+    "src": "play/media/2026-10-06-the-workshop/02.mp4?v=44a78c7a",
+    "poster": "play/media/2026-10-06-the-workshop/02.jpg?v=44a78c7a",
     "w": 960,
     "h": 540,
     "caption": "The bench header: a hologram cycling through new animals, the live buck, doe, elk and bear on glowing discs, and Marley asleep.",
@@ -460,8 +488,8 @@
    },
    {
     "type": "video",
-    "src": "play/media/2026-10-06-the-workshop/03.mp4?v=3phi11jn",
-    "poster": "play/media/2026-10-06-the-workshop/03.jpg?v=3phi11jn",
+    "src": "play/media/2026-10-06-the-workshop/03.mp4?v=eabb2b40",
+    "poster": "play/media/2026-10-06-the-workshop/03.jpg?v=eabb2b40",
     "w": 960,
     "h": 540,
     "caption": "Import & trace: a cast fox traced to 5 colours and 5 paths, 7 KB, in 693 ms, then set next to the doe to check it belongs.",
@@ -469,25 +497,25 @@
    },
    {
     "type": "image",
-    "src": "play/media/2026-10-06-the-workshop/04.jpg",
+    "src": "play/media/2026-10-06-the-workshop/04.jpg?v=3ef318f1",
     "caption": "Step 1, the prompt builder: pick the kind of part, a style, a pose and which way it faces, and it writes a prompt for flat colours on plain white.",
     "after": 2
    },
    {
     "type": "image",
-    "src": "play/media/2026-10-06-the-workshop/05.jpg",
+    "src": "play/media/2026-10-06-the-workshop/05.jpg?v=79360777",
     "caption": "Step 2, import and trace: a winged fox traced to 6 colours and 6 paths, 7 KB, in 164 ms, then set beside the doe to see if it belongs.",
     "after": 3
    },
    {
     "type": "image",
-    "src": "play/media/2026-10-06-the-workshop/06.jpg",
+    "src": "play/media/2026-10-06-the-workshop/06.jpg?v=d61d39ea",
     "caption": "The kit sheet: a lakeside scene asked for as separate pieces on one page (a pine, two rocks, a strip of shore, the reeds), each traced on its own.",
     "after": 4
    },
    {
     "type": "image",
-    "src": "play/media/2026-10-06-the-workshop/07.jpg",
+    "src": "play/media/2026-10-06-the-workshop/07.jpg?v=b73d3299",
     "caption": "Step 3, cut and rig, next: a paper fox split at the joints and pinned with brass pivots, so it can move like the rest of the cast.",
     "after": 5
    }
@@ -516,7 +544,14 @@
    "Step 3, cut and rig, is next: splitting a traced animal at the joints so it can move like the others.",
    "The header is the bench itself. A hologram above it cycles through animals that don't exist yet: an eagle, an owl, a hawk, a squirrel. On glowing discs stand the buck, doe, elk and bear from the live engine, and Marley sleeps at the end of the bench. I took out a soldering iron that didn't belong and fixed my hair colour, which the first render got wrong.",
    "What I learned: make the way back in the easy part. Generating a picture takes seconds anywhere. Turning it into something the scene can use is the work, so that's what the Workshop does."
-  ]
+  ],
+  "slug": "the-workshop",
+  "share": {
+   "image": "play/media/2026-10-06-the-workshop/01.jpg?v=d8c5dcc8",
+   "w": 1280,
+   "h": 720,
+   "alt": "The hands: brass hands shaping a glowing eagle out of light, the way the Workshop turns a picture into a new part for the lake."
+  }
  },
  {
   "id": "2026-10-06-the-narrator-gets-a-face",
@@ -531,8 +566,8 @@
   },
   "card": {
    "type": "video",
-   "src": "play/media/2026-10-06-the-narrator-gets-a-face/04.mp4?v=k1gq387p",
-   "poster": "play/media/2026-10-06-the-narrator-gets-a-face/04.jpg?v=k1gq387p",
+   "src": "play/media/2026-10-06-the-narrator-gets-a-face/04.mp4?v=9c5b196d",
+   "poster": "play/media/2026-10-06-the-narrator-gets-a-face/04.jpg?v=9c5b196d",
    "w": 1280,
    "h": 720,
    "caption": "Her wardrobe: her own curls, six hair styles and eight holiday looks."
@@ -540,53 +575,53 @@
   "media": [
    {
     "type": "image",
-    "src": "play/media/2026-10-08-glazyarray-will-see-you-now/01.jpg",
+    "src": "play/media/2026-10-08-glazyarray-will-see-you-now/01.jpg?v=d08072e8",
     "caption": "Her RIVETING TONE cover: GlazyArray, photographed for her first profile."
    },
    {
     "type": "image",
-    "src": "play/media/2026-10-06-the-narrator-gets-a-face/01.jpg",
+    "src": "play/media/2026-10-06-the-narrator-gets-a-face/01.jpg?v=5a529fa5",
     "caption": "The first head, and hers. The voice is a woman's, so the robot became her too."
    },
    {
     "type": "video",
-    "src": "play/media/2026-10-06-the-narrator-gets-a-face/02.mp4?v=2qim31bpw",
-    "poster": "play/media/2026-10-06-the-narrator-gets-a-face/02.jpg?v=2qim31bpw",
+    "src": "play/media/2026-10-06-the-narrator-gets-a-face/02.mp4?v=8feca919",
+    "poster": "play/media/2026-10-06-the-narrator-gets-a-face/02.jpg?v=8feca919",
     "w": 960,
     "h": 540,
     "caption": "Every gesture she makes while she talks, one after another: twelve, from making a point and counting it off to the storyteller's open arms and three things she holds. Each starts and ends in the same pose, so she can go from any one to any other without a gap."
    },
    {
     "type": "image",
-    "src": "play/media/2026-10-06-the-narrator-gets-a-face/03.jpg",
+    "src": "play/media/2026-10-06-the-narrator-gets-a-face/03.jpg?v=b4cf47bd",
     "caption": "Before anyone presses play: psst, over there; boop, boop; and a little wave toward the Play button."
    },
    {
     "type": "video",
-    "src": "play/media/2026-10-06-the-narrator-gets-a-face/04.mp4?v=k1gq387p",
-    "poster": "play/media/2026-10-06-the-narrator-gets-a-face/04.jpg?v=k1gq387p",
+    "src": "play/media/2026-10-06-the-narrator-gets-a-face/04.mp4?v=9c5b196d",
+    "poster": "play/media/2026-10-06-the-narrator-gets-a-face/04.jpg?v=9c5b196d",
     "w": 1280,
     "h": 720,
     "caption": "Her wardrobe: her own curls, six hair styles and eight holiday looks."
    },
    {
     "type": "image",
-    "src": "play/media/2026-10-06-the-narrator-gets-a-face/05.jpg",
+    "src": "play/media/2026-10-06-the-narrator-gets-a-face/05.jpg?v=00f22fa0",
     "caption": "All fifteen. Her eyes, jaw and neck are the same in every one, so she talks and blinks whatever she's wearing."
    },
    {
     "type": "image",
-    "src": "play/media/2026-10-06-the-narrator-gets-a-face/06.jpg",
+    "src": "play/media/2026-10-06-the-narrator-gets-a-face/06.jpg?v=c1abe0a7",
     "caption": "Her eyes, before and after: the glowing lenses became Lake Tahoe blue, with small pupils and two catchlights, under her own brass lids and lashes."
    },
    {
     "type": "image",
-    "src": "play/media/2026-10-06-the-narrator-gets-a-face/07.jpg",
+    "src": "play/media/2026-10-06-the-narrator-gets-a-face/07.jpg?v=3e34d3d6",
     "caption": "The Workshop's Narrator looks: drop in an edited head and it fits her own face back over it, then shows her at rest, talking, blinking and live in a Listen bar."
    },
    {
     "type": "image",
-    "src": "play/media/2026-10-06-the-narrator-gets-a-face/08.jpg",
+    "src": "play/media/2026-10-06-the-narrator-gets-a-face/08.jpg?v=ce73024a",
     "caption": "Her card in the Parts Catalog, under a new Characters shelf."
    }
   ],
@@ -620,7 +655,14 @@
    "Then her eyes. The glowing cyan lenses felt cold, so I asked for warmer ones: Lake Tahoe blue, with small pupils and two catchlights, under her brass lids and lashes. They glance toward the Play button when she hints.",
    "Her name came last: GlazyArray, for the glaze of the glowing glass tubes in her chest, her glossy brass and her glassy blue eyes, and the array of looks she swaps at a click. Her hair switcher is her Style Array, and the Listen bars now say \"Narrated by GlazyArray\". New looks are made in the Workshop, and she has her own card in the Parts Catalog.",
    "What I learned: a character is mostly the little things done carefully: the rest pose that lets the clips meet, the wink at the right second. And she should look like the voice she's speaking with."
-  ]
+  ],
+  "slug": "glazyarray",
+  "share": {
+   "image": "play/media/2026-10-06-the-narrator-gets-a-face/04.jpg?v=9c5b196d",
+   "w": 1280,
+   "h": 720,
+   "alt": "Her wardrobe: her own curls, six hair styles and eight holiday looks."
+  }
  },
  {
   "id": "2026-10-06-the-lake-v2",
@@ -635,8 +677,8 @@
   },
   "card": {
    "type": "video",
-   "src": "play/media/2026-10-06-the-lake-v2/01.mp4?v=jzjm2kv3",
-   "poster": "play/media/2026-10-06-the-lake-v2/01.jpg?v=jzjm2kv3",
+   "src": "play/media/2026-10-06-the-lake-v2/01.mp4?v=0c82b5c5",
+   "poster": "play/media/2026-10-06-the-lake-v2/01.jpg?v=0c82b5c5",
    "w": 1280,
    "h": 720,
    "caption": "The face: a brass porthole with the lake inside, turning through the seasons. The main site is what everyone sees."
@@ -644,40 +686,40 @@
   "media": [
    {
     "type": "video",
-    "src": "play/media/2026-10-06-the-lake-v2/01.mp4?v=jzjm2kv3",
-    "poster": "play/media/2026-10-06-the-lake-v2/01.jpg?v=jzjm2kv3",
+    "src": "play/media/2026-10-06-the-lake-v2/01.mp4?v=0c82b5c5",
+    "poster": "play/media/2026-10-06-the-lake-v2/01.jpg?v=0c82b5c5",
     "w": 1280,
     "h": 720,
     "caption": "The face: a brass porthole with the lake inside, turning through the seasons. The main site is what everyone sees."
    },
    {
     "type": "video",
-    "src": "play/media/2026-10-06-the-lake-v2/02.mp4?v=fm5m205f",
-    "poster": "play/media/2026-10-06-the-lake-v2/02.jpg?v=fm5m205f",
+    "src": "play/media/2026-10-06-the-lake-v2/02.mp4?v=85aa31d5",
+    "poster": "play/media/2026-10-06-the-lake-v2/02.jpg?v=85aa31d5",
     "w": 960,
     "h": 540,
     "caption": "Books to Web: the change from summer to fall, with the swap hidden in the dark of the turn."
    },
    {
     "type": "video",
-    "src": "play/media/2026-10-06-the-lake-v2/03.mp4?v=f4t51jzy",
-    "poster": "play/media/2026-10-06-the-lake-v2/03.jpg?v=f4t51jzy",
+    "src": "play/media/2026-10-06-the-lake-v2/03.mp4?v=88d8044d",
+    "poster": "play/media/2026-10-06-the-lake-v2/03.jpg?v=88d8044d",
     "w": 960,
     "h": 540,
     "caption": "The Workshop tab is winter: night, the moon over the lake and snow falling."
    },
    {
     "type": "video",
-    "src": "play/media/2026-10-06-the-lake-v2/04.mp4?v=9jxx1s0t",
-    "poster": "play/media/2026-10-06-the-lake-v2/04.jpg?v=9jxx1s0t",
+    "src": "play/media/2026-10-06-the-lake-v2/04.mp4?v=0c4c036b",
+    "poster": "play/media/2026-10-06-the-lake-v2/04.jpg?v=0c4c036b",
     "w": 960,
     "h": 540,
     "caption": "The getaway: the hidden beach at sunset, reached by tapping the fisherman's boat."
    },
    {
     "type": "video",
-    "src": "play/media/2026-10-06-the-lake-v2/05.mp4?v=9y36qrg",
-    "poster": "play/media/2026-10-06-the-lake-v2/05.jpg?v=9y36qrg",
+    "src": "play/media/2026-10-06-the-lake-v2/05.mp4?v=2e4f51a9",
+    "poster": "play/media/2026-10-06-the-lake-v2/05.jpg?v=2e4f51a9",
     "w": 742,
     "h": 648,
     "caption": "A visitor: a doe steps out from behind the bush, walks down to the water and stops to graze.",
@@ -685,7 +727,7 @@
    },
    {
     "type": "image",
-    "src": "play/media/2026-10-06-the-lake-v2/06.jpg",
+    "src": "play/media/2026-10-06-the-lake-v2/06.jpg?v=149c4715",
     "caption": "A winter night in a pocket watch: the lake, the moon and the falling snow, kept smooth at 56 frames a second.",
     "after": 5
    }
@@ -713,6 +755,134 @@
    "Every view has a link. Add words to the address, like winter, night or blizzard, and the lake opens that way. There are 55 of them in the trigger guide at the bottom of the page.",
    "Most of the work nobody sees. I tested on an iPhone the whole way, and the winter night scene ran at 12 frames a second. Dropping one CSS performance hint, will-change, took it to 56. The first load went from 319 KB to 238. Safari needed its own fix for the SVG filters, and on phones a spyglass replaced the tilt camera. If you've asked your device for less motion, 15 different files listen.",
    "What I learned: the scene is the portfolio. Anyone can say they care about detail; a lake that keeps its frame rate in a blizzard on a phone shows it."
-  ]
+  ],
+  "slug": "this-lake",
+  "share": {
+   "image": "play/media/2026-10-06-the-lake-v2/01.jpg?v=0c82b5c5",
+   "w": 1280,
+   "h": 720,
+   "alt": "The face: a brass porthole with the lake inside, turning through the seasons. The main site is what everyone sees."
+  }
+ },
+ {
+  "id": "2026-10-09-a-l-t-a",
+  "name": "A.L.T.A",
+  "tagline": "Ancient Lake Tahoe Automaton",
+  "summary": "On October 9 Christian came up with A.L.T.A., the Ancient Lake Tahoe Automaton: a copper-and-bronze mechanical mermaid built to help protect our waters and teach kids water safety. She's a potential new narrator for the show and will help local pools with water-safety lessons. He made a character description, a turnaround, a mouth chart, a still at the glass and a set of short clips of her moving.",
+  "date": "Fri, Oct 9, 2026",
+  "note": "play/2026-10-09-a-l-t-a/",
+  "tool": null,
+  "card": {
+   "type": "video",
+   "src": "play/media/2026-10-09-a-l-t-a/03.mp4?v=06a88757",
+   "poster": "play/media/2026-10-09-a-l-t-a/03.jpg?v=06a88757",
+   "w": 960,
+   "h": 540,
+   "caption": "A.L.T.A in enjoying the warm sunshine."
+  },
+  "media": [
+   {
+    "type": "video",
+    "src": "play/media/2026-10-09-a-l-t-a/01.mp4?v=8aa9c50e",
+    "poster": "play/media/2026-10-09-a-l-t-a/01.jpg?v=8aa9c50e",
+    "w": 960,
+    "h": 540,
+    "caption": "A.L.T.A showing her lights in the deep water."
+   },
+   {
+    "type": "video",
+    "src": "play/media/2026-10-09-a-l-t-a/02.mp4?v=6226bfc1",
+    "poster": "play/media/2026-10-09-a-l-t-a/02.jpg?v=6226bfc1",
+    "w": 960,
+    "h": 540,
+    "caption": "A.L.T.A booping a trout in the shallow water."
+   },
+   {
+    "type": "video",
+    "src": "play/media/2026-10-09-a-l-t-a/03.mp4?v=06a88757",
+    "poster": "play/media/2026-10-09-a-l-t-a/03.jpg?v=06a88757",
+    "w": 960,
+    "h": 540,
+    "caption": "A.L.T.A in enjoying the warm sunshine."
+   },
+   {
+    "type": "video",
+    "src": "play/media/2026-10-09-a-l-t-a/04.mp4?v=880332dd",
+    "poster": "play/media/2026-10-09-a-l-t-a/04.jpg?v=880332dd",
+    "w": 960,
+    "h": 540,
+    "caption": "A.L.T.A swimming off into the deep water."
+   },
+   {
+    "type": "video",
+    "src": "play/media/2026-10-09-a-l-t-a/05.mp4?v=08c69f98",
+    "poster": "play/media/2026-10-09-a-l-t-a/05.jpg?v=08c69f98",
+    "w": 960,
+    "h": 540,
+    "caption": "A.L.T.A waving."
+   },
+   {
+    "type": "video",
+    "src": "play/media/2026-10-09-a-l-t-a/06.mp4?v=d75bd531",
+    "poster": "play/media/2026-10-09-a-l-t-a/06.jpg?v=d75bd531",
+    "w": 960,
+    "h": 540,
+    "caption": "A.L.T.A welcoming you to her pool."
+   },
+   {
+    "type": "image",
+    "src": "play/media/2026-10-09-a-l-t-a/08.jpg?v=179bbf9d",
+    "caption": "The mouth sheet: eight shapes, from neutral to laughter."
+   },
+   {
+    "type": "image",
+    "src": "play/media/2026-10-09-a-l-t-a/09.jpg?v=f73900df",
+    "caption": "A clean turnaround; from behind, her hair is coiled copper wire."
+   },
+   {
+    "type": "video",
+    "src": "play/media/2026-10-09-a-l-t-a/10.mp4?v=bc4d8fe9",
+    "poster": "play/media/2026-10-09-a-l-t-a/10.jpg?v=bc4d8fe9",
+    "w": 960,
+    "h": 540,
+    "caption": "ALTA being shy for the camera."
+   },
+   {
+    "type": "video",
+    "src": "play/media/2026-10-09-a-l-t-a/11.mp4?v=ed162c5c",
+    "poster": "play/media/2026-10-09-a-l-t-a/11.jpg?v=ed162c5c",
+    "w": 960,
+    "h": 540,
+    "caption": "A.L.T.A playing with some fish in the shallow water."
+   },
+   {
+    "type": "image",
+    "src": "play/media/2026-10-09-a-l-t-a/07.jpg?v=fff260b1",
+    "caption": "Leaning on the ledge of a glass tank at a small microphone, trout swimming below. AI-generated."
+   }
+  ],
+  "pull": "A copper-and-bronze mechanical mermaid built to help protect our waters and teach kids water safety.",
+  "title": "A.L.T.A., the Ancient Lake Tahoe Automaton",
+  "story": [
+   "I came up with a new character on October 9: A.L.T.A., short for Ancient Lake Tahoe Automaton. She's a robot mermaid built to help protect our waters and teach us about them. She's made of weathered copper and aged bronze, green with patina, with small geometric etchings on her face and plates. All of her images are AI-generated, made in Flow and Gemini.",
+   "## Built out of the lake",
+   "I wanted her built out of the lake itself. Her crown is woven from tule reeds, willow, pinecones and old filigree. Her hair is coiled copper wire with Jeffrey pine needles worked through it. Her eyes carry the colors of Tahoe's water from the shallows down: amber and gold at the center, then emerald, then deep sapphire at the rim. At her neck and spine there are soft cyan vacuum tubes, and below the waist her tail is patinated scales and sea-glass windows with small gears and glowing fluid inside.",
+   "> And the best details came from the place: reeds, pine needles and granite say Tahoe better than any amount of glow.",
+   "## A job to do",
+   "She isn't just decoration. I gave her a job: an ancient lake guardian who is also an outspoken nature advocate and water-safety teacher for kids. When she teaches, she rises up and leans in. She counts the rules on her webbed fingers: the buddy system, walking on pool decks, watching for deep drop-offs. Her eyes do the punctuation. They go a steady amber when someone litters or horses around near the water, and bloom cyan-green when a kid makes a good call. She's firm, but it comes from affection. The kids are her junior stewards.",
+   "## A production character",
+   "To keep her the same from one image to the next, I built her like a production character. There's a full written description, a clean front, side and back turnaround, and a mouth sheet with the shapes she needs to talk: neutral, smile, ah, oo, ee, oh, mm and a laugh. Then one still at the glass: her leaning on the ledge of a tank at a small microphone, with trout swimming below.",
+   "For motion, my notes say to ask for slow, weightless movement with no jitter, small things like her irises dilating and a pulse running up the tubes at her neck, and for her to brush the lakebed or the granite without stirring up the water. Then she started to move. The clips open with a fish in a bowl. Then she's shy for the camera, shows her lights in the deep water, boops a trout, and enjoys the warm sunshine. The last one is her swimming off into the deep water.",
+   "## Where she's going",
+   "Where she's going: A.L.T.A. has been released into our world, virtually, to help us learn about our water. She's a potential new narrator for Field Notes, like GlazyArray, but her beat is the water. And she's going to help local pools teach water safety and respect for nature and our waters.",
+   "What I learned: a character holds together because of the reference sheets, not the prompt. The turnaround goes in as the main identity reference, at a weight around 0.75 to 0.85, so the tail and scale layout don't drift. When the eyes go flat in wide shots, I isolate just the head and re-run it with the gradient spelled out, amber-gold center to emerald and sapphire rim. And the best details came from the place: reeds, pine needles and granite say Tahoe better than any amount of glow."
+  ],
+  "slug": "a-l-t-a",
+  "share": {
+   "image": "play/media/2026-10-09-a-l-t-a/03.jpg?v=06a88757",
+   "w": 960,
+   "h": 540,
+   "alt": "A.L.T.A in enjoying the warm sunshine."
+  }
  }
 ]

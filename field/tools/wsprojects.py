@@ -19,7 +19,7 @@ Photos and clips are named as publish.mjs publishes them to play/media.
 
   python3 field/tools/wsprojects.py
 """
-import datetime, hashlib, json, os
+import datetime, hashlib, json, os, re
 
 
 def vtag(F, *files):
@@ -66,7 +66,7 @@ def load(i):
 notes = [e for e in (load(f[:-5]) for f in sorted(os.listdir(EVENTS)) if f.endswith('.json') and not f.startswith('sample'))
          if e and isinstance(e.get('workshop'), dict) and e.get('status') == 'published']
 notes.sort(key=lambda e: (e['workshop'].get('order') or 999, e['id']))
-projects = []
+projects, slugs = [], set()
 for e in notes:
     w, post, mine = e['workshop'], e.get('post') or {}, by_name(e)
     alias = {x['poster'].split('/')[-1]: x['src'].split('/')[-1] for x in e.get('photos') or [] if x.get('video') and x.get('poster')}
@@ -96,6 +96,15 @@ for e in notes:
     if w.get('numbers'): p['numbers'] = [[str(a), str(b)] for a, b in w['numbers']]
     p['title'] = post.get('title') or e.get('title') or p['name']
     p['story'] = [s.strip() for s in (post.get('body') or '').split('\n\n') if s.strip()]
+    # its own address, ?workshop+<slug>, which opens it on the Workshop tab and shares with its own card (share.php)
+    base = re.sub(r'[^a-z0-9]+', '-', p['name'].lower().replace("'", '').replace('\u2019', '')).strip('-')[:48] or e['id']
+    slug, k = base, 2
+    while slug in slugs or re.match(r'^\d{4}-\d\d-\d\d-', slug): slug, k = f'{base}-{k}', k + 1
+    slugs.add(slug); p['slug'] = slug
+    # and its share card: the project's cover picture (a loop's poster frame), as the Note's own page shares it
+    pic = p['card'] or {}
+    img = pic.get('poster') or pic.get('src')
+    if img: p['share'] = {'image': img, 'w': pic.get('w'), 'h': pic.get('h'), 'alt': pic.get('caption') or p['name']}
     projects.append(p)
 with open(OUT, 'w', encoding='utf-8') as f:
     json.dump(projects, f, indent=1, ensure_ascii=False)

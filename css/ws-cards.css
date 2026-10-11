@@ -60,3 +60,5 @@ html.night-page .wsm{background:#0e1823;color:var(--night-text)}
 @media (max-width:640px){.wsf-nums ul{grid-template-columns:1fr;gap:4px}.wsf .wsf-cover{aspect-ratio:4/3}.wsf .mag-top{top:5%}}
 @media (max-width:640px){.wsc{grid-template-columns:1fr;gap:14px;margin-left:0;margin-right:0}.wsc-card.wide{aspect-ratio:16/9}}
 @media (prefers-reduced-motion:reduce){.wsc-card,.wsc-card img,.wsc-card video,.wsm .wsf{transition:none}.wsc-card.on img{transform:scale(1.02)}.wsm[open],.wsm[open]::backdrop,.wsm.shut,.wsm.shut::backdrop{animation:none}}
+.wsf .wsm-share{font:inherit;cursor:pointer;transition:background-color .7s ease-in-out,color .7s ease-in-out,transform .4s ease-in-out}
+.wsf .wsm-share.ok{background:#2e8c5a;color:#fff}   /* "Link copied" glows in, then eases back */

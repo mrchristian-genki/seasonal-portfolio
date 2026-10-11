@@ -277,16 +277,8 @@ ${F.issue ? `<span class="mag-issue">${esc(F.issue)}</span>` : ''}${(F.coverLine
   const magSpot = F && (F.spotted || []).length ? `<aside class="mag-spot"><h2>Spotted</h2><ul>${F.spotted.map((x) => `<li><b>${x.url ? `<a href="${esc(x.url)}">${esc(x.label)}</a>` : esc(x.label)}</b> ${esc(x.text)}</li>`).join('')}</ul></aside>` : '';
   const url = `${show.siteUrl}${e.id}/`, title = `${e.post && e.post.title || e.title} · ${show.showTitle}`;
   const desc = e.summary || paras(e.post && e.post.body)[0] || '';
-  // its share card: the one cards.py made (GlazyArray's, with an episode; else the title on brass over the cover), else the cover itself
-  const cardSrc = path.join(FIELD, 'data', 'cards', e.id + '.jpg');
-  let share = cover && { abs: cover.abs, w: cover.w, h: cover.h, alt: cover.caption };
-  if (fs.existsSync(cardSrc)) {
-    fs.copyFileSync(cardSrc, path.join(media, 'card.jpg'));
-    // v: from the card's own bytes, so any change to it (a new look, colours, backdrop, title) is a new link for caches
-    const cv = createHash('sha1').update(fs.readFileSync(cardSrc)).digest('hex').slice(0, 8);
-    share = { abs: `${show.siteUrl}media/${e.id}/card.jpg?v=${cv}`, w: 1200, h: 630,
-      alt: audio ? `${e.post && e.post.title || e.title}: GlazyArray, the narrator, at her desk with the episode's player` : `${e.post && e.post.title || e.title}: the title on a brass nameplate over the Note's cover picture` };
-  }
+  // its share card: the Note's cover picture (a loop's poster frame), the picture it opens with
+  const share = cover && { abs: cover.abs, w: cover.w, h: cover.h, alt: cover.caption || `${e.post && e.post.title || e.title}: the cover picture` };
   const html = head(title, desc, url, share && share.abs, '../', 'field-notes', { type: 'article', lake: 'notes+' + e.id, published: e.date,
     w: share && share.w, h: share && share.h, alt: share && share.alt, audio: audio && audio.abs }) + `<main class="article${F ? ' feature' : ''}${theme ? ' mag-' + theme : ''}"${t ? ` data-route="../data/${esc(e.id)}.json"` : ''}>
 ${theme && THEME_FONTS[theme] ? `<link rel="stylesheet" href="https://fonts.googleapis.com/css2?${THEME_FONTS[theme]}&display=swap">\n` : ''}${magCover}${F ? `<header class="mag-head"><p class="mag-label">${esc(F.label || 'Feature')}</p>
