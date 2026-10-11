@@ -13,7 +13,7 @@
    her Workshop window). GlazyArray's player (js/narrator.js) leaves these bars to her. */
 (function () {
   'use strict';
-  var P = '/assets/alta/parts/', V = '?v=5';
+  var P = '/assets/alta/parts/', V = '?v=7';
   var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var SHAPES = ['smile', 'neutral', 'ah', 'oh', 'oo', 'ee', 'laugh'];
   var IC = {
@@ -67,23 +67,42 @@
       setTimeout(glance, away ? 900 + Math.random() * 900 : 2200 + Math.random() * 3200);
     })();
 
-    // the idle dive: now and then, while she isn't talking, she lets go of the ledge, sinks below it, hovers near the
-    // glass, and rises the way she went down (rise.mp4 is dive.mp4 backwards). Her own video head shows meanwhile; her
-    // layered head fades out as she goes and back in once she's up. Play mid-dive brings her straight back up.
-    var dv = { state: 'up', t: 0 }, ready = false;
-    var V3 = ['dive', 'hover', 'rise'].map(function (k) { var v = document.createElement('video'); v.className = 'al-dive'; v.muted = true; v.playsInline = true; v.preload = 'none'; v.setAttribute('playsinline', ''); if (k === 'hover') v.loop = true; v.dataset.k = k; st.appendChild(v); return v; });
-    var vDive = V3[0], vHover = V3[1], vRise = V3[2];
+    // the idle dive: now and then, while she isn't talking, she lets go of the ledge and sinks below it, does one thing
+    // underwater, and rises the way she went down (rise.mp4 is dive.mp4 backwards). Underwater she hovers near the glass,
+    // glides a lap of the tank, or meditates and glows (glow.mp4: it comes up, holds, and fades back down); each starts and
+    // ends on the dive's last frame. Her own video head shows meanwhile; her layered head fades out as she goes and back
+    // in once she's up. Play mid-dive brings her straight back up: a glow fades down first, a lap cross-fades.
+    var dv = { state: 'up', t: 0, v: null }, ready = false, GLOW_IN = 10;
+    var V3 = ['dive', 'hover', 'glide', 'glow', 'rise'].map(function (k) { var v = document.createElement('video'); v.className = 'al-dive'; v.muted = true; v.playsInline = true; v.preload = 'none'; v.setAttribute('playsinline', ''); if (k === 'hover') v.loop = true; v.dataset.k = k; st.appendChild(v); return v; });
+    var vDive = V3[0], vHover = V3[1], vGlide = V3[2], vGlow = V3[3], vRise = V3[4];
     function load() { if (ready) return; ready = true; V3.forEach(function (v) { v.src = P + v.dataset.k + '.mp4' + V; v.preload = 'auto'; }); }
     function showV(v) { V3.forEach(function (x) { x.classList.toggle('on', x === v); }); }
     function surfaced() { dv.state = 'up'; head.classList.remove('gone'); setTimeout(function () { if (dv.state === 'up') V3.forEach(function (x) { x.classList.remove('on'); x.pause(); }); }, 300); plan(); }
+    function play(v) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
     function rise(rate) {
-      if (dv.state === 'rise' || dv.state === 'up') return;
+      if (dv.state === 'rise' || dv.state === 'up' || dv.state === 'calm') return;
+      // mid-routine: she finishes it first, quicker, then rises. glow.mp4 is her glow coming up (GLOW_IN seconds), the
+      // held glow, then the first part backwards: coming up, it mirrors into the fade; held, it hurries to the fade.
+      // A lap speeds up home.
+      if (dv.state === 'under' && (dv.v === vGlow || dv.v === vGlide) && dv.v.duration) {
+        dv.state = 'calm'; dv.rate = rate || 1; clearTimeout(dv.t); dv.v.playbackRate = Math.max(1.5, dv.rate);
+        if (dv.v === vGlow) {
+          var t = vGlow.currentTime, out = vGlow.duration - GLOW_IN;
+          if (t < GLOW_IN) vGlow.currentTime = vGlow.duration - t;
+          else if (t < out) {
+            vGlow.playbackRate = 3;
+            var slow = function () { if (dv.state !== 'calm' || vGlow.currentTime >= out) { vGlow.removeEventListener('timeupdate', slow); if (dv.state === 'calm') vGlow.playbackRate = Math.max(1.5, dv.rate); } };
+            vGlow.addEventListener('timeupdate', slow);
+          }
+        }
+        return;
+      }
       var from = dv.state === 'dive' && vDive.duration ? Math.max(0, vDive.duration - vDive.currentTime) : 0;
       dv.state = 'rise'; clearTimeout(dv.t); vRise.playbackRate = rate || 1;
       // from where she is: the dive's time, mirrored (the rise is the dive backwards); once it can seek there
       var start = function () {
         vRise.currentTime = from;
-        var go = function () { vRise.removeEventListener('seeked', go); var p = vRise.play(); if (p && p.catch) p.catch(function () {}); showV(vRise); vDive.pause(); vHover.pause(); };
+        var go = function () { vRise.removeEventListener('seeked', go); play(vRise); showV(vRise); V3.forEach(function (x) { if (x !== vRise) x.pause(); }); };
         if (from > 0) vRise.addEventListener('seeked', go); else go();
       };
       if (vRise.readyState >= 1) start(); else vRise.addEventListener('loadedmetadata', start, { once: true });
@@ -94,8 +113,16 @@
       var go = function () { vDive.removeEventListener('playing', go); if (dv.state !== 'dive') return; showV(vDive); head.classList.add('gone'); palms.classList.remove('on'); };
       vDive.addEventListener('playing', go); var p = vDive.play(); if (p && p.catch) p.catch(function () { dv.state = 'up'; plan(); });
     }
-    vDive.addEventListener('ended', function () { if (dv.state !== 'dive') return; dv.state = 'hover'; vHover.currentTime = 0; vHover.play().catch(function () {}); showV(vHover);
-      dv.t = setTimeout(function () { rise(1); }, 5000 + Math.random() * 5000); });
+    // underwater: a pause at the glass, a lap, or her meditation, then up
+    var last = null;
+    vDive.addEventListener('ended', function () {
+      if (dv.state !== 'dive') return;
+      var pick = [vHover, vGlide, vGlow].filter(function (v) { return v !== last; });
+      var v = pick[Math.floor(Math.random() * pick.length)]; last = v;
+      dv.state = 'under'; dv.v = v; v.currentTime = 0; v.playbackRate = 1; play(v); showV(v);
+      if (v === vHover) dv.t = setTimeout(function () { rise(1); }, 5000 + Math.random() * 5000);
+    });
+    [vGlide, vGlow].forEach(function (v) { v.addEventListener('ended', function () { if (dv.v === v && (dv.state === 'under' || dv.state === 'calm')) { var r = dv.state === 'calm' ? dv.rate : 1; dv.state = 'under'; dv.v = null; rise(r); } }); });
     vRise.addEventListener('ended', function () { if (dv.state === 'rise') surfaced(); });
     function plan() { clearTimeout(dv.t); if (still || dv.state !== 'up') return; dv.t = setTimeout(dive, 30000 + Math.random() * 30000); }
     var isTalking = function () { return false; };
