@@ -13,7 +13,7 @@
    her Workshop window). GlazyArray's player (js/narrator.js) leaves these bars to her. */
 (function () {
   'use strict';
-  var P = '/assets/alta/parts/', V = '?v=8';
+  var P = '/assets/alta/parts/', V = '?v=9';
   var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var GESTURES = ['palms'];   // her gesture clips in parts/ (KIT.md Round 2 adds more)
   var SHAPES = ['smile', 'neutral', 'ah', 'oh', 'oo', 'ee', 'laugh'];
@@ -33,7 +33,8 @@
       ['a', 'b'].map(function (k) { return '<img class="al-pearl" src="' + P + 'head-flair-' + k + '.webp' + V + '" alt=""><i class="al-tint al-tint-' + k + '"></i>'; }).join('') +
       '<div class="al-eyes" style="position:absolute"><img src="' + P + 'head-iris.webp' + V + '" alt=""><i class="al-glow"></i></div>' +
       '<img class="al-lids" src="' + P + 'head-lids.webp' + V + '" alt=""><div class="al-mouth" style="position:absolute">' +
-      SHAPES.map(function (k) { return '<img data-m="' + k + '" src="' + P + 'mouth-' + k + '.webp' + V + '" alt=""' + (k === 'smile' ? ' class="on"' : '') + '>'; }).join('') + '</div></div>';
+      SHAPES.map(function (k) { return '<img data-m="' + k + '" src="' + P + 'mouth-' + k + '.webp' + V + '" alt=""' + (k === 'smile' ? ' class="on"' : '') + '>'; }).join('') + '</div>' +
+      '<img class="al-rest" src="' + P + 'head-rest.webp' + V + '" alt=""></div>';   // her resting face: smiling eyes and a warm smile
     bar.insertBefore(st, bar.children[1] || null);
     // the Note's two colours (data-palette, from its hero): her crown's filigree takes the first, her hair's botanicals the second
     var pal = (bar.getAttribute('data-palette') || '').split(' ').filter(function (c) { return /^#[0-9a-f]{6}$/i.test(c); });
@@ -224,12 +225,12 @@
         return;
       }
       listen(); if (ctx && ctx.state === 'suspended') ctx.resume();
-      talking = true; glow.style.backgroundColor = '#2fe8c0'; glow.style.opacity = '.35'; eyes.style.setProperty('--dil', '1.1');
+      talking = true; bar.classList.add('talking'); glow.style.backgroundColor = '#2fe8c0'; glow.style.opacity = '.35'; eyes.style.setProperty('--dil', '1.1');
       gestures(); if (!raf) raf = requestAnimationFrame(tick);
     });
     ['pause', 'ended'].forEach(function (t) { audio.addEventListener(t, function () {
       if (holding) { show(); pp.innerHTML = IC.pause; return; }
-      talking = false; glow.style.opacity = '0'; eyes.style.removeProperty('--dil'); plan(); gestures();
+      talking = false; bar.classList.remove('talking'); glow.style.opacity = '0'; eyes.style.removeProperty('--dil'); plan(); gestures();
     }); });
   }
 
