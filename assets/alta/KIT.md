@@ -301,8 +301,8 @@ frame** `alta-under.jpg`.
 > exhaling: her hands slide off the ledge first, then her shoulders, then her head, and her crown passes below the
 > ledge last. By the middle of the clip her whole head, crown and hair are under the water and stay under; she does
 > not come back up in this clip. She drifts down to hover close to the front glass, facing the camera. Weightless,
-> eased motion, no jitter; a few small bubbles rise. Locked camera. The tank, ledge, rocks, logs and hall stay
-> exactly as they are.
+> eased motion, no jitter; a few small bubbles rise in the water and stop at its surface, never above the copper
+> ledge. Locked camera. The tank, ledge, rocks, logs and hall stay exactly as they are.
 
 **If your tool can't take a last frame,** use this instead, from the still alone:
 
@@ -311,7 +311,8 @@ frame** `alta-under.jpg`.
 > crown and hair are completely under the water, below the ledge. For the last three seconds the copper ledge is empty,
 > with nothing of her above it, and she hovers underwater close to the front glass, facing the camera, her tail gently
 > sculling. She does not rise again or return to the ledge in this clip. Weightless, eased motion, no jitter; a few
-> small bubbles rise. The tank, ledge, rocks, logs and hall stay exactly as they are.
+> small bubbles rise in the water and stop at its surface, never above the copper ledge. The tank, ledge, rocks, logs
+> and hall stay exactly as they are.
 
 **Clip 2, dive-swim** (image to video, first and last frame: `alta-under.jpg`, or the last frame of clip 1, 8 s):
 
@@ -324,12 +325,78 @@ frame** `alta-under.jpg`.
 **Built (Oct 11):** `parts/dive.mp4` joins the two takes Christian made: the Gemini one's opening (she lets go of the
 ledge, from her exact rest pose) blended over half a second into the Flow one, which takes her all the way under.
 `rise.mp4` is it backwards; `hover.mp4` ping-pongs its last second for her pause underwater. Her player dives every
-30 to 60 seconds while she isn't talking. (A swim loop would replace the hover; the Flow take also has a few bubbles
-rising above the ledge in the air.)
+30 to 60 seconds while she isn't talking. The Flow take had bubbles rising above the ledge, in the air; Claude
+painted them out (Oct 11) with a clean plate of the empty hall, so above the ledge only she moves.
 
 **Check before sending:** clip 1's first frame matches her rest still, and clip 2's first and last frames match clip 1's
 last. A tool with a last-frame setting makes this easy; if yours doesn't, send them anyway and Claude finds the closest
 frames and cross-fades the seams.
+
+## Round 5: what she does underwater (Oct 11)
+
+Once she's down, she does one of these before she comes back up. Every routine **starts and ends on the same
+picture**: her hovering underwater close to the front glass, facing the camera (`assets/alta/alta-underwater-start.jpg`,
+the last frame of her dive). So any routine can follow the dive, and the rise can follow any routine. Her player picks
+one at random each time she goes down.
+
+**Settings for every clip:** image to video, 8 s (6 s is fine), **first frame and last frame both
+`alta-underwater-start.jpg`**. If your tool has no last-frame setting, send it anyway: Claude finds the frame
+closest to the start and cross-fades the seam.
+
+**Add this to the end of every routine prompt:**
+
+> Locked camera, no zoom or pan. Slow, weightless, eased motion with no jitter; her tail sweeps in long smooth arcs
+> and her crown and hair drift softly in the water. She stays in the water the whole clip, below the surface, and never
+> goes above the copper ledge, behind the rocks, or out of frame. Bubbles only in the water: they rise and stop at the
+> water's surface. Above the copper ledge is air: nothing there changes, no bubbles, no splashes, no spray. The tank,
+> rocks, logs, ledge and hall stay exactly as they are. The same character exactly: same face, eyes, crown, hair, body
+> and tail. She ends exactly where she started, hovering close to the front glass, facing the camera.
+
+**1. `swim-glide.mp4`, the lap** (replaces the hover):
+
+> She turns gently to her left and glides along the front glass to the left side of the tank, rolls into a slow turn,
+> glides back past the middle to the right side, turns again, and settles back in the middle, facing the camera.
+
+**2. `swim-twirl.mp4`, the twirl:**
+
+> She stretches her arms out to her sides and does one slow, graceful twirl in place, all the way round, her hair
+> fanning out and her tail curling around her, then settles facing the camera with a small pleased smile.
+
+**3. `swim-trout.mp4`, the trout visit:**
+
+> A trout swims slowly in from the right, close to her. Her eyes follow it; she turns her head and smiles. It circles
+> her once and noses her open palm, then swims calmly away out of frame on the left. She watches it go, then looks back
+> at the camera.
+
+**4. `swim-glass.mp4`, hello at the glass:**
+
+> She drifts forward right up to the front glass, places one open palm flat against the inside of the glass, tilts her
+> head curiously at the camera and gives a small wave with her other hand, then drifts back to where she started.
+
+**5. `swim-peek.mp4`, hide and peek:**
+
+> She sinks slowly down behind the nearest log so only the top of her crown shows, pauses, then peeks up over the log
+> with just her eyes, smiles, and rises back up to hover in the middle, facing the camera.
+
+**6. `swim-pebble.mp4`, the pebble:**
+
+> She dives gently down to the rocks, picks up a small smooth pebble, rises a little and turns it over in her hands,
+> studying it, then sets it carefully back on the rocks and drifts back up to hover facing the camera.
+
+**7. `swim-ring.mp4`, the bubble ring:**
+
+> She purses her lips and blows one slow ring of bubbles that wobbles upward through the water; her eyes follow it up
+> until it breaks apart into small bubbles at the water's surface, below the ledge. She looks back at the camera and
+> smiles.
+
+**8. `swim-roll.mp4`, the barrel roll:**
+
+> She swims a short way to her right, does one slow, smooth barrel roll along the front glass, her tail trailing in a
+> long arc, and glides back to the middle to hover facing the camera.
+
+**Check before sending:** her first and last frames match the start picture (same size, same place), her crown never
+reaches the surface, and nothing moves above the copper ledge. If bubbles still show in the air, Claude can paint them out
+as for the dive, but a clean take is better.
 
 ## Quick fixes
 
@@ -338,4 +405,5 @@ frames and cross-fades the seams.
 - **The crown is cut off:** in prompt 1, ask for "more green above the crown, the head a little smaller in frame".
 - **Extra fingers or melting hands:** shorten the clip, and ask for the hand to stay closer to the ledge.
 - **The tail jerks:** add "slow-motion, neutral buoyancy, the fluke sweeps in one long smooth arc".
+- **Bubbles above the copper ledge:** add "above the copper ledge is air: no bubbles, no splashes, nothing moves there".
 - **Words or symbols appear on her etchings:** add "the etchings are plain geometric lines: no letters, no symbols".

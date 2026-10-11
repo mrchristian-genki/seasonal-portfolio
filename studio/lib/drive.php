@@ -56,14 +56,26 @@ final class Drive {
             if ($this->running($this->state())) return $this->status();
             if (is_file($this->log())) rename($this->log(), $this->log() . '.prev');
             $steps = [];
+            $long = $this->longNames();
             foreach ($this->folders as $f) {
                 if (!is_dir($this->dest($f))) mkdir($this->dest($f), 0700, true);
-                $steps[] = implode(' ', array_map('escapeshellarg', [
-                    $this->rclone, 'copy', $this->remote . ':' . $f, $this->dest($f),
-                    '--drive-skip-gdocs', '--exclude', '.DS_Store', '--transfers', '2', '--checkers', '4',
-                    '--log-file', $this->log(), '--log-level', 'INFO', '--stats', '5s', '--stats-one-line',
-                ]));
+                $flags = ['--drive-skip-gdocs', '--exclude', '.DS_Store', '--log-file', $this->log(), '--log-level', 'INFO'];
+                // names too long for the server's disk are left out of the folder copy and fetched one by one below
+                $skip = [];
+                foreach ($this->longIn($f) as $rel) $skip[] = '/' . preg_replace('/[\\\\*?\[\]{}]/', '\\\\$0', $rel);
+                $ex = studio_private_dir() . '/drive-long-' . md5($f) . '.txt';
+                file_put_contents($ex, implode("\n", $skip) . "\n", LOCK_EX);
+                $steps[] = implode(' ', array_map('escapeshellarg', array_merge([
+                    $this->rclone, 'copy', $this->remote . ':' . $f, $this->dest($f), '--exclude-from', $ex,
+                    '--transfers', '2', '--checkers', '4', '--stats', '5s', '--stats-one-line'], $flags)));
+                foreach ($this->longIn($f) as $rel) {
+                    $short = $this->shorten($rel);
+                    $long["$f/$short"] = $rel;
+                    $steps[] = implode(' ', array_map('escapeshellarg', array_merge([
+                        $this->rclone, 'copyto', $this->remote . ':' . $f . '/' . $rel, $this->dest($f) . '/' . $short], $flags)));
+                }
             }
+            file_put_contents($this->longFile(), json_encode($long, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), LOCK_EX);
             // Each folder in turn; the last line records how it went, which status() reads back.
             $script = 'rc=0; ' . implode(' || rc=$?; ', $steps) . ' || rc=$?; echo "STUDIO-DONE $rc" >> ' . escapeshellarg($this->log());
             $out = [];
@@ -76,6 +88,49 @@ final class Drive {
             fclose($lock);
         }
         return $this->status();
+    }
+
+    // ---------- names too long for the server ----------
+    // A phone's dictation can name a file after everything said ("Right, we went to Marley Lake, ... .txt"), and a
+    // name past 255 bytes can't be written here. Those files come in under a shortened name instead: the first
+    // words, a short tag that keeps it the same name on every run (so it's skipped once it's here), and the
+    // extension. The full name is remembered (drive-longnames.json); a note whose words were only in its name
+    // still gets them.
+    private const MAX_NAME = 180;   // bytes; leaves room for rclone's ".<hash>.partial" while it copies
+    private function longFile(): string { return studio_private_dir() . '/drive-longnames.json'; }
+    private function longNames(): array {
+        $f = $this->longFile();
+        return is_file($f) ? (json_decode((string) file_get_contents($f), true) ?: []) : [];
+    }
+    /** Paths in a watched Drive folder with a part too long for this server, from a quick listing (empty if it fails). */
+    private function longIn(string $folder): array {
+        static $seen = [];
+        if (isset($seen[$folder])) return $seen[$folder];
+        $out = []; $rc = 0;
+        exec('timeout 90 ' . implode(' ', array_map('escapeshellarg', [$this->rclone, 'lsf', '-R', '--files-only', '--drive-skip-gdocs',
+            $this->remote . ':' . $folder])) . ' 2>/dev/null', $out, $rc);
+        $long = [];
+        if ($rc === 0) foreach ($out as $rel) {
+            foreach (explode('/', $rel) as $part) if (strlen($part) > self::MAX_NAME) { $long[] = $rel; break; }
+        }
+        return $seen[$folder] = $long;
+    }
+    // each part of the path that's too long becomes its first words (whole UTF-8 characters, ending at a
+    // space where one is near), "~" and a tag from the full name, then its extension
+    private function shorten(string $rel): string {
+        return implode('/', array_map(function (string $part): string {
+            if (strlen($part) <= self::MAX_NAME) return $part;
+            $ext = pathinfo($part, PATHINFO_EXTENSION);
+            $ext = $ext !== '' && strlen($ext) <= 5 ? '.' . $ext : '';
+            $head = mb_strcut(substr($part, 0, strlen($part) - strlen($ext)), 0, 120, 'UTF-8');
+            $sp = strrpos($head, ' ');
+            if ($sp !== false && $sp > 60) $head = substr($head, 0, $sp);
+            return rtrim($head, ' .,;:') . ' ~' . substr(sha1($part), 0, 6) . $ext;
+        }, explode('/', $rel)));
+    }
+    /** The full Drive name of a file that came in shortened ("Rides/<rel>"), or null. */
+    private function fullName(string $source): ?string {
+        return $this->longNames()[$source] ?? null;
     }
 
     public function status(): array {
@@ -100,7 +155,7 @@ final class Drive {
             'started' => $s['started'] ?? null, 'finished' => $s['finished'] ?? null, 'ok' => $s['ok'] ?? null,
             'progress' => $clean($progress),
             'copied' => array_map($clean, array_slice($copied, -40)), 'copiedCount' => count($copied),
-            'errors' => array_map($clean, array_slice($errors, -10)),
+            'errors' => $this->tidy(array_map($clean, $errors)),
             'inbox' => $this->inbox(),
             'ignored' => array_map(fn($k, $v) => ['source' => $k] + $v, array_keys($this->ignored()), array_values($this->ignored())),
         ];
@@ -269,7 +324,15 @@ final class Drive {
         }
         unset($x);
         foreach ($files as $x) {
-            if ($x['kind'] === 'text' && $x['bytes'] < 65536) $notes[] = trim((string) file_get_contents($r['root'] . '/' . $x['name']));
+            if ($x['kind'] !== 'text' || $x['bytes'] >= 65536) continue;
+            $t = trim((string) file_get_contents($r['root'] . '/' . $x['name']));
+            // a dictated note shortened on the way in: its words may only have been in its name
+            $full = $r['day'] === null ? $this->fullName($source . '/' . $x['name']) : $this->fullName(explode('/', $source)[0] . '/' . $x['name']);
+            if ($full !== null) {
+                $said = trim(preg_replace('/\.(txt|md)$/i', '', basename($full)));
+                if (!str_contains($t, mb_substr($said, 0, 60, 'UTF-8'))) $t = trim($said . "\n\n" . $t);
+            }
+            $notes[] = $t;
         }
         return ['source' => $source, 'files' => $files, 'notes' => implode("\n\n", array_filter($notes)),
             'note' => $this->processed()[$source] ?? null, 'day' => $r['day']];
@@ -297,6 +360,17 @@ final class Drive {
         $type = ['jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'png' => 'image/png', 'webp' => 'image/webp', 'heic' => 'image/heic', 'heif' => 'image/heif',
             'wav' => 'audio/wav', 'mp3' => 'audio/mpeg', 'm4a' => 'audio/mp4'][$ext] ?? 'text/plain; charset=utf-8';
         studio_send_file($path, $type);
+    }
+
+    // rclone's errors, readable: each said once (its retries say it again), a long path cut short, newest last
+    private function tidy(array $errors): array {
+        $out = [];
+        foreach ($errors as $e) {
+            $e = preg_replace('/^Attempt \d+\/\d+ failed with \d+ errors? and: /', '', $e);
+            $e = preg_replace_callback('/[^\/:]{100,}/u', fn($m) => mb_substr($m[0], 0, 50, 'UTF-8') . '…' . mb_substr($m[0], -20, null, 'UTF-8'), $e);
+            $out[$e] = true;
+        }
+        return array_slice(array_keys($out), -6);
     }
 
     private function tail(string $file, int $n): array {

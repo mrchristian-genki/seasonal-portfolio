@@ -120,6 +120,9 @@ DreamHost (outside the web folder, mode 600): the password hash, the Anthropic A
 To watch more folders later (the AI content, phase 2), add them to the private config, e.g.
 `'drive_folders' => ['Rides', 'Studio'],`. Optional settings: `'rclone'` (path) and `'drive_remote'`.
 The copy's log is `~/studio-private/drive-sync.log`.
+A file whose name is too long for the server (past 180 bytes: a phone's dictation can name a file after
+everything said) comes in under its first words plus a short tag, e.g. `Right, we went to Marley Lake ~b56ace.txt`;
+its full name is kept in `~/studio-private/drive-longnames.json`, and its words still reach Your notes.
 
 ## Video loops (once)
 
