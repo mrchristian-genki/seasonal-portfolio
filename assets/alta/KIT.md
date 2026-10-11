@@ -275,16 +275,40 @@ Her return is the dive-down clip played backwards (Claude makes the reversed cop
 went down. During the dive her own video head is shown, since she isn't talking; her layered head takes over again at
 the ledge. If Play is pressed mid-dive, she comes straight back up before she starts talking.
 
-**Clip 1, dive-down** (image to video, first frame: the still of her at the ledge, 8 s):
+**Why the first try failed (Oct 11):** asked only to "sink", the tools kept her head above the ledge and pulled her back
+up, since a clip tends to return to its first frame. The fix is to **make the end picture first**, then give the clip
+both a first and a last frame, so it has to get there.
 
-> A smooth, weightless clip from this exact image. Locked camera, no zoom or pan. She lets go of the copper ledge,
-> lowers her arms, and sinks slowly straight down behind the ledge into the water, as if exhaling, her crown passing
-> below the ledge last. Under the water she settles close to the front glass, facing the camera, about the middle
-> of the tank, her tail gently sculling, her arms relaxed at her sides, a soft calm smile. Slow, eased motion with no
-> jitter; a few small bubbles rise. The tank, the ledge, the rocks, the logs and the hall behind her stay exactly as
-> they are. She ends hovering still, facing the camera.
+**Step 1, the end frame** (`alta-under.jpg`, an image edit of the still of her at the ledge):
 
-**Clip 2, dive-swim** (image to video, first and last frame: the last frame of clip 1, 8 s):
+> Same image, same camera, same tank, same ledge, rocks, logs, trout and hall, all exactly as they are. Move A.L.T.A.
+> down into the water: the copper ledge is now empty, with nothing above it. She is fully underwater, below the
+> water's surface and below the ledge, in the middle of the tank close to the front glass, facing the camera, her whole
+> head, crown and hair under the water, her arms relaxed at her sides, her tail curling gently below her, a calm soft
+> smile. A few small bubbles above her. The same character exactly: same face, eyes, crown, hair, body and tail.
+
+**Check:** nothing of her shows above the ledge; her crown is at least a head's height below the water's surface.
+
+**Step 2, the clip** (`dive-down.mp4`, image to video, 8 s): **first frame** the still of her at the ledge, **last
+frame** `alta-under.jpg`.
+
+> She lets go of the copper ledge and sinks straight down behind it into the water, smoothly and slowly, as if
+> exhaling: her hands slide off the ledge first, then her shoulders, then her head, and her crown passes below the
+> ledge last. By the middle of the clip her whole head, crown and hair are under the water and stay under; she does
+> not come back up in this clip. She drifts down to hover close to the front glass, facing the camera. Weightless,
+> eased motion, no jitter; a few small bubbles rise. Locked camera. The tank, ledge, rocks, logs and hall stay
+> exactly as they are.
+
+**If your tool can't take a last frame,** use this instead, from the still alone:
+
+> A slow, smooth clip from this exact image. Locked camera, no zoom or pan. In the first two seconds she lets go of the
+> copper ledge. From second two to second five she sinks straight down behind the ledge until her whole body, head,
+> crown and hair are completely under the water, below the ledge. For the last three seconds the copper ledge is empty,
+> with nothing of her above it, and she hovers underwater close to the front glass, facing the camera, her tail gently
+> sculling. She does not rise again or return to the ledge in this clip. Weightless, eased motion, no jitter; a few
+> small bubbles rise. The tank, ledge, rocks, logs and hall stay exactly as they are.
+
+**Clip 2, dive-swim** (image to video, first and last frame: `alta-under.jpg`, or the last frame of clip 1, 8 s):
 
 > A seamless loop from this exact image. Locked camera, no zoom or pan. Underwater, she swims a slow, graceful loop
 > close to the front glass: a gentle turn to one side, along the front of the tank, and back to exactly where she
