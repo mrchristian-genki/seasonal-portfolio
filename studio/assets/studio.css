@@ -618,3 +618,14 @@ dialog.pfp::backdrop{background:rgba(20,12,6,.7)}
 #magOff{margin-top:10px}
 @media (prefers-reduced-motion:reduce){.ph,.magCard,.magPickBox,.magNeeds li{transition:none}.magCard:hover{transform:none}}
 #magAddT{width:auto;flex:0 1 280px}
+/* Swap: a picture's place keeps, the picture in it changes */
+.swapBar{margin:10px 0 0;padding:8px 12px;border-radius:10px;background:rgba(227,161,43,.14);border:1px solid rgba(227,161,43,.5);transition:opacity .8s ease-in-out}
+.ph .opts .swBtn{font-size:13px}
+.swp{max-width:min(680px,94vw)}
+.swp h3{margin:14px 0 6px}
+.swGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;max-height:46vh;overflow:auto;padding:2px}
+.swK{display:flex;flex-direction:column;gap:4px;padding:4px;border-radius:8px;background:#fff;text-align:left;transition:box-shadow .6s ease-in-out,transform .6s ease-in-out}
+.swK:hover{transform:translateY(-2px);box-shadow:0 0 0 2px rgba(227,161,43,.7)}
+.swK img,.swK .wsNo{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:5px;display:block}
+.swK small{font-size:11px;color:var(--ink3);overflow-wrap:anywhere;font-weight:500}
+@media (prefers-reduced-motion:reduce){.swK{transition:none}.swK:hover{transform:none}}

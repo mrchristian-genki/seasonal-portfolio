@@ -729,7 +729,7 @@
         '<h3 class="ga-h">Her cap</h3><div id="lookBox"></div><h3 class="ga-h">The backdrop</h3><div id="bdBox"></div></details>') +
       (hasScript ? '' : audioPanel) +
       fold('photos', 'Photos', [nPh ? nPh + ' photo' + (nPh > 1 ? 's' : '') : '', nLoop ? nLoop + ' loop' + (nLoop > 1 ? 's' : '') : ''].filter(Boolean).join(' · '), !isLive,
-        (later ? '' : dropPhotos) + '<p class="muted" id="photoOrderHint">The post shows them in this order, top to bottom: ↑ and ↓ move one. Once the post has subheads ("## " lines), each can sit right under one.</p><div id="photos" class="photos"></div>' + (later ? '<p class="muted" id="noPhotos">No photos yet. Add some under Add more.</p>' : '')) +
+        (later ? '' : dropPhotos) + '<p class="swapBar" id="swapBar" hidden></p><p class="muted" id="photoOrderHint">The post shows them in this order, top to bottom: ↑ and ↓ move one. Once the post has subheads ("## " lines), each can sit right under one.</p><div id="photos" class="photos"></div>' + (later ? '<p class="muted" id="noPhotos">No photos yet. Add some under Add more.</p>' : '')) +
       (E.id ? fold('social', 'Social', E.social && E.social.instagram ? 'captions written' : isLive ? 'next: share it' : 'Instagram and Facebook', false, '<div id="socialBox"></div>') : '') +
       (trackTop ? fold('track', 'Track', E.track ? 'on the map' : '', !isLive, '<div id="track"></div>') : '') +
       fold('loops', 'Video loops', '', false, '<div id="loopBox"></div>') +
@@ -749,7 +749,7 @@
     ['kind', 'date'].forEach(function (k) { $('#' + k).addEventListener('change', markDirty); });
     $('#title').addEventListener('input', function () { $('#sumTitle').textContent = this.value.trim() || 'New entry'; });
     $('#epScript').addEventListener('input', count); count();
-    renderTrack(); renderPhotos(); renderQuestions(); renderAudio(); renderLoops();
+    SWAP = null; renderTrack(); renderPhotos(); renderSwapBar(); renderQuestions(); renderAudio(); renderLoops();
     driveAudio().then(function () { renderDriveFiles(); renderVoiceNotes(); renderNext(); });
     ['postBody', 'epScript', 'fieldNotes'].forEach(function (k) { $('#' + k).addEventListener('change', renderNext); });
     $('#postBody').addEventListener('change', renderFeature);   // the feature's "after paragraph" picks follow the paragraphs
@@ -1372,6 +1372,99 @@
     var c = $$('.ph', $('#photos')).filter(function (el) { return photoName(E.photos[+el.getAttribute('data-i')]) === moved; })[0];
     if (c) { c.classList.add('moved'); setTimeout(function () { c.classList.remove('moved'); }, 900); var b = $(d < 0 ? '.phUp' : '.phDn', c); if (b && !b.disabled) b.focus(); }
   }
+  // New pictures: while the Note is still in the order they were taken, they join it by time; once it's been put in
+  // an order by hand, they join at the end, so the order chosen stays. A swap waiting for one puts it in that place.
+  var ORDER = null;
+  function byTime(a, b) { var x = String(a.takenAt || '~'), y = String(b.takenAt || '~'); return x < y ? -1 : x > y ? 1 : 0; }
+  function markOrder() {
+    var n = E.photos.length, t = true;
+    for (var i = 1; i < n; i++) if (byTime(E.photos[i - 1], E.photos[i]) > 0) t = false;
+    ORDER = { n: n, timed: t };
+  }
+  function settleNew() {
+    var o = ORDER || { n: E.photos.length, timed: true }; ORDER = null;
+    var added = E.photos.slice(o.n);
+    if (SWAP && added.length) {
+      var slot = E.photos.map(photoName).indexOf(SWAP.name), nw = added.filter(function (p) { return !p.strip; })[0];
+      if (slot >= 0 && nw) {
+        var k = E.photos.indexOf(nw), old = photoName(E.photos[slot]);
+        swapContents(slot, k);
+        var gone = E.photos[k]; gone.use = 'skip'; gone.cover = false; delete gone.at;   // the one swapped out waits at the end, not used
+        toast('Swapped in. ' + old + ' is at the end of Photos, not used: Remove it if you don\'t need it.');
+        var keep = photoName(E.photos[slot]); SWAP = null; renderSwapBar();
+        setTimeout(function () { glowPhoto(keep); }, 0);
+        return;
+      }
+    }
+    if (o.timed) E.photos.sort(byTime);
+    else E.photos = E.photos.slice(0, o.n).concat(added.sort(byTime));
+  }
+  // Swap: a picture's place stays (its spot in the order, the subhead it sits under, the cover, and where the
+  // magazine and Workshop features use it) while the picture in it changes, to one already in this Note or a new
+  // photo or loop. The caption goes with its picture.
+  var SWAP = null;   // { name }: the place waiting for a new photo or loop
+  var CONTENT = ['src', 'poster', 'video', 'w', 'h', 'caption', 'from', 'takenAt', 'ai', 'hdr', 'range'];
+  function swapContents(i, j) {
+    var a = E.photos[i], b = E.photos[j], na = photoName(a), nb = photoName(b);
+    var pa = a.poster ? a.poster.split('/').pop() : '', pb = b.poster ? b.poster.split('/').pop() : '';
+    CONTENT.forEach(function (k) { var x = a[k], y = b[k]; if (y === undefined) delete a[k]; else a[k] = y; if (x === undefined) delete b[k]; else b[k] = x; });
+    // what pointed at a place keeps pointing at it: rename references to follow the pictures' new homes
+    var map = {}; map[na] = nb; map[nb] = na; if (pa) map[pa] = pb || nb; if (pb) map[pb] = pa || na;
+    var fix = function (v) { return v && map.hasOwnProperty(v) ? map[v] : v; };
+    if (E.workshop) { (E.workshop.media || []).forEach(function (x) { if (!x.note) x.photo = fix(x.photo); }); if (E.workshop.cover) E.workshop.cover = fix(E.workshop.cover); }
+    if (E.feature) (E.feature.blocks || []).forEach(function (bk) { bk.photo = fix(bk.photo); if (!bk.photo) delete bk.photo; (bk.type === 'steps' && bk.items || []).forEach(function (x) { if (x.photo) x.photo = fix(x.photo); }); });
+    if (a.cover || b.cover) repalette();
+    markDirty();
+  }
+  function glowPhoto(n) {
+    var c = $$('.ph', $('#photos')).filter(function (el) { return photoName(E.photos[+el.getAttribute('data-i')]) === n; })[0];
+    if (c) { c.classList.add('moved'); setTimeout(function () { c.classList.remove('moved'); }, 900); }
+  }
+  function thumbOf(p) {
+    var n = photoName(p);
+    if (!p.video) return photoUrl(p);
+    if (clipsNew[n]) return 'api.php?a=vfile&t=poster&k=' + clipsNew[n].token;
+    var pn = p.poster ? p.poster.split('/').pop() : '';
+    return posterNew[pn] ? posterNew[pn].url : E.id && pn ? 'api.php?a=photo&id=' + encodeURIComponent(E.id) + '&n=' + encodeURIComponent(pn) + posterBust : '';
+  }
+  function canSwap(p, i) { return !p.strip && !(p.hdr && E.photos[i + 1] && E.photos[i + 1].strip); }   // an HDR photo stays with its exposure strip
+  function renderSwapBar() {
+    var b = $('#swapBar'); if (!b) return;
+    b.hidden = !SWAP;
+    if (!SWAP) { b.innerHTML = ''; return; }
+    b.innerHTML = '<span>The next photo or loop you add goes into the place of <b>' + esc(SWAP.name) + '</b>.</span> <button type="button" class="link" id="swapX">Cancel the swap</button>';
+    $('#swapX').onclick = function () { SWAP = null; renderSwapBar(); };
+  }
+  function swapPicker(i) {
+    collect();
+    var p = E.photos[i], n = photoName(p);
+    var d = document.createElement('dialog'); d.className = 'pfp swp';
+    var others = E.photos.map(function (q, j) { return { q: q, j: j }; }).filter(function (o) { return o.j !== i && canSwap(o.q, o.j); });
+    d.innerHTML = '<h2>Swap <small>' + esc(n) + '</small></h2><p class="muted">The new one takes this place: its spot in the order' + (p.at ? ', under "' + esc(p.at) + '"' : '') + (p.cover ? ', the cover' : '') + ', and anywhere a feature uses it. Captions go with their pictures.</p>' +
+      '<h3>With a new photo or video</h3><div class="row"><label class="pick swNew">Choose a file<input type="file" accept="image/*,video/mp4,video/quicktime,video/webm,.mov,.m4v" hidden></label>' +
+      '<span class="muted">A video opens in Video loops: the loop you make goes here.</span></div>' +
+      (others.length ? '<h3>With one already in this Note</h3><p class="muted">The two trade places.</p><div class="swGrid">' + others.map(function (o) {
+        var t = thumbOf(o.q);
+        return '<button type="button" class="swK" data-j="' + o.j + '" title="' + esc(o.q.caption || photoName(o.q)) + '">' + (t ? '<img src="' + esc(t) + '" alt="">' : '<span class="wsNo"></span>') + '<small>' + esc(photoName(o.q)) + (o.q.use === 'skip' ? ' · not used' : '') + '</small></button>';
+      }).join('') + '</div>' : '') +
+      '<div class="row"><span class="sp"></span><button type="button" class="link swX">Cancel</button></div>';
+    document.body.appendChild(d); d.showModal();
+    var close = function () { d.close(); d.remove(); };
+    $('.swX', d).onclick = close; d.addEventListener('cancel', close);
+    $$('.swK', d).forEach(function (b) { b.onclick = function () {
+      var j = +b.getAttribute('data-j'), was = E.photos[j].use;
+      swapContents(i, j);
+      if (was === 'skip' && p.use !== 'skip') { E.photos[j].use = 'skip'; }   // a picture brought back in from the unused ones: the old one takes its place among them
+      close(); renderPhotos(); renderLoops(); glowPhoto(photoName(E.photos[i])); glowPhoto(photoName(E.photos[j]));
+      toast('Swapped. Save to keep it.');
+    }; });
+    $('.swNew input', d).onchange = function () {
+      var f = this.files[0]; if (!f) return;
+      SWAP = { name: n }; close(); renderSwapBar();
+      if (isVideo(f)) { upVideo(f); toast('Make the loop under Video loops; it goes into the place of ' + n + '.'); }
+      else addPhotos([f]);
+    };
+  }
   function subheads() { return ($('#postBody') ? $('#postBody').value : E.post.body || '').split(/\n\s*\n/).map(function (t) { return t.trim(); }).filter(function (t) { return /^## /.test(t); }).map(function (t) { return t.slice(3).trim(); }); }
   function renderPhotos() {
     var box = $('#photos'), none = $('#noPhotos');
@@ -1405,7 +1498,7 @@
         '<textarea rows="2" placeholder="Caption">' + esc(p.caption) + '</textarea>' +
         '<div class="opts"><label><input type="checkbox" class="use"' + (p.use !== 'skip' ? ' checked' : '') + '> Use</label>' +
         '<label><input type="radio" name="cover" class="cover"' + (p.cover ? ' checked' : '') + '> Cover</label>' + (clip ? '<button type="button" class="link pfBtn">Poster frame</button>' : '') +
-        '<button class="link rm">Remove</button>' + mv(i) + '</div>' + at(p) + '</div></div>';
+        (canSwap(p, i) ? '<button type="button" class="link swBtn">Swap</button>' : '') + '<button class="link rm">Remove</button>' + mv(i) + '</div>' + at(p) + '</div></div>';
     }).join('');
     $$('.ph', box).forEach(function (d) {
       $('textarea', d).addEventListener('input', markDirty);
@@ -1414,6 +1507,7 @@
       var pu = $('.phUp', d), pd = $('.phDn', d), ix = +d.getAttribute('data-i');
       if (pu) pu.onclick = function () { movePhoto(ix, -1); };
       if (pd) pd.onclick = function () { movePhoto(ix, 1); };
+      var sw = $('.swBtn', d); if (sw) sw.onclick = function () { swapPicker(ix); };
       $('textarea', d).addEventListener('change', renderFeature);
       $('.rm', d).onclick = function () {
         if (!confirm('Remove this photo from the entry?')) return;
@@ -1422,6 +1516,7 @@
         if (p.poster) delete posterNew[p.poster.split('/').pop()];
         if (fresh[n]) delete fresh[n]; else if (clipsNew[n]) delete clipsNew[n]; else { removed.push(n); if (p.poster) removed.push(p.poster.split('/').pop()); }
         E.photos.splice(i, 1);
+        if (SWAP && SWAP.name === n) { SWAP = null; renderSwapBar(); }
         if (E.workshop && E.workshop.media) E.workshop.media = E.workshop.media.filter(function (x) { return x.note || featFind(x); });
         markDirty(); renderPhotos(); renderLoops();
       };
@@ -1893,7 +1988,8 @@
     }).catch(function () { return false; });
   }
   function addPhotos(files) {
-    collect();
+    collect(); markOrder();
+    if (SWAP) files = [].slice.call(files, 0, 1);   // a swap takes one picture
     [].slice.call(files).filter(isVideo).forEach(upVideo);   // a video goes to Video loops, to trim a loop from
     var list = [].slice.call(files).filter(function (f) { return /^image\//.test(f.type) || /\.(jpe?g|heic|png|webp)$/i.test(f.name); });
     if (!list.length) return Promise.resolve();
@@ -1910,7 +2006,7 @@
     });
   }
   function addSingles(list, merged) {
-    if (!list.length) { E.photos.sort(function (a, b) { var x = String(a.takenAt || '~'), y = String(b.takenAt || '~'); return x < y ? -1 : x > y ? 1 : 0; }); markDirty(); renderPhotos(); if (merged) toast('Merged ' + merged + ' HDR photo' + (merged > 1 ? 's' : '') + '.'); return Promise.resolve(); }
+    if (!list.length) { settleNew(); markDirty(); renderPhotos(); if (merged) toast('Merged ' + merged + ' HDR photo' + (merged > 1 ? 's' : '') + '.'); return Promise.resolve(); }
     toast('Preparing ' + list.length + ' photo' + (list.length > 1 ? 's' : '') + '…');
     var chain = Promise.resolve();
     list.forEach(function (f) {
@@ -1927,7 +2023,7 @@
       });
     });
     return chain.then(function () {
-      E.photos.sort(function (a, b) { var x = String(a.takenAt || '~'), y = String(b.takenAt || '~'); return x < y ? -1 : x > y ? 1 : 0; });
+      settleNew();
       markDirty(); renderPhotos();
       if (merged) toast('Merged ' + merged + ' HDR photo' + (merged > 1 ? 's' : '') + '.');
     });
@@ -2085,12 +2181,12 @@
         if (vt.dead) return;
         if (r.state === 'working') { if (msg) msg.textContent = 'Making the loop… ' + (r.pct ? r.pct + '%' : ''); setTimeout(ask, 2000); return; }
         if (r.state === 'failed') { var lg = $('#vtLog'); if (lg) lg.outerHTML = logBox(r.log); throw new Error(r.error || 'ffmpeg stopped'); }
-        collect();
+        collect(); markOrder();
         var name = nextClip();
         clipsNew[name + '.mp4'] = { token: r.token };
         E.photos.push({ src: 'data/photos/' + (E.id || 'new') + '/' + name + '.mp4', poster: 'data/photos/' + (E.id || 'new') + '/' + name + '.jpg', video: true,
           caption: cap, takenAt: r.taken || null, w: r.w, h: r.h, use: 'post', cover: false, from: vt.name, range: [from, to] });
-        E.photos.sort(function (a, c) { var x = String(a.takenAt || '~'), y = String(c.takenAt || '~'); return x < y ? -1 : x > y ? 1 : 0; });
+        settleNew();
         markDirty(); renderPhotos();
         toast('Loop made. Save to keep it.');
         return renderLoops().then(function () {
