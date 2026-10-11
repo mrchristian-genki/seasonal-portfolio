@@ -174,6 +174,24 @@ Claude then keys the green; cuts the irises, lids and mouths to the head's frame
 picture for her gestures (like GlazyArray's `trick-safe-area.jpg`); and loops the tail. From there her player can be
 built.
 
+## Built so far (Oct 11)
+
+From the first renders, in `assets/alta/parts/`, layered in `assets/alta/preview.html` (unlisted, noindex):
+
+- **`rest.webp`:** the tank with her at the ledge, her painted head erased (the empty tank shows through where it was).
+- **Her head** (`head-base.webp`, `head-iris.webp`, `head-lens.png`): the template with empty sockets, and her irises
+  in a lens mask so they glance. A colour layer gives the steady amber and the cyan-green bloom; the rings narrow and
+  dilate.
+- **Mouths** (`mouth-*.webp`): smile, neutral (also used for "mm"), ah, oh, oo, ee, laugh. All share one soft-edged
+  oval cut from her renders, colour-matched to the template, so any one replaces the others.
+- **`tail.mp4`:** the water below the ledge from the Flow clip, which loops cleanly over its whole 8 seconds.
+- **`palms.mp4`:** the open-palms gesture over her torso, her video head erased, cut where she nears rest and faded
+  back to the still.
+- **`layout.json`:** where each part sits on the 1376 × 768 frame.
+
+**Still needed:** her eyes closed (prompt 2b) for blinks. The "hand to her chin" and "hand by her face" clips bring a
+hand up where her head layer sits, so they don't layer; ask for those again with the hands kept low (part 5).
+
 ## Quick fixes
 
 - **Her face shifts between head parts:** say "same image, exactly as it is" again, and edit the template, never a
