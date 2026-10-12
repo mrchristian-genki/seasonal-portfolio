@@ -72,6 +72,8 @@ const pickFor = (e) => {
   return RES.R.pick(RES.J, { narrator: e.episode && e.episode.narrator, tank: e.altaBackdrop, cats, prefer: e.narratorLook && e.narratorLook.fit === 'category' && e.narratorLook.from });
 };
 const narratorOf = (e) => pickFor(e).narrator.name;
+// a feature's photo spreads: e.feature.lookbook is one, or a list of them
+const books = (e) => { const L = e.feature && e.feature.lookbook; return (Array.isArray(L) ? L : L ? [L] : []).filter((b) => b && typeof b === 'object'); };
 // the scene behind A.L.T.A.'s tank on this Note (KIT.md Round 8), when it has one and its file is there
 const bdAttr = (e) => {
   const t = pickFor(e).tank;
@@ -246,7 +248,7 @@ for (const e of events) {
   const coverStrip = cover && photos[photos.indexOf(cover) + 1] && photos[photos.indexOf(cover) + 1].strip ? photos[photos.indexOf(cover) + 1] : null;
   const FB = (e.feature && e.feature.masthead && Array.isArray(e.feature.blocks)) ? e.feature.blocks : [];
   const held = new Set(FB.flatMap((b) => [b.photo].concat((b.type === 'steps' && b.items || []).map((x) => x.photo))).filter(Boolean));   // pictures a feature's block shows inside itself
-  ((e.feature && e.feature.lookbook && e.feature.lookbook.items) || []).forEach((x) => { held.add(path.basename(String(x.src || ''))); if (x.poster) held.add(path.basename(String(x.poster))); });   // and its photo spread
+  books(e).flatMap((b) => b.items || []).forEach((x) => { held.add(path.basename(String(x.src || ''))); if (x.poster) held.add(path.basename(String(x.poster))); });   // and its photo spread
   const ps = paras(e.post && e.post.body), table = photos.filter((p) => p.table), loose = photos.filter((p) => p !== cover && p !== coverStrip && !p.table && !p.at && !held.has(p.file));
   const tall = (p) => p.w && p.h && p.h > p.w * 1.1;
   const inline = [];
@@ -263,13 +265,14 @@ for (const e of events) {
   const fig = (p, cls) => p.video
     ? `<figure class="${cls || 'photo'} clip"><a href="${esc(p.src)}" data-lightbox data-video><video src="${esc(p.src)}" poster="${esc(p.poster)}" width="${p.w}" height="${p.h}" muted loop playsinline preload="none" data-autoplay></video></a>${p.caption ? `<figcaption>${p.ai ? '<span class="ai-badge">Made with AI</span> ' : ''}${esc(p.caption)}</figcaption>` : ''}</figure>`
     : `<figure class="${cls || 'photo'}"><a href="${esc(p.src)}" data-lightbox><img src="${esc(p.src)}" alt="${esc(p.caption)}" width="${p.w}" height="${p.h}" loading="lazy"></a>${p.caption ? `<figcaption>${p.ai ? '<span class="ai-badge">Made with AI</span> ' : ''}${esc(p.caption)}</figcaption>` : ''}</figure>`;
-  // A feature's look book (e.feature.lookbook): portraits in a grid, set just before the subhead it names ("before")
+  // A feature's look books, its photo spreads (e.feature.lookbook: one, or a list of them): pictures in a grid, each
+  // book set just before the subhead it names ("before"; at the end of the story if none or not found)
   // (an item whose file is missing is left out with a warning, rather than stopping the whole site from building)
   const lbHas = (x) => { const ok = !!x.src && fs.existsSync(path.join(FIELD, x.src)) && (!x.poster || fs.existsSync(path.join(FIELD, x.poster))); if (!ok) console.warn(`${e.id}: look book picture missing, left out: ${x.src}`); return ok; };
-  const LB0 = e.feature && e.feature.lookbook, LBI = LB0 ? (LB0.items || []).filter(lbHas) : [];
-  const LB = LBI.length ? { ...LB0, items: LBI } : null;
-  const lookbook = LB ? `<section class="mag-book"><h2 class="sub">${esc(LB.title || 'The look book')}</h2>${LB.dek ? `<p class="mag-book-dek">${esc(LB.dek)}</p>` : ''}<div class="mag-book-grid">${LB.items.map((x, k) => {
-    const base = 'look-' + String(k + 1).padStart(2, '0'), alt = esc(x.alt || `GlazyArray in ${String(x.name || '').toLowerCase()}`), cap = `<figcaption><b>${esc(x.name || '')}</b> ${esc(x.when || '')}</figcaption>`;
+  const LBS = books(e).map((b) => ({ ...b, items: (b.items || []).filter(lbHas) })).filter((b) => b.items.length);
+  const bookHtml = (LB, n) => `<section class="mag-book"><h2 class="sub">${esc(LB.title || 'The look book')}</h2>${LB.dek ? `<p class="mag-book-dek">${esc(LB.dek)}</p>` : ''}<div class="mag-book-grid">${LB.items.map((x, k) => {
+    // the first book's files are look-01…, a second book's look2-01…, and so on
+    const base = 'look' + (n ? n + 1 : '') + '-' + String(k + 1).padStart(2, '0'), alt = esc(x.alt || `GlazyArray in ${String(x.name || '').toLowerCase()}`), cap = `<figcaption><b>${esc(x.name || '')}</b> ${esc(x.when || '')}</figcaption>`;
     if (x.video && /\.mp4$/.test(x.src || '') && x.poster) {   // a loop: plays silently, its poster frame until it does
       fs.copyFileSync(path.join(FIELD, x.src), path.join(media, base + '.mp4')); fs.copyFileSync(path.join(FIELD, x.poster), path.join(media, base + '.jpg'));
       const tag = '?v=' + vtag(x.src, x.poster);
@@ -277,7 +280,8 @@ for (const e of events) {
     }
     const f = base + '.jpg'; fs.copyFileSync(path.join(FIELD, x.src), path.join(media, f));
     return `<figure class="mag-look${k === 0 ? ' wide' : ''}"><a href="../media/${e.id}/${f}" data-lightbox><img src="../media/${e.id}/${f}" alt="${alt}" width="${x.w}" height="${x.h}" loading="lazy"></a>${cap}</figure>`;
-  }).join('')}</div><p class="mag-book-ai"><span class="ai-badge">Made with AI</span></p></section>\n` : '';
+  }).join('')}</div><p class="mag-book-ai"><span class="ai-badge">Made with AI</span></p></section>\n`;
+  const lbDone = new Set();
   // A feature's blocks (e.feature.blocks), the furniture any magazine template can use, each set just before the
   // subhead it names ("before"; at the end of the story if none): a spec box ("specs": rows of [label, value]), a
   // sidebar ("box": a kicker, a title, text and an optional picture of the Note's), a verdict ("verdict": a score,
@@ -302,10 +306,9 @@ for (const e of events) {
   };
   const sameSub = (a, b) => String(a || '').replace(/['\u2019]/g, "'") === String(b || '').replace(/['\u2019]/g, "'");
   const placed = new Set();
-  let lbDone = !LB;
   let body = '';
   ps.forEach((p, i) => {
-    if (!lbDone && /^## /.test(p) && p.slice(3).replace(/['\u2019]/g, "'") === String(LB.before || '').replace(/['\u2019]/g, "'")) { body += lookbook; lbDone = true; }
+    if (/^## /.test(p)) LBS.forEach((b, n) => { if (!lbDone.has(n) && sameSub(b.before, p.slice(3))) { body += bookHtml(b, n); lbDone.add(n); } });
     if (/^## /.test(p)) FB.forEach((b, k) => { if (!placed.has(k) && sameSub(b.before, p.slice(3))) { body += blockHtml(b); placed.add(k); } });
     const m = /^What I learned:\s*/i.exec(p);
     // a feature's own marks (a profile): "## " a subhead, "> " a pull quote set large
@@ -315,7 +318,7 @@ for (const e of events) {
     inline.forEach((u, k) => { if (slots[k] === i) body += (u.stack ? u.map((ph) => fig(ph, ph.strip ? 'photo strip' : '')).join('\n') : u.length > 1 ? `<div class="duo">${u.map((ph) => fig(ph)).join('')}</div>` : fig(u[0], tall(u[0]) ? 'photo tall' : '')) + '\n'; });
     if (i === tableSlot) body += tableFig() + '\n';
   });
-  if (!lbDone) body += lookbook;   // its subhead wasn't found: at the end of the story
+  LBS.forEach((b, n) => { if (!lbDone.has(n)) body += bookHtml(b, n); });   // its subhead wasn't found: at the end of the story
   FB.forEach((b, k) => { if (!placed.has(k)) body += blockHtml(b); });   // blocks whose subhead wasn't found, or that name none: at the end
 
   // A FEATURE (a profile, written like a magazine cover story: e.feature): the cover becomes a magazine cover with its

@@ -666,3 +666,10 @@ dialog.pfp::backdrop{background:rgba(20,12,6,.7)}
 .spF input{width:100%}
 .spF .row{gap:10px;align-items:center;flex-wrap:wrap}
 @media (max-width:520px){.spItem{flex-direction:column}.spItem img{width:100%}}
+/* the photo spread panel: one tab per spread when a Note has more than one */
+.spTabs{gap:6px;flex-wrap:wrap;margin:6px 0 10px}
+.spTab{border:1px solid var(--line);background:rgba(255,255,255,.55);color:var(--ink2);border-radius:999px;padding:3px 11px;font:600 13px/1.4 inherit;cursor:pointer;
+  transition:background-color .6s ease-in-out,border-color .6s ease-in-out,color .6s ease-in-out}
+.spTab:hover{border-color:#b08a52;color:var(--ink)}
+.spTab.on{border-color:#b08a52;background:#f4e6cf;color:var(--ink)}
+@media (prefers-reduced-motion:reduce){.spTab{transition:none}}
