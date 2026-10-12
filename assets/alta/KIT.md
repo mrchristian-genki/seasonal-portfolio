@@ -501,8 +501,11 @@ add this line, then the gesture's own line:
 
 **Built (Oct 12):** `gest-play` ("press play") is in her idle gestures: her hand reaches over the front of the ledge
 and points down below it, so it plays in a taller layer (`parts/play.mp4` and `-cut.mp4`, colour over mask) where only
-her hand shows below the ledge; she does it only while she waits, never while she talks. `gest-thai-bloom` is in her idle gestures (`parts/thai-bloom.mp4` and `-cut.mp4`), keyed from its
-green-screen clip and laid over her still. `gest-thai-dance` came back with her arms stretched along the whole ledge
+her hand shows below the ledge; she does it only while she waits, never while she talks. `gest-thai-bloom` was built and then taken out (Oct 12): as
+her palms come together her forearms sink down through the ledge, and as the lotus opens her wrists rise out of it, so
+the bar looks like it isn't there. A remake needs the elbows to stay on top of the ledge the whole time and the hands to
+stay above it, or to come over its front edge the way `gest-play` does. Checked at the same time: `palms` keeps its hands
+on top of the ledge, and `play` comes over the front and shows whole below it. `gest-thai-dance` came back with her arms stretched along the whole ledge
 (her hands reach from 181 to 1094 px across the 1376 frame; the box is 440 to 952, and phones show 247 to 1128): make
 it again with the hands kept low and close, as written above.
 

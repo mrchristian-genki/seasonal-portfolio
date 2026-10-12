@@ -192,9 +192,9 @@ const foot = (rel) => `<footer class="foot"><p>${esc(show.narrationNote)}</p>
 <script src="${rel}play.js?v=${V}" defer></script>
 <script src="${rel}../js/lake.js?v=4" defer></script>
 <script src="${rel}../assets/narrator/resolve.js?v=4" defer></script>
-<script src="${rel}../js/narrator.js?v=44" defer></script>
-<script src="${rel}../js/alta.js?v=13" defer></script>
-<script src="${rel}../js/marley.js?v=4" defer></script>
+<script src="${rel}../js/narrator.js?v=45" defer></script>
+<script src="${rel}../js/alta.js?v=14" defer></script>
+<script src="${rel}../js/marley.js?v=5" defer></script>
 </body>
 </html>
 `;
@@ -323,7 +323,18 @@ for (const e of events) {
   const F = e.feature && e.feature.masthead ? e.feature : null;
   // its magazine's look (css/feature.css, main.mag-<theme>): RIVETING TONE's is the default, with none named
   const theme = F && /^[a-z0-9-]{1,30}$/.test(F.theme || '') ? F.theme : '';
-  const magCover = F && cover ? `<header class="mag-cover"><div class="mag-img">${cover.video ? `<video src="${esc(cover.src)}" poster="${esc(cover.poster)}" muted loop playsinline autoplay></video>` : `<img src="${esc(cover.src)}" alt="${esc(cover.caption)}" width="${cover.w}" height="${cover.h}">`}</div>
+  // its title colours: the Note's two colours (the narrator's), each shaded to read on the cover picture where it sits
+  // (field/tools/mastcolors.py); without a palette, the magazine's own
+  let mastStyle = '';
+  const pal2 = (Array.isArray(e.palette) ? e.palette : []).filter((c) => /^#[0-9a-f]{6}$/i.test(c)).slice(0, 2);
+  if (F && cover && pal2.length) {
+    try {
+      const file = path.join(media, String(cover.video ? cover.poster : cover.src).split('/').pop().split('?')[0]);
+      const m = JSON.parse(execFileSync('python3', [path.join(here, 'mastcolors.py'), file, theme || 'riveting', ...pal2], { encoding: 'utf8' }));
+      if (/^#[0-9a-f]{6}$/.test(m.a || '')) mastStyle = ` data-mast style="--mast-a:${m.a};--mast-b:${m.b};--mast-l:${m.l}"`;
+    } catch (err) { console.warn(`${e.id}: cover title colours left as the magazine's (${err.message.split('\n')[0]})`); }
+  }
+  const magCover = F && cover ? `<header class="mag-cover"${mastStyle}><div class="mag-img">${cover.video ? `<video src="${esc(cover.src)}" poster="${esc(cover.poster)}" muted loop playsinline autoplay></video>` : `<img src="${esc(cover.src)}" alt="${esc(cover.caption)}" width="${cover.w}" height="${cover.h}">`}</div>
 <div class="mag-top"><b class="mag-mast">${String(F.masthead || '').trim().split(/\s+/).map((w) => `<span>${esc(w)}</span>`).join(' ')}</b>${F.tagline ? `<span class="mag-tag">${esc(F.tagline)}</span>` : ''}</div>
 ${F.issue ? `<span class="mag-issue">${esc(F.issue)}</span>` : ''}${(F.coverLines || []).length ? `<ul class="mag-lines">${F.coverLines.map((l) => `<li>${esc(l)}</li>`).join('')}</ul>` : ''}
 </header>${cover.caption ? `<p class="mag-cap"><span class="ai-badge">Made with AI</span> ${esc(cover.caption)}</p>` : ''}` : '';

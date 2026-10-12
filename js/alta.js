@@ -15,7 +15,8 @@
   'use strict';
   var P = '/assets/alta/parts/', V = '?v=11';
   var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var GESTURES = ['palms', 'thai-bloom', 'play'];   // her gesture clips in parts/ (KIT.md Rounds 2 and 7): open palms; a Thai dance lotus bloom; "press play"
+  var GESTURES = ['palms', 'play'];   // her gesture clips in parts/ (KIT.md Rounds 2 and 7): open palms; "press play" (the lotus bloom came out
+  // Oct 12: her forearms pass through the ledge)
   // gestures whose hand reaches over the front of the ledge, below it: a taller layer, always drawn with its mask (only her
   // hand shows below the ledge, the tank and her tail carry on behind it); "press play" only while she waits
   var TALL = { play: 1 }, IDLE_ONLY = { play: 1 };
@@ -55,6 +56,9 @@
   }
 
   function build(bar) {
+    // data-manual (the Parts Catalog's cards): nothing on a timer, no blinks, glances, gestures or dives of her own;
+    // she does only what she's asked
+    var auto = !still && !bar.hasAttribute('data-manual');
     if (bar.querySelector('.al-stage')) return;
     var audio = bar.querySelector('audio');
     var st = document.createElement('div'); st.className = 'al-stage'; st.setAttribute('aria-hidden', 'true');
@@ -98,7 +102,7 @@
       if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { vis(es[0].isIntersecting); }).observe(st); else vis(true);
     }
     // blinks and glances
-    if (!still) (function blink() {
+    if (auto) (function blink() {
       setTimeout(function () {
         if (!bar.isConnected) return;
         bar.classList.add('blink'); setTimeout(function () { bar.classList.remove('blink'); }, 130);
@@ -106,7 +110,7 @@
         blink();
       }, 2600 + Math.random() * 3800);
     })();
-    if (!still) (function glance() {
+    if (auto) (function glance() {
       if (!bar.isConnected) return;
       var away = Math.random() < 0.45;
       eyes.style.setProperty('--gx', away ? ((Math.random() - .5) * 7).toFixed(1) + '%' : '0%');
@@ -139,7 +143,7 @@
     // Waiting, her first gesture comes soon (4 to 8 s after she comes on screen or stops talking), so people see one
     // before they scroll on, then one every 14 to 22 s; her dives wait longer (plan, below)
     function gestures(soon) {
-      clearTimeout(gT); if (still) return;
+      clearTimeout(gT); if (!auto) return;
       var t = isTalking();
       gT = setTimeout(function () {
         if (!bar.isConnected) return;
@@ -207,7 +211,7 @@
     });
     [vGlide, vGlow].forEach(function (v) { v.addEventListener('ended', function () { if (dv.v === v && (dv.state === 'under' || dv.state === 'calm')) { var r = dv.state === 'calm' ? dv.rate : 1; dv.state = 'under'; dv.v = null; rise(r); } }); });
     vRise.addEventListener('ended', function () { if (dv.state === 'rise') surfaced(); });
-    function plan() { clearTimeout(dv.t); if (still || dv.state !== 'up') return; dv.t = setTimeout(dive, 30000 + Math.random() * 30000); }
+    function plan() { clearTimeout(dv.t); if (!auto || dv.state !== 'up') return; dv.t = setTimeout(dive, 30000 + Math.random() * 30000); }
     var isTalking = function () { return false; };
     bar.altaDive = dive;   // for testing, and for a page that wants to cue it
     // her eye moods (a soft cyan while she talks; a steady amber; a bright cyan-green bloom), each easing over .9 s
