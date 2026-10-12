@@ -476,6 +476,24 @@ exactly like Round 2's, so **the same rules, stricter:**
 
 From Round 2, `gest-wave`, `gest-beckon`, `gest-tap` and `gest-celebrate` suit waiting too.
 
+**Thai dance hands (Christian, Oct 12):** classical Thai dance gestures, slow and graceful. Same lead-in as above, then
+add this line, then the gesture's own line:
+
+> Classical Thai dance hands: her copper fingers held together and curved gracefully back from the palm, the thumb
+> bent back, wrists turning slowly and smoothly; in the "jeep" shape her thumb and forefinger touch while the other
+> three fingers fan out and curve back. Calm, elegant and unhurried, like a temple dancer.
+
+| File | The gesture |
+|---|---|
+| `gest-wai.mp4` | A wai: her hands rise from the ledge and meet in front of her chest, palms together and fingers pointing up, held low below her collar, for a calm moment; then they part and return to the ledge. Her head stays still (no bow). |
+| `gest-thai-bloom.mp4` | Palms together low in front of her chest, then her hands open like a lotus: the wrists turn outward and the fingers curve back, the palms open toward us, held a moment, then close together again and return to the ledge. |
+| `gest-thai-dance.mp4` | Both hands lift just above the ledge in front of her. One hand makes the "jeep" shape, thumb and forefinger touching, while the other is a flat open hand with the fingers curved back; slowly the wrists turn and the hands trade shapes, twice, then rest on the ledge. |
+| `gest-thai-spread.mp4` | Her forearms open outward along the ledge to just past her elbows, palms up and turned out, fingers curved back; the wrists ripple slowly in a wave, one hand then the other, then the arms come back in to rest. No wider than her elbows plus a hand. |
+
+Her arms opened fully out to each side would leave the safe box (her gesture layer is only that box, and phones crop
+the sides further), so the spread stays at her elbows plus a hand. The references (the Thai hand-shape sheet and the
+curved-back hand) are good to attach as a style reference, never as the first frame.
+
 **Check before sending:** step through it; if a fingertip ever crosses into the red, or her head or shoulders shift,
 make it again. Claude erases her video head, checks every frame against the box, trims each to fade from and back to
 her rest pose, and adds it to her list.
