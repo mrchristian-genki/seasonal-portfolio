@@ -248,5 +248,11 @@
    }
   ],
   "cover": "lake-shore.jpg"
+ },
+ "narratorLook": null,
+ "narratorBackdrop": {
+  "backdrop": "creek",
+  "fit": "new",
+  "scene": "a cozy maker's workshop with a workbench, tools on the wall and warm hanging lamps"
  }
 }
