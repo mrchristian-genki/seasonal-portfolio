@@ -22,11 +22,12 @@
 
   // a video whose bottom half is its own mask, drawn into a canvas with that mask as its alpha (as A.L.T.A.'s are)
   function alphaCanvas(v) {
-    var c = document.createElement('canvas'), gl = c.getContext('webgl', { premultipliedAlpha: false, alpha: true });
+    var c = document.createElement('canvas'), gl = c.getContext('webgl', { premultipliedAlpha: true, alpha: true });
     if (!gl) return null;
     var sh = function (t, src) { var o = gl.createShader(t); gl.shaderSource(o, src); gl.compileShader(o); return o; }, pr = gl.createProgram();
     gl.attachShader(pr, sh(gl.VERTEX_SHADER, 'attribute vec2 p;varying vec2 u;void main(){u=vec2(p.x*.5+.5,.5-p.y*.5);gl_Position=vec4(p,0.,1.);}'));
-    gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, 'precision mediump float;varying vec2 u;uniform sampler2D t;void main(){vec3 c=texture2D(t,vec2(u.x,u.y*.5)).rgb;float a=texture2D(t,vec2(u.x,.5+u.y*.5)).r;gl_FragColor=vec4(c,a);}'));
+    // premultiplied, with the mask's faint floor (video black is never quite 0) cut away: no pale rim around her on any browser
+    gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, 'precision mediump float;varying vec2 u;uniform sampler2D t;void main(){vec3 c=texture2D(t,vec2(u.x,u.y*.5)).rgb;float a=clamp((texture2D(t,vec2(u.x,.5+u.y*.5)).r-.1)/.82,0.,1.);gl_FragColor=vec4(c*a,a);}'));
     gl.linkProgram(pr); gl.useProgram(pr);
     gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer()); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
     var loc = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
@@ -63,6 +64,9 @@
       '<img src="' + P + 'collar.webp' + V + '" alt=""><i class="mly-dc"></i><i class="mly-dc mly-dc2"></i>' +
       '<div class="mly-g mly-charm"></div></div>';
     el.insertBefore(st, el.firstChild);
+    // the scene behind her (data-bd: the Note's backdrop, as the site picks it), under a soft floor shadow
+    var bd = el.getAttribute('data-bd');
+    if (bd && /^\/assets\/[\w.\/-]+\.(webp|jpg|png)(\?v=[\w-]+)?$/.test(bd)) { st.classList.add('has-bd'); st.style.backgroundImage = 'radial-gradient(ellipse at 50% 95%,rgba(0,0,0,.28),transparent 42%),url(' + bd + ')'; }
     var q = function (s) { return st.querySelector(s); };
     var head = q('.mly-head'), ch = q('.mly-charm'), gc = q('.mly-glow-c'), gs = q('.mly-glow-s');
     var eL = q('.mly-earL.mly-down'), eR = q('.mly-earR.mly-down');

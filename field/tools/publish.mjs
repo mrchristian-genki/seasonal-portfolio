@@ -77,6 +77,17 @@ const bdAttr = (e) => {
   const t = pickFor(e).tank;
   return t && /^[\w.-]+\.(webp|jpg|png)$/.test(t.file || '') && fs.existsSync(path.join(SITE, 'assets/alta/backdrops', t.file)) ? ` data-bd="/assets/alta/backdrops/${t.file}${t.v ? '?v=' + t.v : ''}"` : '';
 };
+// the scene behind Robot Marley on this Note (js/marley.js): its backdrop as the site picks it (its own, its
+// categories', a holiday's, the default; the same backdrops as GlazyArray's), when its file is there
+const mlyBdAttr = (e) => {
+  RES || pickFor(e);
+  const cats = tagsOf(e).filter((t) => !/^\d{4}$/.test(t)), kind = cats.shift(); if (kind) cats.push(kind);
+  const nb = mine(e.narratorBackdrop) && e.narratorBackdrop.backdrop;
+  const pf = e.narratorBackdrop && e.narratorBackdrop.fit === 'category' && e.narratorBackdrop.from;
+  const p = RES.R.pick(RES.J, { backdrop: nb || undefined, cats, prefer: pf || undefined, ignoreHolidays: !!e.ignoreHolidays });
+  const b = p.backdrop && (RES.J.backdrops || []).find((x) => x.name === p.backdrop.name);
+  return b && /^[\w.-]+\.(webp|jpg|png)$/.test(b.file || '') && fs.existsSync(path.join(SITE, 'assets/narrator/backdrops', b.file)) ? ` data-bd="/assets/narrator/backdrops/${b.file}${b.v ? '?v=' + b.v : ''}"` : '';
+};
 // moments in an episode her player acts on (js/alta.js): [{at: seconds, eyes: 'amber' | 'cyan' | ''}], from the Note
 const cueAttr = (e) => {
   const c = (e.episode && Array.isArray(e.episode.cues) ? e.episode.cues : []).filter((x) => x && isFinite(x.at)).map((x) => ({ at: +x.at, eyes: x.eyes || '' }));
@@ -162,7 +173,7 @@ ${ICONS}
 <link rel="stylesheet" href="${rel}../css/lake.css?v=2">
 <link rel="stylesheet" href="${rel}../css/narrator.css?v=33">
 <link rel="stylesheet" href="${rel}../css/alta.css?v=8">
-<link rel="stylesheet" href="${rel}../css/marley.css?v=2">
+<link rel="stylesheet" href="${rel}../css/marley.css?v=3">
 <script>/* Logo season from the calendar, as on About. */document.documentElement.dataset.season=["winter","winter","spring","spring","spring","summer","summer","summer","fall","fall","fall","winter"][new Date().getMonth()];</script>
 <link rel="stylesheet" href="${rel}../css/route-dash.css?v=${V}">
 </head>
@@ -183,7 +194,7 @@ const foot = (rel) => `<footer class="foot"><p>${esc(show.narrationNote)}</p>
 <script src="${rel}../assets/narrator/resolve.js?v=4" defer></script>
 <script src="${rel}../js/narrator.js?v=44" defer></script>
 <script src="${rel}../js/alta.js?v=10" defer></script>
-<script src="${rel}../js/marley.js?v=2" defer></script>
+<script src="${rel}../js/marley.js?v=3" defer></script>
 </body>
 </html>
 `;
@@ -275,7 +286,7 @@ for (const e of events) {
     if (b.type === 'code') return `<figure class="mag-code">${b.file ? `<figcaption class="mc-file">${esc(b.file)}</figcaption>` : ''}<pre><code>${esc(b.code || '')}</code></pre>${b.note ? `<figcaption>${esc(b.note)}</figcaption>` : ''}</figure>\n`;
     // Robot Marley, live ("marley": js/marley.js builds her in the figure, with her buttons; an optional charm and
     // two colours, else her own)
-    if (b.type === 'marley') { const pal = (b.palette || []).filter((c) => /^#[0-9a-f]{6}$/i.test(c)); return `<figure class="mag-marley"><div class="marley" data-controls${/^[a-z]{2,12}$/.test(b.charm || '') ? ` data-charm="${b.charm}"` : ''}${pal.length === 2 ? ` data-palette="${pal.join(' ')}"` : ''}></div>${b.title || b.text ? `<figcaption>${b.title ? `<b>${esc(b.title)}</b> ` : ''}${esc(b.text || '')}</figcaption>` : ''}</figure>\n`; }
+    if (b.type === 'marley') { const pal = (b.palette || []).filter((c) => /^#[0-9a-f]{6}$/i.test(c)); return `<figure class="mag-marley"><div class="marley" data-controls${mlyBdAttr(e)}${/^[a-z]{2,12}$/.test(b.charm || '') ? ` data-charm="${b.charm}"` : ''}${pal.length === 2 ? ` data-palette="${pal.join(' ')}"` : ''}></div>${b.title || b.text ? `<figcaption>${b.title ? `<b>${esc(b.title)}</b> ` : ''}${esc(b.text || '')}</figcaption>` : ''}</figure>\n`; }
     if (b.type === 'callouts') { const ph = b.photo && byFile(b.photo); if (!ph) return ''; return `<figure class="mag-callouts"><div class="mc-pic"><img src="${esc(ph.src)}" alt="${esc(ph.caption)}" width="${ph.w}" height="${ph.h}" loading="lazy">${(b.items || []).map((x, k) => `<span class="mc-dot${Number(x.x) > 62 ? ' flip' : ''}" style="--x:${Number(x.x)}%;--y:${Number(x.y)}%"><i>${k + 1}</i><b>${esc(x.label)}</b></span>`).join('')}</div><figcaption>${b.title ? `<b>${esc(b.title)}</b> ` : ''}${ph.ai ? '<span class="ai-badge">Made with AI</span> ' : ''}${esc(ph.caption)}</figcaption></figure>\n`; }
     return '';
   };
@@ -323,7 +334,7 @@ ${e.summary ? `<p class="mag-deck">${esc(e.summary)}</p>` : ''}
 ${e.summary ? `<p class="lede">${esc(e.summary)}</p>` : ''}`}
 ${alta ? `<section class="listen alta" data-narrator="alta"${palAttr(e)}${cueAttr(e)}${bdAttr(e)} aria-label="${audio ? 'Listen to the episode' : 'A.L.T.A. in her tank'}"><div><span class="listen-label">${audio ? `Listen · ${mmss(audio.sec)}` : 'Coming soon'}</span><b>${esc(e.episode.title || e.title)}</b></div>
 ${audio ? `<audio controls preload="metadata" src="${esc(audio.src)}"></audio>` : ''}</section>` : marley ? `<section class="listen mly-bar" data-narrator="marley" aria-label="Listen to the episode"><div><span class="listen-label">Listen · ${mmss(audio.sec)}</span><b>${esc(e.episode.title || e.title)}</b></div>
-<div class="marley" aria-label="Robot Marley, telling the episode"></div>
+<div class="marley"${mlyBdAttr(e)} aria-label="Robot Marley, telling the episode"></div>
 <audio controls preload="metadata" src="${esc(audio.src)}"></audio></section>` : audio ? `<section class="listen" aria-label="Listen to the episode"${lookAttr(e)}><div><span class="listen-label">Listen · ${mmss(audio.sec)}</span><b>${esc(e.episode.title || e.title)}</b></div>
 <audio controls preload="metadata" src="${esc(audio.src)}"></audio></section>` : ''}
 ${cover && !F ? fig(cover, 'cover') : ''}${coverStrip ? '\n' + fig(coverStrip, 'photo strip') : ''}
