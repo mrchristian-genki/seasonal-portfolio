@@ -782,6 +782,11 @@
       (hint ? '<small>' + esc(hint) + '</small>' : '') + '</summary><div class="fold-in">' + inner + '</div></details>';
   }
   function field(label, html, hint) { return '<label class="f"><span>' + label + '</span>' + html + (hint ? '<small>' + hint + '</small>' : '') + '</label>'; }
+  // the Narrator style panel's line: who tells this Note, and (when it's GlazyArray) her cap and backdrop
+  function lookHint(who) {
+    var gl = [E.narratorLook ? E.narratorLook.look : '', E.narratorBackdrop ? E.narratorBackdrop.backdrop : ''].filter(Boolean).join(' · ') || 'from her categories or the holiday';
+    return !who || who === 'glazyarray' ? 'GlazyArray · ' + gl : (NAR_NAME[who] || who) + ' tells it';
+  }
   function render() {
     // a note made from a Drive folder, or already saved, has its content: the drop zones wait at the bottom
     var later = !!(E.id || E.source), trackTop = !later || !!E.track;
@@ -819,7 +824,7 @@
           '<option value="alta"' + (E.episode.narrator === 'alta' ? ' selected' : '') + '>A.L.T.A.</option>' +
           '<option value="marley"' + (E.episode.narrator === 'marley' ? ' selected' : '') + '>Robot Marley</option></select>', '<span id="epWho"></span>') +
         '<div id="epTankBox"></div>' + field('Script', '<textarea id="epScript" rows="16">' + esc(E.episode.script) + '</textarea>', '<span id="epCount"></span>')) +
-      fold('look', 'GlazyArray\'s style', [E.narratorLook ? E.narratorLook.look : '', E.narratorBackdrop ? E.narratorBackdrop.backdrop : ''].filter(Boolean).join(' · ') || 'from her categories or the holiday', false,
+      fold('look', 'Narrator style', lookHint(), false,
         '<div id="styleBox"></div><details class="ga-own" id="gaOwn"' + (gaOwnOpen() ? ' open' : '') + '><summary>Or give this Note its own cap or backdrop</summary>' +
         '<h3 class="ga-h">Her cap</h3><div id="lookBox"></div><h3 class="ga-h">The backdrop</h3><div id="bdBox"></div></details>') +
       (hasScript ? '' : audioPanel) +
@@ -866,7 +871,7 @@
       return renderLookData().then(function (r) { var p = window.GAResolve && GAResolve.pick(r[3], { narrator: E.episode.narrator, cats: noteCats() }); return p ? p.narrator : { name: E.episode.narrator || 'glazyarray', why: '' }; });
     };
     var whoNow = NARNOW = E.episode.narrator || 'glazyarray';
-    var showWho = function () { who().then(function (n) { whoNow = NARNOW = n.name; var w = $('#epWho'); if (w) w.textContent = (NAR_NAME[n.name] || 'GlazyArray') + ' tells it' + (n.why ? ' (' + n.why + ')' : '') + '. The audio prompt is in their voice.'; }); };
+    var showWho = function () { who().then(function (n) { whoNow = NARNOW = n.name; var w = $('#epWho'); var lh = document.querySelector('#f-look > summary small'); if (lh) lh.textContent = lookHint(n.name); if (w) w.textContent = (NAR_NAME[n.name] || 'GlazyArray') + ' tells it' + (n.why ? ' (' + n.why + ')' : '') + '. The audio prompt is in their voice.'; }); };
     $('#epNarrator').onchange = function () { collect(); markDirty(); showWho(); };
     // the scene behind A.L.T.A.'s tank, when she tells it and there are scenes to pick from (looks.json tankBackdrops)
     var showTank = function () {
@@ -1034,7 +1039,7 @@
         ti.onkeydown = function (ev) { if (ev.key === 'Enter') { ev.preventDefault(); addTag(); } }; ti.onchange = addTag; }
       var nh = $('#gaNoHol', box); if (nh) nh.onchange = function () { if (nh.checked) E.ignoreHolidays = true; else delete E.ignoreHolidays; markDirty(); renderStyle(); };
       var hs = $('#f-look > summary'), sm = hs && $('small', hs), ht = now ? [now.look.name, now.backdrop ? now.backdrop.name : ''].filter(Boolean).join(' · ') : [L ? L.look : '', B ? B.backdrop : ''].filter(Boolean).join(' · ') || 'from her categories or the holiday';
-      if (hs) { if (!sm) { sm = document.createElement('small'); hs.appendChild(sm); } sm.textContent = ht; }   // the fold's header follows the pick
+      if (hs) { if (!sm) { sm = document.createElement('small'); hs.appendChild(sm); } sm.textContent = NARNOW && NARNOW !== 'glazyarray' ? lookHint(NARNOW) : 'GlazyArray · ' + ht; }   // the fold's header follows the pick (and who tells it)
       $$('input[data-c]', box).forEach(function (i) { i.onchange = function () {
         var c = i.getAttribute('data-c');
         if (i.checked) {
@@ -2416,7 +2421,7 @@
     if (!drafted) out.push({ t: 'Draft with Claude', d: 'Claude writes the post, the captions and the episode script from your notes, track and photos.', b: 'Draft', run: function () { draft(); } });
     if (q) out.push({ t: 'Answer Claude\'s ' + (q === 1 ? 'question' : q + ' questions'), d: 'The script isn\'t final until they\'re answered. Answer them one by one, then send them all at once.', b: 'Answer', go: '#questions' });
     if (drafted && !q && !val('epScript')) out.push({ t: 'Write the episode script', d: 'The episode is read from it. Draft with Claude writes one from the post, or write your own.', b: 'Go to the script', go: '#epScript' });
-    if (drafted && !q && LOOKPICK) out.push({ t: 'Pick GlazyArray\'s style', d: 'More than one of this Note\'s categories gives her a cap or backdrop. Tick the one this Note takes.', b: 'Pick it', go: '#f-look' });
+    if (drafted && !q && LOOKPICK) out.push({ t: 'Pick the narrator style', d: 'More than one of this Note\'s categories gives her a cap or backdrop. Tick the one this Note takes.', b: 'Pick it', go: '#f-look' });
     if (drafted && !q && val('epScript') && !audio) out.push({ t: 'Record the episode', d: 'Copy the audio prompt, render it with your voice tool, then drop the audio in or choose it from Drive.', b: 'Go to the audio', go: '#copyPrompt' });
     if (videos && !loops && !E.loopsDone) out.push({ t: 'Trim video loops', d: videos + ' video' + (videos > 1 ? 's' : '') + ' in the Drive folder. Pick the moments worth a short silent loop.', b: 'Trim loops', go: '#loops', done: 'loops' });
     if (dirty) out.push({ t: 'Save', d: 'Keep what you have so far.', b: 'Save', run: save });
