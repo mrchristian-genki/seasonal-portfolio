@@ -125,7 +125,7 @@
  },
  "palette": ["#38b1c0", "#b26f34"],
  "workshop": {
-  "order": 4,
+  "order": 5,
   "name": "ProPre Engine",
   "tagline": "From the first prompt to a print-ready book",
   "pull": "Build the tool before the hundredth book, not after.",

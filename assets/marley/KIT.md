@@ -183,6 +183,31 @@ heart), and its two colours dye the collar and the charm.
 Backdrops behind her, like GlazyArray's: soft and out of focus, no people, no text. A backyard with a wooden fence, a
 dog park, a trailhead, a Lake Tahoe beach at dusk, a cosy studio with two microphones on a low table for the podcast.
 
+## 9. Magic around Tahoe (stills, then image to video)
+
+Robot Marley out in the world, doing what a real dog can't. Each is a still first; any of them can then become a slow
+6 to 8 s clip (first frame the still, "slow, eased, dreamlike motion, locked or very slow camera"). For every one:
+paste her description first, use the lake-shore and backyard renders as references (never the model sheet), and add
+the line below at the end. Public places only, never the home.
+
+> Photoreal, cinematic, 16:9 (1376 x 768). The whole of her in frame, about a third of its height, her golden-brown and
+> white panels and amber lenses clearly hers. No people, no text, no letters, no logos, no signs.
+
+| File | The prompt |
+|---|---|
+| `scene-tallac-summit.png` | She stands on the highest granite boulder of a summit above Lake Tahoe at sunrise, chest out, ears lifted by the wind, a sea of pink clouds below and the deep blue lake beyond. A trail of tiny glowing golden paw prints leads up the rock behind her. Her lenses glow warm gold. |
+| `scene-emerald-bay-walk.png` | At dawn she trots across the glassy, mirror-still water of Emerald Bay toward the small rocky island, walking on the surface. Each paw step leaves a soft ring of golden light rippling outward. Mist on the water, pines on the shore. |
+| `scene-sand-harbor-leap.png` | At night she leaps in a long, graceful arc between two huge rounded granite boulders over clear turquoise shallows, the Milky Way overhead. Her lenses leave faint gold light trails through the air; the water below glows softly. |
+| `scene-starlit-nap.png` | High over the lake at night she floats in the air, curled as if napping in a sunny patch, paws tucked under her chest, held up by a soft gold glow from the seams of her panels. The lake below mirrors the stars and a crescent moon. |
+| `scene-aspen-swirl.png` | In a grove of golden autumn aspens above the lake, she drops into a play-bow while the yellow leaves lift off the ground and spiral around her in a slow ring, as if she called them. Warm late-afternoon light. |
+| `scene-powder-ridge.png` | On a snowy ridge high above the lake, she bounds through deep fresh powder in a mid-air gallop, a bright spray of snow behind her, the falling snowflakes lit gold by her lenses. Blue winter sky, the lake far below. |
+| `scene-waterfall-rainbow.png` | She stands calmly at the very top of a rainbow arching over a granite waterfall in the pines near Emerald Bay, looking down at the mist with her head tilted, curious. |
+| `scene-underwater-alta.png` | Underwater in clear Tahoe shallows over smooth granite boulders, she swims beside A.L.T.A. (the copper-and-bronze mermaid), legs paddling, ears floating, a stream of tiny bubbles from her collar ring, a few trout nearby. Sunbeams through the surface. |
+| `scene-moon-perch.png` | She sits on the curve of a huge glowing crescent moon low over the lake at night, tail hanging over the edge and swinging, looking down at the moon's reflection on the water. |
+
+**For a clip:** "Same scene. Slow, eased, dreamlike motion: [her tail sways in slow arcs / the golden ripples spread /
+the leaves keep circling / the snow drifts down]. Very slow camera push or locked camera. No text or logos."
+
 ## Built so far (Oct 12)
 
 From Christian's first 18 renders, `assets/marley/parts/` (her stage is 560 x 728, cut from the 1376 x 768 template at
@@ -208,6 +233,19 @@ From Christian's first 18 renders, `assets/marley/parts/` (her stage is 560 x 72
 **Two sets came in:** twelve renders match the bone-tag template exactly (tail to the right); six (tail to the left,
 plain ring) are a slightly different render. From those, only the closed eyes and the small mouth line up well enough
 to use; the wide "ah" shows a second nose, so it's left out.
+
+**Her moves (Oct 12, Christian's four clips):** a happy wag (`moves/wag.mp4`), lying down and back up (`down.mp4`),
+standing to look around with her ears up (`stand.mp4`), and a tilt with a wink (`tilt.mp4`). Each is lined up with her
+parts (scale and offset; the tilt and the end of lying down warped a few pixels to match), keyed off the green with
+her shadow kept as a soft grey, and packed colour over mask (600 x 1476) so the site draws it with its own alpha. The
+tilt clip came from the plain-ring render, so her charm vanishes in it and her tail starts on the other side; it
+cross-fades, but a new tilt from the bone-tag template (`461`) would be seamless. Still to make from part 7: the
+play-bow and the chin rest.
+
+**Her player (Oct 12):** `js/marley.js` and `css/marley.css` build her on any `.marley` element: her parts in layers,
+idle blinks, ear flicks and a curious tilt, and a move every 22 to 40 s while she's on screen (never the same twice),
+her parts cross-fading to the clip and back. `data-controls` adds her buttons, `data-charm` and `data-palette` dress
+her. She's live in her feature Note (a `marley` block) and in the Parts Catalog (two cards).
 
 **Still to make:** the leaf charm painted cyan (6, same prompt as the others); a wide "ah" edited from the bone-tag template (`461`), not the plain-ring one; empty
 lenses (2a) if her eyes should glance; her moves (7) and scenes (8).
