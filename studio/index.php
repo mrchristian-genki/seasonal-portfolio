@@ -163,7 +163,7 @@ $alt = 'The Studio by ' . $tod . ': a brass STUDIO panel with its day/night dial
 <script src="assets/social.js?v=<?= STUDIO_VERSION ?>-7"></script>
 <script src="assets/look.js?v=<?= STUDIO_VERSION ?>-7"></script>
 <script src="../js/motion.js?v=1"></script>
-<script src="assets/studio.js?v=<?= STUDIO_VERSION ?>-65"></script>
+<script src="assets/studio.js?v=<?= STUDIO_VERSION ?>-66"></script>
 <?php endif; ?>
 <script src="../js/audio-rules.js?v=1"></script>
 <script src="table/table.js?v=25"></script>
