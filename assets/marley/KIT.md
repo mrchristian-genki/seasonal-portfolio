@@ -231,6 +231,35 @@ frame, give it the same image). Paste this before each scene's own line:
 **Making it seamless:** if a loop still jumps at the join, trim it so the last frame matches the first, or play it
 forwards then backwards (a "boomerang"); Claude can do either when it's built in.
 
+### 9c. Side by side with the real Marley (image to video)
+
+Christian's four renders of Oct 12: Robot Marley beside the real Marley, twice in the yard by the fence and twice on
+the patio couch. Each still is the **first and the last frame** (give the same image as the end frame where the tool
+has one), so every clip loops. Paste this before each one's own line:
+
+> A seamless 8-second loop that starts and ends on exactly this image. Locked camera: no zoom, pan or cut. Two dogs
+> side by side: on one side a real dog, a mixed-breed hound, who stays a completely real dog (natural fur, natural
+> movement, her face and markings unchanged, nothing robotic about her); on the other a robot dog built after her,
+> golden-brown and white panels, amber lenses, a collar with a bone charm. The robot moves the way she's built:
+> measured and deliberate, never frantic; her ears turn on their own on ball joints; her tail wags in slow, smooth
+> arcs; her lenses glow a warm gold. Both return to exactly where they began. Slow, eased, natural movement. Nothing
+> enters or leaves the frame and nothing new is added to the yard or the house. No text, letters, numbers or logos:
+> the charm and any tag or label stay blank.
+
+Two takes for each: a quiet **loop**, and a little **moment** between them (still starting and ending on the still).
+
+| File | Still | Loop | Moment |
+|---|---|---|---|
+| `side-yard-1.mp4` | The yard by the fence, the real Marley on the left looking at the robot, the robot on the right looking off to the left | The real Marley's nose twitches as she sniffs toward the robot, one ear shifting; the robot's near ear turns toward her on its joint, then back, and her tail makes one slow arc over the mulch; the tall grasses sway; the dappled light shifts a little. | The real Marley leans in and sniffs the robot's ear; the robot holds still, her lenses brightening to gold, and gives one slow wag; the real Marley sits back, and both settle as they were. |
+| `side-yard-2.mp4` | The yard by the fence, the robot on the left and the real Marley on the right, facing each other | The two dogs watch each other; the real Marley pants softly and blinks; the robot's head tilts a little as her lenses focus, and back; her tail sweeps once; the grasses behind them sway in the breeze. | The robot lowers her stance a little and tilts her head, the way she greets something new; the real Marley sniffs the air toward her and wags; both come back to sitting tall, exactly as they began. |
+| `side-couch-1.mp4` | The patio couch, the robot on the left and the real Marley on the right, looking at each other | They look at each other; the real Marley blinks and one ear flicks; the robot's ear pivots toward her and her tail sweeps across the cushion; the leaves in the yard behind them stir in a light breeze. | Like an interview: the robot's muzzle opens and closes a few times as if she's asking a question, her lenses glowing gold; the real Marley tilts her head as if answering; the robot gives a slow, pleased wag; both settle back. |
+| `side-couch-2.mp4` | The patio couch, the robot facing the camera and the real Marley watching her | The robot looks at the camera, blinks once, and her ears turn on their own; the real Marley watches her with a slow blink and a small wag on the cushion; the garden behind them sways gently. | The robot turns her head to look at the real Marley, as a host turns to her guest, holds a moment, then turns back to the camera; the real Marley's ears lift; both end as they began. |
+
+**Notes:** keep the real Marley looking like herself: if a take changes her face, her markings or her shape, or makes
+her move like a machine, it's a retake. Watch the pillow's small sewn label and the bone charm for letters appearing;
+those are retakes too. When they're in, Claude can loop them like the look book (trim or boomerang the join if needed)
+and set them side by side in her Note or the Workshop.
+
 ## Built so far (Oct 12)
 
 From Christian's first 18 renders, `assets/marley/parts/` (her stage is 560 x 728, cut from the 1376 x 768 template at
