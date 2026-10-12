@@ -46,8 +46,8 @@
 .feature .mag-look{margin:0}
 .feature .mag-look.wide{grid-column:1/-1}
 .feature .mag-look a{display:block;border-radius:6px;overflow:hidden;background:#0b2a28}
-.feature .mag-look img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;max-height:none;border-radius:0;margin:0;transition:transform .5s}
-.feature .mag-look a:hover img{transform:scale(1.03)}
+.feature .mag-look img,.feature .mag-look video{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;max-height:none;border-radius:0;margin:0;transition:transform .5s ease-in-out}
+.feature .mag-look a:hover img,.feature .mag-look a:hover video{transform:scale(1.03)}
 .feature .mag-look figcaption{margin:6px 0 0;font:14px/1.4 var(--mg-text);color:var(--mg-ink2);text-align:left}
 .feature .mag-look figcaption b{display:block;font:800 12px/1.3 var(--mg-sans);letter-spacing:.1em;text-transform:uppercase;color:var(--mg-ink)}
 .feature .mag-book-ai{margin:10px 0 0}
