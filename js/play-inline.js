@@ -18,7 +18,7 @@
   //    the rest of the site: ?spring+daydreams, ?spring+daydreams+fake-tahoe, ?notes, ?above…
   var SECTIONS = ['notes', 'dose', 'above', 'daydreams'];
   var LIMIT = { notes: 3, dose: 4, above: 8, daydreams: 8 };
-  var H = null, state = { view: 'all', item: null, layout: 'list', tags: [], order: 'new', page: 1 };
+  var H = null, state = { view: 'all', item: null, layout: 'grid', tags: [], order: 'new', page: 1 };
   var PER = 9;   // Field Notes on their own, a page at a time (?spring+notes+list+p2)
   // Field Notes, opened on their own: a grid or a list, filtered by tags (all of the chosen ones), newest or
   // oldest first. All of it is in the address too, so any combination can be shared:
@@ -31,7 +31,7 @@
 
   function words() { return (decodeURIComponent(location.search.slice(1)).toLowerCase().split(/[+&,;\s]+/)).map(function (w) { return w.split('=')[0]; }).filter(Boolean); }
   function readURL() {
-    var ws = words(), v = 'all', item = null, layout = 'list', tags = [], order = 'new', page = 1, tagSet = allTags();
+    var ws = words(), v = 'all', item = null, layout = 'grid', tags = [], order = 'new', page = 1, tagSet = allTags();
     ws.forEach(function (w) { if (SECTIONS.indexOf(w) >= 0) v = w; });
     ws.forEach(function (w) {
       if (LAYOUTS.indexOf(w) >= 0) layout = w;
@@ -130,7 +130,7 @@
     var tags = allTags(), names = Object.keys(tags).sort(function (a, b) {
       var ya = /^\d{4}$/.test(a), yb = /^\d{4}$/.test(b); if (ya !== yb) return ya ? 1 : -1; if (ya) return b.localeCompare(a); return tags[b] - tags[a] || a.localeCompare(b); });
     var seg = function (attr, v, label, on) { return '<button type="button" ' + attr + '="' + v + '" aria-pressed="' + on + '">' + label + '</button>'; };
-    return '</p><div class="pi-tools"><span class="pi-seg" role="group" aria-label="Layout">' + seg('data-pi-layout', 'grid', 'Grid', state.layout === 'grid') + seg('data-pi-layout', 'list', 'List', state.layout === 'list') + '</span>' +
+    return '</p><div class="pi-tools"><span class="pi-seg pi-lay" role="group" aria-label="Layout">' + seg('data-pi-layout', 'grid', 'Grid', state.layout === 'grid') + seg('data-pi-layout', 'list', 'List', state.layout === 'list') + '</span>' +
       '<span class="pi-seg" role="group" aria-label="Order">' + seg('data-pi-order', 'new', 'Newest', state.order === 'new') + seg('data-pi-order', 'old', 'Oldest', state.order === 'old') + '</span>' +
       '<span class="pi-count">' + (n > shown ? (from + 1) + '–' + (from + shown) + ' of ' + n + (n < H.episodes.length ? ' (' + H.episodes.length + ' in all)' : '') : n + ' of ' + H.episodes.length) + '</span></div>' +
       '<div class="pi-tags pi-tagbar" role="group" aria-label="Tags">' + (state.tags.length ? '<button type="button" class="pi-clear" data-pi-tag="">All</button>' : '') +
@@ -237,9 +237,12 @@
   }
 
   // a change inside the notes (layout, order, tags) redraws them in place, without the fade or a scroll
-  function notesChanged(top) {
-    var st = box.querySelector('.pi-stage');
-    if (st) { st.innerHTML = sectionHTML('notes') + '<p class="pi-note">' + esc(H.fieldNotes.note) + '</p>'; watch(box); } else render();
+  // (a new layout eases: the notes fade out, and the new arrangement fades in, card by card)
+  function notesChanged(top, ease) {
+    var st = box.querySelector('.pi-stage'), eps = st && ease && FADE && st.querySelector('.pi-eps');
+    var fill = function () { st.innerHTML = sectionHTML('notes') + '<p class="pi-note">' + esc(H.fieldNotes.note) + '</p>'; watch(box); };
+    if (eps) { eps.classList.add('pi-out'); clearTimeout(st._lay); st._lay = setTimeout(fill, FADE + 60); }
+    else if (st) fill(); else render();
     writeURL(false);
     // a new page: back up to the top of the notes when it's out of sight, with the page's own eased scroll
     var sec = top && box.querySelector('.pi-sec[data-sec="notes"]');
@@ -250,7 +253,12 @@
       var t = ev.target, b;
       if ((b = t.closest('[data-pi-view]'))) { setView(b.getAttribute('data-pi-view')); return; }
       if ((b = t.closest('[data-pi-page]'))) { state.page = +b.getAttribute('data-pi-page'); notesChanged(true); return; }
-      if ((b = t.closest('[data-pi-layout]'))) { state.layout = b.getAttribute('data-pi-layout'); notesChanged(); return; }
+      if ((b = t.closest('[data-pi-layout]'))) {
+        var lay = b.getAttribute('data-pi-layout'); if (lay === state.layout) return;
+        state.layout = lay;
+        box.querySelectorAll('[data-pi-layout]').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+        notesChanged(false, true); return;
+      }
       if ((b = t.closest('[data-pi-order]'))) { state.order = b.getAttribute('data-pi-order'); state.page = 1; notesChanged(); return; }
       if ((b = t.closest('[data-pi-tag]'))) {
         var tg = b.getAttribute('data-pi-tag'), at = state.tags.indexOf(tg);

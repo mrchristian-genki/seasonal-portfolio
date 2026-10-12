@@ -193,7 +193,7 @@ const foot = (rel) => `<footer class="foot"><p>${esc(show.narrationNote)}</p>
 <script src="${rel}../js/lake.js?v=4" defer></script>
 <script src="${rel}../assets/narrator/resolve.js?v=4" defer></script>
 <script src="${rel}../js/narrator.js?v=44" defer></script>
-<script src="${rel}../js/alta.js?v=12" defer></script>
+<script src="${rel}../js/alta.js?v=13" defer></script>
 <script src="${rel}../js/marley.js?v=4" defer></script>
 </body>
 </html>
@@ -264,7 +264,10 @@ for (const e of events) {
     ? `<figure class="${cls || 'photo'} clip"><a href="${esc(p.src)}" data-lightbox data-video><video src="${esc(p.src)}" poster="${esc(p.poster)}" width="${p.w}" height="${p.h}" muted loop playsinline autoplay preload="metadata"></video></a>${p.caption ? `<figcaption>${p.ai ? '<span class="ai-badge">Made with AI</span> ' : ''}${esc(p.caption)}</figcaption>` : ''}</figure>`
     : `<figure class="${cls || 'photo'}"><a href="${esc(p.src)}" data-lightbox><img src="${esc(p.src)}" alt="${esc(p.caption)}" width="${p.w}" height="${p.h}" loading="lazy"></a>${p.caption ? `<figcaption>${p.ai ? '<span class="ai-badge">Made with AI</span> ' : ''}${esc(p.caption)}</figcaption>` : ''}</figure>`;
   // A feature's look book (e.feature.lookbook): portraits in a grid, set just before the subhead it names ("before")
-  const LB = e.feature && e.feature.lookbook && (e.feature.lookbook.items || []).length ? e.feature.lookbook : null;
+  // (an item whose file is missing is left out with a warning, rather than stopping the whole site from building)
+  const lbHas = (x) => { const ok = !!x.src && fs.existsSync(path.join(FIELD, x.src)) && (!x.poster || fs.existsSync(path.join(FIELD, x.poster))); if (!ok) console.warn(`${e.id}: look book picture missing, left out: ${x.src}`); return ok; };
+  const LB0 = e.feature && e.feature.lookbook, LBI = LB0 ? (LB0.items || []).filter(lbHas) : [];
+  const LB = LBI.length ? { ...LB0, items: LBI } : null;
   const lookbook = LB ? `<section class="mag-book"><h2 class="sub">${esc(LB.title || 'The look book')}</h2>${LB.dek ? `<p class="mag-book-dek">${esc(LB.dek)}</p>` : ''}<div class="mag-book-grid">${LB.items.map((x, k) => {
     const base = 'look-' + String(k + 1).padStart(2, '0'), alt = esc(x.alt || `GlazyArray in ${String(x.name || '').toLowerCase()}`), cap = `<figcaption><b>${esc(x.name || '')}</b> ${esc(x.when || '')}</figcaption>`;
     if (x.video && /\.mp4$/.test(x.src || '') && x.poster) {   // a loop: plays silently, its poster frame until it does
@@ -321,10 +324,10 @@ for (const e of events) {
   // its magazine's look (css/feature.css, main.mag-<theme>): RIVETING TONE's is the default, with none named
   const theme = F && /^[a-z0-9-]{1,30}$/.test(F.theme || '') ? F.theme : '';
   const magCover = F && cover ? `<header class="mag-cover"><div class="mag-img">${cover.video ? `<video src="${esc(cover.src)}" poster="${esc(cover.poster)}" muted loop playsinline autoplay></video>` : `<img src="${esc(cover.src)}" alt="${esc(cover.caption)}" width="${cover.w}" height="${cover.h}">`}</div>
-<div class="mag-top"><b class="mag-mast">${esc(F.masthead)}</b>${F.tagline ? `<span class="mag-tag">${esc(F.tagline)}</span>` : ''}</div>
+<div class="mag-top"><b class="mag-mast">${String(F.masthead || '').trim().split(/\s+/).map((w) => `<span>${esc(w)}</span>`).join(' ')}</b>${F.tagline ? `<span class="mag-tag">${esc(F.tagline)}</span>` : ''}</div>
 ${F.issue ? `<span class="mag-issue">${esc(F.issue)}</span>` : ''}${(F.coverLines || []).length ? `<ul class="mag-lines">${F.coverLines.map((l) => `<li>${esc(l)}</li>`).join('')}</ul>` : ''}
 </header>${cover.caption ? `<p class="mag-cap"><span class="ai-badge">Made with AI</span> ${esc(cover.caption)}</p>` : ''}` : '';
-  const magQa = F && F.qa && (F.qa.items || []).length ? `<section class="mag-qa"><h2>${esc(F.qa.title || 'Questions')}</h2><dl>${F.qa.items.map((x) => `<dt>${esc(x.q)}</dt><dd>${esc(x.a)}</dd>`).join('')}</dl></section>` : '';
+  const magQa = F && F.qa && (F.qa.items || []).length ? `<section class="mag-qa${/^marley$/.test(F.qa.who || '') ? ` qa-${F.qa.who}` : ''}"><h2>${esc(F.qa.title || 'Questions')}</h2><dl>${F.qa.items.map((x) => `<dt>${esc(x.q)}</dt><dd>${esc(x.a)}</dd>`).join('')}</dl></section>` : '';
   const magSpot = F && (F.spotted || []).length ? `<aside class="mag-spot"><h2>Spotted</h2><ul>${F.spotted.map((x) => `<li><b>${x.url ? `<a href="${esc(x.url)}">${esc(x.label)}</a>` : esc(x.label)}</b> ${esc(x.text)}</li>`).join('')}</ul></aside>` : '';
   const url = `${show.siteUrl}${e.id}/`, title = `${e.post && e.post.title || e.title} · ${show.showTitle}`;
   const desc = e.summary || paras(e.post && e.post.body)[0] || '';

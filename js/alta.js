@@ -91,7 +91,10 @@
     var onScreen = !('IntersectionObserver' in window);
     if (!still) {
       tail.src = P + 'tail.mp4' + V;
-      var vis = function (on) { onScreen = on; if (on) { tail.preload = 'auto'; var p = tail.play(); if (p && p.catch) p.catch(function () {}); tail.classList.add('on'); } else tail.pause(); };
+      var vis = function (on) {
+        var was = onScreen; onScreen = on;
+        if (on) { tail.preload = 'auto'; var p = tail.play(); if (p && p.catch) p.catch(function () {}); tail.classList.add('on'); if (!was && isTalking && !isTalking()) gestures(true); } else tail.pause();
+      };
       if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { vis(es[0].isIntersecting); }).observe(st); else vis(true);
     }
     // blinks and glances
@@ -133,14 +136,16 @@
       var on = function () { v.classList.add('on'); };
       if (p && p.then) p.then(on, function () {}); else on();
     }
-    function gestures() {
+    // Waiting, her first gesture comes soon (4 to 8 s after she comes on screen or stops talking), so people see one
+    // before they scroll on, then one every 14 to 22 s; her dives wait longer (plan, below)
+    function gestures(soon) {
       clearTimeout(gT); if (still) return;
       var t = isTalking();
       gT = setTimeout(function () {
         if (!bar.isConnected) return;
         if (isTalking() || (dv.state === 'up' && onScreen && !document.hidden)) gesture();
         gestures();
-      }, t ? 12000 + Math.random() * 10000 : 20000 + Math.random() * 20000);
+      }, t ? 12000 + Math.random() * 10000 : soon ? 4000 + Math.random() * 4000 : 14000 + Math.random() * 8000);
     }
 
     // the idle dive: now and then, while she isn't talking, she lets go of the ledge and sinks below it, does one thing
@@ -225,7 +230,7 @@
       blink: function () { bar.classList.add('blink'); setTimeout(function () { bar.classList.remove('blink'); }, 130); },
       state: function () { return dv.state; }
     };
-    if (!still) { plan(); gestures(); }
+    if (!still) { plan(); gestures(true); }
 
     if (!audio) {   // no episode yet: she waits in her tank
       var soon = document.createElement('p'); soon.className = 'al-soon'; soon.textContent = bar.getAttribute('data-soon') || 'Her introduction is on its way.';
@@ -306,7 +311,7 @@
     });
     ['pause', 'ended'].forEach(function (t) { audio.addEventListener(t, function () {
       if (holding) { show(); pp.innerHTML = IC.pause; return; }
-      talking = false; bar.classList.remove('talking'); eyeMode(''); plan(); gestures();
+      talking = false; bar.classList.remove('talking'); eyeMode(''); plan(); gestures(true);
     }); });
   }
 
