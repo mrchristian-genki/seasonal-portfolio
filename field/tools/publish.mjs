@@ -253,7 +253,7 @@ for (const e of events) {
   const LB = e.feature && e.feature.lookbook && (e.feature.lookbook.items || []).length ? e.feature.lookbook : null;
   const lookbook = LB ? `<section class="mag-book"><h2 class="sub">${esc(LB.title || 'The look book')}</h2>${LB.dek ? `<p class="mag-book-dek">${esc(LB.dek)}</p>` : ''}<div class="mag-book-grid">${LB.items.map((x, k) => {
     const f = 'look-' + String(k + 1).padStart(2, '0') + '.jpg'; fs.copyFileSync(path.join(FIELD, x.src), path.join(media, f));
-    return `<figure class="mag-look${k === 0 ? ' wide' : ''}"><a href="../media/${e.id}/${f}" data-lightbox><img src="../media/${e.id}/${f}" alt="GlazyArray in ${esc(x.name.toLowerCase())}" width="${x.w}" height="${x.h}" loading="lazy"></a><figcaption><b>${esc(x.name)}</b> ${esc(x.when)}</figcaption></figure>`;
+    return `<figure class="mag-look${k === 0 ? ' wide' : ''}"><a href="../media/${e.id}/${f}" data-lightbox><img src="../media/${e.id}/${f}" alt="${esc(x.alt || `GlazyArray in ${x.name.toLowerCase()}`)}" width="${x.w}" height="${x.h}" loading="lazy"></a><figcaption><b>${esc(x.name)}</b> ${esc(x.when)}</figcaption></figure>`;
   }).join('')}</div><p class="mag-book-ai"><span class="ai-badge">Made with AI</span></p></section>\n` : '';
   // A feature's blocks (e.feature.blocks), the furniture any magazine template can use, each set just before the
   // subhead it names ("before"; at the end of the story if none): a spec box ("specs": rows of [label, value]), a
