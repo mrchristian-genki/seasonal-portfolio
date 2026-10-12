@@ -45,6 +45,7 @@
 .feature .mag-book-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 12px}
 .feature .mag-look{margin:0}
 .feature .mag-look.wide{grid-column:1/-1}
+.feature .mag-look.wide~.mag-look:last-child:nth-child(even){grid-column:1/-1}   /* a last picture that would sit alone (after the wide first) runs wide too */
 .feature .mag-look a{display:block;border-radius:6px;overflow:hidden;background:#0b2a28}
 .feature .mag-look img,.feature .mag-look video{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;max-height:none;border-radius:0;margin:0;transition:transform .5s ease-in-out}
 .feature .mag-look a:hover img,.feature .mag-look a:hover video{transform:scale(1.03)}
