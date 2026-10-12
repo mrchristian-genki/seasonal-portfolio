@@ -19,7 +19,7 @@
 .wsc-card:hover .wsc-more,.wsc-card:focus-visible .wsc-more{opacity:1;transform:none}
 .wsc-card:focus-visible{outline:3px solid rgb(var(--accent));outline-offset:3px}
 /* the window: its case study as a magazine feature (css/feature.css): the cover edge to edge, then a reading column */
-.wsm{border:0;padding:0;width:min(860px,calc(100vw - 24px));max-height:calc(100vh - 32px);border-radius:16px;background:#fbfaf7;color:#22343c;
+.wsm{border:0;padding:0;width:min(860px,calc(100vw - 24px));max-height:calc(100vh - 32px);max-height:calc(100dvh - 24px);border-radius:16px;background:#fbfaf7;color:#22343c;
   box-shadow:0 30px 80px -20px rgba(0,0,0,.5);overflow:auto;overscroll-behavior:contain}
 .wsm::backdrop{background:rgba(8,24,30,.62);backdrop-filter:blur(3px)}
 /* it fades in and out (motion.js softDialog), and the next feature fades in over the last */

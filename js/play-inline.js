@@ -123,7 +123,7 @@
       if (p - last > 1) out.push('<span class="pi-gap" aria-hidden="true">…</span>');
       out.push(b(p, p, '', 'Page ' + p)); last = p;
     }
-    return '<nav class="pi-pager" aria-label="Pages of Field Notes">' + (page > 1 ? b(page - 1, '← Previous', 'pi-step', '') : '<span class="pi-step"></span>') +
+    return '<nav class="pi-npager" aria-label="Pages of Field Notes">' + (page > 1 ? b(page - 1, '← Previous', 'pi-step', '') : '<span class="pi-step"></span>') +
       '<span class="pi-pages">' + out.join('') + '</span>' + (page < pages ? b(page + 1, 'Next →', 'pi-step', '') : '<span class="pi-step"></span>') + '</nav>';
   }
   function notesTools(n, from, shown) {
