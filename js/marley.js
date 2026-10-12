@@ -99,9 +99,13 @@
       Promise.all(imgs.map(function (i) { return (i.decode ? i.decode() : new Promise(function (ok) { if (i.complete) ok(); else i.onload = i.onerror = ok; })).catch(function () {}); }))
         .then(function () { parts.classList.add('ready'); });
     })();
-    // the scene behind her (data-bd: the Note's backdrop, as the site picks it), under a soft floor shadow
+    // the scene behind her (data-bd: the Note's backdrop, as the site picks it), softly blurred and dimmed the way
+    // GlazyArray's is (css/narrator.css .nb-bd), so she and her stump stand out in front of it
     var bd = el.getAttribute('data-bd');
-    if (bd && /^\/assets\/[\w.\/-]+\.(webp|jpg|png)(\?v=[\w-]+)?$/.test(bd)) { st.classList.add('has-bd'); st.style.backgroundImage = 'radial-gradient(ellipse at 50% 95%,rgba(0,0,0,.28),transparent 42%),url(' + bd + ')'; }
+    if (bd && /^\/assets\/[\w.\/-]+\.(webp|jpg|png)(\?v=[\w-]+)?$/.test(bd)) {
+      var bi = document.createElement('i'); bi.className = 'mly-bd'; bi.style.backgroundImage = 'url(' + bd + ')';
+      st.insertBefore(bi, st.firstChild); st.classList.add('has-bd');
+    }
     var q = function (s) { return st.querySelector(s); };
     var head = q('.mly-head'), ch = q('.mly-charm'), gg = q('.mly-glow-g'), gc = q('.mly-glow-c'), gs = q('.mly-glow-s');
     var eL = q('.mly-earL.mly-down'), eR = q('.mly-earR.mly-down');
