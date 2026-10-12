@@ -26,6 +26,86 @@
  "track": null,
  "photos": [
   {
+   "src": "data/photos/2026-10-12-robot-marley/clip-6.mp4",
+   "poster": "data/photos/2026-10-12-robot-marley/clip-6.jpg",
+   "video": true,
+   "caption": "Marley and Marley side by side in the yard.",
+   "takenAt": "2026:10:12 12:36:17",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "side-yard-1.mp4",
+   "range": [
+    0,
+    8
+   ]
+  },
+  {
+   "src": "data/photos/2026-10-12-robot-marley/clip-7.mp4",
+   "poster": "data/photos/2026-10-12-robot-marley/clip-7.jpg",
+   "video": true,
+   "caption": "Marley and Marley checking each other out on the couch.",
+   "takenAt": "2026:10:12 12:37:51",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "side-couch-2.mp4",
+   "range": [
+    0,
+    9.95
+   ]
+  },
+  {
+   "src": "data/photos/2026-10-12-robot-marley/clip-5.mp4",
+   "poster": "data/photos/2026-10-12-robot-marley/clip-5.jpg",
+   "video": true,
+   "caption": "Marley and Marley checking each other out in the yard.",
+   "takenAt": "2026:10:12 12:40:20",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "side-yard-2.mp4",
+   "range": [
+    0,
+    8
+   ]
+  },
+  {
+   "src": "data/photos/2026-10-12-robot-marley/clip-9.mp4",
+   "poster": "data/photos/2026-10-12-robot-marley/clip-9.jpg",
+   "video": true,
+   "caption": "Marley and Marley checking each other out in the yard.",
+   "takenAt": "2026:10:12 12:40:20",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "side-yard-2.mp4",
+   "range": [
+    0,
+    10.05
+   ]
+  },
+  {
+   "src": "data/photos/2026-10-12-robot-marley/clip-8.mp4",
+   "poster": "data/photos/2026-10-12-robot-marley/clip-8.jpg",
+   "video": true,
+   "caption": "Marley and Marley side by side on the couch.",
+   "takenAt": "2026:10:12 12:42:48",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "side-couch-1.mp4",
+   "range": [
+    0,
+    9.6
+   ]
+  },
+  {
    "src": "data/photos/2026-10-12-robot-marley/clip-1.mp4",
    "caption": "Robot Marley on the beach at sunset.",
    "w": 960,
@@ -274,36 +354,44 @@
     "before": "Watch her for a minute",
     "items": [
      {
-      "src": "data/photos/2026-10-12-robot-marley/side-couch-1.jpg",
-      "w": 1376,
-      "h": 768,
+      "src": "data/photos/2026-10-12-robot-marley/clip-7.mp4",
+      "w": 960,
+      "h": 540,
       "name": "The interview",
       "when": "Face to face on the patio couch.",
-      "alt": "Robot Marley and the real Marley sit face to face on a patio couch"
+      "alt": "Robot Marley and the real Marley sit face to face on a patio couch",
+      "video": true,
+      "poster": "data/photos/2026-10-12-robot-marley/clip-7.jpg"
      },
      {
-      "src": "data/photos/2026-10-12-robot-marley/side-couch-2.jpg",
-      "w": 1376,
-      "h": 768,
+      "src": "data/photos/2026-10-12-robot-marley/clip-8.mp4",
+      "w": 960,
+      "h": 540,
       "name": "On the couch",
       "when": "She looks at you; the real Marley looks at her.",
-      "alt": "Robot Marley looks at the camera from a patio couch while the real Marley watches her"
+      "alt": "Robot Marley looks at the camera from a patio couch while the real Marley watches her",
+      "video": true,
+      "poster": "data/photos/2026-10-12-robot-marley/clip-8.jpg"
      },
      {
-      "src": "data/photos/2026-10-12-robot-marley/side-yard-1.jpg",
-      "w": 1376,
-      "h": 768,
+      "src": "data/photos/2026-10-12-robot-marley/clip-6.mp4",
+      "w": 960,
+      "h": 540,
       "name": "By the fence",
       "when": "The real Marley takes a good look at her.",
-      "alt": "The real Marley looks over at Robot Marley, sitting side by side in the yard by a wooden fence"
+      "alt": "The real Marley looks over at Robot Marley, sitting side by side in the yard by a wooden fence",
+      "video": true,
+      "poster": "data/photos/2026-10-12-robot-marley/clip-6.jpg"
      },
      {
-      "src": "data/photos/2026-10-12-robot-marley/side-yard-2.jpg",
-      "w": 1376,
-      "h": 768,
+      "src": "data/photos/2026-10-12-robot-marley/clip-9.mp4",
+      "w": 960,
+      "h": 540,
       "name": "Eye to eye",
       "when": "The robot and the original.",
-      "alt": "Robot Marley and the real Marley sit facing each other on a low stone edge in the yard"
+      "alt": "Robot Marley and the real Marley sit facing each other on a low stone edge in the yard",
+      "video": true,
+      "poster": "data/photos/2026-10-12-robot-marley/clip-9.jpg"
      }
     ]
    }
