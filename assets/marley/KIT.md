@@ -208,6 +208,29 @@ the line below at the end. Public places only, never the home.
 **For a clip:** "Same scene. Slow, eased, dreamlike motion: [her tail sways in slow arcs / the golden ripples spread /
 the leaves keep circling / the snow drifts down]. Very slow camera push or locked camera. No text or logos."
 
+### 9b. The look book as seamless loops (image to video)
+
+For each of the look book stills (Oct 12). Use the still as the **first and the last frame** (if the tool has an end
+frame, give it the same image). Paste this before each scene's own line:
+
+> A seamless 6-second loop that starts and ends on exactly this image. Locked camera: no zoom, pan or cut. Only gentle,
+> cyclical motion that returns to where it began: nothing enters or leaves the frame, nobody changes pose for good.
+> Slow, eased, natural movement. Keep her exactly as she is: golden-brown and white panels, amber lenses, collar. No
+> text, letters or logos.
+
+| File | Her scene's own line |
+|---|---|
+| `loop-ropes-course.mp4` | The log bridge sways gently under her paws and settles; her ears and tail sway with it; the squirrel flicks its tail twice and twitches its nose; pine needles stir in a light breeze; far below, the small figures stay put. |
+| `loop-night-summit.mp4` | Fine snow streams across the ridge in the wind and drifts past; her collar light pulses softly; her ears lift in the gusts and settle; the coyote's fur ruffles as it watches, standing still; clouds drift slowly past the moon; the town lights twinkle. |
+| `loop-parasail.mp4` | She hangs steady under the canopy, swaying gently side to side; her ears and tail flutter in the wind; the canopy breathes and ripples; the eagle glides alongside with two slow wing beats; sunlight glints on the water far below. |
+| `loop-autumn-creek.mp4` | The creek rushes and foams around her legs; she watches the bear, ears twitching, tail giving one slow wag; the bear lowers its head to the water and lifts it again; golden aspen leaves drift down and float by. |
+| `loop-granite-wall.mp4` | She holds steady on the wall, clipped to the cable, looking up; the cable and her lanyard sway slightly; her ears and tail move in the breeze; the falcon ruffles its feathers and turns its head, then back; the pine sprig beside it nods. |
+| `loop-winter-ridge.mp4` | Spindrift blows off the ridge and drifts across the frame; she pauses mid-step, ears lifting in the wind; the ram chews and turns its head slowly, then back; the chickadees hop once and settle; the lake below glitters. |
+| `loop-underwater.mp4` | She paddles in place, legs cycling slowly, ears floating; bubbles stream up from her collar ring; sunbeams waver through the surface; the trout swim slow circles around her and return to where they were. |
+
+**Making it seamless:** if a loop still jumps at the join, trim it so the last frame matches the first, or play it
+forwards then backwards (a "boomerang"); Claude can do either when it's built in.
+
 ## Built so far (Oct 12)
 
 From Christian's first 18 renders, `assets/marley/parts/` (her stage is 560 x 728, cut from the 1376 x 768 template at
