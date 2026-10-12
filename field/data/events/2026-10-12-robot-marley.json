@@ -52,23 +52,21 @@
    "at": "What's next for her"
   },
   {
-   "src": "data/photos/2026-10-12-robot-marley/garden.jpg",
-   "ai": true,
-   "caption": "Robot Marley sitting in the grass in a backyard, ears relaxed, tail out to one side.",
-   "w": 1600,
-   "h": 893,
+   "src": "data/photos/2026-10-12-robot-marley/clip-2.mp4",
+   "caption": "A happy robot dog sits in the yard.",
+   "w": 960,
+   "h": 540,
    "use": "post",
    "cover": false,
-   "at": "Built after a real dog"
-  },
-  {
-   "src": "data/photos/2026-10-12-robot-marley/lake-shore.jpg",
-   "caption": "Robot Marley on the lake shore at sunset, among the granite boulders.",
-   "w": 1376,
-   "h": 768,
-   "use": "post",
-   "cover": false,
-   "ai": true
+   "at": "Built after a real dog",
+   "poster": "data/photos/2026-10-12-robot-marley/clip-2.jpg",
+   "video": true,
+   "from": "gemini_generated_video_2D043F9B.mp4",
+   "takenAt": null,
+   "range": [
+    0,
+    8
+   ]
   }
  ],
  "fieldNotes": "A character profile introducing Robot Marley, the third character (Christian, Oct 12, 2026), styled as a RIVETING TONE cover story like GlazyArray's, with GlazyArray translating. Playful framing around real facts, all from Christian's words: a robot companion dog built after the real Marley, a mixed-breed hound (a girl); her markings, ears, tail, nose, paws and amber lenses; eyes gold when happy, dark amber then red when not (usually happy); curious and thoughtful (pauses, lowers her stance, tilts her head with a soft hum as her lenses focus), affectionate (leans on legs, chin on knees, a whirr of servos), alert (ears on ball joints, stands square, a low warm chime, never a sharp bark), playful in bursts (play-bow, bounce, galloping strides, then calm in a sunny patch); her own section for the local dog scene (news, maybe helping dogs get adopted, trying gear and toys, maybe a podcast with dogs as guests); the name tag that came out reading MARLAT, replaced by charms dyed in each Note's colours; her layers and four moves (a wag, lie down, stand and look, a tilt and a wink, from Christian's clips of Oct 12); meeting A.L.T.A. at her tank (his render). The real Marley in the logo, swimming and chasing the ball, is from earlier Notes and his words. The look book: Christian's seven renders of her around Tahoe (Oct 12); a lettered badge on the underwater camera painted out.",
@@ -260,7 +258,7 @@
     "photo": "meets-alta.jpg"
    },
    {
-    "photo": "garden.jpg"
+    "photo": "clip-2.mp4"
    }
   ],
   "cover": "clip-1.mp4"
