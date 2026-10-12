@@ -1508,6 +1508,10 @@
   function settleNew() {
     var o = ORDER || { n: E.photos.length, timed: true }; ORDER = null;
     var added = E.photos.slice(o.n);
+    if (SPSWAP != null && added.length) {
+      var nwp = added.filter(function (p) { return !p.strip; })[0], L = spreadItems();
+      if (nwp && L[SPSWAP]) { spreadPut(SPSWAP, nwp); toast('Swapped into the photo spread. Save to keep it.'); SPSWAP = null; renderSwapBar(); if (o.timed) E.photos.sort(byTime); renderSpread(); return; }
+    }
     if (SWAP && added.length) {
       var slot = E.photos.map(photoName).indexOf(SWAP.name), nw = added.filter(function (p) { return !p.strip; })[0];
       if (slot >= 0 && nw) {
@@ -1527,6 +1531,7 @@
   // magazine and Workshop features use it) while the picture in it changes, to one already in this Note or a new
   // photo or loop. The caption goes with its picture.
   var SWAP = null;   // { name }: the place waiting for a new photo or loop
+  var SPSWAP = null;   // the photo spread place (its index) waiting for a new photo or loop
   var CONTENT = ['src', 'poster', 'video', 'w', 'h', 'caption', 'from', 'takenAt', 'ai', 'hdr', 'range'];
   function swapContents(i, j) {
     var a = E.photos[i], b = E.photos[j], na = photoName(a), nb = photoName(b);
@@ -1554,10 +1559,10 @@
   function canSwap(p, i) { return !p.strip && !(p.hdr && E.photos[i + 1] && E.photos[i + 1].strip); }   // an HDR photo stays with its exposure strip
   function renderSwapBar() {
     var b = $('#swapBar'); if (!b) return;
-    b.hidden = !SWAP;
-    if (!SWAP) { b.innerHTML = ''; return; }
-    b.innerHTML = '<span>The next photo or loop you add goes into the place of <b>' + esc(SWAP.name) + '</b>.</span> <button type="button" class="link" id="swapX">Cancel the swap</button>';
-    $('#swapX').onclick = function () { SWAP = null; renderSwapBar(); };
+    b.hidden = !SWAP && SPSWAP == null;
+    if (!SWAP && SPSWAP == null) { b.innerHTML = ''; return; }
+    b.innerHTML = '<span>The next photo or loop you add goes into the place of <b>' + esc(SWAP ? SWAP.name : 'picture ' + (SPSWAP + 1) + ' of the photo spread') + '</b>.</span> <button type="button" class="link" id="swapX">Cancel the swap</button>';
+    $('#swapX').onclick = function () { SWAP = null; SPSWAP = null; renderSwapBar(); };
   }
   function swapPicker(i) {
     collect();
@@ -1639,7 +1644,7 @@
         var i = +d.getAttribute('data-i'), p = E.photos[i], n = photoName(p);
         if (p.poster) delete posterNew[p.poster.split('/').pop()];
         // a picture the photo spread still shows keeps its file (it leaves the photo list, not the spread)
-        var inSpread = function (m) { return spreadItems().some(function (x) { return x.src.split('/').pop() === m; }); };
+        var inSpread = function (m) { return spreadItems().some(function (x) { return x.src.split('/').pop() === m || (x.poster && x.poster.split('/').pop() === m); }); };
         if (fresh[n]) { if (!inSpread(n)) delete fresh[n]; } else if (clipsNew[n]) delete clipsNew[n]; else { if (!inSpread(n)) removed.push(n); if (p.poster && !inSpread(p.poster.split('/').pop())) removed.push(p.poster.split('/').pop()); }
         E.photos.splice(i, 1);
         if (SWAP && SWAP.name === n) { SWAP = null; renderSwapBar(); }
@@ -1718,6 +1723,7 @@
           }).join('') + (+at > paras.length ? '<option value="' + at + '" selected>After paragraph ' + at + ' (there are ' + paras.length + ')</option>' : '') +
           '<option value="off"' + (at === 'off' ? ' selected' : '') + '>Not in the feature</option></select>' +
           (x.note ? '' : '<label><input type="radio" name="wsCov" class="wsCov"' + (x.photo === cov ? ' checked' : '') + '> Card</label>') +
+          (x.note || !p ? '' : '<button type="button" class="link wsSw">Swap</button>') +
           '<span class="wsMv"><button type="button" class="link wsUp" aria-label="Earlier"' + (k ? '' : ' disabled') + '>↑</button><button type="button" class="link wsDn" aria-label="Later"' + (k < P.list.length - 1 ? '' : ' disabled') + '>↓</button></span></li>';
       }).join('') + '</ul>' + (P.list.length ? '' : '<p class="muted">No photos or loops yet.</p>') +
       '<button type="button" class="link" id="wsOff">Take it off the Workshop tab</button>';
@@ -1734,6 +1740,7 @@
       var k = +li.getAttribute('data-k'), x = P.list[k];
       $('.wsAt', li).onchange = function () { var v = this.value; delete x.after; delete x.off; if (v === 'off') x.off = true; else if (v) x.after = +v; save(); renderFeature(); };
       var c = $('.wsCov', li); if (c) c.onchange = function () { W.cover = x.photo; markDirty(); };
+      var sw = $('.wsSw', li); if (sw) sw.onclick = function () { var p = featFind(x), i = E.photos.indexOf(p); if (i >= 0) swapPicker(i); };
       $('.wsUp', li).onclick = function () { P.list.splice(k - 1, 0, P.list.splice(k, 1)[0]); save(); renderFeature(); };
       $('.wsDn', li).onclick = function () { P.list.splice(k + 1, 0, P.list.splice(k, 1)[0]); save(); renderFeature(); };
     });
@@ -1754,9 +1761,39 @@
   // the spread they show there instead of between the paragraphs, and keep their files even if they leave Photos.
   function spreadItems() { return (E && E.feature && E.feature.lookbook && E.feature.lookbook.items) || []; }
   function spreadHint() { var n = spreadItems().length; return n ? n + ' picture' + (n > 1 ? 's' : '') + (E.feature.lookbook.before ? ' · before "' + E.feature.lookbook.before + '"' : ' · at the end') : 'none yet'; }
+  // put a Note photo or loop into spread place i (its name and line stay)
+  function spreadPut(i, p) {
+    var x = spreadItems()[i]; if (!x || !p) return;
+    x.src = p.src; x.w = p.w || 1600; x.h = p.h || 900;
+    if (p.video) { x.video = true; x.poster = p.poster; } else { delete x.video; delete x.poster; }
+    markDirty();
+  }
+  // swap spread place i: for another photo or loop of this Note, or a new file (it joins Photos and comes here)
+  function spreadSwap(i) {
+    collect();
+    var x = spreadItems()[i], d = document.createElement('dialog'); d.className = 'pfp swp';
+    var others = (E.photos || []).filter(function (p) { return p.src && !p.strip && p.src !== x.src; });
+    d.innerHTML = '<h2>Swap <small>' + esc(x.name || x.src.split('/').pop()) + '</small></h2><p class="muted">The new one takes this place in the photo spread, with its name and line.</p>' +
+      '<h3>With a new photo or video</h3><div class="row"><label class="pick swNew">Choose a file<input type="file" accept="image/*,video/mp4,video/quicktime,video/webm,.mov,.m4v" hidden></label>' +
+      '<span class="muted">It joins Photos; a video opens in Video loops, and the loop you make comes here.</span></div>' +
+      (others.length ? '<h3>With a photo or loop of this Note</h3><div class="swGrid">' + others.map(function (p, j) {
+        var t = thumbOf(p); return '<button type="button" class="swK" data-j="' + j + '" title="' + esc(p.caption || photoName(p)) + '">' + (t ? '<img src="' + esc(t) + '" alt="">' : '<span class="wsNo"></span>') + '<small>' + esc(photoName(p)) + (p.video ? ' · loop' : '') + '</small></button>';
+      }).join('') + '</div>' : '') +
+      '<div class="row"><span class="sp"></span><button type="button" class="link swX">Cancel</button></div>';
+    document.body.appendChild(d); d.showModal();
+    var close = function () { d.close(); d.remove(); };
+    $('.swX', d).onclick = close; d.addEventListener('cancel', close);
+    $$('.swK', d).forEach(function (b) { b.onclick = function () { spreadPut(i, others[+b.getAttribute('data-j')]); close(); renderSpread(); toast('Swapped. Save to keep it.'); }; });
+    $('.swNew input', d).onchange = function () {
+      var f = this.files[0]; if (!f) return;
+      SWAP = null; SPSWAP = i; close(); renderSwapBar();
+      if (isVideo(f)) { upVideo(f); toast('Make the loop under Video loops; it goes into the photo spread.'); } else addPhotos([f]);
+    };
+  }
   function spreadThumb(x) {
     var n = x.src.split('/').pop(), p = (E.photos || []).find(function (q) { return q.src === x.src || q.poster === x.src; });
-    if (p && !p.video) return photoUrl(p);
+    if (p) return thumbOf(p);
+    if (x.video && x.poster) n = x.poster.split('/').pop();
     return fresh[n] ? fresh[n].thumb : posterNew[n] ? posterNew[n].thumb || '' : 'api.php?a=photo&id=' + encodeURIComponent(E.id) + '&n=' + encodeURIComponent(n);
   }
   function renderSpread() {
@@ -1765,7 +1802,7 @@
     var LB = E.feature && E.feature.lookbook, items = spreadItems();
     var subs = (E.post.body || '').split(/\n/).filter(function (l) { return /^## /.test(l); }).map(function (l) { return l.slice(3).trim(); });
     var have = {}; items.forEach(function (x) { have[x.src] = 1; });
-    var pick = (E.photos || []).filter(function (p) { var s = p.video ? p.poster : p.src; return s && /\.jpg$/.test(s) && !have[s]; });
+    var pick = (E.photos || []).filter(function (p) { return p.src && !p.strip && !have[p.src]; });
     box.innerHTML = '<p class="muted">A grid of pictures with a name and a line each, set before one of the post\'s subheads (a feature\'s look book). Add pictures from this Note\'s photos; in the spread they show there instead of between the paragraphs.</p>' +
       (LB ? '<div class="grid2">' + field('Title', '<input id="spTitle" value="' + esc(LB.title || '') + '" placeholder="Out and about">') +
         field('Before the subhead', '<select id="spBefore"><option value="">At the end of the story</option>' + subs.map(function (s) { return '<option' + (s === LB.before ? ' selected' : '') + '>' + esc(s) + '</option>'; }).join('') + '</select>') + '</div>' +
@@ -1775,17 +1812,17 @@
           '<input class="spName" value="' + esc(x.name || '') + '" placeholder="Its name (set in capitals)">' +
           '<input class="spWhen" value="' + esc(x.when || '') + '" placeholder="A line about it">' +
           '<div class="row"><button type="button" class="link spUp"' + (i ? '' : ' disabled') + '>Up</button><button type="button" class="link spDown"' + (i < items.length - 1 ? '' : ' disabled') + '>Down</button>' +
-          '<button type="button" class="link spRm">Remove from the spread</button>' + (i === 0 ? '<small class="muted">The first is set wide.</small>' : '') + '</div></div></div>';
+          '<button type="button" class="link spSw">Swap</button><button type="button" class="link spRm">Remove from the spread</button>' + (x.video ? '<small class="muted">Loop</small>' : '') + (i === 0 ? '<small class="muted">The first is set wide.</small>' : '') + '</div></div></div>';
       }).join('') + '</div>' +
       '<div class="row">' + (pick.length ? '<select id="spAdd"><option value="">Add a picture from this Note…</option>' + pick.map(function (p) {
-        var s = p.video ? p.poster : p.src; return '<option value="' + esc(s) + '">' + esc(photoName(p) + (p.video ? ' (its poster frame)' : '') + (p.caption ? ': ' + p.caption.slice(0, 50) : '')) + '</option>'; }).join('') + '</select>'
+        return '<option value="' + esc(p.src) + '">' + esc(photoName(p) + (p.video ? ' (loop)' : '') + (p.caption ? ': ' + p.caption.slice(0, 50) : '')) + '</option>'; }).join('') + '</select>'
         : '<span class="muted">' + ((E.photos || []).length ? 'Every photo of this Note is in the spread.' : 'Add photos under Photos first.') + '</span>') +
       (LB ? '<button type="button" class="link" id="spDrop">Remove the whole spread</button>' : '') + '</div>';
     var ensure = function () { E.feature = E.feature || {}; E.feature.lookbook = E.feature.lookbook || { title: 'The photo spread', dek: '', before: '', items: [] }; return E.feature.lookbook; };
     var changed = function () { markDirty(); renderSpread(); };
     var add = $('#spAdd'); if (add) add.onchange = function () {
-      if (!this.value) return; var s = this.value, p = (E.photos || []).find(function (q) { return q.src === s || q.poster === s; }) || {};
-      ensure().items.push({ src: s, w: p.w || 1600, h: p.h || 900, name: '', when: p.caption || '', alt: p.caption || '' }); changed();
+      if (!this.value) return; var s = this.value, p = (E.photos || []).find(function (q) { return q.src === s; }); if (!p) return;
+      ensure().items.push({ name: '', when: p.caption || '', alt: p.caption || '' }); spreadPut(ensure().items.length - 1, p); changed();
     };
     var t = $('#spTitle'); if (t) t.oninput = function () { ensure().title = this.value; markDirty(); };
     var dk = $('#spDek'); if (dk) dk.oninput = function () { ensure().dek = this.value; markDirty(); };
@@ -1796,6 +1833,7 @@
       $('.spWhen', d).oninput = function () { L[i].when = this.value; L[i].alt = this.value; markDirty(); };
       $('.spUp', d).onclick = function () { if (i) { L.splice(i - 1, 0, L.splice(i, 1)[0]); changed(); } };
       $('.spDown', d).onclick = function () { if (i < L.length - 1) { L.splice(i + 1, 0, L.splice(i, 1)[0]); changed(); } };
+      $('.spSw', d).onclick = function () { spreadSwap(i); };
       $('.spRm', d).onclick = function () { L.splice(i, 1); if (!L.length) delete E.feature.lookbook; changed(); renderPhotos(); };
     });
     var dr = $('#spDrop'); if (dr) dr.onclick = function () { if (!confirm('Remove the whole photo spread? Its pictures stay in the Note\'s folder.')) return; delete E.feature.lookbook; changed(); };

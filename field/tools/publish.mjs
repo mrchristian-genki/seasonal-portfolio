@@ -246,7 +246,7 @@ for (const e of events) {
   const coverStrip = cover && photos[photos.indexOf(cover) + 1] && photos[photos.indexOf(cover) + 1].strip ? photos[photos.indexOf(cover) + 1] : null;
   const FB = (e.feature && e.feature.masthead && Array.isArray(e.feature.blocks)) ? e.feature.blocks : [];
   const held = new Set(FB.flatMap((b) => [b.photo].concat((b.type === 'steps' && b.items || []).map((x) => x.photo))).filter(Boolean));   // pictures a feature's block shows inside itself
-  ((e.feature && e.feature.lookbook && e.feature.lookbook.items) || []).forEach((x) => held.add(path.basename(String(x.src || ''))));   // and its photo spread
+  ((e.feature && e.feature.lookbook && e.feature.lookbook.items) || []).forEach((x) => { held.add(path.basename(String(x.src || ''))); if (x.poster) held.add(path.basename(String(x.poster))); });   // and its photo spread
   const ps = paras(e.post && e.post.body), table = photos.filter((p) => p.table), loose = photos.filter((p) => p !== cover && p !== coverStrip && !p.table && !p.at && !held.has(p.file));
   const tall = (p) => p.w && p.h && p.h > p.w * 1.1;
   const inline = [];
@@ -266,8 +266,14 @@ for (const e of events) {
   // A feature's look book (e.feature.lookbook): portraits in a grid, set just before the subhead it names ("before")
   const LB = e.feature && e.feature.lookbook && (e.feature.lookbook.items || []).length ? e.feature.lookbook : null;
   const lookbook = LB ? `<section class="mag-book"><h2 class="sub">${esc(LB.title || 'The look book')}</h2>${LB.dek ? `<p class="mag-book-dek">${esc(LB.dek)}</p>` : ''}<div class="mag-book-grid">${LB.items.map((x, k) => {
-    const f = 'look-' + String(k + 1).padStart(2, '0') + '.jpg'; fs.copyFileSync(path.join(FIELD, x.src), path.join(media, f));
-    return `<figure class="mag-look${k === 0 ? ' wide' : ''}"><a href="../media/${e.id}/${f}" data-lightbox><img src="../media/${e.id}/${f}" alt="${esc(x.alt || `GlazyArray in ${x.name.toLowerCase()}`)}" width="${x.w}" height="${x.h}" loading="lazy"></a><figcaption><b>${esc(x.name)}</b> ${esc(x.when)}</figcaption></figure>`;
+    const base = 'look-' + String(k + 1).padStart(2, '0'), alt = esc(x.alt || `GlazyArray in ${String(x.name || '').toLowerCase()}`), cap = `<figcaption><b>${esc(x.name || '')}</b> ${esc(x.when || '')}</figcaption>`;
+    if (x.video && /\.mp4$/.test(x.src || '') && x.poster) {   // a loop: plays silently, its poster frame until it does
+      fs.copyFileSync(path.join(FIELD, x.src), path.join(media, base + '.mp4')); fs.copyFileSync(path.join(FIELD, x.poster), path.join(media, base + '.jpg'));
+      const tag = '?v=' + vtag(x.src, x.poster);
+      return `<figure class="mag-look clip${k === 0 ? ' wide' : ''}"><a href="../media/${e.id}/${base}.mp4${tag}" data-lightbox data-video><video src="../media/${e.id}/${base}.mp4${tag}" poster="../media/${e.id}/${base}.jpg${tag}" width="${x.w}" height="${x.h}" muted loop playsinline autoplay preload="metadata" aria-label="${alt}"></video></a>${cap}</figure>`;
+    }
+    const f = base + '.jpg'; fs.copyFileSync(path.join(FIELD, x.src), path.join(media, f));
+    return `<figure class="mag-look${k === 0 ? ' wide' : ''}"><a href="../media/${e.id}/${f}" data-lightbox><img src="../media/${e.id}/${f}" alt="${alt}" width="${x.w}" height="${x.h}" loading="lazy"></a>${cap}</figure>`;
   }).join('')}</div><p class="mag-book-ai"><span class="ai-badge">Made with AI</span></p></section>\n` : '';
   // A feature's blocks (e.feature.blocks), the furniture any magazine template can use, each set just before the
   // subhead it names ("before"; at the end of the story if none): a spec box ("specs": rows of [label, value]), a

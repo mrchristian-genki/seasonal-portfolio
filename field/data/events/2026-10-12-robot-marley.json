@@ -163,60 +163,74 @@
    "before": "What's next for her",
    "items": [
     {
-     "src": "data/photos/2026-10-12-robot-marley/scene-winter-ridge.jpg",
-     "w": 1375,
-     "h": 768,
+     "src": "data/photos/2026-10-12-robot-marley/loop-winter-ridge.mp4",
+     "w": 960,
+     "h": 540,
      "name": "Above the lake in winter",
      "when": "A snowy ridge, a bighorn ram and a few chickadees.",
-     "alt": "Robot Marley: a snowy ridge, a bighorn ram and a few chickadees"
+     "alt": "Robot Marley: a snowy ridge, a bighorn ram and a few chickadees",
+     "poster": "data/photos/2026-10-12-robot-marley/loop-winter-ridge.jpg",
+     "video": true
     },
     {
-     "src": "data/photos/2026-10-12-robot-marley/scene-parasail.jpg",
-     "w": 1376,
-     "h": 768,
+     "src": "data/photos/2026-10-12-robot-marley/loop-parasail.mp4",
+     "w": 960,
+     "h": 540,
      "name": "Over the lake",
      "when": "Goggles down, the boats far below, an eagle for company.",
-     "alt": "Robot Marley: goggles down, the boats far below, an eagle for company"
+     "alt": "Robot Marley: goggles down, the boats far below, an eagle for company",
+     "poster": "data/photos/2026-10-12-robot-marley/loop-parasail.jpg",
+     "video": true
     },
     {
-     "src": "data/photos/2026-10-12-robot-marley/scene-ropes-course.jpg",
-     "w": 1376,
-     "h": 768,
+     "src": "data/photos/2026-10-12-robot-marley/loop-ropes-course.mp4",
+     "w": 960,
+     "h": 540,
      "name": "The ropes course",
      "when": "A log bridge high in the pines, with a squirrel for an audience.",
-     "alt": "Robot Marley: a log bridge high in the pines, with a squirrel for an audience"
+     "alt": "Robot Marley: a log bridge high in the pines, with a squirrel for an audience",
+     "poster": "data/photos/2026-10-12-robot-marley/loop-ropes-course.jpg",
+     "video": true
     },
     {
-     "src": "data/photos/2026-10-12-robot-marley/scene-autumn-creek.jpg",
-     "w": 1376,
-     "h": 768,
+     "src": "data/photos/2026-10-12-robot-marley/loop-autumn-creek.mp4",
+     "w": 960,
+     "h": 540,
      "name": "An autumn creek",
      "when": "Wading the rapids under the aspens while a bear goes fishing.",
-     "alt": "Robot Marley: wading the rapids under the aspens while a bear goes fishing"
+     "alt": "Robot Marley: wading the rapids under the aspens while a bear goes fishing",
+     "poster": "data/photos/2026-10-12-robot-marley/loop-autumn-creek.jpg",
+     "video": true
     },
     {
-     "src": "data/photos/2026-10-12-robot-marley/scene-underwater.jpg",
-     "w": 1376,
-     "h": 768,
+     "src": "data/photos/2026-10-12-robot-marley/loop-underwater.mp4",
+     "w": 960,
+     "h": 540,
      "name": "Under the surface",
      "when": "Swimming with the trout over the granite boulders.",
-     "alt": "Robot Marley: swimming with the trout over the granite boulders"
+     "alt": "Robot Marley: swimming with the trout over the granite boulders",
+     "poster": "data/photos/2026-10-12-robot-marley/loop-underwater.jpg",
+     "video": true
     },
     {
-     "src": "data/photos/2026-10-12-robot-marley/scene-granite-wall.jpg",
-     "w": 1376,
-     "h": 768,
+     "src": "data/photos/2026-10-12-robot-marley/loop-granite-wall.mp4",
+     "w": 960,
+     "h": 540,
      "name": "The granite wall",
      "when": "Clipped to the cable on tracked paws, a falcon looking on.",
-     "alt": "Robot Marley: clipped to the cable on tracked paws, a falcon looking on"
+     "alt": "Robot Marley: clipped to the cable on tracked paws, a falcon looking on",
+     "poster": "data/photos/2026-10-12-robot-marley/loop-granite-wall.jpg",
+     "video": true
     },
     {
-     "src": "data/photos/2026-10-12-robot-marley/scene-night-summit.jpg",
-     "w": 1376,
-     "h": 768,
+     "src": "data/photos/2026-10-12-robot-marley/loop-night-summit.mp4",
+     "w": 960,
+     "h": 540,
      "name": "A summit at night",
      "when": "Crampons on, collar lit, a coyote keeping its distance.",
-     "alt": "Robot Marley: crampons on, collar lit, a coyote keeping its distance"
+     "alt": "Robot Marley: crampons on, collar lit, a coyote keeping its distance",
+     "poster": "data/photos/2026-10-12-robot-marley/loop-night-summit.jpg",
+     "video": true
     }
    ]
   }

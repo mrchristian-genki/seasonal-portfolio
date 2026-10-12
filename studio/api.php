@@ -411,8 +411,11 @@ try {
             // the photo spread (feature.lookbook) too, and its pictures keep their files even when they leave the photo list
             $spread = [];
             foreach (($e['feature']['lookbook']['items'] ?? []) as $x) {
-                if (!preg_match('#^data/photos/' . preg_quote($id, '#') . '/([a-z0-9-]{1,40}\.jpg)$#', (string) ($x['src'] ?? ''), $sm)) json_fail('A photo spread picture is outside this entry.');
-                $spread[$sm[1]] = true;
+                foreach (['src', 'poster'] as $k) {
+                    if ($k === 'poster' && !isset($x['poster'])) continue;
+                    if (!preg_match('#^data/photos/' . preg_quote($id, '#') . '/([a-z0-9-]{1,40}\.(jpg|mp4))$#', (string) ($x[$k] ?? ''), $sm)) json_fail('A photo spread picture is outside this entry.');
+                    $spread[$sm[1]] = true;
+                }
             }
             $files = [];
             foreach ($body['newPhotos'] ?? [] as $p) {
