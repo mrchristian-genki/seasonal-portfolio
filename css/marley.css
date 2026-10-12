@@ -7,6 +7,22 @@
 .mly-st img,.mly-st i,.mly-st .mly-g,.mly-st canvas{position:absolute;inset:0;width:100%;height:100%;display:block;margin:0;max-width:none;border:0;border-radius:0;box-shadow:none}
 .mly-st.has-bd{background-size:cover,cover;background-position:center,center}
 .mly-parts{position:absolute;left:6.6667%;top:1.355%;width:93.3333%;height:98.645%;transition:opacity .6s ease-in-out}
+/* her seat (Christian, Oct 12: so she isn't floating over a backdrop): a low round pedestal in her own bronze and
+   graphite, its rim lit in her lenses' amber, drawn in CSS so it suits every scene. She and her moves are scaled down
+   together from the top centre of the stage (the parts' origin is that same point in their own box) so her paws land
+   on its top, a soft shadow where she sits */
+.mly-st .mly-seat{position:absolute;z-index:0;left:9%;right:9%;top:76%;height:19.5%;pointer-events:none}
+.mly-seat::before,.mly-seat::after{content:"";position:absolute;left:0;right:0}
+.mly-seat::before{z-index:1;top:0;height:62%;border-radius:50%;
+  background:radial-gradient(ellipse 42% 34% at 47% 52%,rgba(0,0,0,.42),rgba(0,0,0,.18) 60%,transparent),
+    radial-gradient(ellipse at 50% 30%,#6c625a,#463e38 55%,#2c2622);
+  box-shadow:inset 0 0 0 2px #a8773f,inset 0 0 0 4px rgba(255,176,0,.38),inset 0 -6px 10px rgba(0,0,0,.35)}
+.mly-seat::after{top:31%;bottom:0;border-radius:0 0 50% 50%/0 0 45% 45%;
+  background:linear-gradient(90deg,#1c1815,#4a3f37 30%,#5a4d43 46%,#3a312b 70%,#16130f),#2c2622;
+  box-shadow:0 8px 16px rgba(0,0,0,.4),inset 0 2px 0 rgba(168,119,63,.7)}
+.mly-st .mly-parts,.mly-st .mly-mv-c{transform:scale(.86)}
+.mly-st .mly-parts{transform-origin:46.4286% -1.3736%}
+.mly-st .mly-mv-c{transform-origin:50% 0}
 .mly-st.moving .mly-parts{opacity:0}
 /* her stand-in while her parts load: a small still of her seated pose (parts/web/still.webp, 6 KB), so the stage is
    never empty; it fades out once every part is in, so it never shows behind an ear or her tail as they move */

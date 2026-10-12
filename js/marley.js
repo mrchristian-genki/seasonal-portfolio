@@ -82,7 +82,7 @@
     el.setAttribute('role', 'img');
     if (!el.getAttribute('aria-label')) el.setAttribute('aria-label', 'Robot Marley, a robot hound, sitting and wagging her tail');
     var st = document.createElement('div'); st.className = 'mly-st';
-    st.innerHTML = '<div class="mly-parts">' +
+    st.innerHTML = '<div class="mly-seat" aria-hidden="true"></div><div class="mly-parts">' +
       '<img class="mly-tail" src="' + P + 'tail.webp' + V + '" alt=""' + at('tail', .725, .824) + '>' +
       '<img class="mly-body" src="' + P + 'body.webp' + V + '" alt=""' + at('body', .5, 1) + '>' +
       '<div class="mly-g mly-head"><img src="' + P + 'head.webp' + V + '" alt=""' + at('head') + '><div class="mly-g mly-mouth">' +
