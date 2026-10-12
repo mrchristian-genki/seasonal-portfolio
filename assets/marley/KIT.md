@@ -199,12 +199,17 @@ From Christian's first 18 renders, `assets/marley/parts/` (her stage is 560 x 72
 - **Collar and charms:** the collar (`collar.webp`) and its band (`collar-mask.webp`, from the magenta render) take a
   Note's first colour; eight charms (bone, heart, pinecone, star, paw, leaf, bike wheel, ball) each take its second, with a
   gentle swing when one changes.
+- **Dyeable charms (Oct 12):** from Christian's cyan renders, each charm has `charm-<name>-dye.webp` (the charm, its cyan
+  face turned to grey shading) and `charm-<name>-mask.webp` (exactly where the cyan was). A Note's colour multiplies
+  through the mask, so only the charm's face takes it; its brass ring and rim stay brass. Her own charm cross-fades to
+  the dyed one over .9 s. Her own white ball is the clean cyan cut dyed white. Seven are in; the **leaf** still needs its
+  cyan render (until then her own leaf image dyes as before).
 
 **Two sets came in:** twelve renders match the bone-tag template exactly (tail to the right); six (tail to the left,
 plain ring) are a slightly different render. From those, only the closed eyes and the small mouth line up well enough
 to use; the wide "ah" shows a second nose, so it's left out.
 
-**Still to make:** a wide "ah" edited from the bone-tag template (`461`), not the plain-ring one; empty
+**Still to make:** the leaf charm painted cyan (6, same prompt as the others); a wide "ah" edited from the bone-tag template (`461`), not the plain-ring one; empty
 lenses (2a) if her eyes should glance; her moves (7) and scenes (8).
 
 ---

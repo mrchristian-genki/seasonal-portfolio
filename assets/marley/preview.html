@@ -38,6 +38,7 @@ h1{font-size:20px;margin:0 0 4px} p{margin:0 0 12px;color:var(--ink2);max-width:
 .glow-s{mix-blend-mode:screen;opacity:.35;background:#ffcf4a}
 .charm{transform-origin:45.9% 42%;transition:opacity .6s ease-in-out}
 .charm.sw{animation:swing 2.4s ease-in-out}
+.ch-own,.ch-dyed{transition:opacity .9s ease-in-out} .ch-dyed{position:absolute;inset:0}
 @keyframes swing{25%{transform:rotate(6deg)}60%{transform:rotate(-4deg)}85%{transform:rotate(2deg)}}
 .dye{mix-blend-mode:multiply;transition:background-color .9s ease-in-out,opacity .9s ease-in-out}
 .dye-collar{-webkit-mask:url(parts/collar-mask.webp) 0 0/100% 100%;mask:url(parts/collar-mask.webp) 0 0/100% 100%;opacity:0;mix-blend-mode:color}
@@ -51,7 +52,7 @@ button{font:inherit;font-size:14px;color:var(--ink);background:var(--btn);border
 button:hover{transform:translateY(-1px);border-color:var(--accent)}
 button.on{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 18%,var(--btn))}
 input[type=color]{width:36px;height:28px;border:0;background:none;padding:0;cursor:pointer}
-@media (prefers-reduced-motion: reduce){.tail,.body,.charm.sw{animation:none}.head,.ear,.mouth img,.lids,.glow,.charm,.dye,button{transition:none}}
+@media (prefers-reduced-motion: reduce){.tail,.body,.charm.sw{animation:none}.head,.ear,.mouth img,.lids,.glow,.charm,.dye,.ch-own,.ch-dyed,button{transition:none}}
 </style>
 </head>
 <body>
@@ -119,19 +120,31 @@ site yet.</p>
     gc.style.background = e[0]; gs.style.background = e[1]; gc.style.opacity = e[2]; gs.style.opacity = e[3]; on('[data-eye]', b); }; });
   function blink(then) { st.classList.add('blink'); setTimeout(function () { st.classList.remove('blink'); if (then) setTimeout(then, 200); }, 140); }
   document.getElementById('blink').onclick = function () { blink(); };
-  // charms, dyed by the second colour (multiply over the pale brass), each a gentle swing when it changes
-  var CH = ['bone', 'heart', 'paw', 'star', 'pinecone', 'ball', 'bike', 'leaf'];
+  // charms: her own, and (for a Note's colour) the dyeable one from the cyan render cross-fading in over it, its
+  // grey face multiplied by the colour through the mask where the cyan was. The leaf has no cyan render yet: its
+  // own image dyes with multiply.
+  var CH = ['bone', 'heart', 'paw', 'star', 'pinecone', 'ball', 'bike', 'leaf'], DYE = { leaf: 0 }, OWN = { ball: '#f1eee6' };   // her own white ball: the clean cyan cut, dyed white
   var ch = document.getElementById('charm'), row = document.getElementById('charms'), pal = false;
+  function mask(u) { return '-webkit-mask:url(' + u + ') 0 0/100% 100%;mask:url(' + u + ') 0 0/100% 100%;'; }
   function charm(k) {
-    ch.innerHTML = '<img src="parts/charm-' + k + '.webp" alt=""><i class="dye" id="dch" style="-webkit-mask:url(parts/charm-' + k + '.webp) 0 0/100% 100%;mask:url(parts/charm-' + k + '.webp) 0 0/100% 100%;opacity:' + (pal ? 1 : 0) + ';background:' + document.getElementById('c2').value + '"></i>';
+    var d = DYE[k] !== 0, o = OWN[k], c = pal || !o ? document.getElementById('c2').value : o;
+    ch.innerHTML = '<img src="parts/charm-' + k + '.webp" alt="" class="ch-own"' + (d ? ' style="opacity:' + (pal || o ? 0 : 1) + '"' : '') + '>' +
+      (d ? '<div class="ch-dyed" style="opacity:' + (pal || o ? 1 : 0) + '"><img src="parts/charm-' + k + '-dye.webp" alt=""><i class="dye" style="' + mask('parts/charm-' + k + '-mask.webp') + 'opacity:1;background:' + c + '"></i></div>'
+         : '<i class="dye" style="' + mask('parts/charm-' + k + '.webp') + 'opacity:' + (pal ? 1 : 0) + ';background:' + c + '"></i>');
     if (!still) { ch.classList.remove('sw'); void ch.offsetWidth; ch.classList.add('sw'); }
+  }
+  function charmPal() {
+    var own = ch.querySelector('.ch-own'), dy = ch.querySelector('.ch-dyed'), i = ch.querySelector('.dye');
+    var o = OWN[(ch.querySelector('.ch-own').src.match(/charm-(\w+)\.webp/) || [])[1]];
+    if (i) i.style.background = pal || !o ? $('#c2').value : o;
+    if (dy) { dy.style.opacity = pal || o ? 1 : 0; own.style.opacity = pal || o ? 0 : 1; } else if (i) i.style.opacity = pal ? 1 : 0;
   }
   CH.forEach(function (k, i) { var b = document.createElement('button'); b.textContent = k; b.dataset.ch = k; if (!i) b.className = 'on'; b.onclick = function () { charm(k); on('[data-ch]', b); }; row.appendChild(b); });
   charm('bone');
   // a Note's two colours: the collar band and the charm
-  function colours() { pal = true; st.classList.add('pal'); $('#dc').style.background = $('#dc2').style.background = $('#c1').value; var d = $('#dch'); if (d) { d.style.background = $('#c2').value; d.style.opacity = 1; } document.getElementById('own').classList.remove('on'); }
+  function colours() { pal = true; st.classList.add('pal'); $('#dc').style.background = $('#dc2').style.background = $('#c1').value; charmPal(); document.getElementById('own').classList.remove('on'); }
   $('#c1').oninput = $('#c2').oninput = colours;
-  document.getElementById('own').onclick = function () { pal = false; st.classList.remove('pal'); var d = $('#dch'); if (d) d.style.opacity = 0; this.classList.add('on'); };
+  document.getElementById('own').onclick = function () { pal = false; st.classList.remove('pal'); charmPal(); this.classList.add('on'); };
   // on her own: a blink every few seconds, an ear flick now and then, a curious tilt once in a while
   if (!still) {
     (function b() { setTimeout(function () { blink(Math.random() < .2 ? function () { blink(); } : null); b(); }, 3000 + Math.random() * 3500); })();
