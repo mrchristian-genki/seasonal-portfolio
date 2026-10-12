@@ -120,7 +120,7 @@ site yet.</p>
   function blink(then) { st.classList.add('blink'); setTimeout(function () { st.classList.remove('blink'); if (then) setTimeout(then, 200); }, 140); }
   document.getElementById('blink').onclick = function () { blink(); };
   // charms, dyed by the second colour (multiply over the pale brass), each a gentle swing when it changes
-  var CH = ['bone', 'paw', 'heart', 'star', 'pinecone', 'ball', 'bike', 'leaf'].filter(function (k) { return k !== 'heart'; });
+  var CH = ['bone', 'heart', 'paw', 'star', 'pinecone', 'ball', 'bike', 'leaf'];
   var ch = document.getElementById('charm'), row = document.getElementById('charms'), pal = false;
   function charm(k) {
     ch.innerHTML = '<img src="parts/charm-' + k + '.webp" alt=""><i class="dye" id="dch" style="-webkit-mask:url(parts/charm-' + k + '.webp) 0 0/100% 100%;mask:url(parts/charm-' + k + '.webp) 0 0/100% 100%;opacity:' + (pal ? 1 : 0) + ';background:' + document.getElementById('c2').value + '"></i>';
