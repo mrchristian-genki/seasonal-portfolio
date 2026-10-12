@@ -131,10 +131,14 @@
       vid.onended = function () { if (!faded) { faded = true; done(); } };
       setTimeout(function () { var p = vid.play(); if (p && p.catch) p.catch(function () { moving = ''; mark(); plan(); }); }, 300);
     }
+    // in a Listen bar (a Note she narrates): she talks along while the episode plays, and her moves wait for it
+    var bar = el.closest && el.closest('section.listen'), au = bar && bar.querySelector('audio'), chatT;
+    function chat() { clearTimeout(chatT); if (!au || au.paused || au.ended) { say('closed'); return; } say(['small', 'open', 'small', 'closed', 'open', 'small'][Math.floor(Math.random() * 6)]); chatT = setTimeout(chat, 110 + Math.random() * 90); }
+    if (au) { au.addEventListener('play', chat); ['pause', 'ended'].forEach(function (k) { au.addEventListener(k, function () { clearTimeout(chatT); say('closed'); }); }); }
     function plan() {
       clearTimeout(moveT); if (still || !cv) return;
       moveT = setTimeout(function () {
-        if (!onScreen || moving || document.hidden) return plan();
+        if (!onScreen || moving || document.hidden || (au && !au.paused)) return plan();
         var pick = MOVES.map(function (m) { return m[0]; }).filter(function (k) { return k !== lastMove; });
         move(pick[Math.floor(Math.random() * pick.length)]);
       }, rnd(22000, 40000));

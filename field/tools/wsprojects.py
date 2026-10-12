@@ -65,7 +65,7 @@ def narrator(e):
     global LOOKS
     if LOOKS is None:
         with open(os.path.join(ROOT, 'assets', 'narrator', 'looks.json'), encoding='utf-8') as f: LOOKS = json.load(f)
-    have = ('glazyarray', 'alta')
+    have = ('glazyarray', 'alta', 'marley')
     own = (e.get('episode') or {}).get('narrator')
     if own in have: return own
     m = LOOKS.get('categoryNarrators', {})
