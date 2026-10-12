@@ -77,7 +77,9 @@
     var bd = bar.getAttribute('data-bd'), CUT = {};
     if (bd && /^\/assets\/alta\/backdrops\/[\w.-]+\.(webp|jpg|png)(\?[\w.=-]*)?$/.test(bd) && !!document.createElement('canvas').getContext('webgl')) {
       st.classList.add('al-has-bd'); st.style.setProperty('--al-bd', 'url(' + bd + ')');
-      var rc = document.createElement('img'); rc.className = 'al-restcut'; rc.alt = ''; rc.src = P + 'rest-cut.webp' + V; st.insertBefore(rc, st.firstChild);
+      var rc = document.createElement('img'); rc.className = 'al-restcut'; rc.alt = '';
+      rc.onload = function () { st.classList.add('al-rc-in'); };   // her still is in: its small stand-in goes
+      rc.src = P + 'rest-cut.webp' + V; st.insertBefore(rc, st.firstChild);
       CUT = { palms: 1, dive: 1, rise: 1 };
     }
     // the Note's two colours (data-palette, from its hero): her crown's filigree takes the first, her hair's botanicals the second

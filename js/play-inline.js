@@ -313,6 +313,7 @@
         ['src', 'href', 'poster', 'data-route'].forEach(function (k) { var v = n.getAttribute(k); if (v && !/^(https?:|#|data:|mailto:)/.test(v)) n.setAttribute(k, new URL(v, abs).href); });
       });
       body.innerHTML = ''; body.appendChild(document.importNode(art, true));
+      watch(body);   // its loops play only while on screen, their posters until then
       var route = body.querySelector('[data-route]');
       if (route && body.querySelector('#map')) mapAssets().then(function () { return fetch(route.getAttribute('data-route')); }).then(function (r) { return r.json(); }).then(function (d) {
         var RV = window.RouteView; if (!RV) return;

@@ -172,8 +172,8 @@ ${ICONS}
 <link rel="stylesheet" href="${rel}../css/logo.css?v=11">
 <link rel="stylesheet" href="${rel}../css/lake.css?v=2">
 <link rel="stylesheet" href="${rel}../css/narrator.css?v=33">
-<link rel="stylesheet" href="${rel}../css/alta.css?v=9">
-<link rel="stylesheet" href="${rel}../css/marley.css?v=4">
+<link rel="stylesheet" href="${rel}../css/alta.css?v=10">
+<link rel="stylesheet" href="${rel}../css/marley.css?v=5">
 <script>/* Logo season from the calendar, as on About. */document.documentElement.dataset.season=["winter","winter","spring","spring","spring","summer","summer","summer","fall","fall","fall","winter"][new Date().getMonth()];</script>
 <link rel="stylesheet" href="${rel}../css/route-dash.css?v=${V}">
 </head>
@@ -193,8 +193,8 @@ const foot = (rel) => `<footer class="foot"><p>${esc(show.narrationNote)}</p>
 <script src="${rel}../js/lake.js?v=4" defer></script>
 <script src="${rel}../assets/narrator/resolve.js?v=4" defer></script>
 <script src="${rel}../js/narrator.js?v=45" defer></script>
-<script src="${rel}../js/alta.js?v=14" defer></script>
-<script src="${rel}../js/marley.js?v=5" defer></script>
+<script src="${rel}../js/alta.js?v=15" defer></script>
+<script src="${rel}../js/marley.js?v=6" defer></script>
 </body>
 </html>
 `;
@@ -259,9 +259,9 @@ for (const e of events) {
   const tableSlot = table.length ? Math.min(ps.length - 1, table[0].after != null ? table[0].after : ps.length - 2) : -1;
   const tableCap = (e.photos || []).find((p) => p.tableCaption);
   const tableFig = () => `<figure class="table"><div class="table-top">${table.map((p, k) =>
-    `<a class="print p${k + 1}" href="${esc(p.src)}" data-lightbox data-video title="${esc(p.caption)}"><video src="${esc(p.src)}" poster="${esc(p.poster)}" width="${p.w}" height="${p.h}" muted loop playsinline autoplay preload="metadata" aria-label="${esc(p.caption)}"></video><span class="print-cap">${esc(p.caption)}</span></a>`).join('')}</div>${tableCap ? `<figcaption><span class="ai-badge">Animated with AI</span> ${esc(tableCap.tableCaption)}</figcaption>` : ''}</figure>`;
+    `<a class="print p${k + 1}" href="${esc(p.src)}" data-lightbox data-video title="${esc(p.caption)}"><video src="${esc(p.src)}" poster="${esc(p.poster)}" width="${p.w}" height="${p.h}" muted loop playsinline preload="none" data-autoplay aria-label="${esc(p.caption)}"></video><span class="print-cap">${esc(p.caption)}</span></a>`).join('')}</div>${tableCap ? `<figcaption><span class="ai-badge">Animated with AI</span> ${esc(tableCap.tableCaption)}</figcaption>` : ''}</figure>`;
   const fig = (p, cls) => p.video
-    ? `<figure class="${cls || 'photo'} clip"><a href="${esc(p.src)}" data-lightbox data-video><video src="${esc(p.src)}" poster="${esc(p.poster)}" width="${p.w}" height="${p.h}" muted loop playsinline autoplay preload="metadata"></video></a>${p.caption ? `<figcaption>${p.ai ? '<span class="ai-badge">Made with AI</span> ' : ''}${esc(p.caption)}</figcaption>` : ''}</figure>`
+    ? `<figure class="${cls || 'photo'} clip"><a href="${esc(p.src)}" data-lightbox data-video><video src="${esc(p.src)}" poster="${esc(p.poster)}" width="${p.w}" height="${p.h}" muted loop playsinline preload="none" data-autoplay></video></a>${p.caption ? `<figcaption>${p.ai ? '<span class="ai-badge">Made with AI</span> ' : ''}${esc(p.caption)}</figcaption>` : ''}</figure>`
     : `<figure class="${cls || 'photo'}"><a href="${esc(p.src)}" data-lightbox><img src="${esc(p.src)}" alt="${esc(p.caption)}" width="${p.w}" height="${p.h}" loading="lazy"></a>${p.caption ? `<figcaption>${p.ai ? '<span class="ai-badge">Made with AI</span> ' : ''}${esc(p.caption)}</figcaption>` : ''}</figure>`;
   // A feature's look book (e.feature.lookbook): portraits in a grid, set just before the subhead it names ("before")
   // (an item whose file is missing is left out with a warning, rather than stopping the whole site from building)
@@ -273,7 +273,7 @@ for (const e of events) {
     if (x.video && /\.mp4$/.test(x.src || '') && x.poster) {   // a loop: plays silently, its poster frame until it does
       fs.copyFileSync(path.join(FIELD, x.src), path.join(media, base + '.mp4')); fs.copyFileSync(path.join(FIELD, x.poster), path.join(media, base + '.jpg'));
       const tag = '?v=' + vtag(x.src, x.poster);
-      return `<figure class="mag-look clip${k === 0 ? ' wide' : ''}"><a href="../media/${e.id}/${base}.mp4${tag}" data-lightbox data-video><video src="../media/${e.id}/${base}.mp4${tag}" poster="../media/${e.id}/${base}.jpg${tag}" width="${x.w}" height="${x.h}" muted loop playsinline autoplay preload="metadata" aria-label="${alt}"></video></a>${cap}</figure>`;
+      return `<figure class="mag-look clip${k === 0 ? ' wide' : ''}"><a href="../media/${e.id}/${base}.mp4${tag}" data-lightbox data-video><video src="../media/${e.id}/${base}.mp4${tag}" poster="../media/${e.id}/${base}.jpg${tag}" width="${x.w}" height="${x.h}" muted loop playsinline preload="none" data-autoplay aria-label="${alt}"></video></a>${cap}</figure>`;
     }
     const f = base + '.jpg'; fs.copyFileSync(path.join(FIELD, x.src), path.join(media, f));
     return `<figure class="mag-look${k === 0 ? ' wide' : ''}"><a href="../media/${e.id}/${f}" data-lightbox><img src="../media/${e.id}/${f}" alt="${alt}" width="${x.w}" height="${x.h}" loading="lazy"></a>${cap}</figure>`;
@@ -334,7 +334,7 @@ for (const e of events) {
       if (/^#[0-9a-f]{6}$/.test(m.a || '')) mastStyle = ` data-mast style="--mast-a:${m.a};--mast-b:${m.b};--mast-l:${m.l}"`;
     } catch (err) { console.warn(`${e.id}: cover title colours left as the magazine's (${err.message.split('\n')[0]})`); }
   }
-  const magCover = F && cover ? `<header class="mag-cover"${mastStyle}><div class="mag-img">${cover.video ? `<video src="${esc(cover.src)}" poster="${esc(cover.poster)}" muted loop playsinline autoplay></video>` : `<img src="${esc(cover.src)}" alt="${esc(cover.caption)}" width="${cover.w}" height="${cover.h}">`}</div>
+  const magCover = F && cover ? `<header class="mag-cover"${mastStyle}><div class="mag-img">${cover.video ? `<video src="${esc(cover.src)}" poster="${esc(cover.poster)}" muted loop playsinline preload="metadata" data-autoplay></video>` : `<img src="${esc(cover.src)}" alt="${esc(cover.caption)}" width="${cover.w}" height="${cover.h}">`}</div>
 <div class="mag-top"><b class="mag-mast">${String(F.masthead || '').trim().split(/\s+/).map((w) => `<span>${esc(w)}</span>`).join(' ')}</b>${F.tagline ? `<span class="mag-tag">${esc(F.tagline)}</span>` : ''}</div>
 ${F.issue ? `<span class="mag-issue">${esc(F.issue)}</span>` : ''}${(F.coverLines || []).length ? `<ul class="mag-lines">${F.coverLines.map((l) => `<li>${esc(l)}</li>`).join('')}</ul>` : ''}
 </header>${cover.caption ? `<p class="mag-cap"><span class="ai-badge">Made with AI</span> ${esc(cover.caption)}</p>` : ''}` : '';
