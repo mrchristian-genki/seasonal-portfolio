@@ -8,6 +8,9 @@
   var Track = window.FieldTrack;   // field/track.js, copied here at deploy
   var CFG = null, E = null, dirty = false;
   var REVIEW = null, LIVE = null;   // the note's review state (waiting, or sent back) and its live version, to compare
+  // the copy of the note this page holds: its version (the blob shas of the live and review copies, from api.php) goes
+  // back with every save, which is refused if the repo's copy has changed since; the copy itself, to see what was edited
+  var BASE = { version: { live: null, review: null }, entry: null };
   function owner() { return !CFG || !CFG.me || CFG.me.role === 'owner'; }
   var fresh = {};     // name -> { blob, thumb (data URL), b64 } for photos not yet saved
   var audioNew = null, audioGone = false;   // the episode's MP3: one attached since the last save, or removed
@@ -63,7 +66,7 @@
           var said = t.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 140);
           throw new Error('The server\'s reply to ' + a + ' wasn\'t readable (' + r.status + (said ? ': ' + said : ', empty') + ')');
         }
-        if (!r.ok) throw new Error(j.error || ('Error ' + r.status));
+        if (!r.ok) { var er = new Error(j.error || ('Error ' + r.status)); er.status = r.status; er.data = j; throw er; }
         return j;
       });
     });
@@ -765,11 +768,12 @@
   function edit(id) {
     if (dirty && !confirm('Leave without saving?')) return;
     dirty = false; fresh = {}; removed = []; audioNew = null; audioGone = false; DRIVEAUD = null; DRIVETRK = null; trackRaw = null; trackSwap = false; clipsNew = {}; posterNew = {}; DRIVEVID = null; UPVID = []; stopTrim();
-    REVIEW = null; LIVE = null;
+    REVIEW = null; LIVE = null; BASE = { version: { live: null, review: null }, entry: null }; staleClose();
     if (!id) { E = blank(); savedStatus = null; route('new'); render(); return Promise.resolve(); }
     app.innerHTML = '<p class="muted">Opening…</p>';
     return api('entry', null, '&id=' + encodeURIComponent(id)).then(function (j) {
       E = j.entry; savedStatus = E.status; REVIEW = j.review || null; LIVE = j.live || null; E.post = E.post || { title: '', body: '' }; E.episode = E.episode || { title: '', script: '', audio: null }; E.questions = E.questions || []; E.photos = E.photos || [];
+      BASE = { version: j.version || { live: null, review: null }, entry: clone(E) };
       route('note/' + id); render();
     }).catch(function (err) { toast(err.message, true); showList(); });
   }
@@ -2977,10 +2981,12 @@
       if (audioNew) E.episode.audio = 'data/audio/' + E.id + '.mp3'; else if (audioGone) E.episode.audio = null;
       var clips = Object.keys(clipsNew).map(function (n) { return { name: n.replace(/\.mp4$/, ''), loop: clipsNew[n].token }; });
       if (clips.length) L.at(1, clips.length + ' video loop' + (clips.length > 1 ? 's' : ''));
-      return api('save', { entry: E, newPhotos: uploaded, newClips: clips, removePhotos: removed, newAudio: audioNew ? audioNew.sha : '', removeAudio: audioGone && !!hadAudio, newLook: lookUp, removeLook: LOOKDEL, categoryLooks: Object.keys(CATNEW).length ? CATNEW : null,
+      return api('save', { entry: E, base: BASE.version, newPhotos: uploaded, newClips: clips, removePhotos: removed, newAudio: audioNew ? audioNew.sha : '', removeAudio: audioGone && !!hadAudio, newLook: lookUp, removeLook: LOOKDEL, categoryLooks: Object.keys(CATNEW).length ? CATNEW : null,
         newBackdrop: bdUp, categoryBackdrops: Object.keys(CATBDNEW).length ? CATBDNEW : null })
         .catch(function (err) { E.episode.audio = hadAudio; throw err; });
-    }).then(function () {
+    }).then(function (j) {
+      if (j.entry && j.entry.publishedAt) E.publishedAt = j.entry.publishedAt;   // set by the server the first time it goes live
+      BASE = { version: j.version, entry: clone(j.entry || E) };
       var hadNew = !!audioNew;
       var hadClips = Object.keys(clipsNew).length + Object.keys(posterNew).length;
       if (Object.keys(posterNew).length) posterBust = '&v=' + Date.now().toString(36);
@@ -3006,8 +3012,70 @@
     }).catch(function (err) {
       L.fail(err.message);
       if (first) { E.id = ''; }
-      toast('Not saved: ' + err.message, true);
+      if (err.data && err.data.stale) staleSave(err.data, first); else toast('Not saved: ' + err.message, true);
     }).then(function () { var b = $('#save'); if (b) { b.disabled = false; b.textContent = owner() ? 'Save' : 'Save for review'; } publishing = false; renderNext(); });
+  }
+
+  // ---------- a save from a stale page ----------
+  // The repo's copy of the note changed after this page loaded it (a merged PR, another tab, an editor's review).
+  // The save was refused; this says so, and when the edits made here and the newer changes touch different parts
+  // of the note (field by field, nested objects part by part, lists whole), offers to put them on the latest copy.
+  function clone(x) { return x == null ? x : JSON.parse(JSON.stringify(x)); }
+  function isObj(x) { return !!x && typeof x === 'object' && !Array.isArray(x); }
+  function canon(x) {   // key order and stray spaces at the ends of text don't count as a change
+    if (typeof x === 'string') return x.trim();
+    if (Array.isArray(x)) return x.map(canon);
+    if (isObj(x)) { var o = {}; Object.keys(x).sort().forEach(function (k) { if (x[k] !== undefined) o[k] = canon(x[k]); }); return o; }
+    return x;
+  }
+  function same(a, b) { return JSON.stringify(canon(a)) === JSON.stringify(canon(b)); }
+  // base: the copy loaded; mine: this page's; theirs: the repo's now. Fills r.mine, r.theirs and r.both (paths).
+  function merge3(base, mine, theirs, path, r) {
+    if (same(mine, theirs)) return theirs;
+    if (isObj(base) && isObj(mine) && isObj(theirs)) {   // part by part, so the notice names just what changed
+      var out = {};
+      Object.keys(theirs).concat(Object.keys(mine).filter(function (k) { return !(k in theirs); })).forEach(function (k) {
+        var v = merge3(base[k], mine[k], theirs[k], path ? path + '.' + k : k, r);
+        if (v !== undefined) out[k] = v;
+      });
+      return out;
+    }
+    if (same(mine, base)) { r.theirs.push(path); return theirs; }
+    if (same(theirs, base)) { r.mine.push(path); return mine; }
+    r.both.push(path); return mine;
+  }
+  function staleClose() {
+    var el = $('#stale'); if (!el) return;
+    el.removeAttribute('id'); el.classList.remove('on'); setTimeout(function () { el.remove(); }, 900);
+  }
+  function staleSave(j, first) {
+    staleClose();
+    var r = { mine: [], theirs: [], both: [] }, merged = null;
+    if (!first && BASE.entry && j.current) merged = merge3(BASE.entry, E, j.current, '', r);
+    var list = function (a) { return a.map(function (p) { return '<code>' + esc(p) + '</code>'; }).join(', '); };
+    var msg, can = merged && !r.both.length && r.mine.length;
+    if (first) msg = 'A note with this date and title is already in the notes. Change the title, or open that note from the list.';
+    else if (can) msg = 'Your edits here (' + list(r.mine) + ') don\'t touch what changed there (' + list(r.theirs) + '). Put them on the latest copy, read it through and Save again, or reload to get the latest without them.';
+    else if (r.both.length) msg = 'You and the newer copy both changed ' + list(r.both) + '. Reload to get the latest, then make your edits again.';
+    else msg = 'Reload to get the latest.';
+    var el = document.createElement('div'); el.id = 'stale'; el.setAttribute('role', 'alertdialog'); el.setAttribute('aria-labelledby', 'staleH');
+    el.innerHTML = '<div class="stale-card"><h2 id="staleH">This Note changed since you opened it</h2><p>' + msg + '</p><div class="rb-btns">' +
+      (can ? '<button type="button" class="primary" id="staleMerge">Put my edits on the latest</button>' : '') +
+      (first ? '' : '<button type="button" class="' + (can ? 'small' : 'primary') + '" id="staleReload">Reload the latest</button>') +
+      '<button type="button" class="link" id="staleKeep">Not now</button></div></div>';
+    document.body.appendChild(el);
+    requestAnimationFrame(function () { requestAnimationFrame(function () { el.classList.add('on'); }); });
+    var b = $('#staleMerge', el) || $('#staleReload', el) || $('#staleKeep', el); if (b) b.focus();
+    if (can) $('#staleMerge', el).onclick = function () {
+      E = merged; savedStatus = j.current.status; BASE = { version: j.version, entry: clone(j.current) };
+      staleClose(); render(); markDirty();
+      toast('Your edits are on the latest copy. Read it through, then Save.');
+    };
+    if (!first) $('#staleReload', el).onclick = function () {
+      if (!confirm('Reload the latest copy? Your edits here are left out.')) return;
+      dirty = false; staleClose(); edit(E.id);
+    };
+    $('#staleKeep', el).onclick = staleClose;
   }
 
   // ---------- start ----------

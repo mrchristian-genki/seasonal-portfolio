@@ -28,7 +28,11 @@ Log in, then:
   revises the current draft.
 - **Save**: one commit to `main` in the seasonal-portfolio repo (`field/data/events/<id>.json` and
   `field/data/photos/<id>/`). Set Status to **Published** and save to put it live: the deploy workflow
-  rebuilds Play and uploads it in about a minute.
+  rebuilds Play and uploads it in about a minute. A save only goes through if the Note in the repo is still
+  the copy the page opened (its git blob sha goes back with the save). If it changed since (a merged PR,
+  another tab), the save is refused: "This Note changed since you opened it; reload to get the latest."
+  When your edits and the newer changes touch different parts of the Note, **Put my edits on the latest**
+  keeps both; read it through and Save again. Test: `node field/tools/studio-stale-save.test.mjs`.
 
 - **Workshop order** (owner, under the Drive inbox): the Workshop tab's projects first to last; move any one up,
   down or to the top, then **Save the order** (one commit renumbers every project's place on the tab).
