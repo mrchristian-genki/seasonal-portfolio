@@ -162,6 +162,7 @@ ${ICONS}
 <link rel="stylesheet" href="${rel}../css/lake.css?v=2">
 <link rel="stylesheet" href="${rel}../css/narrator.css?v=33">
 <link rel="stylesheet" href="${rel}../css/alta.css?v=8">
+<link rel="stylesheet" href="${rel}../css/marley.css?v=1">
 <script>/* Logo season from the calendar, as on About. */document.documentElement.dataset.season=["winter","winter","spring","spring","spring","summer","summer","summer","fall","fall","fall","winter"][new Date().getMonth()];</script>
 <link rel="stylesheet" href="${rel}../css/route-dash.css?v=${V}">
 </head>
@@ -182,6 +183,7 @@ const foot = (rel) => `<footer class="foot"><p>${esc(show.narrationNote)}</p>
 <script src="${rel}../assets/narrator/resolve.js?v=3" defer></script>
 <script src="${rel}../js/narrator.js?v=43" defer></script>
 <script src="${rel}../js/alta.js?v=10" defer></script>
+<script src="${rel}../js/marley.js?v=1" defer></script>
 </body>
 </html>
 `;
@@ -269,6 +271,9 @@ for (const e of events) {
     if (b.type === 'steps') return `<section class="mag-steps">${b.title ? `<h3>${esc(b.title)}</h3>` : ''}<ol>${(b.items || []).map((x) => { const ph = x.photo && byFile(x.photo); return `<li>${x.title ? `<b>${esc(x.title)}</b>` : ''}${paras(x.text).map((t) => `<p>${esc(t)}</p>`).join('')}${ph ? fig(ph) : ''}</li>`; }).join('')}</ol></section>\n`;
     if (b.type === 'timeline') return `<section class="mag-time">${b.title ? `<h3>${esc(b.title)}</h3>` : ''}<ol>${(b.items || []).map(([w, t]) => `<li><time>${esc(w)}</time><p>${esc(t)}</p></li>`).join('')}</ol></section>\n`;
     if (b.type === 'code') return `<figure class="mag-code">${b.file ? `<figcaption class="mc-file">${esc(b.file)}</figcaption>` : ''}<pre><code>${esc(b.code || '')}</code></pre>${b.note ? `<figcaption>${esc(b.note)}</figcaption>` : ''}</figure>\n`;
+    // Robot Marley, live ("marley": js/marley.js builds her in the figure, with her buttons; an optional charm and
+    // two colours, else her own)
+    if (b.type === 'marley') { const pal = (b.palette || []).filter((c) => /^#[0-9a-f]{6}$/i.test(c)); return `<figure class="mag-marley"><div class="marley" data-controls${/^[a-z]{2,12}$/.test(b.charm || '') ? ` data-charm="${b.charm}"` : ''}${pal.length === 2 ? ` data-palette="${pal.join(' ')}"` : ''}></div>${b.title || b.text ? `<figcaption>${b.title ? `<b>${esc(b.title)}</b> ` : ''}${esc(b.text || '')}</figcaption>` : ''}</figure>\n`; }
     if (b.type === 'callouts') { const ph = b.photo && byFile(b.photo); if (!ph) return ''; return `<figure class="mag-callouts"><div class="mc-pic"><img src="${esc(ph.src)}" alt="${esc(ph.caption)}" width="${ph.w}" height="${ph.h}" loading="lazy">${(b.items || []).map((x, k) => `<span class="mc-dot${Number(x.x) > 62 ? ' flip' : ''}" style="--x:${Number(x.x)}%;--y:${Number(x.y)}%"><i>${k + 1}</i><b>${esc(x.label)}</b></span>`).join('')}</div><figcaption>${b.title ? `<b>${esc(b.title)}</b> ` : ''}${ph.ai ? '<span class="ai-badge">Made with AI</span> ' : ''}${esc(ph.caption)}</figcaption></figure>\n`; }
     return '';
   };

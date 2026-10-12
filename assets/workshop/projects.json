@@ -142,6 +142,75 @@
   "audio": "play/media/2026-10-09-a-l-t-a/episode.mp3"
  },
  {
+  "id": "2026-10-12-robot-marley",
+  "name": "Robot Marley",
+  "tagline": "A robot companion dog",
+  "summary": "She doesn't bark, she chimes. RIVETING TONE meets Robot Marley, the robot companion dog built after the real Marley, with amber lenses that glow gold when she's happy and a charm on her collar in every Note's colours.",
+  "date": "Mon, Oct 12, 2026",
+  "note": "play/2026-10-12-robot-marley/",
+  "tool": null,
+  "card": {
+   "type": "image",
+   "src": "play/media/2026-10-12-robot-marley/01.jpg?v=e6366885",
+   "caption": "Robot Marley on the lake shore at sunset, among the granite boulders."
+  },
+  "media": [
+   {
+    "type": "image",
+    "src": "play/media/2026-10-12-robot-marley/01.jpg?v=e6366885",
+    "caption": "Robot Marley on the lake shore at sunset, among the granite boulders."
+   },
+   {
+    "type": "image",
+    "src": "play/media/2026-10-12-robot-marley/02.jpg?v=358f6876",
+    "caption": "Robot Marley meets A.L.T.A. at the glass of her tank: a pause, a lower stance, a tilt of the head."
+   },
+   {
+    "type": "image",
+    "src": "play/media/2026-10-12-robot-marley/03.jpg?v=6014e071",
+    "caption": "Robot Marley sitting in the grass in a backyard, ears relaxed, tail out to one side."
+   }
+  ],
+  "pull": "Built after the real Marley, a mixed-breed hound: amber lenses that glow gold when she's happy, and a chime instead of a bark.",
+  "title": "Robot Marley Doesn't Do Interviews",
+  "story": [
+   "She doesn't do interviews. She chimes.",
+   "We meet Robot Marley at the Workshop, late, under the long lamp over the bench. She is sitting square on the floor, front paws together, tail curved out to one side, looking straight at the camera with a pair of warm amber lenses. When we come in, one ear turns toward the door on its own. Then the other. Then her head tilts, slowly, and somewhere inside her there is a soft mechanical hum while her eyes focus.",
+   "\"That's her saying hello,\" says GlazyArray, who has agreed to translate.",
+   "## The third character",
+   "GlazyArray tells the Field Notes. A.L.T.A. guards the lake. Robot Marley is the third, and the first with four paws: a robot companion dog Christian came up with on October 12, built after the real Marley, a mixed-breed hound.",
+   "The real Marley is already all over this site. She's in the logo, in the canyon, right beside Christian. She swims. She chases the ball. So when it came time for a character who could cover the local dog scene, there was really only one candidate.",
+   "> She doesn't bark. When something new happens, she stands up and chimes.",
+   "## Built after a real dog",
+   "Her panels follow the real Marley's markings. Rich golden-brown and caramel on her back, her sides, her ears and the top of her head. Matte white on her muzzle, her chest, her belly and her paws. There are seams and small rivets where a real dog would have fur, and bronze gaskets at her shoulders, elbows and knees.",
+   "Her ears are floppy, made of articulated golden-brown panels. Her tail is smooth and segmented. Her nose is dark and matte, with a tiny hint of pink. Her paws are white, with dark grip pads underneath.",
+   "And her eyes are large amber lenses that glow. When she's happy, which is most of the time, they glow a warm, bright gold. When she isn't, they go dark amber, and then red.",
+   "## Watch her for a minute",
+   "She is built the way GlazyArray and A.L.T.A. are: not one video, but layers the site moves on its own. Her body breathes. Her tail wags in slow, smooth arcs, never rapid thumps. Each ear turns on its own pivot to track a sound. She blinks. And every so often, her head tilts.",
+   "Then, now and then, she does one of her moves. A happy wag. Lying down, and sitting back up. Standing to look around, ears up. A tilt and a wink. Each one starts and ends in the same seated pose, so she slips out of her layers and back into them without a seam.",
+   "## Her personality, in her own servos",
+   "Christian wrote her down before a single picture was made. She's curious and thoughtful: measured and deliberate, never frantic. When she meets something unfamiliar, like a mermaid through the glass of a tank, she pauses, lowers her stance a little, and tilts her head.",
+   "She's affectionate. She leans her warm chassis against your legs when she's resting, and rests her chin on a knee or a table with a quiet whirr of servos letting go.",
+   "She's alert. Her ears move on ball joints to track faint sounds. If someone arrives, she snaps to attention, standing square on her paws with her neck arched, and gives a low, warm electronic chime. Never a sharp bark.",
+   "And she's playful, in bursts. In open grass she drops into a play-bow, bounces on her front legs, and bounds off in a few smooth, galloping strides. Then, just as quickly, she's calm again, lying in a sunny patch with her paws tucked under her chest.",
+   "## A charm instead of a name tag",
+   "The first render gave her a bone-shaped tag with her name engraved on it. It came out reading something close to MARLAT. So the tag is gone. In its place, a charm hangs from the ring on her collar: a bone, a heart, a paw, a star, a pinecone, a ball, a bike wheel or an aspen leaf.",
+   "Each Note will be able to pick one, and its two colours will dye her collar and her charm, the way they dress GlazyArray's hats.",
+   "## What's next for her",
+   "Robot Marley is going to get her own section, where she can dish out all the news about the local dog scene. She might even help a few dogs get adopted, and try out some new dog gear and toys. She could even start a podcast, with other dogs on the show.",
+   "She has already met A.L.T.A., at the glass of her tank. She paused, lowered her stance a little, and tilted her head.",
+   "We ask GlazyArray what Marley thinks of all of it. GlazyArray looks down. Marley looks up. Her tail goes, slowly, from one side to the other.",
+   "\"She's in,\" GlazyArray says."
+  ],
+  "slug": "robot-marley",
+  "share": {
+   "image": "play/media/2026-10-12-robot-marley/01.jpg?v=e6366885",
+   "w": null,
+   "h": null,
+   "alt": "Robot Marley on the lake shore at sunset, among the granite boulders."
+  }
+ },
+ {
   "id": "2026-10-06-the-whole-machine",
   "name": "The whole machine",
   "tagline": "How the lake, the Parts Catalog, the Workshop, the Studio and ProPre fit together",
