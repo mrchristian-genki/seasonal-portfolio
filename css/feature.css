@@ -45,6 +45,7 @@
 .feature .mag-book-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 12px}
 .feature .mag-look{margin:0}
 .feature .mag-look.wide{grid-column:1/-1}
+.feature .mag-look.wide~.mag-look:last-child:nth-child(even){grid-column:1/-1}   /* a last picture that would sit alone (after the wide first) runs wide too */
 .feature .mag-look a{display:block;border-radius:6px;overflow:hidden;background:#0b2a28}
 .feature .mag-look img,.feature .mag-look video{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;max-height:none;border-radius:0;margin:0;transition:transform .5s ease-in-out}
 .feature .mag-look a:hover img,.feature .mag-look a:hover video{transform:scale(1.03)}
@@ -399,3 +400,9 @@ html.night-page .feature.mag-sourceorder .pull p{background:linear-gradient(180d
 html.night-page .feature.mag-studiofloor{--mg-red:#ef6f80}
 html.night-page .feature.mag-studiofloor .mag-qa,html.night-page .feature.mag-studiofloor .mag-box{background:#1b1b1b}
 html.night-page .feature.mag-studiofloor .mag-qa dd{background:#3d3d3d}
+/* A COVER'S TITLE COLOURS (Oct 12, 2026): the Note's two colours, the narrator's, each shaded by publish.mjs
+   (field/tools/mastcolors.py) to read on the cover picture where it sits: the masthead in the first, a two-colour
+   masthead's second word and the lead cover line in the second. Without a palette, each magazine keeps its own. */
+.feature .mag-cover[data-mast] .mag-mast{color:var(--mast-a)}
+.feature.mag-brushengine .mag-cover[data-mast] .mag-mast span+span{color:var(--mast-b)}
+.feature .mag-cover[data-mast] .mag-lines li:first-child{color:var(--mast-l)}

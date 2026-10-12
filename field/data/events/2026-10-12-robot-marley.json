@@ -11,7 +11,7 @@
   "character"
  ],
  "status": "published",
- "summary": "She talks now. RIVETING TONE sits down with Robot Marley, the robot companion dog built after the real Marley, who's about to start her own podcast: interviewing other robot dogs, to get them adopted.",
+ "summary": "She talks now. RIVETING TONE sits down with Robot Marley, the robot companion dog built after the real Marley, who's about to start her own podcast to get real dogs adopted: each guest is a robot version of a real dog looking for a home.",
  "links": [
   {
    "label": "Meet A.L.T.A.",
@@ -25,6 +25,86 @@
  "trailhead": null,
  "track": null,
  "photos": [
+  {
+   "src": "data/photos/2026-10-12-robot-marley/clip-6.mp4",
+   "poster": "data/photos/2026-10-12-robot-marley/clip-6.jpg",
+   "video": true,
+   "caption": "Marley and Marley side by side in the yard.",
+   "takenAt": "2026:10:12 12:36:17",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "side-yard-1.mp4",
+   "range": [
+    0,
+    8
+   ]
+  },
+  {
+   "src": "data/photos/2026-10-12-robot-marley/clip-7.mp4",
+   "poster": "data/photos/2026-10-12-robot-marley/clip-7.jpg",
+   "video": true,
+   "caption": "Marley and Marley checking each other out on the couch.",
+   "takenAt": "2026:10:12 12:37:51",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "side-couch-2.mp4",
+   "range": [
+    0,
+    9.95
+   ]
+  },
+  {
+   "src": "data/photos/2026-10-12-robot-marley/clip-5.mp4",
+   "poster": "data/photos/2026-10-12-robot-marley/clip-5.jpg",
+   "video": true,
+   "caption": "Marley and Marley checking each other out in the yard.",
+   "takenAt": "2026:10:12 12:40:20",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "side-yard-2.mp4",
+   "range": [
+    0,
+    8
+   ]
+  },
+  {
+   "src": "data/photos/2026-10-12-robot-marley/clip-9.mp4",
+   "poster": "data/photos/2026-10-12-robot-marley/clip-9.jpg",
+   "video": true,
+   "caption": "Marley and Marley checking each other out in the yard.",
+   "takenAt": "2026:10:12 12:40:20",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "side-yard-2.mp4",
+   "range": [
+    0,
+    10.05
+   ]
+  },
+  {
+   "src": "data/photos/2026-10-12-robot-marley/clip-8.mp4",
+   "poster": "data/photos/2026-10-12-robot-marley/clip-8.jpg",
+   "video": true,
+   "caption": "Marley and Marley side by side on the couch.",
+   "takenAt": "2026:10:12 12:42:48",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "side-couch-1.mp4",
+   "range": [
+    0,
+    9.6
+   ]
+  },
   {
    "src": "data/photos/2026-10-12-robot-marley/clip-1.mp4",
    "caption": "Robot Marley on the beach at sunset.",
@@ -101,10 +181,10 @@
    ]
   }
  ],
- "fieldNotes": "A character profile introducing Robot Marley, the third character (Christian, Oct 12, 2026), styled as a RIVETING TONE cover story like GlazyArray's. Rewritten Oct 12 from Christian's words: she can talk now, so she does interviews, and she's going to start her own podcast with other robot dogs, interviewing them to try to get them adopted; she answers the Q&A herself (her face in its circles). Playful framing around real facts, all from Christian's words: a robot companion dog built after the real Marley, a mixed-breed hound (a girl); her markings, ears, tail, nose, paws and amber lenses; eyes gold when happy, dark amber then red when not (usually happy); curious and thoughtful (pauses, lowers her stance, tilts her head with a soft hum as her lenses focus), affectionate (leans on legs, chin on knees, a whirr of servos), alert (ears on ball joints, stands square, a low warm chime, never a sharp bark), playful in bursts (play-bow, bounce, galloping strides, then calm in a sunny patch); her own section for the local dog scene (news, helping dogs get adopted, trying gear and toys); the name tag that came out reading MARLAT, replaced by charms dyed in each Note's colours; her layers and four moves (a wag, lie down, stand and look, a tilt and a wink, from Christian's clips of Oct 12); meeting A.L.T.A. at her tank (his render). The real Marley in the logo, swimming and chasing the ball, is from earlier Notes and his words. The look book: Christian's seven seamless loops of her around Tahoe (Oct 12).",
+ "fieldNotes": "A character profile introducing Robot Marley, the third character (Christian, Oct 12, 2026), styled as a RIVETING TONE cover story like GlazyArray's. Rewritten Oct 12 from Christian's words: she can talk now, so she does interviews, and she's going to start her own podcast to get real dogs adopted, interviewing a robot version of each real dog (Christian, Oct 12: each guest will get a personality of its own, built later); she answers the Q&A herself (her face in its circles). Playful framing around real facts, all from Christian's words: a robot companion dog built after the real Marley, a mixed-breed hound (a girl); her markings, ears, tail, nose, paws and amber lenses; eyes gold when happy, dark amber then red when not (usually happy); curious and thoughtful (pauses, lowers her stance, tilts her head with a soft hum as her lenses focus), affectionate (leans on legs, chin on knees, a whirr of servos), alert (ears on ball joints, stands square, a low warm chime, never a sharp bark), playful in bursts (play-bow, bounce, galloping strides, then calm in a sunny patch); her own section for the local dog scene (news, helping dogs get adopted, trying gear and toys); the name tag that came out reading MARLAT, replaced by charms dyed in each Note's colours; her layers and four moves (a wag, lie down, stand and look, a tilt and a wink, from Christian's clips of Oct 12); meeting A.L.T.A. at her tank (his render). The real Marley in the logo, swimming and chasing the ball, is from earlier Notes and his words. The look book: Christian's seven seamless loops of her around Tahoe (Oct 12). A second spread, Side by side: Christian's four renders of her with the real Marley (Oct 12), stills until their loops are made (KIT 9c).",
  "post": {
   "title": "Robot Marley Has Something to Say",
-  "body": "She used to just chime. Now she talks.\n\nWe meet Robot Marley at the Workshop, late, under the long lamp over the bench. She is sitting square on the floor, front paws together, tail curved out to one side, a pair of warm amber lenses on the camera. When we come in, one ear turns toward the door on its own. Then the other. Then her head tilts, slowly, and somewhere inside her there is a soft mechanical hum while her eyes focus.\n\n\"Hi,\" she says. \"Sit anywhere. Ask me anything.\"\n\n## The third character\n\nGlazyArray tells the Field Notes. A.L.T.A. guards the lake. Robot Marley is the third, and the first with four paws: a robot companion dog Christian came up with on October 12, built after the real Marley, a mixed-breed hound.\n\nThe real Marley is already all over this site. She's in the logo, in the canyon, right beside Christian. She swims. She chases the ball. So when it came time for a character who could cover the local dog scene, there was really only one candidate.\n\n## She talks now\n\nFor her first few days, all she had was a chime. Now she can talk, so she does interviews. This is her first.\n\nShe still doesn't bark. When someone arrives, she stands up square on her paws, neck arched, and gives a low, warm electronic chime. Then she says hello.\n\n> She does interviews now. Soon she'll be the one asking the questions.\n\n## Built after a real dog\n\nHer panels follow the real Marley's markings. Rich golden-brown and caramel on her back, her sides, her ears and the top of her head. Matte white on her muzzle, her chest, her belly and her paws. There are seams and small rivets where a real dog would have fur, and bronze gaskets at her shoulders, elbows and knees.\n\nHer ears are floppy, made of articulated golden-brown panels. Her tail is smooth and segmented. Her nose is dark and matte, with a tiny hint of pink. Her paws are white, with dark grip pads underneath.\n\nAnd her eyes are large amber lenses that glow. When she's happy, which is most of the time, they glow a warm, bright gold. When she isn't, they go dark amber, and then red.\n\n## Watch her for a minute\n\nShe is built the way GlazyArray and A.L.T.A. are: not one video, but layers the site moves on its own. Her body breathes. Her tail wags in slow, smooth arcs, never rapid thumps. Each ear turns on its own pivot to track a sound. She blinks. And every so often, her head tilts.\n\nThen, now and then, she does one of her moves. A happy wag. Lying down, and sitting back up. Standing to look around, ears up. A tilt and a wink. Each one starts and ends in the same seated pose, so she slips out of her layers and back into them without a seam. And when she tells her own episode, her mouth moves with her voice.\n\n## Her personality, in her own servos\n\nChristian wrote her down before a single picture was made. She's curious and thoughtful: measured and deliberate, never frantic. When she meets something unfamiliar, like a mermaid through the glass of a tank, she pauses, lowers her stance a little, and tilts her head.\n\nShe's affectionate. She leans her warm chassis against your legs when she's resting, and rests her chin on a knee or a table with a quiet whirr of servos letting go.\n\nShe's alert. Her ears move on ball joints to track faint sounds. If someone arrives, she snaps to attention and chimes.\n\nAnd she's playful, in bursts. In open grass she drops into a play-bow, bounces on her front legs, and bounds off in a few smooth, galloping strides. Then, just as quickly, she's calm again, lying in a sunny patch with her paws tucked under her chest.\n\n## A charm instead of a name tag\n\nThe first render gave her a bone-shaped tag with her name engraved on it. It came out reading something close to MARLAT. So the tag is gone. In its place, a charm hangs from the ring on her collar: a bone, a heart, a paw, a star, a pinecone, a ball, a bike wheel or an aspen leaf.\n\nEach Note will be able to pick one, and its two colours will dye her collar and her charm, the way they dress GlazyArray's hats.\n\n## Her own podcast\n\nNow that she can talk, Robot Marley is going to start her own podcast. Her guests will be other robot dogs, and she'll interview them to try and get them adopted.\n\nIt fits the rest of her plans. She's getting her own section, for the local dog scene: the news, dogs looking for homes, and new dog gear and toys to try out.\n\nShe has already met A.L.T.A., at the glass of her tank. She paused, lowered her stance a little, and tilted her head.\n\nWe ask her if A.L.T.A. will be on the show. Her tail goes, slowly, from one side to the other.\n\n\"Robot dogs first,\" she says. \"Somebody out there is looking for one.\""
+  "body": "She used to just chime. Now she talks.\n\nWe meet Robot Marley at the Workshop, late, under the long lamp over the bench. She is sitting square on the floor, front paws together, tail curved out to one side, a pair of warm amber lenses on the camera. When we come in, one ear turns toward the door on its own. Then the other. Then her head tilts, slowly, and somewhere inside her there is a soft mechanical hum while her eyes focus.\n\n\"Hi,\" she says. \"Sit anywhere. Ask me anything.\"\n\n## The third character\n\nGlazyArray tells the Field Notes. A.L.T.A. guards the lake. Robot Marley is the third, and the first with four paws: a robot companion dog Christian came up with on October 12, built after the real Marley, a mixed-breed hound.\n\nThe real Marley is already all over this site. She's in the logo, in the canyon, right beside Christian. She swims. She chases the ball. So when it came time for a character who could cover the local dog scene, there was really only one candidate.\n\n## She talks now\n\nFor her first few days, all she had was a chime. Now she can talk, so she does interviews. This is her first.\n\nShe still doesn't bark. When someone arrives, she stands up square on her paws, neck arched, and gives a low, warm electronic chime. Then she says hello.\n\n> She does interviews now. Soon she'll be the one asking the questions.\n\n## Built after a real dog\n\nHer panels follow the real Marley's markings. Rich golden-brown and caramel on her back, her sides, her ears and the top of her head. Matte white on her muzzle, her chest, her belly and her paws. There are seams and small rivets where a real dog would have fur, and bronze gaskets at her shoulders, elbows and knees.\n\nHer ears are floppy, made of articulated golden-brown panels. Her tail is smooth and segmented. Her nose is dark and matte, with a tiny hint of pink. Her paws are white, with dark grip pads underneath.\n\nAnd her eyes are large amber lenses that glow. When she's happy, which is most of the time, they glow a warm, bright gold. When she isn't, they go dark amber, and then red.\n\n## Watch her for a minute\n\nShe is built the way GlazyArray and A.L.T.A. are: not one video, but layers the site moves on its own. Her body breathes. Her tail wags in slow, smooth arcs, never rapid thumps. Each ear turns on its own pivot to track a sound. She blinks. And every so often, her head tilts.\n\nThen, now and then, she does one of her moves. A happy wag. Lying down, and sitting back up. Standing to look around, ears up. A tilt and a wink. Each one starts and ends in the same seated pose, so she slips out of her layers and back into them without a seam. And when she tells her own episode, her mouth moves with her voice.\n\n## Her personality, in her own servos\n\nChristian wrote her down before a single picture was made. She's curious and thoughtful: measured and deliberate, never frantic. When she meets something unfamiliar, like a mermaid through the glass of a tank, she pauses, lowers her stance a little, and tilts her head.\n\nShe's affectionate. She leans her warm chassis against your legs when she's resting, and rests her chin on a knee or a table with a quiet whirr of servos letting go.\n\nShe's alert. Her ears move on ball joints to track faint sounds. If someone arrives, she snaps to attention and chimes.\n\nAnd she's playful, in bursts. In open grass she drops into a play-bow, bounces on her front legs, and bounds off in a few smooth, galloping strides. Then, just as quickly, she's calm again, lying in a sunny patch with her paws tucked under her chest.\n\n## A charm instead of a name tag\n\nThe first render gave her a bone-shaped tag with her name engraved on it. It came out reading something close to MARLAT. So the tag is gone. In its place, a charm hangs from the ring on her collar: a bone, a heart, a paw, a star, a pinecone, a ball, a bike wheel or an aspen leaf.\n\nEach Note will be able to pick one, and its two colours will dye her collar and her charm, the way they dress GlazyArray's hats.\n\n## Her own podcast\n\nNow that she can talk, Robot Marley is going to start her own podcast, and it has a job: getting real dogs adopted. Each guest is a robot version of a real dog that's looking for a home. Marley interviews the robot, so you get to know the dog.\n\nEvery guest will have a personality of its own, built for that dog, so no two interviews sound alike.\n\nIt fits the rest of her plans. She's getting her own section, for the local dog scene: the news, dogs looking for homes, and new dog gear and toys to try out.\n\nShe has already met A.L.T.A., at the glass of her tank. She paused, lowered her stance a little, and tilted her head.\n\nWe ask her if A.L.T.A. will be on the show. Her tail goes, slowly, from one side to the other.\n\n\"Dogs first,\" she says. \"Somebody out there is looking for one of them.\""
  },
  "feature": {
   "masthead": "RIVETING TONE",
@@ -114,7 +194,7 @@
   "byline": "Words by the Field Notes desk · Answers by Robot Marley · Pictures made with AI",
   "coverLines": [
    "Meet Robot Marley: she talks now",
-   "Her own podcast, where robot dogs find homes",
+   "Her own podcast, where real dogs find homes",
    "Gold eyes when she's happy (most of the time)",
    "Seven adventures a real dog can't have",
    "Eight charms, every Note's colours"
@@ -172,7 +252,7 @@
     },
     {
      "q": "Tell us about the podcast.",
-     "a": "It's mine. My guests are other robot dogs, and I interview them to help them get adopted. Every one of them deserves a home."
+     "a": "It's mine. Each guest is a robot version of a real dog that needs a home. I interview the robot, you meet the dog, and then, I hope, somebody adopts them."
     }
    ]
   },
@@ -187,97 +267,146 @@
    },
    {
     "label": "Coming soon",
-    "text": "Her own podcast: robot dogs, interviewed, looking for homes."
+    "text": "Her own podcast: real dogs looking for homes, interviewed through their robot selves."
    }
   ],
-  "lookbook": {
-   "title": "Out and about",
-   "dek": "Where she goes when nobody's watching: Christian's renders of her around the lake, doing what a real dog can't.",
-   "before": "Her own podcast",
-   "items": [
-    {
-     "src": "data/photos/2026-10-12-robot-marley/loop-winter-ridge.mp4",
-     "w": 960,
-     "h": 540,
-     "name": "Above the lake in winter",
-     "when": "A snowy ridge, a bighorn ram and a few chickadees.",
-     "alt": "Robot Marley: a snowy ridge, a bighorn ram and a few chickadees",
-     "poster": "data/photos/2026-10-12-robot-marley/loop-winter-ridge.jpg",
-     "video": true
-    },
-    {
-     "src": "data/photos/2026-10-12-robot-marley/loop-parasail.mp4",
-     "w": 960,
-     "h": 540,
-     "name": "Over the lake",
-     "when": "Goggles down, the boats far below, an eagle for company.",
-     "alt": "Robot Marley: goggles down, the boats far below, an eagle for company",
-     "poster": "data/photos/2026-10-12-robot-marley/loop-parasail.jpg",
-     "video": true
-    },
-    {
-     "src": "data/photos/2026-10-12-robot-marley/loop-ropes-course.mp4",
-     "w": 960,
-     "h": 540,
-     "name": "The ropes course",
-     "when": "A log bridge high in the pines, with a squirrel for an audience.",
-     "alt": "Robot Marley: a log bridge high in the pines, with a squirrel for an audience",
-     "poster": "data/photos/2026-10-12-robot-marley/loop-ropes-course.jpg",
-     "video": true
-    },
-    {
-     "src": "data/photos/2026-10-12-robot-marley/loop-autumn-creek.mp4",
-     "w": 960,
-     "h": 540,
-     "name": "An autumn creek",
-     "when": "Wading the rapids under the aspens while a bear goes fishing.",
-     "alt": "Robot Marley: wading the rapids under the aspens while a bear goes fishing",
-     "poster": "data/photos/2026-10-12-robot-marley/loop-autumn-creek.jpg",
-     "video": true
-    },
-    {
-     "src": "data/photos/2026-10-12-robot-marley/loop-underwater.mp4",
-     "w": 960,
-     "h": 540,
-     "name": "Under the surface",
-     "when": "Swimming with the trout over the granite boulders.",
-     "alt": "Robot Marley: swimming with the trout over the granite boulders",
-     "poster": "data/photos/2026-10-12-robot-marley/loop-underwater.jpg",
-     "video": true
-    },
-    {
-     "src": "data/photos/2026-10-12-robot-marley/loop-granite-wall.mp4",
-     "w": 960,
-     "h": 540,
-     "name": "The granite wall",
-     "when": "Clipped to the cable on tracked paws, a falcon looking on.",
-     "alt": "Robot Marley: clipped to the cable on tracked paws, a falcon looking on",
-     "poster": "data/photos/2026-10-12-robot-marley/loop-granite-wall.jpg",
-     "video": true
-    },
-    {
-     "src": "data/photos/2026-10-12-robot-marley/loop-night-summit.mp4",
-     "w": 960,
-     "h": 540,
-     "name": "A summit at night",
-     "when": "Crampons on, collar lit, a coyote keeping its distance.",
-     "alt": "Robot Marley: crampons on, collar lit, a coyote keeping its distance",
-     "poster": "data/photos/2026-10-12-robot-marley/loop-night-summit.jpg",
-     "video": true
-    }
-   ]
-  }
+  "lookbook": [
+   {
+    "title": "Out and about",
+    "dek": "Where she goes when nobody's watching: Christian's renders of her around the lake, doing what a real dog can't.",
+    "before": "Her own podcast",
+    "items": [
+     {
+      "src": "data/photos/2026-10-12-robot-marley/loop-winter-ridge.mp4",
+      "w": 960,
+      "h": 540,
+      "name": "Above the lake in winter",
+      "when": "A snowy ridge, a bighorn ram and a few chickadees.",
+      "alt": "Robot Marley: a snowy ridge, a bighorn ram and a few chickadees",
+      "poster": "data/photos/2026-10-12-robot-marley/loop-winter-ridge.jpg",
+      "video": true
+     },
+     {
+      "src": "data/photos/2026-10-12-robot-marley/loop-parasail.mp4",
+      "w": 960,
+      "h": 540,
+      "name": "Over the lake",
+      "when": "Goggles down, the boats far below, an eagle for company.",
+      "alt": "Robot Marley: goggles down, the boats far below, an eagle for company",
+      "poster": "data/photos/2026-10-12-robot-marley/loop-parasail.jpg",
+      "video": true
+     },
+     {
+      "src": "data/photos/2026-10-12-robot-marley/loop-ropes-course.mp4",
+      "w": 960,
+      "h": 540,
+      "name": "The ropes course",
+      "when": "A log bridge high in the pines, with a squirrel for an audience.",
+      "alt": "Robot Marley: a log bridge high in the pines, with a squirrel for an audience",
+      "poster": "data/photos/2026-10-12-robot-marley/loop-ropes-course.jpg",
+      "video": true
+     },
+     {
+      "src": "data/photos/2026-10-12-robot-marley/loop-autumn-creek.mp4",
+      "w": 960,
+      "h": 540,
+      "name": "An autumn creek",
+      "when": "Wading the rapids under the aspens while a bear goes fishing.",
+      "alt": "Robot Marley: wading the rapids under the aspens while a bear goes fishing",
+      "poster": "data/photos/2026-10-12-robot-marley/loop-autumn-creek.jpg",
+      "video": true
+     },
+     {
+      "src": "data/photos/2026-10-12-robot-marley/loop-underwater.mp4",
+      "w": 960,
+      "h": 540,
+      "name": "Under the surface",
+      "when": "Swimming with the trout over the granite boulders.",
+      "alt": "Robot Marley: swimming with the trout over the granite boulders",
+      "poster": "data/photos/2026-10-12-robot-marley/loop-underwater.jpg",
+      "video": true
+     },
+     {
+      "src": "data/photos/2026-10-12-robot-marley/loop-granite-wall.mp4",
+      "w": 960,
+      "h": 540,
+      "name": "The granite wall",
+      "when": "Clipped to the cable on tracked paws, a falcon looking on.",
+      "alt": "Robot Marley: clipped to the cable on tracked paws, a falcon looking on",
+      "poster": "data/photos/2026-10-12-robot-marley/loop-granite-wall.jpg",
+      "video": true
+     },
+     {
+      "src": "data/photos/2026-10-12-robot-marley/loop-night-summit.mp4",
+      "w": 960,
+      "h": 540,
+      "name": "A summit at night",
+      "when": "Crampons on, collar lit, a coyote keeping its distance.",
+      "alt": "Robot Marley: crampons on, collar lit, a coyote keeping its distance",
+      "poster": "data/photos/2026-10-12-robot-marley/loop-night-summit.jpg",
+      "video": true
+     }
+    ]
+   },
+   {
+    "title": "Side by side",
+    "dek": "Robot Marley and the real Marley, the dog she was built after, in the yard and on the patio couch. Stills for now; they come to life soon.",
+    "before": "Watch her for a minute",
+    "items": [
+     {
+      "src": "data/photos/2026-10-12-robot-marley/clip-7.mp4",
+      "w": 960,
+      "h": 540,
+      "name": "The interview",
+      "when": "Face to face on the patio couch.",
+      "alt": "Robot Marley and the real Marley sit face to face on a patio couch",
+      "video": true,
+      "poster": "data/photos/2026-10-12-robot-marley/clip-7.jpg"
+     },
+     {
+      "src": "data/photos/2026-10-12-robot-marley/clip-8.mp4",
+      "w": 960,
+      "h": 540,
+      "name": "On the couch",
+      "when": "She looks at you; the real Marley looks at her.",
+      "alt": "Robot Marley looks at the camera from a patio couch while the real Marley watches her",
+      "video": true,
+      "poster": "data/photos/2026-10-12-robot-marley/clip-8.jpg"
+     },
+     {
+      "src": "data/photos/2026-10-12-robot-marley/clip-6.mp4",
+      "w": 960,
+      "h": 540,
+      "name": "By the fence",
+      "when": "The real Marley takes a good look at her.",
+      "alt": "The real Marley looks over at Robot Marley, sitting side by side in the yard by a wooden fence",
+      "video": true,
+      "poster": "data/photos/2026-10-12-robot-marley/clip-6.jpg"
+     },
+     {
+      "src": "data/photos/2026-10-12-robot-marley/clip-9.mp4",
+      "w": 960,
+      "h": 540,
+      "name": "Eye to eye",
+      "when": "The robot and the original.",
+      "alt": "Robot Marley and the real Marley sit facing each other on a low stone edge in the yard",
+      "video": true,
+      "poster": "data/photos/2026-10-12-robot-marley/clip-9.jpg"
+     }
+    ]
+   }
+  ]
  },
  "episode": {
   "narrator": "marley",
   "title": "Robot Marley, in her own words",
-  "script": "Hi. I'm Robot Marley.\n\nI can talk now. Which means I do interviews. This is my first one, and it's mine, so I'll start.\n\nI'm a robot companion dog. Christian built me after the real Marley, a mixed-breed hound. You've probably met her already. She's in the logo, in the canyon, right beside him. She swims. She chases the ball. I have a lot to live up to.\n\n***\n\nSo, what am I made of? Panels, mostly. Golden-brown and caramel on my back, my sides, my ears and the top of my head. Matte white on my muzzle, my chest, my belly and my paws. Little seams and rivets where a real dog has fur. Bronze gaskets at my shoulders, my elbows and my knees.\n\nMy ears are floppy. My tail is smooth, in segments. My nose is dark, with a tiny hint of pink. And my eyes are big amber lenses that glow.\n\nHere's a secret. When I'm happy, they glow a warm, bright gold. When I'm not, they go dark amber, and then red. But I'm usually very happy. So, gold.\n\n***\n\nI take my time with new things. When I meet something I don't know, I stop. I lower myself a little. I tilt my head, and you'll hear a soft hum while my lenses focus. That's how I met A.L.T.A., through the glass of her tank.\n\nWhen I'm resting, I'll lean against your legs. Or I'll put my chin on your knee, and you'll hear a quiet whirr as my servos let go.\n\nIf somebody comes to the door, I stand up, square on my paws, neck arched, and I chime. A low, warm chime. I don't bark. Barking is loud. Then I say hello, because now I can.\n\nAnd in open grass? I can't help it. A play-bow, a little bounce on my front legs, a few big galloping strides. Then I'm calm again, in a sunny patch, with my paws tucked under my chest.\n\n***\n\nI used to have a name tag. It was supposed to say Marley. It said something closer to Marlat. So now I wear a charm instead. A bone, a heart, a paw, a star, a pinecone, a ball, a bike wheel or a leaf. Whichever one the story needs.\n\n***\n\nNow, the big news. I'm starting my own podcast. My guests will be other robot dogs, and I'll interview them, so you can get to know them. Because every one of them is looking for a home, and I want to help them get adopted.\n\nI'm also getting my own section, for the local dog scene. All the dog news, the dogs looking for homes, and new gear and toys to try out, which is a very serious job.\n\nSo if you see a golden glow out by the lake, that's probably me. Come say hi. I'll chime, and then I'll ask you a question.",
+  "script": "Hi. I'm Robot Marley.\n\nI can talk now. Which means I do interviews. This is my first one, and it's mine, so I'll start.\n\nI'm a robot companion dog. Christian built me after the real Marley, a mixed-breed hound. You've probably met her already. She's in the logo, in the canyon, right beside him. She swims. She chases the ball. I have a lot to live up to.\n\n***\n\nSo, what am I made of? Panels, mostly. Golden-brown and caramel on my back, my sides, my ears and the top of my head. Matte white on my muzzle, my chest, my belly and my paws. Little seams and rivets where a real dog has fur. Bronze gaskets at my shoulders, my elbows and my knees.\n\nMy ears are floppy. My tail is smooth, in segments. My nose is dark, with a tiny hint of pink. And my eyes are big amber lenses that glow.\n\nHere's a secret. When I'm happy, they glow a warm, bright gold. When I'm not, they go dark amber, and then red. But I'm usually very happy. So, gold.\n\n***\n\nI take my time with new things. When I meet something I don't know, I stop. I lower myself a little. I tilt my head, and you'll hear a soft hum while my lenses focus. That's how I met A.L.T.A., through the glass of her tank.\n\nWhen I'm resting, I'll lean against your legs. Or I'll put my chin on your knee, and you'll hear a quiet whirr as my servos let go.\n\nIf somebody comes to the door, I stand up, square on my paws, neck arched, and I chime. A low, warm chime. I don't bark. Barking is loud. Then I say hello, because now I can.\n\nAnd in open grass? I can't help it. A play-bow, a little bounce on my front legs, a few big galloping strides. Then I'm calm again, in a sunny patch, with my paws tucked under my chest.\n\n***\n\nI used to have a name tag. It was supposed to say Marley. It said something closer to Marlat. So now I wear a charm instead. A bone, a heart, a paw, a star, a pinecone, a ball, a bike wheel or a leaf. Whichever one the story needs.\n\n***\n\nNow, the big news. I'm starting my own podcast. And it's for real dogs. Every guest is a robot version of a real dog who's looking for a home. Each one gets a personality of its own, so you'll hear who they really are. I ask the questions, you get to know the dog, and then, I hope, somebody takes them home.\n\nI'm also getting my own section, for the local dog scene. All the dog news, the dogs looking for homes, and new gear and toys to try out, which is a very serious job.\n\nSo if you see a golden glow out by the lake, that's probably me. Come say hi. I'll chime, and then I'll ask you a question.",
   "audio": "data/audio/2026-10-12-robot-marley.mp3"
  },
  "questions": [
-  "The rewrite is built on your words: she can talk now, so she does interviews, and she's going to start her own podcast with other robot dogs, interviewing them to get them adopted. Does the podcast have a name yet? I left it unnamed.",
-  "Her episode script is new, so its old recording (which said she doesn't do interviews) is unhooked. Record the new script with her voice prompt in the Studio and her Listen bar comes back, mouth and all. The old file is still at data/audio/2026-10-12-robot-marley.mp3.",
-  "The look book is back to her seven loops: a Studio save this morning had put back the old still pictures, whose files are gone, which stopped the site from building."
+  "The copy is built on your words: she can talk now, so she does interviews, and her podcast gets real dogs adopted by interviewing a robot version of each dog, each with a personality of its own (built later). Does the podcast have a name yet? I left it unnamed.",
+  "The look book is back to her seven loops: a Studio save this morning had put back the old still pictures, whose files are gone, which stopped the site from building.",
+  "Your recording from this morning is in. Its podcast paragraph still says her guests are other robot dogs; the script now says each guest is a robot version of a real dog looking for a home. Re-record when you like and the two match again."
  ],
  "consent": "No people: Robot Marley and every scene are AI renders from Christian's prompts.",
  "palette": [
@@ -286,15 +415,15 @@
  ],
  "publishedAt": "2026-10-12T03:00:00Z",
  "social": {
-  "instagram": "Meet Robot Marley, the third character on the site after GlazyArray and A.L.T.A., and the first with four paws: a robot companion dog built after the real Marley, our mixed-breed hound.\n\nShe talks now, so she does interviews. And she's about to start her own podcast: her guests are other robot dogs, and she interviews them to help them get adopted.\n\nHer amber lenses glow gold when she's happy, which is most of the time. Her first render gave her a name tag that read something close to MARLAT, so now she wears a charm instead.\n\nFull story and the Q&A, answered by Marley herself: link in bio.",
+  "instagram": "Meet Robot Marley, the third character on the site after GlazyArray and A.L.T.A., and the first with four paws: a robot companion dog built after the real Marley, our mixed-breed hound.\n\nShe talks now, so she does interviews. And she's about to start her own podcast to get real dogs adopted: every guest is a robot version of a real dog looking for a home, with a personality all its own.\n\nHer amber lenses glow gold when she's happy, which is most of the time. Her first render gave her a name tag that read something close to MARLAT, so now she wears a charm instead.\n\nFull story and the Q&A, answered by Marley herself: link in bio.",
   "tags": "#RobotDog #CharacterDesign #AIArt #DogsOfInstagram #LakeTahoe #ConceptArt",
-  "facebook": "Meet Robot Marley, the newest character on christiangehrke.com and the first with four paws. She's a robot companion dog built after the real Marley, our mixed-breed hound, with golden-brown and white panels that follow Marley's markings and amber lenses that glow gold when she's happy, which is most of the time.\n\nShe can talk now, so she does interviews, and she answers the questions in her feature herself. Next, she's starting her own podcast: her guests will be other robot dogs, and she'll interview them to try and get them adopted.\n\nI wrote her personality down before a single picture was made: curious and measured, never frantic. She tilts her head at anything new, leans on your legs when she's resting, and when someone arrives she stands up and gives a low, warm chime before she says hello.\n\nhttps://www.christiangehrke.com/play/2026-10-12-robot-marley/"
+  "facebook": "Meet Robot Marley, the newest character on christiangehrke.com and the first with four paws. She's a robot companion dog built after the real Marley, our mixed-breed hound, with golden-brown and white panels that follow Marley's markings and amber lenses that glow gold when she's happy, which is most of the time.\n\nShe can talk now, so she does interviews, and she answers the questions in her feature herself. Next, she's starting her own podcast to help real dogs get adopted. Each guest will be a robot version of a real dog that's looking for a home, with its own personality, and Marley will interview them so you can get to know the dog.\n\nI wrote her personality down before a single picture was made: curious and measured, never frantic. She tilts her head at anything new, leans on your legs when she's resting, and when someone arrives she stands up and gives a low, warm chime before she says hello.\n\nhttps://www.christiangehrke.com/play/2026-10-12-robot-marley/"
  },
  "workshop": {
   "order": 2,
   "name": "Robot Marley",
   "tagline": "A robot companion dog",
-  "pull": "Built after the real Marley, a mixed-breed hound. She talks now, and she's starting a podcast: interviewing other robot dogs, to get them adopted.",
+  "pull": "Built after the real Marley, a mixed-breed hound. She talks now, and she's starting a podcast to get real dogs adopted, interviewing a robot version of each one.",
   "numbers": [],
   "links": [],
   "media": [

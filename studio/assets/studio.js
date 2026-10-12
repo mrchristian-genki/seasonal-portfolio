@@ -1513,6 +1513,7 @@
     var o = ORDER || { n: E.photos.length, timed: true }; ORDER = null;
     var added = E.photos.slice(o.n);
     if (SPSWAP != null && added.length) {
+      SPI = SPSWAPB;
       var nwp = added.filter(function (p) { return !p.strip; })[0], L = spreadItems();
       if (nwp && L[SPSWAP]) { spreadPut(SPSWAP, nwp); toast('Swapped into the photo spread. Save to keep it.'); SPSWAP = null; renderSwapBar(); if (o.timed) E.photos.sort(byTime); renderSpread(); return; }
     }
@@ -1535,7 +1536,7 @@
   // magazine and Workshop features use it) while the picture in it changes, to one already in this Note or a new
   // photo or loop. The caption goes with its picture.
   var SWAP = null;   // { name }: the place waiting for a new photo or loop
-  var SPSWAP = null;   // the photo spread place (its index) waiting for a new photo or loop
+  var SPSWAP = null, SPSWAPB = 0;   // the photo spread place (its index, in spread SPSWAPB) waiting for a new photo or loop
   var CONTENT = ['src', 'poster', 'video', 'w', 'h', 'caption', 'from', 'takenAt', 'ai', 'hdr', 'range'];
   function swapContents(i, j) {
     var a = E.photos[i], b = E.photos[j], na = photoName(a), nb = photoName(b);
@@ -1565,7 +1566,7 @@
     var b = $('#swapBar'); if (!b) return;
     b.hidden = !SWAP && SPSWAP == null;
     if (!SWAP && SPSWAP == null) { b.innerHTML = ''; return; }
-    b.innerHTML = '<span>The next photo or loop you add goes into the place of <b>' + esc(SWAP ? SWAP.name : 'picture ' + (SPSWAP + 1) + ' of the photo spread') + '</b>.</span> <button type="button" class="link" id="swapX">Cancel the swap</button>';
+    b.innerHTML = '<span>The next photo or loop you add goes into the place of <b>' + esc(SWAP ? SWAP.name : 'picture ' + (SPSWAP + 1) + ' of the photo spread' + (spreads().length > 1 ? ' "' + (spreads()[SPSWAPB] || {}).title + '"' : '')) + '</b>.</span> <button type="button" class="link" id="swapX">Cancel the swap</button>';
     $('#swapX').onclick = function () { SWAP = null; SPSWAP = null; renderSwapBar(); };
   }
   function swapPicker(i) {
@@ -1763,8 +1764,17 @@
   // THE PHOTO SPREAD (feature.lookbook): a grid of pictures with a name and a line each, set just before a subhead of
   // the post (field/tools/publish.mjs). Pictures come from this Note's photos (a loop gives its poster frame); once in
   // the spread they show there instead of between the paragraphs, and keep their files even if they leave Photos.
-  function spreadItems() { return (E && E.feature && E.feature.lookbook && E.feature.lookbook.items) || []; }
-  function spreadHint() { var n = spreadItems().length; return n ? n + ' picture' + (n > 1 ? 's' : '') + (E.feature.lookbook.before ? ' · before "' + E.feature.lookbook.before + '"' : ' · at the end') : 'none yet'; }
+  // A Note can have more than one (feature.lookbook: one spread, or a list of them); the panel edits one at a time (SPI)
+  var SPI = 0;
+  function spreads() { var L = E && E.feature && E.feature.lookbook; return Array.isArray(L) ? L : L ? [L] : []; }
+  function setSpreads(list) { if (!list.length) delete E.feature.lookbook; else E.feature.lookbook = list.length === 1 ? list[0] : list; SPI = Math.max(0, Math.min(SPI, list.length - 1)); }
+  function spreadCur() { var b = spreads(); if (SPI >= b.length) SPI = Math.max(0, b.length - 1); return b[SPI] || null; }
+  function spreadItems() { var b = spreadCur(); return (b && b.items) || []; }
+  function spreadHint() {
+    var b = spreads(); if (!b.length) return 'none yet';
+    if (b.length > 1) return b.length + ' spreads · ' + b.reduce(function (n, x) { return n + (x.items || []).length; }, 0) + ' pictures';
+    var n = spreadItems().length; return n + ' picture' + (n > 1 ? 's' : '') + (b[0].before ? ' · before "' + b[0].before + '"' : ' · at the end');
+  }
   // put a Note photo or loop into spread place i (its name and line stay)
   function spreadPut(i, p) {
     var x = spreadItems()[i]; if (!x || !p) return;
@@ -1790,7 +1800,7 @@
     $$('.swK', d).forEach(function (b) { b.onclick = function () { spreadPut(i, others[+b.getAttribute('data-j')]); close(); renderSpread(); toast('Swapped. Save to keep it.'); }; });
     $('.swNew input', d).onchange = function () {
       var f = this.files[0]; if (!f) return;
-      SWAP = null; SPSWAP = i; close(); renderSwapBar();
+      SWAP = null; SPSWAP = i; SPSWAPB = SPI; close(); renderSwapBar();
       if (isVideo(f)) { upVideo(f); toast('Make the loop under Video loops; it goes into the photo spread.'); } else addPhotos([f]);
     };
   }
@@ -1803,11 +1813,14 @@
   function renderSpread() {
     var box = $('#spreadBox'); if (!box || !E) return;
     var hs = $('#f-spread > summary small'); if (hs) hs.textContent = spreadHint();
-    var LB = E.feature && E.feature.lookbook, items = spreadItems();
+    var LB = spreadCur(), items = spreadItems(), all = spreads();
     var subs = (E.post.body || '').split(/\n/).filter(function (l) { return /^## /.test(l); }).map(function (l) { return l.slice(3).trim(); });
-    var have = {}; items.forEach(function (x) { have[x.src] = 1; });
+    var have = {}; all.forEach(function (b) { (b.items || []).forEach(function (x) { have[x.src] = 1; }); });
     var pick = (E.photos || []).filter(function (p) { return p.src && !p.strip && !have[p.src]; });
     box.innerHTML = '<p class="muted">A grid of pictures with a name and a line each, set before one of the post\'s subheads (a feature\'s look book). Add pictures from this Note\'s photos; in the spread they show there instead of between the paragraphs.</p>' +
+      // one tab per spread, and a new one
+      (all.length ? '<div class="row spTabs">' + all.map(function (b, n) { return '<button type="button" class="chip spTab' + (n === SPI ? ' on' : '') + '" data-n="' + n + '">' + esc((n + 1) + '. ' + (b.title || 'Untitled')) + '</button>'; }).join('') +
+        '<button type="button" class="link" id="spNew">+ A new spread</button></div>' : '') +
       (LB ? '<div class="grid2">' + field('Title', '<input id="spTitle" value="' + esc(LB.title || '') + '" placeholder="Out and about">') +
         field('Before the subhead', '<select id="spBefore"><option value="">At the end of the story</option>' + subs.map(function (s) { return '<option' + (s === LB.before ? ' selected' : '') + '>' + esc(s) + '</option>'; }).join('') + '</select>') + '</div>' +
         field('Line under the title', '<textarea id="spDek" rows="2">' + esc(LB.dek || '') + '</textarea>') : '') +
@@ -1822,7 +1835,7 @@
         return '<option value="' + esc(p.src) + '">' + esc(photoName(p) + (p.video ? ' (loop)' : '') + (p.caption ? ': ' + p.caption.slice(0, 50) : '')) + '</option>'; }).join('') + '</select>'
         : '<span class="muted">' + ((E.photos || []).length ? 'Every photo of this Note is in the spread.' : 'Add photos under Photos first.') + '</span>') +
       (LB ? '<button type="button" class="link" id="spDrop">Remove the whole spread</button>' : '') + '</div>';
-    var ensure = function () { E.feature = E.feature || {}; E.feature.lookbook = E.feature.lookbook || { title: 'The photo spread', dek: '', before: '', items: [] }; return E.feature.lookbook; };
+    var ensure = function () { E.feature = E.feature || {}; if (!spreads().length) { E.feature.lookbook = { title: 'The photo spread', dek: '', before: '', items: [] }; SPI = 0; } return spreadCur(); };
     var changed = function () { markDirty(); renderSpread(); };
     var add = $('#spAdd'); if (add) add.onchange = function () {
       if (!this.value) return; var s = this.value, p = (E.photos || []).find(function (q) { return q.src === s; }); if (!p) return;
@@ -1832,15 +1845,17 @@
     var dk = $('#spDek'); if (dk) dk.oninput = function () { ensure().dek = this.value; markDirty(); };
     var bf = $('#spBefore'); if (bf) bf.onchange = function () { ensure().before = this.value; changed(); };
     $$('.spItem', box).forEach(function (d) {
-      var i = +d.getAttribute('data-i'), L = E.feature.lookbook.items;
+      var i = +d.getAttribute('data-i'), L = spreadCur().items;
       $('.spName', d).oninput = function () { L[i].name = this.value; markDirty(); };
       $('.spWhen', d).oninput = function () { L[i].when = this.value; L[i].alt = this.value; markDirty(); };
       $('.spUp', d).onclick = function () { if (i) { L.splice(i - 1, 0, L.splice(i, 1)[0]); changed(); } };
       $('.spDown', d).onclick = function () { if (i < L.length - 1) { L.splice(i + 1, 0, L.splice(i, 1)[0]); changed(); } };
       $('.spSw', d).onclick = function () { spreadSwap(i); };
-      $('.spRm', d).onclick = function () { L.splice(i, 1); if (!L.length) delete E.feature.lookbook; changed(); renderPhotos(); };
+      $('.spRm', d).onclick = function () { L.splice(i, 1); if (!L.length) setSpreads(spreads().filter(function (b) { return b !== spreadCur(); })); changed(); renderPhotos(); };
     });
-    var dr = $('#spDrop'); if (dr) dr.onclick = function () { if (!confirm('Remove the whole photo spread? Its pictures stay in the Note\'s folder.')) return; delete E.feature.lookbook; changed(); };
+    var dr = $('#spDrop'); if (dr) dr.onclick = function () { if (!confirm('Remove this whole photo spread? Its pictures stay in the Note\'s folder.')) return; var c = spreadCur(); setSpreads(spreads().filter(function (b) { return b !== c; })); changed(); };
+    $$('.spTab', box).forEach(function (b) { b.onclick = function () { SPI = +b.getAttribute('data-n'); renderSpread(); }; });
+    var nw = $('#spNew'); if (nw) nw.onclick = function () { var l = spreads().slice(); l.push({ title: 'A new spread', dek: '', before: '', items: [] }); E.feature.lookbook = l; SPI = l.length - 1; changed(); };
   }
   function magHint() {
     var F = E.feature, t = F && F.masthead ? magOf(F) : null;

@@ -11,7 +11,18 @@
    charm(k), colours([a, b] | null) }. Every change eases; with reduced motion she stays still unless asked. */
 (function () {
   'use strict';
-  var P = '/assets/marley/parts/', MV = '/assets/marley/moves/', V = '?v=1';
+  var P = '/assets/marley/parts/web/', MV = '/assets/marley/moves/', V = '?v=2';
+  // Her parts, each cropped to its own box in her 560 x 728 frame (assets/marley/parts/web/boxes.json; the full-frame
+  // originals stay in parts/ for the kit): a few MB decoded instead of sixty, so a phone keeps every layer painted.
+  var FW = 560, FH = 728, BOX = {"tail":[386,538,154,102],"body":[92,220,328,496],"head":[148,22,214,288],"lids":[150,42,218,108],"collar":[170,220,174,92],"earL":[92,30,102,166],"earR":[308,28,116,168],"earL-up":[28,12,174,144],"earR-up":[306,12,180,160],"mouth":[158,126,206,184],"iris":[178,80,150,42],"charm-bone":[224,270,84,94],"charm-heart":[220,270,88,120],"charm-paw":[212,268,96,128],"charm-star":[224,268,84,116],"charm-pinecone":[228,270,80,128],"charm-ball":[220,268,88,122],"charm-bike":[208,268,100,156],"charm-leaf":[216,302,82,98]};
+  var pct = function (n, d) { return (n / d * 100).toFixed(4) + '%'; };
+  // a part's place in her frame, and (ox, oy: shares of the frame) the point it turns about, made relative to its box
+  function at(g, ox, oy) {
+    var b = BOX[g]; if (!b) return '';
+    // (right, bottom and margin pinned too: a page's own picture styles, like a Note's centred images, can't move it)
+    return ' style="left:' + pct(b[0], FW) + ';top:' + pct(b[1], FH) + ';right:auto;bottom:auto;margin:0;max-width:none;max-height:none;width:' + pct(b[2], FW) + ';height:' + pct(b[3], FH) +
+      (ox != null ? ';transform-origin:' + pct(ox * FW - b[0], b[2]) + ' ' + pct(oy * FH - b[1], b[3]) : '') + '"';
+  }
   var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var MOVES = [['wag', 'A happy wag'], ['down', 'Lie down'], ['stand', 'Stand and look'], ['tilt', 'Tilt and wink']];
   var CHARMS = ['bone', 'heart', 'paw', 'star', 'pinecone', 'ball', 'bike', 'leaf'];
@@ -41,6 +52,19 @@
       if (v.readyState < 2 || !v.videoWidth) return;
       if (c.width !== v.videoWidth || c.height !== v.videoHeight / 2) { c.width = v.videoWidth; c.height = v.videoHeight / 2; gl.viewport(0, 0, c.width, c.height); }
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, v); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      if (c.onframe && v.currentTime > 0) { var f = c.onframe; c.onframe = null; f(sane()); }
+    }
+    // the first frame of a move, checked before it's shown: she should cover a fair part of the frame, in colour. A
+    // phone that hands WebGL an empty or black frame (it happens while a video is still waking up) fails this, and the
+    // move is skipped: her layers stay, never a blank or a dark block where she was
+    function sane() {
+      try {
+        var w = c.width, h = c.height, px = new Uint8Array(w * h * 4); gl.readPixels(0, 0, w, h, gl.RGBA, gl.UNSIGNED_BYTE, px);
+        var her = 0, dark = 0;
+        for (var i = 0; i < px.length; i += 4 * 37) { if (px[i + 3] > 200) { her++; if (px[i] + px[i + 1] + px[i + 2] < 24) dark++; } }
+        var n = px.length / (4 * 37);
+        return her > n * 0.08 && her < n * 0.9 && dark < her * 0.5;
+      } catch (e) { return true; }
     }
     var rvfc = 'requestVideoFrameCallback' in v;
     function loop() { draw(); if (!v.paused && !v.ended) { if (rvfc) v.requestVideoFrameCallback(loop); else requestAnimationFrame(loop); } }
@@ -51,22 +75,30 @@
   }
 
   function build(el) {
+    // data-manual (the Parts Catalog's cards): no blinks, ear flicks, tilts or moves on a timer; only what's asked
+    var auto = !still && !el.hasAttribute('data-manual');
     if (el.marley) return;
     el.classList.add('mly');
     el.setAttribute('role', 'img');
     if (!el.getAttribute('aria-label')) el.setAttribute('aria-label', 'Robot Marley, a robot hound, sitting and wagging her tail');
     var st = document.createElement('div'); st.className = 'mly-st';
     st.innerHTML = '<div class="mly-parts">' +
-      '<img class="mly-tail" src="' + P + 'tail.webp' + V + '" alt="">' +
-      '<img class="mly-body" src="' + P + 'body.webp' + V + '" alt="">' +
-      '<div class="mly-g mly-head"><img src="' + P + 'head.webp' + V + '" alt=""><div class="mly-g mly-mouth">' +
-        ['closed', 'small', 'open', 'pant'].map(function (k) { return '<img data-m="' + k + '" src="' + P + 'mouth-' + k + '.webp' + V + '" alt=""' + (k === 'closed' ? ' class="on"' : '') + '>'; }).join('') + '</div>' +
-        '<img class="mly-lids" src="' + P + 'lids.webp' + V + '" alt=""><i class="mly-glow mly-glow-g"></i><i class="mly-glow mly-glow-c"></i><i class="mly-glow mly-glow-s"></i>' +
-        '<img class="mly-ear mly-earL mly-down" src="' + P + 'earL.webp' + V + '" alt=""><img class="mly-ear mly-earR mly-down" src="' + P + 'earR.webp' + V + '" alt="">' +
-        '<img class="mly-ear mly-earL mly-up" src="' + P + 'earL-up.webp' + V + '" alt=""><img class="mly-ear mly-earR mly-up" src="' + P + 'earR-up.webp' + V + '" alt=""></div>' +
-      '<img src="' + P + 'collar.webp' + V + '" alt=""><i class="mly-dc"></i><i class="mly-dc mly-dc2"></i>' +
+      '<img class="mly-tail" src="' + P + 'tail.webp' + V + '" alt=""' + at('tail', .725, .824) + '>' +
+      '<img class="mly-body" src="' + P + 'body.webp' + V + '" alt=""' + at('body', .5, 1) + '>' +
+      '<div class="mly-g mly-head"><img src="' + P + 'head.webp' + V + '" alt=""' + at('head') + '><div class="mly-g mly-mouth">' +
+        ['closed', 'small', 'open', 'pant'].map(function (k) { return '<img data-m="' + k + '" src="' + P + 'mouth-' + k + '.webp' + V + '" alt=""' + at('mouth') + (k === 'closed' ? ' class="on"' : '') + '>'; }).join('') + '</div>' +
+        '<img class="mly-lids" src="' + P + 'lids.webp' + V + '" alt=""' + at('lids') + '>' + ['g', 'c', 's'].map(function (k) { return '<i class="mly-glow mly-glow-' + k + '"' + at('iris') + '></i>'; }).join('') +
+        '<img class="mly-ear mly-earL mly-down" src="' + P + 'earL.webp' + V + '" alt=""' + at('earL', .307, .071) + '><img class="mly-ear mly-earR mly-down" src="' + P + 'earR.webp' + V + '" alt=""' + at('earR', .593, .071) + '>' +
+        '<img class="mly-ear mly-earL mly-up" src="' + P + 'earL-up.webp' + V + '" alt=""' + at('earL-up', .307, .071) + '><img class="mly-ear mly-earR mly-up" src="' + P + 'earR-up.webp' + V + '" alt=""' + at('earR-up', .593, .071) + '></div>' +
+      '<img src="' + P + 'collar.webp' + V + '" alt=""' + at('collar') + '><i class="mly-dc"' + at('collar') + '></i><i class="mly-dc mly-dc2"' + at('collar') + '></i>' +
       '<div class="mly-g mly-charm"></div></div>';
     el.insertBefore(st, el.firstChild);
+    // her stand-in fades once every part has loaded (and decoded, where the browser can say)
+    (function () {
+      var parts = st.querySelector('.mly-parts'), imgs = [].slice.call(parts.querySelectorAll('img'));
+      Promise.all(imgs.map(function (i) { return (i.decode ? i.decode() : new Promise(function (ok) { if (i.complete) ok(); else i.onload = i.onerror = ok; })).catch(function () {}); }))
+        .then(function () { parts.classList.add('ready'); });
+    })();
     // the scene behind her (data-bd: the Note's backdrop, as the site picks it), under a soft floor shadow
     var bd = el.getAttribute('data-bd');
     if (bd && /^\/assets\/[\w.\/-]+\.(webp|jpg|png)(\?v=[\w-]+)?$/.test(bd)) { st.classList.add('has-bd'); st.style.backgroundImage = 'radial-gradient(ellipse at 50% 95%,rgba(0,0,0,.28),transparent 42%),url(' + bd + ')'; }
@@ -98,9 +130,10 @@
       if (CHARMS.indexOf(k) < 0) k = 'bone';
       chK = k;
       var d = DYE[k] !== 0, o = OWN[k], c = pal ? pal[1] : o || '#ffffff', show = !!(pal || o);
-      ch.innerHTML = '<img class="mly-own" src="' + P + 'charm-' + k + '.webp' + V + '" alt=""' + (d ? ' style="opacity:' + (show ? 0 : 1) + '"' : '') + '>' +
-        (d ? '<div class="mly-g mly-dyed" style="opacity:' + (show ? 1 : 0) + '"><img src="' + P + 'charm-' + k + '-dye.webp' + V + '" alt=""><i class="mly-dye" style="' + mask(P + 'charm-' + k + '-mask.webp' + V) + 'background:' + c + '"></i></div>'
-           : '<i class="mly-dye" style="' + mask(P + 'charm-' + k + '.webp' + V) + 'opacity:' + (pal ? 1 : 0) + ';background:' + c + '"></i>');
+      var bx = at('charm-' + k).slice(8, -1);   // the charm's own box (its face, dyed face and mask share it)
+      ch.innerHTML = '<img class="mly-own" src="' + P + 'charm-' + k + '.webp' + V + '" alt="" style="' + bx + (d ? ';opacity:' + (show ? 0 : 1) : '') + '">' +
+        (d ? '<div class="mly-g mly-dyed" style="opacity:' + (show ? 1 : 0) + '"><img src="' + P + 'charm-' + k + '-dye.webp' + V + '" alt="" style="' + bx + '"><i class="mly-dye" style="' + bx + ';' + mask(P + 'charm-' + k + '-mask.webp' + V) + 'background:' + c + '"></i></div>'
+           : '<i class="mly-dye" style="' + bx + ';' + mask(P + 'charm-' + k + '.webp' + V) + 'opacity:' + (pal ? 1 : 0) + ';background:' + c + '"></i>');
       if (!still) { ch.classList.remove('sw'); void ch.offsetWidth; ch.classList.add('sw'); }
     }
     function colours(p) {
@@ -129,9 +162,17 @@
       clearTimeout(moveT); moving = k; lastMove = k; mark(); settle();
       vid.src = MV + k + '.mp4' + V; vid.preload = 'auto';
       var faded = false;
+      // shown only once a good frame is on the canvas; if none comes within a few seconds, or the first is bad, she
+      // skips the move and stays as she is
+      var wait = setTimeout(function () { if (moving === k && !cv.classList.contains('on')) { cv.onframe = null; vid.pause(); moving = ''; mark(); plan(); } }, 3500);
       var go = function () {
         vid.removeEventListener('playing', go);
-        setTimeout(function () { if (moving === k) { cv.classList.add('on'); st.classList.add('moving'); } }, 60);
+        cv.onframe = function (ok) {
+          clearTimeout(wait);
+          if (moving !== k) return;
+          if (!ok) { vid.pause(); moving = ''; mark(); plan(); return; }
+          cv.classList.add('on'); st.classList.add('moving');
+        };
       };
       var tick = function () { if (!faded && vid.duration && vid.currentTime > vid.duration - 0.75) { faded = true; vid.removeEventListener('timeupdate', tick); done(); } };
       vid.addEventListener('playing', go); vid.addEventListener('timeupdate', tick);
@@ -169,7 +210,7 @@
       ['pause', 'ended'].forEach(function (k) { au.addEventListener(k, function () { talking = false; }); });
     }
     function plan() {
-      clearTimeout(moveT); if (still || !cv) return;
+      clearTimeout(moveT); if (!auto || !cv) return;
       moveT = setTimeout(function () {
         if (!onScreen || moving || document.hidden || (au && !au.paused)) return plan();
         var pick = MOVES.map(function (m) { return m[0]; }).filter(function (k) { return k !== lastMove; });
@@ -179,7 +220,7 @@
     function mark() { Object.keys(ctl).forEach(function (k) { ctl[k].disabled = !!moving; ctl[k].classList.toggle('on', moving === k); }); }
 
     // on her own: blinks, an ear flick now and then, a curious tilt once in a while, and her moves
-    if (!still) {
+    if (auto) {
       (function b() { setTimeout(function () { if (!moving) { blink(); if (Math.random() < 0.2) setTimeout(blink, 340); } b(); }, rnd(3000, 6500)); })();
       (function f() { setTimeout(function () { if (!moving) flick(Math.random() < 0.5 ? 'L' : 'R'); f(); }, rnd(6000, 14000)); })();
       (function t() { setTimeout(function () { if (!moving) { tilt(Math.random() < 0.5 ? -9 : 9); setTimeout(function () { if (!moving) tilt(0); }, 2600); } t(); }, rnd(14000, 26000)); })();

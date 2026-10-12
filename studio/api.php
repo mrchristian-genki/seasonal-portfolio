@@ -432,7 +432,13 @@ try {
             }
             // the photo spread (feature.lookbook) too, and its pictures keep their files even when they leave the photo list
             $spread = [];
-            foreach (($e['feature']['lookbook']['items'] ?? []) as $x) {
+            // (feature.lookbook is one spread, or a list of them)
+            $books = $e['feature']['lookbook'] ?? [];
+            if (!is_array($books)) $books = [];
+            if (isset($books['items'])) $books = [$books];
+            $spreadItems = [];
+            foreach ($books as $b) foreach ((is_array($b) ? ($b['items'] ?? []) : []) as $x) $spreadItems[] = $x;
+            foreach ($spreadItems as $x) {
                 foreach (['src', 'poster'] as $k) {
                     if ($k === 'poster' && !isset($x['poster'])) continue;
                     if (!preg_match('#^data/photos/' . preg_quote($id, '#') . '/([a-z0-9-]{1,40}\.(jpg|mp4))$#', (string) ($x[$k] ?? ''), $sm)) json_fail('A photo spread picture is outside this entry.');
