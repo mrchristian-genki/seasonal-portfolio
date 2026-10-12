@@ -30,6 +30,8 @@ section.listen.alta audio{position:absolute;width:1px;height:1px;opacity:0;point
    lies over it, and her gesture, dive and rise play through canvases that use their masks (the videos themselves
    play unseen). Underwater clips just hide everything above the ledge (37.8% down), where nothing of her is. */
 .alta .al-stage.al-has-bd{background:#0a1a1c var(--al-bd) center/cover no-repeat}
+/* until her still (rest-cut) is in, a small copy of it (rest-cut-lq.webp, 9 KB) stands in over the backdrop, so the tank is never empty */
+.alta .al-stage.al-has-bd:not(.al-rc-in){background:url(/assets/alta/parts/rest-cut-lq.webp?v=1) 0 0/100% 100% no-repeat,#0a1a1c var(--al-bd) center/cover no-repeat}
 .alta .al-restcut{left:0;top:0;width:100%;height:100%;opacity:1;transition:opacity .4s ease-in-out}
 .alta .al-under .al-restcut{opacity:0}
 .alta .al-src{opacity:0!important}

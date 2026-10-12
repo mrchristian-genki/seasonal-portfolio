@@ -8,6 +8,10 @@
 .mly-st.has-bd{background-size:cover,cover;background-position:center,center}
 .mly-parts{position:absolute;left:6.6667%;top:1.355%;width:93.3333%;height:98.645%;transition:opacity .6s ease-in-out}
 .mly-st.moving .mly-parts{opacity:0}
+/* her stand-in while her parts load: a small still of her seated pose (parts/web/still.webp, 6 KB), so the stage is
+   never empty; it fades out once every part is in, so it never shows behind an ear or her tail as they move */
+.mly-parts::before{content:"";position:absolute;inset:0;background:url(/assets/marley/parts/web/still.webp?v=2) 0 0/100% 100% no-repeat;transition:opacity .6s ease-in-out}
+.mly-parts.ready::before{opacity:0}
 .mly-mv{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
 .mly-mv-c{opacity:0;transition:opacity .6s ease-in-out}
 .mly-mv-c.on{opacity:1}
@@ -22,7 +26,7 @@
 .mly-up{opacity:0} .mly.alert .mly-up{opacity:1} .mly.alert .mly-down{opacity:0}
 .mly-mouth img{opacity:0;transition:opacity 90ms ease-in-out} .mly-mouth img.on{opacity:1}
 .mly-lids{opacity:0;transition:opacity 90ms ease-in-out} .mly.blink .mly-lids{opacity:1}
-.mly-glow{-webkit-mask:url(/assets/marley/parts/iris-mask.webp) 0 0/100% 100% no-repeat;mask:url(/assets/marley/parts/iris-mask.webp) 0 0/100% 100% no-repeat;
+.mly-glow{-webkit-mask:url(/assets/marley/parts/web/iris-mask.webp?v=2) 0 0/100% 100% no-repeat;mask:url(/assets/marley/parts/web/iris-mask.webp?v=2) 0 0/100% 100% no-repeat;
   transition:background-color .9s ease-in-out,opacity .9s ease-in-out}
 /* her lenses' own amber; a mood fades a tint in (js/marley.js EYES): a warm gold when she's happy, red when she's upset */
 .mly-glow-g{mix-blend-mode:overlay;opacity:0;background:#ffb000}
@@ -33,7 +37,7 @@
 @keyframes mly-swing{25%{transform:rotate(6deg)}60%{transform:rotate(-4deg)}85%{transform:rotate(2deg)}}
 .mly-own,.mly-dyed{transition:opacity .9s ease-in-out}
 .mly-dye{mix-blend-mode:multiply;transition:background-color .9s ease-in-out,opacity .9s ease-in-out}
-.mly-dc{-webkit-mask:url(/assets/marley/parts/collar-mask.webp) 0 0/100% 100%;mask:url(/assets/marley/parts/collar-mask.webp) 0 0/100% 100%;opacity:0;mix-blend-mode:color}
+.mly-dc{-webkit-mask:url(/assets/marley/parts/web/collar-mask.webp?v=2) 0 0/100% 100%;mask:url(/assets/marley/parts/web/collar-mask.webp?v=2) 0 0/100% 100%;opacity:0;mix-blend-mode:color}
 .mly-dc2{mix-blend-mode:screen}
 .mly.pal .mly-dc{opacity:.95} .mly.pal .mly-dc2{opacity:.32}
 /* her buttons, where a page asks for them (data-controls) */
@@ -47,7 +51,7 @@
 .mly-chip[disabled]{opacity:.45;cursor:default;transform:none}
 @media (prefers-reduced-motion: reduce){
   .mly-tail,.mly-body,.mly-charm.sw{animation:none}
-  .mly-head,.mly-ear,.mly-mouth img,.mly-lids,.mly-glow,.mly-own,.mly-dyed,.mly-dye,.mly-parts,.mly-mv-c,.mly-chip{transition:none}
+  .mly-head,.mly-ear,.mly-mouth img,.mly-lids,.mly-glow,.mly-own,.mly-dyed,.mly-dye,.mly-parts,.mly-parts::before,.mly-mv-c,.mly-chip{transition:none}
 }
 /* in a Listen bar (a Note she narrates): her stage above the episode's player */
 section.listen.mly-bar{display:block}
