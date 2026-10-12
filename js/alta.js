@@ -15,7 +15,7 @@
   'use strict';
   var P = '/assets/alta/parts/', V = '?v=11';
   var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var GESTURES = ['palms'];   // her gesture clips in parts/ (KIT.md Round 2 adds more)
+  var GESTURES = ['palms', 'thai-bloom'];   // her gesture clips in parts/ (KIT.md Rounds 2 and 7): open palms; a Thai dance lotus bloom
   var SHAPES = ['smile', 'neutral', 'ah', 'oh', 'oo', 'ee', 'laugh'];
   var IC = {
     play: '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>', pause: '<svg viewBox="0 0 24 24"><path d="M7 5h4v14H7zm6 0h4v14h-4z"/></svg>',
@@ -112,9 +112,10 @@
     var gT = 0, gestKey = '';
     if (CUT.palms) alphaCanvas(palms);
     if (!still) palms.addEventListener('timeupdate', function () { if (palms.duration && palms.currentTime > palms.duration - 0.6) palms.classList.remove('on'); });
-    function gesture() {
+    function gesture(want) {
       if (still || palms.classList.contains('on')) return;
-      var k = GESTURES[Math.floor(Math.random() * GESTURES.length)];
+      var pick = GESTURES.filter(function (g) { return g !== gestKey; });   // never the same one twice running
+      var k = GESTURES.indexOf(want) >= 0 ? want : (pick.length ? pick : GESTURES)[Math.floor(Math.random() * (pick.length || GESTURES.length))];
       if (k !== gestKey) { gestKey = k; palms.src = cutSrc(k); }
       palms.preload = 'auto'; palms.currentTime = 0;
       var p = palms.play();
@@ -207,7 +208,7 @@
     var want = '';
     bar.alta = {
       dive: function (k) { want = k || ''; if (dv.state === 'up') { clearTimeout(dv.t); dive(); } },
-      gesture: function () { if (dv.state === 'up') { palms.classList.remove('on'); gesture(); } },
+      gesture: function (k) { if (dv.state === 'up') { palms.classList.remove('on'); gesture(k); } },
       eyes: function (m) { eyeMode(m || ''); },
       say: function (k) { bar.classList.toggle('talking', k !== 'rest'); say(k === 'rest' ? 'smile' : k); },
       blink: function () { bar.classList.add('blink'); setTimeout(function () { bar.classList.remove('blink'); }, 130); },

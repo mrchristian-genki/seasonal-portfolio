@@ -499,6 +499,11 @@ add this line, then the gesture's own line:
 | `gest-thai-dance.mp4` | Both hands lift just above the ledge in front of her. One hand makes the "jeep" shape, thumb and forefinger touching, while the other is a flat open hand with the fingers curved back; slowly the wrists turn and the hands trade shapes, twice, then rest on the ledge. |
 | `gest-thai-spread.mp4` | Her forearms open outward along the ledge to just past her elbows, palms up and turned out, fingers curved back; the wrists ripple slowly in a wave, one hand then the other, then the arms come back in to rest. No wider than her elbows plus a hand. |
 
+**Built (Oct 12):** `gest-thai-bloom` is in her idle gestures (`parts/thai-bloom.mp4` and `-cut.mp4`), keyed from its
+green-screen clip and laid over her still. `gest-thai-dance` came back with her arms stretched along the whole ledge
+(her hands reach from 181 to 1094 px across the 1376 frame; the box is 440 to 952, and phones show 247 to 1128): make
+it again with the hands kept low and close, as written above.
+
 Her arms opened fully out to each side would leave the safe box (her gesture layer is only that box, and phones crop
 the sides further), so the spread stays at her elbows plus a hand. The references (the Thai hand-shape sheet and the
 curved-back hand) are good to attach as a style reference, never as the first frame.
