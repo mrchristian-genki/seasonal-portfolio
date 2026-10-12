@@ -35,6 +35,10 @@ section.listen.alta audio{position:absolute;width:1px;height:1px;opacity:0;point
 .alta .al-src{opacity:0!important}
 .alta .al-palms-c{left:31.977%;top:0;width:37.209%;height:47.917%;opacity:0;transition:opacity .5s ease-in-out;pointer-events:none}
 .alta .al-palms.on+.al-palms-c{opacity:1}
+/* a gesture whose hand reaches over the front of the ledge (TALL in js/alta.js): the box runs further down, only her hand shows below the ledge */
+.alta .al-tall{left:31.977%;top:0;width:37.209%;height:65.104%}
+.alta .al-tall-c{left:31.977%;top:0;width:37.209%;height:65.104%;opacity:0;transition:opacity .5s ease-in-out;pointer-events:none}
+.alta .al-tall.on+.al-tall-c{opacity:1}
 .alta .al-dive-c{left:0;top:0;width:100%;height:100%;opacity:0;transition:opacity .4s ease-in-out;z-index:2;pointer-events:none}
 .alta .al-dive.on+.al-dive-c{opacity:1}
 .alta .al-has-bd .al-dive[data-k=hover],.alta .al-has-bd .al-dive[data-k=glide],.alta .al-has-bd .al-dive[data-k=glow]{-webkit-mask:linear-gradient(#0000 0,#0000 37.6%,#000 37.9%);mask:linear-gradient(#0000 0,#0000 37.6%,#000 37.9%)}
@@ -78,4 +82,4 @@ section.listen.alta audio{position:absolute;width:1px;height:1px;opacity:0;point
   section.listen.alta>div:first-child{position:static;padding:10px 14px 8px;background:#0a1a1c}   /* the title above her, off her crown */
 }
 @media (max-width:560px){.alta .al-ctl{gap:6px;padding:16px 8px 8px}.alta .al-ctl .al-sm{display:none}section.listen.alta>div:first-child{padding:8px 12px}}
-@media (prefers-reduced-motion:reduce){.alta .al-ctl button.al-wait{animation:none}.alta .al-restcut,.alta .al-palms-c,.alta .al-dive-c{transition:none}.alta .al-rest{transition:none}.alta .al-dive,.alta .al-pearl,.alta .al-tint,.alta .al-tail,.alta .al-palms,.alta .al-head,.alta .al-eyes img,.alta .al-glow,.alta .al-lids,.alta .al-mouth img,.alta .al-ctl button{transition:none}}
+@media (prefers-reduced-motion:reduce){.alta .al-ctl button.al-wait{animation:none}.alta .al-restcut,.alta .al-palms-c,.alta .al-tall-c,.alta .al-dive-c{transition:none}.alta .al-rest{transition:none}.alta .al-dive,.alta .al-pearl,.alta .al-tint,.alta .al-tail,.alta .al-palms,.alta .al-head,.alta .al-eyes img,.alta .al-glow,.alta .al-lids,.alta .al-mouth img,.alta .al-ctl button{transition:none}}

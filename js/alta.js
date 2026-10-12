@@ -15,7 +15,10 @@
   'use strict';
   var P = '/assets/alta/parts/', V = '?v=11';
   var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var GESTURES = ['palms', 'thai-bloom'];   // her gesture clips in parts/ (KIT.md Rounds 2 and 7): open palms; a Thai dance lotus bloom
+  var GESTURES = ['palms', 'thai-bloom', 'play'];   // her gesture clips in parts/ (KIT.md Rounds 2 and 7): open palms; a Thai dance lotus bloom; "press play"
+  // gestures whose hand reaches over the front of the ledge, below it: a taller layer, always drawn with its mask (only her
+  // hand shows below the ledge, the tank and her tail carry on behind it); "press play" only while she waits
+  var TALL = { play: 1 }, IDLE_ONLY = { play: 1 };
   var SHAPES = ['smile', 'neutral', 'ah', 'oh', 'oo', 'ee', 'laugh'];
   var IC = {
     play: '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>', pause: '<svg viewBox="0 0 24 24"><path d="M7 5h4v14H7zm6 0h4v14h-4z"/></svg>',
@@ -57,6 +60,7 @@
     var st = document.createElement('div'); st.className = 'al-stage'; st.setAttribute('aria-hidden', 'true');
     st.innerHTML = '<video class="al-tail" muted loop playsinline preload="none"></video>' +
       '<video class="al-palms" muted playsinline preload="none"></video>' +
+      '<video class="al-tall" muted playsinline preload="none"></video>' +
       '<div class="al-head"><img class="al-base" src="' + P + 'head-base.webp' + V + '" alt="">' +
       ['a', 'b'].map(function (k) { return '<img class="al-pearl" src="' + P + 'head-flair-' + k + '.webp' + V + '" alt=""><i class="al-tint al-tint-' + k + '"></i>'; }).join('') +
       '<div class="al-eyes" style="position:absolute"><img src="' + P + 'head-iris.webp' + V + '" alt=""><i class="al-glow"></i></div>' +
@@ -78,7 +82,7 @@
     var lbl = bar.querySelector('.listen-label');
     if (lbl && !bar.querySelector('.al-by')) { var by = document.createElement('span'); by.className = 'al-by'; by.textContent = 'Narrated by A.L.T.A.'; lbl.parentNode.appendChild(by); }
     var cutSrc = function (k) { return P + k + (CUT[k] || (CUT.palms && GESTURES.indexOf(k) >= 0) ? '-cut' : '') + '.mp4' + V; };
-    var tail = st.querySelector('.al-tail'), palms = st.querySelector('.al-palms'), head = st.querySelector('.al-head'), glow = st.querySelector('.al-glow'), eyes = st.querySelector('.al-eyes');
+    var tail = st.querySelector('.al-tail'), palms = st.querySelector('.al-palms'), tallV = st.querySelector('.al-tall'), head = st.querySelector('.al-head'), glow = st.querySelector('.al-glow'), eyes = st.querySelector('.al-eyes');
     var M = {}; [].forEach.call(st.querySelectorAll('.al-mouth img'), function (i) { M[i.getAttribute('data-m')] = i; });
     var cur = 'smile';
     function say(k) { if (k === cur || !M[k]) return; M[cur].classList.remove('on'); M[k].classList.add('on'); cur = k; }
@@ -111,15 +115,22 @@
     // ledge too. Each fades in, plays once and fades back to her rest pose. GESTURES are the clips in parts/.
     var gT = 0, gestKey = '';
     if (CUT.palms) alphaCanvas(palms);
-    if (!still) palms.addEventListener('timeupdate', function () { if (palms.duration && palms.currentTime > palms.duration - 0.6) palms.classList.remove('on'); });
+    var tallOk = !!alphaCanvas(tallV), tallKey = '';
+    if (!still) [palms, tallV].forEach(function (v) { v.addEventListener('timeupdate', function () { if (v.duration && v.currentTime > v.duration - 0.6) v.classList.remove('on'); }); });
+    var gestOn = function () { return palms.classList.contains('on') || tallV.classList.contains('on'); };
     function gesture(want) {
-      if (still || palms.classList.contains('on')) return;
-      var pick = GESTURES.filter(function (g) { return g !== gestKey; });   // never the same one twice running
-      var k = GESTURES.indexOf(want) >= 0 ? want : (pick.length ? pick : GESTURES)[Math.floor(Math.random() * (pick.length || GESTURES.length))];
-      if (k !== gestKey) { gestKey = k; palms.src = cutSrc(k); }
-      palms.preload = 'auto'; palms.currentTime = 0;
-      var p = palms.play();
-      var on = function () { palms.classList.add('on'); };
+      if (still || gestOn()) return;
+      var can = GESTURES.filter(function (g) { return (!TALL[g] || tallOk) && (!IDLE_ONLY[g] || !isTalking()); });
+      var pick = can.filter(function (g) { return g !== gestKey; });   // never the same one twice running
+      var k = can.indexOf(want) >= 0 ? want : (pick.length ? pick : can)[Math.floor(Math.random() * (pick.length || can.length))];
+      if (!k) return;
+      var v = TALL[k] ? tallV : palms;
+      if (TALL[k]) { if (k !== tallKey) { tallKey = k; v.src = P + k + (CUT.palms ? '-cut' : '') + '.mp4' + V; } }
+      else if (k !== gestKey) v.src = cutSrc(k);
+      gestKey = k;
+      v.preload = 'auto'; v.currentTime = 0;
+      var p = v.play();
+      var on = function () { v.classList.add('on'); };
       if (p && p.then) p.then(on, function () {}); else on();
     }
     function gestures() {
@@ -175,9 +186,9 @@
       if (vRise.readyState >= 1) start(); else vRise.addEventListener('loadedmetadata', start, { once: true });
     }
     function dive() {
-      if (still || dv.state !== 'up' || isTalking() || !bar.isConnected || palms.classList.contains('on')) return plan();
+      if (still || dv.state !== 'up' || isTalking() || !bar.isConnected || gestOn()) return plan();
       load(); dv.state = 'dive'; vDive.currentTime = 0;
-      var go = function () { vDive.removeEventListener('playing', go); if (dv.state !== 'dive') return; showV(vDive); head.classList.add('gone'); palms.classList.remove('on'); };
+      var go = function () { vDive.removeEventListener('playing', go); if (dv.state !== 'dive') return; showV(vDive); head.classList.add('gone'); palms.classList.remove('on'); tallV.classList.remove('on'); };
       vDive.addEventListener('playing', go); var p = vDive.play(); if (p && p.catch) p.catch(function () { dv.state = 'up'; plan(); });
     }
     // underwater: a pause at the glass, a lap, or her meditation, then up
@@ -208,7 +219,7 @@
     var want = '';
     bar.alta = {
       dive: function (k) { want = k || ''; if (dv.state === 'up') { clearTimeout(dv.t); dive(); } },
-      gesture: function (k) { if (dv.state === 'up') { palms.classList.remove('on'); gesture(k); } },
+      gesture: function (k) { if (dv.state === 'up') { palms.classList.remove('on'); tallV.classList.remove('on'); gesture(k); } },
       eyes: function (m) { eyeMode(m || ''); },
       say: function (k) { bar.classList.toggle('talking', k !== 'rest'); say(k === 'rest' ? 'smile' : k); },
       blink: function () { bar.classList.add('blink'); setTimeout(function () { bar.classList.remove('blink'); }, 130); },
