@@ -239,12 +239,16 @@
     var body = nb.querySelector('.nb-body'), head = nb.querySelector('.nb-head'), jaw = nb.querySelector('.nb-jaw'), jawS = nb.querySelector('.nb-jaw-s');
     var talking = false, an = null, buf = null, level = 0, raf = 0, plan = null, lastG = -1;
     var played = false, taps = 0, wait = 1, lastH = -1, hint = null;   // hints only until the first play, after a round or two of tapping
+    // data-manual (the Parts Catalog's card): nothing of her own on a timer, no tapping, hints, blinks or glances while
+    // she waits; she moves when her episode plays
+    var auto = !bar.hasAttribute('data-manual');
     body.src = A + 'narrator.mp4' + V;
 
     // the hands: a plan is a stretch of the video to play to, and what to do when it gets there
     function go(at, end, then, rate) { body.playbackRate = rate || 1; if (Math.abs(body.currentTime - at) > 0.06) body.currentTime = at; plan = { end: end, then: then }; body.play().catch(function () {}); drive(); }
     function idle() {
       if (talking) return gesture();
+      if (!auto) { body.pause(); return; }   // back at her rest pose: she holds it
       if (!played && taps >= wait) {
         taps = 0; wait = 1 + Math.floor(Math.random() * 2);
         var k = (lastH + 1 + Math.floor(Math.random() * (HINTS.length - 1))) % HINTS.length; lastH = k; hint = HINTS[k];
@@ -288,7 +292,7 @@
         if (!body.paused) requestAnimationFrame(step); else driving = false;
       })();
     }
-    if (!still && 'IntersectionObserver' in window) {   // starts tapping when it comes into view
+    if (!still && auto && 'IntersectionObserver' in window) {   // starts tapping when it comes into view
       var io = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { io.disconnect(); body.preload = 'auto'; if (!talking && !plan) idle(); } });
       io.observe(nb);
     }
@@ -323,7 +327,7 @@
     ['pause', 'ended'].forEach(function (t) { audio.addEventListener(t, function () { talking = false; if (!still) settle(); }); });
 
     // a blink every few seconds
-    (function blink() {
+    if (auto) (function blink() {
       setTimeout(function () {
         if (!nb.isConnected) return;
         nb.classList.add('blink'); setTimeout(function () { nb.classList.remove('blink'); }, 140);
@@ -334,7 +338,7 @@
     // her gaze: mostly on you, now and then a short, unhurried glance aside or down and back, the way people look
     // while they talk (a fixed, unblinking stare reads as cold); a hint's look toward Play takes over while it lasts
     follow(bar, nb, audio);
-    (function gaze() {
+    if (auto) (function gaze() {
       if (nb.classList.contains('follow')) { setTimeout(function () { if (nb.isConnected) gaze(); }, 1500); return; }   // she's watching the pointer
       var away = !still && Math.random() < 0.45;
       if (away) {

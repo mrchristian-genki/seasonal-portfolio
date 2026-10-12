@@ -51,6 +51,8 @@
   }
 
   function build(el) {
+    // data-manual (the Parts Catalog's cards): no blinks, ear flicks, tilts or moves on a timer; only what's asked
+    var auto = !still && !el.hasAttribute('data-manual');
     if (el.marley) return;
     el.classList.add('mly');
     el.setAttribute('role', 'img');
@@ -169,7 +171,7 @@
       ['pause', 'ended'].forEach(function (k) { au.addEventListener(k, function () { talking = false; }); });
     }
     function plan() {
-      clearTimeout(moveT); if (still || !cv) return;
+      clearTimeout(moveT); if (!auto || !cv) return;
       moveT = setTimeout(function () {
         if (!onScreen || moving || document.hidden || (au && !au.paused)) return plan();
         var pick = MOVES.map(function (m) { return m[0]; }).filter(function (k) { return k !== lastMove; });
@@ -179,7 +181,7 @@
     function mark() { Object.keys(ctl).forEach(function (k) { ctl[k].disabled = !!moving; ctl[k].classList.toggle('on', moving === k); }); }
 
     // on her own: blinks, an ear flick now and then, a curious tilt once in a while, and her moves
-    if (!still) {
+    if (auto) {
       (function b() { setTimeout(function () { if (!moving) { blink(); if (Math.random() < 0.2) setTimeout(blink, 340); } b(); }, rnd(3000, 6500)); })();
       (function f() { setTimeout(function () { if (!moving) flick(Math.random() < 0.5 ? 'L' : 'R'); f(); }, rnd(6000, 14000)); })();
       (function t() { setTimeout(function () { if (!moving) { tilt(Math.random() < 0.5 ? -9 : 9); setTimeout(function () { if (!moving) tilt(0); }, 2600); } t(); }, rnd(14000, 26000)); })();
