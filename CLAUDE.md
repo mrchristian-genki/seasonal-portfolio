@@ -22,7 +22,8 @@ Christian's rule, a lesson learned on the Tumble: every change on screen eases. 
 
 - Facts on the site come only from Christian's Notes or his own words.
 - People stay anonymous unless they've agreed to be named. Never publish the home location.
-- The narrator is "GlazyArray" unless a Note or its category chooses A.L.T.A. (Christian, Oct 11, 2026; the Studio sets
-  it, assets/narrator/resolve.js decides). A.L.T.A.'s own Note she tells herself. Marley is "she".
+- The narrator is "GlazyArray" unless a Note or its category chooses A.L.T.A. or Robot Marley (Christian, Oct 11 and
+  12, 2026; the Studio sets it, assets/narrator/resolve.js decides). A.L.T.A.'s and Robot Marley's own Notes they tell
+  themselves. Marley is "she".
 - No brands, logos or text inside AI renders; real browser logos only where credited.
 - Never commit secrets.

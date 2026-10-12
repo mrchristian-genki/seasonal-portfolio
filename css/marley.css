@@ -46,3 +46,7 @@
   .mly-tail,.mly-body,.mly-charm.sw{animation:none}
   .mly-head,.mly-ear,.mly-mouth img,.mly-lids,.mly-glow,.mly-own,.mly-dyed,.mly-dye,.mly-parts,.mly-mv-c,.mly-chip{transition:none}
 }
+/* in a Listen bar (a Note she narrates): her stage above the episode's player */
+section.listen.mly-bar{display:block}
+section.listen.mly-bar .marley{max-width:300px;margin:10px auto}
+section.listen.mly-bar audio{display:block;width:100%}

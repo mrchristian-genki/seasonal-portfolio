@@ -14,7 +14,7 @@
    (episode.narrator), its categories (looks.json "categoryNarrators"), the site default ("defaults.narrator"), else
    GlazyArray. A.L.T.A.'s tank backdrop (the scene behind her glass) follows it too: the Note's own (altaBackdrop),
    its categories' (looks.json "categoryTanks"), the default ("defaults.tank"), else none (the hall). Her scenes are
-   looks.json "tankBackdrops", files in assets/alta/backdrops/. NARRATORS are the ones with a player: GlazyArray (js/narrator.js) and A.L.T.A. (js/alta.js).
+   looks.json "tankBackdrops", files in assets/alta/backdrops/. NARRATORS are the ones with a player: GlazyArray (js/narrator.js), A.L.T.A. (js/alta.js) and Robot Marley (js/marley.js).
 
    So there is never nothing unless there is nothing at all. pick() also says where each came from, for the Studio.
    note = { look, backdrop, narrator, cats: [...], prefer, ignoreHolidays }; date = a Date (today by default). */
@@ -73,7 +73,7 @@
     else if (dt && tks[dt]) tk = { name: dt, file: tks[dt].file, v: tks[dt].v, from: 'default', why: 'the site default' };
     return { look: look, backdrop: bd, narrator: nar, tank: tk, holiday: on ? on.name : null };
   }
-  var NARRATORS = { glazyarray: 'GlazyArray', alta: 'A.L.T.A.' };
+  var NARRATORS = { glazyarray: 'GlazyArray', alta: 'A.L.T.A.', marley: 'Robot Marley' };
   var api = { pick: pick, mmdd: mmdd, NARRATORS: NARRATORS };
   if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.GAResolve = api;
 })(this);

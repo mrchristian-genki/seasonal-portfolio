@@ -44,7 +44,7 @@ if ($method === 'POST') {
 $cfg = studio_config();
 $gh = new GitHub($cfg);
 const EVENTS = 'field/data/events';
-const NARRATORS = ['glazyarray', 'alta'];   // the narrators with a player (assets/narrator/resolve.js)
+const NARRATORS = ['glazyarray', 'alta', 'marley'];   // the narrators with a player (assets/narrator/resolve.js)
 const PHOTOS = 'field/data/photos';
 const AUDIO = 'field/data/audio';
 const AUDIO_MAX = 40_000_000;

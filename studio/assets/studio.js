@@ -362,7 +362,7 @@
       var opts = '<option value="">No look</option><option value="curls">curls</option>' + list.map(function (l) { return '<option value="' + esc(l.name) + '">' + esc(l.name + (l.about ? ' · ' + l.about : '')) + '</option>'; }).join('');
       var src = function (n) { var l = list.filter(function (x) { return x.name === n; })[0]; return n === 'curls' ? '/assets/narrator/head-base.webp' : l ? '/assets/narrator/looks/' + esc(l.file) + (l.v ? '?r=' + esc(l.v) : '') : ''; };
       var cnar = J.categoryNarrators || {}, nv = function (c) { return c in CATNP ? CATNP[c] : (cnar[c] || ''); };
-      var NOPTS = '<option value="">The default</option><option value="glazyarray">GlazyArray</option><option value="alta">A.L.T.A.</option>';
+      var NOPTS = '<option value="">The default</option><option value="glazyarray">GlazyArray</option><option value="alta">A.L.T.A.</option><option value="marley">Robot Marley</option>';
       // A.L.T.A.'s tank backdrops (looks.json tankBackdrops, files in assets/alta/backdrops): a column once there are any
       var tanks = J.tankBackdrops || [], ctank = J.categoryTanks || {}, tv = function (c) { return c in CATTP ? CATTP[c] : (ctank[c] || ''); };
       var TOPTS = '<option value="">The default</option>' + tanks.map(function (b) { return '<option value="' + esc(b.name) + '">' + esc(b.name + (b.about ? ' · ' + b.about : '')) + '</option>'; }).join('');
@@ -378,7 +378,7 @@
             (tanks.length ? '<span class="catc"><small>Her tank</small><span><select data-cattank="' + esc(c) + '">' + TOPTS + '</select></span></span>' : '') +
             '<span class="catc catr"><small>Priority</small><input type="number" min="0" max="9" step="1" data-catr="' + esc(c) + '" value="' + rk(c) + '" title="0 to 9: when a Note\'s categories disagree, the higher wins"></span></li>';
         }).join('') + '</ul>' +
-        '<div class="row"><label class="f catnd"><span>Who narrates when nothing else says</span><select id="defNar"><option value="">GlazyArray</option><option value="alta">A.L.T.A.</option></select></label>' +
+        '<div class="row"><label class="f catnd"><span>Who narrates when nothing else says</span><select id="defNar"><option value="">GlazyArray</option><option value="alta">A.L.T.A.</option><option value="marley">Robot Marley</option></select></label>' +
           (tanks.length ? '<label class="f catnd"><span>Behind her tank when nothing else says</span><select id="defTank"><option value="">The hall (her own)</option>' + TOPTS.replace('<option value="">The default</option>', '') + '</select></label>' : '') +
           '<span class="muted">A Note can choose its own narrator in its Episode script panel; otherwise its categories\' narrator tells it (the highest priority wins), else this one.</span></div>' +
         '<div class="row"><input id="newCat" placeholder="A new category, e.g. Night ride" maxlength="40"><button type="button" id="newCatAdd">Add the category</button><span class="muted">Then give it a look, a backdrop and a priority above, save, and add it to Notes in their style panel.</span></div>' +
@@ -413,7 +413,7 @@
         sel.onchange = function () { if (sel.value === (ctank[c] || '')) delete CATTP[c]; else CATTP[c] = sel.value; renderCats(); };
       });
       var dtk = $('#defTank'); if (dtk) { dtk.value = df('tank') || ''; dtk.onchange = function () { if (dtk.value === (defs.tank || '')) delete DEFP.tank; else DEFP.tank = dtk.value; renderCats(); }; }
-      var dn = $('#defNar'); dn.value = df('narrator') === 'alta' ? 'alta' : '';
+      var dn = $('#defNar'); dn.value = df('narrator') === 'alta' || df('narrator') === 'marley' ? df('narrator') : '';
       dn.onchange = function () { if (dn.value === (defs.narrator || '')) delete DEFP.narrator; else DEFP.narrator = dn.value; renderCats(); };
       $$('.catl select[data-catbd]', box).forEach(function (sel) {
         var c = sel.getAttribute('data-catbd'); sel.value = c in CATBP ? CATBP[c] : (bcats[c] || '');
@@ -816,7 +816,8 @@
         field('Title', '<input id="postTitle" value="' + esc(E.post.title) + '">') + field('Text', '<textarea id="postBody" rows="14">' + esc(E.post.body) + '</textarea>', 'First person. A blank line between paragraphs. End with "What I learned: …" when there is something real.')) +
       fold('episode', 'Episode script', E.episode.title || '', !isLive, field('Title', '<input id="epTitle" value="' + esc(E.episode.title) + '">') +
         field('Narrator', '<select id="epNarrator"><option value="">From its categories</option><option value="glazyarray"' + (E.episode.narrator === 'glazyarray' ? ' selected' : '') + '>GlazyArray</option>' +
-          '<option value="alta"' + (E.episode.narrator === 'alta' ? ' selected' : '') + '>A.L.T.A.</option></select>', '<span id="epWho"></span>') +
+          '<option value="alta"' + (E.episode.narrator === 'alta' ? ' selected' : '') + '>A.L.T.A.</option>' +
+          '<option value="marley"' + (E.episode.narrator === 'marley' ? ' selected' : '') + '>Robot Marley</option></select>', '<span id="epWho"></span>') +
         '<div id="epTankBox"></div>' + field('Script', '<textarea id="epScript" rows="16">' + esc(E.episode.script) + '</textarea>', '<span id="epCount"></span>')) +
       fold('look', 'GlazyArray\'s style', [E.narratorLook ? E.narratorLook.look : '', E.narratorBackdrop ? E.narratorBackdrop.backdrop : ''].filter(Boolean).join(' · ') || 'from her categories or the holiday', false,
         '<div id="styleBox"></div><details class="ga-own" id="gaOwn"' + (gaOwnOpen() ? ' open' : '') + '><summary>Or give this Note its own cap or backdrop</summary>' +
@@ -865,7 +866,7 @@
       return renderLookData().then(function (r) { var p = window.GAResolve && GAResolve.pick(r[3], { narrator: E.episode.narrator, cats: noteCats() }); return p ? p.narrator : { name: E.episode.narrator || 'glazyarray', why: '' }; });
     };
     var whoNow = NARNOW = E.episode.narrator || 'glazyarray';
-    var showWho = function () { who().then(function (n) { whoNow = NARNOW = n.name; var w = $('#epWho'); if (w) w.textContent = (n.name === 'alta' ? 'A.L.T.A.' : 'GlazyArray') + ' tells it' + (n.why ? ' (' + n.why + ')' : '') + '. The audio prompt is in their voice.'; }); };
+    var showWho = function () { who().then(function (n) { whoNow = NARNOW = n.name; var w = $('#epWho'); if (w) w.textContent = (NAR_NAME[n.name] || 'GlazyArray') + ' tells it' + (n.why ? ' (' + n.why + ')' : '') + '. The audio prompt is in their voice.'; }); };
     $('#epNarrator').onchange = function () { collect(); markDirty(); showWho(); };
     // the scene behind A.L.T.A.'s tank, when she tells it and there are scenes to pick from (looks.json tankBackdrops)
     var showTank = function () {
@@ -1050,6 +1051,7 @@
   }
   // what she wears on this Note, by the site's one rule (/assets/narrator/resolve.js): a holiday on its dates unless the
   // Note ignores holidays, the Note's own, its categories (the ticked one, then priority, then the latest changed), the default
+  var NAR_NAME = { glazyarray: 'GlazyArray', alta: 'A.L.T.A.', marley: 'Robot Marley' };   // the narrators' names (assets/narrator/resolve.js NARRATORS)
   var LOOKJ = null, NARNOW = 'glazyarray';   // who tells the open Note, as the site decides it (render's showWho)
   function gaPick(J) {
     if (!window.GAResolve || !E) return null;
@@ -2811,7 +2813,7 @@
       var facts = { title: E.title, date: E.date, kind: E.kind, place: E.place, whoAppears: E.consent, notes: E.fieldNotes, figures: figures(),
         photos: E.photos.filter(function (p) { return p.use !== 'skip'; }).map(function (p) { return { file: photoName(p), takenAt: p.takenAt || null, video: !!p.video, caption: p.caption || '' }; }),
         currentDraft: (E.post.body || E.episode.script) ? { summary: E.summary, post: E.post, episode: { title: E.episode.title, script: E.episode.script } } : null,
-        narrator: NARNOW === 'alta' ? 'A.L.T.A.' : 'GlazyArray',   // who tells the episode (its own choice or its categories'): the script is in their voice
+        narrator: NAR_NAME[NARNOW] || 'GlazyArray',   // who tells the episode (its own choice or its categories'): the script is in their voice
         narratorLook: E.narratorLook ? E.narratorLook.look : null, narratorBackdrop: E.narratorBackdrop ? E.narratorBackdrop.backdrop : null,   // her look already chosen: Claude keeps it (fit existing) unless asked
         instruction: opts.instruction || $('#instr').value.trim() };
       return api('draft', { facts: facts, thumbs: thumbs });

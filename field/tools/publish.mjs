@@ -162,7 +162,7 @@ ${ICONS}
 <link rel="stylesheet" href="${rel}../css/lake.css?v=2">
 <link rel="stylesheet" href="${rel}../css/narrator.css?v=33">
 <link rel="stylesheet" href="${rel}../css/alta.css?v=8">
-<link rel="stylesheet" href="${rel}../css/marley.css?v=1">
+<link rel="stylesheet" href="${rel}../css/marley.css?v=2">
 <script>/* Logo season from the calendar, as on About. */document.documentElement.dataset.season=["winter","winter","spring","spring","spring","summer","summer","summer","fall","fall","fall","winter"][new Date().getMonth()];</script>
 <link rel="stylesheet" href="${rel}../css/route-dash.css?v=${V}">
 </head>
@@ -180,10 +180,10 @@ const foot = (rel) => `<footer class="foot"><p>${esc(show.narrationNote)}</p>
 <script src="${rel}../js/motion.js?v=1" defer></script>
 <script src="${rel}play.js?v=${V}" defer></script>
 <script src="${rel}../js/lake.js?v=4" defer></script>
-<script src="${rel}../assets/narrator/resolve.js?v=3" defer></script>
-<script src="${rel}../js/narrator.js?v=43" defer></script>
+<script src="${rel}../assets/narrator/resolve.js?v=4" defer></script>
+<script src="${rel}../js/narrator.js?v=44" defer></script>
 <script src="${rel}../js/alta.js?v=10" defer></script>
-<script src="${rel}../js/marley.js?v=1" defer></script>
+<script src="${rel}../js/marley.js?v=2" defer></script>
 </body>
 </html>
 `;
@@ -220,6 +220,8 @@ for (const e of events) {
   // a Note A.L.T.A. narrates (its own choice, or its category's): her tank is its Listen bar (js/alta.js); on a Note
   // that chose her itself, there even before her episode is recorded
   const alta = narratorOf(e) === 'alta' && (!!audio || (e.episode && e.episode.narrator === 'alta'));
+  // a Note Robot Marley narrates, once its episode is recorded: she sits in its Listen bar and talks along (js/marley.js)
+  const marley = narratorOf(e) === 'marley' && !!audio;
   const t = e.track || null, s = t && t.stats;
   if (t) fs.writeFileSync(path.join(OUT, 'data', e.id + '.json'), JSON.stringify({ kind: e.kind, stats: s, line: t.line, profile: t.profile, shownKm: t.trim && t.trim.shownKm, show: e.dashboard || null }) + '\n');
 
@@ -320,7 +322,9 @@ ${e.summary ? `<p class="mag-deck">${esc(e.summary)}</p>` : ''}
 <h1>${esc(e.post && e.post.title || e.title)}</h1>
 ${e.summary ? `<p class="lede">${esc(e.summary)}</p>` : ''}`}
 ${alta ? `<section class="listen alta" data-narrator="alta"${palAttr(e)}${cueAttr(e)}${bdAttr(e)} aria-label="${audio ? 'Listen to the episode' : 'A.L.T.A. in her tank'}"><div><span class="listen-label">${audio ? `Listen · ${mmss(audio.sec)}` : 'Coming soon'}</span><b>${esc(e.episode.title || e.title)}</b></div>
-${audio ? `<audio controls preload="metadata" src="${esc(audio.src)}"></audio>` : ''}</section>` : audio ? `<section class="listen" aria-label="Listen to the episode"${lookAttr(e)}><div><span class="listen-label">Listen · ${mmss(audio.sec)}</span><b>${esc(e.episode.title || e.title)}</b></div>
+${audio ? `<audio controls preload="metadata" src="${esc(audio.src)}"></audio>` : ''}</section>` : marley ? `<section class="listen mly-bar" data-narrator="marley" aria-label="Listen to the episode"><div><span class="listen-label">Listen · ${mmss(audio.sec)}</span><b>${esc(e.episode.title || e.title)}</b></div>
+<div class="marley" aria-label="Robot Marley, telling the episode"></div>
+<audio controls preload="metadata" src="${esc(audio.src)}"></audio></section>` : audio ? `<section class="listen" aria-label="Listen to the episode"${lookAttr(e)}><div><span class="listen-label">Listen · ${mmss(audio.sec)}</span><b>${esc(e.episode.title || e.title)}</b></div>
 <audio controls preload="metadata" src="${esc(audio.src)}"></audio></section>` : ''}
 ${cover && !F ? fig(cover, 'cover') : ''}${coverStrip ? '\n' + fig(coverStrip, 'photo strip') : ''}
 ${t ? `<section class="route" aria-label="The route"><h2>The route</h2>
