@@ -183,6 +183,30 @@ heart), and its two colours dye the collar and the charm.
 Backdrops behind her, like GlazyArray's: soft and out of focus, no people, no text. A backyard with a wooden fence, a
 dog park, a trailhead, a Lake Tahoe beach at dusk, a cosy studio with two microphones on a low table for the podcast.
 
+## Built so far (Oct 12)
+
+From Christian's first 18 renders, `assets/marley/parts/` (her stage is 560 x 728, cut from the 1376 x 768 template at
+440, 40; `layout.json` has every part's box and pivot), and a preview with every move on a button
+(`assets/marley/preview.html`):
+
+- **Body** (`body.webp`): the bare render (no ears or tail), keyed, the chest under the charm filled in. A slow breath.
+- **Head** (`head.webp`): down under the collar, so a tilt never shows a gap. It tilts on her neck (her curious look).
+- **Ears** (`earL`, `earR`, and `-up` from the alert render): each flicks on its own pivot; alert lifts both.
+- **Tail** (`tail.webp`): behind her body, wagging in slow arcs (faster when she's excited).
+- **Eyes:** a glow on her irises (`iris-mask.webp`): warm gold when she's happy, dark amber, red; each fades over .9 s.
+  Her lids (`lids.webp`) are from the eyes-closed render, lined up on hers.
+- **Mouth:** closed, small (lined up from its render), open and the happy pant.
+- **Collar and charms:** the collar (`collar.webp`) and its band (`collar-mask.webp`, from the magenta render) take a
+  Note's first colour; seven charms (bone, pinecone, star, paw, leaf, bike wheel, ball) each take its second, with a
+  gentle swing when one changes.
+
+**Two sets came in:** twelve renders match the bone-tag template exactly (tail to the right); six (tail to the left,
+plain ring) are a slightly different render. From those, only the closed eyes and the small mouth line up well enough
+to use; the wide "ah" shows a second nose, so it's left out.
+
+**Still to make:** the heart charm; a wide "ah" edited from the bone-tag template (`461`), not the plain-ring one; empty
+lenses (2a) if her eyes should glance; her moves (7) and scenes (8).
+
 ---
 
 ## Next steps

@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Robot Marley preview</title>
+<style>
+/* Robot Marley's parts (assets/marley/KIT.md), layered: her body, her tail behind it, her head on her neck (her ears on
+   their own pivots, her mouth shapes, her lids, the glow on her irises), and her collar and charm over the seam. Every
+   change eases, per the motion rule; reduced motion stills her. Positions are shares of her stage
+   (parts/layout.json: 560 x 728, cut from her 1376 x 768 template at 440, 40). */
+:root{--bg:#f3efe6;--ink:#2a2118;--ink2:#6b5d4f;--btn:#fff;--line:#d9cfc0;--accent:#c98a2b}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#17130f;--ink:#efe6d8;--ink2:#b3a591;--btn:#241d17;--line:#3a3027}}
+:root[data-theme="dark"]{--bg:#17130f;--ink:#efe6d8;--ink2:#b3a591;--btn:#241d17;--line:#3a3027}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;padding:16px}
+h1{font-size:20px;margin:0 0 4px} p{margin:0 0 12px;color:var(--ink2);max-width:62ch}
+.wrap{display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start}
+.stage{position:relative;width:min(100%,380px);aspect-ratio:560/728;border-radius:14px;overflow:hidden;
+  background:radial-gradient(ellipse at 50% 92%,rgba(0,0,0,.18),transparent 45%),linear-gradient(#cfe3d0,#e9e3d3)}
+.stage img,.stage i,.stage .grp{position:absolute;inset:0;width:100%;height:100%;display:block}
+.tail{transform-origin:72.5% 82.4%;animation:wag 1.8s ease-in-out infinite alternate;animation-play-state:paused}
+.stage.wag .tail{animation-play-state:running}
+.stage.excited .tail{animation-duration:.9s}
+@keyframes wag{from{transform:rotate(-7deg)}to{transform:rotate(9deg)}}
+.body{transform-origin:50% 100%;animation:breathe 4.2s ease-in-out infinite}
+@keyframes breathe{50%{transform:scaleY(1.006)}}
+.head{transform-origin:45.5% 33.6%;transition:transform .9s ease-in-out}
+.ear{transition:transform .7s ease-in-out,opacity .6s ease-in-out}
+.earL{transform-origin:30.7% 7.1%} .earR{transform-origin:59.3% 7.1%}
+.up{opacity:0} .stage.alert .up{opacity:1} .stage.alert .down{opacity:0}
+.mouth img{opacity:0;transition:opacity 90ms ease-in-out} .mouth img.on{opacity:1}
+.lids{opacity:0;transition:opacity 90ms ease-in-out} .stage.blink .lids{opacity:1}
+.glow{-webkit-mask:url(parts/iris-mask.webp) 0 0/100% 100% no-repeat;mask:url(parts/iris-mask.webp) 0 0/100% 100% no-repeat;
+  transition:background-color .9s ease-in-out,opacity .9s ease-in-out}
+.glow-c{mix-blend-mode:color;opacity:.45;background:#ffb21e}
+.glow-s{mix-blend-mode:screen;opacity:.35;background:#ffcf4a}
+.charm{transform-origin:45.9% 42%;transition:opacity .6s ease-in-out}
+.charm.sw{animation:swing 2.4s ease-in-out}
+@keyframes swing{25%{transform:rotate(6deg)}60%{transform:rotate(-4deg)}85%{transform:rotate(2deg)}}
+.dye{mix-blend-mode:multiply;transition:background-color .9s ease-in-out,opacity .9s ease-in-out}
+.dye-collar{-webkit-mask:url(parts/collar-mask.webp) 0 0/100% 100%;mask:url(parts/collar-mask.webp) 0 0/100% 100%;opacity:0;mix-blend-mode:color}
+.dye-collar2{mix-blend-mode:screen}   /* the band is dark leather: its colour, and a little lift so it reads */
+.stage.pal .dye-collar{opacity:.95} .stage.pal .dye-collar2{opacity:.32}
+.ctl{display:flex;flex-direction:column;gap:10px;min-width:260px;flex:1}
+.row{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.row b{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);min-width:74px}
+button{font:inherit;font-size:14px;color:var(--ink);background:var(--btn);border:1px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer;
+  transition:transform .5s ease-in-out,border-color .6s ease-in-out,background-color .6s ease-in-out}
+button:hover{transform:translateY(-1px);border-color:var(--accent)}
+button.on{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 18%,var(--btn))}
+input[type=color]{width:36px;height:28px;border:0;background:none;padding:0;cursor:pointer}
+@media (prefers-reduced-motion: reduce){.tail,.body,.charm.sw{animation:none}.head,.ear,.mouth img,.lids,.glow,.charm,.dye,button{transition:none}}
+</style>
+</head>
+<body>
+<h1>Robot Marley preview</h1>
+<p>Her parts from Christian's renders, layered the way GlazyArray's and A.L.T.A.'s are: her head tilts on her neck, each
+ear turns on its own pivot, her tail wags in slow arcs, her eyes glow, and her mouth swaps between her shapes. Not on the
+site yet.</p>
+<div class="wrap">
+  <div class="stage wag" id="st">
+    <img class="tail" src="parts/tail.webp" alt="">
+    <img class="body" src="parts/body.webp" alt="">
+    <div class="grp head" id="head">
+      <img src="parts/head.webp" alt="">
+      <div class="grp mouth" id="mouth"></div>
+      <img class="lids" src="parts/lids.webp" alt="">
+      <i class="glow glow-c" id="gc"></i><i class="glow glow-s" id="gs"></i>
+      <img class="ear earL down" id="eL" src="parts/earL.webp" alt=""><img class="ear earR down" id="eR" src="parts/earR.webp" alt="">
+      <img class="ear earL up" src="parts/earL-up.webp" alt=""><img class="ear earR up" src="parts/earR-up.webp" alt="">
+    </div>
+    <img src="parts/collar.webp" alt=""><i class="dye dye-collar" id="dc"></i><i class="dye dye-collar dye-collar2" id="dc2"></i>
+    <div class="grp charm" id="charm"></div>
+  </div>
+  <div class="ctl">
+    <div class="row"><b>Head</b><button data-tilt="-9">Tilt left</button><button data-tilt="0">Straight</button><button data-tilt="9">Tilt right</button><button id="curious">Curious</button></div>
+    <div class="row"><b>Ears</b><button data-ear="L">Flick left</button><button data-ear="R">Flick right</button><button id="alert">Alert</button></div>
+    <div class="row"><b>Tail</b><button id="wag" class="on">Slow wag</button><button id="excited">Excited</button><button id="still">Still</button></div>
+    <div class="row"><b>Eyes</b><button data-eye="happy" class="on">Happy gold</button><button data-eye="unsure">Dark amber</button><button data-eye="upset">Red</button><button id="blink">Blink</button></div>
+    <div class="row"><b>Mouth</b><button id="talk">Talk</button><button data-m="small">Small</button><button data-m="open">Open</button><button data-m="pant">Happy pant</button><button data-m="closed">Closed</button></div>
+    <div class="row" id="charms"><b>Charm</b></div>
+    <div class="row"><b>Colours</b><button id="own" class="on">Her own</button><label>Collar <input type="color" id="c1" value="#2f8fd8"></label><label>Charm <input type="color" id="c2" value="#e8603c"></label></div>
+  </div>
+</div>
+<script>
+(function () {
+  'use strict';
+  var still = matchMedia('(prefers-reduced-motion: reduce)').matches, st = document.getElementById('st');
+  var $ = function (s) { return document.querySelector(s); }, $$ = function (s) { return [].slice.call(document.querySelectorAll(s)); };
+  function on(group, b) { $$(group).forEach(function (x) { x.classList.toggle('on', x === b); }); }
+  // mouths
+  var M = {}, box = document.getElementById('mouth'), cur = 'closed';
+  ['closed', 'small', 'open', 'pant'].forEach(function (k) { var i = new Image(); i.src = 'parts/mouth-' + k + '.webp'; i.alt = ''; if (k === 'closed') i.className = 'on'; box.appendChild(i); M[k] = i; });
+  function say(k) { if (k === cur) return; M[cur].classList.remove('on'); M[k].classList.add('on'); cur = k; }
+  $$('[data-m]').forEach(function (b) { b.onclick = function () { say(b.dataset.m); }; });
+  document.getElementById('talk').onclick = function () {
+    var seq = [], n = 10 + Math.floor(Math.random() * 6);
+    for (var w = 0; w < n; w++) { seq.push(['small', 'open', 'small', 'open', 'small'][Math.floor(Math.random() * 5)], 'closed'); if (Math.random() < .2) seq.push('closed'); }
+    seq.push('pant', 'closed'); var i = 0;
+    (function next() { if (i >= seq.length) return; say(seq[i++]); setTimeout(next, 130 + Math.random() * 80); })();
+  };
+  // head: a tilt, or curious (tilt, hold while her eyes focus, straighten)
+  var head = document.getElementById('head'), tilt = 0;
+  function setTilt(d) { tilt = d; head.style.transform = 'rotate(' + d + 'deg)'; }
+  $$('[data-tilt]').forEach(function (b) { b.onclick = function () { setTilt(+b.dataset.tilt); }; });
+  document.getElementById('curious').onclick = function () { setTilt(Math.random() < .5 ? -10 : 10); setTimeout(function () { setTilt(0); }, 2600); };
+  // ears: a flick turns one on its pivot and back; alert lifts both
+  function flick(k) { var e = document.getElementById('e' + k); e.style.transform = 'rotate(' + (k === 'L' ? 14 : -14) + 'deg)'; setTimeout(function () { e.style.transform = ''; }, 700); }
+  $$('[data-ear]').forEach(function (b) { b.onclick = function () { flick(b.dataset.ear); }; });
+  document.getElementById('alert').onclick = function () { var a = st.classList.toggle('alert'); this.classList.toggle('on', a); };
+  // tail
+  ['wag', 'excited', 'still'].forEach(function (k) { document.getElementById(k).onclick = function () {
+    st.classList.toggle('wag', k !== 'still'); st.classList.toggle('excited', k === 'excited'); on('#wag,#excited,#still', this); }; });
+  // eyes: gold when she's happy (most of the time), dark amber, red; each fades over .9 s
+  var EY = { happy: ['#ffb21e', '#ffcf4a', .45, .35], unsure: ['#b4570c', '#7a3a06', .7, .15], upset: ['#e0261a', '#ff3b2b', .75, .3] };
+  $$('[data-eye]').forEach(function (b) { b.onclick = function () { var e = EY[b.dataset.eye]; var gc = $('#gc'), gs = $('#gs');
+    gc.style.background = e[0]; gs.style.background = e[1]; gc.style.opacity = e[2]; gs.style.opacity = e[3]; on('[data-eye]', b); }; });
+  function blink(then) { st.classList.add('blink'); setTimeout(function () { st.classList.remove('blink'); if (then) setTimeout(then, 200); }, 140); }
+  document.getElementById('blink').onclick = function () { blink(); };
+  // charms, dyed by the second colour (multiply over the pale brass), each a gentle swing when it changes
+  var CH = ['bone', 'paw', 'heart', 'star', 'pinecone', 'ball', 'bike', 'leaf'].filter(function (k) { return k !== 'heart'; });
+  var ch = document.getElementById('charm'), row = document.getElementById('charms'), pal = false;
+  function charm(k) {
+    ch.innerHTML = '<img src="parts/charm-' + k + '.webp" alt=""><i class="dye" id="dch" style="-webkit-mask:url(parts/charm-' + k + '.webp) 0 0/100% 100%;mask:url(parts/charm-' + k + '.webp) 0 0/100% 100%;opacity:' + (pal ? 1 : 0) + ';background:' + document.getElementById('c2').value + '"></i>';
+    if (!still) { ch.classList.remove('sw'); void ch.offsetWidth; ch.classList.add('sw'); }
+  }
+  CH.forEach(function (k, i) { var b = document.createElement('button'); b.textContent = k; b.dataset.ch = k; if (!i) b.className = 'on'; b.onclick = function () { charm(k); on('[data-ch]', b); }; row.appendChild(b); });
+  charm('bone');
+  // a Note's two colours: the collar band and the charm
+  function colours() { pal = true; st.classList.add('pal'); $('#dc').style.background = $('#dc2').style.background = $('#c1').value; var d = $('#dch'); if (d) { d.style.background = $('#c2').value; d.style.opacity = 1; } document.getElementById('own').classList.remove('on'); }
+  $('#c1').oninput = $('#c2').oninput = colours;
+  document.getElementById('own').onclick = function () { pal = false; st.classList.remove('pal'); var d = $('#dch'); if (d) d.style.opacity = 0; this.classList.add('on'); };
+  // on her own: a blink every few seconds, an ear flick now and then, a curious tilt once in a while
+  if (!still) {
+    (function b() { setTimeout(function () { blink(Math.random() < .2 ? function () { blink(); } : null); b(); }, 3000 + Math.random() * 3500); })();
+    (function f() { setTimeout(function () { flick(Math.random() < .5 ? 'L' : 'R'); f(); }, 6000 + Math.random() * 8000); })();
+  }
+})();
+</script>
+</body>
+</html>
