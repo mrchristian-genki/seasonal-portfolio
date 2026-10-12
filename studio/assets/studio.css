@@ -666,6 +666,14 @@ dialog.pfp::backdrop{background:rgba(20,12,6,.7)}
 .spF input{width:100%}
 .spF .row{gap:10px;align-items:center;flex-wrap:wrap}
 @media (max-width:520px){.spItem{flex-direction:column}.spItem img{width:100%}}
+
+/* a save from a stale page (studio.js staleSave): eases in and out, never snaps */
+#stale{position:fixed;inset:0;z-index:110;display:grid;place-items:center;padding:16px;background:rgba(6,5,3,.55);opacity:0;transition:opacity .8s ease-in-out}
+#stale.on{opacity:1}
+#stale .stale-card{max-width:560px;background:#fbefd2;border:1px solid #e5c47c;border-radius:8px;padding:16px 18px;box-shadow:0 10px 40px rgba(0,0,0,.35);transform:translateY(8px);transition:transform .8s ease-in-out}
+#stale.on .stale-card{transform:none}
+#stale h2{margin:0 0 6px;color:#5c3a0c;font-size:19px} #stale p{margin:0 0 12px;color:#7a5a2a;overflow-wrap:anywhere}
+@media (prefers-reduced-motion:reduce){#stale,#stale .stale-card{transition:none}}
 /* the photo spread panel: one tab per spread when a Note has more than one */
 .spTabs{gap:6px;flex-wrap:wrap;margin:6px 0 10px}
 .spTab{border:1px solid var(--line);background:rgba(255,255,255,.55);color:var(--ink2);border-radius:999px;padding:3px 11px;font:600 13px/1.4 inherit;cursor:pointer;

@@ -5,6 +5,9 @@
    Play and uploads it. Uses a fine-grained token limited to this one repo (Contents: read/write). */
 declare(strict_types=1);
 
+/** A save from a page that loaded an older copy of a file (see GitHub::commit's $expect). */
+final class StaleFile extends RuntimeException {}
+
 final class GitHub
 {
     private string $repo;
@@ -77,17 +80,36 @@ final class GitHub
         return array_map(fn($f) => $f['name'], array_filter(json_decode($raw, true) ?: [], fn($f) => $f['type'] === 'file'));
     }
 
+    /** A file's git blob sha (what `git hash-object` gives), from its bytes: the version of a file a page loaded. */
+    public static function blobSha(?string $bytes): ?string
+    {
+        return $bytes === null ? null : sha1('blob ' . strlen($bytes) . "\0" . $bytes);
+    }
+
+    /** The blob sha of a file at a ref (a branch or a commit), or null if it isn't there. */
+    public function fileSha(string $file, string $ref): ?string
+    {
+        [$code, $raw] = $this->call('GET', "/repos/{$this->repo}/contents/" . $this->encode($file) . '?ref=' . rawurlencode($ref));
+        if ($code === 404) return null;
+        if ($code >= 300) throw new RuntimeException("GitHub $code reading $file");
+        return json_decode($raw, true)['sha'] ?? null;
+    }
+
     /**
      * One commit with several files. $files maps repo path => ['text' => string], ['base64' => string],
      * ['sha' => an uploaded blob]
      * or null to delete the file.
+     * $expect maps repo path => the blob sha the file must still have (null: it must not be there) in the
+     * commit this one goes on top of; if not, nothing is written and it throws StaleFile. With the not-forced
+     * ref update below, nothing can slip in between the check and the commit.
      */
-    public function commit(array $files, string $message, ?string $branch = null): string
+    public function commit(array $files, string $message, ?string $branch = null, array $expect = []): string
     {
         $branch = $branch ?? $this->branch;
         if ($branch !== $this->branch && $this->head($branch) === null) $this->makeBranch($branch);
         $ref = $this->json('GET', "/repos/{$this->repo}/git/ref/heads/" . $this->encode($branch));
         $parent = $ref['object']['sha'];
+        $this->expect($expect, $parent);
         $base = $this->json('GET', "/repos/{$this->repo}/git/commits/$parent");
         $tree = [];
         foreach ($files as $path => $f) {
@@ -100,9 +122,20 @@ final class GitHub
         }
         $newTree = $this->json('POST', "/repos/{$this->repo}/git/trees", ['base_tree' => $base['tree']['sha'], 'tree' => $tree]);
         $commit = $this->json('POST', "/repos/{$this->repo}/git/commits", ['message' => $message, 'tree' => $newTree['sha'], 'parents' => [$parent]]);
-        // Not forced: if someone pushed in between, this fails and the save can simply be retried.
-        $this->json('PATCH', "/repos/{$this->repo}/git/refs/heads/" . $this->encode($branch), ['sha' => $commit['sha'], 'force' => false]);
+        // Not forced: if someone pushed in between, this fails and the save can simply be retried (or, when it
+        // was one of the files expected that changed, says so).
+        [$code, $raw] = $this->call('PATCH', "/repos/{$this->repo}/git/refs/heads/" . $this->encode($branch), ['sha' => $commit['sha'], 'force' => false]);
+        if ($code >= 300) {
+            if ($code === 422 && $expect) $this->expect($expect, $branch);
+            throw new RuntimeException("GitHub $code: " . (json_decode($raw, true)['message'] ?? substr($raw, 0, 200)));
+        }
         return $commit['sha'];
+    }
+    private function expect(array $expect, string $ref): void
+    {
+        foreach ($expect as $path => $sha) {
+            if ($this->fileSha($path, $ref) !== $sha) throw new StaleFile($path);
+        }
     }
 
     // ---- review branches: an editor's saves go to review/<id>, off the live branch, until approved ----

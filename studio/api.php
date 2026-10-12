@@ -283,6 +283,15 @@ function apply_looks(GitHub $gh, array &$files, array $body): void
         $files[LOOKS_JSON] = ['text' => looks_json(array_values($list), $cats, array_values($bds), $bcats, ['categoryRank' => $rank, 'categoryStamp' => $stamp, 'defaults' => $defs, 'categoryNames' => $cnames, 'categoryNarrators' => $cnars, 'tankBackdrops' => $tanks, 'categoryTanks' => $ctanks])];
     }
 }
+// A save from a page holding an older copy of the Note than the repo's: refused, with the copy there now and its
+// version, so the page can offer to put the edits made on it on top (studio.js staleSave).
+const STALE = 'This Note changed since you opened it; reload to get the latest.';
+function note_versions(?string $live, ?string $rev): array { return ['live' => GitHub::blobSha($live), 'review' => GitHub::blobSha($rev)]; }
+function note_stale(GitHub $gh, string $id): never {
+    $live = $gh->read(EVENTS . "/$id.json");
+    $rev = isset(reviews()[$id]) ? $gh->read(EVENTS . "/$id.json", rb($id)) : null;
+    json_out(['error' => STALE, 'stale' => true, 'current' => json_decode($rev ?? $live ?? 'null', true), 'version' => note_versions($live, $rev)], 409);
+}
 function owner_only(): void { if (!studio_is_owner()) json_fail('Only the owner can do that.', 403); }
 // a file of an entry: from its review copy when there is one, else the live one
 function read_either(GitHub $gh, string $id, string $path): ?string {
@@ -342,7 +351,8 @@ try {
             $r = reviews()[$id] ?? null;
             $rev = $r ? $gh->read(EVENTS . "/$id.json", rb($id)) : null;
             if ($raw === null && $rev === null) json_fail('No such entry.', 404);
-            json_out(['entry' => json_decode($rev ?? $raw, true), 'live' => $raw === null ? null : json_decode($raw, true), 'review' => $rev === null ? null : $r]);
+            // version: the blob shas of the copies the page now holds, sent back with its save (POST save checks them)
+            json_out(['entry' => json_decode($rev ?? $raw, true), 'live' => $raw === null ? null : json_decode($raw, true), 'review' => $rev === null ? null : $r, 'version' => note_versions($raw, $rev)]);
 
         // A photo already in the repo, for the editor's thumbnails.
         case 'GET photo':
@@ -402,6 +412,18 @@ try {
             $e = $body['entry'] ?? null;
             if (!is_array($e) || !valid_id((string) ($e['id'] ?? ''))) json_fail('The entry needs a date and a title.');
             $id = $e['id'];
+            // The page saves the whole Note from the copy it loaded. If the repo's copy (live, or waiting for review) has
+            // changed since (a merged PR, another tab), saving would quietly put the older one back: refuse instead.
+            // A page without a version is an old Studio page, also out of date. A new Note's version is null: its id
+            // must still be free.
+            $base = $body['base'] ?? null;
+            if (!is_array($base)) json_fail(STALE, 409);
+            foreach (['live', 'review'] as $k) if (($base[$k] ?? null) !== null && !preg_match('/^[0-9a-f]{40}$/', (string) $base[$k])) json_fail(STALE, 409);
+            $liveRaw = $gh->read(EVENTS . "/$id.json");
+            $inReview = isset(reviews()[$id]);
+            $revRaw = $inReview ? $gh->read(EVENTS . "/$id.json", rb($id)) : null;
+            $ver = note_versions($liveRaw, $revRaw);
+            if ($ver !== ['live' => $base['live'] ?? null, 'review' => $base['review'] ?? null]) note_stale($gh, $id);
             // Photos and clips may only point into this entry's own folder.
             foreach ($e['photos'] ?? [] as $p) {
                 foreach (['src', 'poster'] as $k) {
@@ -458,33 +480,37 @@ try {
             if (!studio_is_owner()) {
                 // An editor can't change what's live: a published note stays published (its update waits
                 // for review), and nothing else can be made published.
-                $live = json_decode($gh->read(EVENTS . "/$id.json") ?? 'null', true);
+                $live = json_decode($liveRaw ?? 'null', true);
                 $wasLive = ($live['status'] ?? '') === 'published';
                 if (!$wasLive && ($e['status'] ?? '') === 'published') json_fail('Only the owner can publish. Save it, and it waits for review.', 403);
                 if ($wasLive) $e['status'] = 'published';
-                $files[EVENTS . "/$id.json"] = ['text' => repo_json($e)];
-                $sha = $gh->commit($files, "Studio ({$me['name']}): Save $id for review", rb($id));
+                $text = repo_json($e);
+                $files[EVENTS . "/$id.json"] = ['text' => $text];
+                // the review copy goes on the review branch, or on a new one made from the live branch
+                $sha = $gh->commit($files, "Studio ({$me['name']}): Save $id for review", rb($id), [EVENTS . "/$id.json" => $inReview ? $ver['review'] : $ver['live']]);
                 set_review($id, ['by' => $me['name'], 'at' => time(), 'state' => 'ready', 'live' => $wasLive]);
                 if (isset($e['source']) && is_string($e['source'])) (new Drive($cfg))->remember($e['source'], $id);
-                json_out(['ok' => true, 'commit' => $sha, 'review' => true]);
+                json_out(['ok' => true, 'commit' => $sha, 'review' => true, 'entry' => $e, 'version' => ['live' => $ver['live'], 'review' => GitHub::blobSha($text)]]);
             }
             // The owner saves to the live branch. A note waiting for review takes its review in first (so
             // the photos the editor added come along), and is then no longer waiting.
-            if (isset(reviews()[$id])) {
+            if ($inReview) {
                 if (!$gh->mergeIn(rb($id), "Studio: take in the review of $id")) json_fail('The review copy and the live note both changed the same thing. Ask for it in a Claude Code session to merge by hand.', 409);
             }
             // the moment it first goes live: Play orders the Notes of one day by it, newest first
             if (($e['status'] ?? '') === 'published' && !preg_match('/T/', (string) ($e['publishedAt'] ?? ''))) {
-                $live = json_decode($gh->read(EVENTS . "/$id.json") ?? 'null', true);
+                $live = json_decode($liveRaw ?? 'null', true);
                 $e['publishedAt'] = (($live['status'] ?? '') === 'published' && preg_match('/T/', (string) ($live['publishedAt'] ?? ''))) ? $live['publishedAt'] : gmdate('Y-m-d\TH:i:s\Z');
             }
-            $files[EVENTS . "/$id.json"] = ['text' => repo_json($e)];
+            $text = repo_json($e);
+            $files[EVENTS . "/$id.json"] = ['text' => $text];
             $what = ($e['status'] ?? '') === 'published' ? 'Publish' : 'Save';
-            $sha = $gh->commit($files, "Studio: $what $id");
-            if (isset(reviews()[$id])) { $gh->deleteBranch(rb($id)); set_review($id, null); }
+            // (after taking in a review the live copy is the merge of the two, both checked above)
+            $sha = $gh->commit($files, "Studio: $what $id", null, $inReview ? [] : [EVENTS . "/$id.json" => $ver['live']]);
+            if ($inReview) { $gh->deleteBranch(rb($id)); set_review($id, null); }
             // a note made from an inbox folder: remember which, so the folder shows it's done
             if (isset($e['source']) && is_string($e['source'])) (new Drive($cfg))->remember($e['source'], $id);
-            json_out(['ok' => true, 'commit' => $sha]);
+            json_out(['ok' => true, 'commit' => $sha, 'entry' => $e, 'version' => ['live' => GitHub::blobSha($text), 'review' => null]]);
 
         case 'POST draft':
             @set_time_limit(240);
@@ -599,16 +625,16 @@ try {
             owner_only();
             $ids = array_values(array_filter((array) ($body['ids'] ?? []), fn($x) => is_string($x) && valid_id($x)));
             if (!$ids) json_fail('No projects to order.');
-            $files = [];
+            $files = []; $expect = [];
             foreach ($ids as $i => $id) {
-                $e = json_decode($gh->read(EVENTS . "/$id.json") ?? 'null', true);
+                $raw = $gh->read(EVENTS . "/$id.json"); $e = json_decode($raw ?? 'null', true);
                 if (!is_array($e) || !is_array($e['workshop'] ?? null)) continue;
                 if ((int) ($e['workshop']['order'] ?? 0) === $i + 1) continue;
                 $e['workshop']['order'] = $i + 1;
-                $files[EVENTS . "/$id.json"] = ['text' => repo_json($e)];
+                $files[EVENTS . "/$id.json"] = ['text' => repo_json($e)]; $expect[EVENTS . "/$id.json"] = GitHub::blobSha($raw);
             }
             if (!$files) json_out(['ok' => true, 'commit' => null]);
-            json_out(['ok' => true, 'commit' => $gh->commit($files, 'Studio: the Workshop order')]);
+            json_out(['ok' => true, 'commit' => $gh->commit($files, 'Studio: the Workshop order', null, $expect)]);
 
         case 'POST looks':
             owner_only();
@@ -653,6 +679,10 @@ try {
         default:
             json_fail('Unknown request.', 404);
     }
+} catch (StaleFile $s) {
+    // the Note changed between the check above and the commit
+    if ($action === 'save' && preg_match('#^' . EVENTS . '/(.+)\.json$#', $s->getMessage(), $m) && valid_id($m[1])) note_stale($gh, $m[1]);
+    json_fail('A Note changed while this was saving. Try again.', 409);
 } catch (Throwable $t) {
     error_log('studio: ' . $t->getMessage());
     json_fail($t->getMessage(), 500);
