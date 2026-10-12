@@ -19,7 +19,8 @@
   // a part's place in her frame, and (ox, oy: shares of the frame) the point it turns about, made relative to its box
   function at(g, ox, oy) {
     var b = BOX[g]; if (!b) return '';
-    return ' style="left:' + pct(b[0], FW) + ';top:' + pct(b[1], FH) + ';width:' + pct(b[2], FW) + ';height:' + pct(b[3], FH) +
+    // (right, bottom and margin pinned too: a page's own picture styles, like a Note's centred images, can't move it)
+    return ' style="left:' + pct(b[0], FW) + ';top:' + pct(b[1], FH) + ';right:auto;bottom:auto;margin:0;max-width:none;max-height:none;width:' + pct(b[2], FW) + ';height:' + pct(b[3], FH) +
       (ox != null ? ';transform-origin:' + pct(ox * FW - b[0], b[2]) + ' ' + pct(oy * FH - b[1], b[3]) : '') + '"';
   }
   var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
