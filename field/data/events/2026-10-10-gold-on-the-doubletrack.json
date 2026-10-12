@@ -2143,5 +2143,10 @@
   "facts": false
  },
  "paletteBy": "hand",
- "publishedAt": "2026-10-10T20:44:36Z"
+ "publishedAt": "2026-10-10T20:44:36Z",
+ "narratorBackdrop": {
+  "backdrop": "foliage",
+  "fit": "new",
+  "scene": "a small bike shop garage with mountain bikes hanging on a wall rack, tools on a pegboard and a wooden workbench"
+ }
 }
