@@ -24,8 +24,10 @@
 .mly-lids{opacity:0;transition:opacity 90ms ease-in-out} .mly.blink .mly-lids{opacity:1}
 .mly-glow{-webkit-mask:url(/assets/marley/parts/iris-mask.webp) 0 0/100% 100% no-repeat;mask:url(/assets/marley/parts/iris-mask.webp) 0 0/100% 100% no-repeat;
   transition:background-color .9s ease-in-out,opacity .9s ease-in-out}
-.mly-glow-c{mix-blend-mode:color;opacity:.45;background:#ffb21e}
-.mly-glow-s{mix-blend-mode:screen;opacity:.35;background:#ffcf4a}
+/* her lenses' own amber; a mood fades a tint in (js/marley.js EYES): a warm gold when she's happy, red when she's upset */
+.mly-glow-g{mix-blend-mode:overlay;opacity:0;background:#ffb000}
+.mly-glow-c{mix-blend-mode:color;opacity:0;background:#e0261a}
+.mly-glow-s{mix-blend-mode:screen;opacity:0;background:#ff3b2b}
 .mly-charm{transform-origin:45.9% 42%}
 .mly-charm.sw{animation:mly-swing 2.4s ease-in-out}
 @keyframes mly-swing{25%{transform:rotate(6deg)}60%{transform:rotate(-4deg)}85%{transform:rotate(2deg)}}

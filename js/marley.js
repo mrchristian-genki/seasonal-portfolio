@@ -16,7 +16,10 @@
   var MOVES = [['wag', 'A happy wag'], ['down', 'Lie down'], ['stand', 'Stand and look'], ['tilt', 'Tilt and wink']];
   var CHARMS = ['bone', 'heart', 'paw', 'star', 'pinecone', 'ball', 'bike', 'leaf'];
   var DYE = { leaf: 0 }, OWN = { ball: '#f1eee6' };   // the leaf has no cyan render yet; her own white ball is the cyan cut dyed white
-  var EYES = { happy: ['#ffb21e', '#ffcf4a', 0.45, 0.35], unsure: ['#b4570c', '#7a3a06', 0.7, 0.15], upset: ['#e0261a', '#ff3b2b', 0.75, 0.3] };
+  // her lenses: their own amber unless a mood tints them (Christian, Oct 12: a softer gold, amber as her normal)
+  // [gold overlay, red colour, red screen] opacities, each layer fading on its own
+  var EYES = { amber: [0, 0, 0], happy: [0.55, 0, 0], upset: [0, 0.7, 0.26] };
+  EYES.unsure = EYES.amber;
   var rnd = function (a, b) { return a + Math.random() * (b - a); };
   var mask = function (u) { return '-webkit-mask:url(' + u + ') 0 0/100% 100%;mask:url(' + u + ') 0 0/100% 100%;'; };
 
@@ -58,7 +61,7 @@
       '<img class="mly-body" src="' + P + 'body.webp' + V + '" alt="">' +
       '<div class="mly-g mly-head"><img src="' + P + 'head.webp' + V + '" alt=""><div class="mly-g mly-mouth">' +
         ['closed', 'small', 'open', 'pant'].map(function (k) { return '<img data-m="' + k + '" src="' + P + 'mouth-' + k + '.webp' + V + '" alt=""' + (k === 'closed' ? ' class="on"' : '') + '>'; }).join('') + '</div>' +
-        '<img class="mly-lids" src="' + P + 'lids.webp' + V + '" alt=""><i class="mly-glow mly-glow-c"></i><i class="mly-glow mly-glow-s"></i>' +
+        '<img class="mly-lids" src="' + P + 'lids.webp' + V + '" alt=""><i class="mly-glow mly-glow-g"></i><i class="mly-glow mly-glow-c"></i><i class="mly-glow mly-glow-s"></i>' +
         '<img class="mly-ear mly-earL mly-down" src="' + P + 'earL.webp' + V + '" alt=""><img class="mly-ear mly-earR mly-down" src="' + P + 'earR.webp' + V + '" alt="">' +
         '<img class="mly-ear mly-earL mly-up" src="' + P + 'earL-up.webp' + V + '" alt=""><img class="mly-ear mly-earR mly-up" src="' + P + 'earR-up.webp' + V + '" alt=""></div>' +
       '<img src="' + P + 'collar.webp' + V + '" alt=""><i class="mly-dc"></i><i class="mly-dc mly-dc2"></i>' +
@@ -68,7 +71,7 @@
     var bd = el.getAttribute('data-bd');
     if (bd && /^\/assets\/[\w.\/-]+\.(webp|jpg|png)(\?v=[\w-]+)?$/.test(bd)) { st.classList.add('has-bd'); st.style.backgroundImage = 'radial-gradient(ellipse at 50% 95%,rgba(0,0,0,.28),transparent 42%),url(' + bd + ')'; }
     var q = function (s) { return st.querySelector(s); };
-    var head = q('.mly-head'), ch = q('.mly-charm'), gc = q('.mly-glow-c'), gs = q('.mly-glow-s');
+    var head = q('.mly-head'), ch = q('.mly-charm'), gg = q('.mly-glow-g'), gc = q('.mly-glow-c'), gs = q('.mly-glow-s');
     var eL = q('.mly-earL.mly-down'), eR = q('.mly-earR.mly-down');
 
     // mouth
@@ -87,7 +90,7 @@
     function tilt(d) { head.style.transform = d ? 'rotate(' + d + 'deg)' : ''; }
     function flick(k) { var e = k === 'L' ? eL : eR; e.style.transform = 'rotate(' + (k === 'L' ? 14 : -14) + 'deg)'; setTimeout(function () { e.style.transform = ''; }, 700); }
     function blink() { el.classList.add('blink'); setTimeout(function () { el.classList.remove('blink'); }, 140); }
-    function eyes(m) { var e = EYES[m] || EYES.happy; gc.style.background = e[0]; gs.style.background = e[1]; gc.style.opacity = e[2]; gs.style.opacity = e[3]; }
+    function eyes(m) { var e = EYES[m] || EYES.amber; gg.style.opacity = e[0]; gc.style.opacity = e[1]; gs.style.opacity = e[2]; }
 
     // collar and charm: her own, or a Note's two colours (the charm's dyed face cross-fades in over her own)
     var pal = null, chK = '';
@@ -136,9 +139,35 @@
       setTimeout(function () { var p = vid.play(); if (p && p.catch) p.catch(function () { moving = ''; mark(); plan(); }); }, 300);
     }
     // in a Listen bar (a Note she narrates): she talks along while the episode plays, and her moves wait for it
-    var bar = el.closest && el.closest('section.listen'), au = bar && bar.querySelector('audio'), chatT;
-    function chat() { clearTimeout(chatT); if (!au || au.paused || au.ended) { say('closed'); return; } say(['small', 'open', 'small', 'closed', 'open', 'small'][Math.floor(Math.random() * 6)]); chatT = setTimeout(chat, 110 + Math.random() * 90); }
-    if (au) { au.addEventListener('play', chat); ['pause', 'ended'].forEach(function (k) { au.addEventListener(k, function () { clearTimeout(chatT); say('closed'); }); }); }
+    var bar = el.closest && el.closest('section.listen'), au = bar && bar.querySelector('audio');
+    // her mouth follows the voice itself (as A.L.T.A.'s does): Web Audio measures how loud it is each frame, so she only
+    // opens her mouth when there's sound, never ahead of it while the episode is still loading
+    var ctx = null, an = null, td = null, talking = false, raf = 0, level = 0, lastSwap = 0;
+    function listen() {
+      if (an || !(window.AudioContext || window.webkitAudioContext)) return;
+      try {
+        ctx = new (window.AudioContext || window.webkitAudioContext)();
+        var src = ctx.createMediaElementSource(au);
+        an = ctx.createAnalyser(); an.fftSize = 1024; td = new Uint8Array(an.fftSize);
+        src.connect(an); an.connect(ctx.destination);
+      } catch (e) { an = null; }
+    }
+    function tick(now) {
+      var v = 0;
+      if (an) { an.getByteTimeDomainData(td); var s = 0; for (var i = 0; i < td.length; i += 4) { var d = (td[i] - 128) / 128; s += d * d; } v = Math.min(1, Math.max(0, (Math.sqrt(s / (td.length / 4)) - 0.015) * 5)); }
+      else if (talking && !au.paused && au.currentTime > 0) v = 0.3 + 0.3 * Math.sin(now / 90) * Math.sin(now / 233);
+      level += (v - level) * (v > level ? 0.6 : 0.3);
+      if (now - lastSwap > 85) { lastSwap = now; say(level < 0.07 ? 'closed' : level > 0.42 ? 'open' : 'small'); }
+      if (talking || level > 0.01) raf = requestAnimationFrame(tick); else { raf = 0; say('closed'); }
+    }
+    if (au) {
+      au.addEventListener('play', function () {
+        listen(); if (ctx && ctx.state === 'suspended') ctx.resume();
+        if (moving) done();   // mid-move: she comes back to sit and talk
+        talking = true; if (!raf) raf = requestAnimationFrame(tick);
+      });
+      ['pause', 'ended'].forEach(function (k) { au.addEventListener(k, function () { talking = false; }); });
+    }
     function plan() {
       clearTimeout(moveT); if (still || !cv) return;
       moveT = setTimeout(function () {
@@ -171,7 +200,7 @@
         box.appendChild(r);
       };
       if (cv) row('Moves', MOVES, move);
-      row('Eyes', [['happy', 'Happy gold', 1], ['unsure', 'Dark amber'], ['upset', 'Red']], eyes, true);
+      row('Eyes', [['amber', 'Amber', 1], ['happy', 'Happy gold'], ['upset', 'Red']], eyes, true);
       row('Head', [['curious', 'Curious tilt'], ['alert', 'Ears up'], ['talk', 'Talk'], ['blink', 'Blink']], function (k) {
         if (moving) return;
         if (k === 'curious') { tilt(Math.random() < 0.5 ? -10 : 10); setTimeout(function () { tilt(0); }, 2600); }

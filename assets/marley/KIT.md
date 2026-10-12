@@ -92,8 +92,8 @@ need her whole body (the play-bow, lying down) are video clips that start and en
 > Same image, exactly as it is. Change only her eyes: she closes them gently, a soft golden-brown lid panel with a
 > fine seam lowered over each lens, relaxed. Nothing else changes.
 
-The glow is code: a bright, warm gold when she's happy (most of the time), dark amber when she's unsure, red when
-she's upset, each fading over about a second.
+The glow is code (Christian, Oct 12): her lenses' own amber is her normal look; a soft gold tint fades in when she's
+happy, and red when she's upset. Each fades over .9 s.
 
 ## 3. Her muzzle: five shapes
 
