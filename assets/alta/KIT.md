@@ -28,6 +28,12 @@ separate layer on her neck collar, like GlazyArray's, so no clip ever has to kee
 ## Rules for every prompt
 
 - **Paste her description first** (below), then the part's own prompt.
+- **The copper ledge is solid** (Christian, Oct 12). Nothing passes through it. Her hands and arms rest on it or
+  move in front of it; to get below it she goes up, over the top and down behind it, and the ledge always stays in
+  front of her. Some clips had her cut straight through it as if it weren't there: add this line to every prompt
+  with her near the ledge:
+
+> The copper ledge is a solid metal bar fixed across the tank: nothing ever passes through it. Her arms and hands stay on top of it or in front of it; to go below it she goes up and over the top and down behind it, so the ledge always stays in front of her body.
 - **References:** give the tool the clean turnaround (the one **without labels**) and the close-up of her face. Never
   the labelled turnaround: its words end up in the picture.
 - **Head parts are edits, not new renders.** Prompts 2 to 4 each edit the image prompt 1 made: the same image, only
@@ -298,8 +304,8 @@ the ledge, graded to the tank's water, with a few bubbles rising from her crown.
 frame** `alta-under.jpg`.
 
 > She lets go of the copper ledge and sinks straight down behind it into the water, smoothly and slowly, as if
-> exhaling: her hands slide off the ledge first, then her shoulders, then her head, and her crown passes below the
-> ledge last. By the middle of the clip her whole head, crown and hair are under the water and stay under; she does
+> exhaling: her hands lift up off the top of the ledge and back over it first (never through it), then her shoulders,
+> then her head, and her crown passes below the ledge last, the solid ledge staying in front of her all the way down. By the middle of the clip her whole head, crown and hair are under the water and stay under; she does
 > not come back up in this clip. She drifts down to hover close to the front glass, facing the camera. Weightless,
 > eased motion, no jitter; a few small bubbles rise in the water and stop at its surface, never above the copper
 > ledge. Locked camera. The tank, ledge, rocks, logs and hall stay exactly as they are.
@@ -307,7 +313,8 @@ frame** `alta-under.jpg`.
 **If your tool can't take a last frame,** use this instead, from the still alone:
 
 > A slow, smooth clip from this exact image. Locked camera, no zoom or pan. In the first two seconds she lets go of the
-> copper ledge. From second two to second five she sinks straight down behind the ledge until her whole body, head,
+> copper ledge, lifting her hands up and back over its top (never through it). From second two to second five she
+> sinks straight down behind the ledge, the solid ledge staying in front of her, until her whole body, head,
 > crown and hair are completely under the water, below the ledge. For the last three seconds the copper ledge is empty,
 > with nothing of her above it, and she hovers underwater close to the front glass, facing the camera, her tail gently
 > sculling. She does not rise again or return to the ledge in this clip. Weightless, eased motion, no jitter; a few
@@ -347,7 +354,8 @@ closest to the start and cross-fades the seam.
 
 > Locked camera, no zoom or pan. Slow, weightless, eased motion with no jitter; her tail sweeps in long smooth arcs
 > and her crown and hair drift softly in the water. She stays in the water the whole clip, below the surface, and never
-> goes above the copper ledge, behind the rocks, or out of frame. Bubbles only in the water: they rise and stop at the
+> goes above the copper ledge, behind the rocks, or out of frame. The copper ledge is a solid bar in front of her:
+> she never passes through it, and it always stays in front of her body. Bubbles only in the water: they rise and stop at the
 > water's surface. Above the copper ledge is air: nothing there changes, no bubbles, no splashes, no spray. The tank,
 > rocks, logs, ledge and hall stay exactly as they are. The same character exactly: same face, eyes, crown, hair, body
 > and tail. She ends exactly where she started, hovering close to the front glass, facing the camera.
@@ -463,7 +471,8 @@ exactly like Round 2's, so **the same rules, stricter:**
 > with a soft closed smile. Only her forearms and hands move, slowly and gracefully, with eased motion and no jitter.
 > Her hands stay low and close: never above her shoulders, never near her face, head or neck, never below the copper
 > ledge, and never further out to the sides than her elbows. Five articulated copper fingers on each hand, bending
-> only at the joints. Below the ledge her tail keeps sculling gently; the water, the fish and the hall carry on.
+> only at the joints. The copper ledge is a solid metal bar: her hands and arms rest on it or move in front of it and
+> never pass through it. Below the ledge her tail keeps sculling gently; the water, the fish and the hall carry on.
 
 | File | The gesture |
 |---|---|
@@ -536,5 +545,6 @@ the hall.
 - **The crown is cut off:** in prompt 1, ask for "more green above the crown, the head a little smaller in frame".
 - **Extra fingers or melting hands:** shorten the clip, and ask for the hand to stay closer to the ledge.
 - **The tail jerks:** add "slow-motion, neutral buoyancy, the fluke sweeps in one long smooth arc".
+- **She goes through the copper ledge:** add "The copper ledge is a solid metal bar fixed across the tank: nothing ever passes through it. Her arms and hands stay on top of it or in front of it; to go below it she goes up and over the top and down behind it, so the ledge always stays in front of her body." Claude can't fix a clip that passes through it; make it again.
 - **Bubbles above the copper ledge:** add "above the copper ledge is air: no bubbles, no splashes, nothing moves there".
 - **Words or symbols appear on her etchings:** add "the etchings are plain geometric lines: no letters, no symbols".
