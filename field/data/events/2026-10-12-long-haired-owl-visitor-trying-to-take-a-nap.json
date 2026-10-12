@@ -37,7 +37,7 @@
    "w": 1594,
    "h": 897,
    "use": "post",
-   "cover": false,
+   "cover": true,
    "from": "IMG_7808.JPG"
   },
   {
@@ -81,7 +81,7 @@
    "w": 960,
    "h": 960,
    "use": "post",
-   "cover": true,
+   "cover": false,
    "from": "owl-3.mov",
    "range": [
     0,
@@ -119,8 +119,8 @@
  "questions": [],
  "consent": "",
  "palette": [
-  "#a4b234",
-  "#85d05d"
+  "#69c4d3",
+  "#b27f34"
  ],
  "narratorBackdrop": {
   "backdrop": "foliage",
