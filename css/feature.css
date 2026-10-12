@@ -65,6 +65,8 @@
 .feature .mag-qa dd{align-self:flex-end;margin-right:46px;background:#0f4d47;color:#fff;border-bottom-right-radius:5px;box-shadow:0 6px 14px -10px rgba(15,77,71,.8)}
 .feature .mag-qa dd::after{content:"";position:absolute;right:-46px;bottom:0;width:36px;height:36px;border-radius:50%;
   background:#0b3b37 url(/assets/narrator/ga-avatar.jpg) center/cover;box-shadow:0 0 0 2px #f4efe4,0 0 0 3px #c9a14a}
+/* a Q&A its subject answers herself (e.feature.qa.who): her face in the circles instead of GlazyArray's */
+.feature .mag-qa.qa-marley dd::after{background-image:url(/assets/marley/marley-avatar.jpg)}
 @media (max-width:520px){.feature .mag-qa dt,.feature .mag-qa dd{max-width:88%}.feature .mag-qa{padding:22px 14px}}
 .feature .mag-spot{margin:0 0 30px;padding:18px 20px;border:2px solid var(--mg-ink);border-radius:4px}
 .feature .mag-spot h2{font:900 22px/1 var(--mg-serif);text-transform:uppercase;letter-spacing:.08em;margin:0 0 12px;color:var(--mg-red)}
@@ -326,13 +328,27 @@ html.night-page .feature.mag-colcobble .mag-box{background:#241c1d}
 .feature.mag-hiddenlayer .mag-steps li::before{background:linear-gradient(135deg,#6c3bff,#00b3a4)}
 html.night-page .feature.mag-hiddenlayer{--mg-red:#9a7bff}
 
-/* BRUSH ENGINE (digital art): charcoal and canvas with a warm painted accent; a wide expressive display face */
+/* BRUSH ENGINE (digital art): charcoal and canvas with a warm painted accent. Its cover reads like the digital art
+   magazines on the rack (Oct 12, 2026): a tight, heavy sans masthead set in one line, its two words in two colours and
+   closed up; the tagline above it in condensed caps; cover lines in condensed caps under an "Inside this issue" tab */
 .feature.mag-brushengine{--mg-ink:#1c1c21;--mg-ink2:#46464f;--mg-ink3:#7a7a84;--mg-red:#e8603c;--mg-gold:#ffd6a0;--mg-rule:#1c1c21;
-  --mg-serif:"Syne","Avenir Next","Helvetica Neue",Arial,sans-serif;--mg-text:"Work Sans","Helvetica Neue",Arial,sans-serif;--mg-sans:"Work Sans","Helvetica Neue",Arial,sans-serif}
+  --mg-serif:"Inter Tight","Helvetica Neue","Arial Black",Arial,sans-serif;--mg-text:"Work Sans","Helvetica Neue",Arial,sans-serif;--mg-sans:"Work Sans","Helvetica Neue",Arial,sans-serif;
+  --mg-cond:"Oswald","Roboto Condensed","Arial Narrow","Helvetica Neue",sans-serif;--be-hot:#ff5a36}
 .feature.mag-brushengine .mag-cover{background:#1c1c21}
-.feature.mag-brushengine .mag-mast{font:800 clamp(30px,8.6vw,82px)/.88 var(--mg-serif);letter-spacing:-.01em}
+.feature.mag-brushengine .mag-cover::after{background:linear-gradient(180deg,rgba(10,10,14,.62) 0,rgba(10,10,14,0) 34%),linear-gradient(90deg,rgba(10,10,14,0) 58%,rgba(10,10,14,.5) 100%)}
+.feature.mag-brushengine .mag-top{top:3.5%;gap:0}
+.feature.mag-brushengine .mag-mast{display:flex;flex-wrap:nowrap;font:900 clamp(40px,9.6vw,112px)/.84 var(--mg-serif);letter-spacing:-.05em;text-transform:none;color:#fff;text-shadow:0 2px 18px rgba(0,0,0,.3)}
+.feature.mag-brushengine .mag-mast span{display:inline-block;text-transform:lowercase}
+.feature.mag-brushengine .mag-mast span::first-letter{text-transform:uppercase}
+.feature.mag-brushengine .mag-mast span+span{color:var(--be-hot)}
+.feature.mag-brushengine .mag-tag{order:-1;margin:0 0 .5em;padding:0 0 0 .2em;font:600 clamp(10px,1.5vw,16px)/1.2 var(--mg-cond);font-style:normal;letter-spacing:.08em;text-transform:uppercase;color:#fff}
+.feature.mag-brushengine .mag-issue{font:600 clamp(11px,1.5vw,15px)/1.2 var(--mg-cond);letter-spacing:.08em}
+.feature.mag-brushengine .mag-lines{top:27%;width:37%;gap:clamp(5px,1vw,11px)}
+.feature.mag-brushengine .mag-lines::before{content:"Inside this issue";align-self:flex-end;padding:3px 9px;background:var(--be-hot);font:600 clamp(10px,1.3vw,14px)/1.2 var(--mg-cond);letter-spacing:.06em;text-transform:uppercase;color:#fff}
+.feature.mag-brushengine .mag-lines li{font:500 clamp(12px,1.6vw,18px)/1.1 var(--mg-cond);letter-spacing:.01em;text-transform:uppercase;text-shadow:0 1px 10px rgba(0,0,0,.6)}
+.feature.mag-brushengine .mag-lines li:first-child{font:700 clamp(15px,2.3vw,27px)/1.02 var(--mg-cond);font-style:normal;letter-spacing:0;color:var(--mg-gold)}
 .feature.mag-brushengine .mag-issue{background:linear-gradient(90deg,#e8603c,#c13b8a)}
-.feature.mag-brushengine .mag-head h1{font-weight:800;letter-spacing:-.02em}
+.feature.mag-brushengine .mag-head h1{font-weight:800;letter-spacing:-.035em}
 .feature.mag-brushengine .mag-deck{font-style:normal}
 .feature.mag-brushengine .post>p{font-size:17.5px;line-height:1.75}
 .feature.mag-brushengine .post>p:first-child::first-letter{font-weight:800;color:var(--mg-red)}
