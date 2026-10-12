@@ -5,6 +5,7 @@
 .mly-st{position:relative;width:100%;aspect-ratio:600/738;overflow:hidden;border-radius:16px;
   background:radial-gradient(ellipse at 50% 95%,rgba(0,0,0,.2),transparent 42%),linear-gradient(#cfe3d0,#ece5d4)}
 .mly-st img,.mly-st i,.mly-st .mly-g,.mly-st canvas{position:absolute;inset:0;width:100%;height:100%;display:block;margin:0;max-width:none;border:0;border-radius:0;box-shadow:none}
+.mly-st.has-bd{background-size:cover,cover;background-position:center,center}
 .mly-parts{position:absolute;left:6.6667%;top:1.355%;width:93.3333%;height:98.645%;transition:opacity .6s ease-in-out}
 .mly-st.moving .mly-parts{opacity:0}
 .mly-mv{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
