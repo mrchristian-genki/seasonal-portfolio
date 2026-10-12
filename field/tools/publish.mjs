@@ -246,6 +246,7 @@ for (const e of events) {
   const coverStrip = cover && photos[photos.indexOf(cover) + 1] && photos[photos.indexOf(cover) + 1].strip ? photos[photos.indexOf(cover) + 1] : null;
   const FB = (e.feature && e.feature.masthead && Array.isArray(e.feature.blocks)) ? e.feature.blocks : [];
   const held = new Set(FB.flatMap((b) => [b.photo].concat((b.type === 'steps' && b.items || []).map((x) => x.photo))).filter(Boolean));   // pictures a feature's block shows inside itself
+  ((e.feature && e.feature.lookbook && e.feature.lookbook.items) || []).forEach((x) => held.add(path.basename(String(x.src || ''))));   // and its photo spread
   const ps = paras(e.post && e.post.body), table = photos.filter((p) => p.table), loose = photos.filter((p) => p !== cover && p !== coverStrip && !p.table && !p.at && !held.has(p.file));
   const tall = (p) => p.w && p.h && p.h > p.w * 1.1;
   const inline = [];

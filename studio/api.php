@@ -408,6 +408,12 @@ try {
                     if (isset($p[$k]) && !preg_match('#^data/photos/' . preg_quote($id, '#') . '/[a-z0-9-]{1,40}\.(jpg|mp4)$#', (string) $p[$k])) json_fail('A photo path is outside this entry.');
                 }
             }
+            // the photo spread (feature.lookbook) too, and its pictures keep their files even when they leave the photo list
+            $spread = [];
+            foreach (($e['feature']['lookbook']['items'] ?? []) as $x) {
+                if (!preg_match('#^data/photos/' . preg_quote($id, '#') . '/([a-z0-9-]{1,40}\.jpg)$#', (string) ($x['src'] ?? ''), $sm)) json_fail('A photo spread picture is outside this entry.');
+                $spread[$sm[1]] = true;
+            }
             $files = [];
             foreach ($body['newPhotos'] ?? [] as $p) {
                 $n = (string) ($p['name'] ?? ''); $sha = (string) ($p['sha'] ?? '');
@@ -426,7 +432,7 @@ try {
                 if (!isset($files[PHOTOS . "/$id/$n.jpg"])) $files[PHOTOS . "/$id/$n.jpg"] = ['sha' => $gh->blob(base64_encode((string) file_get_contents($jpg)))];
             }
             foreach ($body['removePhotos'] ?? [] as $n) {
-                if (preg_match('/^[a-z0-9-]{1,40}\.(jpg|mp4)$/', (string) $n)) $files[PHOTOS . "/$id/$n"] = null;
+                if (preg_match('/^[a-z0-9-]{1,40}\.(jpg|mp4)$/', (string) $n) && !isset($spread[(string) $n])) $files[PHOTOS . "/$id/$n"] = null;
             }
             // The episode's audio lives at one place per entry, and only there.
             $audio = $e['episode']['audio'] ?? null;

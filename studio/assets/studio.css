@@ -658,3 +658,11 @@ dialog.pfp::backdrop{background:rgba(20,12,6,.7)}
 /* who narrates a category's Notes (studio.js renderCats): a narrow column beside its look and backdrop */
 .panel.cats .catl .catc:has(select[data-catnar]){flex:0 1 150px}
 .panel.cats .catnd{flex:0 0 260px;margin:0}
+/* the photo spread (feature.lookbook): each picture with its name and line, and its order */
+.spItems{display:flex;flex-direction:column;gap:8px;margin:10px 0}
+.spItem{display:flex;gap:10px;align-items:flex-start;padding:8px;border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.5)}
+.spItem img{width:120px;aspect-ratio:16/9;object-fit:cover;border-radius:6px;flex:none;background:var(--line)}
+.spF{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
+.spF input{width:100%}
+.spF .row{gap:10px;align-items:center;flex-wrap:wrap}
+@media (max-width:520px){.spItem{flex-direction:column}.spItem img{width:100%}}
