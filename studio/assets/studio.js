@@ -834,6 +834,7 @@
       (trackTop ? fold('track', 'Track', E.track ? 'on the map' : '', !isLive, '<div id="track"></div>') : '') +
       fold('loops', 'Video loops', '', false, '<div id="loopBox"></div>') +
       fold('magazine', 'Magazine template', magHint(), false, '<div id="magBox"></div>') +
+      fold('spread', 'Photo spread', spreadHint(), false, '<div id="spreadBox"></div>') +
       fold('feature', 'Workshop feature', E.workshop ? (E.workshop.name || 'on the Workshop tab') : 'not a feature', false, '<div id="featBox"></div>') +
       (later ? fold('more', 'Add more', 'photos' + (trackTop ? '' : ', a track'), false, '<p class="muted">Only if you want to add to what\'s here.</p>' + (trackTop ? '' : '<h3>Track</h3><div id="track"></div>') + '<h3>Photos</h3>' + dropPhotos) : '') +
       '<footer class="savebar"><span id="saveState" class="muted">' + (E.id ? 'Saved' : 'Not saved yet') + '</span>' +
@@ -1637,7 +1638,9 @@
         collect();
         var i = +d.getAttribute('data-i'), p = E.photos[i], n = photoName(p);
         if (p.poster) delete posterNew[p.poster.split('/').pop()];
-        if (fresh[n]) delete fresh[n]; else if (clipsNew[n]) delete clipsNew[n]; else { removed.push(n); if (p.poster) removed.push(p.poster.split('/').pop()); }
+        // a picture the photo spread still shows keeps its file (it leaves the photo list, not the spread)
+        var inSpread = function (m) { return spreadItems().some(function (x) { return x.src.split('/').pop() === m; }); };
+        if (fresh[n]) { if (!inSpread(n)) delete fresh[n]; } else if (clipsNew[n]) delete clipsNew[n]; else { if (!inSpread(n)) removed.push(n); if (p.poster && !inSpread(p.poster.split('/').pop())) removed.push(p.poster.split('/').pop()); }
         E.photos.splice(i, 1);
         if (SWAP && SWAP.name === n) { SWAP = null; renderSwapBar(); }
         if (E.workshop && E.workshop.media) E.workshop.media = E.workshop.media.filter(function (x) { return x.note || featFind(x); });
@@ -1654,7 +1657,7 @@
           .then(function (b) { v.src = URL.createObjectURL(b); v.play(); }).catch(function () { toast('Couldn\'t load that clip.', true); });
       };
     });
-    renderFeature(); renderMag();
+    renderFeature(); renderMag(); renderSpread();
   }
 
   // ---------- the Workshop feature: this Note as one of the big projects on the Workshop tab (E.workshop). The
@@ -1746,6 +1749,57 @@
     callouts: 'A picture with numbered callouts', steps: 'Numbered steps', timeline: 'A timeline', code: 'A code or prompt block', qa: 'A Q&A', spotted: 'A Spotted box' };
   function mags() { return (CFG && CFG.magazines) || []; }
   function magOf(F) { var id = F && F.theme || 'riveting'; return mags().filter(function (t) { return t.id === id; })[0] || null; }
+  // THE PHOTO SPREAD (feature.lookbook): a grid of pictures with a name and a line each, set just before a subhead of
+  // the post (field/tools/publish.mjs). Pictures come from this Note's photos (a loop gives its poster frame); once in
+  // the spread they show there instead of between the paragraphs, and keep their files even if they leave Photos.
+  function spreadItems() { return (E && E.feature && E.feature.lookbook && E.feature.lookbook.items) || []; }
+  function spreadHint() { var n = spreadItems().length; return n ? n + ' picture' + (n > 1 ? 's' : '') + (E.feature.lookbook.before ? ' · before "' + E.feature.lookbook.before + '"' : ' · at the end') : 'none yet'; }
+  function spreadThumb(x) {
+    var n = x.src.split('/').pop(), p = (E.photos || []).find(function (q) { return q.src === x.src || q.poster === x.src; });
+    if (p && !p.video) return photoUrl(p);
+    return fresh[n] ? fresh[n].thumb : posterNew[n] ? posterNew[n].thumb || '' : 'api.php?a=photo&id=' + encodeURIComponent(E.id) + '&n=' + encodeURIComponent(n);
+  }
+  function renderSpread() {
+    var box = $('#spreadBox'); if (!box || !E) return;
+    var hs = $('#f-spread > summary small'); if (hs) hs.textContent = spreadHint();
+    var LB = E.feature && E.feature.lookbook, items = spreadItems();
+    var subs = (E.post.body || '').split(/\n/).filter(function (l) { return /^## /.test(l); }).map(function (l) { return l.slice(3).trim(); });
+    var have = {}; items.forEach(function (x) { have[x.src] = 1; });
+    var pick = (E.photos || []).filter(function (p) { var s = p.video ? p.poster : p.src; return s && /\.jpg$/.test(s) && !have[s]; });
+    box.innerHTML = '<p class="muted">A grid of pictures with a name and a line each, set before one of the post\'s subheads (a feature\'s look book). Add pictures from this Note\'s photos; in the spread they show there instead of between the paragraphs.</p>' +
+      (LB ? '<div class="grid2">' + field('Title', '<input id="spTitle" value="' + esc(LB.title || '') + '" placeholder="Out and about">') +
+        field('Before the subhead', '<select id="spBefore"><option value="">At the end of the story</option>' + subs.map(function (s) { return '<option' + (s === LB.before ? ' selected' : '') + '>' + esc(s) + '</option>'; }).join('') + '</select>') + '</div>' +
+        field('Line under the title', '<textarea id="spDek" rows="2">' + esc(LB.dek || '') + '</textarea>') : '') +
+      '<div class="spItems">' + items.map(function (x, i) {
+        return '<div class="spItem" data-i="' + i + '"><img src="' + esc(spreadThumb(x)) + '" alt="" loading="lazy"><div class="spF">' +
+          '<input class="spName" value="' + esc(x.name || '') + '" placeholder="Its name (set in capitals)">' +
+          '<input class="spWhen" value="' + esc(x.when || '') + '" placeholder="A line about it">' +
+          '<div class="row"><button type="button" class="link spUp"' + (i ? '' : ' disabled') + '>Up</button><button type="button" class="link spDown"' + (i < items.length - 1 ? '' : ' disabled') + '>Down</button>' +
+          '<button type="button" class="link spRm">Remove from the spread</button>' + (i === 0 ? '<small class="muted">The first is set wide.</small>' : '') + '</div></div></div>';
+      }).join('') + '</div>' +
+      '<div class="row">' + (pick.length ? '<select id="spAdd"><option value="">Add a picture from this Note…</option>' + pick.map(function (p) {
+        var s = p.video ? p.poster : p.src; return '<option value="' + esc(s) + '">' + esc(photoName(p) + (p.video ? ' (its poster frame)' : '') + (p.caption ? ': ' + p.caption.slice(0, 50) : '')) + '</option>'; }).join('') + '</select>'
+        : '<span class="muted">' + ((E.photos || []).length ? 'Every photo of this Note is in the spread.' : 'Add photos under Photos first.') + '</span>') +
+      (LB ? '<button type="button" class="link" id="spDrop">Remove the whole spread</button>' : '') + '</div>';
+    var ensure = function () { E.feature = E.feature || {}; E.feature.lookbook = E.feature.lookbook || { title: 'The photo spread', dek: '', before: '', items: [] }; return E.feature.lookbook; };
+    var changed = function () { markDirty(); renderSpread(); };
+    var add = $('#spAdd'); if (add) add.onchange = function () {
+      if (!this.value) return; var s = this.value, p = (E.photos || []).find(function (q) { return q.src === s || q.poster === s; }) || {};
+      ensure().items.push({ src: s, w: p.w || 1600, h: p.h || 900, name: '', when: p.caption || '', alt: p.caption || '' }); changed();
+    };
+    var t = $('#spTitle'); if (t) t.oninput = function () { ensure().title = this.value; markDirty(); };
+    var dk = $('#spDek'); if (dk) dk.oninput = function () { ensure().dek = this.value; markDirty(); };
+    var bf = $('#spBefore'); if (bf) bf.onchange = function () { ensure().before = this.value; changed(); };
+    $$('.spItem', box).forEach(function (d) {
+      var i = +d.getAttribute('data-i'), L = E.feature.lookbook.items;
+      $('.spName', d).oninput = function () { L[i].name = this.value; markDirty(); };
+      $('.spWhen', d).oninput = function () { L[i].when = this.value; L[i].alt = this.value; markDirty(); };
+      $('.spUp', d).onclick = function () { if (i) { L.splice(i - 1, 0, L.splice(i, 1)[0]); changed(); } };
+      $('.spDown', d).onclick = function () { if (i < L.length - 1) { L.splice(i + 1, 0, L.splice(i, 1)[0]); changed(); } };
+      $('.spRm', d).onclick = function () { L.splice(i, 1); if (!L.length) delete E.feature.lookbook; changed(); renderPhotos(); };
+    });
+    var dr = $('#spDrop'); if (dr) dr.onclick = function () { if (!confirm('Remove the whole photo spread? Its pictures stay in the Note\'s folder.')) return; delete E.feature.lookbook; changed(); };
+  }
   function magHint() {
     var F = E.feature, t = F && F.masthead ? magOf(F) : null;
     if (!F || !F.masthead) return 'any Note can be a magazine feature';
