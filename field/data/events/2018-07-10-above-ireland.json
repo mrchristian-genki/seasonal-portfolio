@@ -17,7 +17,7 @@
    "w": 1600,
    "h": 900,
    "use": "post",
-   "cover": true,
+   "cover": false,
    "from": "IMG_6042-HDR.jpg"
   },
   {
@@ -49,6 +49,118 @@
    "use": "post",
    "cover": false,
    "from": "IMG_6027-HDR.jpg"
+  },
+  {
+   "src": "data/photos/2018-07-10-above-ireland/clip-9.mp4",
+   "poster": "data/photos/2018-07-10-above-ireland/clip-9.jpg",
+   "video": true,
+   "caption": "Valleys and lakes of Donegal.",
+   "takenAt": "2018:07:13 11:18:13",
+   "w": 720,
+   "h": 406,
+   "use": "post",
+   "cover": false,
+   "from": "IMG_6391.mp4",
+   "range": [
+    7.6,
+    15.25
+   ]
+  },
+  {
+   "src": "data/photos/2018-07-10-above-ireland/clip-7.mp4",
+   "poster": "data/photos/2018-07-10-above-ireland/clip-7.jpg",
+   "video": true,
+   "caption": "The valleys and streams of Donegal.",
+   "takenAt": "2018:07:13 11:22:28",
+   "w": 720,
+   "h": 406,
+   "use": "post",
+   "cover": false,
+   "from": "IMG_6393.mp4",
+   "range": [
+    0,
+    19.8
+   ]
+  },
+  {
+   "src": "data/photos/2018-07-10-above-ireland/clip-8.mp4",
+   "poster": "data/photos/2018-07-10-above-ireland/clip-8.jpg",
+   "video": true,
+   "caption": "Waterfalls and streams of Donegal.",
+   "takenAt": "2018:07:13 11:23:09",
+   "w": 720,
+   "h": 406,
+   "use": "post",
+   "cover": false,
+   "from": "IMG_6393.mp4",
+   "range": [
+    41.9,
+    60.05
+   ]
+  },
+  {
+   "src": "data/photos/2018-07-10-above-ireland/clip-6.mp4",
+   "poster": "data/photos/2018-07-10-above-ireland/clip-6.jpg",
+   "video": true,
+   "caption": "Above the cliffs of Slieve League in Donegal.",
+   "takenAt": "2018:07:14 08:24:34",
+   "w": 720,
+   "h": 406,
+   "use": "post",
+   "cover": false,
+   "from": "IMG_6478.mp4",
+   "range": [
+    0,
+    8
+   ]
+  },
+  {
+   "src": "data/photos/2018-07-10-above-ireland/clip-5.mp4",
+   "poster": "data/photos/2018-07-10-above-ireland/clip-5.jpg",
+   "video": true,
+   "caption": "Cliffs and caves of Slieve League in Donegal.",
+   "takenAt": "2018:07:14 08:27:25",
+   "w": 720,
+   "h": 406,
+   "use": "post",
+   "cover": false,
+   "from": "IMG_6479.mp4",
+   "range": [
+    0,
+    15.1
+   ]
+  },
+  {
+   "src": "data/photos/2018-07-10-above-ireland/clip-4.mp4",
+   "poster": "data/photos/2018-07-10-above-ireland/clip-4.jpg",
+   "video": true,
+   "caption": "Inside the stone fort.",
+   "takenAt": "2018:07:16 04:49:38",
+   "w": 720,
+   "h": 406,
+   "use": "post",
+   "cover": false,
+   "from": "IMG_6609.mp4",
+   "range": [
+    0,
+    8
+   ]
+  },
+  {
+   "src": "data/photos/2018-07-10-above-ireland/clip-3.mp4",
+   "poster": "data/photos/2018-07-10-above-ireland/clip-3.jpg",
+   "video": true,
+   "caption": "Stone Fort from directly above.",
+   "takenAt": "2018:07:16 05:23:21",
+   "w": 720,
+   "h": 406,
+   "use": "post",
+   "cover": false,
+   "from": "IMG_6615.mp4",
+   "range": [
+    0,
+    18.55
+   ]
   },
   {
    "src": "data/photos/2018-07-10-above-ireland/05.jpg",
@@ -109,6 +221,112 @@
    "use": "post",
    "cover": false,
    "from": "IMG_6580-HDR.jpg"
+  },
+  {
+   "src": "data/photos/2018-07-10-above-ireland/clip-2.mp4",
+   "poster": "data/photos/2018-07-10-above-ireland/clip-2.jpg",
+   "video": true,
+   "caption": "Puffins playing on the island of Skellig Michael in Kerry.",
+   "takenAt": "2018:07:19 03:22:51",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "IMG_7037.MOV",
+   "range": [
+    4.4,
+    19.2
+   ]
+  },
+  {
+   "src": "data/photos/2018-07-10-above-ireland/clip-1.mp4",
+   "poster": "data/photos/2018-07-10-above-ireland/clip-1.jpg",
+   "video": true,
+   "caption": "Puffins flying off the island of Skellig Michael in Kerry.",
+   "takenAt": "2018:07:19 03:31:41",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "IMG_7044.MOV",
+   "range": [
+    0,
+    1.72
+   ]
+  },
+  {
+   "src": "data/photos/2018-07-10-above-ireland/clip-11.mp4",
+   "poster": "data/photos/2018-07-10-above-ireland/clip-11.jpg",
+   "video": true,
+   "caption": "The ring of Kerry in the summer time.",
+   "takenAt": "2018:08:06 14:22:26",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "aerial-beach-Kerry-Ireland-summer-bay-forward.mp4",
+   "range": [
+    0,
+    9.15
+   ]
+  },
+  {
+   "src": "data/photos/2018-07-10-above-ireland/clip-12.mp4",
+   "poster": "data/photos/2018-07-10-above-ireland/clip-12.jpg",
+   "video": true,
+   "caption": "Boats in a bay in Kerry in the summer time.",
+   "takenAt": "2018:08:06 14:22:46",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "aerial-beach-Kerry-Ireland-summer-bay-forward.mp4",
+   "range": [
+    20.45,
+    29.7
+   ]
+  },
+  {
+   "src": "data/photos/2018-07-10-above-ireland/clip-13.mp4",
+   "poster": "data/photos/2018-07-10-above-ireland/clip-13.jpg",
+   "video": true,
+   "caption": "Mist blowing over the top of the stone fort.",
+   "takenAt": "2026:06:04 22:07:29",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "IMG_4600.MOV",
+   "range": [
+    0,
+    5.7
+   ]
+  },
+  {
+   "src": "data/photos/2018-07-10-above-ireland/clip-10.mp4",
+   "poster": "data/photos/2018-07-10-above-ireland/clip-10.jpg",
+   "video": true,
+   "caption": "Inside the stone fort at sunrise.",
+   "takenAt": "2026:06:04 22:08:20",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "IMG_4601.MOV",
+   "range": [
+    2.4,
+    9.15
+   ]
+  },
+  {
+   "src": "data/photos/2018-07-10-above-ireland/12.jpg",
+   "caption": "All of Ireland.",
+   "takenAt": null,
+   "w": 1376,
+   "h": 768,
+   "use": "post",
+   "cover": true,
+   "from": "Aerial_view_of_Oahu_island_20261013055942.jpg"
   }
  ],
  "fieldNotes": "Was this actually a ride? The entry kind is ride, but nothing in the photos or notes shows a bike. Should it be a different kind or category (it would otherwise wear the bike helmet and forest backdrop)?\nNo this was a series of drone flights all over donegal near ards friary.\n\nWere these taken with a drone? The text only says \"from above\" until you confirm.\nYes\n\nWhere are the coast photos (01 to 04)? Can the place be named?\nArds Friary donegal\n\nIs the stone fort in photos 05 to 11 Grianán of Aileach in Donegal? I left it unnamed until you confirm.\nYes\n\nWho was with you on the trip, if anyone, and can Helena or anyone else be mentioned?\nNo\n\nAny notes on why you were in Ireland or anything that happened on these days? The draft has no story beyond the photos.\nLived there for 9 years\n\nThe visitors at the fort are tiny and not the subject; OK to keep them in?\nSo long ago. Yes.\n\n08.jpg and 09.jpg look nearly identical (same second). Keep both or drop one?\nYes\n\nWhat date should the entry carry: July 10 or July 16, 2018?\nWhatever\n\nThe entry is still filed as a ride. Can you change its kind and category in the Studio (maybe hike or a travel category), so it doesn't pick up the bike helmet and forest backdrop?\nOk\n\nHow should the voice say Grianán of Aileach? I can spell it out phonetically in the script, the way Ha-Leen-Ah is.\nGREE-nawn of AWE-ul-yok\n\nFor 08 and 09 you answered \"Yes\": I read that as keep both. Right?\nRemove the duplicate please.\n\nI kept July 10, the first day, as the entry date. OK?\nOk. Perfect.\n\nI dropped 09.jpg (the duplicate of 08) from the captions; please remove it from the entry's photos in the Studio too.\nOk\n\n02.jpg came through to me as a completely black image. Can you check the file? Its caption (the sea cave) is kept from the earlier draft.\nOk",
@@ -212,8 +430,8 @@
   ]
  },
  "palette": [
-  "#1fc4c7",
-  "#4a8ee3"
+  "#279bbe",
+  "#82b234"
  ],
  "narratorLook": {
   "look": "curls",
