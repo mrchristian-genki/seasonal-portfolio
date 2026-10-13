@@ -529,7 +529,10 @@ dialog.pfp::backdrop{background:rgba(20,12,6,.7)}
 .head .tabs button[aria-selected=true]{background:#f3e6d2;color:#1d2a26}
 .head .tabs+.me{margin-left:auto}
 @media (max-width:640px){.head .tabs{order:3;width:100%;justify-content:space-between}.head .tabs button{flex:1}}
-#list[hidden],#drive[hidden],#queue[hidden],#catsBox[hidden],#peopleBox[hidden],#statsBox[hidden]{display:none!important}
+#list[hidden],#drive[hidden],#driveHint[hidden],#queue[hidden],#catsBox[hidden],#peopleBox[hidden],#statsBox[hidden]{display:none!important}
+/* on the Notes tab: one line when Google Drive has something new (studio.js driveHint), opening the Drive tab */
+.drive-hint{margin:0 0 14px;padding:10px 14px;border-radius:6px;background:rgba(243,230,210,.1);border:1px solid rgba(243,230,210,.22);color:#f3e6d2;font-size:15px}
+.drive-hint .link{color:#f3e6d2;font-weight:700}
 
 /* GlazyArray's style: her look and the backdrop (Note panel, Categories tab) */
 .ga-h{margin:6px 0 8px;font-size:1rem} .ga-h+div{margin-bottom:14px}
