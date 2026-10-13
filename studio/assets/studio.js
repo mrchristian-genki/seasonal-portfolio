@@ -403,17 +403,25 @@
     ids.sort(function (a, b) { return (notes[b] || 0) - (notes[a] || 0) || (listens[b] || 0) - (listens[a] || 0); });
     var top = Math.max.apply(null, ids.map(function (k) { return notes[k] || 0; }).concat([1]));
     html += '<h3>Field Notes</h3>' + (ids.length ? '<div class="stx-tw"><table class="stx-t"><thead><tr><th>Note</th><th class="n">Opened</th><th class="n">Listens</th></tr></thead><tbody>' + ids.slice(0, 25).map(function (k) {
-      return '<tr><td><button type="button" class="link" data-note="' + esc(k) + '">' + esc(noteName(k)) + '</button><i class="stx-mini" style="--w:' + ((notes[k] || 0) / top * 100).toFixed(1) + '%"></i></td><td class="n">' + N(notes[k]) + '</td><td class="n">' + N(listens[k]) + '</td></tr>';
+      return '<tr><td><button type="button" class="link" data-note="' + esc(k) + '">' + esc(noteName(k)) + '</button><i class="stx-mini" data-w="' + ((notes[k] || 0) / top * 100).toFixed(1) + '"></i></td><td class="n">' + N(notes[k]) + '</td><td class="n">' + N(listens[k]) + '</td></tr>';
     }).join('') + '</tbody></table></div>' + (ids.length > 25 ? '<p class="muted stx-more">And ' + (ids.length - 25) + ' more.</p>' : '') : '<p class="muted">No Notes opened in this span.</p>');
     html += '<h3>Visitor log</h3><p class="muted">The last week\'s page views, newest first. A visitor\'s tag is new every day, so one visit\'s pages read together but no one can be followed from day to day; no addresses are kept.</p><div id="stxLog"></div><div class="pager" id="stxPg" hidden></div>';
     html += srcNote(j, false);
     box.innerHTML = html;
+    sizes(box);
     spanClicks(box);
     $$('[data-note]', box).forEach(function (b) { b.onclick = function () { edit(b.getAttribute('data-note')); }; });
     chartHover(box);
     drawLog(days, noteName);
     // the bars grow in, eased (css .stx-in), once they're on the page
     requestAnimationFrame(function () { requestAnimationFrame(function () { box.classList.add('stx-in'); }); });
+  }
+  // the bars' lengths and the gridlines' places, set from here: the Studio's Content-Security-Policy (style-src 'self',
+  // lib/bootstrap.php) drops style="" attributes written into the page, but not styles set by script
+  function sizes(box) {
+    $$('[data-h]', box).forEach(function (e) { e.style.setProperty('--h', e.getAttribute('data-h') + '%'); });
+    $$('[data-w]', box).forEach(function (e) { e.style.setProperty('--w', e.getAttribute('data-w') + '%'); });
+    $$('[data-b]', box).forEach(function (e) { e.style.bottom = e.getAttribute('data-b') + '%'; });
   }
   function spanClicks(box) {
     $$('[data-span]', box).forEach(function (b) { b.onclick = function () { var n = +b.getAttribute('data-span'); if (n === SV.span) return; SV.span = n; saveSV(); box.classList.remove('stx-in'); $$('[data-span]', box).forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); }); renderStats(); }; });
@@ -427,9 +435,9 @@
     for (var i = SV.span - 1; i >= 0; i--) { var d = new Date(t); d.setDate(t.getDate() - i); var k = d.toISOString().slice(0, 10); list.push(by[k] || { date: k, visits: 0, views: 0 }); }
     var top = niceTop(Math.max.apply(null, list.map(function (d) { return d.visits || 0; }).concat([0])));
     var fmt = function (k, long) { return new Date(k + 'T12:00:00').toLocaleDateString(undefined, long ? { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' } : { month: 'short', day: 'numeric' }); };
-    var grid = [top, top / 2, 0].map(function (v) { return '<div class="stx-gl" style="bottom:' + (v / top * 100) + '%"><span>' + Math.round(v).toLocaleString() + '</span></div>'; }).join('');
+    var grid = [top, top / 2, 0].map(function (v) { return '<div class="stx-gl" data-b="' + (v / top * 100) + '"><span>' + Math.round(v).toLocaleString() + '</span></div>'; }).join('');
     var cols = list.map(function (d) {
-      return '<div class="stx-col" data-tip="' + esc(fmt(d.date, true) + '|' + (d.visits || 0) + '|' + (d.views || 0)) + '"><i style="--h:' + ((d.visits || 0) / top * 100).toFixed(2) + '%"></i></div>'; }).join('');
+      return '<div class="stx-col" data-tip="' + esc(fmt(d.date, true) + '|' + (d.visits || 0) + '|' + (d.views || 0)) + '"><i data-h="' + ((d.visits || 0) / top * 100).toFixed(2) + '"></i></div>'; }).join('');
     var ticks = [0, Math.floor((list.length - 1) / 2), list.length - 1].map(function (i, n) { return '<span class="t' + n + '">' + fmt(list[i].date) + '</span>'; }).join('');
     var rows = list.slice().reverse().map(function (d) { return '<tr><td>' + fmt(d.date, true) + '</td><td class="n">' + (d.visits || 0).toLocaleString() + '</td><td class="n">' + (d.views || 0).toLocaleString() + '</td></tr>'; }).join('');
     return '<div class="stx-chart" role="img" aria-label="Visits per day, the last ' + SV.span + ' days"><div class="stx-plot">' + grid + '<div class="stx-cols' + (SV.span > 60 ? ' dense' : '') + '">' + cols + '</div></div>' +
@@ -455,7 +463,7 @@
     if (!items.length) return '<p class="muted">Nothing yet.</p>';
     var top = items[0][1];
     return '<ul class="stx-bars">' + items.map(function (x) {
-      return '<li title="' + esc(x[0] + ': ' + x[1].toLocaleString() + ' ' + unit) + '"><span class="l">' + esc(x[0]) + '</span><span class="b"><i style="--w:' + (x[1] / top * 100).toFixed(1) + '%"></i></span>' +
+      return '<li title="' + esc(x[0] + ': ' + x[1].toLocaleString() + ' ' + unit) + '"><span class="l">' + esc(x[0]) + '</span><span class="b"><i data-w="' + (x[1] / top * 100).toFixed(1) + '"></i></span>' +
         '<span class="v">' + x[1].toLocaleString() + (x[2] ? '<small>' + esc(x[2]) + '</small>' : '') + '</span></li>'; }).join('') + '</ul>';
   }
   // the visitor log: the last week's page views (newest first), a page of 25 at a time
