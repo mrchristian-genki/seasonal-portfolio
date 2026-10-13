@@ -1702,6 +1702,53 @@
    "The template's box is \"What I'd pack again\", but the Note doesn't say what you'd pack again, so I titled it \"What came along\". Is there kit you'd recommend for this trip?",
    "The track has you stopped at the beach 6:00 to 7:07, but the selfies are at 7:08. Were the selfies on the beach or on the way up? I left 7:07 out of the timeline.",
    "The stats use 371 ft of climbing from the notes while the post says about 370; and the 6,588 ft high point comes from the figures. OK?"
-  ]
+  ],
+  "lookbook": {
+   "title": "The photo spread",
+   "dek": "Near the lake on Whale Beach. ",
+   "before": "",
+   "items": [
+    {
+     "name": "",
+     "when": "",
+     "alt": "",
+     "src": "data/photos/2026-03-28-whale-beach/02.jpg",
+     "w": 1600,
+     "h": 900
+    },
+    {
+     "name": "",
+     "when": "",
+     "alt": "",
+     "src": "data/photos/2026-03-28-whale-beach/03.jpg",
+     "w": 1600,
+     "h": 900
+    },
+    {
+     "name": "",
+     "when": "",
+     "alt": "",
+     "src": "data/photos/2026-03-28-whale-beach/04.jpg",
+     "w": 1600,
+     "h": 900
+    },
+    {
+     "name": "",
+     "when": "",
+     "alt": "",
+     "src": "data/photos/2026-03-28-whale-beach/07.jpg",
+     "w": 1600,
+     "h": 900
+    },
+    {
+     "name": "",
+     "when": "",
+     "alt": "",
+     "src": "data/photos/2026-03-28-whale-beach/06.jpg",
+     "w": 1600,
+     "h": 900
+    }
+   ]
+  }
  }
 }
