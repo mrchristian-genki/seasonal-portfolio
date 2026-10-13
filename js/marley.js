@@ -121,6 +121,7 @@
       for (var w = 0; w < n; w++) { seq.push(['small', 'open', 'small', 'open', 'small'][Math.floor(Math.random() * 5)], 'closed'); if (Math.random() < 0.2) seq.push('closed'); }
       seq.push('pant', 'closed'); var i = 0;
       (function next() { if (i >= seq.length) return; say(seq[i++]); talkT = setTimeout(next, 130 + Math.random() * 80); })();
+      return seq.length * 210;   // about how long she talks (each shape 130 to 210 ms), for her buttons' lock
     }
     // head, ears, lids, eyes
     function tilt(d) { head.style.transform = d ? 'rotate(' + d + 'deg)' : ''; }
@@ -221,7 +222,26 @@
         move(pick[Math.floor(Math.random() * pick.length)]);
       }, rnd(22000, 40000));
     }
-    function mark() { Object.keys(ctl).forEach(function (k) { ctl[k].disabled = !!moving; ctl[k].classList.toggle('on', moving === k); }); }
+    // her buttons wait while she does something that takes time, so nothing is cut off halfway: the one pressed shows
+    // a thin bar filling for as long as it lasts (or, for a move, sliding until the clip ends), the others dim and
+    // softly pulse, and all come back once she's done (css .mly-ctl.busy)
+    var box = null, lockT = 0, lockKind = '';
+    function lock(b, ms, kind) {
+      if (!box) return;
+      clearTimeout(lockT); lockKind = kind || 'act';
+      box.classList.add('busy');
+      [].forEach.call(box.querySelectorAll('.mly-chip'), function (c) { c.disabled = true; c.classList.toggle('run', c === b); c.classList.toggle('wait', c === b && !ms); c.classList.remove('go'); });
+      if (b && ms) { b.style.setProperty('--dur', Math.round(ms) + 'ms'); void b.offsetWidth; b.classList.add('go'); }
+      if (ms) lockT = setTimeout(unlock, ms);
+    }
+    function unlock() {
+      if (!box) return;
+      clearTimeout(lockT); lockKind = '';
+      box.classList.remove('busy');
+      [].forEach.call(box.querySelectorAll('.mly-chip'), function (c) { c.disabled = false; c.classList.remove('run', 'wait', 'go'); });
+    }
+    // a move (pressed, or one she does on her own) holds her buttons until its clip has faded back to her
+    function mark() { if (moving) lock(ctl[moving] || null, 0, 'move'); else if (lockKind === 'move') unlock(); }
 
     // on her own: blinks, an ear flick now and then, a curious tilt once in a while, and her moves
     if (auto) {
@@ -234,25 +254,31 @@
 
     // her buttons
     if (el.hasAttribute('data-controls')) {
-      var box = document.createElement('div'); box.className = 'mly-ctl';
+      box = document.createElement('div'); box.className = 'mly-ctl';
       var row = function (label, items, fn, group) {
         var r = document.createElement('div'); r.className = 'mly-row'; r.innerHTML = '<span>' + label + '</span>';
         items.forEach(function (x, n) {
           var b = document.createElement('button'); b.type = 'button'; b.className = 'mly-chip' + (group && x[2] ? ' on' : ''); b.textContent = x[1];
-          b.onclick = function () { if (group) [].forEach.call(r.querySelectorAll('.mly-chip'), function (y) { y.classList.toggle('on', y === b); }); fn(x[0], b); };
+          b.onclick = function () {
+            if (box.classList.contains('busy')) return;
+            if (group) [].forEach.call(r.querySelectorAll('.mly-chip'), function (y) { y.classList.toggle('on', y === b); });
+            fn(x[0], b);
+          };
           r.appendChild(b); if (!group && fn === move) ctl[x[0]] = b;
         });
         box.appendChild(r);
       };
       if (cv) row('Moves', MOVES, move);
-      row('Eyes', [['amber', 'Amber', 1], ['happy', 'Happy gold'], ['upset', 'Red']], eyes, true);
-      row('Head', [['curious', 'Curious tilt'], ['alert', 'Ears up'], ['talk', 'Talk'], ['blink', 'Blink']], function (k) {
+      // each holds her buttons for as long as it takes, the ease back included
+      row('Eyes', [['amber', 'Amber', 1], ['happy', 'Happy gold'], ['upset', 'Red']], function (k, b) { eyes(k); lock(b, 900); }, true);
+      row('Head', [['curious', 'Curious tilt'], ['alert', 'Ears up'], ['talk', 'Talk'], ['blink', 'Blink']], function (k, b) {
         if (moving) return;
-        if (k === 'curious') { tilt(Math.random() < 0.5 ? -10 : 10); setTimeout(function () { tilt(0); }, 2600); }
-        else if (k === 'alert') { el.classList.add('alert'); setTimeout(function () { el.classList.remove('alert'); }, 2400); }
-        else if (k === 'talk') talk(); else blink();
+        if (k === 'curious') { tilt(Math.random() < 0.5 ? -10 : 10); setTimeout(function () { tilt(0); }, 2600); lock(b, 3500); }
+        else if (k === 'alert') { el.classList.add('alert'); setTimeout(function () { el.classList.remove('alert'); }, 2400); lock(b, 3000); }
+        else if (k === 'talk') lock(b, talk() + 200);
+        else { blink(); lock(b, 400); }
       });
-      row('Charm', CHARMS.map(function (k) { return [k, k === 'bike' ? 'bike wheel' : k, k === chK]; }), charm, true);
+      row('Charm', CHARMS.map(function (k) { return [k, k === 'bike' ? 'bike wheel' : k, k === chK]; }), function (k, b) { charm(k); lock(b, still ? 900 : 2400); }, true);
       el.appendChild(box);
     }
     el.marley = { move: move, tilt: tilt, blink: blink, eyes: eyes, say: say, talk: talk, charm: charm, colours: colours };
