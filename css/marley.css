@@ -54,17 +54,34 @@
 .mly-dc2{mix-blend-mode:screen}
 .mly.pal .mly-dc{opacity:.95} .mly.pal .mly-dc2{opacity:.32}
 /* her buttons, where a page asks for them (data-controls) */
-.mly-ctl{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.mly-ctl{display:flex;flex-direction:column;gap:10px;margin-top:12px}
 .mly-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+/* a faint line between her sets of buttons (Moves, Eyes, Head, Charm), so each set reads as one */
+.mly-row+.mly-row{border-top:1px solid currentColor;border-top-color:color-mix(in srgb,currentColor 14%,transparent);padding-top:10px}
 .mly-row>span{font-size:11px;letter-spacing:.08em;text-transform:uppercase;opacity:.7;min-width:64px}
 .mly-chip{font:inherit;font-size:13px;line-height:1.2;color:inherit;background:transparent;border:1px solid currentColor;border-color:color-mix(in srgb,currentColor 30%,transparent);
-  border-radius:999px;padding:6px 11px;cursor:pointer;transition:transform .5s ease-in-out,border-color .6s ease-in-out,background-color .6s ease-in-out}
+  border-radius:999px;padding:6px 11px;cursor:pointer;transition:transform .5s ease-in-out,border-color .6s ease-in-out,background-color .6s ease-in-out,opacity .6s ease-in-out}
 .mly-chip:hover{transform:translateY(-1px);border-color:color-mix(in srgb,currentColor 70%,transparent)}
 .mly-chip.on{border-color:#c98a2b;background:color-mix(in srgb,#c98a2b 20%,transparent)}
 .mly-chip[disabled]{opacity:.45;cursor:default;transform:none}
+/* while she does something that takes time (js/marley.js lock): the button pressed keeps its colour and a thin amber
+   bar fills under its label for as long as it lasts (slides back and forth for a move, which lasts as long as its
+   clip); the others dim and slowly pulse until she's done. All eased, per the motion rule */
+.mly-chip{position:relative}
+.mly-chip::after{content:"";position:absolute;left:12px;right:12px;bottom:3px;height:2px;border-radius:2px;background:#c98a2b;
+  transform:scaleX(0);transform-origin:left;opacity:0;transition:opacity .4s ease-in-out}
+.mly-ctl.busy .mly-chip.run{opacity:1;border-color:#c98a2b;background:color-mix(in srgb,#c98a2b 20%,transparent)}
+.mly-ctl.busy .mly-chip.run::after{opacity:1}
+.mly-chip.run.go::after{transform:scaleX(1);transition:opacity .4s ease-in-out,transform var(--dur,1s) ease-in-out}
+.mly-chip.run.wait::after{transform:none;right:auto;width:30%;animation:mly-wait 1.4s ease-in-out infinite alternate}
+@keyframes mly-wait{from{left:12px}to{left:calc(70% - 12px)}}
+.mly-ctl.busy .mly-chip:not(.run){opacity:.45;animation:mly-hold 1.6s ease-in-out .6s infinite alternate}
+@keyframes mly-hold{from{opacity:.45}to{opacity:.28}}
 @media (prefers-reduced-motion: reduce){
   .mly-tail,.mly-body,.mly-charm.sw{animation:none}
   .mly-head,.mly-ear,.mly-mouth img,.mly-lids,.mly-glow,.mly-own,.mly-dyed,.mly-dye,.mly-parts,.mly-parts::before,.mly-mv-c,.mly-chip{transition:none}
+  .mly-chip::after,.mly-chip.run.go::after{transition:none} .mly-chip.run.wait::after{animation:none;width:auto;right:12px}
+  .mly-ctl.busy .mly-chip:not(.run){animation:none;opacity:.4}
 }
 /* in a Listen bar (a Note she narrates): her stage above the episode's player */
 section.listen.mly-bar{display:block}
