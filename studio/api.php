@@ -168,7 +168,7 @@ function apply_looks(GitHub $gh, array &$files, array $body): void
     // GlazyArray's looks (Studio, "GlazyArray's look"), all in looks.json, written once: a Note look taken off the
     // site, a new or replaced Note look, and the looks given to whole categories. Holiday looks and hair styles
     // are never replaced or removed from here.
-    if ($rl !== '' || is_array($nl) || is_array($cl) || $rb !== '' || is_array($nb) || is_array($cb) || is_array($cr) || is_array($df) || is_array($hb) || is_array($cn) || is_array($cnr) || is_array($ctk) || is_array($body['newTank'] ?? null) || is_array($body['categoryBackdropChoices'] ?? null) || is_array($body['categoryTankChoices'] ?? null)) {
+    if ($rl !== '' || is_array($nl) || is_array($cl) || $rb !== '' || is_array($nb) || is_array($cb) || is_array($cr) || is_array($df) || is_array($hb) || is_array($cn) || is_array($cnr) || is_array($ctk) || is_array($body['newTank'] ?? null) || is_array($body['categoryBackdropChoices'] ?? null) || is_array($body['categoryTankChoices'] ?? null) || is_array($body['marleyLook'] ?? null)) {
         $lj = json_decode($gh->read(LOOKS_JSON) ?? '{"looks":[]}', true);
         $list = array_values((array) ($lj['looks'] ?? [])); $cats = (array) ($lj['categories'] ?? []);
         $bds = array_values((array) ($lj['backdrops'] ?? [])); $bcats = (array) ($lj['categoryBackdrops'] ?? []);
@@ -325,6 +325,35 @@ function apply_looks(GitHub $gh, array &$files, array $body): void
                 foreach ($names as $n) if (!in_array($n, $known, true)) json_fail("There's nothing called \"$n\" to offer.");
                 $touch($cat);
                 if ($names) $ch[1][$cat] = $names; else unset($ch[1][$cat]);
+            }
+        }
+        // a look brought in for Robot Marley (Studio, Characters, "Bring in a look"; studio/assets/marleycut.js): her hat
+        // and her charm, each three files (own, -dye, -mask) in assets/marley/parts/web, and the look's "marley" naming
+        // them with their boxes in her frame (js/marley.js reads it). A look she had is replaced; a new one is added
+        $ml = $body['marleyLook'] ?? null;
+        if (is_array($ml)) {
+            $name = (string) ($ml['name'] ?? '');
+            if (!preg_match('/^[a-z0-9-]{1,40}$/', $name) || $name === 'curls') json_fail('Give the look a name: lowercase, with dashes.');
+            $m = ['v' => base_convert((string) time(), 10, 36)];
+            foreach (['hat', 'charm'] as $pc) {
+                $p = $ml[$pc] ?? null; if (!is_array($p)) json_fail("Her $pc is missing.");
+                $key = (string) ($p['key'] ?? ''); $ext = (string) ($p['ext'] ?? '');
+                if (!preg_match('/^[a-z0-9]{1,24}$/', $key) || !in_array($ext, ['webp', 'png'], true)) json_fail("Bad $pc.");
+                $box = array_values((array) ($p['box'] ?? []));
+                if (count($box) !== 4 || array_filter($box, fn($n) => !is_int($n) || $n < -200 || $n > 900)) json_fail("Bad $pc box.");
+                foreach (['own' => '', 'dye' => '-dye', 'mask' => '-mask'] as $k => $suf) {
+                    $sha = (string) ($p[$k] ?? ''); if (!preg_match('/^[0-9a-f]{40}$/', $sha)) json_fail("Bad $pc image.");
+                    $files["assets/marley/parts/web/$pc-$key$suf.$ext"] = ['sha' => $sha];
+                }
+                $m[$pc] = $key; $m[$pc . 'Box'] = $box;
+                if ($ext === 'png') $m['ext'] = 'png';
+            }
+            $found = false;
+            foreach ($list as $k => $l) if (($l['name'] ?? '') === $name) { $list[$k]['marley'] = $m; $found = true; }
+            if (!$found) {
+                $add = ['name' => $name, 'marley' => $m];
+                $about = mb_substr(trim((string) ($ml['about'] ?? '')), 0, 120); if ($about !== '') $add['about'] = $about;
+                $list[] = $add;
             }
         }
         // the scene behind A.L.T.A.'s tank for a category's Notes ('' for none)
@@ -713,7 +742,7 @@ try {
             $files = [];
             apply_looks($gh, $files, ['newLook' => $body['newLook'] ?? null, 'categoryLooks' => $body['categoryLooks'] ?? null,
                 'newBackdrop' => $body['newBackdrop'] ?? null, 'categoryBackdrops' => $body['categoryBackdrops'] ?? null,
-                'categoryRank' => $body['categoryRank'] ?? null, 'defaults' => $body['defaults'] ?? null, 'holidayBackdrops' => $body['holidayBackdrops'] ?? null, 'categoryNames' => $body['categoryNames'] ?? null, 'categoryNarrators' => $body['categoryNarrators'] ?? null, 'categoryTanks' => $body['categoryTanks'] ?? null, 'newTank' => $body['newTank'] ?? null, 'categoryBackdropChoices' => $body['categoryBackdropChoices'] ?? null, 'categoryTankChoices' => $body['categoryTankChoices'] ?? null]);
+                'categoryRank' => $body['categoryRank'] ?? null, 'defaults' => $body['defaults'] ?? null, 'holidayBackdrops' => $body['holidayBackdrops'] ?? null, 'categoryNames' => $body['categoryNames'] ?? null, 'categoryNarrators' => $body['categoryNarrators'] ?? null, 'categoryTanks' => $body['categoryTanks'] ?? null, 'newTank' => $body['newTank'] ?? null, 'categoryBackdropChoices' => $body['categoryBackdropChoices'] ?? null, 'categoryTankChoices' => $body['categoryTankChoices'] ?? null, 'marleyLook' => $body['marleyLook'] ?? null]);
             if (!$files) json_fail('Nothing to save.');
             json_out(['ok' => true, 'commit' => $gh->commit($files, "Studio: GlazyArray's looks")]);
 

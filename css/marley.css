@@ -91,3 +91,8 @@
 section.listen.mly-bar{display:block}
 section.listen.mly-bar .marley{max-width:300px;margin:10px auto}
 section.listen.mly-bar audio{display:block;width:100%}
+
+/* her Holiday or look row comes in once looks.json says which looks she has (js/marley.js holRow) */
+.mly-row.mly-late{animation:mly-late .7s ease-in-out}
+@keyframes mly-late{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.mly-row.mly-late{animation:none}}

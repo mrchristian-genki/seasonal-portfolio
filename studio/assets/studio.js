@@ -774,7 +774,7 @@
   // pieces, template and prompts; looks.json says what exists. A matrix of the looks more than one of them wears, then
   // any category or Note applied (on a day you pick) to show what each of them gets and where it comes from, the same
   // rule as the site (assets/narrator/resolve.js). A gap is a click from its prompt. ----------
-  var CHARS = null, CHV = { t: '', d: '' }, PREFILL_LOOK = null;
+  var CHARS = null, CHV = { t: '', d: '' }, PREFILL_LOOK = null, PREFILL_ML = null;
   function charsData() {
     if (!CHARS) CHARS = fetch('/assets/narrator/characters.json', { cache: 'no-cache' }).then(function (r) { return r.json(); }).then(function (j) { return j.characters || []; }).catch(function () { return []; });
     return Promise.all([CHARS, renderLookData()]);
@@ -820,6 +820,13 @@
             return hasLook(c, l) ? '<td class="ok">' + (c.look.has === 'file' ? '<img alt="" src="' + lookSrc(l) + '">' : '') + '<span>Has hers</span></td>' : '<td class="gap">' + gapBtn(c, 'look', l.name) + '</td>';
           }).join('') + '</tr>';
         }).join('') + '</tbody></table></div>' +
+        '<h3 id="mlH">Bring in a look for Robot Marley</h3><p class="muted">Her two renders of a look, from her flat-green seated template: one in its own colours, one with the hat and the charm painted flat cyan (the prompt is a click away in the matrix above). Your browser cuts her hat (the cyan above her collar) and her charm (the cyan below it), and shows her wearing them, in their own colours and in a sample Note\'s, before you add them.</p>' +
+          '<div class="row"><label class="f"><span>Which look</span><select id="mlLook">' + list.filter(function (l) { return !l.marley && l.from; }).map(function (l) { return '<option value="' + esc(l.name) + '">' + esc(l.name.replace(/-/g, ' ')) + (l.from ? ' (' + esc(l.from + ' to ' + l.to) + ')' : '') + '</option>'; }).join('') +
+            '<option value="__new">A new look of hers…</option>' + list.filter(function (l) { return l.marley; }).map(function (l) { return '<option value="' + esc(l.name) + '">' + esc(l.name.replace(/-/g, ' ')) + ' (replace hers)</option>'; }).join('') + '</select></label>' +
+            '<label class="f" id="mlNewF" hidden><span>Its name</span><input id="mlName" placeholder="e.g. ski-day" maxlength="40"></label></div>' +
+          '<div class="grid2"><label class="drop" id="mlOwnD"><input type="file" id="mlOwn" accept="image/png,image/jpeg,image/webp" hidden><b>Her own colours</b> <span class="muted">or drop it here</span></label>' +
+            '<label class="drop" id="mlCyD"><input type="file" id="mlCy" accept="image/png,image/jpeg,image/webp" hidden><b>The cyan one</b> <span class="muted">hat and charm painted cyan</span></label></div>' +
+          '<div id="mlOut"></div><div class="row"><button type="button" class="primary" id="mlSave" disabled>Add it to her looks</button></div>' +
         '<h3>What each category offers</h3><p class="muted">The categories by how many Notes they hold. Where one offers several, each Note gets the one that fits it best. A gap is a click from its prompt; a scene without a description can\'t be matched by its words, so it\'s flagged too.</p><div class="chm-wrap"><table class="chm cov"><thead><tr><th>Category</th><th>Notes</th><th>Backdrops</th><th>A.L.T.A.\'s tank</th></tr></thead><tbody>' +
           covRows() + '</tbody></table></div>' + (bare.length ? '<p class="warn"><b>No description yet:</b> ' + bare.map(esc).join(', ') + '. Add one in Categories so it can be matched by its words.</p>' : '') +
         '<h3>What a category or a Note gives them</h3><div class="row"><label class="f"><span>Apply</span><select id="chT"><option value="">Pick a category or a Note</option><optgroup label="Categories">' +
@@ -872,13 +879,49 @@
             else { text = charPrompt(c, k, l, place); how = P.how || ''; title = c.name + '\'s ' + (k === 'tank' ? 'tank scene' : n.replace(/-/g, ' ')); }
             $('#chPrompt').innerHTML = '<div class="sync-box"><p><b>' + esc(title) + '.</b> ' + esc(how) + '</p>' + field('The prompt', '<textarea id="chP" rows="10">' + esc(text) + '</textarea>', 'Change anything before you copy') +
               '<div class="row"><button type="button" id="chCopy">Copy the prompt</button>' + (tpl ? '<button type="button" id="chTpl">Copy the template</button><a href="' + esc(tpl) + '" download>Download the template</a>' : '') +
-              (k === 'look' && c.look.made === 'studio' ? '<button type="button" id="chGo">Add it in Categories</button>' : '') + '</div></div>';
+              (k === 'look' && c.look.made === 'studio' ? '<button type="button" id="chGo">Add it in Categories</button>' : '') + (k === 'look' && c.id === 'marley' ? '<button type="button" id="chMl">Bring in her renders</button>' : '') + '</div></div>';
             $('#chCopy').onclick = function () { navigator.clipboard.writeText($('#chP').value).then(function () { toast('Prompt copied.'); }); };
             if ($('#chTpl')) $('#chTpl').onclick = function () { GALook.copyImage(tpl).then(function () { toast('The template is on the clipboard.'); }, function (err) { toast(err.message, true); }); };
             if ($('#chGo')) $('#chGo').onclick = function () { PREFILL_LOOK = { name: n, about: l.about || '' }; showList('categories'); };
+            if ($('#chMl')) $('#chMl').onclick = function () { var sel = $('#mlLook'); if ([].some.call(sel.options, function (o) { return o.value === n; })) { sel.value = n; sel.onchange(); } if (window.easeScroll) easeScroll.to($('#mlH')); };
             var pb = $('#chPrompt'); if (window.easeScroll && pb.getBoundingClientRect().top > innerHeight - 120) easeScroll.to(pb);
           };
         });
+      };
+      // Bring in a look for Robot Marley: both renders in, cut here (studio/assets/marleycut.js), seen on her, added
+      var ML = { own: null, cy: null, cut: null }, mlLook = $('#mlLook');
+      var mlShow = function () { $('#mlNewF').hidden = mlLook.value !== '__new'; };
+      mlLook.onchange = mlShow; if (PREFILL_ML && [].some.call(mlLook.options, function (o) { return o.value === PREFILL_ML; })) mlLook.value = PREFILL_ML; PREFILL_ML = null; mlShow();
+      var mlCut = function () {
+        $('#mlSave').disabled = true; ML.cut = null;
+        if (!ML.own || !ML.cy) { $('#mlOut').innerHTML = '<p class="muted">' + (ML.own ? 'Now the cyan one.' : ML.cy ? 'Now the one in its own colours.' : '') + '</p>'; return; }
+        $('#mlOut').innerHTML = '<p class="muted">Cutting…</p>';
+        MarleyCut.cut(ML.own, ML.cy).then(function (res) {
+          ML.cut = res; var o = $('#mlOut'); o.innerHTML = '<div class="ml-prev"></div>' + (res.warn.length ? '<p class="warn">' + res.warn.map(esc).join('<br>') + '</p>' : '');
+          res.previews.forEach(function (c) { c.className = 'ml-cv'; o.firstChild.appendChild(c); });
+          $('#mlSave').disabled = !(res.hat && res.charm);
+        }).catch(function (err) { $('#mlOut').innerHTML = '<p class="err">' + esc(err.message) + '</p>'; });
+      };
+      [['mlOwn', 'mlOwnD', 'own'], ['mlCy', 'mlCyD', 'cy']].forEach(function (d) {
+        var take = function (f) { if (!f) return; ML[d[2]] = f; $('#' + d[1] + ' b').textContent = (d[2] === 'own' ? 'Her own colours: ' : 'The cyan one: ') + f.name; mlCut(); };
+        $('#' + d[0]).onchange = function () { take(this.files[0]); this.value = ''; };
+        var dz = $('#' + d[1]); ['dragover', 'dragenter'].forEach(function (t) { dz.addEventListener(t, function (ev) { ev.preventDefault(); }); });
+        dz.addEventListener('drop', function (ev) { ev.preventDefault(); take(ev.dataTransfer.files[0]); });
+      });
+      $('#mlSave').onclick = function () {
+        var name = mlLook.value === '__new' ? slug($('#mlName').value).slice(0, 40) : mlLook.value, b = this, res = ML.cut;
+        if (!name) { toast('Give the look a name.', true); return; }
+        // her pieces' file names: the look's letters, kept clear of the hats and charms she already has (js/marley.js)
+        var key = name.replace(/[^a-z0-9]/g, '').slice(0, 20) || 'look', TAKEN = ['halloween', 'winter', 'stpatricks', 'hawaii', 'beanie', 'bone', 'heart', 'paw', 'star', 'pinecone', 'ball', 'bike', 'leaf', 'broom', 'snowglobe', 'clover', 'lei', 'wintercone'];
+        var mine = (byName[name] && typeof byName[name].marley === 'object') ? byName[name].marley : null;
+        var hk = mine ? mine.hat : TAKEN.indexOf(key) >= 0 ? key + '2' : key, ck = mine ? mine.charm : TAKEN.indexOf(key) >= 0 ? key + '2' : key;
+        b.disabled = true; b.textContent = 'Uploading her pieces…';
+        var up = function (p) { return Promise.all([api('lookblob', p.own), api('lookblob', p.dye), api('lookblob', p.mask)]).then(function (r) { return { ext: p.ext, box: p.box, own: r[0].sha, dye: r[1].sha, mask: r[2].sha }; }); };
+        Promise.all([up(res.hat), up(res.charm)]).then(function (pp) {
+          pp[0].key = hk; pp[1].key = ck; b.textContent = 'Saving…';
+          return api('looks', { marleyLook: { name: name, hat: pp[0], charm: pp[1] } });
+        }).then(function () { LOOKS = null; toast('Robot Marley\'s ' + name.replace(/-/g, ' ') + ' is added. The site updates in about a minute.'); renderChars(); })
+          .catch(function (err) { toast(err.message, true); b.disabled = false; b.textContent = 'Add it to her looks'; });
       };
       wireGaps(box);
       var ct = $('#chT'), cd = $('#chD'); ct.value = CHV.t; cd.value = CHV.d;
