@@ -34,6 +34,25 @@
   // Tahoe winter (Oct 13): a knit beanie and a pinecone charm, on its dates (01-02 to 01-31)
   var HOL = { halloween: ['halloween', 'broom', 'Halloween'], 'winter-holidays': ['winter', 'snowglobe', 'Winter holidays'], 'st-patricks': ['stpatricks', 'clover', 'St. Patrick\'s'], hawaii: ['hawaii', 'lei', 'Hawaii'], 'tahoe-winter': ['beanie', 'wintercone', 'Tahoe winter'] };
   var HCHARMS = ['broom', 'snowglobe', 'clover', 'lei', 'wintercone'];   // the leaf has no cyan render yet; her own white ball is the cyan cut dyed white
+  // looks brought in from the Studio (Characters, "Bring in a look", Oct 13): a look in looks.json whose "marley" names
+  // her pieces ({ hat, charm, hatBox, charmBox, v, label }) joins the ones above, no code needed; its files carry their
+  // own version (PV), so a look brought in again isn't served from a cache
+  var PV = {}, PE = {}, LOOKS_J = null;
+  function adopt(J) {
+    ((J && J.looks) || []).forEach(function (l) {
+      var m = l.marley, ok = function (k) { return /^[a-z0-9]{1,24}$/.test(k || ''); }, box = function (b) { return Array.isArray(b) && b.length === 4 && b.every(function (n) { return typeof n === 'number'; }); };
+      if (!m || typeof m !== 'object' || !ok(m.hat) || !ok(m.charm) || !box(m.hatBox) || !box(m.charmBox)) return;
+      BOX['hat-' + m.hat] = m.hatBox; BOX['charm-' + m.charm] = m.charmBox;
+      HOL[l.name] = [m.hat, m.charm, String(m.label || l.name.replace(/-/g, ' ').replace(/^./, function (c) { return c.toUpperCase(); })).slice(0, 40)];
+      if (HCHARMS.indexOf(m.charm) < 0) HCHARMS.push(m.charm);
+      if (m.v) PV['hat-' + m.hat] = PV['charm-' + m.charm] = '?v=' + String(m.v).replace(/\W/g, '');
+      if (m.ext === 'png') PE['hat-' + m.hat] = PE['charm-' + m.charm] = 'png';   // a browser that couldn't save webp
+    });
+    return J;
+  }
+  function looksJ() { return LOOKS_J || (LOOKS_J = fetch('/assets/narrator/looks.json', { cache: 'no-cache' }).then(function (r) { return r.json(); }).then(adopt)); }
+  function pv(part) { return PV[part] || V; }
+  function pe(part) { return PE[part] || 'webp'; }
   // her lenses: their own amber unless a mood tints them (Christian, Oct 12: a softer gold, amber as her normal)
   // [gold overlay, red colour, red screen] opacities, each layer fading on its own
   var EYES = { amber: [0, 0, 0], happy: [0.55, 0, 0], upset: [0, 0.7, 0.26] };
@@ -145,9 +164,9 @@
       if (box) [].forEach.call(box.querySelectorAll('[data-row="charm"] .mly-chip'), function (c) { c.classList.toggle('on', c.getAttribute('data-k') === k); });
       var d = DYE[k] !== 0, o = OWN[k], c = pal ? pal[1] : o || '#ffffff', show = !!(pal || o);
       var bx = at('charm-' + k).slice(8, -1);   // the charm's own box (its face, dyed face and mask share it)
-      ch.innerHTML = '<img class="mly-own" src="' + P + 'charm-' + k + '.webp' + V + '" alt="" style="' + bx + (d ? ';opacity:' + (show ? 0 : 1) : '') + '">' +
-        (d ? '<div class="mly-g mly-dyed" style="opacity:' + (show ? 1 : 0) + '"><img src="' + P + 'charm-' + k + '-dye.webp' + V + '" alt="" style="' + bx + '"><i class="mly-dye" style="' + bx + ';' + mask(P + 'charm-' + k + '-mask.webp' + V) + 'background:' + c + '"></i></div>'
-           : '<i class="mly-dye" style="' + bx + ';' + mask(P + 'charm-' + k + '.webp' + V) + 'opacity:' + (pal ? 1 : 0) + ';background:' + c + '"></i>');
+      ch.innerHTML = '<img class="mly-own" src="' + P + 'charm-' + k + '.' + pe('charm-' + k) + pv('charm-' + k) + '" alt="" style="' + bx + (d ? ';opacity:' + (show ? 0 : 1) : '') + '">' +
+        (d ? '<div class="mly-g mly-dyed" style="opacity:' + (show ? 1 : 0) + '"><img src="' + P + 'charm-' + k + '-dye.' + pe('charm-' + k) + pv('charm-' + k) + '" alt="" style="' + bx + '"><i class="mly-dye" style="' + bx + ';' + mask(P + 'charm-' + k + '-mask.' + pe('charm-' + k) + pv('charm-' + k)) + 'background:' + c + '"></i></div>'
+           : '<i class="mly-dye" style="' + bx + ';' + mask(P + 'charm-' + k + '.' + pe('charm-' + k) + pv('charm-' + k)) + 'opacity:' + (pal ? 1 : 0) + ';background:' + c + '"></i>');
       ch.classList.remove('sw'); if (!still && k !== 'lei') { void ch.offsetWidth; ch.classList.add('sw'); }
     }
     // her hat: her own, or (with a Note's colours) its cyan render dyed with the first, like her collar. A new hat fades
@@ -155,9 +174,9 @@
     var hatK = '';
     function hatHTML(k) {
       var bx = at('hat-' + k).slice(8, -1), show = !!pal;
-      return '<img class="mly-own" src="' + P + 'hat-' + k + '.webp' + V + '" alt="" style="' + bx + ';opacity:' + (show ? 0 : 1) + '">' +
-        '<div class="mly-g mly-dyed" style="opacity:' + (show ? 1 : 0) + '"><img src="' + P + 'hat-' + k + '-dye.webp' + V + '" alt="" style="' + bx + '">' +
-        '<i class="mly-dye" style="' + bx + ';' + mask(P + 'hat-' + k + '-mask.webp' + V) + 'background:' + (pal ? pal[0] : '#ffffff') + '"></i></div>';
+      return '<img class="mly-own" src="' + P + 'hat-' + k + '.' + pe('hat-' + k) + pv('hat-' + k) + '" alt="" style="' + bx + ';opacity:' + (show ? 0 : 1) + '">' +
+        '<div class="mly-g mly-dyed" style="opacity:' + (show ? 1 : 0) + '"><img src="' + P + 'hat-' + k + '-dye.' + pe('hat-' + k) + pv('hat-' + k) + '" alt="" style="' + bx + '">' +
+        '<i class="mly-dye" style="' + bx + ';' + mask(P + 'hat-' + k + '-mask.' + pe('hat-' + k) + pv('hat-' + k)) + 'background:' + (pal ? pal[0] : '#ffffff') + '"></i></div>';
     }
     function hat(k) {
       k = k && BOX['hat-' + k] ? k : '';
@@ -202,7 +221,10 @@
       if (want && HOL[want]) return holiday(want);
       var noDates = el.closest && el.closest('[data-noholiday]');
       if (own && HOL[own] && noDates) return holiday(own);
-      fetch('/assets/narrator/looks.json', { cache: 'no-cache' }).then(function (r) { return r.json(); }).then(function (J) {
+      looksJ().then(function (J) {   // (and the looks brought in from the Studio)
+        if (holK) return;
+        if (want && HOL[want]) return holiday(want);
+        if (own && HOL[own] && noDates) return holiday(own);
         var d = new Date(), md = ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
         var on = noDates ? null : (J.looks || []).filter(function (l) { return HOL[l.name] && l.from && l.to && (l.from <= l.to ? md >= l.from && md <= l.to : md >= l.from || md <= l.to); })[0];
         if (!holK) { if (on) holiday(on.name); else if (own && HOL[own]) holiday(own); }
@@ -336,7 +358,13 @@
         else { blink(); lock(b, 400); }
       });
       row('Charm', CHARMS.map(function (k) { return [k, k === 'bike' ? 'bike wheel' : k, k === chK]; }), function (k, b) { if (holK) { holiday(''); } charm(k); lock(b, still ? 900 : 2400); }, true);
-      row('Holiday or look', [['none', 'None', !holK]].concat(Object.keys(HOL).map(function (k) { return [k, HOL[k][2], k === holK]; })), function (k, b) { holiday(k === 'none' ? '' : k); lock(b, still ? 900 : 2400); }, true);
+      // once the looks brought in from the Studio are known (it fades in, css/marley.css .mly-late)
+      var holRow = function () {
+        if (box.querySelector('[data-row="holiday or look"]')) return;
+        row('Holiday or look', [['none', 'None', !holK]].concat(Object.keys(HOL).map(function (k) { return [k, HOL[k][2], k === holK]; })), function (k, b) { holiday(k === 'none' ? '' : k); lock(b, still ? 900 : 2400); }, true);
+        var hr = box.querySelector('[data-row="holiday or look"]'); if (hr) hr.classList.add('mly-late');
+      };
+      looksJ().then(holRow, holRow);
       el.appendChild(box);
     }
     el.marley = { move: move, tilt: tilt, blink: blink, eyes: eyes, say: say, talk: talk, charm: charm, colours: colours, hat: hat, holiday: holiday };

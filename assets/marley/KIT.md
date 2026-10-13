@@ -324,6 +324,15 @@ she has one).
 frame (`hat-beanie`, `charm-wintercone`, each with `-dye` and `-mask`), cut by the cyan shape like the others. She wears
 them on Tahoe winter's dates (01-02 to 01-31); the beanie takes a Note's first colour, the charm's frame the second.
 
+**Bring in a look (Oct 13):** her looks no longer need code. In the Studio's Characters tab, "Bring in a look for Robot
+Marley" takes the two renders (own colours, and hat and charm painted cyan), cuts them in the browser
+(`studio/assets/marleycut.js`, the same steps as the cuts above: the cyan above her collar is the hat, below it the
+charm; holes filled, the green's spill taken off the edges, each piece as own, `-dye` and `-mask`), shows her wearing
+them in their own colours and a sample Note's, and saves the six files with the look's `"marley"` in `looks.json`:
+`{ hat, charm, hatBox, charmBox, v }`. `js/marley.js` reads that and adds the look to her Holiday or look row; it's
+worn on the look's dates, or when a Note or its category picks it, like the ones built in. Bringing one in again
+replaces it.
+
 **Narrators in step (Oct 13):** the Studio's Categories tab lists every look more than one narrator wears (the
 holidays, and the looks marked `"marley": true`, the ones she has parts for) and who has her piece. A missing one is
 a click from its prompts: GlazyArray's two (from the look's `gaLook`, `gaA` and `gaB`, else its `about`) fill in Add a

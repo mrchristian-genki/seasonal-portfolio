@@ -23,8 +23,8 @@
       "pieces": ["look", "backdrop"],
       "look": {
         "has": "marley",
-        "made": "claude",
-        "how": "Paste her description from assets/marley/KIT.md first, run Prompt 1 on her flat-green seated template, then Prompt 2 on the image it made, and bring both renders to Claude, who cuts her hat and charm from them.",
+        "made": "bring-in",
+        "how": "Paste her description from assets/marley/KIT.md first, run Prompt 1 on her flat-green seated template, then Prompt 2 on the image it made, and bring both renders to Bring in a look (this tab): your browser cuts her hat and charm from them and shows her wearing them before you add them.",
         "prompt": "Prompt 1 (after her description):\n\nSame image, exactly as it is. Add only {hat} on her head, sitting between her ears, and {charm} about the size of a coin hanging from the ring at the front of her collar, each in its own colours with natural shading and shine. No text, letters or logos. Her pose, her ears, her face and the flat chroma green background (#00B140) stay exactly the same.\n\nPrompt 2 (on the image Prompt 1 made):\n\nSame image, exactly as it is. Paint only the {hatShort} and the {charmShort} a flat, saturated cyan (#00FFFF), keeping their shading and shine. Everything else stays exactly the same.",
         "ideas": {
           "tahoe-winter": ["a chunky knit beanie with a pom-pom", "a tiny pinecone", "beanie", "pinecone"],

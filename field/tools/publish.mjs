@@ -114,10 +114,11 @@ const mlyBdAttr = (e) => {
   // her holiday look when this Note (or its category) chose one she has, as GlazyArray's look is picked but leaving the
   // dates out: her player puts a holiday on its dates first, then this (js/marley.js HOL). And a Note that ignores holidays
   const lk = RES.R.pick(RES.J, { look: mine(e.narratorLook) && e.narratorLook.look || undefined, cats, prefer: (e.narratorLook && e.narratorLook.fit === 'category' && e.narratorLook.from) || undefined, ignoreHolidays: true }).look;
-  const hol = lk && (lk.from === 'note' || lk.from === 'category') && MLY_HOL.includes(lk.name) ? ` data-look="${lk.name}"` : '';
+  const hol = lk && (lk.from === 'note' || lk.from === 'category') && mlyHas(lk.name) ? ` data-look="${lk.name}"` : '';
   return bd + hol + (e.ignoreHolidays ? ' data-noholiday' : '');
 };
-const MLY_HOL = ['halloween', 'winter-holidays', 'st-patricks', 'hawaii', 'tahoe-winter'];   // the holidays (and Hawaii) Robot Marley has a look for (js/marley.js HOL)
+// the looks Robot Marley has (looks.json "marley": her own built in, js/marley.js HOL, or brought in from the Studio)
+const mlyHas = (name) => !!RES && (RES.J.looks || []).some((l) => l.name === name && l.marley);   // (RES is loaded by noteBd, which runs first)
 // moments in an episode her player acts on (js/alta.js): [{at: seconds, eyes: 'amber' | 'cyan' | ''}], from the Note
 const cueAttr = (e) => {
   const c = (e.episode && Array.isArray(e.episode.cues) ? e.episode.cues : []).filter((x) => x && isFinite(x.at)).map((x) => ({ at: +x.at, eyes: x.eyes || '' }));
@@ -203,7 +204,7 @@ ${ICONS}
 <link rel="stylesheet" href="${rel}../css/lake.css?v=2">
 <link rel="stylesheet" href="${rel}../css/narrator.css?v=33">
 <link rel="stylesheet" href="${rel}../css/alta.css?v=11">
-<link rel="stylesheet" href="${rel}../css/marley.css?v=8">
+<link rel="stylesheet" href="${rel}../css/marley.css?v=9">
 <script>/* Logo season from the calendar, as on About. */document.documentElement.dataset.season=["winter","winter","spring","spring","spring","summer","summer","summer","fall","fall","fall","winter"][new Date().getMonth()];</script>
 <link rel="stylesheet" href="${rel}../css/route-dash.css?v=${V}">
 </head>
@@ -224,7 +225,7 @@ const foot = (rel) => `<footer class="foot"><p>${esc(show.narrationNote)}</p>
 <script src="${rel}../assets/narrator/resolve.js?v=5" defer></script>
 <script src="${rel}../js/narrator.js?v=45" defer></script>
 <script src="${rel}../js/alta.js?v=16" defer></script>
-<script src="${rel}../js/marley.js?v=13" defer></script>
+<script src="${rel}../js/marley.js?v=14" defer></script>
 </body>
 </html>
 `;
