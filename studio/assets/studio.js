@@ -568,7 +568,7 @@
       var bdopts = '<option value="">No backdrop</option>' + bds.map(function (b) { return '<option value="' + esc(b.name) + '">' + esc(b.name + (b.about ? ' · ' + b.about : '')) + '</option>'; }).join('');
       var bsrc = function (n) { var b = bds.filter(function (x) { return x.name === n; })[0]; return b ? bdSrc(b) : ''; };
       var opts = '<option value="">No look</option><option value="curls">curls</option>' + list.map(function (l) { return '<option value="' + esc(l.name) + '">' + esc(l.name + (l.about ? ' · ' + l.about : '')) + '</option>'; }).join('');
-      var src = function (n) { var l = list.filter(function (x) { return x.name === n; })[0]; return n === 'curls' ? '/assets/narrator/head-base.webp' : l ? '/assets/narrator/looks/' + esc(l.file) + (l.v ? '?r=' + esc(l.v) : '') : ''; };
+      var src = function (n) { var l = list.filter(function (x) { return x.name === n; })[0]; return n === 'curls' ? '/assets/narrator/head-base.webp' : l ? lookSrc(l) : ''; };
       var cnar = J.categoryNarrators || {}, nv = function (c) { return c in CATNP ? CATNP[c] : (cnar[c] || ''); };
       var NOPTS = '<option value="">The default</option><option value="glazyarray">GlazyArray</option><option value="alta">A.L.T.A.</option><option value="marley">Robot Marley</option>';
       // A.L.T.A.'s tank backdrops (looks.json tankBackdrops, files in assets/alta/backdrops): a column once there are any
@@ -599,6 +599,11 @@
         }).join('') + '</ul>' +
         '<h3>Her looks</h3><p class="muted">Tick the default, like a Note\'s poster: what she wears when nothing else gives her a look. None ticked: the holiday coming up.</p><div class="lookg">' + [{ name: 'curls', about: 'her own curls' }].concat(list).map(function (l) {
           return '<figure' + (df('look') === l.name ? ' class="on"' : '') + '><img alt="" src="' + src(l.name) + '"><figcaption>' + esc(l.name) + '<label class="ga-def"><input type="checkbox" data-deflook="' + esc(l.name) + '"' + (df('look') === l.name ? ' checked' : '') + '> Default</label></figcaption></figure>'; }).join('') + '</div>' +
+        '<h3>Narrators in step</h3><p class="muted">The looks more than one narrator wears: the holidays, and the looks made for Robot Marley. When one of them is missing her piece, its prompt is a click away: GlazyArray\'s render comes back to Add a look below, Robot Marley\'s two renders go to Claude, who cuts them.</p><ul class="catl sync">' + list.filter(function (l) { return (l.from && l.to) || l.marley; }).map(function (l) {
+          return '<li><span class="catn"><b>' + esc(l.name.replace(/-/g, ' ')) + '</b><small>' + esc(l.from ? l.from + ' to ' + l.to : 'picked, no dates') + '</small></span>' +
+            '<span class="catc"><small>GlazyArray</small><span>' + (l.file ? '<img alt="" src="' + src(l.name) + '">Has hers' : '<i class="noimg"></i><button type="button" data-syncga="' + esc(l.name) + '">Missing: her prompts</button>') + '</span></span>' +
+            '<span class="catc"><small>Robot Marley</small><span>' + (l.marley ? '<img alt="" src="/assets/marley/marley-avatar.jpg">Has hers' : '<i class="noimg"></i><button type="button" data-syncml="' + esc(l.name) + '">Missing: her prompts</button>') + '</span></span></li>';
+        }).join('') + '</ul><div id="syncOut"></div>' +
         '<h3>Add a look</h3><p class="muted">Start from <a href="/assets/narrator/kit/her-template.png" download>her template</a> (<button type="button" class="link" id="catTpl">copy the image</button> · <a href="/assets/narrator/kit/her-edit-mask.png" download>mask</a> · <a href="/assets/narrator/kit/her-contact-sheet.jpg" target="_blank" rel="noopener">rules</a>), change only the hair and what\'s on it, and bring the render back here.</p>' +
         '<div class="grid2">' + field('Name', '<input id="nlName" placeholder="e.g. rain-hood" maxlength="40">', 'Lowercase, with dashes') + field('What it is', '<input id="nlAbout" placeholder="e.g. a brass rain hood" maxlength="120">') + '</div>' +
         '<label class="drop ga-drop" id="nlDrop"><input type="file" id="nlFile" accept="image/png,image/jpeg,image/webp" hidden><b>' + (CATNEWLOOK ? 'Choose a different render' : 'Bring the render here') + '</b> <span class="muted">or drop it here</span></label><div id="nlOut"></div>' +
@@ -686,6 +691,20 @@
         }).then(function () { CATNEWBD = null; LOOKS = null; toast(name + ' added. The site updates in about a minute.'); renderCats(); })
           .catch(function (err) { toast(err.message, true); b.disabled = false; b.textContent = 'Add the backdrop'; });
       };
+      // a missing piece's prompts (GlazyArray's also fill in Add a look's name, so her render lands on the same look)
+      var syncShow = function (l, who) {
+        var ga = who === 'ga';
+        $('#syncOut').innerHTML = '<div class="sync-box"><p><b>' + (ga ? 'GlazyArray' : 'Robot Marley') + '\'s ' + esc(l.name.replace(/-/g, ' ')) + '.</b> ' +
+          (ga ? 'Run Prompt 1 on her template, then Prompt 2 on the image it made, and bring that back to Add a look below (its name is filled in).'
+              : 'Run Prompt 1 on her flat-green seated template (paste her description from <code>assets/marley/KIT.md</code> first), then Prompt 2 on the image it made, and bring both renders to Claude, who cuts her hat and charm from them.') + '</p>' +
+          field('The prompts', '<textarea id="syncP" rows="10">' + esc(ga ? gaSyncPrompt(l) : mlySyncPrompt(l)) + '</textarea>', 'Change anything before you copy') +
+          '<div class="row"><button type="button" id="syncCopy">Copy the prompts</button></div></div>';
+        $('#syncCopy').onclick = function () { navigator.clipboard.writeText($('#syncP').value).then(function () { toast('Prompts copied.'); }); };
+        if (ga) { $('#nlName').value = l.name; if (!$('#nlAbout').value.trim()) $('#nlAbout').value = l.about || ''; }
+      };
+      $$('button[data-syncga],button[data-syncml]', box).forEach(function (b) {
+        b.onclick = function () { var n = b.getAttribute('data-syncga') || b.getAttribute('data-syncml'); syncShow(list.filter(function (x) { return x.name === n; })[0], b.hasAttribute('data-syncga') ? 'ga' : 'ml'); };
+      });
       $('#catTpl').onclick = function () { GALook.copyTemplate().then(function () { toast('Her template is on the clipboard.'); }, function (e) { toast(e.message, true); }); };
       function take(f) {
         if (!f) return; $('#nlOut').innerHTML = '<p class="muted">Working…</p>';
@@ -702,7 +721,7 @@
         var name = slug($('#nlName').value).slice(0, 40), about = $('#nlAbout').value.trim(), cat = $('#nlCat').value, b = this;
         if (!name) { toast('Give the look a name.', true); return; }
         if (name === 'curls' || list.some(function (l) { return l.name === name && (l.to || l.rotate); })) { toast('That name is taken by one of her holiday looks or hair styles.', true); return; }
-        if (list.some(function (l) { return l.name === name; }) && !confirm(name + ' already exists. Replace its image with this one?')) return;
+        if (list.some(function (l) { return l.name === name && l.file; }) && !confirm(name + ' already exists. Replace its image with this one?')) return;
         b.disabled = true; b.textContent = 'Adding…';
         var nlSha = null;
         api('lookblob', CATNEWLOOK.blob).then(function (r) { nlSha = r.sha; return flairUp(CATNEWLOOK); }).then(function (f) {
@@ -1132,7 +1151,7 @@
   var LOOKPICK = false, LOOKREPL = false;   // LOOKREPL: Replace pressed, so the prompt and the drop zone show   // two category looks on this Note and none picked yet (for the next steps)
   var LOOKS = null, LOOKCATS = null, CATNEW = {}, LOOKNEW = null, LOOKSAVED = {}, LOOKDEL = null;   // CATNEW: category -> look ('' for none), waiting for Save   // LOOKNEW: { name, blob, ext, url } waiting for Save;
   // LOOKSAVED: name -> this session's image, shown until the site has it; LOOKDEL: a look to take off the site on Save
-  function lookSrc(l) { return LOOKSAVED[l.name] || '/assets/narrator/looks/' + esc(l.file) + (l.v ? '?r=' + esc(l.v) : ''); }
+  function lookSrc(l) { return LOOKSAVED[l.name] || (l.file ? '/assets/narrator/looks/' + esc(l.file) + (l.v ? '?r=' + esc(l.v) : '') : '/assets/marley/marley-avatar.jpg'); }   // a look with no file is Robot Marley's alone (hawaii)
   // this Note's categories (Play's filter tags, as field/tools/publish.mjs makes them): its own tags, then its kind
   function noteCats() {
     var slug = function (t) { return String(t || '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); };
@@ -1321,6 +1340,28 @@
   // teal. A new one starts as a few words about the place; the prompt is built from them (look.js bdPrompt), rendered
   // on the backdrop template in any image tool, and brought back here ----------
   var LOOKBD = null, BDNEW = null, BDSAVED = {}, CATBDNEW = {}, BDPICK = false;
+  // ---------- narrators in step: the prompts for a look's missing piece ----------
+  // GlazyArray's two (assets/narrator/looks/PROMPTS.md), from the look's gaLook / gaA / gaB in looks.json, else its about
+  function gaSyncPrompt(l) {
+    var look = l.gaLook || l.about || l.name.replace(/-/g, ' '), a = l.gaA || '[the part that takes the first colour]', b = l.gaB || '[the part that takes the second colour]';
+    return 'Prompt 1:\n\nSame image, same camera, same face, same eyes, same jaw, same neck and the same flat chroma green background (#00B140). Change only the hair and accessories: ' + look + '. Render ' + a +
+      ' in a bright saturated magenta (#FF00FF) with natural shading and gloss, and ' + b + ' in plain pearl white with natural shading and gloss. Everything else in her style: polished brass and rose-gold, chunky sculpted shapes, nothing crossing her face below the brows. No text, letters or logos.\n\n' +
+      'Prompt 2 (on the image Prompt 1 made):\n\nSame image, exactly as it is. Change only ' + b + ' from pearl white to a bright saturated cyan (#00FFFF), keeping the shading, gloss and folds. Change nothing else: the magenta stays magenta, and the brass, hair, face and green background stay exactly the same.';
+  }
+  // Robot Marley's two (assets/marley/KIT.md, her holiday looks): a hat and a charm in their own colours, then the same
+  // image with both cyan. Her ideas for the holidays she hasn't got yet; any other look gets brackets to fill in.
+  var MLY_IDEAS = {
+    'tahoe-winter': ['a chunky knit beanie with a pom-pom', 'a tiny pinecone', 'beanie', 'pinecone'],
+    valentines: ['a red velvet bow on a slim headband between her ears', 'a small heart locket', 'bow and its headband', 'heart locket'],
+    spring: ['a headband with soft bunny ears', 'a little painted egg', 'bunny-ear headband', 'egg'],
+    'fourth-of-july': ['a small straw boater hat with a striped band', 'a little star', 'hat and its band', 'star'],
+    thanksgiving: ['a knitted autumn beanie with a maple leaf on it', 'a tiny acorn', 'beanie and its leaf', 'acorn']
+  };
+  function mlySyncPrompt(l) {
+    var i = MLY_IDEAS[l.name] || ['[a hat for ' + l.name.replace(/-/g, ' ') + ']', '[a small charm]', 'hat', 'charm'];
+    return 'Prompt 1 (after her description):\n\nSame image, exactly as it is. Add only ' + i[0] + ' on her head, sitting between her ears, and ' + i[1] + ' about the size of a coin hanging from the ring at the front of her collar, each in its own colours with natural shading and shine. No text, letters or logos. Her pose, her ears, her face and the flat chroma green background (#00B140) stay exactly the same.\n\n' +
+      'Prompt 2 (on the image Prompt 1 made):\n\nSame image, exactly as it is. Paint only the ' + i[2] + ' and the ' + i[3] + ' a flat, saturated cyan (#00FFFF), keeping their shading and shine. Everything else stays exactly the same.';
+  }
   var SCENES = { 'case-study': 'an old library with tall wooden bookshelves, brass reading lamps and a long study table',
     ride: 'a small bike shop garage with mountain bikes hanging on a wall rack, tools on a pegboard and a wooden workbench',
     hike: 'a pine forest trailhead with a wooden trail sign and a dirt path in late light',
@@ -1394,7 +1435,7 @@
       var list = r[0], cats = {}; Object.keys(r[1]).concat(Object.keys(CATNEW)).forEach(function (k) { var v = k in CATNEW ? CATNEW[k] : r[1][k]; if (v) cats[k] = v; });
       var L = E.narratorLook; if (L && L.fit === 'category') L = null;   // a category's cap is ticked above, not here
       var entry = L && list.filter(function (l) { return l.name === L.look; })[0];
-      var made = L && (L.look === 'curls' || !!entry), own = !!entry && !entry.to && !entry.rotate;   // own: a Note look (not a holiday or hair style)
+      var made = L && (L.look === 'curls' || !!entry), own = !!entry && !entry.to && !entry.rotate && !entry.marley;   // own: a Note look (not a holiday or hair style)
       var waiting = LOOKNEW && L && LOOKNEW.name === L.look;
       var opts = '<option value="">None: her category or holiday look</option><option value="curls">curls</option>' + list.filter(function (l) { return l.name !== LOOKDEL; }).map(function (l) { return '<option value="' + esc(l.name) + '">' + esc(l.name + (l.about ? ' · ' + l.about : '')) + '</option>'; }).join('') +
         (L && !made ? '<option value="' + esc(L.look) + '">' + esc(L.look) + (waiting ? ' (new: saves with the Note)' : ' (not made yet)') + '</option>' : '') +

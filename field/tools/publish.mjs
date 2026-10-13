@@ -101,7 +101,7 @@ const mlyBdAttr = (e) => {
   const hol = lk && (lk.from === 'note' || lk.from === 'category') && MLY_HOL.includes(lk.name) ? ` data-look="${lk.name}"` : '';
   return bd + hol + (e.ignoreHolidays ? ' data-noholiday' : '');
 };
-const MLY_HOL = ['halloween', 'winter-holidays', 'st-patricks'];   // the holidays Robot Marley has a look for (js/marley.js HOL)
+const MLY_HOL = ['halloween', 'winter-holidays', 'st-patricks', 'hawaii'];   // the holidays (and Hawaii) Robot Marley has a look for (js/marley.js HOL)
 // moments in an episode her player acts on (js/alta.js): [{at: seconds, eyes: 'amber' | 'cyan' | ''}], from the Note
 const cueAttr = (e) => {
   const c = (e.episode && Array.isArray(e.episode.cues) ? e.episode.cues : []).filter((x) => x && isFinite(x.at)).map((x) => ({ at: +x.at, eyes: x.eyes || '' }));
@@ -208,7 +208,7 @@ const foot = (rel) => `<footer class="foot"><p>${esc(show.narrationNote)}</p>
 <script src="${rel}../assets/narrator/resolve.js?v=4" defer></script>
 <script src="${rel}../js/narrator.js?v=45" defer></script>
 <script src="${rel}../js/alta.js?v=15" defer></script>
-<script src="${rel}../js/marley.js?v=11" defer></script>
+<script src="${rel}../js/marley.js?v=12" defer></script>
 </body>
 </html>
 `;
@@ -564,7 +564,7 @@ fs.writeFileSync(path.join(OUT, 'feed.xml'), rss);
   const has = (dir, f) => !!f && fs.existsSync(path.join(SITE, 'assets/narrator', dir, f));
   const lk = Object.fromEntries((J.looks || []).map((l) => [l.name, l])), bk = Object.fromEntries((J.backdrops || []).map((b) => [b.name, b]));
   const bad = [];
-  for (const l of J.looks || []) if (!has('looks', l.file)) bad.push(`look ${l.name}: no file ${l.file}`);
+  for (const l of J.looks || []) if ((l.file || !l.marley) && !has('looks', l.file)) bad.push(`look ${l.name}: no file ${l.file}`);
   for (const b of J.backdrops || []) if (!has('backdrops', b.file)) bad.push(`backdrop ${b.name}: no file ${b.file}`);
   for (const [c, n] of Object.entries(J.categories || {})) if (!lk[n] && n !== 'curls') bad.push(`category ${c}: no look called ${n}`);
   for (const [c, n] of Object.entries(J.categoryBackdrops || {})) if (!bk[n]) bad.push(`category ${c}: no backdrop called ${n}`);
