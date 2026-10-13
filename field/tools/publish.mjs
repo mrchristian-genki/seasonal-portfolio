@@ -29,14 +29,20 @@ const show = readJSON(path.join(FIELD, 'data/show.json'));
 const V = Date.now().toString(36);   // cache tag for the shared css/js
 
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
-const KIND = { ride: 'Ride', hike: 'Hike', forage: 'Foraging walk', make: 'Mini-Cast' };
+// every kind a Note can be, its name and its category word (field/data/kinds.json: the outings, the Mini-Cast and one
+// for each magazine category)
+const KINDS = (() => { try { return JSON.parse(fs.readFileSync(new URL('../data/kinds.json', import.meta.url), 'utf8')).kinds || []; } catch { return []; } })()
+  .concat([['ride', 'Ride', 'ride'], ['hike', 'Hike', 'hike'], ['forage', 'Foraging walk', 'foraging'], ['make', 'Mini-Cast', 'mini-cast']]
+    .map(([id, name, tag]) => ({ id, name, tag })));   // the first four, if kinds.json can't be read (its own come first and win)
+
+const KIND = Object.fromEntries(KINDS.slice().reverse().map((k) => [k.id, k.name]));
 // the web fonts a feature's magazine theme brings (css/feature.css .mag-<theme>), loaded only on its page: from the
 // magazine templates (field/data/magazines.json), the ones the Studio's Magazine template panel offers
 const THEME_FONTS = Object.fromEntries(((() => { try { return JSON.parse(fs.readFileSync(new URL('../data/magazines.json', import.meta.url), 'utf8')).templates; } catch { return []; } })() || [])
   .filter((t) => t.fonts).map((t) => [t.id, t.fonts]));
 // a Note's tags, for Play's filters and its address words: what kind it is, its own tags (field/data/events, "tags"),
 // and its year. Lowercase words with dashes, so they read well in a link (?spring+notes+grid+with-marley).
-const KIND_TAG = { ride: 'ride', hike: 'hike', forage: 'foraging', make: 'mini-cast' };
+const KIND_TAG = Object.fromEntries(KINDS.slice().reverse().map((k) => [k.id, k.tag]));
 const tagsOf = (e) => [...new Set([KIND_TAG[e.kind] || e.kind, ...(e.tags || []), String(e.date || '').slice(0, 4)]
   .map((t) => String(t || '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')).filter(Boolean))];
 const day = (d, long) => new Date(d + 'T12:00:00Z').toLocaleDateString('en-US', { timeZone: 'UTC', weekday: long ? 'long' : 'short', month: long ? 'long' : 'short', day: 'numeric', year: 'numeric' });

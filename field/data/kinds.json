@@ -1,0 +1,18 @@
+{
+  "about": "Every kind a Note can be (its type, e.kind), in the order the Studio's Kind menu lists them. One for each outing with a track (ride, hike) or without (forage), the Mini-Cast, and one for each magazine category (field/data/magazines.json), so a Note that isn't an outing, like a drone montage of decades of footage, needn't pretend to be a ride or a hike (Christian, Oct 13, 2026). name: what cards and kickers call it. tag: its category word (Play's filters, its address words, looks.json categories); an existing Note tag where one already says the same. magazine: the template that suits it (none for the forage walk and Mini-Cast). track: whether it's an outing with a GPS track (the Studio asks for one, and its stats show). Read by field/tools/publish.mjs, studio/api.php (config, and a Note's categories), studio/assets/studio.js and social.js.",
+  "kinds": [
+    { "id": "ride", "name": "Ride", "tag": "ride", "magazine": "colcobble", "track": true },
+    { "id": "hike", "name": "Hike", "tag": "hike", "magazine": "contour", "track": true },
+    { "id": "forage", "name": "Foraging walk", "tag": "foraging", "magazine": "", "track": false },
+    { "id": "make", "name": "Mini-Cast", "tag": "mini-cast", "magazine": "", "track": false },
+    { "id": "aerial", "name": "Aerial", "tag": "aerial", "magazine": "lineofsight", "track": false },
+    { "id": "adventure", "name": "Adventure", "tag": "adventure", "magazine": "untethered", "track": false },
+    { "id": "profile", "name": "Profile", "tag": "profile", "magazine": "riveting", "track": false },
+    { "id": "science", "name": "Science and inventions", "tag": "science", "magazine": "paradox", "track": false },
+    { "id": "tech", "name": "Tech", "tag": "tech", "magazine": "heatsink", "track": false },
+    { "id": "ai", "name": "AI", "tag": "ai", "magazine": "hiddenlayer", "track": false },
+    { "id": "art", "name": "Digital art", "tag": "digital-art", "magazine": "brushengine", "track": false },
+    { "id": "web", "name": "Web development", "tag": "web", "magazine": "sourceorder", "track": false },
+    { "id": "showcase", "name": "Showcase", "tag": "showcase", "magazine": "studiofloor", "track": false }
+  ]
+}
