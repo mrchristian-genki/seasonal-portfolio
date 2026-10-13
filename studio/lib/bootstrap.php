@@ -72,6 +72,28 @@ function studio_note_failure(): void {
     $t = array_values(array_filter($t, fn($ts) => $ts > time() - 900));
     $t[] = time();
     file_put_contents($f, json_encode($t), LOCK_EX);
+    studio_count_failure(count($t) >= 5);
+}
+/* Failed logins per day, for the Stats tab's Site health: how many, and how many of them locked an address out.
+   Counts only (no addresses), the last 400 days. */
+function studio_failures_file(): string { return studio_private_dir() . '/login-failures.json'; }
+function studio_count_failure(bool $lockout): void {
+    $f = studio_failures_file();
+    $h = @fopen($f, 'c+');
+    if (!$h || !flock($h, LOCK_EX)) return;
+    $all = json_decode((string) stream_get_contents($h), true) ?: [];
+    $d = date('Y-m-d');
+    $all[$d] = ['fails' => (int) ($all[$d]['fails'] ?? 0) + 1, 'lockouts' => (int) ($all[$d]['lockouts'] ?? 0) + ($lockout ? 1 : 0)];
+    ksort($all);
+    $all = array_slice($all, -400, null, true);
+    ftruncate($h, 0); rewind($h); fwrite($h, json_encode($all));
+    flock($h, LOCK_UN); fclose($h);
+    @chmod($f, 0600);
+}
+function studio_failures(string $since): array {
+    $f = studio_failures_file();
+    $all = is_file($f) ? (json_decode((string) file_get_contents($f), true) ?: []) : [];
+    return array_filter($all, fn($k) => $k >= $since, ARRAY_FILTER_USE_KEY);
 }
 function studio_clear_failures(): void {
     $f = studio_throttle_file();
@@ -134,6 +156,10 @@ function studio_security_headers(): void {
     header('X-Content-Type-Options: nosniff');
     header('Referrer-Policy: same-origin');
     header('Cache-Control: no-store');
+    // HTTPS only from now on: a browser that sees this uses https for the whole of www.christiangehrke.com (HSTS is
+    // for the host, not this folder) for a year, so an old http:// link or a typed address never loads insecurely.
+    // The Let's Encrypt certificate renews itself; the Stats tab's Site health warns if it ever doesn't
+    if (($_SERVER['HTTPS'] ?? '') === 'on' || ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https') header('Strict-Transport-Security: max-age=31536000');
     header("Content-Security-Policy: default-src 'self'; img-src 'self' blob: data: https://tile.openstreetmap.org https://*.tile.opentopomap.org; media-src 'self' blob:; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'");
 }
 

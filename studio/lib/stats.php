@@ -89,6 +89,8 @@ final class SiteStats
             $j = json_decode((string) file_get_contents($f), true);
             if (!is_array($j)) continue;
             unset($j['final'], $j['pages']);   // pages stay on the server for later; the Stats tab doesn't use them
+            // referrer spam summed up before it was recognised (or before the config named it): left out here
+            if (!empty($j['refs'])) $j['refs'] = array_filter($j['refs'], fn($h) => !$this->isSpamRef((string) $h), ARRAY_FILTER_USE_KEY);
             if ($d < date('Y-m-d', strtotime('today -' . (self::KEEP_LOG_DAYS - 1) . ' days'))) unset($j['log']);
             $out[] = ['date' => $d] + $j;
         }
@@ -167,6 +169,17 @@ final class SiteStats
         return ['type' => 'page', 'area' => $area, 'path' => $path];
     }
 
+    /** Referrer spam: bots that send a fake referring address to advertise a site (backlink and SEO sellers, link
+     *  generators...). Their visits count as bots, and the sites never show as places visitors came from. The
+     *  config's stats_spam (a list of hosts or bits of them) adds to the patterns. */
+    public function isSpamRef(string $host): bool
+    {
+        if ($host === '') return false;
+        if (preg_match('~backlink|(^|[.-])seo([.-]|$)|linkgenerat|link-?build|buy-?(cheap|links?|backlinks?|traffic|followers)|webtraffic|traffic-?(bot|gen|exchange)|semalt|darodar|ilovevitaly|casino|porn|xxx|viagra~i', $host)) return true;
+        foreach ((array) ($this->cfg['stats_spam'] ?? []) as $bit) if ($bit !== '' && stripos($host, (string) $bit) !== false) return true;
+        return false;
+    }
+
     public static function isBot(string $ua): bool
     {
         return $ua === '' || $ua === '-' || (bool) preg_match('~bot|crawl|spider|slurp|scrap|fetch|preview|monitor|uptime|curl|wget|python|httpclient|okhttp|go-http|java/|libwww|headless|lighthouse|facebookexternalhit|embedly|whatsapp|discord|telegram|skype|validator|feed|rss|pingdom|ahrefs|semrush|bing|yandex|baidu|duckduck|petal|bytespider|gptbot|claude|perplexity|ccbot|dataforseo|mj12|zgrab|masscan|nmap|nikto|sqlmap~i', $ua);
@@ -208,13 +221,16 @@ final class SiteStats
 
     private function add(array &$days, array $r): void
     {
-        $c = self::classify($r['url']);
-        if (!$c || $r['method'] !== 'GET') return;
         $d = $r['day'];
         $acc = &$days[$d];
-        $acc ??= ['views' => 0, 'v' => [], 'areas' => [], 'av' => [], 'pages' => [], 'notes' => [], 'listens' => [], 'refs' => [], 'feed' => 0, 'bots' => 0, 'log' => []];
+        $acc ??= ['views' => 0, 'v' => [], 'areas' => [], 'av' => [], 'pages' => [], 'notes' => [], 'listens' => [], 'refs' => [], 'feed' => 0, 'bots' => 0, 'log' => [],
+            'missing' => [], 'errors' => [], 'probes' => 0];
+        $this->trouble($acc, $r);
+        $c = self::classify($r['url']);
+        if (!$c || $r['method'] !== 'GET') return;
         $pod = self::isPodcastApp($r['ua']);
         if (self::isBot($r['ua']) && !$pod) { $acc['bots']++; return; }
+        if ($this->isSpamRef(self::refHost($r['ref']))) { $acc['bots']++; return; }   // referrer spam: a bot in a browser's clothes
         $who = substr(hash('sha256', $this->salt($d) . '|' . $r['ip'] . '|' . $r['ua']), 0, 16);
         if ($c['type'] === 'feed') { if ($r['status'] < 400) $acc['feed']++; return; }
         if ($c['type'] === 'listen') {   // an episode: one listen per person per day, however many pieces the player asks for
@@ -234,6 +250,26 @@ final class SiteStats
         $acc['log'][] = [$r['time'], $c['path'] . ($a === 'Workshop' ? '?workshop' : ''), $ref, self::agent($r['ua']), substr($who, 0, 6)];
     }
 
+    /** Probes: bots trying addresses that would be weak spots on another kind of site (WordPress logins, .env and .git
+     *  files, database tools, old scripts). Normal background noise on any server; a sudden rush is worth knowing. */
+    public static function isProbe(string $path): bool
+    {
+        return (bool) preg_match('~/(wp-|wordpress|xmlrpc\.php|\.env|\.git|\.aws|\.ssh|\.htpasswd|\.ds_store|phpmyadmin|pma|adminer|cgi-bin|vendor/phpunit|boaform|actuator|server-status|owa/|autodiscover|_ignition|telescope|config\.(json|php|ya?ml)|backup|\.sql|\.bak|shell|eval-stdin)~i', $path)
+            || (bool) preg_match('~\.(asp|aspx|jsp|cgi)$~i', $path);
+    }
+
+    // the day's trouble from any request (not only pages): probes, missing addresses people asked for (404, bots and
+    // probes left out), and the server's own errors (500s, whoever asked)
+    private function trouble(array &$acc, array $r): void
+    {
+        $path = (string) parse_url($r['url'], PHP_URL_PATH);
+        if ($path === '') return;
+        if (self::isProbe($path)) { $acc['probes']++; return; }
+        $path = mb_substr($path, 0, 160);
+        if ($r['status'] >= 500) $acc['errors'][$path] = ($acc['errors'][$path] ?? 0) + 1;
+        elseif ($r['status'] === 404 && !self::isBot($r['ua']) && !preg_match('~^/(studio|field)/~', $path)) $acc['missing'][$path] = ($acc['missing'][$path] ?? 0) + 1;
+    }
+
     // a day's tallies, saved: sets become counts, the longest lists are cut to their top entries
     private function save(string $day, array $acc, bool $final): void
     {
@@ -247,6 +283,7 @@ final class SiteStats
             'pages' => array_slice($acc['pages'], 0, self::PAGES_MAX, true), 'notes' => $acc['notes'],
             'listens' => array_map('count', $acc['listens']), 'refs' => array_slice($acc['refs'], 0, 100, true),
             'feed' => $acc['feed'], 'bots' => $acc['bots'],
+            'missing' => self::top($acc['missing'], 50), 'errors' => self::top($acc['errors'], 50), 'probes' => $acc['probes'],
             'log' => $keepLog ? array_slice($acc['log'], -self::LOG_MAX) : [],
             'final' => $final,
         ];
@@ -255,6 +292,8 @@ final class SiteStats
         rename($f . '.tmp', $f);
         @chmod($f, 0600);
     }
+
+    private static function top(array $counts, int $n): array { arsort($counts); return array_slice($counts, 0, $n, true); }
 
     /** Takes the visitor log out of summaries older than a week (the counts stay). */
     public function prune(): void

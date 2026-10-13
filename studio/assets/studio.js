@@ -409,9 +409,10 @@
     var tile = function (n, label, hint) { return '<div class="stx-tile"><b>' + N(n) + '</b><span>' + label + '</span>' + (hint ? '<small>' + hint + '</small>' : '') + '</div>'; };
     var html = '<div class="stx-head"><div><h2>Site stats</h2><p class="muted">From the server\'s own logs: no cookies or scripts on the pages. Bots, the Studio and the files a page pulls in are left out.</p></div>' +
       '<div class="stx-span" role="group" aria-label="Span">' + spans + '</div></div>';
+    html += healthHtml(j);
     if (!j.source || !j.source.found) {
       html += srcNote(j, true);
-      box.innerHTML = html; spanClicks(box); return;
+      box.innerHTML = html; spanClicks(box); healthClicks(box); return;
     }
     html += '<div class="stx-tiles">' + tile(sum('visits'), 'Visits', 'a person on a given day') + tile(sum('views'), 'Page views') +
       tile(listenN, 'Episode listens', 'people who pressed play') + tile(sum('feed'), 'Podcast feed checks', 'apps looking for new episodes') + '</div>';
@@ -425,16 +426,56 @@
     html += '<h3>Field Notes</h3>' + (ids.length ? '<div class="stx-tw"><table class="stx-t"><thead><tr><th>Note</th><th class="n">Opened</th><th class="n">Listens</th></tr></thead><tbody>' + ids.slice(0, 25).map(function (k) {
       return '<tr><td><button type="button" class="link" data-note="' + esc(k) + '">' + esc(noteName(k)) + '</button><i class="stx-mini" data-w="' + ((notes[k] || 0) / top * 100).toFixed(1) + '"></i></td><td class="n">' + N(notes[k]) + '</td><td class="n">' + N(listens[k]) + '</td></tr>';
     }).join('') + '</tbody></table></div>' + (ids.length > 25 ? '<p class="muted stx-more">And ' + (ids.length - 25) + ' more.</p>' : '') : '<p class="muted">No Notes opened in this span.</p>');
+    html += troubleHtml(days, j.logins || {});
     html += '<h3>Visitor log</h3><p class="muted">The last week\'s page views, newest first. A visitor\'s tag is new every day, so one visit\'s pages read together but no one can be followed from day to day; no addresses are kept.</p><div id="stxLog"></div><div class="pager" id="stxPg" hidden></div>';
     html += srcNote(j, false);
     box.innerHTML = html;
     dataStyles(box);
-    spanClicks(box);
+    spanClicks(box); healthClicks(box);
     $$('[data-note]', box).forEach(function (b) { b.onclick = function () { edit(b.getAttribute('data-note')); }; });
     chartHover(box);
     drawLog(days, noteName);
     // the bars grow in, eased (css .stx-in), once they're on the page
     requestAnimationFrame(function () { requestAnimationFrame(function () { box.classList.add('stx-in'); }); });
+  }
+  // Site health (lib/health.php): a check each for the domain, the certificate, the redirect to HTTPS, HSTS, email
+  // protection and disk space; good, check or fix, each with an icon and a word as well as its colour, and what to do
+  function healthHtml(j) {
+    var h = j.health || {}, cs = h.checks || [];
+    if (!cs.length) return h.error ? '<p class="err">Site health: ' + esc(h.error) + '</p>' : '';
+    var word = { good: 'OK', warn: 'Check', bad: 'Fix' }, icon = { good: '✓', warn: '!', bad: '✕' };
+    var worst = cs.some(function (c) { return c.state === 'bad'; }) ? 'bad' : cs.some(function (c) { return c.state === 'warn'; }) ? 'warn' : 'good';
+    return '<div class="stx-health"><div class="stx-hh"><h3>Site health</h3><span class="stx-hsum" data-state="' + worst + '">' +
+      (worst === 'good' ? 'All good' : cs.filter(function (c) { return c.state !== 'good'; }).length + ' to look at') + '</span>' +
+      '<small class="muted">Checked ' + esc(when(h.at)) + '</small><button type="button" class="small" id="stxHealthGo">Check again</button></div>' +
+      '<ul class="stx-hc">' + cs.map(function (c) {
+        var st = word[c.state] ? c.state : 'warn';
+        return '<li data-state="' + st + '"><span class="stx-hi" aria-hidden="true">' + icon[st] + '</span><div><b>' + esc(c.label) + ' <em>' + word[st] + '</em></b>' +
+          '<span>' + esc(c.say || '') + '</span>' + (c.todo ? '<span class="stx-todo">' + esc(c.todo) + '</span>' : '') + '</div></li>';
+      }).join('') + '</ul></div>';
+  }
+  function healthClicks(box) {
+    var b = $('#stxHealthGo', box); if (!b) return;
+    b.onclick = function () {
+      b.disabled = true; b.textContent = 'Checking…';
+      api('stats', null, '&days=' + SV.span + '&fresh=1').then(function (j) { SV.data = j; drawStats(); toast('Site health checked.'); })
+        .catch(function (err) { b.disabled = false; b.textContent = 'Check again'; toast(err.message, true); });
+    };
+  }
+  // trouble in the logs over the span: missing pages people asked for, the server's own errors, probes and failed logins
+  function troubleHtml(days, logins) {
+    var missing = {}, errors = {}, probes = 0, add = function (into, obj) { Object.keys(obj || {}).forEach(function (k) { into[k] = (into[k] || 0) + obj[k]; }); };
+    days.forEach(function (d) { add(missing, d.missing); add(errors, d.errors); probes += d.probes || 0; });
+    var errN = Object.keys(errors).reduce(function (a, k) { return a + errors[k]; }, 0);
+    var fails = 0, locks = 0; Object.keys(logins).forEach(function (k) { fails += logins[k].fails || 0; locks += logins[k].lockouts || 0; });
+    var top = function (o, n) { return Object.keys(o).sort(function (a, b) { return o[b] - o[a]; }).slice(0, n); };
+    var line = function (n, label, hint) { return '<li><b>' + n.toLocaleString() + '</b><span>' + label + (hint ? '<small>' + hint + '</small>' : '') + '</span></li>'; };
+    return '<h3>Problems in the logs</h3><div class="stx-two"><div><h4 class="stx-h4">Missing pages people asked for</h4>' +
+      (Object.keys(missing).length ? hbars(top(missing, 10).map(function (k) { return [k, missing[k]]; }), 'requests', 10) + '<p class="muted stx-more">An old link to one of these may be worth a redirect.</p>' :
+        '<p class="muted">None in this span.</p>') + '</div><div><ul class="stx-tl">' +
+      line(errN, 'server errors', errN ? top(errors, 3).map(esc).join(', ') : 'none: nothing broke') +
+      line(probes, 'probes', 'bots trying weak spots of other kinds of site (WordPress, .env files); normal noise, a sudden rush is worth knowing') +
+      line(fails, 'failed Studio logins', locks ? locks + ' locked an address out for 15 minutes' : 'none locked an address out') + '</ul></div></div>';
   }
   function spanClicks(box) {
     $$('[data-span]', box).forEach(function (b) { b.onclick = function () { var n = +b.getAttribute('data-span'); if (n === SV.span) return; SV.span = n; saveSV(); box.classList.remove('stx-in'); $$('[data-span]', box).forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); }); renderStats(); }; });
@@ -698,7 +739,12 @@
     d.innerHTML = '<div class="drive-head"><div><h2>Google Drive</h2><p class="muted">Watching ' + names + '. New files are copied to the server; nothing is deleted on either side.</p></div>' +
       '<button id="driveGo" class="primary"' + (j.running || !j.ready ? ' disabled' : '') + '>' + (j.running ? 'Bringing in…' : 'Bring in from Drive') + '</button></div>' +
       (j.problem ? '<p class="err">' + esc(j.problem) + '</p>' : '<p class="drive-line">' + line + '</p>') +
-      (j.errors.length ? '<p class="err">' + j.errors.map(esc).join('<br>') + '</p>' : '') + inbox +
+      (j.errors.length ? '<p class="err">' + j.errors.map(esc).join('<br>') + '</p>' : '') +
+      // why the last try stopped (lib/drive.php status): rclone's exit code in words, the fix for an expired Drive
+      // login, and rclone's last lines when no error line says more
+      (j.why ? '<p class="drive-why">What it means: ' + esc(j.why) + '.</p>' : '') +
+      (j.reconnect ? '<p class="drive-why">The Drive login looks expired. Over SSH, run <code>~/bin/rclone config reconnect ' + esc((j.remote || 'gdrive') + ':') + '</code> and sign in again, then bring in again.</p>' : '') +
+      ((j.lastLines || []).length ? '<details class="drive-last"><summary>rclone\'s last words</summary><pre>' + j.lastLines.map(esc).join('\n') + '</pre></details>' : '') + inbox +
       ((j.ignored || []).length && owner() ? '<details class="ignored"><summary>Ignored (' + j.ignored.length + ')</summary><ul>' + j.ignored.map(function (x) {
         return '<li>' + esc(x.source) + ' <small>' + esc(when(x.at)) + (x.dropped ? ' · server copy deleted' : '') + '</small> <button class="link unignore" data-src="' + esc(x.source) + '">Restore</button></li>'; }).join('') + '</ul></details>' : '');
     pager($('#inboxPg'), INBOX_PAGE, pages, function (p) { INBOX_PAGE = p; renderDrive(lastDrive); toTop($('#drive .inbox')); });
