@@ -14,7 +14,7 @@
   var P = '/assets/marley/parts/web/', MV = '/assets/marley/moves/', V = '?v=2';
   // Her parts, each cropped to its own box in her 560 x 728 frame (assets/marley/parts/web/boxes.json; the full-frame
   // originals stay in parts/ for the kit): a few MB decoded instead of sixty, so a phone keeps every layer painted.
-  var FW = 560, FH = 728, BOX = {"tail":[386,538,154,102],"body":[92,220,328,496],"head":[148,22,214,288],"lids":[150,42,218,108],"collar":[170,220,174,92],"earL":[92,30,102,166],"earR":[308,28,116,168],"earL-up":[28,12,174,144],"earR-up":[306,12,180,160],"mouth":[158,126,206,184],"iris":[178,80,150,42],"charm-bone":[224,270,84,94],"charm-heart":[220,270,88,120],"charm-paw":[212,268,96,128],"charm-star":[224,268,84,116],"charm-pinecone":[228,270,80,128],"charm-ball":[220,268,88,122],"charm-bike":[208,268,100,156],"charm-leaf":[216,302,82,98]};
+  var FW = 560, FH = 728, BOX = {"tail":[386,538,154,102],"body":[92,220,328,496],"head":[148,22,214,288],"lids":[150,42,218,108],"collar":[170,220,174,92],"earL":[92,30,102,166],"earR":[308,28,116,168],"earL-up":[28,12,174,144],"earR-up":[306,12,180,160],"mouth":[158,126,206,184],"iris":[178,80,150,42],"charm-bone":[224,270,84,94],"charm-heart":[220,270,88,120],"charm-paw":[212,268,96,128],"charm-star":[224,268,84,116],"charm-pinecone":[228,270,80,128],"charm-ball":[220,268,88,122],"charm-bike":[208,268,100,156],"charm-leaf":[216,302,82,98],"hat-halloween":[176,-40,156,100],"hat-winter":[186,-40,138,96],"hat-stpatricks":[184,-38,140,92],"charm-broom":[230,314,66,216],"charm-snowglobe":[212,278,92,134],"charm-clover":[204,276,106,150]};
   var pct = function (n, d) { return (n / d * 100).toFixed(4) + '%'; };
   // a part's place in her frame, and (ox, oy: shares of the frame) the point it turns about, made relative to its box
   function at(g, ox, oy) {
@@ -26,7 +26,12 @@
   var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var MOVES = [['wag', 'A happy wag'], ['down', 'Lie down'], ['stand', 'Stand and look'], ['tilt', 'Tilt and wink']];
   var CHARMS = ['bone', 'heart', 'paw', 'star', 'pinecone', 'ball', 'bike', 'leaf'];
-  var DYE = { leaf: 0 }, OWN = { ball: '#f1eee6' };   // the leaf has no cyan render yet; her own white ball is the cyan cut dyed white
+  var DYE = { leaf: 0 }, OWN = { ball: '#f1eee6' };
+  // her holiday looks (Christian, Oct 13): a hat on her head and a charm on her collar, each with a cyan render for a
+  // Note's colours like her charms. Worn on the site's holiday dates (assets/narrator/looks.json, the same windows as
+  // GlazyArray's), or picked; the hats tilt with her head. Thanksgiving's is on its way
+  var HOL = { halloween: ['halloween', 'broom', 'Halloween'], 'winter-holidays': ['winter', 'snowglobe', 'Winter holidays'], 'st-patricks': ['stpatricks', 'clover', 'St. Patrick\'s'] };
+  var HCHARMS = ['broom', 'snowglobe', 'clover'];   // the leaf has no cyan render yet; her own white ball is the cyan cut dyed white
   // her lenses: their own amber unless a mood tints them (Christian, Oct 12: a softer gold, amber as her normal)
   // [gold overlay, red colour, red screen] opacities, each layer fading on its own
   var EYES = { amber: [0, 0, 0], happy: [0.55, 0, 0], upset: [0, 0.7, 0.26] };
@@ -89,7 +94,8 @@
         ['closed', 'small', 'open', 'pant'].map(function (k) { return '<img data-m="' + k + '" src="' + P + 'mouth-' + k + '.webp' + V + '" alt=""' + at('mouth') + (k === 'closed' ? ' class="on"' : '') + '>'; }).join('') + '</div>' +
         '<img class="mly-lids" src="' + P + 'lids.webp' + V + '" alt=""' + at('lids') + '>' + ['g', 'c', 's'].map(function (k) { return '<i class="mly-glow mly-glow-' + k + '"' + at('iris') + '></i>'; }).join('') +
         '<img class="mly-ear mly-earL mly-down" src="' + P + 'earL.webp' + V + '" alt=""' + at('earL', .307, .071) + '><img class="mly-ear mly-earR mly-down" src="' + P + 'earR.webp' + V + '" alt=""' + at('earR', .593, .071) + '>' +
-        '<img class="mly-ear mly-earL mly-up" src="' + P + 'earL-up.webp' + V + '" alt=""' + at('earL-up', .307, .071) + '><img class="mly-ear mly-earR mly-up" src="' + P + 'earR-up.webp' + V + '" alt=""' + at('earR-up', .593, .071) + '></div>' +
+        '<img class="mly-ear mly-earL mly-up" src="' + P + 'earL-up.webp' + V + '" alt=""' + at('earL-up', .307, .071) + '><img class="mly-ear mly-earR mly-up" src="' + P + 'earR-up.webp' + V + '" alt=""' + at('earR-up', .593, .071) + '>' +
+        '<div class="mly-g mly-hat"></div></div>' +
       '<img src="' + P + 'collar.webp' + V + '" alt=""' + at('collar') + '><i class="mly-dc"' + at('collar') + '></i><i class="mly-dc mly-dc2"' + at('collar') + '></i>' +
       '<div class="mly-g mly-charm"></div></div>';
     el.insertBefore(st, el.firstChild);
@@ -107,7 +113,7 @@
       st.insertBefore(bi, st.firstChild); st.classList.add('has-bd');
     }
     var q = function (s) { return st.querySelector(s); };
-    var head = q('.mly-head'), ch = q('.mly-charm'), gg = q('.mly-glow-g'), gc = q('.mly-glow-c'), gs = q('.mly-glow-s');
+    var head = q('.mly-head'), ch = q('.mly-charm'), hatEl = q('.mly-hat'), gg = q('.mly-glow-g'), gc = q('.mly-glow-c'), gs = q('.mly-glow-s');
     var eL = q('.mly-earL.mly-down'), eR = q('.mly-earR.mly-down');
 
     // mouth
@@ -132,8 +138,9 @@
     // collar and charm: her own, or a Note's two colours (the charm's dyed face cross-fades in over her own)
     var pal = null, chK = '';
     function charm(k) {
-      if (CHARMS.indexOf(k) < 0) k = 'bone';
+      if (CHARMS.indexOf(k) < 0 && HCHARMS.indexOf(k) < 0) k = 'bone';
       chK = k;
+      if (box) [].forEach.call(box.querySelectorAll('[data-row="charm"] .mly-chip'), function (c) { c.classList.toggle('on', c.getAttribute('data-k') === k); });
       var d = DYE[k] !== 0, o = OWN[k], c = pal ? pal[1] : o || '#ffffff', show = !!(pal || o);
       var bx = at('charm-' + k).slice(8, -1);   // the charm's own box (its face, dyed face and mask share it)
       ch.innerHTML = '<img class="mly-own" src="' + P + 'charm-' + k + '.webp' + V + '" alt="" style="' + bx + (d ? ';opacity:' + (show ? 0 : 1) : '') + '">' +
@@ -141,8 +148,40 @@
            : '<i class="mly-dye" style="' + bx + ';' + mask(P + 'charm-' + k + '.webp' + V) + 'opacity:' + (pal ? 1 : 0) + ';background:' + c + '"></i>');
       if (!still) { ch.classList.remove('sw'); void ch.offsetWidth; ch.classList.add('sw'); }
     }
+    // her hat: her own, or (with a Note's colours) its cyan render dyed with the first, like her collar. A new hat fades
+    // in as the old one fades out
+    var hatK = '';
+    function hatHTML(k) {
+      var bx = at('hat-' + k).slice(8, -1), show = !!pal;
+      return '<img class="mly-own" src="' + P + 'hat-' + k + '.webp' + V + '" alt="" style="' + bx + ';opacity:' + (show ? 0 : 1) + '">' +
+        '<div class="mly-g mly-dyed" style="opacity:' + (show ? 1 : 0) + '"><img src="' + P + 'hat-' + k + '-dye.webp' + V + '" alt="" style="' + bx + '">' +
+        '<i class="mly-dye" style="' + bx + ';' + mask(P + 'hat-' + k + '-mask.webp' + V) + 'background:' + (pal ? pal[0] : '#ffffff') + '"></i></div>';
+    }
+    function hat(k) {
+      k = k && BOX['hat-' + k] ? k : '';
+      if (k === hatK) return;
+      hatK = k;
+      [].forEach.call(hatEl.children, function (old) { old.style.opacity = 0; setTimeout(function () { if (old.parentNode) old.parentNode.removeChild(old); }, still ? 0 : 950); });
+      if (!k) return;
+      var w = document.createElement('div'); w.className = 'mly-g mly-hatk'; w.style.opacity = 0; w.innerHTML = hatHTML(k);
+      hatEl.appendChild(w);
+      requestAnimationFrame(function () { requestAnimationFrame(function () { w.style.opacity = 1; }); });
+    }
+    // a holiday: its hat and its charm (her own charm comes back after); '' takes it off
+    var holK = '', charmBefore = '';
+    function holiday(k) {
+      var h = HOL[k];
+      if (box) [].forEach.call(box.querySelectorAll('[data-row="holiday"] .mly-chip'), function (c) { c.classList.toggle('on', c.getAttribute('data-k') === (h ? k : 'none')); });
+      if (h) { if (!holK) charmBefore = chK; holK = k; hat(h[0]); charm(h[1]); }
+      else if (holK) { holK = ''; hat(''); charm(charmBefore || 'bone'); }
+    }
     function colours(p) {
       pal = p && /^#[0-9a-f]{6}$/i.test(p[0]) && /^#[0-9a-f]{6}$/i.test(p[1]) ? p : null;
+      [].forEach.call(hatEl.querySelectorAll('.mly-hatk'), function (w) {
+        var o = w.querySelector('.mly-own'), d = w.querySelector('.mly-dyed'), i = w.querySelector('.mly-dye');
+        if (i && pal) i.style.background = pal[0];
+        if (o && d) { o.style.opacity = pal ? 0 : 1; d.style.opacity = pal ? 1 : 0; }
+      });
       el.classList.toggle('pal', !!pal);
       if (pal) [].forEach.call(st.querySelectorAll('.mly-dc'), function (i) { i.style.background = pal[0]; });
       var own = ch.querySelector('.mly-own'), dy = ch.querySelector('.mly-dyed'), i = ch.querySelector('.mly-dye'), o = OWN[chK], show = !!(pal || o);
@@ -151,6 +190,18 @@
     }
     charm(el.getAttribute('data-charm') || 'bone');
     colours((el.getAttribute('data-palette') || '').split(' '));
+    // the holiday she wears: data-holiday names one ("none" for none); else the one on today's date, from the site's
+    // holiday windows, unless this Note ignores holidays (data-noholiday, as GlazyArray's do)
+    (function () {
+      var want = el.getAttribute('data-holiday');
+      if (want === 'none' || (el.closest && el.closest('[data-noholiday]'))) return;
+      if (want && HOL[want]) return holiday(want);
+      fetch('/assets/narrator/looks.json', { cache: 'no-cache' }).then(function (r) { return r.json(); }).then(function (J) {
+        var d = new Date(), md = ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
+        var on = (J.looks || []).filter(function (l) { return HOL[l.name] && l.from && l.to && (l.from <= l.to ? md >= l.from && md <= l.to : md >= l.from || md <= l.to); })[0];
+        if (on && !holK) holiday(on.name);
+      }).catch(function () {});
+    })();
 
     // her moves: a video (colour over mask) drawn in a canvas; her parts fade out as it fades in, and back near its end
     var vid = document.createElement('video'); vid.className = 'mly-mv'; vid.muted = true; vid.playsInline = true; vid.preload = 'none';
@@ -256,9 +307,9 @@
     if (el.hasAttribute('data-controls')) {
       box = document.createElement('div'); box.className = 'mly-ctl';
       var row = function (label, items, fn, group) {
-        var r = document.createElement('div'); r.className = 'mly-row'; r.innerHTML = '<span>' + label + '</span>';
+        var r = document.createElement('div'); r.className = 'mly-row'; r.setAttribute('data-row', label.toLowerCase()); r.innerHTML = '<span>' + label + '</span>';
         items.forEach(function (x, n) {
-          var b = document.createElement('button'); b.type = 'button'; b.className = 'mly-chip' + (group && x[2] ? ' on' : ''); b.textContent = x[1];
+          var b = document.createElement('button'); b.type = 'button'; b.className = 'mly-chip' + (group && x[2] ? ' on' : ''); b.textContent = x[1]; b.setAttribute('data-k', x[0]);
           b.onclick = function () {
             if (box.classList.contains('busy')) return;
             if (group) [].forEach.call(r.querySelectorAll('.mly-chip'), function (y) { y.classList.toggle('on', y === b); });
@@ -278,10 +329,11 @@
         else if (k === 'talk') lock(b, talk() + 200);
         else { blink(); lock(b, 400); }
       });
-      row('Charm', CHARMS.map(function (k) { return [k, k === 'bike' ? 'bike wheel' : k, k === chK]; }), function (k, b) { charm(k); lock(b, still ? 900 : 2400); }, true);
+      row('Charm', CHARMS.map(function (k) { return [k, k === 'bike' ? 'bike wheel' : k, k === chK]; }), function (k, b) { if (holK) { holiday(''); } charm(k); lock(b, still ? 900 : 2400); }, true);
+      row('Holiday', [['none', 'None', !holK]].concat(Object.keys(HOL).map(function (k) { return [k, HOL[k][2], k === holK]; })), function (k, b) { holiday(k === 'none' ? '' : k); lock(b, still ? 900 : 2400); }, true);
       el.appendChild(box);
     }
-    el.marley = { move: move, tilt: tilt, blink: blink, eyes: eyes, say: say, talk: talk, charm: charm, colours: colours };
+    el.marley = { move: move, tilt: tilt, blink: blink, eyes: eyes, say: say, talk: talk, charm: charm, colours: colours, hat: hat, holiday: holiday };
   }
 
   function scan(root) { [].forEach.call((root.querySelectorAll ? root : document).querySelectorAll('.marley'), build); }
