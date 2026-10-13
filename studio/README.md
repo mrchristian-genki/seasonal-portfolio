@@ -169,6 +169,20 @@ editor a note, **Discard** deletes the branch. The owner saving a note that wait
 review in too. Editors and their password hashes are in `~/studio-private/users.json`; the review states
 in `~/studio-private/reviews.json`. Removing an editor logs them out at once.
 
+## Stats
+
+**Stats** on the notes list (owner only) shows the site's visits, read from the server's own access logs:
+the pages carry no analytics scripts or cookies (privacy/index.html says so). `lib/stats.php` finds
+DreamHost's logs at `~/logs/<this site>/http{,s}/access.log*` (gzipped ones too; `'stats_logs' => '<glob>'`
+in the private config points it elsewhere), leaves out bots, the Studio, private tools and the files a page
+pulls in, and sums up each day into `~/studio-private/stats/YYYY-MM-DD.json`, kept after the logs rotate
+away. Each opening of the tab brings the summaries up to date (a day is final two days on). A day holds its
+page views, visits (a person on a given day: a salted hash of address and browser, new every day, never
+stored itself), views and visits by area, each Note's opens (as a page or in place from Home, both fetch
+`/play/<id>/`), episode listens (people who requested its MP3), referring sites, podcast feed checks and the
+bots left out; the last week also keeps a visitor log (time, page, referring site, browser, a 6-letter
+daily tag), never an address. Visits to the public site by the owner count like anyone's.
+
 ## For Claude Code sessions
 
 Entries saved in the Studio land on `main`, so start from the latest `main`. Field Notes still works the

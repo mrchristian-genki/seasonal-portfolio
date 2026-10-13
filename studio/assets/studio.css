@@ -529,7 +529,7 @@ dialog.pfp::backdrop{background:rgba(20,12,6,.7)}
 .head .tabs button[aria-selected=true]{background:#f3e6d2;color:#1d2a26}
 .head .tabs+.me{margin-left:auto}
 @media (max-width:640px){.head .tabs{order:3;width:100%;justify-content:space-between}.head .tabs button{flex:1}}
-#list[hidden],#drive[hidden],#queue[hidden],#catsBox[hidden],#peopleBox[hidden]{display:none!important}
+#list[hidden],#drive[hidden],#queue[hidden],#catsBox[hidden],#peopleBox[hidden],#statsBox[hidden]{display:none!important}
 
 /* GlazyArray's style: her look and the backdrop (Note panel, Categories tab) */
 .ga-h{margin:6px 0 8px;font-size:1rem} .ga-h+div{margin-bottom:14px}
@@ -681,3 +681,62 @@ dialog.pfp::backdrop{background:rgba(20,12,6,.7)}
 .spTab:hover{border-color:#b08a52;color:var(--ink)}
 .spTab.on{border-color:#b08a52;background:#f4e6cf;color:var(--ink)}
 @media (prefers-reduced-motion:reduce){.spTab{transition:none}}
+
+/* the Stats tab (studio.js renderStats): the site's visits from the server's logs. One series, one hue (the Studio's
+   teal, checked against the paper); thin marks with round ends, values in ink, never in the bar's colour. Bars grow in
+   and the hover note fades, eased, per the motion rule; with reduced motion they're simply there. */
+.panel.site-stats{--stx:#0f8f80;--stx-grid:rgba(43,33,24,.12)}
+.stx-head{display:flex;gap:12px 20px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
+.stx-head h2{margin-bottom:4px} .stx-head p{margin:0;max-width:56ch;font-size:14px}
+.stx-span{display:inline-flex;gap:2px;padding:3px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.35)}
+.stx-span button{border:0;background:transparent;padding:6px 12px;font-size:14px;box-shadow:none;transition:background-color .6s ease-in-out,color .6s ease-in-out}
+.stx-span button[aria-pressed=true]{background:var(--ink);color:#f6efe2}
+.site-stats.stx-busy>*:not(.stx-head){opacity:.55;transition:opacity .6s ease-in-out}
+.stx-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:16px 0 4px}
+.stx-tile{background:rgba(255,255,255,.45);border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column}
+.stx-tile b{font:800 26px/1.1 var(--display)} .stx-tile span{font-weight:700;color:var(--ink2);font-size:14px} .stx-tile small{color:var(--ink3);font-size:12px}
+.stx-chart{position:relative;margin:6px 0 2px}
+.stx-plot{position:relative;height:180px;margin-left:34px}
+.stx-gl{position:absolute;left:0;right:0;border-top:1px solid var(--stx-grid)}
+.stx-gl span{position:absolute;right:calc(100% + 6px);top:-.65em;font-size:11px;color:var(--ink3);white-space:nowrap}
+.stx-cols{position:absolute;inset:0;display:flex;align-items:flex-end;gap:2px}
+.stx-cols.dense{gap:1px}
+.stx-col{flex:1 1 0;height:100%;display:flex;align-items:flex-end;justify-content:center;cursor:default}
+.stx-col i{display:block;width:100%;max-width:24px;height:var(--h);min-height:0;background:var(--stx);border-radius:4px 4px 0 0;
+  transform:scaleY(0);transform-origin:bottom;transition:transform .9s ease-in-out,opacity .6s ease-in-out}
+.stx-cols.dense .stx-col i{border-radius:2px 2px 0 0}
+.stx-in .stx-col i{transform:scaleY(1)}
+.stx-cols:hover .stx-col i{opacity:.55} .stx-cols .stx-col.hot i{opacity:1}
+.stx-x{position:relative;height:18px;margin:4px 0 0 34px;font-size:11px;color:var(--ink3)}
+.stx-x span{position:absolute;top:0;white-space:nowrap} .stx-x .t0{left:0} .stx-x .t1{left:50%;transform:translateX(-50%)} .stx-x .t2{right:0}
+.stx-tip{position:absolute;top:-6px;transform:translate(-50%,-100%);background:#2b2118;color:#f6efe2;border-radius:6px;padding:6px 9px;font-size:12px;line-height:1.35;
+  pointer-events:none;opacity:0;transition:opacity .4s ease-in-out;white-space:nowrap;display:flex;flex-direction:column;box-shadow:0 4px 12px rgba(0,0,0,.25)}
+.stx-tip.on{opacity:1}
+.stx-table{margin:6px 0 4px} .stx-table summary{cursor:pointer;color:var(--ink2);font-size:14px}
+.stx-two{display:grid;grid-template-columns:1fr 1fr;gap:4px 24px}
+@media (max-width:700px){.stx-two{grid-template-columns:1fr}}
+.stx-bars{list-style:none;padding:0;margin:0;display:grid;gap:7px}
+.stx-bars li{display:grid;grid-template-columns:minmax(90px,38%) 1fr auto;gap:10px;align-items:center;font-size:14px}
+.stx-bars .l{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.stx-bars .b{height:12px;display:block}
+.stx-bars .b i{display:block;height:100%;width:var(--w);min-width:2px;background:var(--stx);border-radius:0 4px 4px 0;transform:scaleX(0);transform-origin:left;transition:transform .9s ease-in-out}
+.stx-in .stx-bars .b i{transform:scaleX(1)}
+.stx-bars .v{font-weight:700;text-align:right;white-space:nowrap} .stx-bars .v small{display:block;font-weight:400;color:var(--ink3);font-size:11px}
+.stx-tw{overflow-x:auto}
+.stx-t{width:100%;border-collapse:collapse;font-size:14px}
+.stx-t th{text-align:left;font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink3);font-weight:700;padding:4px 8px;border-bottom:1px solid var(--line)}
+.stx-t td{padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+.stx-t .n{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.stx-t td:first-child{position:relative}
+.stx-mini{display:block;height:3px;margin-top:4px;width:var(--w);max-width:100%;background:var(--stx);border-radius:0 2px 2px 0;opacity:.75;transform:scaleX(0);transform-origin:left;transition:transform .9s ease-in-out}
+.stx-in .stx-mini{transform:scaleX(1)}
+.stx-log td{white-space:nowrap} .stx-log td:nth-child(2){white-space:normal;min-width:180px}
+.stx-more{font-size:13px;margin:6px 0 0}
+.stx-src{margin-top:16px;font-size:14px;color:var(--ink2)} .stx-src summary{cursor:pointer}
+.stx-src ul{margin:6px 0 0;padding-left:18px} .stx-src code{word-break:break-all}
+.stx-src.warn{padding:12px 14px;border:1px dashed #c99a48;border-radius:6px;background:#fffaf0}
+.stx-src.warn p{margin:6px 0 0}
+@media (prefers-reduced-motion: reduce){
+  .stx-col i,.stx-bars .b i,.stx-mini{transform:none;transition:none}
+  .stx-tip,.stx-span button,.site-stats.stx-busy>*{transition:none}
+}
