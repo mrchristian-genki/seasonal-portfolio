@@ -53,7 +53,8 @@
   { "name": "donegal-2", "file": "donegal-2.jpg", "about": "Donegal", "v": "tmuzrb", "scene": "a white lighthouse and keepers' cottages on a rocky headland at a pink sunset, waves breaking below" },
   { "name": "donegal-3", "file": "donegal-3.jpg", "about": "Donegal", "v": "tmuzrb", "scene": "a pale cone of a mountain wrapped in low cloud above a still lake, bog and old stone walls" },
   { "name": "donegal-4", "file": "donegal-4.jpg", "about": "Donegal", "v": "tmuzrb", "scene": "a sandy cove between dark cliffs and sea stacks, turquoise surf and green clifftop paths" },
-  { "name": "donegal-5", "file": "donegal-5.jpg", "about": "Donegal", "v": "tmuzrb", "scene": "a stone castle among trees on the shore of a mountain lake, misty slopes and flowering rhododendrons" }
+  { "name": "donegal-5", "file": "donegal-5.jpg", "about": "Donegal", "v": "tmuzrb", "scene": "a stone castle among trees on the shore of a mountain lake, misty slopes and flowering rhododendrons" },
+  { "name": "lake-tahoe-2", "file": "lake-tahoe-2.webp", "about": "", "v": "tmv9k2", "scene": "a Lake Tahoe shoreline with clear turquoise water, smooth granite boulders and pines at golden hour" }
  ],
  "categoryBackdrops": {
   "automaton": "workshop-with-robots",

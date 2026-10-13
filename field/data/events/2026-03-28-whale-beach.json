@@ -1635,10 +1635,9 @@
   "#4c76e1"
  ],
  "narratorBackdrop": {
-  "backdrop": "lake-tahoe-beach",
-  "fit": "category",
-  "from": "lake-tahoe",
-  "scene": ""
+  "backdrop": "lake-tahoe-2",
+  "fit": "new",
+  "scene": "a Lake Tahoe shoreline with clear turquoise water, smooth granite boulders and pines at golden hour"
  },
  "feature": {
   "theme": "untethered",
