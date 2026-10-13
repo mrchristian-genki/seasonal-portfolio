@@ -320,6 +320,13 @@ render tinted her chest green under the lei, which stays out of the cut. A Note 
 `hawaii` in `looks.json`, Robot Marley's alone for now (`"marley": true`, no file: GlazyArray keeps her curls until
 she has one).
 
+**Narrators in step (Oct 13):** the Studio's Categories tab lists every look more than one narrator wears (the
+holidays, and the looks marked `"marley": true`, the ones she has parts for) and who has her piece. A missing one is
+a click from its prompts: GlazyArray's two (from the look's `gaLook`, `gaA` and `gaB`, else its `about`) fill in Add a
+look, and her render lands on the same look, which stays Robot Marley's too; Robot Marley's two (a hat and a charm,
+then both cyan) are rendered from her seated template and brought to Claude to cut, then added to `js/marley.js`
+`HOL`, `publish.mjs` `MLY_HOL`, and `"marley": true` on the look.
+
 **Still to make:** the leaf charm painted cyan (6, same prompt as the others); a wide "ah" edited from the bone-tag template (`461`), not the plain-ring one; empty
 lenses (2a) if her eyes should glance; her moves (7) and scenes (8).
 

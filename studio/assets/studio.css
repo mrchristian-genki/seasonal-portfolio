@@ -768,3 +768,8 @@ dialog.pfp::backdrop{background:rgba(20,12,6,.7)}
 .stx-tl{list-style:none;padding:0;margin:0;display:grid;gap:10px}
 .stx-tl li{display:flex;gap:12px;align-items:baseline} .stx-tl b{font:800 22px/1 var(--display);min-width:76px;text-align:right}
 .stx-tl span{display:flex;flex-direction:column;font-weight:700;color:var(--ink2);font-size:14px} .stx-tl small{font-weight:400;color:var(--ink3);font-size:12px;overflow-wrap:anywhere}
+/* Categories tab, narrators in step: a missing piece's prompts (studio.js syncShow); Marley's avatar is a photo, not a cap */
+.panel.cats .catl.sync img[src*="marley-avatar"]{object-fit:cover}
+.panel.cats .sync-box{margin:0 0 14px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fafcfc;animation:sync-in .7s ease-in-out}
+@keyframes sync-in{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.panel.cats .sync-box{animation:none}}

@@ -564,7 +564,7 @@ fs.writeFileSync(path.join(OUT, 'feed.xml'), rss);
   const has = (dir, f) => !!f && fs.existsSync(path.join(SITE, 'assets/narrator', dir, f));
   const lk = Object.fromEntries((J.looks || []).map((l) => [l.name, l])), bk = Object.fromEntries((J.backdrops || []).map((b) => [b.name, b]));
   const bad = [];
-  for (const l of J.looks || []) if (!l.marley && !has('looks', l.file)) bad.push(`look ${l.name}: no file ${l.file}`);
+  for (const l of J.looks || []) if ((l.file || !l.marley) && !has('looks', l.file)) bad.push(`look ${l.name}: no file ${l.file}`);
   for (const b of J.backdrops || []) if (!has('backdrops', b.file)) bad.push(`backdrop ${b.name}: no file ${b.file}`);
   for (const [c, n] of Object.entries(J.categories || {})) if (!lk[n] && n !== 'curls') bad.push(`category ${c}: no look called ${n}`);
   for (const [c, n] of Object.entries(J.categoryBackdrops || {})) if (!bk[n]) bad.push(`category ${c}: no backdrop called ${n}`);

@@ -199,7 +199,7 @@ function apply_looks(GitHub $gh, array &$files, array $body): void
                 $bcats[$cat] = $b;
             }
         }
-        $fixed = fn(array $l) => isset($l['to']) || !empty($l['rotate']) || !empty($l['marley']);   // marley: Robot Marley's own look (hawaii)
+        $fixed = fn(array $l) => isset($l['to']) || !empty($l['rotate']) || !empty($l['marley']);   // marley: a look Robot Marley wears too (her parts: js/marley.js HOL)
         // a look's flair masks go with it (and a replaced look's old ones, unless the new one brings its own)
         $unflair = function (array $l) use (&$files) {
             $stem = preg_replace('/\.(webp|png)$/', '', (string) ($l['file'] ?? ''));
@@ -220,15 +220,18 @@ function apply_looks(GitHub $gh, array &$files, array $body): void
         if (is_array($nl)) {
             $name = (string) ($nl['name'] ?? ''); $ext = (string) ($nl['ext'] ?? ''); $lsha = (string) ($nl['sha'] ?? '');
             if (!preg_match('/^[a-z0-9-]{1,40}$/', $name) || $name === 'curls' || !in_array($ext, ['webp', 'png'], true) || !preg_match('/^[0-9a-f]{40}$/', $lsha)) json_fail('Bad look.');
+            $was = [];
             foreach ($list as $k => $l) {
                 if (($l['name'] ?? '') !== $name) continue;
-                if ($fixed($l)) json_fail("\"$name\" is one of her holiday looks or hair styles. Pick another name for this one.");
+                if ($fixed($l) && !(!empty($l['marley']) && empty($l['file']))) json_fail("\"$name\" is one of her holiday looks or hair styles. Pick another name for this one.");
+                $was = $l;   // a look only Robot Marley had (marley, no file) getting GlazyArray's image: it stays Marley's too
                 if (($l['file'] ?? '') !== "$name.$ext" && preg_match('/^[a-z0-9-]{1,40}\.(webp|png)$/', (string) ($l['file'] ?? ''))) $files['assets/narrator/looks/' . $l['file']] = null;   // the old file, if it changes type
                 $unflair($l);
                 unset($list[$k]);
             }
             // v: changes with every version, so a replaced image isn't served from a cache
             $look = ['name' => $name, 'file' => "$name.$ext", 'about' => mb_substr(trim((string) ($nl['about'] ?? '')), 0, 120), 'v' => base_convert((string) time(), 10, 36)];
+            if (!empty($was['marley'])) { $look['marley'] = true; if ($look['about'] === '') $look['about'] = (string) ($was['about'] ?? ''); }
             if (($nl['bulb'] ?? true) === false) $look['bulb'] = false;
             // her flair: the masks of the parts that take the Note's palette (look.js), one per colour
             $fl = '';
