@@ -18,7 +18,8 @@
   { "name": "trail-cap", "file": "trail-cap.webp", "bulb": false, "about": "a trucker cap with a GA leather patch, its front and brim in one colour and its mesh back in the other", "v": "tw2a", "flair": "ab", "flairK": 1, "flairDye": "ab", "flairBase": ["#2fb5ad","#efe7d6"] },
   { "name": "beach-shades", "file": "beach-shades.webp", "about": "round sunglasses pushed up in her curls, with a gem clip: the frames in one colour and the gem in the other", "v": "tw2e", "flair": "ab", "flairK": 1, "flairDye": "ab", "flairBase": ["#e0533d","#2fb5ad"] },
   { "name": "workshop-goggles", "file": "workshop-goggles.webp", "about": "brass workshop goggles pushed up on her forehead: the leather strap in one colour and the padded rims in the other", "v": "tw2e", "flair": "ab", "flairDye": "ab", "flairK": 1, "flairBase": ["#7a4a2a","#2fb5ad"] },
-  { "name": "grad-cap", "file": "grad-cap.webp", "about": "a mortarboard, its board in one colour and its tassel in the other", "v": "tw2a", "bulb": false, "flair": "ab", "flairDye": "ab", "flairK": 1, "flairBase": ["#26355e","#d4a23c"] }
+  { "name": "grad-cap", "file": "grad-cap.webp", "about": "a mortarboard, its board in one colour and its tassel in the other", "v": "tw2a", "bulb": false, "flair": "ab", "flairDye": "ab", "flairK": 1, "flairBase": ["#26355e","#d4a23c"] },
+  { "name": "hawaii", "marley": true, "about": "Robot Marley's sunglasses and flower lei (GlazyArray keeps her curls)" }
  ],
  "categories": {
   "automaton": "workshop-goggles",

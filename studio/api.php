@@ -199,7 +199,7 @@ function apply_looks(GitHub $gh, array &$files, array $body): void
                 $bcats[$cat] = $b;
             }
         }
-        $fixed = fn(array $l) => isset($l['to']) || !empty($l['rotate']);
+        $fixed = fn(array $l) => isset($l['to']) || !empty($l['rotate']) || !empty($l['marley']);   // marley: Robot Marley's own look (hawaii)
         // a look's flair masks go with it (and a replaced look's old ones, unless the new one brings its own)
         $unflair = function (array $l) use (&$files) {
             $stem = preg_replace('/\.(webp|png)$/', '', (string) ($l['file'] ?? ''));

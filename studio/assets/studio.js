@@ -568,7 +568,7 @@
       var bdopts = '<option value="">No backdrop</option>' + bds.map(function (b) { return '<option value="' + esc(b.name) + '">' + esc(b.name + (b.about ? ' · ' + b.about : '')) + '</option>'; }).join('');
       var bsrc = function (n) { var b = bds.filter(function (x) { return x.name === n; })[0]; return b ? bdSrc(b) : ''; };
       var opts = '<option value="">No look</option><option value="curls">curls</option>' + list.map(function (l) { return '<option value="' + esc(l.name) + '">' + esc(l.name + (l.about ? ' · ' + l.about : '')) + '</option>'; }).join('');
-      var src = function (n) { var l = list.filter(function (x) { return x.name === n; })[0]; return n === 'curls' ? '/assets/narrator/head-base.webp' : l ? '/assets/narrator/looks/' + esc(l.file) + (l.v ? '?r=' + esc(l.v) : '') : ''; };
+      var src = function (n) { var l = list.filter(function (x) { return x.name === n; })[0]; return n === 'curls' ? '/assets/narrator/head-base.webp' : l ? lookSrc(l) : ''; };
       var cnar = J.categoryNarrators || {}, nv = function (c) { return c in CATNP ? CATNP[c] : (cnar[c] || ''); };
       var NOPTS = '<option value="">The default</option><option value="glazyarray">GlazyArray</option><option value="alta">A.L.T.A.</option><option value="marley">Robot Marley</option>';
       // A.L.T.A.'s tank backdrops (looks.json tankBackdrops, files in assets/alta/backdrops): a column once there are any
@@ -1132,7 +1132,7 @@
   var LOOKPICK = false, LOOKREPL = false;   // LOOKREPL: Replace pressed, so the prompt and the drop zone show   // two category looks on this Note and none picked yet (for the next steps)
   var LOOKS = null, LOOKCATS = null, CATNEW = {}, LOOKNEW = null, LOOKSAVED = {}, LOOKDEL = null;   // CATNEW: category -> look ('' for none), waiting for Save   // LOOKNEW: { name, blob, ext, url } waiting for Save;
   // LOOKSAVED: name -> this session's image, shown until the site has it; LOOKDEL: a look to take off the site on Save
-  function lookSrc(l) { return LOOKSAVED[l.name] || '/assets/narrator/looks/' + esc(l.file) + (l.v ? '?r=' + esc(l.v) : ''); }
+  function lookSrc(l) { return LOOKSAVED[l.name] || (l.file ? '/assets/narrator/looks/' + esc(l.file) + (l.v ? '?r=' + esc(l.v) : '') : '/assets/marley/marley-avatar.jpg'); }   // a look with no file is Robot Marley's alone (hawaii)
   // this Note's categories (Play's filter tags, as field/tools/publish.mjs makes them): its own tags, then its kind
   function noteCats() {
     var slug = function (t) { return String(t || '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); };
@@ -1394,7 +1394,7 @@
       var list = r[0], cats = {}; Object.keys(r[1]).concat(Object.keys(CATNEW)).forEach(function (k) { var v = k in CATNEW ? CATNEW[k] : r[1][k]; if (v) cats[k] = v; });
       var L = E.narratorLook; if (L && L.fit === 'category') L = null;   // a category's cap is ticked above, not here
       var entry = L && list.filter(function (l) { return l.name === L.look; })[0];
-      var made = L && (L.look === 'curls' || !!entry), own = !!entry && !entry.to && !entry.rotate;   // own: a Note look (not a holiday or hair style)
+      var made = L && (L.look === 'curls' || !!entry), own = !!entry && !entry.to && !entry.rotate && !entry.marley;   // own: a Note look (not a holiday or hair style)
       var waiting = LOOKNEW && L && LOOKNEW.name === L.look;
       var opts = '<option value="">None: her category or holiday look</option><option value="curls">curls</option>' + list.filter(function (l) { return l.name !== LOOKDEL; }).map(function (l) { return '<option value="' + esc(l.name) + '">' + esc(l.name + (l.about ? ' · ' + l.about : '')) + '</option>'; }).join('') +
         (L && !made ? '<option value="' + esc(L.look) + '">' + esc(L.look) + (waiting ? ' (new: saves with the Note)' : ' (not made yet)') + '</option>' : '') +

@@ -312,6 +312,14 @@ holiday dates (`assets/narrator/looks.json`, the same windows as GlazyArray's) u
 out with her parts and back after (the clips don't have it). To fit the witch's hat she's drawn at 84%, scaled about a
 point 30% down her stage. **Thanksgiving's** is on its way.
 
+**Hawaii (Oct 13, Christian's renders):** not a holiday, only picked: sunglasses pushed up on her head and a frangipani
+lei, an own-colour render and a cyan one, cut the same way (`hat-hawaii` and `charm-lei`, each with `-dye` and
+`-mask`). The glasses are worn as her hat and tilt with her head; the lei is her charm, the one that doesn't swing.
+The lei's leaves were kept where they're clearly leaves (over her body, and the darker ones against the green); the
+render tinted her chest green under the lei, which stays out of the cut. A Note or category picks it as the look
+`hawaii` in `looks.json`, Robot Marley's alone for now (`"marley": true`, no file: GlazyArray keeps her curls until
+she has one).
+
 **Still to make:** the leaf charm painted cyan (6, same prompt as the others); a wide "ah" edited from the bone-tag template (`461`), not the plain-ring one; empty
 lenses (2a) if her eyes should glance; her moves (7) and scenes (8).
 
