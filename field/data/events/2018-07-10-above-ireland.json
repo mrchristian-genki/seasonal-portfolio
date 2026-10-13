@@ -436,12 +436,12 @@
   "#82b234"
  ],
  "narratorLook": {
-  "look": "curls",
+  "look": "st-patricks",
   "fit": "existing",
-  "about": "her own curls",
-  "why": "These were drone flights, not a ride, so her own curls instead of the ride category's bike helmet.",
+  "about": "",
+  "why": "",
   "prompt": "",
-  "bulb": true
+  "bulb": false
  },
  "publishedAt": "2026-10-13T03:41:57Z"
 }
