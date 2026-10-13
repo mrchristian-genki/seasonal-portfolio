@@ -320,6 +320,10 @@ render tinted her chest green under the lei, which stays out of the cut. A Note 
 `hawaii` in `looks.json`, Robot Marley's alone for now (`"marley": true`, no file: GlazyArray keeps her curls until
 she has one).
 
+**Tahoe winter (Oct 13, Christian's renders):** a chunky knit beanie with a pom-pom and a pinecone charm in a brass
+frame (`hat-beanie`, `charm-wintercone`, each with `-dye` and `-mask`), cut by the cyan shape like the others. She wears
+them on Tahoe winter's dates (01-02 to 01-31); the beanie takes a Note's first colour, the charm's frame the second.
+
 **Narrators in step (Oct 13):** the Studio's Categories tab lists every look more than one narrator wears (the
 holidays, and the looks marked `"marley": true`, the ones she has parts for) and who has her piece. A missing one is
 a click from its prompts: GlazyArray's two (from the look's `gaLook`, `gaA` and `gaB`, else its `about`) fill in Add a

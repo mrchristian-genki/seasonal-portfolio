@@ -6,7 +6,7 @@
   { "name": "crimp", "file": "crimp.webp", "rotate": true, "v": "tw2b", "flair": "ab", "flairDye": "ab", "flairK": 1, "flairBase": ["#e0559a","#f4efe6"] },
   { "name": "headband", "file": "headband.webp", "rotate": true, "v": "tw2c", "flair": "ab", "flairDye": "ab", "flairK": 1, "flairBase": ["#9c2a35","#e9c46a"] },
   { "name": "updo", "file": "updo.webp", "rotate": true, "v": "tw2c", "flair": "ab", "flairDye": "ab", "flairK": 1, "flairBase": ["#c9506a","#f4efe6"] },
-  { "name": "tahoe-winter", "file": "beanie.webp", "from": "01-02", "to": "01-31", "bulb": false, "v": "tw2d", "flair": "ab", "flairK": 1, "flairDye": "ab", "flairBase": ["#3fb7c0","#f2ede4"] },
+  { "name": "tahoe-winter", "marley": true, "file": "beanie.webp", "from": "01-02", "to": "01-31", "bulb": false, "v": "tw2d", "flair": "ab", "flairK": 1, "flairDye": "ab", "flairBase": ["#3fb7c0","#f2ede4"] },
   { "name": "valentines", "file": "valentine.webp", "from": "02-10", "to": "02-14", "flair": "ab", "flairK": 1, "v": "tw2g", "flairDye": "ab", "flairBase": ["#d8344f","#f4c6d0"] },
   { "name": "st-patricks", "marley": true, "file": "stpatrick.webp", "from": "03-15", "to": "03-17", "bulb": false, "flair": "ab", "flairK": 1, "v": "tw2h", "flairDye": "ab", "flairBase": ["#1f7a3a","#e9c46a"] },
   { "name": "spring", "file": "bunny.webp", "from": "03-20", "to": "04-20", "bulb": false, "flair": "ab", "flairK": 1, "v": "tw2i", "flairDye": "ab", "flairBase": ["#f2ede4","#e6a3c4"] },

@@ -117,7 +117,7 @@ const mlyBdAttr = (e) => {
   const hol = lk && (lk.from === 'note' || lk.from === 'category') && MLY_HOL.includes(lk.name) ? ` data-look="${lk.name}"` : '';
   return bd + hol + (e.ignoreHolidays ? ' data-noholiday' : '');
 };
-const MLY_HOL = ['halloween', 'winter-holidays', 'st-patricks', 'hawaii'];   // the holidays (and Hawaii) Robot Marley has a look for (js/marley.js HOL)
+const MLY_HOL = ['halloween', 'winter-holidays', 'st-patricks', 'hawaii', 'tahoe-winter'];   // the holidays (and Hawaii) Robot Marley has a look for (js/marley.js HOL)
 // moments in an episode her player acts on (js/alta.js): [{at: seconds, eyes: 'amber' | 'cyan' | ''}], from the Note
 const cueAttr = (e) => {
   const c = (e.episode && Array.isArray(e.episode.cues) ? e.episode.cues : []).filter((x) => x && isFinite(x.at)).map((x) => ({ at: +x.at, eyes: x.eyes || '' }));
@@ -224,7 +224,7 @@ const foot = (rel) => `<footer class="foot"><p>${esc(show.narrationNote)}</p>
 <script src="${rel}../assets/narrator/resolve.js?v=5" defer></script>
 <script src="${rel}../js/narrator.js?v=45" defer></script>
 <script src="${rel}../js/alta.js?v=16" defer></script>
-<script src="${rel}../js/marley.js?v=12" defer></script>
+<script src="${rel}../js/marley.js?v=13" defer></script>
 </body>
 </html>
 `;
