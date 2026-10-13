@@ -11,15 +11,19 @@
 .mly-parts{position:absolute;left:6.6667%;top:1.355%;width:93.3333%;height:98.645%;transition:opacity .6s ease-in-out}
 /* her seat (Christian, Oct 12: so she isn't floating over a backdrop): an old tree stump, his picture cut from its
    white ground (assets/marley/seat-stump.webp, 1249 x 510), running off the bottom and sides of her stage. She and her
-   moves are scaled down together from the top centre of the stage (the parts' origin is that same point in their own
-   box) so her paws land on its top, a soft shadow where she sits */
-.mly-st .mly-seat{position:absolute;z-index:0;left:-10.5%;top:72%;width:120.6%;height:40%;pointer-events:none;
+   moves are scaled down together (below) so her paws land on its top, a soft shadow where she sits */
+.mly-st .mly-seat{position:absolute;z-index:0;left:-10.5%;top:76.5%;width:120.6%;height:40%;pointer-events:none;
   background:url(/assets/marley/seat-stump.webp) 0 0/100% 100% no-repeat}
 .mly-seat::after{content:"";position:absolute;left:30%;width:38%;top:16%;height:16%;border-radius:50%;
   background:radial-gradient(closest-side,rgba(0,0,0,.4),rgba(0,0,0,.15) 65%,transparent)}
-.mly-st .mly-parts,.mly-st .mly-mv-c{transform:scale(.86)}
-.mly-st .mly-parts{transform-origin:46.4286% -1.3736%}
-.mly-st .mly-mv-c{transform-origin:50% 0}
+.mly-st .mly-parts,.mly-st .mly-mv-c{transform:scale(.84)}
+/* scaled about a point 30% down the stage's centre line (the same point in the parts' own box), so a holiday hat's
+   tip, which reaches the top of her template, stays inside the stage; the stump sits that much lower to meet her paws */
+.mly-st .mly-parts{transform-origin:46.4286% 29.0384%}
+.mly-st .mly-mv-c{transform-origin:50% 30%}
+/* her holiday hat (js/marley.js hat): on her head, so it tilts with it; a new one fades in as the old fades out */
+.mly-hat{pointer-events:none}
+.mly-hatk{transition:opacity .9s ease-in-out}
 .mly-st.moving .mly-parts{opacity:0}
 /* her stand-in while her parts load: a small still of her seated pose (parts/web/still.webp, 6 KB), so the stage is
    never empty; it fades out once every part is in, so it never shows behind an ear or her tail as they move */
@@ -80,7 +84,7 @@
 @media (prefers-reduced-motion: reduce){
   .mly-tail,.mly-body,.mly-charm.sw{animation:none}
   .mly-head,.mly-ear,.mly-mouth img,.mly-lids,.mly-glow,.mly-own,.mly-dyed,.mly-dye,.mly-parts,.mly-parts::before,.mly-mv-c,.mly-chip{transition:none}
-  .mly-chip::after,.mly-chip.run.go::after{transition:none} .mly-chip.run.wait::after{animation:none;width:auto;right:12px}
+  .mly-chip::after,.mly-chip.run.go::after,.mly-hatk{transition:none} .mly-chip.run.wait::after{animation:none;width:auto;right:12px}
   .mly-ctl.busy .mly-chip:not(.run){animation:none;opacity:.4}
 }
 /* in a Listen bar (a Note she narrates): her stage above the episode's player */

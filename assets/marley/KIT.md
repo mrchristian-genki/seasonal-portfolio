@@ -299,6 +299,19 @@ idle blinks, ear flicks and a curious tilt, and a move every 22 to 40 s while sh
 her parts cross-fading to the clip and back. `data-controls` adds her buttons, `data-charm` and `data-palette` dress
 her. She's live in her feature Note (a `marley` block) and in the Parts Catalog (two cards).
 
+**Her holiday looks (Oct 13, Christian's renders):** a hat and a charm per holiday, each in her own colours and from
+a cyan render for a Note's colours, cut by Claude: Halloween (a witch's hat and a broom), the winter holidays (a top
+hat with holly and a snow globe) and St. Patrick's (a buckled hat and a four-leaf clover). In `parts/web/`:
+`hat-<halloween|winter|stpatricks>` and `charm-<broom|snowglobe|clover>`, each with `-dye` (the cyan turned to grey
+shading) and `-mask` (where the cyan was). The renders line up with her template exactly; each piece was cut out by
+the cyan shape (the hats stopped at their brims, so none of her head comes with them), the own-colour ones guided by
+it (the green hat on the green screen by being darker than it). A hat sits on her head layer and tilts with it, and
+with a Note's colours takes the first (as her collar does); the charm takes the second. She wears them on the site's
+holiday dates (`assets/narrator/looks.json`, the same windows as GlazyArray's) unless the Note ignores holidays;
+`data-holiday` picks one ("none" for none), and her buttons have a Holiday row. During one of her moves the hat fades
+out with her parts and back after (the clips don't have it). To fit the witch's hat she's drawn at 84%, scaled about a
+point 30% down her stage. **Thanksgiving's** is on its way.
+
 **Still to make:** the leaf charm painted cyan (6, same prompt as the others); a wide "ah" edited from the bone-tag template (`461`), not the plain-ring one; empty
 lenses (2a) if her eyes should glance; her moves (7) and scenes (8).
 

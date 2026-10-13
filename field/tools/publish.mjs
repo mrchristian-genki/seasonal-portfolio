@@ -181,7 +181,7 @@ ${ICONS}
 <link rel="stylesheet" href="${rel}../css/lake.css?v=2">
 <link rel="stylesheet" href="${rel}../css/narrator.css?v=33">
 <link rel="stylesheet" href="${rel}../css/alta.css?v=10">
-<link rel="stylesheet" href="${rel}../css/marley.css?v=7">
+<link rel="stylesheet" href="${rel}../css/marley.css?v=8">
 <script>/* Logo season from the calendar, as on About. */document.documentElement.dataset.season=["winter","winter","spring","spring","spring","summer","summer","summer","fall","fall","fall","winter"][new Date().getMonth()];</script>
 <link rel="stylesheet" href="${rel}../css/route-dash.css?v=${V}">
 </head>
@@ -202,7 +202,7 @@ const foot = (rel) => `<footer class="foot"><p>${esc(show.narrationNote)}</p>
 <script src="${rel}../assets/narrator/resolve.js?v=4" defer></script>
 <script src="${rel}../js/narrator.js?v=45" defer></script>
 <script src="${rel}../js/alta.js?v=15" defer></script>
-<script src="${rel}../js/marley.js?v=9" defer></script>
+<script src="${rel}../js/marley.js?v=10" defer></script>
 </body>
 </html>
 `;
