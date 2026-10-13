@@ -94,8 +94,14 @@ const mlyBdAttr = (e) => {
   const pf = e.narratorBackdrop && e.narratorBackdrop.fit === 'category' && e.narratorBackdrop.from;
   const p = RES.R.pick(RES.J, { backdrop: nb || undefined, cats, prefer: pf || undefined, ignoreHolidays: !!e.ignoreHolidays });
   const b = p.backdrop && (RES.J.backdrops || []).find((x) => x.name === p.backdrop.name);
-  return b && /^[\w.-]+\.(webp|jpg|png)$/.test(b.file || '') && fs.existsSync(path.join(SITE, 'assets/narrator/backdrops', b.file)) ? ` data-bd="/assets/narrator/backdrops/${b.file}${b.v ? '?v=' + b.v : ''}"` : '';
+  const bd = b && /^[\w.-]+\.(webp|jpg|png)$/.test(b.file || '') && fs.existsSync(path.join(SITE, 'assets/narrator/backdrops', b.file)) ? ` data-bd="/assets/narrator/backdrops/${b.file}${b.v ? '?v=' + b.v : ''}"` : '';
+  // her holiday look when this Note (or its category) chose one she has, as GlazyArray's look is picked but leaving the
+  // dates out: her player puts a holiday on its dates first, then this (js/marley.js HOL). And a Note that ignores holidays
+  const lk = RES.R.pick(RES.J, { look: mine(e.narratorLook) && e.narratorLook.look || undefined, cats, prefer: (e.narratorLook && e.narratorLook.fit === 'category' && e.narratorLook.from) || undefined, ignoreHolidays: true }).look;
+  const hol = lk && (lk.from === 'note' || lk.from === 'category') && MLY_HOL.includes(lk.name) ? ` data-look="${lk.name}"` : '';
+  return bd + hol + (e.ignoreHolidays ? ' data-noholiday' : '');
 };
+const MLY_HOL = ['halloween', 'winter-holidays', 'st-patricks'];   // the holidays Robot Marley has a look for (js/marley.js HOL)
 // moments in an episode her player acts on (js/alta.js): [{at: seconds, eyes: 'amber' | 'cyan' | ''}], from the Note
 const cueAttr = (e) => {
   const c = (e.episode && Array.isArray(e.episode.cues) ? e.episode.cues : []).filter((x) => x && isFinite(x.at)).map((x) => ({ at: +x.at, eyes: x.eyes || '' }));
@@ -202,7 +208,7 @@ const foot = (rel) => `<footer class="foot"><p>${esc(show.narrationNote)}</p>
 <script src="${rel}../assets/narrator/resolve.js?v=4" defer></script>
 <script src="${rel}../js/narrator.js?v=45" defer></script>
 <script src="${rel}../js/alta.js?v=15" defer></script>
-<script src="${rel}../js/marley.js?v=10" defer></script>
+<script src="${rel}../js/marley.js?v=11" defer></script>
 </body>
 </html>
 `;
