@@ -190,17 +190,21 @@
     }
     charm(el.getAttribute('data-charm') || 'bone');
     colours((el.getAttribute('data-palette') || '').split(' '));
-    // the holiday she wears: data-holiday names one ("none" for none); else the one on today's date, from the site's
-    // holiday windows, unless this Note ignores holidays (data-noholiday, as GlazyArray's do)
+    // the holiday she wears, in GlazyArray's order: data-holiday names one outright ("none" for none); else a holiday on
+    // today's date (the site's holiday windows) unless this Note ignores holidays (data-noholiday); else the holiday
+    // look this Note or its category chose (data-look, from field/tools/publish.mjs), say St. Patrick's on a Note
+    // about Ireland
     (function () {
-      var want = el.getAttribute('data-holiday');
-      if (want === 'none' || (el.closest && el.closest('[data-noholiday]'))) return;
+      var want = el.getAttribute('data-holiday'), own = el.getAttribute('data-look');
+      if (want === 'none') return;
       if (want && HOL[want]) return holiday(want);
+      var noDates = el.closest && el.closest('[data-noholiday]');
+      if (own && HOL[own] && noDates) return holiday(own);
       fetch('/assets/narrator/looks.json', { cache: 'no-cache' }).then(function (r) { return r.json(); }).then(function (J) {
         var d = new Date(), md = ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
-        var on = (J.looks || []).filter(function (l) { return HOL[l.name] && l.from && l.to && (l.from <= l.to ? md >= l.from && md <= l.to : md >= l.from || md <= l.to); })[0];
-        if (on && !holK) holiday(on.name);
-      }).catch(function () {});
+        var on = noDates ? null : (J.looks || []).filter(function (l) { return HOL[l.name] && l.from && l.to && (l.from <= l.to ? md >= l.from && md <= l.to : md >= l.from || md <= l.to); })[0];
+        if (!holK) { if (on) holiday(on.name); else if (own && HOL[own]) holiday(own); }
+      }).catch(function () { if (!holK && own && HOL[own]) holiday(own); });
     })();
 
     // her moves: a video (colour over mask) drawn in a canvas; her parts fade out as it fades in, and back near its end
