@@ -152,7 +152,7 @@
     var m = /^note\/(.+)$/.exec(v || '');
     if (m) return edit(m[1]);
     if (v === 'new') return edit(null);
-    if ((v === 'categories' || v === 'people') && owner()) return showList(v);
+    if ((v === 'categories' || v === 'people' || v === 'stats') && owner()) return showList(v);
     return showList();
   }
   function listen() {                    // Back and Forward (switch.js loads after this file, so at start)
@@ -164,24 +164,28 @@
   }
 
   // ---------- list ----------
-  // the list's tabs: the Notes, their Categories (GlazyArray's looks) and People (owner only)
+  // the list's tabs: the Notes, their Categories (GlazyArray's looks), People and the site's Stats (owner only)
   function showList(tab) {
-    tab = tab === 'categories' || tab === 'people' ? tab : 'notes';
+    tab = tab === 'categories' || tab === 'people' || tab === 'stats' ? tab : 'notes';
     if (dirty && !confirm('Leave without saving?')) return;
     dirty = false; E = null; fresh = {}; removed = []; INBOX = null; audioNew = null; audioGone = false; DRIVEAUD = null; DRIVETRK = null; trackRaw = null; trackSwap = false; clipsNew = {}; posterNew = {}; DRIVEVID = null; UPVID = []; stopTrim();
     route(tab);
-    var tabs = owner() ? '<nav class="tabs" role="tablist">' + [['notes', 'Notes'], ['categories', 'Categories'], ['people', 'People']].map(function (t) {
+    var tabs = owner() ? '<nav class="tabs" role="tablist">' + [['notes', 'Notes'], ['categories', 'Categories'], ['people', 'People'], ['stats', 'Stats']].map(function (t) {
       return '<button type="button" role="tab" data-tab="' + t[0] + '" aria-selected="' + (t[0] === tab) + '">' + t[1] + '</button>'; }).join('') + '</nav>' : '';
     app.innerHTML = '<div class="head"><h1>Field Notes</h1>' + tabs + '<span class="me">' + esc(CFG.me ? CFG.me.name : '') + (owner() ? '' : ' · editor') + '</span>' +
       (tab === 'notes' ? '<button id="new" class="primary">New entry</button>' : '') + '</div>' +
       '<section id="queue" class="panel queue" hidden></section><section id="peopleBox" class="panel people"' + (tab === 'people' ? '' : ' hidden') + '></section><section id="catsBox" class="panel cats"' + (tab === 'categories' ? '' : ' hidden') + '></section>' +
+      '<section id="statsBox" class="panel site-stats"' + (tab === 'stats' ? '' : ' hidden') + '></section>' +
       '<section id="drive" class="panel drive"' + (tab === 'notes' ? '' : ' hidden') + '><p class="muted">Checking Google Drive…</p></section><section id="wsOrder" class="panel wsorder" hidden></section><div id="list" class="cards"' + (tab === 'notes' ? '' : ' hidden') + '><p class="muted">Loading entries…</p></div>';
     if ($('#new')) $('#new').onclick = function () { edit(null); };
     $$('.tabs [data-tab]').forEach(function (b) { b.onclick = function () { showList(b.getAttribute('data-tab')); }; });
     if (tab === 'people') renderPeople();
+    if (tab === 'stats') renderStats();
     driveStatus();
     api('list').then(function (j) {
-      ENTRIES = j.entries; if (lastDrive) renderDrive(lastDrive);
+      ENTRIES = j.entries;
+      if (tab === 'stats' && SV.data) drawStats();   // the Notes' titles, now they're here
+      if (lastDrive) renderDrive(lastDrive);
       if (tab === 'categories') renderCats();
       if (tab !== 'notes') return;   // the other tabs only needed the list for their counts
       var st = {}; (CFG.statuses || []).forEach(function (s) { st[s.id] = s.label; });
@@ -351,6 +355,137 @@
       $$('[data-reset]', box).forEach(function (b) { b.onclick = function () { var n = b.getAttribute('data-reset'); if (!confirm('Give ' + n + ' a new password? The old one stops working.')) return; api('userreset', { name: n }).then(show).catch(function (err) { toast(err.message, true); }); }; });
       $$('[data-del]', box).forEach(function (b) { b.onclick = function () { var n = b.getAttribute('data-del'); if (!confirm('Remove ' + n + '? They\'re logged out, and what they saved for review stays for you to approve or discard.')) return; api('userdel', { name: n }).then(renderPeople).catch(function (err) { toast(err.message, true); }); }; });
     }).catch(function (err) { box.innerHTML = '<p class="err">' + esc(err.message) + '</p>'; });
+  }
+
+  // ---------- Stats (owner only): the site's visits, from the server's own access logs (api.php stats, lib/stats.php).
+  // No analytics on the pages: each day is summed up on the server from its log, bots, the Studio and page files left
+  // out, and kept, so the history outlives the logs. Pick a span; every chart and list sums the days in it. ----------
+  var SV = (function () { try { return JSON.parse(localStorage.getItem('studio-stats') || '{}'); } catch (e) { return {}; } })();
+  SV.span = [7, 30, 90, 365].indexOf(SV.span) >= 0 ? SV.span : 30; SV.page = 1; SV.data = null;
+  function saveSV() { try { localStorage.setItem('studio-stats', JSON.stringify({ span: SV.span })); } catch (e) { /* private window */ } }
+  function renderStats() {
+    var box = $('#statsBox'); if (!box) return;
+    if (!SV.data) box.innerHTML = '<h2>Site stats</h2><p class="muted">Reading the server\'s logs…</p>';
+    else box.classList.add('stx-busy');
+    api('stats', null, '&days=' + SV.span).then(function (j) { SV.data = j; SV.page = 1; drawStats(); })
+      .catch(function (err) { box.classList.remove('stx-busy'); box.innerHTML = '<h2>Site stats</h2><p class="err">' + esc(err.message) + '</p>'; });
+  }
+  function drawStats() {
+    var box = $('#statsBox'), j = SV.data; if (!box || !j) return;
+    box.classList.remove('stx-busy');
+    var days = j.days || [], N = function (n) { return (n || 0).toLocaleString(); };
+    var title = {}; (ENTRIES || []).forEach(function (e) { title[e.id] = e.title || e.id; });
+    var noteName = function (id) { return title[id] || id; };
+    var sum = function (k) { return days.reduce(function (a, d) { return a + (d[k] || 0); }, 0); };
+    var add = function (into, obj, f) { Object.keys(obj || {}).forEach(function (k) { into[k] = (into[k] || 0) + (f ? f(obj[k]) : obj[k]); }); return into; };
+    var areas = {}, areaV = {}, notes = {}, listens = {}, refs = {};
+    days.forEach(function (d) {
+      add(areas, d.areas, function (a) { return a.views; }); add(areaV, d.areas, function (a) { return a.visits; });
+      add(notes, d.notes); add(listens, d.listens); add(refs, d.refs);
+    });
+    var listenN = Object.keys(listens).reduce(function (a, k) { return a + listens[k]; }, 0);
+    var spans = [[7, '7 days'], [30, '30 days'], [90, '90 days'], [365, 'A year']].map(function (s) {
+      return '<button type="button" data-span="' + s[0] + '" aria-pressed="' + (SV.span === s[0]) + '">' + s[1] + '</button>'; }).join('');
+    var tile = function (n, label, hint) { return '<div class="stx-tile"><b>' + N(n) + '</b><span>' + label + '</span>' + (hint ? '<small>' + hint + '</small>' : '') + '</div>'; };
+    var html = '<div class="stx-head"><div><h2>Site stats</h2><p class="muted">From the server\'s own logs: no cookies or scripts on the pages. Bots, the Studio and the files a page pulls in are left out.</p></div>' +
+      '<div class="stx-span" role="group" aria-label="Span">' + spans + '</div></div>';
+    if (!j.source || !j.source.found) {
+      html += srcNote(j, true);
+      box.innerHTML = html; spanClicks(box); return;
+    }
+    html += '<div class="stx-tiles">' + tile(sum('visits'), 'Visits', 'a person on a given day') + tile(sum('views'), 'Page views') +
+      tile(listenN, 'Episode listens', 'people who pressed play') + tile(sum('feed'), 'Podcast feed checks', 'apps looking for new episodes') + '</div>';
+    html += '<h3>Visits per day</h3>' + dayChart(days, j.today);
+    html += '<div class="stx-two"><div><h3>Areas</h3>' + hbars(Object.keys(areas).map(function (a) { return [a, areas[a], N(areaV[a]) + ' visit' + (areaV[a] === 1 ? '' : 's')]; }), 'views') +
+      '</div><div><h3>Where visitors came from</h3>' + (Object.keys(refs).length ? hbars(Object.keys(refs).map(function (r) { return [r, refs[r]]; }).slice(0), 'views', 10) :
+      '<p class="muted">No visits from other sites in this span. Visits typed in, from bookmarks or from inside the site don\'t name a site.</p>') + '</div></div>';
+    var ids = Object.keys(notes).concat(Object.keys(listens).filter(function (k) { return !(k in notes); }));
+    ids.sort(function (a, b) { return (notes[b] || 0) - (notes[a] || 0) || (listens[b] || 0) - (listens[a] || 0); });
+    var top = Math.max.apply(null, ids.map(function (k) { return notes[k] || 0; }).concat([1]));
+    html += '<h3>Field Notes</h3>' + (ids.length ? '<div class="stx-tw"><table class="stx-t"><thead><tr><th>Note</th><th class="n">Opened</th><th class="n">Listens</th></tr></thead><tbody>' + ids.slice(0, 25).map(function (k) {
+      return '<tr><td><button type="button" class="link" data-note="' + esc(k) + '">' + esc(noteName(k)) + '</button><i class="stx-mini" style="--w:' + ((notes[k] || 0) / top * 100).toFixed(1) + '%"></i></td><td class="n">' + N(notes[k]) + '</td><td class="n">' + N(listens[k]) + '</td></tr>';
+    }).join('') + '</tbody></table></div>' + (ids.length > 25 ? '<p class="muted stx-more">And ' + (ids.length - 25) + ' more.</p>' : '') : '<p class="muted">No Notes opened in this span.</p>');
+    html += '<h3>Visitor log</h3><p class="muted">The last week\'s page views, newest first. A visitor\'s tag is new every day, so one visit\'s pages read together but no one can be followed from day to day; no addresses are kept.</p><div id="stxLog"></div><div class="pager" id="stxPg" hidden></div>';
+    html += srcNote(j, false);
+    box.innerHTML = html;
+    spanClicks(box);
+    $$('[data-note]', box).forEach(function (b) { b.onclick = function () { edit(b.getAttribute('data-note')); }; });
+    chartHover(box);
+    drawLog(days, noteName);
+    // the bars grow in, eased (css .stx-in), once they're on the page
+    requestAnimationFrame(function () { requestAnimationFrame(function () { box.classList.add('stx-in'); }); });
+  }
+  function spanClicks(box) {
+    $$('[data-span]', box).forEach(function (b) { b.onclick = function () { var n = +b.getAttribute('data-span'); if (n === SV.span) return; SV.span = n; saveSV(); box.classList.remove('stx-in'); $$('[data-span]', box).forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); }); renderStats(); }; });
+  }
+  // a round top for an axis: 1, 2 or 5 times a power of ten, at least n
+  function niceTop(n) { if (n <= 4) return 4; var p = Math.pow(10, Math.floor(Math.log10(n))); return [1, 2, 5, 10].map(function (m) { return m * p; }).filter(function (v) { return v >= n; })[0]; }
+  // visits per day, a column a day (every day in the span, the quiet ones too), with a hover note and a table view
+  function dayChart(days, today) {
+    var by = {}; days.forEach(function (d) { by[d.date] = d; });
+    var list = [], t = new Date((today || new Date().toISOString().slice(0, 10)) + 'T12:00:00');
+    for (var i = SV.span - 1; i >= 0; i--) { var d = new Date(t); d.setDate(t.getDate() - i); var k = d.toISOString().slice(0, 10); list.push(by[k] || { date: k, visits: 0, views: 0 }); }
+    var top = niceTop(Math.max.apply(null, list.map(function (d) { return d.visits || 0; }).concat([0])));
+    var fmt = function (k, long) { return new Date(k + 'T12:00:00').toLocaleDateString(undefined, long ? { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' } : { month: 'short', day: 'numeric' }); };
+    var grid = [top, top / 2, 0].map(function (v) { return '<div class="stx-gl" style="bottom:' + (v / top * 100) + '%"><span>' + Math.round(v).toLocaleString() + '</span></div>'; }).join('');
+    var cols = list.map(function (d) {
+      return '<div class="stx-col" data-tip="' + esc(fmt(d.date, true) + '|' + (d.visits || 0) + '|' + (d.views || 0)) + '"><i style="--h:' + ((d.visits || 0) / top * 100).toFixed(2) + '%"></i></div>'; }).join('');
+    var ticks = [0, Math.floor((list.length - 1) / 2), list.length - 1].map(function (i, n) { return '<span class="t' + n + '">' + fmt(list[i].date) + '</span>'; }).join('');
+    var rows = list.slice().reverse().map(function (d) { return '<tr><td>' + fmt(d.date, true) + '</td><td class="n">' + (d.visits || 0).toLocaleString() + '</td><td class="n">' + (d.views || 0).toLocaleString() + '</td></tr>'; }).join('');
+    return '<div class="stx-chart" role="img" aria-label="Visits per day, the last ' + SV.span + ' days"><div class="stx-plot">' + grid + '<div class="stx-cols' + (SV.span > 60 ? ' dense' : '') + '">' + cols + '</div></div>' +
+      '<div class="stx-x">' + ticks + '</div><div class="stx-tip" aria-hidden="true"></div></div>' +
+      '<details class="stx-table"><summary>As a table</summary><div class="stx-tw"><table class="stx-t"><thead><tr><th>Day</th><th class="n">Visits</th><th class="n">Page views</th></tr></thead><tbody>' + rows + '</tbody></table></div></details>';
+  }
+  function chartHover(box) {
+    var ch = $('.stx-chart', box); if (!ch) return;
+    var tip = $('.stx-tip', ch);
+    $$('.stx-col', ch).forEach(function (c) {
+      c.onmouseenter = function () {
+        var p = c.getAttribute('data-tip').split('|'), r = c.getBoundingClientRect(), b = ch.getBoundingClientRect();
+        tip.innerHTML = '<b>' + esc(p[0]) + '</b><span>' + Number(p[1]).toLocaleString() + ' visit' + (p[1] === '1' ? '' : 's') + '</span><span>' + Number(p[2]).toLocaleString() + ' page view' + (p[2] === '1' ? '' : 's') + '</span>';
+        tip.style.left = Math.min(Math.max(r.left - b.left + r.width / 2, 70), b.width - 70) + 'px';
+        tip.classList.add('on'); c.classList.add('hot');
+      };
+      c.onmouseleave = function () { tip.classList.remove('on'); c.classList.remove('hot'); };
+    });
+  }
+  // horizontal bars, biggest first: [label, value, note], the value at the bar's end
+  function hbars(items, unit, max) {
+    items = items.filter(function (x) { return x[1] > 0; }).sort(function (a, b) { return b[1] - a[1]; }).slice(0, max || 12);
+    if (!items.length) return '<p class="muted">Nothing yet.</p>';
+    var top = items[0][1];
+    return '<ul class="stx-bars">' + items.map(function (x) {
+      return '<li title="' + esc(x[0] + ': ' + x[1].toLocaleString() + ' ' + unit) + '"><span class="l">' + esc(x[0]) + '</span><span class="b"><i style="--w:' + (x[1] / top * 100).toFixed(1) + '%"></i></span>' +
+        '<span class="v">' + x[1].toLocaleString() + (x[2] ? '<small>' + esc(x[2]) + '</small>' : '') + '</span></li>'; }).join('') + '</ul>';
+  }
+  // the visitor log: the last week's page views (newest first), a page of 25 at a time
+  function drawLog(days, noteName) {
+    var rows = [];
+    days.forEach(function (d) { (d.log || []).forEach(function (r) { rows.push([d.date].concat(r)); }); });
+    rows.sort(function (a, b) { return a[0] + a[1] < b[0] + b[1] ? 1 : a[0] + a[1] > b[0] + b[1] ? -1 : 0; });   // newest first
+    var box = $('#stxLog'); if (!box) return;
+    if (!rows.length) { box.innerHTML = '<p class="muted">No page views in the last week.</p>'; return; }
+    var per = 25, pages = Math.ceil(rows.length / per); SV.page = Math.min(SV.page, pages);
+    var page = function (p) {
+      var label = function (path) { var m = /^\/play\/(\d{4}-\d{2}-\d{2}-[a-z0-9-]+)\/$/.exec(path); return m ? noteName(m[1]) : path === '/' ? 'Home' : path === '/?workshop' ? 'Home · Workshop' : path; };
+      box.innerHTML = '<div class="stx-tw"><table class="stx-t stx-log"><thead><tr><th>When</th><th>Page</th><th>From</th><th>Browser</th><th>Visitor</th></tr></thead><tbody>' + rows.slice((p - 1) * per, p * per).map(function (r) {
+        return '<tr><td>' + esc(new Date(r[0] + 'T12:00:00').toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) + ' ' + r[1]) + '</td><td>' + esc(label(r[2])) + '</td><td>' + esc(r[3] || '—') + '</td><td>' + esc(r[4]) + '</td><td><code>' + esc(r[5]) + '</code></td></tr>';
+      }).join('') + '</tbody></table></div>';
+      pager($('#stxPg'), p, pages, function (n) { SV.page = n; page(n); toTop($('#stxLog')); });
+    };
+    page(SV.page);
+  }
+  // where the numbers come from: the log files the Studio reads, or, if it finds none, where it looked
+  function srcNote(j, missing) {
+    var s = j.source || {}, files = s.files || [];
+    var mb = function (b) { return b > 1048576 ? (b / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(b / 1024)) + ' KB'; };
+    if (missing) return '<div class="stx-src warn"><b>The Studio can\'t see the server\'s logs yet.</b><p>It looked for ' + (s.looked || []).map(function (g) { return '<code>' + esc(g) + '</code>'; }).join(' and ') + '.' +
+      (s.logsDir ? ' The logs folder holds: ' + (s.logsDir.length ? s.logsDir.map(function (d) { return '<code>' + esc(d) + '</code>'; }).join(', ') : 'nothing') + '.' : ' There\'s no <code>~/logs</code> folder.') + '</p>' +
+      '<p>In the DreamHost panel, check that this site\'s logs are kept (Websites, Manage, the site\'s settings). If they\'re somewhere else, add <code>\'stats_logs\' => \'/home/…/access.log*\'</code> to <code>~/studio-private/config.php</code>.</p>' + (j.error ? '<p class="err">' + esc(j.error) + '</p>' : '') + '</div>';
+    var days = (j.days || []).map(function (d) { return d.date; });
+    return '<details class="stx-src"><summary>Where these numbers come from</summary><p>' + files.length + ' log file' + (files.length === 1 ? '' : 's') + ' on the server, summed up into a file a day in <code>~/studio-private/stats</code> (kept after the logs rotate away)' +
+      (days.length ? '; this span has days from ' + esc(days[0]) + ' to ' + esc(days[days.length - 1]) : '') + '.</p><ul>' + files.map(function (f) { return '<li><code>' + esc(f.name) + '</code> · ' + mb(f.bytes) + ' · ' + esc(when(f.changed)) + '</li>'; }).join('') + '</ul>' +
+      (j.error ? '<p class="err">' + esc(j.error) + '</p>' : '') + '</details>';
   }
 
   // ---------- Categories (owner only): every category the Notes use (Play's filter tags: their kind and their own tags),

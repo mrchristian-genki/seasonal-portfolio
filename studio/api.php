@@ -8,6 +8,7 @@ require __DIR__ . '/lib/github.php';
 require __DIR__ . '/lib/drafter.php';
 require __DIR__ . '/lib/drive.php';
 require __DIR__ . '/lib/video.php';
+require __DIR__ . '/lib/stats.php';
 require __DIR__ . '/vendor/autoload.php';
 
 studio_security_headers();
@@ -627,6 +628,16 @@ try {
             json_out(['ok' => true]);
 
         // People, for the owner: editors and their passwords (shown once, when made).
+        // the Studio's Stats tab (owner only): the site's visits, from the server's own access logs (lib/stats.php),
+        // brought up to date first. days: how far back (up to two years).
+        case 'GET stats':
+            owner_only();
+            $st = new SiteStats($cfg);
+            $err = null;
+            try { $st->update(); } catch (Throwable $e) { $err = $e->getMessage(); }
+            $n = max(1, min(731, (int) ($_GET['days'] ?? 30)));
+            json_out(['source' => $st->source(), 'days' => $st->days(date('Y-m-d', strtotime('today -' . ($n - 1) . ' days'))), 'today' => date('Y-m-d'), 'error' => $err]);
+
         case 'GET users':
             owner_only();
             json_out(['users' => array_map(fn($u) => ['name' => $u['name'], 'user' => $u['user'] ?? studio_username($u['name']), 'added' => $u['added'] ?? null], studio_users())]);
