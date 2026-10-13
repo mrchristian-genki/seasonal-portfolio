@@ -78,9 +78,21 @@ function list_row(array $e): array {
         // a Workshop project: its name and place on the tab (field/tools/wsprojects.py sorts by it, empty last)
         'ws' => is_array($e['workshop'] ?? null) ? ['name' => (string) ($e['workshop']['name'] ?? ''), 'order' => (int) ($e['workshop']['order'] ?? 0)] : null];
 }
+/** Every kind a Note can be (field/data/kinds.json: the outings, the Mini-Cast and one for each magazine category), read once. */
+function note_kinds(): array {
+    static $kinds = null;
+    if ($kinds === null) { global $gh; $kinds = json_decode($gh->read('field/data/kinds.json') ?? '{}', true)['kinds'] ?? []; }
+    return $kinds;
+}
+/** Each kind's category word (kinds.json "tag"), by its id. */
+function kind_tags(): array {
+    $out = ['ride' => 'ride', 'hike' => 'hike', 'forage' => 'foraging', 'make' => 'mini-cast'];   // if kinds.json can't be read
+    foreach (note_kinds() as $k) if (isset($k['id'], $k['tag'])) $out[(string) $k['id']] = (string) $k['tag'];
+    return $out;
+}
 /** A Note's categories, as Play's filters have them (field/tools/publish.mjs tagsOf, without the year): its own tags, then its kind. */
 function note_cats(array $e): array {
-    $kind = ['ride' => 'ride', 'hike' => 'hike', 'forage' => 'foraging', 'make' => 'mini-cast'][$e['kind'] ?? ''] ?? (string) ($e['kind'] ?? '');
+    $kind = kind_tags()[$e['kind'] ?? ''] ?? (string) ($e['kind'] ?? '');
     $out = [];
     foreach (array_merge((array) ($e['tags'] ?? []), [$kind]) as $t) {
         $t = trim(preg_replace('/[^a-z0-9]+/', '-', strtolower(trim((string) $t))), '-');
@@ -321,6 +333,7 @@ try {
                 'audioPrompts' => $show['audioPrompts'] ?? new stdClass(),   // a Note told by someone else (episode.narrator): their own voice
                 'siteUrl' => $show['siteUrl'] ?? '',
                 'magazines' => (json_decode($gh->read('field/data/magazines.json') ?? '{}', true)['templates'] ?? []),   // the Magazine template panel's choices
+                'kinds' => note_kinds(),   // the Kind menu's choices (field/data/kinds.json)
                 'me' => studio_me(),
             ]);
 

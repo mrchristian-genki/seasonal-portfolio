@@ -6,7 +6,10 @@
    (E.social, saved with the Note). Saving hands the files to the phone's share sheet where it can (straight
    to Photos or Instagram), else downloads them. */
 (function () {
-  var KIND = { ride: 'Ride', hike: 'Hike', forage: 'Foraging walk', make: 'Mini-Cast' };
+  // a kind's name and category word (field/data/kinds.json, in the Studio's config)
+  function kindOf(id) { return ((X && X.cfg() && X.cfg().kinds) || []).filter(function (k) { return k.id === id; })[0] || null; }
+  function kindName(id) { var k = kindOf(id); return k ? k.name : ({ ride: 'Ride', hike: 'Hike', forage: 'Foraging walk', make: 'Mini-Cast' })[id] || ''; }
+  function kindTag(id) { var k = kindOf(id); return k ? k.tag : ({ forage: 'foraging', make: 'mini-cast' })[id] || id; }
   var NF = 'Nunito, "Avenir Next Rounded", "Avenir Next", "Segoe UI", Arial, sans-serif';   // the site's type, and its fallbacks
   var MONTHS = 'January February March April May June July August September October November December'.split(' ');
   var CW = 1080, CH = 1350, SW = 1080, SH = 1920, FPS = 30;
@@ -24,7 +27,7 @@
   }
   function line() {
     var d = (E.date || '').split('-'), when = d.length === 3 ? MONTHS[+d[1] - 1] + ' ' + (+d[2]) + ', ' + d[0] : '';
-    var kind = (E.tags || []).indexOf('case-study') >= 0 ? 'Case study' : KIND[E.kind] || '';   // as the share cards say it
+    var kind = (E.tags || []).indexOf('case-study') >= 0 ? 'Case study' : kindName(E.kind);   // as the share cards say it
     return [kind, when, (E.place || '').split(',')[0].trim()].filter(Boolean).join(' · ').toUpperCase();
   }
   function link() { return (X.cfg().siteUrl || 'https://www.christiangehrke.com/play/') + E.id + '/'; }
@@ -106,10 +109,9 @@
   var NA = '/assets/narrator/', gaParts = null, gaCards = {}, gaK = .45, gaDye = '', gaBase = null;   // gaK: how strongly her flair takes the colours (looks.json flairK)
   function pic(u) { return new Promise(function (ok) { var i = new Image(); i.onload = function () { ok(i); }; i.onerror = function () { ok(null); }; i.src = u; }); }
   function gaStyle() {   // her look and backdrop on this Note, as the site picks them: its own, else its categories'
-    var kt = { ride: 'ride', hike: 'hike', forage: 'foraging', make: 'mini-cast' };
     return fetch(NA + 'looks.json', { cache: 'no-cache' }).then(function (r) { return r.json(); }).catch(function () { return {}; }).then(function (j) {
       var slug = function (t) { return String(t || '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); };
-      var cats = (E.tags || []).map(slug).concat([kt[E.kind] || E.kind]), lc = j.categories || {}, bc = j.categoryBackdrops || {};
+      var cats = (E.tags || []).map(slug).concat([kindTag(E.kind)]), lc = j.categories || {}, bc = j.categoryBackdrops || {};
       var pick = function (own, m) { return own || (cats.filter(function (c) { return m[c]; }).map(function (c) { return m[c]; })[0]) || null; };
       var ln = pick(E.narratorLook && E.narratorLook.look, lc), bn = pick(E.narratorBackdrop && E.narratorBackdrop.backdrop, bc);
       if (window.GAResolve) {   // the site's one rule (holiday, the Note's own, its categories by priority, the default)

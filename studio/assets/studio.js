@@ -262,7 +262,15 @@
   }
 
   // ---------- the notes, as a grid of covers (or a compact list), with search, filters and sorting ----------
-  var KIND_NAMES = { ride: 'Ride', hike: 'Hike', forage: 'Foraging walk', make: 'Mini-Cast' };
+  // every kind a Note can be (field/data/kinds.json, through api.php config): the outings, the Mini-Cast and one for
+  // each magazine category, with its name, category word and whether it has a track
+  var KINDS0 = [{ id: 'ride', name: 'Ride', tag: 'ride', track: true }, { id: 'hike', name: 'Hike', tag: 'hike', track: true },
+    { id: 'forage', name: 'Foraging walk', tag: 'foraging' }, { id: 'make', name: 'Mini-Cast', tag: 'mini-cast' }];   // if the config has none
+  function allKinds() { return (CFG && CFG.kinds && CFG.kinds.length) ? CFG.kinds : KINDS0; }
+  function kindOf(id) { return allKinds().filter(function (k) { return k.id === id; })[0] || null; }
+  function kindName(id) { var k = kindOf(id); return k ? k.name : id; }
+  function kindTag(id) { var k = kindOf(id); return k ? k.tag : id; }
+  function hasTrack(id) { var k = kindOf(id); return !!(k && k.track); }
   var LV = (function () { try { return JSON.parse(localStorage.getItem('studio-list') || '{}'); } catch (e) { return {}; } })();
   function saveLV() { try { localStorage.setItem('studio-list', JSON.stringify(LV)); } catch (e) { /* private window */ } }
   function renderGrid(all, st) {
@@ -274,7 +282,7 @@
     var tools = document.createElement('div'); tools.className = 'ltools';
     tools.innerHTML = '<input id="lq" type="search" placeholder="Search titles, places, summaries" value="' + esc(LV.q || '') + '" aria-label="Search notes">' +
       '<select id="lstat" aria-label="Status">' + opt('', 'Any status', LV.stat) + opt('published', 'Published', LV.stat) + opt('working', 'Not published yet', LV.stat) + opt('review', 'In review', LV.stat) + opt('noaudio', 'Needs audio', LV.stat) + '</select>' +
-      '<select id="lkind" aria-label="Kind">' + opt('', 'Every kind', LV.kind) + kinds.map(function (k) { return opt(k, KIND_NAMES[k] || k, LV.kind); }).join('') + '</select>' +
+      '<select id="lkind" aria-label="Kind">' + opt('', 'Every kind', LV.kind) + kinds.map(function (k) { return opt(k, kindName(k), LV.kind); }).join('') + '</select>' +
       '<select id="lyear" aria-label="Year">' + opt('', 'Every year', LV.year) + years.map(function (y) { return opt(y, y, LV.year); }).join('') + '</select>' +
       '<select id="lsort" aria-label="Sort">' + opt('new', 'Newest first', LV.sort) + opt('old', 'Oldest first', LV.sort) + opt('title', 'Title A to Z', LV.sort) + opt('status', 'By status', LV.sort) + opt('media', 'Most photos and loops', LV.sort) + '</select>' +
       '<span class="lview" role="group" aria-label="View"><button type="button" data-v="grid" aria-pressed="' + (LV.view !== 'list') + '">Grid</button><button type="button" data-v="list" aria-pressed="' + (LV.view === 'list') + '">List</button></span>' +
@@ -311,10 +319,10 @@
       rows = rows.slice(from, from + PER);
       pager(pg, page, pages, function (p) { page = p; draw(true); toTop(tools); });
       list.innerHTML = rows.length ? rows.map(function (e) {
-        var img = LV.view !== 'list' ? '<span class="cv">' + (e.cover ? '<img loading="lazy" alt="" src="api.php?a=photo&id=' + encodeURIComponent(e.id) + '&n=' + encodeURIComponent(e.cover) + '">' : '<i>' + esc(KIND_NAMES[e.kind] || e.kind || 'Note') + '</i>') + '</span>' : '';
+        var img = LV.view !== 'list' ? '<span class="cv">' + (e.cover ? '<img loading="lazy" alt="" src="api.php?a=photo&id=' + encodeURIComponent(e.id) + '&n=' + encodeURIComponent(e.cover) + '">' : '<i>' + esc(kindName(e.kind) || 'Note') + '</i>') + '</span>' : '';
         var media = [e.photos ? e.photos + ' photo' + (e.photos === 1 ? '' : 's') : '', e.loops ? e.loops + ' loop' + (e.loops === 1 ? '' : 's') : '', e.audio ? 'audio' : ''].filter(Boolean).join(' · ');
         return '<button class="card" data-id="' + esc(e.id) + '">' + img + '<span class="cb"><span class="tags"><span class="st st-' + esc(e.status) + '">' + esc(st[e.status] || e.status) + '</span>' + (e.review ? '<span class="st st-review">' + (e.review.state === 'returned' ? 'Sent back' : 'In review') + '</span>' : '') + '</span>' +
-          '<b>' + esc(e.title || e.id) + '</b><small>' + esc(e.date) + ' · ' + esc(KIND_NAMES[e.kind] || e.kind) + (e.place ? ' · ' + esc(e.place) : '') + '</small>' +
+          '<b>' + esc(e.title || e.id) + '</b><small>' + esc(e.date) + ' · ' + esc(kindName(e.kind)) + (e.place ? ' · ' + esc(e.place) : '') + '</small>' +
           (media ? '<small class="md">' + esc(media) + '</small>' : '') + '<span class="sum">' + esc(e.summary) + '</span></span></button>';
       }).join('') : '<p class="muted">No notes match. <button type="button" class="link" id="lclear">Clear the filters</button></p>';
       $$('.card', list).forEach(function (b) { b.onclick = function () { edit(b.getAttribute('data-id')); }; });
@@ -795,7 +803,8 @@
     // a note made from a Drive folder, or already saved, has its content: the drop zones wait at the bottom
     var later = !!(E.id || E.source), trackTop = !later || !!E.track;
     var dropPhotos = '<div id="drop-photos" class="drop">Drop photos or videos here, or <label class="pick">choose<input type="file" accept="image/*,video/mp4,video/quicktime,video/webm,.mov,.m4v" multiple hidden id="pickPhotos"></label>. Photos are resized and their location data removed before upload; a video goes to Video loops, to trim a loop from.</div>';
-    var kOpts = ['ride', 'hike', 'forage', 'make'].map(function (k) { return '<option' + (E.kind === k ? ' selected' : '') + '>' + k + '</option>'; }).join('');
+    var kList = allKinds().concat(E.kind && !kindOf(E.kind) ? [{ id: E.kind, name: E.kind }] : []);   // an old kind not in the list stays picked
+    var kOpts = kList.map(function (k) { return '<option value="' + esc(k.id) + '"' + (E.kind === k.id ? ' selected' : '') + '>' + esc(k.name) + '</option>'; }).join('');
     // The page follows the note's stage: what's needed now sits open near the top, the rest folds away (one
     // click opens it). Once the script is final, the audio prompt and the audio file come up under the summary;
     // the notes and Claude's drafting fold away unless questions are still open; once it's live, the parts that
@@ -809,10 +818,10 @@
         '<div class="sum-meta" id="sumMeta"></div><ol class="stages" id="stages"></ol>' +
         '<div class="sum-next" id="next" aria-live="polite"></div><div class="sum-left" id="left"></div>' + inboxHint() + '<div id="revBar"></div></section>' +
       (hasScript ? audioPanel : '') +
-      fold('details', 'Details', [E.date, E.kind, E.place].filter(Boolean).join(' · '), isNew || !E.post.body, '<div class="grid2">' +
+      fold('details', 'Details', [E.date, E.kind && kindName(E.kind), E.place].filter(Boolean).join(' · '), isNew || !E.post.body, '<div class="grid2">' +
         field('Title', '<input id="title" value="' + esc(E.title) + '">') +
         field('Date', '<input id="date" type="date" value="' + esc(E.date) + '"' + (E.id ? ' disabled' : '') + '>', E.id ? 'The address is <code>' + esc(E.id) + '</code>' : 'Sets the address with the title, on first save') +
-        field('Kind', '<select id="kind">' + kOpts + '</select>') +
+        field('Kind', '<select id="kind">' + kOpts + '</select>', 'Rides and hikes carry a track; the rest match the magazine categories') +
         field('Place', '<input id="place" value="' + esc(E.place) + '" placeholder="Trailhead or public land, never closer to home">') +
         '<input type="hidden" id="status" value="' + esc(E.status) + '">' +
         field('Who appears', '<input id="consent" value="' + esc(E.consent || '') + '" placeholder="e.g. Christian and Marley only">') +
@@ -908,10 +917,9 @@
   // LOOKSAVED: name -> this session's image, shown until the site has it; LOOKDEL: a look to take off the site on Save
   function lookSrc(l) { return LOOKSAVED[l.name] || '/assets/narrator/looks/' + esc(l.file) + (l.v ? '?r=' + esc(l.v) : ''); }
   // this Note's categories (Play's filter tags, as field/tools/publish.mjs makes them): its own tags, then its kind
-  var KIND_TAG = { ride: 'ride', hike: 'hike', forage: 'foraging', make: 'mini-cast' };
   function noteCats() {
     var slug = function (t) { return String(t || '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); };
-    var out = []; (E.tags || []).concat([KIND_TAG[E.kind] || E.kind]).forEach(function (t) { t = slug(t); if (t && !/^\d{4}$/.test(t) && out.indexOf(t) < 0) out.push(t); });
+    var out = []; (E.tags || []).concat([kindTag(E.kind)]).forEach(function (t) { t = slug(t); if (t && !/^\d{4}$/.test(t) && out.indexOf(t) < 0) out.push(t); });
     return out;
   }
   // every category there is: on a Note, styled in looks.json, or made in the Categories tab (looks.json "categoryNames")
@@ -1021,7 +1029,7 @@
       if (box.getAttribute('data-for') !== (E.id || 'new')) { box.setAttribute('data-for', E.id || 'new'); var ow = $('#gaOwn'); if (ow) ow.open = gaOwnOpen(); }
       box.innerHTML = palField() +
         '<div class="ga-catedit"><span class="ga-cats-h">Categories</span><small>Where this Note is filed on Play, and the categories she can take her style from. Add one, or make a new one by typing its name.</small><span class="chips">' +
-          '<span class="chip fixed" title="Its kind, set by the Note\'s type">' + esc(catName(KIND_TAG[E.kind] || E.kind || '')) + '</span>' +
+          '<span class="chip fixed" title="Its kind, set by the Note\'s type">' + esc(catName(kindTag(E.kind) || '')) + '</span>' +
           (E.tags || []).map(function (t) { return '<span class="chip">' + esc(catName(t)) + '<button type="button" data-untag="' + esc(t) + '" aria-label="Remove ' + esc(catName(t)) + '">×</button></span>'; }).join('') +
           '<input id="gaTagIn" list="gaCatList" placeholder="Add a category" maxlength="40"><datalist id="gaCatList">' + allCats(r[3]).filter(function (c) { return nc.indexOf(c) < 0; }).map(function (c) { return '<option value="' + esc(catName(c)) + '">'; }).join('') + '</datalist></span></div>' +
         '<div class="ga-stys"><span class="ga-cats-h">Her style from a category</span>' +
@@ -1952,11 +1960,14 @@
       .then(function () { MAG_BUSY = false; renderMag(); });
   }
   function magGallery(cur) {
-    return '<div class="magGal">' + mags().map(function (t) {
+    // the template that suits this Note's kind (kinds.json "magazine") comes first, marked
+    var fit = (kindOf(E && E.kind) || {}).magazine || '';
+    var list = mags().filter(function (t) { return t.id === fit; }).concat(mags().filter(function (t) { return t.id !== fit; }));
+    return '<div class="magGal">' + list.map(function (t) {
       var sw = (t.swatches || []).map(function (c) { return '<i style="background:' + esc(c) + '"></i>'; }).join('');
       var on = cur && cur.id === t.id;
       return '<div class="magCard' + (on ? ' on' : '') + '" data-id="' + esc(t.id) + '"><div class="magSw">' + sw + '</div>' +
-        '<b class="magMast" style="color:' + esc((t.swatches || [])[0] || '#000') + '">' + esc(t.masthead) + '</b><span class="magCat">' + esc(t.category) + '</span>' +
+        '<b class="magMast" style="color:' + esc((t.swatches || [])[0] || '#000') + '">' + esc(t.masthead) + '</b><span class="magCat">' + esc(t.category) + (t.id === fit ? ' · suits its kind' : '') + '</span>' +
         '<small>' + esc(t.format) + '</small><span class="magWants">' + (t.wants || []).map(function (w) { return '<em>' + esc((MAG_WANTS[w] || w).replace(/^(A|An) /, '')) + '</em>'; }).join('') + '</span>' +
         '<button type="button" class="small magUse"' + (on ? ' disabled' : '') + '>' + (on ? 'In use' : 'Use this template') + '</button></div>';
     }).join('') + '</div>';
@@ -2478,7 +2489,7 @@
     var val = function (id) { var el = $('#' + id); return el ? el.value.trim() : ''; };
     var used = E.photos.filter(function (p) { return p.use !== 'skip'; });
     var capd = used.filter(function (p) { var d = $('.ph[data-i="' + E.photos.indexOf(p) + '"] textarea'); return (d ? d.value : p.caption || '').trim(); });
-    var kind = val('kind') || E.kind, needsTrack = kind === 'ride' || kind === 'hike';
+    var kind = val('kind') || E.kind, needsTrack = hasTrack(kind);
     var list = [
       { go: '#title', t: 'Title', ok: !!val('title'), must: true },
       { go: '#postBody', t: 'The post\'s text', ok: !!val('postBody'), must: true },
@@ -2578,9 +2589,9 @@
     var dt = $('#date') ? $('#date').value : E.date, place = $('#place') ? $('#place').value.trim() : E.place, kind = $('#kind') ? $('#kind').value : E.kind;
     var chip = function (txt, to, warn) { return '<button type="button" class="chip' + (warn ? ' warn' : '') + '" data-go="' + to + '">' + txt + '</button>'; };
     var ts = E.track && E.track.stats, nq = (E.questions || []).length, np = used.length - loops;
-    put($('#sumMeta'), '<span>' + esc(dt ? new Date(dt + 'T12:00:00').toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }) : '') + ' · ' + esc(kind) + '</span>' +
+    put($('#sumMeta'), '<span>' + esc(dt ? new Date(dt + 'T12:00:00').toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }) : '') + ' · ' + esc(kindName(kind)) + '</span>' +
       (place ? chip(esc(place), '#place') : chip('Add the place', '#place', true)) +
-      (ts ? chip(mi(ts.distanceKm || 0) + ' mi · ↑ ' + ft(ts.gainM || 0).toLocaleString() + ' ft', '#track') : (kind === 'ride' || kind === 'hike' ? chip('No track yet', '#track', true) : '')) +
+      (ts ? chip(mi(ts.distanceKm || 0) + ' mi · ↑ ' + ft(ts.gainM || 0).toLocaleString() + ' ft', '#track') : (hasTrack(kind) ? chip('No track yet', '#track', true) : '')) +
       chip(np + ' photo' + (np === 1 ? '' : 's'), '#photos', !np) +
       (loops || vids ? chip(loops + ' loop' + (loops === 1 ? '' : 's') + (vids ? ' · ' + vids + ' video' + (vids === 1 ? '' : 's') : ''), E.source ? '#loops' : '#photos') : '') +
       (nq ? chip(nq + ' open question' + (nq > 1 ? 's' : ''), '#questions', true) : '') +
