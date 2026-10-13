@@ -132,27 +132,63 @@
       var gs = [0, 0, 0], n = 0;
       [[10, 10], [W - 30, 10], [10, H - 30], [W - 30, H - 30]].forEach(function (p) { for (var y = p[1]; y < p[1] + 20; y++) for (var x = p[0]; x < p[0] + 20; x++) { var j = (y * W + x) * 4; gs[0] += own[j]; gs[1] += own[j + 1]; gs[2] += own[j + 2]; n++; } });
       gs = gs.map(function (v) { return v / n; });
-      var m = new Uint8Array(W * H);
+      // the cyan: plainly cyan pixels, grown into the softer cyan touching them (fur, a shaded inner ear), so a piece's
+      // edges and folds come too; and what's still the green in her own render is never part of a piece
+      var m = new Uint8Array(W * H), weak = new Uint8Array(W * H), green = new Uint8Array(W * H);
+      var dist = function (px, j) { return Math.sqrt((px[j] - gs[0]) * (px[j] - gs[0]) + (px[j + 1] - gs[1]) * (px[j + 1] - gs[1]) + (px[j + 2] - gs[2]) * (px[j + 2] - gs[2])); };
       for (var i = 0; i < m.length; i++) {
-        var j = i * 4, R = cy[j], G = cy[j + 1], B = cy[j + 2], d = Math.sqrt((R - gs[0]) * (R - gs[0]) + (G - gs[1]) * (G - gs[1]) + (B - gs[2]) * (B - gs[2]));
+        var j = i * 4, R = cy[j], G = cy[j + 1], B = cy[j + 2], d = dist(cy, j);
         m[i] = B > R + 45 && G > R + 30 && Math.abs(G - B) < 80 && B > 90 && d > 60 ? 1 : 0;
+        weak[i] = B > R + 28 && G > R + 20 && Math.abs(G - B) < 85 && B > 80 && d > 50 ? 1 : 0;
+        green[i] = dist(own, j) < 50 ? 1 : 0;
       }
       m = open(m, 1);
+      (function grow() {   // at most 8 pixels out from the plain cyan, above her collar: a hat's soft edge or fold, never a new part
+        var depth = new Uint8Array(m.length), st = []; for (var k = 0; k < m.length; k++) if (m[k]) st.push(k);
+        while (st.length) {
+          var q = st.pop(), qx = q % W;
+          if (depth[q] >= 8 || q >= 245 * W) continue;   // hats only (a charm is small and solid, and its inside keeps its own colour)
+          [q - 1, q + 1, q - W, q + W].forEach(function (nq, t) { if (nq < 0 || nq >= m.length || (t === 0 && qx === 0) || (t === 1 && qx === W - 1)) return; if (weak[nq] && !m[nq]) { m[nq] = 1; depth[nq] = depth[q] + 1; st.push(nq); } });
+        }
+      })();
+      var notGreen = function (mk) { for (var k = 0; k < mk.length; k++) if (green[k]) mk[k] = 0; return mk; };
       var hat = new Uint8Array(m.length), charm = new Uint8Array(m.length);
       pieces(m).forEach(function (p) {
         if (p.px.length < 40) return;
         var into = p.cy < 245 ? hat : p.cy > 285 ? charm : null;   // above her collar (rows 265 to 344) the hat, below it the charm
         if (into) p.px.forEach(function (k) { into[k] = 1; });
       });
-      hat = close(hat, 2); var hatFull = morph(fill(hat), 1, false);
-      charm = close(charm, 2); var charmFull = fill(close(charm, 3));
+      hat = close(hat, 2); var hatFull = notGreen(morph(fill(hat), 1, false));
+      charm = close(charm, 2); var charmFull = notGreen(fill(close(charm, 3))); charm = notGreen(charm);
       var hb = bbox(hatFull), cb = bbox(charmFull);
       if (!hb) warn.push('No hat found: is the hat painted cyan in the second render?');
-      if (!cb) warn.push('No charm found: is the charm painted cyan in the second render?');
-      if (!hb && !cb) throw new Error('Nothing cyan to cut. The second render should show the hat and the charm painted flat cyan.');
       var imgs = {};
-      return Promise.all([hb ? out(own, cy, hatFull, hatFull, hb) : null, cb ? out(own, cy, charmFull, charm, cb) : null,
-        Promise.all(['tail', 'body', 'head', 'earL', 'earR', 'collar'].map(function (k) { return load(PARTS + k + '.webp?v=2').then(function (im) { imgs[k] = im; }, function () {}); }))]).then(function (rr) {
+      return Promise.all(['tail', 'body', 'head', 'earL', 'earR', 'collar'].map(function (k) { return load(PARTS + k + '.webp?v=2').then(function (im) { imgs[k] = im; }, function () {}); })).then(function () {
+        // a charm that isn't cyan (a turkey leg that should look like one): cut by how her own render differs from her
+        // template below the collar, kept in its own colours (no part of it takes a Note's colour)
+        if (!cb) {
+          var c0 = document.createElement('canvas'); c0.width = W; c0.height = H;
+          var g0 = c0.getContext('2d'); g0.fillStyle = 'rgb(' + gs.map(Math.round).join(',') + ')'; g0.fillRect(0, 0, W, H);
+          ['tail', 'body', 'head', 'earL', 'earR', 'collar'].forEach(function (k) { var b2 = boxes[k]; if (b2 && imgs[k]) g0.drawImage(imgs[k], b2[0] + SX, b2[1] + SY, b2[2], b2[3]); });
+          var tp = g0.getImageData(0, 0, W, H).data, dm = new Uint8Array(W * H);
+          for (var y = 300; y < 660; y++) for (var x = 540; x < 840; x++) {
+            var i3 = y * W + x, j3 = i3 * 4;
+            if (!green[i3] && Math.max(Math.abs(own[j3] - tp[j3]), Math.abs(own[j3 + 1] - tp[j3 + 1]), Math.abs(own[j3 + 2] - tp[j3 + 2])) > 55) dm[i3] = 1;
+          }
+          dm = open(dm, 2);   // the parts' own edges differ a little: thin lines, gone
+          var hang = new Uint8Array(W * H);
+          pieces(dm).forEach(function (p) {
+            if (p.px.length < 200) return;
+            var top = Math.min.apply(null, p.px.map(function (k) { return Math.floor(k / W); })), cx = p.px.reduce(function (a2, k) { return a2 + k % W; }, 0) / p.px.length;
+            if (top < 420 && cx > 600 && cx < 780) p.px.forEach(function (k) { hang[k] = 1; });   // hanging from her collar ring, in front of her chest
+          });
+          charmFull = notGreen(fill(close(hang, 3))); charm = new Uint8Array(W * H); cb = bbox(charmFull);
+          if (cb) warn.push('The charm isn\'t cyan, so it was cut by how it differs from her template, and keeps its own colours. Check its edges in the preview.');
+        }
+        if (!cb) warn.push('No charm found: is the charm painted cyan in the second render?');
+        if (!hb && !cb) throw new Error('Nothing to cut. The second render should show the hat and the charm painted flat cyan.');
+        return Promise.all([hb ? out(own, cy, hatFull, hatFull, hb) : null, cb ? out(own, cy, charmFull, charm, cb) : null]);
+      }).then(function (rr) {
         var res = { hat: rr[0], charm: rr[1], warn: warn };
         res.previews = [preview(boxes, imgs, res, null), preview(boxes, imgs, res, ['#3c7f6f', '#d9a441'])];
         return res;

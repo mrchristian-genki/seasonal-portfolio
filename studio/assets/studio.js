@@ -821,7 +821,7 @@
           }).join('') + '</tr>';
         }).join('') + '</tbody></table></div>' +
         '<h3 id="mlH">Bring in a look for Robot Marley</h3><p class="muted">Her two renders of a look, from her flat-green seated template: one in its own colours, one with the hat and the charm painted flat cyan (the prompt is a click away in the matrix above). Your browser cuts her hat (the cyan above her collar) and her charm (the cyan below it), and shows her wearing them, in their own colours and in a sample Note\'s, before you add them.</p>' +
-          '<div class="row"><label class="f"><span>Which look</span><select id="mlLook">' + list.filter(function (l) { return !l.marley && l.from; }).map(function (l) { return '<option value="' + esc(l.name) + '">' + esc(l.name.replace(/-/g, ' ')) + (l.from ? ' (' + esc(l.from + ' to ' + l.to) + ')' : '') + '</option>'; }).join('') +
+          '<div class="row"><label class="f"><span>Which look</span><select id="mlLook"><option value="">Pick the look…</option>' + list.filter(function (l) { return !l.marley && l.from; }).map(function (l) { return '<option value="' + esc(l.name) + '">' + esc(l.name.replace(/-/g, ' ')) + (l.from ? ' (' + esc(l.from + ' to ' + l.to) + ')' : '') + '</option>'; }).join('') +
             '<option value="__new">A new look of hers…</option>' + list.filter(function (l) { return l.marley; }).map(function (l) { return '<option value="' + esc(l.name) + '">' + esc(l.name.replace(/-/g, ' ')) + ' (replace hers)</option>'; }).join('') + '</select></label>' +
             '<label class="f" id="mlNewF" hidden><span>Its name</span><input id="mlName" placeholder="e.g. ski-day" maxlength="40"></label></div>' +
           '<div class="grid2"><label class="drop" id="mlOwnD"><input type="file" id="mlOwn" accept="image/png,image/jpeg,image/webp" hidden><b>Her own colours</b> <span class="muted">or drop it here</span></label>' +
@@ -910,7 +910,8 @@
       });
       $('#mlSave').onclick = function () {
         var name = mlLook.value === '__new' ? slug($('#mlName').value).slice(0, 40) : mlLook.value, b = this, res = ML.cut;
-        if (!name) { toast('Give the look a name.', true); return; }
+        if (!name) { toast(mlLook.value === '__new' ? 'Give the look a name.' : 'Pick which look this is.', true); return; }
+        if (byName[name] && byName[name].marley && !confirm('Robot Marley already has her ' + name.replace(/-/g, ' ') + ' look. Replace it with this one?')) return;
         // her pieces' file names: the look's letters, kept clear of the hats and charms she already has (js/marley.js)
         var key = name.replace(/[^a-z0-9]/g, '').slice(0, 20) || 'look', TAKEN = ['halloween', 'winter', 'stpatricks', 'hawaii', 'beanie', 'bone', 'heart', 'paw', 'star', 'pinecone', 'ball', 'bike', 'leaf', 'broom', 'snowglobe', 'clover', 'lei', 'wintercone'];
         var mine = (byName[name] && typeof byName[name].marley === 'object') ? byName[name].marley : null;

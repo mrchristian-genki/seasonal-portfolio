@@ -331,7 +331,10 @@ charm; holes filled, the green's spill taken off the edges, each piece as own, `
 them in their own colours and a sample Note's, and saves the six files with the look's `"marley"` in `looks.json`:
 `{ hat, charm, hatBox, charmBox, v }`. `js/marley.js` reads that and adds the look to her Holiday or look row; it's
 worn on the look's dates, or when a Note or its category picks it, like the ones built in. Bringing one in again
-replaces it.
+replaces it. A hat's soft edges (fur, a shaded inner ear) are grown from its plain cyan, a few pixels at most;
+anything still the green in the own-colours render is never part of a piece; and a charm left in its own colours
+(Thanksgiving's turkey leg) is cut by how the render differs from her template, and takes no Note colour. Anything
+the cyan surrounds (a maple leaf on a beanie) comes with the piece and keeps its own colours.
 
 **Narrators in step (Oct 13):** the Studio's Categories tab lists every look more than one narrator wears (the
 holidays, and the looks marked `"marley": true`, the ones she has parts for) and who has her piece. A missing one is
