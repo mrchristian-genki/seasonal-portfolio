@@ -63,7 +63,10 @@ const lookAttr = (e) => {
   // and its categories, for the looks whole categories wear (looks.json "categories"): its own tags first, its kind last
   const cats = tagsOf(e).filter((t) => !/^\d{4}$/.test(t)), kind = cats.shift();
   // and its own backdrop, if it has one (narratorBackdrop: the scene behind its Listen bar)
-  const b = mine(e.narratorBackdrop) && e.narratorBackdrop.backdrop, bd = b && /^[a-z0-9-]{1,40}$/.test(b) ? ` data-backdrop="${b}"` : '';
+  // its own backdrop, or the one of its category's choices that fits it best (picked here, where its words are)
+  let b = mine(e.narratorBackdrop) && e.narratorBackdrop.backdrop;
+  if (!b || !(RES || pickFor(e), (RES.J.backdrops || []).some((x) => x.name === b))) { const n = noteBd(e); if (n && n.from === 'category' && n.choices > 1) b = n.name; }
+  const bd = b && /^[a-z0-9-]{1,40}$/.test(b) ? ` data-backdrop="${b}"` : '';
   // and its palette (two accent colours pulled from its hero in the Studio): her flair, the glass card and the backdrop take them
   const pal = (Array.isArray(e.palette) ? e.palette : []).filter((c) => /^#[0-9a-f]{6}$/i.test(c)).slice(0, 2);
   const pa = pal.length ? ` data-palette="${pal.join(' ')}"` : '';
@@ -75,8 +78,10 @@ let RES = null;
 const pickFor = (e) => {
   RES = RES || { R: createRequire(import.meta.url)('../../assets/narrator/resolve.js'), J: readJSON(path.join(SITE, 'assets/narrator/looks.json')) };
   const cats = tagsOf(e).filter((t) => !/^\d{4}$/.test(t)), kind = cats.shift(); if (kind) cats.push(kind);
-  return RES.R.pick(RES.J, { narrator: e.episode && e.episode.narrator, tank: e.altaBackdrop, cats, prefer: e.narratorLook && e.narratorLook.fit === 'category' && e.narratorLook.from });
+  return RES.R.pick(RES.J, { narrator: e.episode && e.episode.narrator, tank: e.altaBackdrop, cats, prefer: e.narratorLook && e.narratorLook.fit === 'category' && e.narratorLook.from, words: noteWords(e), palette: e.palette, month: +(e.date || '').slice(5, 7) || 0 });
 };
+// what a Note says about itself, for picking among a category's choices (resolve.js fit()): the same words the Studio uses
+const noteWords = (e) => [e.title, e.summary, e.place, (e.tags || []).join(' '), e.episode && e.episode.title].filter(Boolean).join(' ');
 const narratorOf = (e) => pickFor(e).narrator.name;
 // a feature's photo spreads: e.feature.lookbook is one, or a list of them
 const books = (e) => { const L = e.feature && e.feature.lookbook; return (Array.isArray(L) ? L : L ? [L] : []).filter((b) => b && typeof b === 'object'); };
@@ -98,10 +103,10 @@ const noteBd = (e) => {
   const cats = tagsOf(e).filter((t) => !/^\d{4}$/.test(t)), kind = cats.shift(); if (kind) cats.push(kind);
   const nb = mine(e.narratorBackdrop) && e.narratorBackdrop.backdrop;
   const pf = e.narratorBackdrop && e.narratorBackdrop.fit === 'category' && e.narratorBackdrop.from;
-  const p = RES.R.pick(RES.J, { backdrop: nb || undefined, cats, prefer: pf || undefined, ignoreHolidays: !!e.ignoreHolidays });
+  const p = RES.R.pick(RES.J, { backdrop: nb || undefined, cats, prefer: pf || undefined, ignoreHolidays: !!e.ignoreHolidays, words: noteWords(e), palette: e.palette, month: +(e.date || '').slice(5, 7) || 0 });
   const b = p.backdrop && (RES.J.backdrops || []).find((x) => x.name === p.backdrop.name);
   return b && /^[\w.-]+\.(webp|jpg|png)$/.test(b.file || '') && fs.existsSync(path.join(SITE, 'assets/narrator/backdrops', b.file))
-    ? { attr: ` data-bd="/assets/narrator/backdrops/${b.file}${b.v ? '?v=' + b.v : ''}"`, from: p.backdrop.from } : null;
+    ? { attr: ` data-bd="/assets/narrator/backdrops/${b.file}${b.v ? '?v=' + b.v : ''}"`, from: p.backdrop.from, name: b.name, choices: p.backdrop.choices || 1 } : null;
 };
 const mlyBdAttr = (e) => {
   const cats = tagsOf(e).filter((t) => !/^\d{4}$/.test(t)), kind = cats.shift(); if (kind) cats.push(kind);
@@ -216,7 +221,7 @@ const foot = (rel) => `<footer class="foot"><p>${esc(show.narrationNote)}</p>
 <script src="${rel}../js/motion.js?v=1" defer></script>
 <script src="${rel}play.js?v=${V}" defer></script>
 <script src="${rel}../js/lake.js?v=4" defer></script>
-<script src="${rel}../assets/narrator/resolve.js?v=4" defer></script>
+<script src="${rel}../assets/narrator/resolve.js?v=5" defer></script>
 <script src="${rel}../js/narrator.js?v=45" defer></script>
 <script src="${rel}../js/alta.js?v=16" defer></script>
 <script src="${rel}../js/marley.js?v=12" defer></script>
@@ -579,10 +584,13 @@ fs.writeFileSync(path.join(OUT, 'feed.xml'), rss);
   for (const b of J.backdrops || []) if (!has('backdrops', b.file)) bad.push(`backdrop ${b.name}: no file ${b.file}`);
   for (const [c, n] of Object.entries(J.categories || {})) if (!lk[n] && n !== 'curls') bad.push(`category ${c}: no look called ${n}`);
   for (const [c, n] of Object.entries(J.categoryBackdrops || {})) if (!bk[n]) bad.push(`category ${c}: no backdrop called ${n}`);
+  for (const [c, l] of Object.entries(J.categoryBackdropChoices || {})) for (const n of l) if (!bk[n]) bad.push(`category ${c}: no backdrop called ${n} to choose`);
+  const tkn = new Set((J.tankBackdrops || []).map((x) => x.name));
+  for (const [c, l] of Object.entries(J.categoryTankChoices || {})) for (const n of l) if (!tkn.has(n)) bad.push(`category ${c}: no tank scene called ${n} to choose`);
   for (const { e } of pages) {
     const cats = tagsOf(e).filter((t) => !/^\d{4}$/.test(t)), kind = cats.shift(); if (kind) cats.push(kind);
     const r = R.pick(J, { look: mine(e.narratorLook) && e.narratorLook.look, backdrop: mine(e.narratorBackdrop) && e.narratorBackdrop.backdrop, cats,
-      prefer: (e.narratorLook && e.narratorLook.from) || (e.narratorBackdrop && e.narratorBackdrop.from), ignoreHolidays: !!e.ignoreHolidays });
+      prefer: (e.narratorLook && e.narratorLook.from) || (e.narratorBackdrop && e.narratorBackdrop.from), ignoreHolidays: !!e.ignoreHolidays, words: noteWords(e), palette: e.palette, month: +(e.date || '').slice(5, 7) || 0 });
     if (!r.backdrop) bad.push(`${e.id}: no backdrop (and no default)`);
     console.log(`  ${e.id}: ${r.look.name} (${r.look.why}) · ${r.backdrop ? r.backdrop.name + ' (' + r.backdrop.why + ')' : 'none'}`);
   }

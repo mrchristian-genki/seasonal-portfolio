@@ -116,7 +116,8 @@
       var ln = pick(E.narratorLook && E.narratorLook.look, lc), bn = pick(E.narratorBackdrop && E.narratorBackdrop.backdrop, bc);
       if (window.GAResolve) {   // the site's one rule (holiday, the Note's own, its categories by priority, the default)
         var L = E.narratorLook, B = E.narratorBackdrop, r = GAResolve.pick(j, { look: L && L.fit !== 'category' ? L.look : null, backdrop: B && B.fit !== 'category' ? B.backdrop : null, cats: cats,
-          prefer: (L && L.fit === 'category' && L.from) || (B && B.fit === 'category' && B.from) || null, ignoreHolidays: !!E.ignoreHolidays });
+          prefer: (L && L.fit === 'category' && L.from) || (B && B.fit === 'category' && B.from) || null, ignoreHolidays: !!E.ignoreHolidays,
+          words: [E.title, E.summary, E.place, (E.tags || []).join(' '), E.episode && E.episode.title].filter(Boolean).join(' '), palette: E.palette, month: +(E.date || '').slice(5, 7) || 0 });   // a category's choices: the one that fits (resolve.js fit())
         return { look: (j.looks || []).filter(function (l) { return l.name === r.look.name && l.file; })[0] || null, bd: r.backdrop ? (j.backdrops || []).filter(function (b) { return b.name === r.backdrop.name; })[0] || null : null };
       }
       var look = (j.looks || []).filter(function (l) { return l.name === ln && l.file; })[0] || null;

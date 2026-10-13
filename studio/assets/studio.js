@@ -556,7 +556,7 @@
   // new ones as soon as a Note has them, and the look each one gives GlazyArray (looks.json "categories"). Most have
   // none. A Note's own look beats its category's, which beats the holiday look. Her looks are here too, with a way to
   // add one from a render. ----------
-  var CATP = {}, CATBP = {}, CATRP = {}, CATNP = {}, CATTP = {}, DEFP = {}, HOLBP = {}, NEWCATP = {}, CATNEWLOOK = null, CATNEWBD = null, CATNEWTANK = null;   // pending: looks, backdrops, priorities, defaults, holiday backdrops
+  var CATP = {}, CATBP = {}, CATRP = {}, CATNP = {}, CATTP = {}, DEFP = {}, HOLBP = {}, NEWCATP = {}, CATNEWLOOK = null, CATNEWBD = null, CATNEWTANK = null, CATBCP = {}, CATTCP = {};   // CATBCP/CATTCP: a category's other choices   // pending: looks, backdrops, priorities, defaults, holiday backdrops
   function renderCats() {
     var box = $('#catsBox'); box.innerHTML = '<p class="muted">Loading…</p>';
     LOOKS = null; renderLookData().then(function (r) {
@@ -576,7 +576,9 @@
       // A.L.T.A.'s tank backdrops (looks.json tankBackdrops, files in assets/alta/backdrops): a column once there are any
       var tanks = J.tankBackdrops || [], ctank = J.categoryTanks || {}, tv = function (c) { return c in CATTP ? CATTP[c] : (ctank[c] || ''); };
       var TOPTS = '<option value="">The default</option>' + tanks.map(function (b) { return '<option value="' + esc(b.name) + '">' + esc(b.name + (b.about ? ' · ' + b.about : '')) + '</option>'; }).join('');
-      var pending = Object.keys(CATTP).length + Object.keys(CATNP).length + Object.keys(CATP).length + Object.keys(CATBP).length + Object.keys(CATRP).length + Object.keys(DEFP).length + Object.keys(HOLBP).length + Object.keys(NEWCATP).length;
+      var bch = J.categoryBackdropChoices || {}, tch = J.categoryTankChoices || {};
+      var bcv = function (c) { return c in CATBCP ? CATBCP[c] : (bch[c] || []); }, tcv = function (c) { return c in CATTCP ? CATTCP[c] : (tch[c] || []); };
+      var pending = Object.keys(CATBCP).length + Object.keys(CATTCP).length + Object.keys(CATTP).length + Object.keys(CATNP).length + Object.keys(CATP).length + Object.keys(CATBP).length + Object.keys(CATRP).length + Object.keys(DEFP).length + Object.keys(HOLBP).length + Object.keys(NEWCATP).length;
       box.innerHTML = '<h2>Categories</h2><p class="muted">Every category the Notes use: their kind (Ride, Hike, Mini-Cast) and their own tags. Give one a look and a backdrop and GlazyArray wears them on every Note in it. What she wears is decided in this order: a holiday on its dates (on every Note, unless the Note ignores holidays), the Note\'s own, its categories (the one ticked on the Note, then the highest priority here, then the one changed last), then the defaults ticked below.</p>' +
         '<ul class="catl">' + names.map(function (c) {
           var v = c in CATP ? CATP[c] : (cats[c] || ''), im = v && src(v);
@@ -586,7 +588,13 @@
             '<span class="catc"><small>Backdrop</small><span>' + (bim ? '<img class="bd" alt="" src="' + bim + '">' : '<i class="noimg bd"></i>') + '<select data-catbd="' + esc(c) + '">' + bdopts + '</select></span></span>' +
             '<span class="catc"><small>Narrator</small><span><select data-catnar="' + esc(c) + '">' + NOPTS + '</select></span></span>' +
             (tanks.length ? '<span class="catc"><small>Her tank</small><span><select data-cattank="' + esc(c) + '">' + TOPTS + '</select></span></span>' : '') +
-            '<span class="catc catr"><small>Priority</small><input type="number" min="0" max="9" step="1" data-catr="' + esc(c) + '" value="' + rk(c) + '" title="0 to 9: when a Note\'s categories disagree, the higher wins"></span></li>';
+            '<span class="catc catr"><small>Priority</small><input type="number" min="0" max="9" step="1" data-catr="' + esc(c) + '" value="' + rk(c) + '" title="0 to 9: when a Note\'s categories disagree, the higher wins"></span>' +
+            // more to choose from: each Note in the category gets the one that fits its words and colours (resolve.js fit())
+            '<details class="catch"' + (c in CATBCP || c in CATTCP ? ' open' : '') + '><summary>More to choose from: ' + bcv(c).length + ' backdrop' + (bcv(c).length === 1 ? '' : 's') + (tanks.length ? ' · ' + tcv(c).length + ' tank scene' + (tcv(c).length === 1 ? '' : 's') : '') + '</summary>' +
+              '<p class="muted">Each Note in ' + esc(catName(c)) + ' gets whichever of these, and the one picked above, fits its words and colours best (snow in winter, golden leaves in autumn). One image can be offered by any number of categories.</p>' +
+              '<small>Backdrops</small><div class="chips">' + bds.map(function (b) { return '<label class="chip"><input type="checkbox" data-cbc="' + esc(c) + '" value="' + esc(b.name) + '"' + (bcv(c).indexOf(b.name) >= 0 ? ' checked' : '') + '>' + esc(b.name) + '</label>'; }).join('') + '</div>' +
+              (tanks.length ? '<small>A.L.T.A.\'s tank scenes</small><div class="chips">' + tanks.map(function (b) { return '<label class="chip"><input type="checkbox" data-ctc="' + esc(c) + '" value="' + esc(b.name) + '"' + (tcv(c).indexOf(b.name) >= 0 ? ' checked' : '') + '>' + esc(b.name) + '</label>'; }).join('') + '</div>' : '') +
+            '</details></li>';
         }).join('') + '</ul>' +
         '<div class="row"><label class="f catnd"><span>Who narrates when nothing else says</span><select id="defNar"><option value="">GlazyArray</option><option value="alta">A.L.T.A.</option><option value="marley">Robot Marley</option></select></label>' +
           (tanks.length ? '<label class="f catnd"><span>Behind her tank when nothing else says</span><select id="defTank"><option value="">The hall (her own)</option>' + TOPTS.replace('<option value="">The default</option>', '') + '</select></label>' : '') +
@@ -624,6 +632,14 @@
           '<button type="button" id="ntTplCopy">Copy the image</button> <a href="/assets/alta/kit/tank-template.jpg" download>Download</a> · <a href="/assets/alta/kit/tank-backdrop-guide.jpg" target="_blank" rel="noopener">Layout guide</a></span></div>' +
         '<label class="drop ga-drop" id="ntDrop"><input type="file" id="ntFile" accept="image/png,image/jpeg,image/webp" hidden><b>Bring the render here</b> <span class="muted">or drop it here: you\'ll see her in front of it</span></label><div id="ntOut"></div>' +
         '<div class="row"><button type="button" class="primary" id="ntAdd" disabled>Add the scene</button></div>';
+      [['data-cbc', CATBCP, bch], ['data-ctc', CATTCP, tch]].forEach(function (k) {
+        $$('input[' + k[0] + ']', box).forEach(function (inp) {
+          inp.onchange = function () {
+            var c = inp.getAttribute(k[0]), now = $$('input[' + k[0] + '="' + c + '"]', box).filter(function (x) { return x.checked; }).map(function (x) { return x.value; });
+            if (now.join() === (k[2][c] || []).join()) delete k[1][c]; else k[1][c] = now; renderCats();
+          };
+        });
+      });
       $$('.catl select[data-catnar]', box).forEach(function (sel) {
         var c = sel.getAttribute('data-catnar'); sel.value = nv(c);
         sel.onchange = function () { if (sel.value === (cnar[c] || '')) delete CATNP[c]; else CATNP[c] = sel.value; renderCats(); };
@@ -668,8 +684,8 @@
       $('#catSave').onclick = function () {
         var b = this; b.disabled = true; b.textContent = 'Saving…';
         var ne = function (o) { return Object.keys(o).length ? o : null; };
-        api('looks', { categoryTanks: ne(CATTP), categoryNarrators: ne(CATNP), categoryLooks: ne(CATP), categoryBackdrops: ne(CATBP), categoryRank: ne(CATRP), defaults: ne(DEFP), holidayBackdrops: ne(HOLBP), categoryNames: ne(NEWCATP) })
-          .then(function () { CATTP = {}; CATNP = {}; CATP = {}; CATBP = {}; CATRP = {}; DEFP = {}; HOLBP = {}; NEWCATP = {}; LOOKS = null; toast('Saved. The site updates in about a minute.'); renderCats(); })
+        api('looks', { categoryBackdropChoices: ne(CATBCP), categoryTankChoices: ne(CATTCP), categoryTanks: ne(CATTP), categoryNarrators: ne(CATNP), categoryLooks: ne(CATP), categoryBackdrops: ne(CATBP), categoryRank: ne(CATRP), defaults: ne(DEFP), holidayBackdrops: ne(HOLBP), categoryNames: ne(NEWCATP) })
+          .then(function () { CATBCP = {}; CATTCP = {}; CATTP = {}; CATNP = {}; CATP = {}; CATBP = {}; CATRP = {}; DEFP = {}; HOLBP = {}; NEWCATP = {}; LOOKS = null; toast('Saved. The site updates in about a minute.'); renderCats(); })
           .catch(function (err) { toast(err.message, true); b.disabled = false; b.textContent = 'Save the categories'; });
       };
       // Add a backdrop
@@ -694,7 +710,7 @@
         b.disabled = true; b.textContent = 'Adding…';
         api('lookblob', CATNEWBD.blob).then(function (r) {
           var cb = {}; if (cat) cb[cat] = name;
-          return api('looks', { newBackdrop: { name: name, ext: CATNEWBD.ext, sha: r.sha, about: '', scene: nbScene.value.trim() }, categoryBackdrops: cat ? cb : null });
+          return blobColors(CATNEWBD.blob).then(function (cols) { return api('looks', { newBackdrop: { name: name, ext: CATNEWBD.ext, sha: r.sha, about: '', scene: nbScene.value.trim(), colors: cols }, categoryBackdrops: cat ? cb : null }); });
         }).then(function () { CATNEWBD = null; LOOKS = null; toast(name + ' added. The site updates in about a minute.'); renderCats(); })
           .catch(function (err) { toast(err.message, true); b.disabled = false; b.textContent = 'Add the backdrop'; });
       };
@@ -721,7 +737,7 @@
         b.disabled = true; b.textContent = 'Adding…';
         api('lookblob', CATNEWTANK.blob).then(function (r) {
           var ct = {}; if (cat) ct[cat] = name;
-          return api('looks', { newTank: { name: name, ext: CATNEWTANK.ext, sha: r.sha, scene: ntScene.value.trim() }, categoryTanks: cat ? ct : null });
+          return api('looks', { newTank: { name: name, ext: CATNEWTANK.ext, sha: r.sha, scene: ntScene.value.trim(), colors: CATNEWTANK.colors }, categoryTanks: cat ? ct : null });
         }).then(function () { CATNEWTANK = null; LOOKS = null; toast(name + ' added. The site updates in about a minute.'); renderCats(); })
           .catch(function (err) { toast(err.message, true); b.disabled = false; b.textContent = 'Add the scene'; });
       };
@@ -781,6 +797,20 @@
       var occ = list.filter(function (l) { return (l.from && l.to) || l.marley; });
       var hols = list.filter(function (l) { return l.from && l.to; }).sort(function (a, b) { return a.from < b.from ? -1 : 1; });
       var cats = {}; (ENTRIES || []).forEach(function (e) { (e.cats || []).forEach(function (c) { cats[c] = 1; }); }); allCats(J).forEach(function (c) { cats[c] = 1; });
+      // what each category offers (its own pick and its choices), by how many Notes it holds
+      var nCat = {}; (ENTRIES || []).forEach(function (e) { (e.cats || []).forEach(function (c) { nCat[c] = (nCat[c] || 0) + 1; }); });
+      var tks = J.tankBackdrops || [], offer = function (base, more, c) { return [base[c]].concat(more[c] || []).filter(function (n, i, a) { return n && a.indexOf(n) === i; }); };
+      var bare = bds.filter(function (b) { return !b.scene; }).map(function (b) { return b.name; }).concat(tks.filter(function (b) { return !b.scene; }).map(function (b) { return 'tank ' + b.name; }));
+      var covRows = function () {
+        var alta = chars.filter(function (c) { return c.pieces.indexOf('tank') >= 0; })[0];
+        return Object.keys(cats).sort(function (a, b) { return (nCat[b] || 0) - (nCat[a] || 0) || (a < b ? -1 : 1); }).map(function (c) {
+          var ob = offer(J.categoryBackdrops || {}, J.categoryBackdropChoices || {}, c), ot = offer(J.categoryTanks || {}, J.categoryTankChoices || {}, c);
+          var place = TANK_SCENES[c] || SCENES[c] || '';
+          return '<tr><th>' + esc(catName(c)) + '</th><td>' + (nCat[c] || 0) + '</td>' +
+            '<td>' + (ob.length ? ob.map(esc).join(', ') : '<span class="gapt">None</span> ' + gapBtn(chars[0], 'backdrop', '', SCENES[c] || '', 'The prompt')) + '</td>' +
+            '<td>' + (ot.length ? ot.map(esc).join(', ') : '<span class="gapt">Borrows or her hall</span> ' + (alta ? gapBtn(alta, 'tank', '', place, 'The prompt') : '')) + '</td></tr>';
+        }).join('');
+      };
       var head = '<tr><th></th>' + chars.map(function (c) { return '<th><img alt="" src="' + esc(c.avatar) + '">' + esc(c.name) + '</th>'; }).join('') + '</tr>';
       var gapBtn = function (c, kind, n, place, label) { return '<button type="button" class="chg" data-c="' + esc(c.id) + '" data-k="' + kind + '" data-n="' + esc(n || '') + '" data-p="' + esc(place || '') + '">' + (label || 'Missing: the prompt') + '</button>'; };
       box.innerHTML = '<h2>Characters</h2><p class="muted">Who wears what. A category sets a base, a Note can change it, and a holiday on its dates comes first (unless the Note ignores holidays). Each character\'s pieces, template and prompts are in <code>assets/narrator/characters.json</code>; a new character is an entry there plus its player and kit.</p>' +
@@ -790,6 +820,8 @@
             return hasLook(c, l) ? '<td class="ok">' + (c.look.has === 'file' ? '<img alt="" src="' + lookSrc(l) + '">' : '') + '<span>Has hers</span></td>' : '<td class="gap">' + gapBtn(c, 'look', l.name) + '</td>';
           }).join('') + '</tr>';
         }).join('') + '</tbody></table></div>' +
+        '<h3>What each category offers</h3><p class="muted">The categories by how many Notes they hold. Where one offers several, each Note gets the one that fits it best. A gap is a click from its prompt; a scene without a description can\'t be matched by its words, so it\'s flagged too.</p><div class="chm-wrap"><table class="chm cov"><thead><tr><th>Category</th><th>Notes</th><th>Backdrops</th><th>A.L.T.A.\'s tank</th></tr></thead><tbody>' +
+          covRows() + '</tbody></table></div>' + (bare.length ? '<p class="warn"><b>No description yet:</b> ' + bare.map(esc).join(', ') + '. Add one in Categories so it can be matched by its words.</p>' : '') +
         '<h3>What a category or a Note gives them</h3><div class="row"><label class="f"><span>Apply</span><select id="chT"><option value="">Pick a category or a Note</option><optgroup label="Categories">' +
           Object.keys(cats).sort().map(function (c) { return '<option value="c:' + esc(c) + '">' + esc(catName(c)) + '</option>'; }).join('') + '</optgroup><optgroup label="Notes">' +
           (ENTRIES || []).map(function (e) { return '<option value="n:' + esc(e.id) + '">' + esc(e.title || e.id) + '</option>'; }).join('') + '</optgroup></select></label>' +
@@ -799,7 +831,7 @@
       var show = function () {
         var o = $('#chOut'), t = CHV.t; if (!t) { o.innerHTML = ''; return; }
         var e = t.slice(0, 2) === 'n:' ? (ENTRIES || []).filter(function (x) { return x.id === t.slice(2); })[0] : null, cat = t.slice(0, 2) === 'c:' ? t.slice(2) : '';
-        var note = e ? { look: e.look || undefined, backdrop: e.bd || undefined, tank: e.tank || undefined, narrator: e.nar || undefined, cats: e.cats || [], prefer: e.prefer || undefined, ignoreHolidays: !!e.noh } : { cats: [cat] };
+        var note = e ? { look: e.look || undefined, backdrop: e.bd || undefined, tank: e.tank || undefined, narrator: e.nar || undefined, cats: e.cats || [], prefer: e.prefer || undefined, ignoreHolidays: !!e.noh, words: e.words || e.title, palette: e.pal, month: +(e.date || '').slice(5, 7) || 0 } : { cats: [cat], words: catName(cat) };
         var md = CHV.d, day = md ? new Date(new Date().getFullYear(), +md.slice(0, 2) - 1, +md.slice(3, 5)) : undefined;
         var p = GAResolve.pick(J, note, day), place = SCENES[cat || (note.cats || [])[0]] || TANK_SCENES[cat || (note.cats || [])[0]] || '';
         var tplace = TANK_SCENES[cat || (note.cats || [])[0]] || place;
@@ -1253,7 +1285,7 @@
         var J = r[3] || {}, tanks = J.tankBackdrops || [], b = $('#epTankBox'); if (!b) return;
         if (rr[1].name !== 'alta') { b.innerHTML = ''; return; }
         var Bk = E.narratorBackdrop && E.narratorBackdrop.backdrop;
-        var p = window.GAResolve && GAResolve.pick(J, { tank: E.altaBackdrop, cats: noteCats(), backdrop: Bk || undefined, ignoreHolidays: !!E.ignoreHolidays }), t = p && p.tank;
+        var nf = noteFit(), p = window.GAResolve && GAResolve.pick(J, { tank: E.altaBackdrop, cats: noteCats(), backdrop: Bk || undefined, ignoreHolidays: !!E.ignoreHolidays, words: nf.words, palette: nf.palette, month: nf.month }), t = p && p.tank;
         var lent = !t && p && p.backdrop && p.backdrop.from !== 'default' ? p.backdrop : null;   // field/tools/publish.mjs bdAttr
         if (!tanks.length) { b.innerHTML = '<p class="muted">Behind her tank: ' + (lent ? 'this Note\'s backdrop, ' + esc(lent.name) + ', borrowed' : 'her hall') + '. Her own scenes are made in Categories.</p>'; return; }
         b.innerHTML = field('Behind her tank', '<select id="epTank"><option value="">From its categories</option>' + tanks.map(function (x) { return '<option value="' + esc(x.name) + '"' + (E.altaBackdrop === x.name ? ' selected' : '') + '>' + esc(x.name + (x.about ? ' · ' + x.about : '')) + '</option>'; }).join('') + '</select>',
@@ -1433,11 +1465,16 @@
   // Note ignores holidays, the Note's own, its categories (the ticked one, then priority, then the latest changed), the default
   var NAR_NAME = { glazyarray: 'GlazyArray', alta: 'A.L.T.A.', marley: 'Robot Marley' };   // the narrators' names (assets/narrator/resolve.js NARRATORS)
   var LOOKJ = null, NARNOW = 'glazyarray';   // who tells the open Note, as the site decides it (render's showWho)
+  // what the Note says about itself, for picking among a category's choices (resolve.js fit(); publish.mjs noteWords)
+  function noteFit(e) {
+    e = e || E || {};
+    return { words: [e.title, e.summary, e.place, (e.tags || []).join(' '), e.episode && e.episode.title].filter(Boolean).join(' '), palette: e.palette, month: +(e.date || '').slice(5, 7) || 0 };
+  }
   function gaPick(J) {
     if (!window.GAResolve || !E) return null;
-    var L = E.narratorLook, B = E.narratorBackdrop;
+    var L = E.narratorLook, B = E.narratorBackdrop, f = noteFit();
     return GAResolve.pick(J, { look: L && L.fit !== 'category' ? L.look : null, backdrop: B && B.fit !== 'category' ? B.backdrop : null, cats: noteCats(),
-      prefer: (L && L.fit === 'category' && L.from) || (B && B.fit === 'category' && B.from) || null, ignoreHolidays: !!E.ignoreHolidays });
+      prefer: (L && L.fit === 'category' && L.from) || (B && B.fit === 'category' && B.from) || null, ignoreHolidays: !!E.ignoreHolidays, words: f.words, palette: f.palette, month: f.month });
   }
   function renderLookData() {
     if (!LOOKS) {
@@ -1466,6 +1503,26 @@
   // teal. A new one starts as a few words about the place; the prompt is built from them (look.js bdPrompt), rendered
   // on the backdrop template in any image tool, and brought back here ----------
   var LOOKBD = null, BDNEW = null, BDSAVED = {}, CATBDNEW = {}, BDPICK = false;
+  // ---------- a picture's three main colours (most of it first), for matching a Note's palette (resolve.js fit()):
+  // a small copy (its top part only, for a tank scene: band), grouped three ways ----------
+  function imageColors(src, band) {
+    var sw = src.width, sh = src.height * (band || 1), w = 64, h = Math.max(1, Math.round(w * sh / sw));
+    var c = document.createElement('canvas'); c.width = w; c.height = h; var g = c.getContext('2d'); g.drawImage(src, 0, 0, sw, sh, 0, 0, w, h);
+    var d = g.getImageData(0, 0, w, h).data, px = [];
+    for (var i = 0; i < d.length; i += 4) px.push([d[i], d[i + 1], d[i + 2]]);
+    px.sort(function (a, b) { return (a[0] + a[1] + a[2]) - (b[0] + b[1] + b[2]); });
+    var k = [px[Math.floor(px.length / 6)], px[Math.floor(px.length / 2)], px[Math.floor(px.length * 5 / 6)]].map(function (p) { return p.slice(); }), n = [0, 0, 0];
+    for (var it = 0; it < 12; it++) {
+      var sum = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]; n = [0, 0, 0];
+      px.forEach(function (p) { var bi = 0, bd = 1e9; k.forEach(function (q, j) { var dd = (p[0] - q[0]) * (p[0] - q[0]) + (p[1] - q[1]) * (p[1] - q[1]) + (p[2] - q[2]) * (p[2] - q[2]); if (dd < bd) { bd = dd; bi = j; } }); n[bi]++; sum[bi][0] += p[0]; sum[bi][1] += p[1]; sum[bi][2] += p[2]; });
+      k = k.map(function (q, j) { return n[j] ? [sum[j][0] / n[j], sum[j][1] / n[j], sum[j][2] / n[j]] : q; });
+    }
+    return [0, 1, 2].sort(function (a, b) { return n[b] - n[a]; }).map(function (j) { return '#' + k[j].map(function (v) { return ('0' + Math.round(v).toString(16)).slice(-2); }).join(''); });
+  }
+  function blobColors(blob) {
+    if (!blob || !window.createImageBitmap) return Promise.resolve([]);
+    return createImageBitmap(blob).then(function (bm) { return imageColors(bm); }).catch(function () { return []; });
+  }
   // ---------- A.L.T.A.'s tank scenes (assets/alta/KIT.md Round 8): only the strip above her ledge shows ----------
   var TANK_SCENES = {
     'lake-tahoe': 'a sandy Lake Tahoe beach at dusk, smooth granite boulders and pines along the far shore',
@@ -1500,7 +1557,7 @@
       return new Promise(function (ok) { c.toBlob(ok, 'image/webp', 0.85); }).then(function (b) {
         if (b && b.type === 'image/webp') return b;
         return new Promise(function (ok) { c.toBlob(ok, 'image/jpeg', 0.86); });
-      }).then(function (blob) { return { blob: blob, ext: blob.type === 'image/webp' ? 'webp' : 'jpg', preview: pv, warn: warn }; });
+      }).then(function (blob) { return { blob: blob, ext: blob.type === 'image/webp' ? 'webp' : 'jpg', preview: pv, warn: warn, colors: imageColors(c, 0.38) }; });
     });
   }
   var SCENES = { 'case-study': 'an old library with tall wooden bookshelves, brass reading lamps and a long study table',
@@ -3399,7 +3456,7 @@
     var bdUp = null;
     if (BDNEW && BDNEW.blob && E.narratorBackdrop && BDNEW.name === E.narratorBackdrop.backdrop) chain = chain.then(function () {
       btn.textContent = 'Uploading the backdrop…';
-      return api('lookblob', BDNEW.blob).then(function (r) { bdUp = { name: BDNEW.name, ext: BDNEW.ext, sha: r.sha, about: '', scene: E.narratorBackdrop.scene || '' }; });
+      return Promise.all([api('lookblob', BDNEW.blob), blobColors(BDNEW.blob)]).then(function (rr) { bdUp = { name: BDNEW.name, ext: BDNEW.ext, sha: rr[0].sha, about: '', scene: E.narratorBackdrop.scene || '', colors: rr[1] }; });
     });
     chain.then(function () {
       btn.textContent = 'Saving…'; L.at(1);

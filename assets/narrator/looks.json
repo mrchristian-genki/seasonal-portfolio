@@ -30,39 +30,46 @@
   "ride": "bike-helmet"
  },
  "backdrops": [
-  { "name": "library", "file": "library.webp", "about": "", "v": "tmia4z", "scene": "an old library with tall wooden bookshelves, brass reading lamps and a long study table" },
-  { "name": "bike-shop", "file": "bike-shop.webp", "about": "", "v": "tmiacs", "scene": "a small bike shop garage with mountain bikes hanging on a wall rack, tools on a pegboard and a wooden workbench" },
-  { "name": "trailhead", "file": "trailhead.webp", "about": "", "v": "tmiah5", "scene": "a pine forest trailhead with a wooden trail sign and a dirt path in late light" },
-  { "name": "clockmaker", "file": "clockmaker.webp", "about": "", "v": "tmiako", "scene": "a clockmaker's workshop full of brass gears, cogs and glass jars on wooden shelves" },
-  { "name": "workshop", "file": "workshop.webp", "about": "", "v": "tmiav4", "scene": "a cozy maker's workshop with a workbench, tools on the wall and warm hanging lamps" },
-  { "name": "lake-tahoe-beach", "file": "lake-tahoe-beach.webp", "about": "", "v": "tmjrp2", "scene": "a Lake Tahoe shoreline with clear turquoise water, smooth granite boulders and pines at golden hour" },
-  { "name": "biking-forest", "file": "biking-forest.jpg", "about": "", "v": "tmk2vr", "scene": "a Lake Tahoe shoreline with clear turquoise water, smooth granite boulders and pines at golden hour" },
-  { "name": "hiking-1", "file": "hiking-1.jpg", "about": "", "v": "tmk36o", "scene": "a Lake Tahoe shoreline with clear turquoise water, smooth granite boulders and pines at golden hour" },
-  { "name": "hiking-yosemite-1", "file": "hiking-yosemite-1.jpg", "about": "", "v": "tmk3qx", "scene": "a Lake Tahoe shoreline with clear turquoise water, smooth granite boulders and pines at golden hour" },
-  { "name": "hiking-yosemite-2", "file": "hiking-yosemite-2.jpg", "about": "", "v": "tmk3x1", "scene": "a Lake Tahoe shoreline with clear turquoise water, smooth granite boulders and pines at golden hour" },
-  { "name": "hiking-yosemite-3", "file": "hiking-yosemite-3.jpg", "about": "", "v": "tmk3zg", "scene": "a Lake Tahoe shoreline with clear turquoise water, smooth granite boulders and pines at golden hour" },
-  { "name": "workshop-with-robots", "file": "workshop-with-robots.jpg", "about": "", "v": "tmk4bm", "scene": "a sunny pine meadow with a dog's ball and leash resting on a log" },
-  { "name": "library-futuristic-1", "file": "library-futuristic-1.jpg", "about": "", "v": "tmk4fd", "scene": "a sunny pine meadow with a dog's ball and leash resting on a log" },
-  { "name": "lake-tahoe-beach-winter", "file": "lake-tahoe-beach-winter.jpg", "about": "", "v": "tmk675", "scene": "a Lake Tahoe shoreline with clear turquoise water, smooth granite boulders and pines at golden hour" },
-  { "name": "lake-tahoe-with-snow", "file": "lake-tahoe-with-snow.jpg", "about": "", "v": "tmk6bg", "scene": "Snow on Lake Tahoe." },
-  { "name": "red-carpet-gala", "file": "red-carpet-gala.jpg", "about": "", "v": "tmkb42", "scene": "a clockmaker's workshop full of brass gears, cogs and glass jars on wooden shelves" },
-  { "name": "hawaii-coast", "file": "hawaii-coast.webp", "about": "", "v": "tmnqye", "scene": "a tropical shoreline with palm trees, turquoise water and two small offshore islands" },
-  { "name": "creek", "file": "creek.jpg", "about": "", "v": "tmrwit", "scene": "a cozy maker's workshop with a workbench, tools on the wall and warm hanging lamps" },
-  { "name": "foliage", "file": "foliage.webp", "about": "", "v": "tmta6o", "scene": "a small bike shop garage with mountain bikes hanging on a wall rack, tools on a pegboard and a wooden workbench" },
-  { "name": "donegal-1", "file": "donegal-1.jpg", "about": "Donegal", "v": "tmuzrb", "scene": "sea cliffs dropping into the Atlantic under grey cloud, with sunbeams over the water" },
-  { "name": "donegal-2", "file": "donegal-2.jpg", "about": "Donegal", "v": "tmuzrb", "scene": "a white lighthouse and keepers' cottages on a rocky headland at a pink sunset, waves breaking below" },
-  { "name": "donegal-3", "file": "donegal-3.jpg", "about": "Donegal", "v": "tmuzrb", "scene": "a pale cone of a mountain wrapped in low cloud above a still lake, bog and old stone walls" },
-  { "name": "donegal-4", "file": "donegal-4.jpg", "about": "Donegal", "v": "tmuzrb", "scene": "a sandy cove between dark cliffs and sea stacks, turquoise surf and green clifftop paths" },
-  { "name": "donegal-5", "file": "donegal-5.jpg", "about": "Donegal", "v": "tmuzrb", "scene": "a stone castle among trees on the shore of a mountain lake, misty slopes and flowering rhododendrons" },
-  { "name": "lake-tahoe-2", "file": "lake-tahoe-2.webp", "about": "", "v": "tmv9k2", "scene": "a Lake Tahoe shoreline with clear turquoise water, smooth granite boulders and pines at golden hour" }
+  { "name": "library", "file": "library.webp", "about": "", "v": "tmia4z", "scene": "an old library with tall wooden bookshelves, brass reading lamps and a long study table", "colors": ["#19140a","#54391d","#94693e"] },
+  { "name": "bike-shop", "file": "bike-shop.webp", "about": "", "v": "tmiacs", "scene": "a small bike shop garage with mountain bikes hanging on a wall rack, tools on a pegboard and a wooden workbench", "colors": ["#212018","#68553d","#b29773"] },
+  { "name": "trailhead", "file": "trailhead.webp", "about": "", "v": "tmiah5", "scene": "a pine forest trailhead with a wooden trail sign and a dirt path in late light", "colors": ["#1b1a0e","#3f321b","#7a5b2f"] },
+  { "name": "clockmaker", "file": "clockmaker.webp", "about": "", "v": "tmiako", "scene": "a clockmaker's workshop full of brass gears, cogs and glass jars on wooden shelves", "colors": ["#271e14","#59432b","#947651"] },
+  { "name": "workshop", "file": "workshop.webp", "about": "", "v": "tmiav4", "scene": "a cozy maker's workshop with a workbench, tools on the wall and warm hanging lamps", "colors": ["#251d13","#6c4d30","#a88b6b"] },
+  { "name": "lake-tahoe-beach", "file": "lake-tahoe-beach.webp", "about": "", "v": "tmjrp2", "scene": "a Lake Tahoe shoreline with clear turquoise water, smooth granite boulders and pines at golden hour", "colors": ["#2a2a1e","#5f593f","#a1a185"] },
+  { "name": "biking-forest", "file": "biking-forest.jpg", "about": "", "v": "tmk2vr", "scene": "mountain bikes resting on a sandy lake shore by granite boulders, turquoise water and pines", "colors": ["#332a16","#7c654b","#c1bdad"] },
+  { "name": "hiking-1", "file": "hiking-1.jpg", "about": "", "v": "tmk36o", "scene": "granite boulders and pines on a calm lake at golden hour", "colors": ["#333220","#837b66","#b5b9ac"] },
+  { "name": "hiking-yosemite-1", "file": "hiking-yosemite-1.jpg", "about": "", "v": "tmk3qx", "scene": "a dirt hiking trail through granite and pines in a mountain valley at golden hour, a granite dome beyond", "colors": ["#282c28","#635d54","#d5bda3"] },
+  { "name": "hiking-yosemite-2", "file": "hiking-yosemite-2.jpg", "about": "", "v": "tmk3x1", "scene": "a hiking trail beside a creek in a red rock canyon", "colors": ["#342318","#734e32","#c59470"] },
+  { "name": "hiking-yosemite-3", "file": "hiking-yosemite-3.jpg", "about": "", "v": "tmk3zg", "scene": "a trail across a valley meadow toward granite cliffs and a waterfall", "colors": ["#262216","#76634d","#f5eadd"] },
+  { "name": "workshop-with-robots", "file": "workshop-with-robots.jpg", "about": "", "v": "tmk4bm", "scene": "a workshop full of robots and machines on workbenches", "colors": ["#222227","#4a4748","#89776b"] },
+  { "name": "library-futuristic-1", "file": "library-futuristic-1.jpg", "about": "", "v": "tmk4fd", "scene": "a vast futuristic library with curved glowing balconies of books", "colors": ["#262524","#5d564e","#96a6a6"] },
+  { "name": "lake-tahoe-beach-winter", "file": "lake-tahoe-beach-winter.jpg", "about": "", "v": "tmk675", "scene": "a snowy Lake Tahoe shoreline in winter, snow on granite boulders and pines", "colors": ["#68818e","#aeb8be","#334951"] },
+  { "name": "lake-tahoe-with-snow", "file": "lake-tahoe-with-snow.jpg", "about": "", "v": "tmk6bg", "scene": "snow on granite boulders and pines along Lake Tahoe in winter", "colors": ["#68818e","#aeb8be","#334951"] },
+  { "name": "red-carpet-gala", "file": "red-carpet-gala.jpg", "about": "", "v": "tmkb42", "scene": "a grand hall with chandeliers and a red carpet, a crowd at a gala", "colors": ["#221d22","#6a4745","#bfa48c"] },
+  { "name": "hawaii-coast", "file": "hawaii-coast.webp", "about": "", "v": "tmnqye", "scene": "a tropical shoreline with palm trees, turquoise water and two small offshore islands", "colors": ["#e8d3b1","#a89576","#46381f"] },
+  { "name": "creek", "file": "creek.jpg", "about": "", "v": "tmrwit", "scene": "a bear wading in a rushing mountain creek among rocks and autumn trees", "colors": ["#86765c","#443726","#b9bcbe"] },
+  { "name": "foliage", "file": "foliage.webp", "about": "", "v": "tmta6o", "scene": "a path through golden autumn aspens", "colors": ["#735932","#ad7d33","#433423"] },
+  { "name": "donegal-1", "file": "donegal-1.jpg", "about": "Donegal", "v": "tmuzrb", "scene": "sea cliffs dropping into the Atlantic under grey cloud, with sunbeams over the water", "colors": ["#2c2a1b","#a9acae","#5e6464"] },
+  { "name": "donegal-2", "file": "donegal-2.jpg", "about": "Donegal", "v": "tmuzrb", "scene": "a white lighthouse and keepers' cottages on a rocky headland at a pink sunset, waves breaking below", "colors": ["#cbb4b1","#242116","#857e7e"] },
+  { "name": "donegal-3", "file": "donegal-3.jpg", "about": "Donegal", "v": "tmuzrb", "scene": "a pale cone of a mountain wrapped in low cloud above a still lake, bog and old stone walls", "colors": ["#3a2919","#9ca6ad","#685e53"] },
+  { "name": "donegal-4", "file": "donegal-4.jpg", "about": "Donegal", "v": "tmuzrb", "scene": "a sandy cove between dark cliffs and sea stacks, turquoise surf and green clifftop paths", "colors": ["#333627","#6c807f","#d0d2d3"] },
+  { "name": "donegal-5", "file": "donegal-5.jpg", "about": "Donegal", "v": "tmuzrb", "scene": "a stone castle among trees on the shore of a mountain lake, misty slopes and flowering rhododendrons", "colors": ["#39371b","#bec5d0","#6f7272"] },
+  { "name": "lake-tahoe-2", "file": "lake-tahoe-2.webp", "about": "", "v": "tmv9k2", "scene": "a mountain bike against a pine above a deep blue mountain lake", "colors": ["#22251a","#4b4a3f","#798386"] }
  ],
  "categoryBackdrops": {
   "automaton": "workshop-with-robots",
   "case-study": "library-futuristic-1",
   "hike": "hiking-yosemite-1",
+  "ireland": "donegal-1",
   "lake-tahoe": "lake-tahoe-beach",
   "mini-cast": "workshop-with-robots",
   "ride": "biking-forest"
+ },
+ "categoryBackdropChoices": {
+  "hike": ["hiking-yosemite-2","hiking-yosemite-3","trailhead","foliage","creek"],
+  "ireland": ["donegal-2","donegal-3","donegal-4","donegal-5"],
+  "lake-tahoe": ["lake-tahoe-beach-winter","hiking-1","biking-forest","lake-tahoe-2"],
+  "ride": ["lake-tahoe-2"]
  },
  "categoryRank": {
   "automaton": 2,
@@ -75,16 +82,26 @@
  "defaults": {
   "backdrop": "lake-tahoe-beach"
  },
+ "categoryNames": {
+  "ireland": "Ireland"
+ },
  "tankBackdrops": [
-  { "name": "boathouse", "file": "boathouse.webp", "about": "", "v": "tmvavx", "scene": "the inside of an old wooden boathouse, kayaks and paddles on racks, the lake through the open doors" },
-  { "name": "pool-deck", "file": "pool-deck.webp", "about": "", "v": "tmvavx", "scene": "a sunny outdoor swimming pool deck with lane ropes and a lifeguard chair" },
-  { "name": "tahoe-winter-shore", "file": "tahoe-winter-shore.webp", "about": "", "v": "tmvavx", "scene": "a snowy Lake Tahoe shoreline in winter, dark pines and white mountains across the water" },
-  { "name": "emerald-bay-mist", "file": "emerald-bay-mist.webp", "about": "", "v": "tmvavx", "scene": "the shore of Emerald Bay on a still morning, mist on the water and the small rocky island beyond" },
-  { "name": "tahoe-beach-dusk", "file": "tahoe-beach-dusk.webp", "about": "", "v": "tmvavx", "scene": "a sandy Lake Tahoe beach at dusk, smooth granite boulders and pines along the far shore" },
-  { "name": "tunnel", "file": "tunnel.webp", "about": "", "v": "tmvavx", "scene": "an old stone wall with an arched tunnel leading out toward the lake" },
-  { "name": "hawaii-coast", "file": "hawaii-coast.webp", "about": "", "v": "tmvavx", "scene": "a tropical shoreline at golden hour, palm trees and calm turquoise water" },
-  { "name": "donegal-cliffs", "file": "donegal-cliffs.webp", "about": "", "v": "tmvavx", "scene": "green sea cliffs above the Atlantic under a soft grey sky" },
-  { "name": "classroom", "file": "classroom.webp", "about": "", "v": "tmvavx", "scene": "a bright classroom with a long chalkboard, a globe and tall windows" },
-  { "name": "library", "file": "library.webp", "about": "", "v": "tmvavx", "scene": "a quiet old library with tall wooden bookshelves and warm reading lamps" }
- ]
+  { "name": "boathouse", "file": "boathouse.webp", "about": "", "v": "tmvavx", "scene": "the inside of an old wooden boathouse, kayaks and paddles on racks, the lake through the open doors", "colors": ["#1d150f","#5a4d3d","#9f9f94"] },
+  { "name": "pool-deck", "file": "pool-deck.webp", "about": "", "v": "tmvavx", "scene": "a sunny outdoor swimming pool deck with lane ropes and a lifeguard chair", "colors": ["#243615","#535d32","#919357"] },
+  { "name": "tahoe-winter-shore", "file": "tahoe-winter-shore.webp", "about": "", "v": "tmvavx", "scene": "a snowy Lake Tahoe shoreline in winter, dark pines and white mountains across the water", "colors": ["#ced5dd","#728191","#4d5351"] },
+  { "name": "emerald-bay-mist", "file": "emerald-bay-mist.webp", "about": "", "v": "tmvavx", "scene": "the shore of Emerald Bay on a still morning, mist on the water and the small rocky island beyond", "colors": ["#455358","#dde0e0","#8b9598"] },
+  { "name": "tahoe-beach-dusk", "file": "tahoe-beach-dusk.webp", "about": "", "v": "tmvavx", "scene": "a sandy Lake Tahoe beach at dusk, smooth granite boulders and pines along the far shore", "colors": ["#2a2d2d","#727e88","#c5c3c0"] },
+  { "name": "tunnel", "file": "tunnel.webp", "about": "", "v": "tmvavx", "scene": "an old stone wall with an arched tunnel leading out toward the lake", "colors": ["#736c5d","#4e4938","#a89f8c"] },
+  { "name": "hawaii-coast", "file": "hawaii-coast.webp", "about": "", "v": "tmvavx", "scene": "a tropical shoreline at golden hour, palm trees and calm turquoise water", "colors": ["#5a5033","#e8d3af","#99987c"] },
+  { "name": "donegal-cliffs", "file": "donegal-cliffs.webp", "about": "", "v": "tmvavx", "scene": "green sea cliffs above the Atlantic under a soft grey sky", "colors": ["#cdd1d2","#8f999c","#59573c"] },
+  { "name": "classroom", "file": "classroom.webp", "about": "", "v": "tmvavx", "scene": "a bright classroom with a long chalkboard, a globe and tall windows", "colors": ["#a78b6e","#554c3f","#daccba"] },
+  { "name": "library", "file": "library.webp", "about": "", "v": "tmvavx", "scene": "a quiet old library with tall wooden bookshelves and warm reading lamps", "colors": ["#492e18","#816144","#cfc0a7"] }
+ ],
+ "categoryTanks": {
+  "ireland": "donegal-cliffs",
+  "lake-tahoe": "tahoe-beach-dusk"
+ },
+ "categoryTankChoices": {
+  "lake-tahoe": ["tahoe-winter-shore","emerald-bay-mist","boathouse"]
+ }
 }

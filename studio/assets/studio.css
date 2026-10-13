@@ -787,3 +787,8 @@ dialog.pfp::backdrop{background:rgba(20,12,6,.7)}
 .panel.chars .chm td.ok span{color:var(--ink)} .panel.chars .chm td.na{color:var(--ink3)}
 .panel.chars .chm td.gap span{color:#9a5b1e} .panel.chars .chm td.gap button{margin-top:4px}
 .panel.chars .row .f{flex:1 1 240px}
+/* Categories: a category's other choices (studio.js CATBCP/CATTCP); Characters: what each category offers */
+.panel.cats .catl .catch{flex:1 1 100%;margin:2px 0 4px} .panel.cats .catl .catch summary{cursor:pointer;color:var(--ink2);font-size:13px}
+.panel.cats .catl .catch small{display:block;margin:6px 0 4px;color:var(--ink3);font-size:12px}
+.panel.cats .chips{display:flex;flex-wrap:wrap;gap:6px} .panel.cats label.chip{display:inline-flex;flex:none;width:auto;flex-direction:row;gap:6px;align-items:center;padding:3px 10px;border:1px solid var(--line);border-radius:999px;font-size:13px;cursor:pointer;white-space:nowrap;margin:0} .panel.cats label.chip input{width:auto;margin:0;flex:none}
+.panel.chars .chm.cov td{font-size:13px} .panel.chars .gapt{color:#9a5b1e}
