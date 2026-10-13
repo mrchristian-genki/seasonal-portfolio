@@ -47,7 +47,12 @@
   { "name": "red-carpet-gala", "file": "red-carpet-gala.jpg", "about": "", "v": "tmkb42", "scene": "a clockmaker's workshop full of brass gears, cogs and glass jars on wooden shelves" },
   { "name": "hawaii-coast", "file": "hawaii-coast.webp", "about": "", "v": "tmnqye", "scene": "a tropical shoreline with palm trees, turquoise water and two small offshore islands" },
   { "name": "creek", "file": "creek.jpg", "about": "", "v": "tmrwit", "scene": "a cozy maker's workshop with a workbench, tools on the wall and warm hanging lamps" },
-  { "name": "foliage", "file": "foliage.webp", "about": "", "v": "tmta6o", "scene": "a small bike shop garage with mountain bikes hanging on a wall rack, tools on a pegboard and a wooden workbench" }
+  { "name": "foliage", "file": "foliage.webp", "about": "", "v": "tmta6o", "scene": "a small bike shop garage with mountain bikes hanging on a wall rack, tools on a pegboard and a wooden workbench" },
+  { "name": "donegal-1", "file": "donegal-1.jpg", "about": "Donegal", "v": "tmuzrb", "scene": "sea cliffs dropping into the Atlantic under grey cloud, with sunbeams over the water" },
+  { "name": "donegal-2", "file": "donegal-2.jpg", "about": "Donegal", "v": "tmuzrb", "scene": "a white lighthouse and keepers' cottages on a rocky headland at a pink sunset, waves breaking below" },
+  { "name": "donegal-3", "file": "donegal-3.jpg", "about": "Donegal", "v": "tmuzrb", "scene": "a pale cone of a mountain wrapped in low cloud above a still lake, bog and old stone walls" },
+  { "name": "donegal-4", "file": "donegal-4.jpg", "about": "Donegal", "v": "tmuzrb", "scene": "a sandy cove between dark cliffs and sea stacks, turquoise surf and green clifftop paths" },
+  { "name": "donegal-5", "file": "donegal-5.jpg", "about": "Donegal", "v": "tmuzrb", "scene": "a stone castle among trees on the shore of a mountain lake, misty slopes and flowering rhododendrons" }
  ],
  "categoryBackdrops": {
   "automaton": "workshop-with-robots",
