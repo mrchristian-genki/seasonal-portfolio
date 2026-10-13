@@ -89,6 +89,8 @@ final class SiteStats
             $j = json_decode((string) file_get_contents($f), true);
             if (!is_array($j)) continue;
             unset($j['final'], $j['pages']);   // pages stay on the server for later; the Stats tab doesn't use them
+            // referrer spam summed up before it was recognised (or before the config named it): left out here
+            if (!empty($j['refs'])) $j['refs'] = array_filter($j['refs'], fn($h) => !$this->isSpamRef((string) $h), ARRAY_FILTER_USE_KEY);
             if ($d < date('Y-m-d', strtotime('today -' . (self::KEEP_LOG_DAYS - 1) . ' days'))) unset($j['log']);
             $out[] = ['date' => $d] + $j;
         }
@@ -167,6 +169,17 @@ final class SiteStats
         return ['type' => 'page', 'area' => $area, 'path' => $path];
     }
 
+    /** Referrer spam: bots that send a fake referring address to advertise a site (backlink and SEO sellers, link
+     *  generators...). Their visits count as bots, and the sites never show as places visitors came from. The
+     *  config's stats_spam (a list of hosts or bits of them) adds to the patterns. */
+    public function isSpamRef(string $host): bool
+    {
+        if ($host === '') return false;
+        if (preg_match('~backlink|(^|[.-])seo([.-]|$)|linkgenerat|link-?build|buy-?(cheap|links?|backlinks?|traffic|followers)|webtraffic|traffic-?(bot|gen|exchange)|semalt|darodar|ilovevitaly|casino|porn|xxx|viagra~i', $host)) return true;
+        foreach ((array) ($this->cfg['stats_spam'] ?? []) as $bit) if ($bit !== '' && stripos($host, (string) $bit) !== false) return true;
+        return false;
+    }
+
     public static function isBot(string $ua): bool
     {
         return $ua === '' || $ua === '-' || (bool) preg_match('~bot|crawl|spider|slurp|scrap|fetch|preview|monitor|uptime|curl|wget|python|httpclient|okhttp|go-http|java/|libwww|headless|lighthouse|facebookexternalhit|embedly|whatsapp|discord|telegram|skype|validator|feed|rss|pingdom|ahrefs|semrush|bing|yandex|baidu|duckduck|petal|bytespider|gptbot|claude|perplexity|ccbot|dataforseo|mj12|zgrab|masscan|nmap|nikto|sqlmap~i', $ua);
@@ -215,6 +228,7 @@ final class SiteStats
         $acc ??= ['views' => 0, 'v' => [], 'areas' => [], 'av' => [], 'pages' => [], 'notes' => [], 'listens' => [], 'refs' => [], 'feed' => 0, 'bots' => 0, 'log' => []];
         $pod = self::isPodcastApp($r['ua']);
         if (self::isBot($r['ua']) && !$pod) { $acc['bots']++; return; }
+        if ($this->isSpamRef(self::refHost($r['ref']))) { $acc['bots']++; return; }   // referrer spam: a bot in a browser's clothes
         $who = substr(hash('sha256', $this->salt($d) . '|' . $r['ip'] . '|' . $r['ua']), 0, 16);
         if ($c['type'] === 'feed') { if ($r['status'] < 400) $acc['feed']++; return; }
         if ($c['type'] === 'listen') {   // an episode: one listen per person per day, however many pieces the player asks for
