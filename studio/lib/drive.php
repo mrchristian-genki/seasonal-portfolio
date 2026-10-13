@@ -136,18 +136,24 @@ final class Drive {
     public function status(): array {
         $s = $this->state();
         $lines = is_file($this->log()) ? $this->tail($this->log(), 400) : [];
-        $done = null; $progress = ''; $copied = []; $errors = [];
+        $done = null; $progress = ''; $copied = []; $last = [];
         foreach ($lines as $l) {
             if (preg_match('/^STUDIO-DONE (\d+)/', $l, $m)) { $done = (int) $m[1]; continue; }
             if (preg_match('/INFO\s*:\s*(.+?): Copied \((new|replaced existing)\)/', $l, $m)) $copied[] = $m[1];
-            elseif (preg_match('/ERROR\s*:\s*(.+)$/', $l, $m)) $errors[] = $m[1];
             elseif (preg_match('/NOTICE:\s*(.*\bETA\b.*)$/', $l, $m) || preg_match('/INFO\s*:\s*(.*\d+%.*ETA.*)$/', $l, $m)) $progress = trim($m[1]);
+            elseif (trim($l) !== '' && !preg_match('/\bETA\b|: Copied \(|There was nothing to transfer/', $l)) $last[] = preg_replace('/^\d{4}\/\d\d\/\d\d \d\d:\d\d:\d\d\s+/', '', $l);
         }
+        // its errors from the whole log, not just the end: a long copy logs a progress line every few seconds, which
+        // pushes them out of the tail. ERROR lines, and the fatal ones rclone words otherwise (an expired Drive login,
+        // a missing remote: CRITICAL, "Failed to ...", "Fatal error: ...")
+        $errors = is_file($this->log()) ? $this->errorsIn($this->log()) : [];
         $running = $this->running($s);
         if (!$running && $done !== null && empty($s['finished']) && $s) {
-            $s['finished'] = (int) filemtime($this->log()); $s['ok'] = $done === 0;
+            $s['finished'] = (int) filemtime($this->log()); $s['ok'] = $done === 0; $s['rc'] = $done;
             file_put_contents($this->stateFile(), json_encode($s), LOCK_EX);
         }
+        $rc = isset($s['rc']) ? (int) $s['rc'] : $done;   // (a try saved before the code was kept: read back from the log)
+        $failed = !$running && isset($s['ok']) && $s['ok'] === false;
         $clean = fn(string $t) => str_replace($this->home, '~', $t);
         return [
             'ready' => $this->problem() === null, 'problem' => $this->problem(),
@@ -156,6 +162,12 @@ final class Drive {
             'progress' => $clean($progress),
             'copied' => array_map($clean, array_slice($copied, -40)), 'copiedCount' => count($copied),
             'errors' => $this->tidy(array_map($clean, $errors)),
+            // when the last try failed: what rclone's exit code means, the fix for an expired Drive login, and, if no
+            // error line explains it, rclone's last few lines
+            'why' => $failed ? self::exitMeaning($rc) : null,
+            'reconnect' => $failed && (bool) preg_grep('/token|oauth|invalid_grant|reconnect|unauthori[sz]ed|401/i', $errors),
+            'remote' => $this->remote,
+            'lastLines' => $failed && !$errors ? array_map($clean, array_slice($last, -4)) : [],
             'inbox' => $this->inbox(),
             'ignored' => array_map(fn($k, $v) => ['source' => $k] + $v, array_keys($this->ignored()), array_values($this->ignored())),
         ];
@@ -360,6 +372,37 @@ final class Drive {
         $type = ['jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'png' => 'image/png', 'webp' => 'image/webp', 'heic' => 'image/heic', 'heif' => 'image/heif',
             'wav' => 'audio/wav', 'mp3' => 'audio/mpeg', 'm4a' => 'audio/mp4'][$ext] ?? 'text/plain; charset=utf-8';
         studio_send_file($path, $type);
+    }
+
+    // the error lines in a whole log (read a line at a time, so a long one costs no memory), newest last
+    private function errorsIn(string $file): array {
+        $h = @fopen($file, 'r');
+        if (!$h) return [];
+        $out = [];
+        while (($l = fgets($h)) !== false) {
+            if (preg_match('/\b(?:ERROR|CRITICAL)\s*:\s*(.+)$/', $l, $m) || preg_match('/(?:^|\s)((?:Failed to |Fatal error: ).+)$/', $l, $m)) {
+                $out[] = trim($m[1]);
+                if (count($out) > 500) $out = array_slice($out, -200);
+            }
+        }
+        fclose($h);
+        return $out;
+    }
+
+    /** rclone's exit codes (its docs, "Exit Code"), in words. The script keeps the last step's failing code. */
+    public static function exitMeaning(?int $rc): ?string {
+        if ($rc === null || $rc === 0) return null;
+        return [
+            1 => 'rclone was started the wrong way (a usage error)',
+            2 => 'an error rclone doesn\'t name more closely',
+            3 => 'a folder wasn\'t found (is the Drive folder still there, under the same name?)',
+            4 => 'a file wasn\'t found',
+            5 => 'a passing error (the network, or Google limiting requests); trying again later usually works',
+            6 => 'a less serious error, such as a file Google won\'t let be downloaded',
+            7 => 'a fatal error, such as an expired Drive login or a remote that isn\'t set up',
+            8 => 'the transfer limit was reached',
+            9 => 'there was nothing to copy',
+        ][$rc] ?? 'rclone stopped with code ' . $rc;
     }
 
     // rclone's errors, readable: each said once (its retries say it again), a long path cut short, newest last

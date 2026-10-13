@@ -131,6 +131,10 @@ A file whose name is too long for the server (past 180 bytes: a phone's dictatio
 everything said) comes in under its first words plus a short tag, e.g. `Right, we went to Marley Lake ~b56ace.txt`;
 its full name is kept in `~/studio-private/drive-longnames.json`, and its words still reach Your notes.
 
+When a bring-in fails, the Drive tab says why: rclone's errors from the whole log (`~/studio-private/drive-sync.log`),
+what its exit code means, the `rclone config reconnect <remote>:` fix when the Drive login has expired, and rclone's
+last lines when no error line explains it.
+
 ## Video loops (once)
 
 The videos that come in from Drive, and the ones dropped into a note (they come up in 2 MB pieces, so the host's
@@ -182,6 +186,9 @@ stored itself), views and visits by area, each Note's opens (as a page or in pla
 `/play/<id>/`), episode listens (people who requested its MP3), referring sites, podcast feed checks and the
 bots left out; the last week also keeps a visitor log (time, page, referring site, browser, a 6-letter
 daily tag), never an address. Visits to the public site by the owner count like anyone's.
+Referrer spam (bots sending a fake referring address to advertise backlink and SEO sellers, link generators
+and the like) counts as bots and never shows under "Where visitors came from"; `'stats_spam' => ['example.com']`
+in the private config names more.
 
 ## For Claude Code sessions
 

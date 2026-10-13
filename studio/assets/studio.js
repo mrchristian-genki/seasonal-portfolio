@@ -698,7 +698,12 @@
     d.innerHTML = '<div class="drive-head"><div><h2>Google Drive</h2><p class="muted">Watching ' + names + '. New files are copied to the server; nothing is deleted on either side.</p></div>' +
       '<button id="driveGo" class="primary"' + (j.running || !j.ready ? ' disabled' : '') + '>' + (j.running ? 'Bringing in…' : 'Bring in from Drive') + '</button></div>' +
       (j.problem ? '<p class="err">' + esc(j.problem) + '</p>' : '<p class="drive-line">' + line + '</p>') +
-      (j.errors.length ? '<p class="err">' + j.errors.map(esc).join('<br>') + '</p>' : '') + inbox +
+      (j.errors.length ? '<p class="err">' + j.errors.map(esc).join('<br>') + '</p>' : '') +
+      // why the last try stopped (lib/drive.php status): rclone's exit code in words, the fix for an expired Drive
+      // login, and rclone's last lines when no error line says more
+      (j.why ? '<p class="drive-why">What it means: ' + esc(j.why) + '.</p>' : '') +
+      (j.reconnect ? '<p class="drive-why">The Drive login looks expired. Over SSH, run <code>~/bin/rclone config reconnect ' + esc((j.remote || 'gdrive') + ':') + '</code> and sign in again, then bring in again.</p>' : '') +
+      ((j.lastLines || []).length ? '<details class="drive-last"><summary>rclone\'s last words</summary><pre>' + j.lastLines.map(esc).join('\n') + '</pre></details>' : '') + inbox +
       ((j.ignored || []).length && owner() ? '<details class="ignored"><summary>Ignored (' + j.ignored.length + ')</summary><ul>' + j.ignored.map(function (x) {
         return '<li>' + esc(x.source) + ' <small>' + esc(when(x.at)) + (x.dropped ? ' · server copy deleted' : '') + '</small> <button class="link unignore" data-src="' + esc(x.source) + '">Restore</button></li>'; }).join('') + '</ul></details>' : '');
     pager($('#inboxPg'), INBOX_PAGE, pages, function (p) { INBOX_PAGE = p; renderDrive(lastDrive); toTop($('#drive .inbox')); });
