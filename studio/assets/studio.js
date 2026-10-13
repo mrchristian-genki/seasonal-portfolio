@@ -554,7 +554,7 @@
   // new ones as soon as a Note has them, and the look each one gives GlazyArray (looks.json "categories"). Most have
   // none. A Note's own look beats its category's, which beats the holiday look. Her looks are here too, with a way to
   // add one from a render. ----------
-  var CATP = {}, CATBP = {}, CATRP = {}, CATNP = {}, CATTP = {}, DEFP = {}, HOLBP = {}, NEWCATP = {}, CATNEWLOOK = null, CATNEWBD = null;   // pending: looks, backdrops, priorities, defaults, holiday backdrops
+  var CATP = {}, CATBP = {}, CATRP = {}, CATNP = {}, CATTP = {}, DEFP = {}, HOLBP = {}, NEWCATP = {}, CATNEWLOOK = null, CATNEWBD = null, CATNEWTANK = null;   // pending: looks, backdrops, priorities, defaults, holiday backdrops
   function renderCats() {
     var box = $('#catsBox'); box.innerHTML = '<p class="muted">Loading…</p>';
     LOOKS = null; renderLookData().then(function (r) {
@@ -616,7 +616,17 @@
         field('The place', '<textarea id="nbScene" rows="2" placeholder="e.g. ' + esc(SCENES.ride) + '"></textarea>', 'Picking a category fills in a suggestion') +
         field('Image prompt', '<textarea id="nbPrompt" rows="5" readonly></textarea>') + '<div class="row"><button type="button" id="nbCopy">Copy the image prompt</button></div>' + bdTpl() +
         '<label class="drop ga-drop" id="nbDrop"><input type="file" id="nbFile" accept="image/png,image/jpeg,image/webp" hidden><b>Bring the render here</b> <span class="muted">or drop it here</span></label><div id="nbOut"></div>' +
-        '<div class="row"><button type="button" class="primary" id="nbAdd" disabled>Add the backdrop</button></div>';
+        '<div class="row"><button type="button" class="primary" id="nbAdd" disabled>Add the backdrop</button></div>' +
+        '<h3>A.L.T.A.\'s tank scenes</h3><p class="muted">The place behind her glass, so she\'s on location. Only the strip above her copper ledge shows (the top 38%): the horizon or treeline sits about a quarter of the way down, and everything that matters is in the top third. A Note picks one in its Episode panel, a category in its column above. Without one she borrows the Note\'s backdrop (blurred, just the strip); with neither, she\'s in her hall.</p>' +
+        (tanks.length ? '<div class="lookg bdg tkg">' + tanks.map(function (b) { return '<figure><img alt="" src="/assets/alta/backdrops/' + esc(b.file) + (b.v ? '?r=' + esc(b.v) : '') + '"><figcaption>' + esc(b.name) + '</figcaption></figure>'; }).join('') + '</div>' : '<p class="muted">None yet.</p>') +
+        '<div class="grid2">' + field('Name', '<input id="ntName" placeholder="e.g. tahoe-beach-dusk" maxlength="40">', 'Lowercase, with dashes') + field('Give it to', '<select id="ntCat"><option value="">No category yet</option>' + names.map(function (c) { return '<option value="' + esc(c) + '">' + esc(catName(c)) + '</option>'; }).join('') + '</select>') + '</div>' +
+        field('The place', '<textarea id="ntScene" rows="2" placeholder="e.g. ' + esc(TANK_SCENES['lake-tahoe']) + '"></textarea>', 'Picking a category fills in a suggestion') +
+        field('How you\'ll make it', '<select id="ntWay"><option value="edit">Edit her template (keeps the framing)</option><option value="new">A new picture from the prompt</option></select>') +
+        field('Image prompt', '<textarea id="ntPrompt" rows="6" readonly></textarea>') + '<div class="row"><button type="button" id="ntCopy">Copy the image prompt</button></div>' +
+        '<div class="ga-tpl"><img alt="Her tank template" src="/assets/alta/kit/tank-template.jpg"><span><b>Her tank template</b><br><span class="muted">16:9, 1376 x 768. The grey is the place; she and everything below the ledge stay.</span><br>' +
+          '<button type="button" id="ntTplCopy">Copy the image</button> <a href="/assets/alta/kit/tank-template.jpg" download>Download</a> · <a href="/assets/alta/kit/tank-backdrop-guide.jpg" target="_blank" rel="noopener">Layout guide</a></span></div>' +
+        '<label class="drop ga-drop" id="ntDrop"><input type="file" id="ntFile" accept="image/png,image/jpeg,image/webp" hidden><b>Bring the render here</b> <span class="muted">or drop it here: you\'ll see her in front of it</span></label><div id="ntOut"></div>' +
+        '<div class="row"><button type="button" class="primary" id="ntAdd" disabled>Add the scene</button></div>';
       $$('.catl select[data-catnar]', box).forEach(function (sel) {
         var c = sel.getAttribute('data-catnar'); sel.value = nv(c);
         sel.onchange = function () { if (sel.value === (cnar[c] || '')) delete CATNP[c]; else CATNP[c] = sel.value; renderCats(); };
@@ -705,6 +715,33 @@
       $$('button[data-syncga],button[data-syncml]', box).forEach(function (b) {
         b.onclick = function () { var n = b.getAttribute('data-syncga') || b.getAttribute('data-syncml'); syncShow(list.filter(function (x) { return x.name === n; })[0], b.hasAttribute('data-syncga') ? 'ga' : 'ml'); };
       });
+      // A.L.T.A.'s tank scenes: the prompt (an edit of her template, or a new picture), the render cropped to her frame,
+      // and a preview with her and her tank in front of it (assets/alta/kit/tank-overlay.webp)
+      var ntScene = $('#ntScene'), ntPrompt = $('#ntPrompt'), ntUpd = function () { ntPrompt.value = tankPrompt(ntScene.value || TANK_SCENES[$('#ntCat').value] || SCENES[$('#ntCat').value] || '', $('#ntWay').value); };
+      $('#ntCat').onchange = function () { var c = this.value, sc = TANK_SCENES[c] || SCENES[c]; if (!ntScene.value.trim() && sc) ntScene.value = sc; if (!$('#ntName').value.trim() && c) $('#ntName').value = c + '-tank'; ntUpd(); };
+      ntScene.oninput = ntUpd; $('#ntWay').onchange = ntUpd; ntUpd();
+      $('#ntCopy').onclick = function () { navigator.clipboard.writeText(ntPrompt.value).then(function () { toast('Image prompt copied.'); }); };
+      $('#ntTplCopy').onclick = function () { GALook.copyImage('/assets/alta/kit/tank-template.jpg').then(function () { toast('Her tank template is on the clipboard.'); }, function (e) { toast(e.message, true); }); };
+      var takeTank = function (f) {
+        if (!f) return; $('#ntOut').innerHTML = '<p class="muted">Working…</p>';
+        tankImage(f).then(function (res) { CATNEWTANK = res; var o = $('#ntOut'); o.innerHTML = res.warn ? '<p class="warn">' + esc(res.warn) + '</p>' : ''; res.preview.className = 'ga-prev'; o.appendChild(res.preview); $('#ntAdd').disabled = false; })
+          .catch(function (e) { $('#ntOut').innerHTML = ''; toast(e.message, true); });
+      };
+      $('#ntFile').onchange = function () { takeTank(this.files[0]); this.value = ''; };
+      var ntd = $('#ntDrop'); ['dragover', 'dragenter'].forEach(function (t) { ntd.addEventListener(t, function (ev) { ev.preventDefault(); }); });
+      ntd.addEventListener('drop', function (ev) { ev.preventDefault(); takeTank(ev.dataTransfer.files[0]); });
+      if (CATNEWTANK) { CATNEWTANK.preview.className = 'ga-prev'; $('#ntOut').appendChild(CATNEWTANK.preview); $('#ntAdd').disabled = false; }
+      $('#ntAdd').onclick = function () {
+        var name = slug($('#ntName').value).slice(0, 40), cat = $('#ntCat').value, b = this;
+        if (!name) { toast('Give the scene a name.', true); return; }
+        if (tanks.some(function (x) { return x.name === name; }) && !confirm(name + ' already exists. Replace its image with this one?')) return;
+        b.disabled = true; b.textContent = 'Adding…';
+        api('lookblob', CATNEWTANK.blob).then(function (r) {
+          var ct = {}; if (cat) ct[cat] = name;
+          return api('looks', { newTank: { name: name, ext: CATNEWTANK.ext, sha: r.sha, scene: ntScene.value.trim() }, categoryTanks: cat ? ct : null });
+        }).then(function () { CATNEWTANK = null; LOOKS = null; toast(name + ' added. The site updates in about a minute.'); renderCats(); })
+          .catch(function (err) { toast(err.message, true); b.disabled = false; b.textContent = 'Add the scene'; });
+      };
       $('#catTpl').onclick = function () { GALook.copyTemplate().then(function () { toast('Her template is on the clipboard.'); }, function (e) { toast(e.message, true); }); };
       function take(f) {
         if (!f) return; $('#nlOut').innerHTML = '<p class="muted">Working…</p>';
@@ -1128,10 +1165,13 @@
       Promise.all([renderLookData(), who()]).then(function (rr) {
         var r = rr[0];
         var J = r[3] || {}, tanks = J.tankBackdrops || [], b = $('#epTankBox'); if (!b) return;
-        if (!tanks.length || rr[1].name !== 'alta') { b.innerHTML = ''; return; }
-        var p = window.GAResolve && GAResolve.pick(J, { tank: E.altaBackdrop, cats: noteCats() }), t = p && p.tank;
+        if (rr[1].name !== 'alta') { b.innerHTML = ''; return; }
+        var Bk = E.narratorBackdrop && E.narratorBackdrop.backdrop;
+        var p = window.GAResolve && GAResolve.pick(J, { tank: E.altaBackdrop, cats: noteCats(), backdrop: Bk || undefined, ignoreHolidays: !!E.ignoreHolidays }), t = p && p.tank;
+        var lent = !t && p && p.backdrop && p.backdrop.from !== 'default' ? p.backdrop : null;   // field/tools/publish.mjs bdAttr
+        if (!tanks.length) { b.innerHTML = '<p class="muted">Behind her tank: ' + (lent ? 'this Note\'s backdrop, ' + esc(lent.name) + ', borrowed' : 'her hall') + '. Her own scenes are made in Categories.</p>'; return; }
         b.innerHTML = field('Behind her tank', '<select id="epTank"><option value="">From its categories</option>' + tanks.map(function (x) { return '<option value="' + esc(x.name) + '"' + (E.altaBackdrop === x.name ? ' selected' : '') + '>' + esc(x.name + (x.about ? ' · ' + x.about : '')) + '</option>'; }).join('') + '</select>',
-          t ? esc(t.name) + ' (' + esc(t.why) + ')' : 'The hall, her own');
+          t ? esc(t.name) + ' (' + esc(t.why) + ')' : lent ? 'This Note\'s backdrop, ' + esc(lent.name) + ', borrowed' : 'The hall, her own');
         $('#epTank').onchange = function () { if (this.value) E.altaBackdrop = this.value; else delete E.altaBackdrop; markDirty(); showTank(); };
       }).catch(function (e) { console.error('tank', e); });
     };
@@ -1340,6 +1380,43 @@
   // teal. A new one starts as a few words about the place; the prompt is built from them (look.js bdPrompt), rendered
   // on the backdrop template in any image tool, and brought back here ----------
   var LOOKBD = null, BDNEW = null, BDSAVED = {}, CATBDNEW = {}, BDPICK = false;
+  // ---------- A.L.T.A.'s tank scenes (assets/alta/KIT.md Round 8): only the strip above her ledge shows ----------
+  var TANK_SCENES = {
+    'lake-tahoe': 'a sandy Lake Tahoe beach at dusk, smooth granite boulders and pines along the far shore',
+    'case-study': 'a quiet old library with tall wooden bookshelves and warm reading lamps',
+    ride: 'a small bike shop with mountain bikes hanging on the far wall',
+    hike: 'a pine forest trailhead in late afternoon light',
+    'mini-cast': 'a cozy maker\'s workshop with tools on the far wall and warm hanging lamps',
+    automaton: 'a clockmaker\'s workshop with brass gears and glass jars on shelves',
+    'with-marley': 'a sunny backyard lawn with a wooden fence and trees beyond',
+    aerial: 'a wide mountain valley seen from a high ridge, a lake far below',
+    science: 'a bright science classroom with a long chalkboard and shelves of equipment',
+    showcase: 'a gallery with soft spotlights on the far wall'
+  };
+  function tankPrompt(place, way) {
+    place = place || '[THE PLACE]';
+    var tail = ' No people, no animals, no text, signs, logos or brands. Colours that sit well beside a teal-green tank and weathered copper.';
+    if (way === 'new') return 'A softly blurred photograph of ' + place + ', seen from about table height, as if from behind a large aquarium standing in the room. Wide 16:9. The camera looks straight ahead, level. The far wall, the horizon or the treeline sits about a quarter of the way down the frame, and everything that matters is in the top third; the lower part is plain floor or ground. Shallow depth of field: the whole scene gently out of focus, like the background of a portrait, with soft, natural light.' + tail;
+    return 'Same image, exactly as it is: the mermaid, her copper ledge, the water and everything below the ledge stay exactly the same. Replace only the flat grey wall above the copper ledge with a softly blurred photograph of ' + place + ', seen from about table height, as if from behind a large aquarium standing there. The camera looks straight ahead, level; the far wall, the horizon or the treeline sits about halfway between the top of the picture and the ledge. Shallow depth of field: the whole place gently out of focus, like the background of a portrait, with soft, natural light. Nothing new in front of her or on the ledge.' + tail;
+  }
+  // a render cropped to her frame (1376 x 768) as webp, and a preview with her and her tank in front of it
+  function tankImage(file) {
+    var url = URL.createObjectURL(file), W = 1376, H = 768;
+    var load = function (src) { return new Promise(function (ok, no) { var i = new Image(); i.onload = function () { ok(i); }; i.onerror = function () { no(new Error('That image didn\'t open.')); }; i.src = src; }); };
+    return Promise.all([load(url), load('/assets/alta/kit/tank-overlay.webp')]).then(function (r) {
+      URL.revokeObjectURL(url);
+      var src = r[0], c = document.createElement('canvas'); c.width = W; c.height = H;
+      var g = c.getContext('2d'), sw = src.naturalWidth, sh = src.naturalHeight, k = Math.max(W / sw, H / sh);
+      g.imageSmoothingQuality = 'high'; g.drawImage(src, (W - sw * k) / 2, (H - sh * k) / 2, sw * k, sh * k);
+      var warn = Math.abs(sw / sh - W / H) > 0.15 ? 'It isn\'t 16:9 like her template, so it was cropped to fit.' : '';
+      var pv = document.createElement('canvas'); pv.width = 688; pv.height = 384;
+      var pg = pv.getContext('2d'); pg.drawImage(c, 0, 0, 688, 384); pg.drawImage(r[1], 0, 0, 688, 384);
+      return new Promise(function (ok) { c.toBlob(ok, 'image/webp', 0.85); }).then(function (b) {
+        if (b && b.type === 'image/webp') return b;
+        return new Promise(function (ok) { c.toBlob(ok, 'image/jpeg', 0.86); });
+      }).then(function (blob) { return { blob: blob, ext: blob.type === 'image/webp' ? 'webp' : 'jpg', preview: pv, warn: warn }; });
+    });
+  }
   // ---------- narrators in step: the prompts for a look's missing piece ----------
   // GlazyArray's two (assets/narrator/looks/PROMPTS.md), from the look's gaLook / gaA / gaB in looks.json, else its about
   function gaSyncPrompt(l) {

@@ -74,12 +74,17 @@
     bar.insertBefore(st, bar.children[1] || null);
     // a backdrop behind her tank (data-bd: the scene for this Note, as the site picks it; assets/alta/KIT.md Round 8):
     // her still without the hall (rest-cut), and her gesture, dive and rise with their masks (*-cut.mp4), over the scene
+    // A scene of her own (assets/alta/backdrops) is made for her tank; one borrowed from the Note (assets/narrator/
+    // backdrops, the one GlazyArray and Robot Marley show) is framed for a wide strip, so it fills just the strip above
+    // her ledge, softly blurred, its middle showing (Christian, Oct 13)
     var bd = bar.getAttribute('data-bd'), CUT = {};
-    if (bd && /^\/assets\/alta\/backdrops\/[\w.-]+\.(webp|jpg|png)(\?[\w.=-]*)?$/.test(bd) && !!document.createElement('canvas').getContext('webgl')) {
+    var lent = !!bd && /^\/assets\/narrator\/backdrops\/[\w.-]+\.(webp|jpg|png)(\?[\w.=-]*)?$/.test(bd);
+    if (bd && (lent || /^\/assets\/alta\/backdrops\/[\w.-]+\.(webp|jpg|png)(\?[\w.=-]*)?$/.test(bd)) && !!document.createElement('canvas').getContext('webgl')) {
       st.classList.add('al-has-bd'); st.style.setProperty('--al-bd', 'url(' + bd + ')');
       var rc = document.createElement('img'); rc.className = 'al-restcut'; rc.alt = '';
       rc.onload = function () { st.classList.add('al-rc-in'); };   // her still is in: its small stand-in goes
       rc.src = P + 'rest-cut.webp' + V; st.insertBefore(rc, st.firstChild);
+      if (lent) { st.classList.add('al-bd-lent'); var bl = document.createElement('i'); bl.className = 'al-bdl'; bl.innerHTML = '<i></i>'; st.insertBefore(bl, st.firstChild); }   // under everything, her still included
       CUT = { palms: 1, dive: 1, rise: 1 };
     }
     // the Note's two colours (data-palette, from its hero): her crown's filigree takes the first, her hair's botanicals the second

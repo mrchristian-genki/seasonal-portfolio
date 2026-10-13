@@ -159,7 +159,7 @@ function apply_looks(GitHub $gh, array &$files, array $body): void
     // GlazyArray's looks (Studio, "GlazyArray's look"), all in looks.json, written once: a Note look taken off the
     // site, a new or replaced Note look, and the looks given to whole categories. Holiday looks and hair styles
     // are never replaced or removed from here.
-    if ($rl !== '' || is_array($nl) || is_array($cl) || $rb !== '' || is_array($nb) || is_array($cb) || is_array($cr) || is_array($df) || is_array($hb) || is_array($cn) || is_array($cnr) || is_array($ctk)) {
+    if ($rl !== '' || is_array($nl) || is_array($cl) || $rb !== '' || is_array($nb) || is_array($cb) || is_array($cr) || is_array($df) || is_array($hb) || is_array($cn) || is_array($cnr) || is_array($ctk) || is_array($body['newTank'] ?? null)) {
         $lj = json_decode($gh->read(LOOKS_JSON) ?? '{"looks":[]}', true);
         $list = array_values((array) ($lj['looks'] ?? [])); $cats = (array) ($lj['categories'] ?? []);
         $bds = array_values((array) ($lj['backdrops'] ?? [])); $bcats = (array) ($lj['categoryBackdrops'] ?? []);
@@ -287,6 +287,20 @@ function apply_looks(GitHub $gh, array &$files, array $body): void
             if ($n !== '' && !in_array($n, NARRATORS, true)) json_fail('No narrator called "' . $n . '".');
             $touch($cat);
             if ($n === '') unset($cnars[$cat]); else $cnars[$cat] = $n;
+        }
+        // a new (or replaced) scene behind A.L.T.A.'s tank (assets/alta/backdrops/<name>.webp; KIT.md Round 8)
+        $nt = $body['newTank'] ?? null;
+        if (is_array($nt)) {
+            $name = (string) ($nt['name'] ?? ''); $ext = (string) ($nt['ext'] ?? ''); $tsha = (string) ($nt['sha'] ?? '');
+            if (!preg_match('/^[a-z0-9-]{1,40}$/', $name) || !in_array($ext, ['webp', 'png', 'jpg'], true) || !preg_match('/^[0-9a-f]{40}$/', $tsha)) json_fail('Bad tank scene.');
+            foreach ($tanks as $k => $b) if (($b['name'] ?? '') === $name) {
+                if (($b['file'] ?? '') !== "$name.$ext" && preg_match('/^[a-z0-9-]{1,40}\.(webp|png|jpg)$/', (string) ($b['file'] ?? ''))) $files['assets/alta/backdrops/' . $b['file']] = null;
+                unset($tanks[$k]);
+            }
+            $tk = ['name' => $name, 'file' => "$name.$ext", 'about' => '', 'v' => base_convert((string) time(), 10, 36)];
+            $scene = mb_substr(trim((string) ($nt['scene'] ?? '')), 0, 400); if ($scene !== '') $tk['scene'] = $scene;
+            $tanks = array_values($tanks); $tanks[] = $tk; $tankNames[] = $name;
+            $files["assets/alta/backdrops/$name.$ext"] = ['sha' => $tsha];
         }
         // the scene behind A.L.T.A.'s tank for a category's Notes ('' for none)
         if (is_array($ctk)) foreach ($ctk as $cat => $n) {
@@ -674,7 +688,7 @@ try {
             $files = [];
             apply_looks($gh, $files, ['newLook' => $body['newLook'] ?? null, 'categoryLooks' => $body['categoryLooks'] ?? null,
                 'newBackdrop' => $body['newBackdrop'] ?? null, 'categoryBackdrops' => $body['categoryBackdrops'] ?? null,
-                'categoryRank' => $body['categoryRank'] ?? null, 'defaults' => $body['defaults'] ?? null, 'holidayBackdrops' => $body['holidayBackdrops'] ?? null, 'categoryNames' => $body['categoryNames'] ?? null, 'categoryNarrators' => $body['categoryNarrators'] ?? null, 'categoryTanks' => $body['categoryTanks'] ?? null]);
+                'categoryRank' => $body['categoryRank'] ?? null, 'defaults' => $body['defaults'] ?? null, 'holidayBackdrops' => $body['holidayBackdrops'] ?? null, 'categoryNames' => $body['categoryNames'] ?? null, 'categoryNarrators' => $body['categoryNarrators'] ?? null, 'categoryTanks' => $body['categoryTanks'] ?? null, 'newTank' => $body['newTank'] ?? null]);
             if (!$files) json_fail('Nothing to save.');
             json_out(['ok' => true, 'commit' => $gh->commit($files, "Studio: GlazyArray's looks")]);
 
