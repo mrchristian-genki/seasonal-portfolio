@@ -9,6 +9,7 @@ require __DIR__ . '/lib/drafter.php';
 require __DIR__ . '/lib/drive.php';
 require __DIR__ . '/lib/video.php';
 require __DIR__ . '/lib/stats.php';
+require __DIR__ . '/lib/health.php';
 require __DIR__ . '/vendor/autoload.php';
 
 studio_security_headers();
@@ -636,7 +637,12 @@ try {
             $err = null;
             try { $st->update(); } catch (Throwable $e) { $err = $e->getMessage(); }
             $n = max(1, min(731, (int) ($_GET['days'] ?? 30)));
-            json_out(['source' => $st->source(), 'days' => $st->days(date('Y-m-d', strtotime('today -' . ($n - 1) . ' days'))), 'today' => date('Y-m-d'), 'error' => $err]);
+            $since = date('Y-m-d', strtotime('today -' . ($n - 1) . ' days'));
+            // the site's health (lib/health.php; kept a few hours, fresh=1 asks again) and failed Studio logins
+            $health = null;
+            try { $health = (new SiteHealth($cfg))->report(!empty($_GET['fresh'])); } catch (Throwable $e) { $health = ['at' => time(), 'checks' => [], 'error' => $e->getMessage()]; }
+            json_out(['source' => $st->source(), 'days' => $st->days($since), 'today' => date('Y-m-d'), 'error' => $err,
+                'health' => $health, 'logins' => studio_failures($since)]);
 
         case 'GET users':
             owner_only();

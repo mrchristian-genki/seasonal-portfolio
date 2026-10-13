@@ -190,6 +190,15 @@ Referrer spam (bots sending a fake referring address to advertise backlink and S
 and the like) counts as bots and never shows under "Where visitors came from"; `'stats_spam' => ['example.com']`
 in the private config names more.
 
+**Site health**, at the top of Stats, checks from the server itself (`lib/health.php`, kept six hours in
+`~/studio-private/health.json`; **Check again** asks afresh): the domain's renewal date (RDAP), the HTTPS
+certificate each name gets (a real connection), the redirect from http:// and the bare name to https://www, HSTS
+(the Studio sends `Strict-Transport-Security` for a year, which browsers apply to the whole host), email protection
+(SPF, DKIM with the `'dkim_selector'`, default `dreamhost`, and DMARC) and disk space. Each says OK, Check or Fix,
+with what to do. Below the Notes, **Problems in the logs** lists missing pages people asked for (404s, bots left
+out), server errors, probes (bots trying WordPress logins, .env files and the like) and failed Studio logins
+(counted per day in `~/studio-private/login-failures.json`, no addresses).
+
 ## For Claude Code sessions
 
 Entries saved in the Studio land on `main`, so start from the latest `main`. Field Notes still works the

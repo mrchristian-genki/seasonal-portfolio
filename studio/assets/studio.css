@@ -746,3 +746,25 @@ dialog.pfp::backdrop{background:rgba(20,12,6,.7)}
   .stx-col i,.stx-bars .b i,.stx-mini{transform:none;transition:none}
   .stx-tip,.stx-span button,.site-stats.stx-busy>*{transition:none}
 }
+/* Site health on the Stats tab (studio.js healthHtml): each check marked by an icon and a word as well as its colour
+   (OK, Check, Fix); the status colours are kept for this and never used for data */
+.site-stats{--ok:#2f8f6b;--ok-bg:#e2f4ec;--chk:#8a5a00;--chk-bg:#fbefd5;--fix:#b3261e;--fix-bg:#fbe3e1}
+.stx-health{margin:14px 0 6px}
+.stx-hh{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.stx-hh h3{margin:0} .stx-hh small{font-size:13px} .stx-hh button{margin-left:auto}
+.stx-hsum{font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;border-radius:999px;padding:2px 9px}
+.stx-hsum[data-state=good]{background:var(--ok-bg);color:var(--ok)} .stx-hsum[data-state=warn]{background:var(--chk-bg);color:var(--chk)} .stx-hsum[data-state=bad]{background:var(--fix-bg);color:var(--fix)}
+.stx-hc{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:8px}
+.stx-hc li{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:8px;border:1px solid var(--line);background:rgba(255,255,255,.45);font-size:14px;line-height:1.4}
+.stx-hc li>div{display:flex;flex-direction:column;gap:3px;min-width:0}
+.stx-hc b{font-size:15px} .stx-hc b em{font-style:normal;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;margin-left:4px}
+.stx-hc span{color:var(--ink2);overflow-wrap:anywhere}
+.stx-hc .stx-hi{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font:900 14px/1 Arial,sans-serif;color:#fff}
+.stx-hc li[data-state=good] .stx-hi{background:var(--ok)} .stx-hc li[data-state=good] em{color:var(--ok)}
+.stx-hc li[data-state=warn] .stx-hi{background:var(--chk)} .stx-hc li[data-state=warn] em{color:var(--chk)} .stx-hc li[data-state=warn]{border-color:#e7c98a}
+.stx-hc li[data-state=bad] .stx-hi{background:var(--fix)} .stx-hc li[data-state=bad] em{color:var(--fix)} .stx-hc li[data-state=bad]{border-color:#e9aaa5}
+.stx-hc .stx-todo{color:var(--ink);font-weight:600}
+.stx-h4{margin:0 0 8px;font-size:14px;color:var(--ink2)}
+.stx-tl{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.stx-tl li{display:flex;gap:12px;align-items:baseline} .stx-tl b{font:800 22px/1 var(--display);min-width:76px;text-align:right}
+.stx-tl span{display:flex;flex-direction:column;font-weight:700;color:var(--ink2);font-size:14px} .stx-tl small{font-weight:400;color:var(--ink3);font-size:12px;overflow-wrap:anywhere}
