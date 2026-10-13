@@ -80,6 +80,23 @@
   function markDirty() { dirty = true; var s = $('#saveState'); if (s) s.textContent = 'Unsaved changes'; if (typeof renderNext === 'function') renderNext(); }
   window.addEventListener('beforeunload', function (ev) { if (dirty) { ev.preventDefault(); ev.returnValue = ''; } });
 
+  // Styles for HTML built here, set from script: the Studio's Content-Security-Policy (style-src 'self',
+  // lib/bootstrap.php) drops style="" attributes written into the page, but not styles set by script. So HTML carries
+  // them as data: data-h / data-w (a bar's height or length, the --h / --w its CSS uses), data-b (a gridline's place),
+  // data-bg / data-fg (a colour), data-x / data-y (a marker's place); call this once it's on the page.
+  function dataStyles(root) {
+    var pct = function (v) { return (+v || 0) + '%'; };
+    $$('[data-h],[data-w],[data-b],[data-bg],[data-fg],[data-x]', root).forEach(function (e) {
+      var g = function (k) { return e.getAttribute('data-' + k); };
+      if (g('h') != null) e.style.setProperty('--h', pct(g('h')));
+      if (g('w') != null) e.style.setProperty('--w', pct(g('w')));
+      if (g('b') != null) e.style.bottom = pct(g('b'));
+      if (g('bg') != null) e.style.background = g('bg');
+      if (g('fg') != null) e.style.color = g('fg');
+      if (g('x') != null) { e.style.left = pct(g('x')); e.style.top = pct(g('y')); }
+    });
+  }
+
   // ---------- photos: EXIF date, resize, strip ----------
   // Reads DateTimeOriginal from a JPEG's EXIF (the only thing kept: the time, for ordering).
   function exifDate(file) {
@@ -152,7 +169,7 @@
     var m = /^note\/(.+)$/.exec(v || '');
     if (m) return edit(m[1]);
     if (v === 'new') return edit(null);
-    if ((v === 'categories' || v === 'people' || v === 'stats') && owner()) return showList(v);
+    if (v === 'drive' || ((v === 'categories' || v === 'people' || v === 'stats') && owner())) return showList(v);
     return showList();
   }
   function listen() {                    // Back and Forward (switch.js loads after this file, so at start)
@@ -164,19 +181,22 @@
   }
 
   // ---------- list ----------
-  // the list's tabs: the Notes, their Categories (GlazyArray's looks), People and the site's Stats (owner only)
+  // the list's tabs: the Notes and Google Drive (everyone), their Categories (GlazyArray's looks), People and the
+  // site's Stats (owner only). Drive has its own tab, since bringing in is now and then and the Notes are every day;
+  // the Notes tab says in a line when Drive has something new (driveHint)
   function showList(tab) {
-    tab = tab === 'categories' || tab === 'people' || tab === 'stats' ? tab : 'notes';
+    tab = tab === 'drive' || ((tab === 'categories' || tab === 'people' || tab === 'stats') && owner()) ? tab : 'notes';
     if (dirty && !confirm('Leave without saving?')) return;
     dirty = false; E = null; fresh = {}; removed = []; INBOX = null; audioNew = null; audioGone = false; DRIVEAUD = null; DRIVETRK = null; trackRaw = null; trackSwap = false; clipsNew = {}; posterNew = {}; DRIVEVID = null; UPVID = []; stopTrim();
     route(tab);
-    var tabs = owner() ? '<nav class="tabs" role="tablist">' + [['notes', 'Notes'], ['categories', 'Categories'], ['people', 'People'], ['stats', 'Stats']].map(function (t) {
-      return '<button type="button" role="tab" data-tab="' + t[0] + '" aria-selected="' + (t[0] === tab) + '">' + t[1] + '</button>'; }).join('') + '</nav>' : '';
+    var tabs = '<nav class="tabs" role="tablist">' + [['notes', 'Notes'], ['drive', 'Drive']].concat(owner() ? [['categories', 'Categories'], ['people', 'People'], ['stats', 'Stats']] : []).map(function (t) {
+      return '<button type="button" role="tab" data-tab="' + t[0] + '" aria-selected="' + (t[0] === tab) + '">' + t[1] + '</button>'; }).join('') + '</nav>';
     app.innerHTML = '<div class="head"><h1>Field Notes</h1>' + tabs + '<span class="me">' + esc(CFG.me ? CFG.me.name : '') + (owner() ? '' : ' · editor') + '</span>' +
       (tab === 'notes' ? '<button id="new" class="primary">New entry</button>' : '') + '</div>' +
       '<section id="queue" class="panel queue" hidden></section><section id="peopleBox" class="panel people"' + (tab === 'people' ? '' : ' hidden') + '></section><section id="catsBox" class="panel cats"' + (tab === 'categories' ? '' : ' hidden') + '></section>' +
       '<section id="statsBox" class="panel site-stats"' + (tab === 'stats' ? '' : ' hidden') + '></section>' +
-      '<section id="drive" class="panel drive"' + (tab === 'notes' ? '' : ' hidden') + '><p class="muted">Checking Google Drive…</p></section><section id="wsOrder" class="panel wsorder" hidden></section><div id="list" class="cards"' + (tab === 'notes' ? '' : ' hidden') + '><p class="muted">Loading entries…</p></div>';
+      '<p id="driveHint" class="drive-hint" hidden></p>' +
+      '<section id="drive" class="panel drive"' + (tab === 'drive' ? '' : ' hidden') + '><p class="muted">Checking Google Drive…</p></section><section id="wsOrder" class="panel wsorder" hidden></section><div id="list" class="cards"' + (tab === 'notes' ? '' : ' hidden') + '><p class="muted">Loading entries…</p></div>';
     if ($('#new')) $('#new').onclick = function () { edit(null); };
     $$('.tabs [data-tab]').forEach(function (b) { b.onclick = function () { showList(b.getAttribute('data-tab')); }; });
     if (tab === 'people') renderPeople();
@@ -408,20 +428,13 @@
     html += '<h3>Visitor log</h3><p class="muted">The last week\'s page views, newest first. A visitor\'s tag is new every day, so one visit\'s pages read together but no one can be followed from day to day; no addresses are kept.</p><div id="stxLog"></div><div class="pager" id="stxPg" hidden></div>';
     html += srcNote(j, false);
     box.innerHTML = html;
-    sizes(box);
+    dataStyles(box);
     spanClicks(box);
     $$('[data-note]', box).forEach(function (b) { b.onclick = function () { edit(b.getAttribute('data-note')); }; });
     chartHover(box);
     drawLog(days, noteName);
     // the bars grow in, eased (css .stx-in), once they're on the page
     requestAnimationFrame(function () { requestAnimationFrame(function () { box.classList.add('stx-in'); }); });
-  }
-  // the bars' lengths and the gridlines' places, set from here: the Studio's Content-Security-Policy (style-src 'self',
-  // lib/bootstrap.php) drops style="" attributes written into the page, but not styles set by script
-  function sizes(box) {
-    $$('[data-h]', box).forEach(function (e) { e.style.setProperty('--h', e.getAttribute('data-h') + '%'); });
-    $$('[data-w]', box).forEach(function (e) { e.style.setProperty('--w', e.getAttribute('data-w') + '%'); });
-    $$('[data-b]', box).forEach(function (e) { e.style.bottom = e.getAttribute('data-b') + '%'; });
   }
   function spanClicks(box) {
     $$('[data-span]', box).forEach(function (b) { b.onclick = function () { var n = +b.getAttribute('data-span'); if (n === SV.span) return; SV.span = n; saveSV(); box.classList.remove('stx-in'); $$('[data-span]', box).forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); }); renderStats(); }; });
@@ -672,6 +685,7 @@
   function renderDrive(j) {
     lastDrive = j;
     var d = $('#drive'); if (!d) return;
+    driveHint(j);
     var names = j.folders.map(function (f) { return '“' + esc(f) + '”'; }).join(', ');
     var line;
     if (j.running) line = 'Bringing in new files… ' + esc(j.progress || 'starting') + (j.copiedCount ? ' · ' + j.copiedCount + ' copied so far' : '');
@@ -713,6 +727,20 @@
       };
     });
     if (j.running) drivePoll = setTimeout(driveStatus, 4000);
+  }
+
+  // on the Notes tab, one line when Drive has something to do: bringing in now, a problem, or folders not yet made
+  // into notes and new files for notes already made; it opens the Drive tab
+  function driveHint(j) {
+    var h = $('#driveHint'); if (!h) return;
+    if ($('#drive') && !$('#drive').hidden) { h.hidden = true; return; }
+    var items = ENTRIES ? (j.inbox || []).filter(function (f) { return f.dir || f.note; }) : [];   // (until the notes are in, every folder would look new)
+    var fresh = items.filter(function (f) { return !noteFor(f); }).length, more = items.filter(function (f) { return noteFor(f) && f.since; }).length;
+    var say = j.running ? 'Bringing in new files from Google Drive…' : j.problem || (j.errors || []).length ? 'Google Drive: the last try had a problem.' :
+      fresh || more ? 'Google Drive: ' + [fresh ? fresh + ' new folder' + (fresh === 1 ? '' : 's') + ' to make into notes' : '', more ? more + ' note' + (more === 1 ? '' : 's') + ' with new files' : ''].filter(Boolean).join(' and ') + '.' : '';
+    h.hidden = !say;
+    h.innerHTML = say ? esc(say) + ' <button type="button" class="link" id="driveHintGo">Open Drive</button>' : '';
+    var b = $('#driveHintGo'); if (b) b.onclick = function () { showList('drive'); };
   }
 
   // one inbox item: its date, what's in it, and where it stands (new, draft, published, updated since)
@@ -2107,10 +2135,10 @@
     var fit = (kindOf(E && E.kind) || {}).magazine || '';
     var list = mags().filter(function (t) { return t.id === fit; }).concat(mags().filter(function (t) { return t.id !== fit; }));
     return '<div class="magGal">' + list.map(function (t) {
-      var sw = (t.swatches || []).map(function (c) { return '<i style="background:' + esc(c) + '"></i>'; }).join('');
+      var sw = (t.swatches || []).map(function (c) { return '<i data-bg="' + esc(c) + '"></i>'; }).join('');
       var on = cur && cur.id === t.id;
       return '<div class="magCard' + (on ? ' on' : '') + '" data-id="' + esc(t.id) + '"><div class="magSw">' + sw + '</div>' +
-        '<b class="magMast" style="color:' + esc((t.swatches || [])[0] || '#000') + '">' + esc(t.masthead) + '</b><span class="magCat">' + esc(t.category) + (t.id === fit ? ' · suits its kind' : '') + '</span>' +
+        '<b class="magMast" data-fg="' + esc((t.swatches || [])[0] || '#000') + '">' + esc(t.masthead) + '</b><span class="magCat">' + esc(t.category) + (t.id === fit ? ' · suits its kind' : '') + '</span>' +
         '<small>' + esc(t.format) + '</small><span class="magWants">' + (t.wants || []).map(function (w) { return '<em>' + esc((MAG_WANTS[w] || w).replace(/^(A|An) /, '')) + '</em>'; }).join('') + '</span>' +
         '<button type="button" class="small magUse"' + (on ? ' disabled' : '') + '>' + (on ? 'In use' : 'Use this template') + '</button></div>';
     }).join('') + '</div>';
@@ -2127,7 +2155,7 @@
       var canWrite = todo.filter(function (x) { return x.by === 'claude' || x.by === 'picture'; }).map(function (x) { return x.k; });
       var inp = function (k, ph) { return '<input class="magF" data-k="' + k + '" value="' + esc(F[k] || '') + '" placeholder="' + esc(ph || '') + '">'; };
       box.innerHTML =
-        '<div class="magNow"><div class="magSw">' + ((t && t.swatches) || []).map(function (c) { return '<i style="background:' + esc(c) + '"></i>'; }).join('') + '</div>' +
+        '<div class="magNow"><div class="magSw">' + ((t && t.swatches) || []).map(function (c) { return '<i data-bg="' + esc(c) + '"></i>'; }).join('') + '</div>' +
           '<div><b>' + esc(t ? t.masthead : F.theme || 'RIVETING TONE') + '</b><small>' + esc(t ? t.category + ' · ' + t.format : '') + '</small></div>' +
           '<button type="button" class="small" id="magPick">' + (MAG_OPEN ? 'Keep this one' : 'Change template') + '</button></div>' +
         '<div class="magPickBox' + (MAG_OPEN ? ' open' : '') + '"' + (MAG_OPEN ? '' : ' inert') + '><div><p class="muted">Switching keeps everything written for this Note; only the template\'s own defaults change. Parts the new one doesn\'t usually have stay in, and you can remove them below.</p>' + magGallery(t) + '</div></div>' +
@@ -2146,6 +2174,7 @@
         '<h3>The parts</h3>' + magParts(F) +
         '<button type="button" class="link" id="magOff">Take the magazine look off</button>';
     }
+    dataStyles(box);   // the templates' colours
     // wiring
     $$('.magUse', box).forEach(function (b) { b.onclick = function () { var id = b.closest('.magCard').getAttribute('data-id'); magApply(mags().filter(function (t) { return t.id === id; })[0]); }; });
     if (!F) return;
@@ -2200,10 +2229,10 @@
         if (!ed.hidden) { ed.hidden = true; ed.innerHTML = ''; return; }
         var pics = E.photos.filter(function (p) { return !p.strip && !p.video; });
         ed.innerHTML = (b.type === 'callouts' ? '<label class="f"><span>Picture</span><select class="mcPic"><option value="">Pick one</option>' + pics.map(function (p) { var n = photoName(p); return '<option' + (n === b.photo ? ' selected' : '') + '>' + esc(n) + '</option>'; }).join('') + '</select></label>' +
-            '<div class="mcPlace">' + (b.photo ? '<img src="' + esc(photoUrl(pics.filter(function (p) { return photoName(p) === b.photo; })[0] || {})) + '" alt="">' + (b.items || []).map(function (x, k) { return '<i style="left:' + Number(x.x) + '%;top:' + Number(x.y) + '%">' + (k + 1) + '</i>'; }).join('') : '') + '</div>' +
+            '<div class="mcPlace">' + (b.photo ? '<img src="' + esc(photoUrl(pics.filter(function (p) { return photoName(p) === b.photo; })[0] || {})) + '" alt="">' + (b.items || []).map(function (x, k) { return '<i data-x="' + Number(x.x) + '" data-y="' + Number(x.y) + '">' + (k + 1) + '</i>'; }).join('') : '') + '</div>' +
             (b.photo ? '<small class="muted">Click the picture to add a label there; then name it in the JSON (x and y are percentages across and down).</small>' : '') : '') +
           '<textarea class="magPartJ" rows="10" spellcheck="false">' + esc(JSON.stringify(b, null, 2)) + '</textarea><div class="row"><button type="button" class="small magPartOk">Keep these changes</button><span class="muted magPartErr"></span></div>';
-        ed.hidden = false;
+        ed.hidden = false; dataStyles(ed);   // the callouts' markers
         var ta = $('.magPartJ', ed);
         $('.magPartOk', ed).onclick = function () {
           try { var nb = JSON.parse(ta.value); if (!nb || typeof nb !== 'object' || !nb.type) throw new Error('it needs a "type"'); B[i] = nb; markDirty(); renderMag(); toast('Part changed. Save to keep it.'); }
