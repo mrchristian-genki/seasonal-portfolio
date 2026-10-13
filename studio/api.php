@@ -77,6 +77,12 @@ function list_row(array $e): array {
         'status' => $e['status'] ?? 'notes', 'photos' => count($e['photos'] ?? []) - $loops, 'loops' => $loops, 'summary' => $e['summary'] ?? '',
         'place' => trim(explode(',', (string) ($e['place'] ?? ''))[0]), 'audio' => !empty($e['episode']['audio']),
         'cover' => preg_match('/^[a-z0-9-]{1,40}\.jpg$/', $cover) ? $cover : '', 'cats' => note_cats($e), 'look' => (string) ($e['narratorLook']['look'] ?? ''),
+        // what else picks its narrator's style (assets/narrator/resolve.js), for the Characters tab
+        'bd' => (string) ($e['narratorBackdrop']['backdrop'] ?? ''), 'tank' => (string) ($e['altaBackdrop'] ?? ''), 'nar' => (string) ($e['episode']['narrator'] ?? ''),
+        'prefer' => (string) (($e['narratorLook']['fit'] ?? '') === 'category' ? ($e['narratorLook']['from'] ?? '') : ''), 'noh' => !empty($e['ignoreHolidays']),
+        // what it says about itself and its colours, for picking among a category's choices (resolve.js fit(); publish.mjs noteWords)
+        'words' => mb_substr(implode(' ', array_filter([(string) ($e['title'] ?? ''), (string) ($e['summary'] ?? ''), (string) ($e['place'] ?? ''), implode(' ', array_map('strval', (array) ($e['tags'] ?? []))), (string) ($e['episode']['title'] ?? '')])), 0, 1200),
+        'pal' => array_values(array_filter((array) ($e['palette'] ?? []), fn($c) => is_string($c) && preg_match('/^#[0-9a-f]{6}$/i', $c))),
         // a Workshop project: its name and place on the tab (field/tools/wsprojects.py sorts by it, empty last)
         'ws' => is_array($e['workshop'] ?? null) ? ['name' => (string) ($e['workshop']['name'] ?? ''), 'order' => (int) ($e['workshop']['order'] ?? 0)] : null];
 }
@@ -139,12 +145,15 @@ function looks_json(array $list, array $cats = [], array $bds = [], array $bcats
     // her backdrops and the ones whole categories have, the same way
     if ($bds) $out .= ",\n \"backdrops\": [\n  " . implode(",\n  ", array_map($line, $bds)) . "\n ]";
     $out .= $map('categoryBackdrops', $bcats);
+    // a category's other backdrops to choose from (resolve.js fit(): the one that fits each Note's words and colours)
+    $out .= $map('categoryBackdropChoices', (array) ($more['categoryBackdropChoices'] ?? []));
     // the rule's settings (assets/narrator/resolve.js): categories' priorities, when each last changed, the defaults
     // and who narrates whole categories (Christian, Oct 11, 2026): "glazyarray" or "alta"
     foreach (['categoryRank', 'categoryStamp', 'defaults', 'categoryNames', 'categoryNarrators'] as $k) $out .= $map($k, (array) ($more[$k] ?? []));
     // A.L.T.A.'s tank backdrops (assets/alta/backdrops) and the ones whole categories give her
     if (!empty($more['tankBackdrops'])) $out .= ",\n \"tankBackdrops\": [\n  " . implode(",\n  ", array_map($line, array_values($more['tankBackdrops']))) . "\n ]";
     $out .= $map('categoryTanks', (array) ($more['categoryTanks'] ?? []));
+    $out .= $map('categoryTankChoices', (array) ($more['categoryTankChoices'] ?? []));
     return $out . "\n}\n";
 }
 /** GlazyArray's looks (Studio, "GlazyArray's look" and Categories), all in looks.json, written once into $files: a Note
@@ -159,12 +168,13 @@ function apply_looks(GitHub $gh, array &$files, array $body): void
     // GlazyArray's looks (Studio, "GlazyArray's look"), all in looks.json, written once: a Note look taken off the
     // site, a new or replaced Note look, and the looks given to whole categories. Holiday looks and hair styles
     // are never replaced or removed from here.
-    if ($rl !== '' || is_array($nl) || is_array($cl) || $rb !== '' || is_array($nb) || is_array($cb) || is_array($cr) || is_array($df) || is_array($hb) || is_array($cn) || is_array($cnr) || is_array($ctk)) {
+    if ($rl !== '' || is_array($nl) || is_array($cl) || $rb !== '' || is_array($nb) || is_array($cb) || is_array($cr) || is_array($df) || is_array($hb) || is_array($cn) || is_array($cnr) || is_array($ctk) || is_array($body['newTank'] ?? null) || is_array($body['categoryBackdropChoices'] ?? null) || is_array($body['categoryTankChoices'] ?? null)) {
         $lj = json_decode($gh->read(LOOKS_JSON) ?? '{"looks":[]}', true);
         $list = array_values((array) ($lj['looks'] ?? [])); $cats = (array) ($lj['categories'] ?? []);
         $bds = array_values((array) ($lj['backdrops'] ?? [])); $bcats = (array) ($lj['categoryBackdrops'] ?? []);
         $rank = (array) ($lj['categoryRank'] ?? []); $stamp = (array) ($lj['categoryStamp'] ?? []); $defs = (array) ($lj['defaults'] ?? []); $cnames = (array) ($lj['categoryNames'] ?? []); $cnars = (array) ($lj['categoryNarrators'] ?? []);
         $tanks = array_values((array) ($lj['tankBackdrops'] ?? [])); $ctanks = (array) ($lj['categoryTanks'] ?? []);
+        $bchoice = (array) ($lj['categoryBackdropChoices'] ?? []); $tchoice = (array) ($lj['categoryTankChoices'] ?? []);
         $tankNames = array_map(fn($b) => (string) ($b['name'] ?? ''), $tanks);
         $now = gmdate('Y-m-d\TH:i:s\Z'); $touch = function (string $c) use (&$stamp, $now) { $stamp[$c] = $now; };   // a category's last change breaks a tie in priority
         // her backdrops: the scene behind the Listen bar (assets/narrator/backdrops/<name>.webp), the same way
@@ -175,6 +185,7 @@ function apply_looks(GitHub $gh, array &$files, array $body): void
                 unset($bds[$k]);
             }
             $bcats = array_filter($bcats, fn($n) => $n !== $rb);
+            foreach ($bchoice as $c => $l) { $bchoice[$c] = array_values(array_filter((array) $l, fn($n) => $n !== $rb)); if (!$bchoice[$c]) unset($bchoice[$c]); }
         }
         if (is_array($nb)) {
             $name = (string) ($nb['name'] ?? ''); $ext = (string) ($nb['ext'] ?? ''); $bsha = (string) ($nb['sha'] ?? '');
@@ -185,6 +196,7 @@ function apply_looks(GitHub $gh, array &$files, array $body): void
             }
             $bd = ['name' => $name, 'file' => "$name.$ext", 'about' => mb_substr(trim((string) ($nb['about'] ?? '')), 0, 120), 'v' => base_convert((string) time(), 10, 36)];
             $scene = mb_substr(trim((string) ($nb['scene'] ?? '')), 0, 400); if ($scene !== '') $bd['scene'] = $scene;
+            $cols = array_values(array_filter((array) ($nb['colors'] ?? []), fn($c) => is_string($c) && preg_match('/^#[0-9a-f]{6}$/', $c))); if ($cols) $bd['colors'] = array_slice($cols, 0, 4);
             $bds[] = $bd;
             $files["assets/narrator/backdrops/$name.$ext"] = ['sha' => $bsha];
         }
@@ -288,6 +300,33 @@ function apply_looks(GitHub $gh, array &$files, array $body): void
             $touch($cat);
             if ($n === '') unset($cnars[$cat]); else $cnars[$cat] = $n;
         }
+        // a new (or replaced) scene behind A.L.T.A.'s tank (assets/alta/backdrops/<name>.webp; KIT.md Round 8)
+        $nt = $body['newTank'] ?? null;
+        if (is_array($nt)) {
+            $name = (string) ($nt['name'] ?? ''); $ext = (string) ($nt['ext'] ?? ''); $tsha = (string) ($nt['sha'] ?? '');
+            if (!preg_match('/^[a-z0-9-]{1,40}$/', $name) || !in_array($ext, ['webp', 'png', 'jpg'], true) || !preg_match('/^[0-9a-f]{40}$/', $tsha)) json_fail('Bad tank scene.');
+            foreach ($tanks as $k => $b) if (($b['name'] ?? '') === $name) {
+                if (($b['file'] ?? '') !== "$name.$ext" && preg_match('/^[a-z0-9-]{1,40}\.(webp|png|jpg)$/', (string) ($b['file'] ?? ''))) $files['assets/alta/backdrops/' . $b['file']] = null;
+                unset($tanks[$k]);
+            }
+            $tk = ['name' => $name, 'file' => "$name.$ext", 'about' => '', 'v' => base_convert((string) time(), 10, 36)];
+            $scene = mb_substr(trim((string) ($nt['scene'] ?? '')), 0, 400); if ($scene !== '') $tk['scene'] = $scene;
+            $cols = array_values(array_filter((array) ($nt['colors'] ?? []), fn($c) => is_string($c) && preg_match('/^#[0-9a-f]{6}$/', $c))); if ($cols) $tk['colors'] = array_slice($cols, 0, 4);
+            $tanks = array_values($tanks); $tanks[] = $tk; $tankNames[] = $name;
+            $files["assets/alta/backdrops/$name.$ext"] = ['sha' => $tsha];
+        }
+        // a category's other choices: { category: [names] } for her backdrops and A.L.T.A.'s tank scenes ([] for none)
+        foreach ([['categoryBackdropChoices', &$bchoice, fn() => array_map(fn($b) => (string) ($b['name'] ?? ''), $bds)], ['categoryTankChoices', &$tchoice, fn() => $tankNames]] as $ch) {
+            $in = $body[$ch[0]] ?? null; if (!is_array($in)) continue;
+            $known = ($ch[2])();
+            foreach ($in as $cat => $names) {
+                $cat = (string) $cat; if (!preg_match('/^[a-z0-9-]{1,40}$/', $cat) || preg_match('/^\d{4}$/', $cat)) json_fail('Bad category.');
+                $names = array_values(array_unique(array_map('strval', (array) $names)));
+                foreach ($names as $n) if (!in_array($n, $known, true)) json_fail("There's nothing called \"$n\" to offer.");
+                $touch($cat);
+                if ($names) $ch[1][$cat] = $names; else unset($ch[1][$cat]);
+            }
+        }
         // the scene behind A.L.T.A.'s tank for a category's Notes ('' for none)
         if (is_array($ctk)) foreach ($ctk as $cat => $n) {
             $cat = (string) $cat; $n = (string) $n;
@@ -297,7 +336,7 @@ function apply_looks(GitHub $gh, array &$files, array $body): void
             if ($n === '') unset($ctanks[$cat]); else $ctanks[$cat] = $n;
         }
         ksort($stamp);
-        $files[LOOKS_JSON] = ['text' => looks_json(array_values($list), $cats, array_values($bds), $bcats, ['categoryRank' => $rank, 'categoryStamp' => $stamp, 'defaults' => $defs, 'categoryNames' => $cnames, 'categoryNarrators' => $cnars, 'tankBackdrops' => $tanks, 'categoryTanks' => $ctanks])];
+        $files[LOOKS_JSON] = ['text' => looks_json(array_values($list), $cats, array_values($bds), $bcats, ['categoryRank' => $rank, 'categoryStamp' => $stamp, 'defaults' => $defs, 'categoryNames' => $cnames, 'categoryNarrators' => $cnars, 'tankBackdrops' => $tanks, 'categoryTanks' => $ctanks, 'categoryBackdropChoices' => $bchoice, 'categoryTankChoices' => $tchoice])];
     }
 }
 // A save from a page holding an older copy of the Note than the repo's: refused, with the copy there now and its
@@ -674,7 +713,7 @@ try {
             $files = [];
             apply_looks($gh, $files, ['newLook' => $body['newLook'] ?? null, 'categoryLooks' => $body['categoryLooks'] ?? null,
                 'newBackdrop' => $body['newBackdrop'] ?? null, 'categoryBackdrops' => $body['categoryBackdrops'] ?? null,
-                'categoryRank' => $body['categoryRank'] ?? null, 'defaults' => $body['defaults'] ?? null, 'holidayBackdrops' => $body['holidayBackdrops'] ?? null, 'categoryNames' => $body['categoryNames'] ?? null, 'categoryNarrators' => $body['categoryNarrators'] ?? null, 'categoryTanks' => $body['categoryTanks'] ?? null]);
+                'categoryRank' => $body['categoryRank'] ?? null, 'defaults' => $body['defaults'] ?? null, 'holidayBackdrops' => $body['holidayBackdrops'] ?? null, 'categoryNames' => $body['categoryNames'] ?? null, 'categoryNarrators' => $body['categoryNarrators'] ?? null, 'categoryTanks' => $body['categoryTanks'] ?? null, 'newTank' => $body['newTank'] ?? null, 'categoryBackdropChoices' => $body['categoryBackdropChoices'] ?? null, 'categoryTankChoices' => $body['categoryTankChoices'] ?? null]);
             if (!$files) json_fail('Nothing to save.');
             json_out(['ok' => true, 'commit' => $gh->commit($files, "Studio: GlazyArray's looks")]);
 

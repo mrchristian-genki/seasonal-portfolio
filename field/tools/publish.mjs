@@ -63,7 +63,10 @@ const lookAttr = (e) => {
   // and its categories, for the looks whole categories wear (looks.json "categories"): its own tags first, its kind last
   const cats = tagsOf(e).filter((t) => !/^\d{4}$/.test(t)), kind = cats.shift();
   // and its own backdrop, if it has one (narratorBackdrop: the scene behind its Listen bar)
-  const b = mine(e.narratorBackdrop) && e.narratorBackdrop.backdrop, bd = b && /^[a-z0-9-]{1,40}$/.test(b) ? ` data-backdrop="${b}"` : '';
+  // its own backdrop, or the one of its category's choices that fits it best (picked here, where its words are)
+  let b = mine(e.narratorBackdrop) && e.narratorBackdrop.backdrop;
+  if (!b || !(RES || pickFor(e), (RES.J.backdrops || []).some((x) => x.name === b))) { const n = noteBd(e); if (n && n.from === 'category' && n.choices > 1) b = n.name; }
+  const bd = b && /^[a-z0-9-]{1,40}$/.test(b) ? ` data-backdrop="${b}"` : '';
   // and its palette (two accent colours pulled from its hero in the Studio): her flair, the glass card and the backdrop take them
   const pal = (Array.isArray(e.palette) ? e.palette : []).filter((c) => /^#[0-9a-f]{6}$/i.test(c)).slice(0, 2);
   const pa = pal.length ? ` data-palette="${pal.join(' ')}"` : '';
@@ -75,26 +78,39 @@ let RES = null;
 const pickFor = (e) => {
   RES = RES || { R: createRequire(import.meta.url)('../../assets/narrator/resolve.js'), J: readJSON(path.join(SITE, 'assets/narrator/looks.json')) };
   const cats = tagsOf(e).filter((t) => !/^\d{4}$/.test(t)), kind = cats.shift(); if (kind) cats.push(kind);
-  return RES.R.pick(RES.J, { narrator: e.episode && e.episode.narrator, tank: e.altaBackdrop, cats, prefer: e.narratorLook && e.narratorLook.fit === 'category' && e.narratorLook.from });
+  return RES.R.pick(RES.J, { narrator: e.episode && e.episode.narrator, tank: e.altaBackdrop, cats, prefer: e.narratorLook && e.narratorLook.fit === 'category' && e.narratorLook.from, words: noteWords(e), palette: e.palette, month: +(e.date || '').slice(5, 7) || 0 });
 };
+// what a Note says about itself, for picking among a category's choices (resolve.js fit()): the same words the Studio uses
+const noteWords = (e) => [e.title, e.summary, e.place, (e.tags || []).join(' '), e.episode && e.episode.title].filter(Boolean).join(' ');
 const narratorOf = (e) => pickFor(e).narrator.name;
 // a feature's photo spreads: e.feature.lookbook is one, or a list of them
 const books = (e) => { const L = e.feature && e.feature.lookbook; return (Array.isArray(L) ? L : L ? [L] : []).filter((b) => b && typeof b === 'object'); };
 // the scene behind A.L.T.A.'s tank on this Note (KIT.md Round 8), when it has one and its file is there
+// Without a scene of her own she borrows the Note's backdrop (the one GlazyArray and Robot Marley show) when the Note,
+// its categories or a holiday give it one, so she's on location too; with only the site's default she stays in her
+// hall (Christian, Oct 13). js/alta.js shows a borrowed one blurred, in the strip above her ledge.
 const bdAttr = (e) => {
   const t = pickFor(e).tank;
-  return t && /^[\w.-]+\.(webp|jpg|png)$/.test(t.file || '') && fs.existsSync(path.join(SITE, 'assets/alta/backdrops', t.file)) ? ` data-bd="/assets/alta/backdrops/${t.file}${t.v ? '?v=' + t.v : ''}"` : '';
+  if (t && /^[\w.-]+\.(webp|jpg|png)$/.test(t.file || '') && fs.existsSync(path.join(SITE, 'assets/alta/backdrops', t.file))) return ` data-bd="/assets/alta/backdrops/${t.file}${t.v ? '?v=' + t.v : ''}"`;
+  const n = noteBd(e);
+  return n && n.from !== 'default' ? n.attr : '';
 };
 // the scene behind Robot Marley on this Note (js/marley.js): its backdrop as the site picks it (its own, its
 // categories', a holiday's, the default; the same backdrops as GlazyArray's), when its file is there
-const mlyBdAttr = (e) => {
+// the Note's backdrop as the site picks it: { attr: ' data-bd="..."', from: 'note' | 'category' | 'holiday' | 'default' }, or null
+const noteBd = (e) => {
   RES || pickFor(e);
   const cats = tagsOf(e).filter((t) => !/^\d{4}$/.test(t)), kind = cats.shift(); if (kind) cats.push(kind);
   const nb = mine(e.narratorBackdrop) && e.narratorBackdrop.backdrop;
   const pf = e.narratorBackdrop && e.narratorBackdrop.fit === 'category' && e.narratorBackdrop.from;
-  const p = RES.R.pick(RES.J, { backdrop: nb || undefined, cats, prefer: pf || undefined, ignoreHolidays: !!e.ignoreHolidays });
+  const p = RES.R.pick(RES.J, { backdrop: nb || undefined, cats, prefer: pf || undefined, ignoreHolidays: !!e.ignoreHolidays, words: noteWords(e), palette: e.palette, month: +(e.date || '').slice(5, 7) || 0 });
   const b = p.backdrop && (RES.J.backdrops || []).find((x) => x.name === p.backdrop.name);
-  const bd = b && /^[\w.-]+\.(webp|jpg|png)$/.test(b.file || '') && fs.existsSync(path.join(SITE, 'assets/narrator/backdrops', b.file)) ? ` data-bd="/assets/narrator/backdrops/${b.file}${b.v ? '?v=' + b.v : ''}"` : '';
+  return b && /^[\w.-]+\.(webp|jpg|png)$/.test(b.file || '') && fs.existsSync(path.join(SITE, 'assets/narrator/backdrops', b.file))
+    ? { attr: ` data-bd="/assets/narrator/backdrops/${b.file}${b.v ? '?v=' + b.v : ''}"`, from: p.backdrop.from, name: b.name, choices: p.backdrop.choices || 1 } : null;
+};
+const mlyBdAttr = (e) => {
+  const cats = tagsOf(e).filter((t) => !/^\d{4}$/.test(t)), kind = cats.shift(); if (kind) cats.push(kind);
+  const n = noteBd(e), bd = n ? n.attr : '';
   // her holiday look when this Note (or its category) chose one she has, as GlazyArray's look is picked but leaving the
   // dates out: her player puts a holiday on its dates first, then this (js/marley.js HOL). And a Note that ignores holidays
   const lk = RES.R.pick(RES.J, { look: mine(e.narratorLook) && e.narratorLook.look || undefined, cats, prefer: (e.narratorLook && e.narratorLook.fit === 'category' && e.narratorLook.from) || undefined, ignoreHolidays: true }).look;
@@ -186,7 +202,7 @@ ${ICONS}
 <link rel="stylesheet" href="${rel}../css/logo.css?v=11">
 <link rel="stylesheet" href="${rel}../css/lake.css?v=2">
 <link rel="stylesheet" href="${rel}../css/narrator.css?v=33">
-<link rel="stylesheet" href="${rel}../css/alta.css?v=10">
+<link rel="stylesheet" href="${rel}../css/alta.css?v=11">
 <link rel="stylesheet" href="${rel}../css/marley.css?v=8">
 <script>/* Logo season from the calendar, as on About. */document.documentElement.dataset.season=["winter","winter","spring","spring","spring","summer","summer","summer","fall","fall","fall","winter"][new Date().getMonth()];</script>
 <link rel="stylesheet" href="${rel}../css/route-dash.css?v=${V}">
@@ -205,9 +221,9 @@ const foot = (rel) => `<footer class="foot"><p>${esc(show.narrationNote)}</p>
 <script src="${rel}../js/motion.js?v=1" defer></script>
 <script src="${rel}play.js?v=${V}" defer></script>
 <script src="${rel}../js/lake.js?v=4" defer></script>
-<script src="${rel}../assets/narrator/resolve.js?v=4" defer></script>
+<script src="${rel}../assets/narrator/resolve.js?v=5" defer></script>
 <script src="${rel}../js/narrator.js?v=45" defer></script>
-<script src="${rel}../js/alta.js?v=15" defer></script>
+<script src="${rel}../js/alta.js?v=16" defer></script>
 <script src="${rel}../js/marley.js?v=12" defer></script>
 </body>
 </html>
@@ -568,10 +584,13 @@ fs.writeFileSync(path.join(OUT, 'feed.xml'), rss);
   for (const b of J.backdrops || []) if (!has('backdrops', b.file)) bad.push(`backdrop ${b.name}: no file ${b.file}`);
   for (const [c, n] of Object.entries(J.categories || {})) if (!lk[n] && n !== 'curls') bad.push(`category ${c}: no look called ${n}`);
   for (const [c, n] of Object.entries(J.categoryBackdrops || {})) if (!bk[n]) bad.push(`category ${c}: no backdrop called ${n}`);
+  for (const [c, l] of Object.entries(J.categoryBackdropChoices || {})) for (const n of l) if (!bk[n]) bad.push(`category ${c}: no backdrop called ${n} to choose`);
+  const tkn = new Set((J.tankBackdrops || []).map((x) => x.name));
+  for (const [c, l] of Object.entries(J.categoryTankChoices || {})) for (const n of l) if (!tkn.has(n)) bad.push(`category ${c}: no tank scene called ${n} to choose`);
   for (const { e } of pages) {
     const cats = tagsOf(e).filter((t) => !/^\d{4}$/.test(t)), kind = cats.shift(); if (kind) cats.push(kind);
     const r = R.pick(J, { look: mine(e.narratorLook) && e.narratorLook.look, backdrop: mine(e.narratorBackdrop) && e.narratorBackdrop.backdrop, cats,
-      prefer: (e.narratorLook && e.narratorLook.from) || (e.narratorBackdrop && e.narratorBackdrop.from), ignoreHolidays: !!e.ignoreHolidays });
+      prefer: (e.narratorLook && e.narratorLook.from) || (e.narratorBackdrop && e.narratorBackdrop.from), ignoreHolidays: !!e.ignoreHolidays, words: noteWords(e), palette: e.palette, month: +(e.date || '').slice(5, 7) || 0 });
     if (!r.backdrop) bad.push(`${e.id}: no backdrop (and no default)`);
     console.log(`  ${e.id}: ${r.look.name} (${r.look.why}) · ${r.backdrop ? r.backdrop.name + ' (' + r.backdrop.why + ')' : 'none'}`);
   }

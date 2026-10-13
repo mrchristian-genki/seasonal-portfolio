@@ -543,6 +543,49 @@ a pine forest, a boathouse, a bike shop, a trailhead.
 **Check:** lay the render under the guide: the band shows the part you want, and nothing sharp or busy sits right
 behind where her head is (the middle of the band).
 
+### Her template, the Studio and borrowing (Oct 13)
+
+**Her template** (`assets/alta/kit/tank-template.jpg`, 1376 x 768): her tank exactly as the site draws it, with the
+place she'll be a flat grey above the copper ledge. The easiest way to a scene that fits is to **edit the template**:
+the framing stays right, and anything the tool does to her or the tank doesn't matter, because only the strip above the
+ledge is used and she's drawn over it. The edit prompt:
+
+> Same image, exactly as it is: the mermaid, her copper ledge, the water and everything below the ledge stay exactly
+> the same. Replace only the flat grey wall above the copper ledge with a softly blurred photograph of [THE PLACE],
+> seen from about table height, as if from behind a large aquarium standing there. The camera looks straight ahead,
+> level; the far wall, the horizon or the treeline sits about halfway between the top of the picture and the ledge.
+> Shallow depth of field: the whole place gently out of focus, like the background of a portrait, with soft, natural
+> light. Nothing new in front of her or on the ledge. No people, no animals, no text, signs, logos or brands. Colours
+> that sit well beside a teal-green tank and weathered copper.
+
+The prompt above (a new picture) works too; then the horizon goes about a quarter of the way down.
+
+**In the Studio:** Categories, "A.L.T.A.'s tank scenes": name it, pick a category (it fills in a place), choose edit or
+new, copy the prompt and the template, and drop the render back: the preview shows her and her tank in front of it
+(`assets/alta/kit/tank-overlay.webp`, her tank with the place cut out). Add the scene, and pick it for a Note in its
+Episode panel or for a whole category in its column.
+
+**Borrowing:** without a scene of her own, she borrows the Note's backdrop (the one GlazyArray and Robot Marley show)
+when the Note, its categories or a holiday give it one: blurred, just its middle, in the strip above her ledge. With only
+the site's default backdrop she stays in her hall.
+
+**Starter places** (for [THE PLACE]; public places only, never the home):
+
+| Name | The place |
+|---|---|
+| `tahoe-beach-dusk` | a sandy Lake Tahoe beach at dusk, smooth granite boulders and pines along the far shore |
+| `emerald-bay-mist` | the shore of Emerald Bay on a still morning, mist on the water and the small rocky island beyond |
+| `tahoe-winter-shore` | a snowy Lake Tahoe shoreline in winter, dark pines and white mountains across the water |
+| `pool-deck` | a sunny outdoor swimming pool deck with lane ropes and a lifeguard chair (her water-safety lessons) |
+| `boathouse` | the inside of an old wooden boathouse, kayaks and paddles on racks, the lake through the open doors |
+| `trailhead` | a pine forest trailhead in late afternoon light, a dirt path leading into the trees |
+| `library` | a quiet old library with tall wooden bookshelves and warm reading lamps |
+| `classroom` | a bright classroom with a long chalkboard, a globe and tall windows |
+| `donegal-cliffs` | green sea cliffs above the Atlantic under a soft grey sky with breaks of sunlight |
+| `hawaii-coast` | a tropical shoreline at golden hour, palm trees and calm turquoise water |
+| `bike-shop` | a small bike shop with mountain bikes hanging on the far wall |
+| `tunnel` | a smooth stone tunnel mouth in the far wall of her room, lit softly from within, as if it leads out to the lake (for the day she swims out the back) |
+
 **Send back** each scene with a one-word name (`lakeshore`, `pool-deck`). Claude adds it to her scenes (looks.json
 `tankBackdrops`, the file in `assets/alta/backdrops/`); then the Studio picks it: a Note's Episode script panel
 ("Behind her tank", once A.L.T.A. tells it), or the Categories tab ("Her tank", and a default). Without one, she keeps
