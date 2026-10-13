@@ -77,6 +77,9 @@ function list_row(array $e): array {
         'status' => $e['status'] ?? 'notes', 'photos' => count($e['photos'] ?? []) - $loops, 'loops' => $loops, 'summary' => $e['summary'] ?? '',
         'place' => trim(explode(',', (string) ($e['place'] ?? ''))[0]), 'audio' => !empty($e['episode']['audio']),
         'cover' => preg_match('/^[a-z0-9-]{1,40}\.jpg$/', $cover) ? $cover : '', 'cats' => note_cats($e), 'look' => (string) ($e['narratorLook']['look'] ?? ''),
+        // what else picks its narrator's style (assets/narrator/resolve.js), for the Characters tab
+        'bd' => (string) ($e['narratorBackdrop']['backdrop'] ?? ''), 'tank' => (string) ($e['altaBackdrop'] ?? ''), 'nar' => (string) ($e['episode']['narrator'] ?? ''),
+        'prefer' => (string) (($e['narratorLook']['fit'] ?? '') === 'category' ? ($e['narratorLook']['from'] ?? '') : ''), 'noh' => !empty($e['ignoreHolidays']),
         // a Workshop project: its name and place on the tab (field/tools/wsprojects.py sorts by it, empty last)
         'ws' => is_array($e['workshop'] ?? null) ? ['name' => (string) ($e['workshop']['name'] ?? ''), 'order' => (int) ($e['workshop']['order'] ?? 0)] : null];
 }

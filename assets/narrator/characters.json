@@ -1,0 +1,52 @@
+{
+  "about": "The characters and what each one wears (Christian, Oct 13, 2026): read by the Studio's Characters tab, which shows a matrix of who has which piece, and what a category or a Note gives each of them, with the prompt for any gap. A new character is an entry here (its pieces, its template, its prompts) plus its player and kit. Pieces: look (a look in looks.json: GlazyArray's has a file; Robot Marley's are the looks marked \"marley\": true, her hat and charm cut by Claude, js/marley.js HOL), backdrop (the scene behind the Listen bar, assets/narrator/backdrops, shared), tank (A.L.T.A.'s own scenes, assets/alta/backdrops; without one she borrows the Note's backdrop). In the prompts, {look}, {a}, {b}, {hat}, {charm}, {hatShort}, {charmShort} and {place} are filled in by the Studio.",
+  "characters": [
+    {
+      "id": "glazyarray",
+      "name": "GlazyArray",
+      "avatar": "/assets/narrator/head-base.webp",
+      "kit": "/assets/narrator/looks/PROMPTS.md",
+      "pieces": ["look", "backdrop"],
+      "look": {
+        "has": "file",
+        "made": "studio",
+        "template": "/assets/narrator/kit/her-template.png",
+        "how": "Run Prompt 1 on her template, then Prompt 2 on the image it made, and bring that back to Add a look in the Categories tab (the Studio keys it and puts her face back).",
+        "prompt": "Prompt 1:\n\nSame image, same camera, same face, same eyes, same jaw, same neck and the same flat chroma green background (#00B140). Change only the hair and accessories: {look}. Render {a} in a bright saturated magenta (#FF00FF) with natural shading and gloss, and {b} in plain pearl white with natural shading and gloss. Everything else in her style: polished brass and rose-gold, chunky sculpted shapes, nothing crossing her face below the brows. No text, letters or logos.\n\nPrompt 2 (on the image Prompt 1 made):\n\nSame image, exactly as it is. Change only {b} from pearl white to a bright saturated cyan (#00FFFF), keeping the shading, gloss and folds. Change nothing else: the magenta stays magenta, and the brass, hair, face and green background stay exactly the same."
+      }
+    },
+    {
+      "id": "marley",
+      "name": "Robot Marley",
+      "avatar": "/assets/marley/marley-avatar.jpg",
+      "kit": "/assets/marley/KIT.md",
+      "pieces": ["look", "backdrop"],
+      "look": {
+        "has": "marley",
+        "made": "claude",
+        "how": "Paste her description from assets/marley/KIT.md first, run Prompt 1 on her flat-green seated template, then Prompt 2 on the image it made, and bring both renders to Claude, who cuts her hat and charm from them.",
+        "prompt": "Prompt 1 (after her description):\n\nSame image, exactly as it is. Add only {hat} on her head, sitting between her ears, and {charm} about the size of a coin hanging from the ring at the front of her collar, each in its own colours with natural shading and shine. No text, letters or logos. Her pose, her ears, her face and the flat chroma green background (#00B140) stay exactly the same.\n\nPrompt 2 (on the image Prompt 1 made):\n\nSame image, exactly as it is. Paint only the {hatShort} and the {charmShort} a flat, saturated cyan (#00FFFF), keeping their shading and shine. Everything else stays exactly the same.",
+        "ideas": {
+          "tahoe-winter": ["a chunky knit beanie with a pom-pom", "a tiny pinecone", "beanie", "pinecone"],
+          "valentines": ["a red velvet bow on a slim headband between her ears", "a small heart locket", "bow and its headband", "heart locket"],
+          "spring": ["a headband with soft bunny ears", "a little painted egg", "bunny-ear headband", "egg"],
+          "fourth-of-july": ["a small straw boater hat with a striped band", "a little star", "hat and its band", "star"],
+          "thanksgiving": ["a knitted autumn beanie with a maple leaf on it", "a tiny acorn", "beanie and its leaf", "acorn"]
+        }
+      }
+    },
+    {
+      "id": "alta",
+      "name": "A.L.T.A.",
+      "avatar": "/assets/alta/kit/alta-avatar.jpg",
+      "kit": "/assets/alta/KIT.md",
+      "pieces": ["tank"],
+      "tank": {
+        "made": "studio",
+        "template": "/assets/alta/kit/tank-template.jpg",
+        "how": "Give your image tool her tank template with this prompt, and bring the render back to A.L.T.A.'s tank scenes in the Categories tab (it shows her in front of it before you add it).",
+        "prompt": "Same image, exactly as it is: the mermaid, her copper ledge, the water and everything below the ledge stay exactly the same. Replace only the flat grey wall above the copper ledge with a softly blurred photograph of {place}, seen from about table height, as if from behind a large aquarium standing there. The camera looks straight ahead, level; the far wall, the horizon or the treeline sits about halfway between the top of the picture and the ledge. Shallow depth of field: the whole place gently out of focus, like the background of a portrait, with soft, natural light. Nothing new in front of her or on the ledge. No people, no animals, no text, signs, logos or brands. Colours that sit well beside a teal-green tank and weathered copper."
+      }
+    }
+  ]
+}

@@ -169,7 +169,7 @@
     var m = /^note\/(.+)$/.exec(v || '');
     if (m) return edit(m[1]);
     if (v === 'new') return edit(null);
-    if (v === 'drive' || ((v === 'categories' || v === 'people' || v === 'stats') && owner())) return showList(v);
+    if (v === 'drive' || ((v === 'categories' || v === 'characters' || v === 'people' || v === 'stats') && owner())) return showList(v);
     return showList();
   }
   function listen() {                    // Back and Forward (switch.js loads after this file, so at start)
@@ -185,16 +185,17 @@
   // site's Stats (owner only). Drive has its own tab, since bringing in is now and then and the Notes are every day;
   // the Notes tab says in a line when Drive has something new (driveHint)
   function showList(tab) {
-    tab = tab === 'drive' || ((tab === 'categories' || tab === 'people' || tab === 'stats') && owner()) ? tab : 'notes';
+    tab = tab === 'drive' || ((tab === 'categories' || tab === 'characters' || tab === 'people' || tab === 'stats') && owner()) ? tab : 'notes';
     if (dirty && !confirm('Leave without saving?')) return;
     dirty = false; E = null; fresh = {}; removed = []; INBOX = null; audioNew = null; audioGone = false; DRIVEAUD = null; DRIVETRK = null; trackRaw = null; trackSwap = false; clipsNew = {}; posterNew = {}; DRIVEVID = null; UPVID = []; stopTrim();
     route(tab);
-    var tabs = '<nav class="tabs" role="tablist">' + [['notes', 'Notes'], ['drive', 'Drive']].concat(owner() ? [['categories', 'Categories'], ['people', 'People'], ['stats', 'Stats']] : []).map(function (t) {
+    var tabs = '<nav class="tabs" role="tablist">' + [['notes', 'Notes'], ['drive', 'Drive']].concat(owner() ? [['categories', 'Categories'], ['characters', 'Characters'], ['people', 'People'], ['stats', 'Stats']] : []).map(function (t) {
       return '<button type="button" role="tab" data-tab="' + t[0] + '" aria-selected="' + (t[0] === tab) + '">' + t[1] + '</button>'; }).join('') + '</nav>';
     app.innerHTML = '<div class="head"><h1>Field Notes</h1>' + tabs + '<span class="me">' + esc(CFG.me ? CFG.me.name : '') + (owner() ? '' : ' · editor') + '</span>' +
       (tab === 'notes' ? '<button id="new" class="primary">New entry</button>' : '') + '</div>' +
       '<section id="queue" class="panel queue" hidden></section><section id="peopleBox" class="panel people"' + (tab === 'people' ? '' : ' hidden') + '></section><section id="catsBox" class="panel cats"' + (tab === 'categories' ? '' : ' hidden') + '></section>' +
       '<section id="statsBox" class="panel site-stats"' + (tab === 'stats' ? '' : ' hidden') + '></section>' +
+      '<section id="charsBox" class="panel cats chars"' + (tab === 'characters' ? '' : ' hidden') + '></section>' +
       '<p id="driveHint" class="drive-hint" hidden></p>' +
       '<section id="drive" class="panel drive"' + (tab === 'drive' ? '' : ' hidden') + '><p class="muted">Checking Google Drive…</p></section><section id="wsOrder" class="panel wsorder" hidden></section><div id="list" class="cards"' + (tab === 'notes' ? '' : ' hidden') + '><p class="muted">Loading entries…</p></div>';
     if ($('#new')) $('#new').onclick = function () { edit(null); };
@@ -207,6 +208,7 @@
       if (tab === 'stats' && SV.data) drawStats();   // the Notes' titles, now they're here
       if (lastDrive) renderDrive(lastDrive);
       if (tab === 'categories') renderCats();
+      if (tab === 'characters') renderChars();
       if (tab !== 'notes') return;   // the other tabs only needed the list for their counts
       var st = {}; (CFG.statuses || []).forEach(function (s) { st[s.id] = s.label; });
       // notes waiting for the owner's review, first
@@ -599,11 +601,6 @@
         }).join('') + '</ul>' +
         '<h3>Her looks</h3><p class="muted">Tick the default, like a Note\'s poster: what she wears when nothing else gives her a look. None ticked: the holiday coming up.</p><div class="lookg">' + [{ name: 'curls', about: 'her own curls' }].concat(list).map(function (l) {
           return '<figure' + (df('look') === l.name ? ' class="on"' : '') + '><img alt="" src="' + src(l.name) + '"><figcaption>' + esc(l.name) + '<label class="ga-def"><input type="checkbox" data-deflook="' + esc(l.name) + '"' + (df('look') === l.name ? ' checked' : '') + '> Default</label></figcaption></figure>'; }).join('') + '</div>' +
-        '<h3>Narrators in step</h3><p class="muted">The looks more than one narrator wears: the holidays, and the looks made for Robot Marley. When one of them is missing her piece, its prompt is a click away: GlazyArray\'s render comes back to Add a look below, Robot Marley\'s two renders go to Claude, who cuts them.</p><ul class="catl sync">' + list.filter(function (l) { return (l.from && l.to) || l.marley; }).map(function (l) {
-          return '<li><span class="catn"><b>' + esc(l.name.replace(/-/g, ' ')) + '</b><small>' + esc(l.from ? l.from + ' to ' + l.to : 'picked, no dates') + '</small></span>' +
-            '<span class="catc"><small>GlazyArray</small><span>' + (l.file ? '<img alt="" src="' + src(l.name) + '">Has hers' : '<i class="noimg"></i><button type="button" data-syncga="' + esc(l.name) + '">Missing: her prompts</button>') + '</span></span>' +
-            '<span class="catc"><small>Robot Marley</small><span>' + (l.marley ? '<img alt="" src="/assets/marley/marley-avatar.jpg">Has hers' : '<i class="noimg"></i><button type="button" data-syncml="' + esc(l.name) + '">Missing: her prompts</button>') + '</span></span></li>';
-        }).join('') + '</ul><div id="syncOut"></div>' +
         '<h3>Add a look</h3><p class="muted">Start from <a href="/assets/narrator/kit/her-template.png" download>her template</a> (<button type="button" class="link" id="catTpl">copy the image</button> · <a href="/assets/narrator/kit/her-edit-mask.png" download>mask</a> · <a href="/assets/narrator/kit/her-contact-sheet.jpg" target="_blank" rel="noopener">rules</a>), change only the hair and what\'s on it, and bring the render back here.</p>' +
         '<div class="grid2">' + field('Name', '<input id="nlName" placeholder="e.g. rain-hood" maxlength="40">', 'Lowercase, with dashes') + field('What it is', '<input id="nlAbout" placeholder="e.g. a brass rain hood" maxlength="120">') + '</div>' +
         '<label class="drop ga-drop" id="nlDrop"><input type="file" id="nlFile" accept="image/png,image/jpeg,image/webp" hidden><b>' + (CATNEWLOOK ? 'Choose a different render' : 'Bring the render here') + '</b> <span class="muted">or drop it here</span></label><div id="nlOut"></div>' +
@@ -701,20 +698,6 @@
         }).then(function () { CATNEWBD = null; LOOKS = null; toast(name + ' added. The site updates in about a minute.'); renderCats(); })
           .catch(function (err) { toast(err.message, true); b.disabled = false; b.textContent = 'Add the backdrop'; });
       };
-      // a missing piece's prompts (GlazyArray's also fill in Add a look's name, so her render lands on the same look)
-      var syncShow = function (l, who) {
-        var ga = who === 'ga';
-        $('#syncOut').innerHTML = '<div class="sync-box"><p><b>' + (ga ? 'GlazyArray' : 'Robot Marley') + '\'s ' + esc(l.name.replace(/-/g, ' ')) + '.</b> ' +
-          (ga ? 'Run Prompt 1 on her template, then Prompt 2 on the image it made, and bring that back to Add a look below (its name is filled in).'
-              : 'Run Prompt 1 on her flat-green seated template (paste her description from <code>assets/marley/KIT.md</code> first), then Prompt 2 on the image it made, and bring both renders to Claude, who cuts her hat and charm from them.') + '</p>' +
-          field('The prompts', '<textarea id="syncP" rows="10">' + esc(ga ? gaSyncPrompt(l) : mlySyncPrompt(l)) + '</textarea>', 'Change anything before you copy') +
-          '<div class="row"><button type="button" id="syncCopy">Copy the prompts</button></div></div>';
-        $('#syncCopy').onclick = function () { navigator.clipboard.writeText($('#syncP').value).then(function () { toast('Prompts copied.'); }); };
-        if (ga) { $('#nlName').value = l.name; if (!$('#nlAbout').value.trim()) $('#nlAbout').value = l.about || ''; }
-      };
-      $$('button[data-syncga],button[data-syncml]', box).forEach(function (b) {
-        b.onclick = function () { var n = b.getAttribute('data-syncga') || b.getAttribute('data-syncml'); syncShow(list.filter(function (x) { return x.name === n; })[0], b.hasAttribute('data-syncga') ? 'ga' : 'ml'); };
-      });
       // A.L.T.A.'s tank scenes: the prompt (an edit of her template, or a new picture), the render cropped to her frame,
       // and a preview with her and her tank in front of it (assets/alta/kit/tank-overlay.webp)
       var ntScene = $('#ntScene'), ntPrompt = $('#ntPrompt'), ntUpd = function () { ntPrompt.value = tankPrompt(ntScene.value || TANK_SCENES[$('#ntCat').value] || SCENES[$('#ntCat').value] || '', $('#ntWay').value); };
@@ -742,6 +725,7 @@
         }).then(function () { CATNEWTANK = null; LOOKS = null; toast(name + ' added. The site updates in about a minute.'); renderCats(); })
           .catch(function (err) { toast(err.message, true); b.disabled = false; b.textContent = 'Add the scene'; });
       };
+      if (PREFILL_LOOK) { $('#nlName').value = PREFILL_LOOK.name; $('#nlAbout').value = PREFILL_LOOK.about || ''; var nn = $('#nlName'); PREFILL_LOOK = null; setTimeout(function () { if (window.easeScroll) easeScroll.to(nn); nn.focus({ preventScroll: true }); }, 50); }
       $('#catTpl').onclick = function () { GALook.copyTemplate().then(function () { toast('Her template is on the clipboard.'); }, function (e) { toast(e.message, true); }); };
       function take(f) {
         if (!f) return; $('#nlOut').innerHTML = '<p class="muted">Working…</p>';
@@ -767,6 +751,108 @@
         }).then(function () { CATNEWLOOK = null; LOOKS = null; toast(name + ' added. The site updates in about a minute.'); renderCats(); })
           .catch(function (err) { toast(err.message, true); b.disabled = false; b.textContent = 'Add the look'; });
       };
+    }).catch(function (err) { box.innerHTML = '<p class="err">' + esc(err.message) + '</p>'; });
+  }
+
+  // ---------- Characters (owner, Christian, Oct 13): who wears what. assets/narrator/characters.json says each one's
+  // pieces, template and prompts; looks.json says what exists. A matrix of the looks more than one of them wears, then
+  // any category or Note applied (on a day you pick) to show what each of them gets and where it comes from, the same
+  // rule as the site (assets/narrator/resolve.js). A gap is a click from its prompt. ----------
+  var CHARS = null, CHV = { t: '', d: '' }, PREFILL_LOOK = null;
+  function charsData() {
+    if (!CHARS) CHARS = fetch('/assets/narrator/characters.json', { cache: 'no-cache' }).then(function (r) { return r.json(); }).then(function (j) { return j.characters || []; }).catch(function () { return []; });
+    return Promise.all([CHARS, renderLookData()]);
+  }
+  function fillIn(t, v) { return String(t || '').replace(/\{(\w+)\}/g, function (m, k) { return k in v ? v[k] : m; }); }
+  // a character's prompt for a piece: a look (by its looks.json entry) or a tank scene (by its place)
+  function charPrompt(ch, kind, l, place) {
+    var P = ch[kind] || {};
+    if (kind === 'tank') return fillIn(P.prompt, { place: place || '[THE PLACE]' });
+    if (P.has === 'file') return fillIn(P.prompt, { look: l.gaLook || l.about || l.name.replace(/-/g, ' '), a: l.gaA || '[the part that takes the first colour]', b: l.gaB || '[the part that takes the second colour]' });
+    var i = (P.ideas || {})[l.name] || ['[a hat for ' + l.name.replace(/-/g, ' ') + ']', '[a small charm]', 'hat', 'charm'];
+    return fillIn(P.prompt, { hat: i[0], charm: i[1], hatShort: i[2], charmShort: i[3] });
+  }
+  function hasLook(ch, l) { return !!l && (l.name === 'curls' ? ch.look.has === 'file' : ch.look.has === 'file' ? !!l.file : !!l[ch.look.has]); }
+  function renderChars() {
+    var box = $('#charsBox'); if (!box) return; box.innerHTML = '<p class="muted">Loading…</p>';
+    charsData().then(function (rr) {
+      var chars = rr[0], r = rr[1], list = r[0], J = r[3] || {}, bds = r[2].list;
+      var byName = {}; list.forEach(function (l) { byName[l.name] = l; });
+      var occ = list.filter(function (l) { return (l.from && l.to) || l.marley; });
+      var hols = list.filter(function (l) { return l.from && l.to; }).sort(function (a, b) { return a.from < b.from ? -1 : 1; });
+      var cats = {}; (ENTRIES || []).forEach(function (e) { (e.cats || []).forEach(function (c) { cats[c] = 1; }); }); allCats(J).forEach(function (c) { cats[c] = 1; });
+      var head = '<tr><th></th>' + chars.map(function (c) { return '<th><img alt="" src="' + esc(c.avatar) + '">' + esc(c.name) + '</th>'; }).join('') + '</tr>';
+      var gapBtn = function (c, kind, n, place, label) { return '<button type="button" class="chg" data-c="' + esc(c.id) + '" data-k="' + kind + '" data-n="' + esc(n || '') + '" data-p="' + esc(place || '') + '">' + (label || 'Missing: the prompt') + '</button>'; };
+      box.innerHTML = '<h2>Characters</h2><p class="muted">Who wears what. A category sets a base, a Note can change it, and a holiday on its dates comes first (unless the Note ignores holidays). Each character\'s pieces, template and prompts are in <code>assets/narrator/characters.json</code>; a new character is an entry there plus its player and kit.</p>' +
+        '<h3>Who has which look</h3><p class="muted">The holidays, and the looks made for more than one of them.</p><div class="chm-wrap"><table class="chm"><thead>' + head + '</thead><tbody>' + occ.map(function (l) {
+          return '<tr><th>' + esc(l.name.replace(/-/g, ' ')) + '<small>' + esc(l.from ? l.from + ' to ' + l.to : 'picked, no dates') + '</small></th>' + chars.map(function (c) {
+            if (c.pieces.indexOf('look') < 0) return '<td class="na" title="' + esc(c.name) + ' doesn\'t wear looks">—</td>';
+            return hasLook(c, l) ? '<td class="ok">' + (c.look.has === 'file' ? '<img alt="" src="' + lookSrc(l) + '">' : '') + '<span>Has hers</span></td>' : '<td class="gap">' + gapBtn(c, 'look', l.name) + '</td>';
+          }).join('') + '</tr>';
+        }).join('') + '</tbody></table></div>' +
+        '<h3>What a category or a Note gives them</h3><div class="row"><label class="f"><span>Apply</span><select id="chT"><option value="">Pick a category or a Note</option><optgroup label="Categories">' +
+          Object.keys(cats).sort().map(function (c) { return '<option value="c:' + esc(c) + '">' + esc(catName(c)) + '</option>'; }).join('') + '</optgroup><optgroup label="Notes">' +
+          (ENTRIES || []).map(function (e) { return '<option value="n:' + esc(e.id) + '">' + esc(e.title || e.id) + '</option>'; }).join('') + '</optgroup></select></label>' +
+          '<label class="f"><span>On</span><select id="chD"><option value="">Today</option>' + hols.map(function (h) { return '<option value="' + esc(h.from) + '">' + esc(h.name.replace(/-/g, ' ') + ' (' + h.from + ')') + '</option>'; }).join('') + '</select></label></div>' +
+        '<div id="chOut"></div><div id="chPrompt"></div>';
+      // what the target gives each character
+      var show = function () {
+        var o = $('#chOut'), t = CHV.t; if (!t) { o.innerHTML = ''; return; }
+        var e = t.slice(0, 2) === 'n:' ? (ENTRIES || []).filter(function (x) { return x.id === t.slice(2); })[0] : null, cat = t.slice(0, 2) === 'c:' ? t.slice(2) : '';
+        var note = e ? { look: e.look || undefined, backdrop: e.bd || undefined, tank: e.tank || undefined, narrator: e.nar || undefined, cats: e.cats || [], prefer: e.prefer || undefined, ignoreHolidays: !!e.noh } : { cats: [cat] };
+        var md = CHV.d, day = md ? new Date(new Date().getFullYear(), +md.slice(0, 2) - 1, +md.slice(3, 5)) : undefined;
+        var p = GAResolve.pick(J, note, day), place = SCENES[cat || (note.cats || [])[0]] || TANK_SCENES[cat || (note.cats || [])[0]] || '';
+        var tplace = TANK_SCENES[cat || (note.cats || [])[0]] || place;
+        var bdOf = function (n) { return bds.filter(function (b) { return b.name === n; })[0]; };
+        var why = function (x) { return x && x.why ? '<small>' + esc(x.why) + '</small>' : ''; };
+        var row = function (label, f) { return '<tr><th>' + label + '</th>' + chars.map(f).join('') + '</tr>'; };
+        o.innerHTML = '<div class="chm-wrap"><table class="chm chi"><thead>' + head + '</thead><tbody>' +
+          row('Tells it', function (c) { return p.narrator.name === c.id ? '<td class="ok"><span>★ Narrates</span>' + why(p.narrator) + '</td>' : '<td class="na"></td>'; }) +
+          row('Look', function (c) {
+            if (c.pieces.indexOf('look') < 0) return '<td class="na">—</td>';
+            var l = byName[p.look.name] || (p.look.name === 'curls' ? { name: 'curls' } : null);
+            if (c.look.has === 'file') return hasLook(c, l) ? '<td class="ok">' + (l.file ? '<img alt="" src="' + lookSrc(l) + '">' : '') + '<span>' + esc(p.look.name) + '</span>' + why(p.look) + '</td>' : '<td class="gap"><span>' + esc(p.look.name) + '</span>' + why(p.look) + gapBtn(c, 'look', p.look.name) + '</td>';
+            // the others wear a look only when it's a holiday's or one made for them; a cap stays GlazyArray's
+            if (l && hasLook(c, l)) return '<td class="ok"><span>' + esc(l.name) + '</span>' + why(p.look) + '</td>';
+            if (l && (l.from || l.marley)) return '<td class="gap"><span>' + esc(l.name) + '</span>' + why(p.look) + gapBtn(c, 'look', l.name) + '</td>';
+            return '<td class="na"><span>Her own</span><small>' + esc(p.look.name) + ' is GlazyArray\'s</small></td>';
+          }) +
+          row('Backdrop', function (c) {
+            if (c.pieces.indexOf('backdrop') < 0) return '<td class="na">—</td>';
+            var b = p.backdrop && bdOf(p.backdrop.name);
+            return b ? '<td class="ok"><img class="bd" alt="" src="' + bdSrc(b) + '"><span>' + esc(b.name) + '</span>' + why(p.backdrop) + '</td>' : '<td class="gap"><span>None</span>' + gapBtn(c, 'backdrop', '', place, 'The backdrop prompt') + '</td>';
+          }) +
+          row('Tank scene', function (c) {
+            if (c.pieces.indexOf('tank') < 0) return '<td class="na">—</td>';
+            if (p.tank) return '<td class="ok"><img class="bd" alt="" src="/assets/alta/backdrops/' + esc(p.tank.file) + '"><span>' + esc(p.tank.name) + '</span>' + why(p.tank) + '</td>';
+            var lent = p.backdrop && p.backdrop.from !== 'default' && bdOf(p.backdrop.name);
+            return '<td class="gap">' + (lent ? '<img class="bd" alt="" src="' + bdSrc(lent) + '"><span>Borrows ' + esc(lent.name) + '</span><small>blurred, above her ledge</small>' : '<span>Her hall</span>') + gapBtn(c, 'tank', '', tplace, 'Her own: the prompt') + '</td>';
+          }) +
+          '</tbody></table></div>';
+        wireGaps(o);
+      };
+      var wireGaps = function (root) {
+        $$('button.chg', root).forEach(function (b) {
+          b.onclick = function () {
+            var c = chars.filter(function (x) { return x.id === b.getAttribute('data-c'); })[0], k = b.getAttribute('data-k'), n = b.getAttribute('data-n'), place = b.getAttribute('data-p');
+            var l = byName[n] || { name: n }, P = c[k] || {}, text, how, tpl = P.template || '', title;
+            if (k === 'backdrop') { text = GALook.bdPrompt(place || ''); how = 'Copy it with the backdrop template (Categories, Add a backdrop) into your image tool, and bring the render back there.'; tpl = GALook.BD_TEMPLATE; title = 'A backdrop'; }
+            else { text = charPrompt(c, k, l, place); how = P.how || ''; title = c.name + '\'s ' + (k === 'tank' ? 'tank scene' : n.replace(/-/g, ' ')); }
+            $('#chPrompt').innerHTML = '<div class="sync-box"><p><b>' + esc(title) + '.</b> ' + esc(how) + '</p>' + field('The prompt', '<textarea id="chP" rows="10">' + esc(text) + '</textarea>', 'Change anything before you copy') +
+              '<div class="row"><button type="button" id="chCopy">Copy the prompt</button>' + (tpl ? '<button type="button" id="chTpl">Copy the template</button><a href="' + esc(tpl) + '" download>Download the template</a>' : '') +
+              (k === 'look' && c.look.made === 'studio' ? '<button type="button" id="chGo">Add it in Categories</button>' : '') + '</div></div>';
+            $('#chCopy').onclick = function () { navigator.clipboard.writeText($('#chP').value).then(function () { toast('Prompt copied.'); }); };
+            if ($('#chTpl')) $('#chTpl').onclick = function () { GALook.copyImage(tpl).then(function () { toast('The template is on the clipboard.'); }, function (err) { toast(err.message, true); }); };
+            if ($('#chGo')) $('#chGo').onclick = function () { PREFILL_LOOK = { name: n, about: l.about || '' }; showList('categories'); };
+            var pb = $('#chPrompt'); if (window.easeScroll && pb.getBoundingClientRect().top > innerHeight - 120) easeScroll.to(pb);
+          };
+        });
+      };
+      wireGaps(box);
+      var ct = $('#chT'), cd = $('#chD'); ct.value = CHV.t; cd.value = CHV.d;
+      ct.onchange = function () { CHV.t = ct.value; $('#chPrompt').innerHTML = ''; show(); };
+      cd.onchange = function () { CHV.d = cd.value; show(); };
+      show();
     }).catch(function (err) { box.innerHTML = '<p class="err">' + esc(err.message) + '</p>'; });
   }
 
@@ -1416,28 +1502,6 @@
         return new Promise(function (ok) { c.toBlob(ok, 'image/jpeg', 0.86); });
       }).then(function (blob) { return { blob: blob, ext: blob.type === 'image/webp' ? 'webp' : 'jpg', preview: pv, warn: warn }; });
     });
-  }
-  // ---------- narrators in step: the prompts for a look's missing piece ----------
-  // GlazyArray's two (assets/narrator/looks/PROMPTS.md), from the look's gaLook / gaA / gaB in looks.json, else its about
-  function gaSyncPrompt(l) {
-    var look = l.gaLook || l.about || l.name.replace(/-/g, ' '), a = l.gaA || '[the part that takes the first colour]', b = l.gaB || '[the part that takes the second colour]';
-    return 'Prompt 1:\n\nSame image, same camera, same face, same eyes, same jaw, same neck and the same flat chroma green background (#00B140). Change only the hair and accessories: ' + look + '. Render ' + a +
-      ' in a bright saturated magenta (#FF00FF) with natural shading and gloss, and ' + b + ' in plain pearl white with natural shading and gloss. Everything else in her style: polished brass and rose-gold, chunky sculpted shapes, nothing crossing her face below the brows. No text, letters or logos.\n\n' +
-      'Prompt 2 (on the image Prompt 1 made):\n\nSame image, exactly as it is. Change only ' + b + ' from pearl white to a bright saturated cyan (#00FFFF), keeping the shading, gloss and folds. Change nothing else: the magenta stays magenta, and the brass, hair, face and green background stay exactly the same.';
-  }
-  // Robot Marley's two (assets/marley/KIT.md, her holiday looks): a hat and a charm in their own colours, then the same
-  // image with both cyan. Her ideas for the holidays she hasn't got yet; any other look gets brackets to fill in.
-  var MLY_IDEAS = {
-    'tahoe-winter': ['a chunky knit beanie with a pom-pom', 'a tiny pinecone', 'beanie', 'pinecone'],
-    valentines: ['a red velvet bow on a slim headband between her ears', 'a small heart locket', 'bow and its headband', 'heart locket'],
-    spring: ['a headband with soft bunny ears', 'a little painted egg', 'bunny-ear headband', 'egg'],
-    'fourth-of-july': ['a small straw boater hat with a striped band', 'a little star', 'hat and its band', 'star'],
-    thanksgiving: ['a knitted autumn beanie with a maple leaf on it', 'a tiny acorn', 'beanie and its leaf', 'acorn']
-  };
-  function mlySyncPrompt(l) {
-    var i = MLY_IDEAS[l.name] || ['[a hat for ' + l.name.replace(/-/g, ' ') + ']', '[a small charm]', 'hat', 'charm'];
-    return 'Prompt 1 (after her description):\n\nSame image, exactly as it is. Add only ' + i[0] + ' on her head, sitting between her ears, and ' + i[1] + ' about the size of a coin hanging from the ring at the front of her collar, each in its own colours with natural shading and shine. No text, letters or logos. Her pose, her ears, her face and the flat chroma green background (#00B140) stay exactly the same.\n\n' +
-      'Prompt 2 (on the image Prompt 1 made):\n\nSame image, exactly as it is. Paint only the ' + i[2] + ' and the ' + i[3] + ' a flat, saturated cyan (#00FFFF), keeping their shading and shine. Everything else stays exactly the same.';
   }
   var SCENES = { 'case-study': 'an old library with tall wooden bookshelves, brass reading lamps and a long study table',
     ride: 'a small bike shop garage with mountain bikes hanging on a wall rack, tools on a pegboard and a wooden workbench',
