@@ -74,5 +74,17 @@
  },
  "defaults": {
   "backdrop": "lake-tahoe-beach"
- }
+ },
+ "tankBackdrops": [
+  { "name": "boathouse", "file": "boathouse.webp", "about": "", "v": "tmvavx", "scene": "the inside of an old wooden boathouse, kayaks and paddles on racks, the lake through the open doors" },
+  { "name": "pool-deck", "file": "pool-deck.webp", "about": "", "v": "tmvavx", "scene": "a sunny outdoor swimming pool deck with lane ropes and a lifeguard chair" },
+  { "name": "tahoe-winter-shore", "file": "tahoe-winter-shore.webp", "about": "", "v": "tmvavx", "scene": "a snowy Lake Tahoe shoreline in winter, dark pines and white mountains across the water" },
+  { "name": "emerald-bay-mist", "file": "emerald-bay-mist.webp", "about": "", "v": "tmvavx", "scene": "the shore of Emerald Bay on a still morning, mist on the water and the small rocky island beyond" },
+  { "name": "tahoe-beach-dusk", "file": "tahoe-beach-dusk.webp", "about": "", "v": "tmvavx", "scene": "a sandy Lake Tahoe beach at dusk, smooth granite boulders and pines along the far shore" },
+  { "name": "tunnel", "file": "tunnel.webp", "about": "", "v": "tmvavx", "scene": "an old stone wall with an arched tunnel leading out toward the lake" },
+  { "name": "hawaii-coast", "file": "hawaii-coast.webp", "about": "", "v": "tmvavx", "scene": "a tropical shoreline at golden hour, palm trees and calm turquoise water" },
+  { "name": "donegal-cliffs", "file": "donegal-cliffs.webp", "about": "", "v": "tmvavx", "scene": "green sea cliffs above the Atlantic under a soft grey sky" },
+  { "name": "classroom", "file": "classroom.webp", "about": "", "v": "tmvavx", "scene": "a bright classroom with a long chalkboard, a globe and tall windows" },
+  { "name": "library", "file": "library.webp", "about": "", "v": "tmvavx", "scene": "a quiet old library with tall wooden bookshelves and warm reading lamps" }
+ ]
 }
