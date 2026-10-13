@@ -14,7 +14,7 @@
   var P = '/assets/marley/parts/web/', MV = '/assets/marley/moves/', V = '?v=2';
   // Her parts, each cropped to its own box in her 560 x 728 frame (assets/marley/parts/web/boxes.json; the full-frame
   // originals stay in parts/ for the kit): a few MB decoded instead of sixty, so a phone keeps every layer painted.
-  var FW = 560, FH = 728, BOX = {"tail":[386,538,154,102],"body":[92,220,328,496],"head":[148,22,214,288],"lids":[150,42,218,108],"collar":[170,220,174,92],"earL":[92,30,102,166],"earR":[308,28,116,168],"earL-up":[28,12,174,144],"earR-up":[306,12,180,160],"mouth":[158,126,206,184],"iris":[178,80,150,42],"charm-bone":[224,270,84,94],"charm-heart":[220,270,88,120],"charm-paw":[212,268,96,128],"charm-star":[224,268,84,116],"charm-pinecone":[228,270,80,128],"charm-ball":[220,268,88,122],"charm-bike":[208,268,100,156],"charm-leaf":[216,302,82,98],"hat-halloween":[176,-40,156,100],"hat-winter":[186,-40,138,96],"hat-stpatricks":[184,-38,140,92],"charm-broom":[230,314,66,216],"charm-snowglobe":[212,278,92,134],"charm-clover":[204,276,106,150],"hat-hawaii":[158,2,192,61],"charm-lei":[102,165,316,315]};
+  var FW = 560, FH = 728, BOX = {"tail":[386,538,154,102],"body":[92,220,328,496],"head":[148,22,214,288],"lids":[150,42,218,108],"collar":[170,220,174,92],"earL":[92,30,102,166],"earR":[308,28,116,168],"earL-up":[28,12,174,144],"earR-up":[306,12,180,160],"mouth":[158,126,206,184],"iris":[178,80,150,42],"charm-bone":[224,270,84,94],"charm-heart":[220,270,88,120],"charm-paw":[212,268,96,128],"charm-star":[224,268,84,116],"charm-pinecone":[228,270,80,128],"charm-ball":[220,268,88,122],"charm-bike":[208,268,100,156],"charm-leaf":[216,302,82,98],"hat-halloween":[176,-40,156,100],"hat-winter":[186,-40,138,96],"hat-stpatricks":[184,-38,140,92],"charm-broom":[230,314,66,216],"charm-snowglobe":[212,278,92,134],"charm-clover":[204,276,106,150],"hat-hawaii":[158,2,192,61],"charm-lei":[102,165,316,315],"hat-beanie":[150,-40,208,155],"charm-wintercone":[222,275,74,116]};
   var pct = function (n, d) { return (n / d * 100).toFixed(4) + '%'; };
   // a part's place in her frame, and (ox, oy: shares of the frame) the point it turns about, made relative to its box
   function at(g, ox, oy) {
@@ -30,9 +30,10 @@
   // her holiday looks (Christian, Oct 13): a hat on her head and a charm on her collar, each with a cyan render for a
   // Note's colours like her charms. Worn on the site's holiday dates (assets/narrator/looks.json, the same windows as
   // GlazyArray's), or picked; the hats tilt with her head. Thanksgiving's is on its way. Hawaii (Oct 13) isn't a holiday,
-  // only picked: sunglasses pushed up on her head (worn as a hat) and a flower lei (as a charm, too big to swing)
-  var HOL = { halloween: ['halloween', 'broom', 'Halloween'], 'winter-holidays': ['winter', 'snowglobe', 'Winter holidays'], 'st-patricks': ['stpatricks', 'clover', 'St. Patrick\'s'], hawaii: ['hawaii', 'lei', 'Hawaii'] };
-  var HCHARMS = ['broom', 'snowglobe', 'clover', 'lei'];   // the leaf has no cyan render yet; her own white ball is the cyan cut dyed white
+  // only picked: sunglasses pushed up on her head (worn as a hat) and a flower lei (as a charm, too big to swing).
+  // Tahoe winter (Oct 13): a knit beanie and a pinecone charm, on its dates (01-02 to 01-31)
+  var HOL = { halloween: ['halloween', 'broom', 'Halloween'], 'winter-holidays': ['winter', 'snowglobe', 'Winter holidays'], 'st-patricks': ['stpatricks', 'clover', 'St. Patrick\'s'], hawaii: ['hawaii', 'lei', 'Hawaii'], 'tahoe-winter': ['beanie', 'wintercone', 'Tahoe winter'] };
+  var HCHARMS = ['broom', 'snowglobe', 'clover', 'lei', 'wintercone'];   // the leaf has no cyan render yet; her own white ball is the cyan cut dyed white
   // her lenses: their own amber unless a mood tints them (Christian, Oct 12: a softer gold, amber as her normal)
   // [gold overlay, red colour, red screen] opacities, each layer fading on its own
   var EYES = { amber: [0, 0, 0], happy: [0.55, 0, 0], upset: [0, 0.7, 0.26] };
