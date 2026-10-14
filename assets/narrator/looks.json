@@ -25,7 +25,8 @@
   { "name": "tailored-irish-tweed-cap", "marley": {"v":"tmx19y","hat":"tailoredirishtweedca","hatBox":[128,-36,252,118],"charm":"tailoredirishtweedca","charmBox":[219,301,78,86]} },
   { "name": "miner-cap-1", "marley": {"v":"tmx1av","hat":"minercap1","hatBox":[160,-32,189,122],"charm":"minercap1","charmBox":[224,302,66,88]} },
   { "name": "cowboy-hat-1", "marley": {"v":"tmx1c0","hat":"cowboyhat1","hatBox":[121,-38,264,106],"charm":"cowboyhat1","charmBox":[221,278,75,112]} },
-  { "name": "hawaiian-cap-2", "marley": {"v":"tmx1jr","hat":"hawaiiancap2","hatBox":[115,-38,275,118],"charm":"hawaiiancap2","charmBox":[215,303,83,152]} }
+  { "name": "hawaiian-cap-2", "marley": {"v":"tmx1jr","hat":"hawaiiancap2","hatBox":[115,-38,275,118],"charm":"hawaiiancap2","charmBox":[215,303,83,152]} },
+  { "name": "chefs-hat", "marley": {"v":"tmx1p6","hat":"chefshat","hatBox":[156,-40,195,104],"charm":"chefshat","charmBox":[213,303,94,81]} }
  ],
  "categories": {
   "automaton": "workshop-goggles",
