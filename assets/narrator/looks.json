@@ -135,12 +135,12 @@
   "dusk": "2026-10-14T18:12:30Z",
   "feature": "2026-10-14T18:12:30Z",
   "high-desert": "2026-10-14T18:12:30Z",
-  "mini-cast": "2026-10-14T19:09:17Z",
+  "mini-cast": "2026-10-14T19:10:23Z",
   "profile": "2026-10-14T18:12:30Z",
   "ride": "2026-10-14T15:50:30Z",
   "robot": "2026-10-14T18:12:30Z",
   "time-machine": "2026-10-14T02:29:20Z",
-  "with-family": "2026-10-14T18:31:55Z",
+  "with-family": "2026-10-14T19:10:23Z",
   "with-helena": "2026-10-14T18:12:30Z",
   "with-marley": "2026-10-14T18:12:30Z"
  },
@@ -180,7 +180,8 @@
   { "name": "buckeye-hot-springs-2", "file": "buckeye-hot-springs-2.webp", "about": "", "v": "tmwmo6", "scene": "Buckeye Hot Springs with natural, undeveloped thermal mineral pools", "colors": ["#8e836c","#51513a","#cac3b8"] },
   { "name": "time-machine-workshop", "file": "time-machine-workshop.webp", "about": "", "v": "tmwmo6", "scene": "an elaborate time machine workshop with copper and turquoise lights", "colors": ["#231c1b","#4e413a","#8c6e5a"] },
   { "name": "alpine-forest-and-wooden-fence", "file": "alpine-forest-and-wooden-fence.webp", "about": "", "v": "tmwmo6", "scene": "alpine forest and wooden fence", "colors": ["#49422b","#7c7854","#cacbbf"] },
-  { "name": "rainbow-trout-in-aquarium-tank-202610111", "file": "rainbow-trout-in-aquarium-tank-202610111.webp", "about": "", "v": "tmwvvh", "colors": ["#e3e3df","#4c514b","#959890"] }
+  { "name": "rainbow-trout-in-aquarium-tank-202610111", "file": "rainbow-trout-in-aquarium-tank-202610111.webp", "about": "", "v": "tmwvvh", "colors": ["#e3e3df","#4c514b","#959890"] },
+  { "name": "mermaid-family-jumping-in-the-air", "file": "mermaid-family-jumping-in-the-air.webp", "about": "", "v": "tmwvxb", "scene": "mermaid family jumping in the air", "colors": ["#e8e5dd","#a39b91","#574b36"] }
  ],
  "categoryTanks": {
   "aerial": "a-wide-mountain-valley",
@@ -197,7 +198,8 @@
  },
  "categoryTankChoices": {
   "lake-tahoe": ["emerald-bay-mist","boathouse"],
-  "mini-cast": ["boathouse","library","makers-workshop","a-pine-forest-trailhead","a-wide-mountain-valley","makers-workshop-with-tools","tunnels-to-tunnels","travertine-hot-springs","a-dogs-ball-in-pine-meadow","the-boat-house-tubes","whale-beach-on-lake-tahoe-at-sunset","a-massive-futuristic-glowing-library","a-place-that-suits-dusk","fannette-island","buckeye-hot-springs-1","comfortable-room","a-brass-and-copper-workshop","open-high-desert-sagebrush-hills","buckeye-hot-springs-2","time-machine-workshop","alpine-forest-and-wooden-fence","rainbow-trout-in-aquarium-tank-202610111"],
-  "ride": ["tahoe-beach-dusk","a-pine-forest-trailhead"]
+  "mini-cast": ["boathouse","library","makers-workshop","a-pine-forest-trailhead","a-wide-mountain-valley","makers-workshop-with-tools","tunnels-to-tunnels","travertine-hot-springs","a-dogs-ball-in-pine-meadow","the-boat-house-tubes","whale-beach-on-lake-tahoe-at-sunset","a-massive-futuristic-glowing-library","a-place-that-suits-dusk","fannette-island","buckeye-hot-springs-1","comfortable-room","a-brass-and-copper-workshop","open-high-desert-sagebrush-hills","buckeye-hot-springs-2","time-machine-workshop","alpine-forest-and-wooden-fence","rainbow-trout-in-aquarium-tank-202610111","mermaid-family-jumping-in-the-air"],
+  "ride": ["tahoe-beach-dusk","a-pine-forest-trailhead"],
+  "with-family": ["mermaid-family-jumping-in-the-air"]
  }
 }
