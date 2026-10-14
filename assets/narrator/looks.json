@@ -54,7 +54,12 @@
   { "name": "donegal-3", "file": "donegal-3.jpg", "about": "Donegal", "v": "tmuzrb", "scene": "a pale cone of a mountain wrapped in low cloud above a still lake, bog and old stone walls", "colors": ["#3a2919","#9ca6ad","#685e53"] },
   { "name": "donegal-4", "file": "donegal-4.jpg", "about": "Donegal", "v": "tmuzrb", "scene": "a sandy cove between dark cliffs and sea stacks, turquoise surf and green clifftop paths", "colors": ["#333627","#6c807f","#d0d2d3"] },
   { "name": "donegal-5", "file": "donegal-5.jpg", "about": "Donegal", "v": "tmuzrb", "scene": "a stone castle among trees on the shore of a mountain lake, misty slopes and flowering rhododendrons", "colors": ["#39371b","#bec5d0","#6f7272"] },
-  { "name": "lake-tahoe-2", "file": "lake-tahoe-2.webp", "about": "", "v": "tmv9k2", "scene": "a mountain bike against a pine above a deep blue mountain lake", "colors": ["#22251a","#4b4a3f","#798386"] }
+  { "name": "lake-tahoe-2", "file": "lake-tahoe-2.webp", "about": "", "v": "tmv9k2", "scene": "a mountain bike against a pine above a deep blue mountain lake", "colors": ["#22251a","#4b4a3f","#798386"] },
+  { "name": "old-library", "file": "old-library.webp", "about": "", "v": "tmwm08", "scene": "an old library with tall wooden bookshelves, brass reading lamps and a long study table, with bright green tones, the same size and shape as the attached template.", "colors": ["#4f4526","#131308","#b3a879"] },
+  { "name": "copper-workbench", "file": "copper-workbench.webp", "about": "", "v": "tmwm08", "scene": "a cozy maker's workshop with a workbench, tools on the wall and warm hanging lamps, the same size and shape as the attached template.", "colors": ["#292013","#815629","#c8985b"] },
+  { "name": "bike-bench", "file": "bike-bench.webp", "about": "", "v": "tmwm08", "scene": "a small bike shop garage with mountain bikes hanging on a wall rack, tools on a pegboard and a wooden workbench, with bright gold tones", "colors": ["#61432b","#231a0e","#d68c4a"] },
+  { "name": "behind-the-scenes", "file": "behind-the-scenes.webp", "about": "", "v": "tmwm08", "scene": "a place that suits Behind the scenes", "colors": ["#111410","#453929","#7b6347"] },
+  { "name": "aerial-of-river-and-valley", "file": "aerial-of-river-and-valley.webp", "about": "", "v": "tmwm08", "scene": "a place that suits Aerial. A river from high up flowing through a valley.", "colors": ["#393929","#191b13","#74643e"] }
  ],
  "categoryBackdrops": {
   "automaton": "workshop-with-robots",
@@ -69,6 +74,7 @@
   "hike": ["hiking-yosemite-2","hiking-yosemite-3","trailhead","foliage","creek"],
   "ireland": ["donegal-2","donegal-3","donegal-4","donegal-5"],
   "lake-tahoe": ["lake-tahoe-beach-winter","hiking-1","biking-forest","lake-tahoe-2"],
+  "mini-cast": ["old-library","copper-workbench","bike-bench","behind-the-scenes","aerial-of-river-and-valley"],
   "ride": ["lake-tahoe-2"]
  },
  "categoryRank": {
@@ -89,6 +95,7 @@
   "dogs": "2026-10-14T02:25:49Z",
   "dusk": "2026-10-14T02:26:36Z",
   "feature": "2026-10-14T02:30:15Z",
+  "mini-cast": "2026-10-14T15:36:08Z",
   "time-machine": "2026-10-14T02:29:20Z"
  },
  "defaults": {
