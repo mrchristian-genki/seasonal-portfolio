@@ -60,11 +60,15 @@
  "publishedAt": "2026-10-03T03:39:00Z",
  "narratorLook": {
   "look": "bike-helmet",
-  "fit": "existing",
+  "fit": "category",
   "about": "a brass bike helmet with a little headlamp",
   "prompt": "",
   "bulb": true,
-  "why": "A Friday evening ride out to dinner."
+  "why": "A Friday evening ride out to dinner.",
+  "from": "ride"
  },
- "palette": ["#3468b2", "#d3bd69"]
+ "palette": [
+  "#3468b2",
+  "#d3bd69"
+ ]
 }
