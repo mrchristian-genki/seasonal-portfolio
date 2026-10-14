@@ -19,7 +19,7 @@
   { "name": "beach-shades", "file": "beach-shades.webp", "about": "round sunglasses pushed up in her curls, with a gem clip: the frames in one colour and the gem in the other", "v": "tw2e", "flair": "ab", "flairK": 1, "flairDye": "ab", "flairBase": ["#e0533d","#2fb5ad"] },
   { "name": "workshop-goggles", "file": "workshop-goggles.webp", "about": "brass workshop goggles pushed up on her forehead: the leather strap in one colour and the padded rims in the other", "v": "tw2e", "flair": "ab", "flairDye": "ab", "flairK": 1, "flairBase": ["#7a4a2a","#2fb5ad"] },
   { "name": "grad-cap", "file": "grad-cap.webp", "about": "a mortarboard, its board in one colour and its tassel in the other", "v": "tw2a", "bulb": false, "flair": "ab", "flairDye": "ab", "flairK": 1, "flairBase": ["#26355e","#d4a23c"] },
-  { "name": "hawaii", "marley": true, "about": "sunglasses and frangipani flowers", "gaLook": "round sunglasses pushed up on top of her curls, and a small cluster of frangipani flowers tucked into her hair above one ear", "gaA": "the sunglasses' frames", "gaB": "the frangipani petals" }
+  { "name": "hawaii", "file": "hawaii.webp", "about": "sunglasses and frangipani flowers", "v": "tmvisi", "marley": true, "flair": "a" }
  ],
  "categories": {
   "automaton": "workshop-goggles",
