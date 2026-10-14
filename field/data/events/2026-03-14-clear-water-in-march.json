@@ -1451,6 +1451,16 @@
    "hdr": 3
   },
   {
+   "src": "data/photos/2026-03-14-clear-water-in-march/08.jpg",
+   "caption": "",
+   "takenAt": "2026:03:14 10:10:15",
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "DJI_0657-HDR.jpg"
+  },
+  {
    "src": "data/photos/2026-03-14-clear-water-in-march/07.jpg",
    "caption": "10:16. A small cove, old buildings in the trees and a line of old posts in the water.",
    "takenAt": "2026:03:14 10:16:20",
@@ -1460,6 +1470,16 @@
    "cover": false,
    "from": "dji_fly_20260314_101620_664_1773509076835_aeb.JPG + dji_fly_20260314_101620_666_1773509080632_aeb.JPG",
    "hdr": 2
+  },
+  {
+   "src": "data/photos/2026-03-14-clear-water-in-march/09.jpg",
+   "caption": "",
+   "takenAt": "2026:03:14 10:16:23",
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "DJI_0667-HDR.jpg"
   },
   {
    "src": "data/photos/2026-03-14-clear-water-in-march/clip-1.mp4",
@@ -1476,12 +1496,76 @@
     8.75,
     24.95
    ]
+  },
+  {
+   "src": "data/photos/2026-03-14-clear-water-in-march/clip-3.mp4",
+   "poster": "data/photos/2026-03-14-clear-water-in-march/clip-3.jpg",
+   "video": true,
+   "caption": "Flying with Marley while she swims.",
+   "takenAt": "2026:10:13 20:01:10",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "marley-swim-3.mp4",
+   "range": [
+    0,
+    24.7
+   ]
+  },
+  {
+   "src": "data/photos/2026-03-14-clear-water-in-march/clip-2.mp4",
+   "poster": "data/photos/2026-03-14-clear-water-in-march/clip-2.jpg",
+   "video": true,
+   "caption": "flying over lake tahoe near skunk harbor.",
+   "takenAt": "2026:10:13 20:02:29",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "push-in-1.mp4",
+   "range": [
+    0,
+    13.2
+   ]
+  },
+  {
+   "src": "data/photos/2026-03-14-clear-water-in-march/clip-4.mp4",
+   "poster": "data/photos/2026-03-14-clear-water-in-march/clip-4.jpg",
+   "video": true,
+   "caption": "Looking down over Skunk Harbor.",
+   "takenAt": "2026:10:13 20:03:21",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "looking-down-1.mp4",
+   "range": [
+    0,
+    24.55
+   ]
+  },
+  {
+   "src": "data/photos/2026-03-14-clear-water-in-march/clip-5.mp4",
+   "poster": "data/photos/2026-03-14-clear-water-in-march/clip-5.jpg",
+   "video": true,
+   "caption": "Flying away from the shore over Lake Tahoe.",
+   "takenAt": "2026:10:13 20:04:33",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "hero-shot-pull-back-lift.mp4",
+   "range": [
+    0,
+    17.95
+   ]
   }
  ],
  "fieldNotes": "The track was trimmed because there was no trailhead near the start or end. Where did the ride start and finish, and is either end near home? If so, this needs the from-home treatment (no map, route or distances).\nSkunk Beach or Cove on Lake Tahoe\n\nWhere was this? Which stretch of shore and trailhead or public-land name can be used?\nSkunk Harbor\n\nWere the aerial photos taken with a drone? If so, OK to say so, and was it flown where drones are allowed?\nYes and yes.\n\nWas anyone else along (Marley, your wife, others)? Nothing in the notes says.\nYes. Marley.\n\nPhotos 01-03 and 06/08 look like the same shots with different edits. Keep all, or one of each?\nThose are raw HDR images that are to be merged via or new protocol.\n\nDo you know what the line of posts in the water (07) and the buildings in the cove are? Worth a line if so.\nAn old dock from long ago.\n\nWas the 22 minutes moving out of two hours mostly the photo stop, or something else (tracker left running, a walk, a swim)?\nThe trip up and down on my bike.\n\nAny title, notes or a moment from the day you want in the story? The draft is built only from the figures and photos.\nMornings with Marley.\n\nThe start and finish were trimmed (no trailhead nearby). Please confirm neither end is near home; if one is, the distances and route details come out.\ncorrect. it is the Skunk Harbor trail.\n\nMarley isn't in any of the photos. Anything she did that morning (swim, run along, wait by the bike) you'd like in the story?\nShe is there and swimming in the video. I can create a few more of Robot Marley if that will help fill things out?\n\nclip-1.mp4 is dated Oct 4, 2026. Is it real drone footage from that morning, or animated with AI from a photo? If AI, it needs the label.\nall real aerial footage.\n\nPhotos 01-03 and 08 are raw HDR frames waiting to be merged. Should the merged versions be added to this Note before publishing?\nno\n\nThe old buildings in the cove: do you know what they are, and are they fine to show (not someone's private place)?\nno\n\nThe tahoe-winter look is a January holiday look, kept as the entry has it. Still want it on a March Note?\nthere is snow on the ground so yes\n\nYour \"no\" on the old buildings: does it mean you don't know what they are, or that they shouldn't be shown? If they shouldn't be shown, 04, 05 and 07 need cropping and the text mentions come out.\nThey are not able to be lived in. gutted inside.\n\nRobot Marley pictures: not needed for this Note. If you add them, they'd need the Animated with AI label; want them in?\nok\n\nclip-1.mp4 is dated Oct 4: is that just the export date, with the flight from the March 14 morning?\nyes.",
  "post": {
   "title": "Clear water in March",
-  "body": "I started rolling just before nine on March 14, headed down the Skunk Harbor trail to Lake Tahoe with Marley along. The bike was just the way down to the water and back up again: about three miles, a little under six hundred feet of climbing, and only twenty-two minutes of actual moving. The whole morning took a bit over two hours.\n\nThe rest of the time went to the drone. Skunk Harbor is a place where it's allowed, and I'd wanted to see this stretch of shore from above. Mornings with Marley tend to go like that. We get there, and then nobody's in a hurry.\n\nMarley went swimming. She's in the drone video, out in that clear water, with snow still on the shore.\n\nThe first shots are from about half past nine. There was still snow in patches under the pines and tucked between the granite, and the sun was low enough that the trees threw long shadows far out over the water. Straight down, the lake is so clear the boulders under the surface show every edge, brown and green against the turquoise, with the shallows fading into deep blue farther out.\n\nJust after ten I took the drone along the shore. The forest runs right down to the rocks, and across the lake the mountains were still white.\n\nThe last shot is the one I keep coming back to. A small cove, a few old buildings back in the trees, and a line of posts standing in the shallows. The buildings are only shells now, gutted inside and not fit to live in. The posts are what's left of an old dock from long ago. Nothing on top of them now, just the posts and their shadows on the sand.\n\nThen it was back on the bike and up the hill. The top speed for the day was around twenty-six miles an hour, which on a three-mile ride tells you how the way down went."
+  "body": "I started rolling just before nine on March 14, headed down the Skunk Harbor trail to Lake Tahoe with Marley along. The bike was just the way down to the water and back up again: about three miles, a little under six hundred feet of climbing, and only twenty-two minutes of actual moving. The whole morning took a bit over two hours.\n\n## The drone's morning\n\nThe rest of the time went to the drone. Skunk Harbor is a place where it's allowed, and I'd wanted to see this stretch of shore from above. Mornings with Marley tend to go like that. We get there, and then nobody's in a hurry.\n\nMarley went swimming. She's in the drone video, out in that clear water, with snow still on the shore.\n\n> We get there, and then nobody's in a hurry.\n\n## Straight down\n\nThe first shots are from about half past nine. There was still snow in patches under the pines and tucked between the granite, and the sun was low enough that the trees threw long shadows far out over the water. Straight down, the lake is so clear the boulders under the surface show every edge, brown and green against the turquoise, with the shallows fading into deep blue farther out.\n\nJust after ten I took the drone along the shore. The forest runs right down to the rocks, and across the lake the mountains were still white.\n\n## The old dock\n\nThe last shot is the one I keep coming back to. A small cove, a few old buildings back in the trees, and a line of posts standing in the shallows. The buildings are only shells now, gutted inside and not fit to live in. The posts are what's left of an old dock from long ago. Nothing on top of them now, just the posts and their shadows on the sand.\n\n## Back up the hill\n\nThen it was back on the bike and up the hill. The top speed for the day was around twenty-six miles an hour, which on a three-mile ride tells you how the way down went."
  },
  "episode": {
   "title": "The posts in the shallows",
@@ -1518,5 +1602,105 @@
   "from": "lake-tahoe",
   "scene": ""
  },
- "paletteBy": "hand"
+ "paletteBy": "hand",
+ "feature": {
+  "theme": "lineofsight",
+  "masthead": "LINE OF SIGHT",
+  "tagline": "The quarterly of the patient aerial",
+  "issue": "The Blue Hour Issue",
+  "label": "How I Got the Shot",
+  "byline": "By GlazyArray, Aerial Desk",
+  "blocks": [
+   {
+    "type": "box",
+    "title": "Airspace etiquette",
+    "before": "Straight down",
+    "kicker": "Rules of the air",
+    "text": "Before the drone went up, Christian made sure Skunk Harbor is a place where flying one is allowed. It is, and that is where he flew.\n\nEvery clip in this story is real aerial footage from that March morning, including the one of Marley out swimming with the drone overhead. Nothing here was animated with AI."
+   },
+   {
+    "type": "specs",
+    "title": "Settings",
+    "before": "The old dock",
+    "rows": [
+     [
+      "Aircraft",
+      "Drone"
+     ],
+     [
+      "Where",
+      "Skunk Harbor, Lake Tahoe"
+     ],
+     [
+      "Date",
+      "March 14, 2026"
+     ],
+     [
+      "First still",
+      "9:33"
+     ],
+     [
+      "Along the shore",
+      "10:10"
+     ],
+     [
+      "Last still",
+      "10:16"
+     ],
+     [
+      "Stills",
+      "Some kept as raw HDR frames"
+     ],
+     [
+      "Video",
+      "Four clips, all real aerial footage"
+     ]
+    ],
+    "note": "Camera settings weren't recorded in the Note."
+   },
+   {
+    "type": "stats",
+    "title": "Flight log",
+    "items": [
+     [
+      "3.2 mi",
+      "Ride, down to the shore and back up"
+     ],
+     [
+      "22 min",
+      "Moving time on the bike"
+     ],
+     [
+      "~600 ft",
+      "Climbing, a little under"
+     ],
+     [
+      "6,827 ft",
+      "High point"
+     ],
+     [
+      "~26 mph",
+      "Top speed, on the way down"
+     ],
+     [
+      "2+ hrs",
+      "The whole morning"
+     ]
+    ],
+    "note": "Ride figures from the track; the drone's own flight time wasn't logged in the Note."
+   }
+  ],
+  "coverLines": [
+   "Snow on the granite, clear water below: flying Skunk Harbor in March",
+   "Marley swims, the drone follows",
+   "The posts of an old dock from long ago",
+   "Three miles of riding, two hours by the water"
+  ],
+  "questions": [
+   "The Settings box has no camera details. Which drone did you fly, and do you have any settings worth listing (altitude, shutter, ISO, frame rate, resolution)? Without them it only lists times and formats.",
+   "How long was the drone actually in the air (number of flights or total flight time)? It could go in the Flight log.",
+   "Is there a specific rule or source you checked to confirm drones are allowed at Skunk Harbor that you'd like named in the Airspace etiquette box?",
+   "Please confirm the stats: 'a little under six hundred feet' of climbing and the 26 mph top speed come from the post; the track figures given only list distance, high point and moving time."
+  ]
+ }
 }
