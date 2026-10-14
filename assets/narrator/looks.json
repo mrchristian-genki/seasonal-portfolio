@@ -123,11 +123,11 @@
   { "name": "behind-the-scenes-tank", "file": "behind-the-scenes-tank.webp", "about": "", "v": "tmvlaw", "colors": ["#423423","#8a7c65","#d8d6c9"] },
   { "name": "case-study-tank", "file": "case-study-tank.webp", "about": "", "v": "tmvlbj", "scene": "a quiet old library with tall wooden bookshelves and warm reading lamps", "colors": ["#69513e","#311e11","#c1a27e"] },
   { "name": "character-tank", "file": "character-tank.webp", "about": "", "v": "tmvlcc", "colors": ["#252929","#75828e","#c7c3bf"] },
-  { "name": "coloring-books-tank", "file": "coloring-books-tank.webp", "about": "", "v": "tmvlec", "colors": ["#4f3620","#94785b","#dbd7ca"] },
   { "name": "dogs-tank", "file": "dogs-tank.webp", "about": "", "v": "tmvlf1", "scene": "Backyard", "colors": ["#414121","#7f774b","#d6c085"] },
   { "name": "dusk-tank", "file": "dusk-tank.webp", "about": "", "v": "tmvlgc", "colors": ["#252929","#75828e","#c7c3bf"] },
   { "name": "time-machine-tank", "file": "time-machine-tank.webp", "about": "", "v": "tmvlkw", "colors": ["#30241a","#786755","#d2cec2"] },
-  { "name": "feature-tank", "file": "feature-tank.webp", "about": "", "v": "tmvlmf", "colors": ["#435257","#dee1e1","#8e979a"] }
+  { "name": "feature-tank", "file": "feature-tank.webp", "about": "", "v": "tmvlmf", "colors": ["#435257","#dee1e1","#8e979a"] },
+  { "name": "coloring-books-tank", "file": "coloring-books-tank.webp", "about": "", "v": "tmwejz", "colors": ["#47301f","#9d755c","#d5c3b6"] }
  ],
  "categoryTanks": {
   "aerial": "aerial-tank",
