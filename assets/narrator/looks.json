@@ -146,7 +146,7 @@
   "time-machine": "2026-10-14T19:28:39Z",
   "web": "2026-10-14T19:28:39Z",
   "with-family": "2026-10-14T19:28:39Z",
-  "with-helena": "2026-10-14T18:12:30Z",
+  "with-helena": "2026-10-14T20:01:44Z",
   "with-marley": "2026-10-14T18:12:30Z"
  },
  "defaults": {
@@ -223,6 +223,7 @@
   "robot": ["workshop-with-robots","time-machine-tank","feature-tank","boathouse","makers-workshop","makers-workshop-with-tools","the-boat-house-tubes","a-brass-and-copper-workshop","time-machine-workshop","rainbow-trout-in-aquarium-tank-202610111","mermaid-family-jumping-in-the-air"],
   "time-machine": ["time-machine-workshop"],
   "web": ["workshop-with-robots","time-machine-tank","feature-tank","library","the-boat-house-tubes","a-massive-futuristic-glowing-library","a-brass-and-copper-workshop","time-machine-workshop"],
-  "with-family": ["mermaid-family-jumping-in-the-air","workshop-with-robots","coloring-books-tank","feature-tank","boathouse","the-boat-house-tubes","comfortable-room","rainbow-trout-in-aquarium-tank-202610111","people-coloring-in-books-together-202610"]
+  "with-family": ["mermaid-family-jumping-in-the-air","workshop-with-robots","coloring-books-tank","feature-tank","boathouse","the-boat-house-tubes","comfortable-room","rainbow-trout-in-aquarium-tank-202610111","people-coloring-in-books-together-202610"],
+  "with-helena": ["coloring-books-tank","comfortable-room","open-high-desert-sagebrush-hills","people-coloring-in-books-together-202610"]
  }
 }
