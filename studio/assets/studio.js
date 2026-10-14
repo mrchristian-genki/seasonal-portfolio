@@ -42,6 +42,21 @@
       return { body: a, key: Array.from(k, function (b) { return b.toString(16).padStart(2, '0'); }).join('') };
     });
   }
+  // CANCEL UPLOAD: whatever is going up (or saving) for more than a few seconds brings in a Cancel button at the foot of
+  // the screen; it stops every request still on its way, and each box shows "Cancelled." and can be tried again. A save
+  // the server had already taken in may still go through: reloading shows what's there.
+  var UPS = [];
+  function upGuard(ac) {
+    UPS.push(ac);
+    var t = setTimeout(upShow, 4000);
+    return function () { clearTimeout(t); UPS = UPS.filter(function (x) { return x !== ac; }); upShow(); };
+  }
+  function upShow() {
+    var b = document.getElementById('upCancel');
+    if (!b) { b = document.createElement('button'); b.type = 'button'; b.id = 'upCancel'; b.textContent = 'Cancel upload'; document.body.appendChild(b);
+      b.onclick = function () { var n = UPS.length; UPS.slice().forEach(function (x) { x.why = 'cancel'; x.abort(); }); UPS = []; upShow(); if (n) toast('Cancelled. Anything the server had already taken in may still save; reload to see what\'s there.'); }; }
+    b.classList.toggle('on', UPS.length > 0);
+  }
   function api(a, body, q, tries) {
     // every body goes up scrambled as a form file: an upload as it is, the JSON of everything else marked X-Body, so the
     // web host's firewall never reads a Note's words (a prompt or a caption can look like an attack to it: a 418)
@@ -51,7 +66,15 @@
       var h = { 'X-CSRF': CSRF }, payload;
       if (m) { h['X-Mask'] = m.key; if (json) h['X-Body'] = 'json'; payload = new FormData(); payload.append('f', new Blob([m.body], { type: 'application/octet-stream' }), 'part.bin'); }
       var opt = body ? { method: 'POST', headers: h, body: payload } : {};
-      return fetch('api.php?a=' + a + (q || ''), opt);
+      // an upload the server never answers shouldn't leave a button on "Uploading…" for ever, and one taking a while can
+      // be cancelled (the Cancel button, upGuard; Christian, Oct 14)
+      var ac = body && window.AbortController ? new AbortController() : null, done;
+      if (ac) { opt.signal = ac.signal; setTimeout(function () { if (!ac.signal.aborted) { ac.why = 'slow'; ac.abort(); } }, 120000); done = upGuard(ac); }
+      return fetch('api.php?a=' + a + (q || ''), opt).then(function (r) { if (done) done(); return r; }, function (e) {
+        if (done) done();
+        if (e && e.name === 'AbortError') throw new Error(ac.why === 'slow' ? 'The server didn\'t answer the ' + a + ' request within two minutes. Check your connection and try again.' : 'Cancelled.');
+        throw new Error('The ' + a + ' request didn\'t reach the server (' + (e && e.message || 'network error') + '). Check your connection and try again.');
+      });
     }).then(function (r) {
       if (r.status === 401) { location.reload(); throw new Error('Logged out'); }
       if (r.status === 418 && body && (tries || 0) < 4) return api(a, body, q, (tries || 0) + 1);   // blocked: again, with a new key
@@ -743,7 +766,7 @@
       var takeTank = function (f) {
         if (!f) return; $('#ntOut').innerHTML = '<p class="muted">Working…</p>';
         tankImage(f).then(function (res) { CATNEWTANK = res; $('#ntAdd').disabled = !tankShow($('#ntOut'), res); })
-          .catch(function (e) { $('#ntOut').innerHTML = ''; toast(e.message, true); });
+          .catch(function (e) { $('#ntOut').innerHTML = '<p class="warn">That picture didn\'t open: ' + esc(e.message) + '</p>'; toast(e.message, true); });
       };
       $('#ntFile').onchange = function () { takeTank(this.files[0]); this.value = ''; };
       var ntd = $('#ntDrop'); ['dragover', 'dragenter'].forEach(function (t) { ntd.addEventListener(t, function (ev) { ev.preventDefault(); }); });
@@ -1132,7 +1155,7 @@
       var alTake = function (f) {
         if (!f) return; $('#alOut').innerHTML = '<p class="muted">Working…</p>'; $('#alSave').disabled = true;
         tankImage(f).then(function (res) { AL.rec = res; $('#alSave').disabled = !tankShow($('#alOut'), res); })
-          .catch(function (e) { $('#alOut').innerHTML = ''; toast(e.message, true); });
+          .catch(function (e) { $('#alOut').innerHTML = '<p class="warn">That picture didn\'t open: ' + esc(e.message) + '</p>'; toast(e.message, true); });
       };
       $('#alFile').onchange = function () { alTake(this.files[0]); this.value = ''; };
       var ad = $('#alDrop'); ['dragover', 'dragenter'].forEach(function (t) { ad.addEventListener(t, function (ev) { ev.preventDefault(); }); });
@@ -1932,8 +1955,10 @@
       var her = n > 0 && sum / n / 3 < 30;
       // is her template's green still showing above the ledge (the tool left some of the wall)?
       var gd = g.getImageData(0, 0, W, 285).data, gn = 0;
-      for (var z = 0; z < gd.length; z += 16) if (gd[z + 1] > 120 && gd[z + 1] - gd[z] > 80 && gd[z + 1] - gd[z + 2] > 40) gn++;
-      var green = gn / (gd.length / 16) > 0.03;
+      // the template's chroma green (about #00A549 to #00B140: almost no red, strong green): grass and trees always
+      // carry more red than that, so a leafy scene isn't mistaken for it
+      for (var z = 0; z < gd.length; z += 16) if (gd[z] < 60 && gd[z + 1] > 130 && gd[z + 1] - gd[z] > 100 && gd[z + 2] < 120 && gd[z + 1] - gd[z + 2] > 50) gn++;
+      var green = gn / (gd.length / 16) > 0.04;
       return new Promise(function (ok) { c.toBlob(ok, 'image/webp', 0.85); }).then(function (b) {
         if (b && b.type === 'image/webp') return b;
         return new Promise(function (ok) { c.toBlob(ok, 'image/jpeg', 0.86); });
@@ -2056,8 +2081,15 @@
         }
         if (ok.length && !toNow.length) { toast('Tick at least one category for the new ones.', true); return; }
         b.disabled = true; b.textContent = ok.length ? 'Uploading…' : 'Saving…';
-        Promise.all(ok.map(function (x) { return Promise.all([api('lookblob', x.blob), x.colors || blobColors(x.blob)]).then(function (rr) { return { name: x.name, ext: x.ext, sha: rr[0].sha, scene: (x.scene || '').trim(), colors: rr[1], about: '' }; }); }))
-          .then(function (up) {
+        // one at a time, saying which (a batch of big images all at once can choke the web host)
+        var up = [], one = function (i) {
+          if (i >= ok.length) return Promise.resolve(up);
+          var x = ok[i]; b.textContent = 'Uploading ' + (i + 1) + ' of ' + ok.length + '…';
+          return Promise.all([api('lookblob', x.blob), x.colors || blobColors(x.blob)]).then(function (rr) { up.push({ name: x.name, ext: x.ext, sha: rr[0].sha, scene: (x.scene || '').trim(), colors: rr[1], about: '' }); return one(i + 1); },
+            function (err) { throw new Error(x.name + ': ' + err.message); });
+        };
+        one(0)
+          .then(function (up) { b.textContent = 'Saving…';
             var body = {}, sentP = pend; body[tank ? 'categoryTankChoices' : 'categoryBackdropChoices'] = Object.keys(pend).length ? pend : null;
             if (up.length) { body[tank ? 'newTanks' : 'newBackdrops'] = up; body[tank ? 'offerTank' : 'offerBackdrop'] = { names: up.map(function (x) { return x.name; }), cats: toNow }; }
             return api('looks', body).then(function () {
