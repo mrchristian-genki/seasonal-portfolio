@@ -134,10 +134,9 @@
   "bulb": false
  },
  "narratorBackdrop": {
-  "backdrop": "library",
-  "fit": "category",
-  "from": "case-study",
-  "scene": ""
+  "backdrop": "workshop-with-robots",
+  "fit": "existing",
+  "scene": "a workshop full of robots and machines on workbenches"
  },
  "palette": [
   "#26bfac",
