@@ -6,7 +6,8 @@
    so her parts cross-fade to it and back. The clips carry their own masks (colour over mask, drawn in a canvas),
    so whatever is behind her shows.
 
-   On the element: data-palette="#collar #charm" (a Note's two colours), data-charm="heart" (else her bone),
+   On the element: data-palette="#collar #charm" (a Note's two colours), data-seatpal (colours for her stump's carvings
+   only, where no data-palette is given; every Note she tells gives data-palette, Christian, Oct 14), data-charm="heart" (else her bone),
    data-controls (her buttons below her). el.marley = { move(k), tilt(deg), blink(), eyes(mood), say(shape), talk(),
    charm(k), colours([a, b] | null) }. Every change eases; with reduced motion she stays still unless asked. */
 (function () {
@@ -108,7 +109,9 @@
     el.setAttribute('role', 'img');
     if (!el.getAttribute('aria-label')) el.setAttribute('aria-label', 'Robot Marley, a robot hound, sitting and wagging her tail');
     var st = document.createElement('div'); st.className = 'mly-st';
-    st.innerHTML = '<div class="mly-seat" aria-hidden="true"></div><div class="mly-parts">' +
+    // her stump (css/marley.css .mly-seat): its own colours, or with a Note's its carvings, key and bands dyed with the
+    // first (its dyed face, seat-stump-dye, cross-fades in; the colour fills seat-stump-mask, multiplied onto it)
+    st.innerHTML = '<div class="mly-seat" aria-hidden="true"><div class="mly-sd"><i class="mly-sdi"></i></div></div><div class="mly-parts">' +
       '<img class="mly-tail" src="' + P + 'tail.webp' + V + '" alt=""' + at('tail', .725, .824) + '>' +
       '<img class="mly-body" src="' + P + 'body.webp' + V + '" alt=""' + at('body', .5, 1) + '>' +
       '<div class="mly-g mly-head"><img src="' + P + 'head.webp' + V + '" alt=""' + at('head') + '><div class="mly-g mly-mouth">' +
@@ -205,6 +208,11 @@
       });
       el.classList.toggle('pal', !!pal);
       if (pal) [].forEach.call(st.querySelectorAll('.mly-dc'), function (i) { i.style.background = pal[0]; });
+      // her stump: the Note's colours (data-seatpal, set on every Note she tells) or these
+      var sb = el.getAttribute('data-seatpal') ? el : (el.closest && el.closest('[data-seatpal]')) || el;
+      var sp = (sb.getAttribute('data-seatpal') || '').split(' ')[0], sc = pal ? pal[0] : /^#[0-9a-f]{6}$/i.test(sp) ? sp : '';
+      var sd = st.querySelector('.mly-sd'), sdi = st.querySelector('.mly-sdi');
+      if (sd) { if (sc) sdi.style.background = sc; sd.style.opacity = sc ? 1 : 0; }
       var own = ch.querySelector('.mly-own'), dy = ch.querySelector('.mly-dyed'), i = ch.querySelector('.mly-dye'), o = OWN[chK], show = !!(pal || o);
       if (i) i.style.background = pal ? pal[1] : o || '#ffffff';
       if (dy) { dy.style.opacity = show ? 1 : 0; own.style.opacity = show ? 0 : 1; } else if (i) i.style.opacity = pal ? 1 : 0;

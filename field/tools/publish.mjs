@@ -202,7 +202,7 @@ ${ICONS}
 <link rel="stylesheet" href="${rel}../css/lake.css?v=2">
 <link rel="stylesheet" href="${rel}../css/narrator.css?v=33">
 <link rel="stylesheet" href="${rel}../css/alta.css?v=12">
-<link rel="stylesheet" href="${rel}../css/marley.css?v=9">
+<link rel="stylesheet" href="${rel}../css/marley.css?v=10">
 <script>/* Logo season from the calendar, as on About. */document.documentElement.dataset.season=["winter","winter","spring","spring","spring","summer","summer","summer","fall","fall","fall","winter"][new Date().getMonth()];</script>
 <link rel="stylesheet" href="${rel}../css/route-dash.css?v=${V}">
 </head>
@@ -223,7 +223,7 @@ const foot = (rel) => `<footer class="foot"><p>${esc(show.narrationNote)}</p>
 <script src="${rel}../assets/narrator/resolve.js?v=7" defer></script>
 <script src="${rel}../js/narrator.js?v=45" defer></script>
 <script src="${rel}../js/alta.js?v=17" defer></script>
-<script src="${rel}../js/marley.js?v=14" defer></script>
+<script src="${rel}../js/marley.js?v=15" defer></script>
 </body>
 </html>
 `;
@@ -385,7 +385,7 @@ ${e.summary ? `<p class="mag-deck">${esc(e.summary)}</p>` : ''}
 ${e.summary ? `<p class="lede">${esc(e.summary)}</p>` : ''}`}
 ${alta ? `<section class="listen alta" data-narrator="alta"${palAttr(e)}${cueAttr(e)}${bdAttr(e)} aria-label="${audio ? 'Listen to the episode' : 'A.L.T.A. in her tank'}"><div><span class="listen-label">${audio ? `Listen · ${mmss(audio.sec)}` : 'Coming soon'}</span><b>${esc(e.episode.title || e.title)}</b></div>
 ${audio ? `<audio controls preload="metadata" src="${esc(audio.src)}"></audio>` : ''}</section>` : marley ? `<section class="listen mly-bar" data-narrator="marley" aria-label="Listen to the episode"><div><span class="listen-label">Listen · ${mmss(audio.sec)}</span><b>${esc(e.episode.title || e.title)}</b></div>
-<div class="marley"${mlyBdAttr(e)} aria-label="Robot Marley, telling the episode"></div>
+<div class="marley"${mlyBdAttr(e)}${palAttr(e)} aria-label="Robot Marley, telling the episode"></div>
 <audio controls preload="metadata" src="${esc(audio.src)}"></audio></section>` : audio ? `<section class="listen" aria-label="Listen to the episode"${lookAttr(e)}><div><span class="listen-label">Listen · ${mmss(audio.sec)}</span><b>${esc(e.episode.title || e.title)}</b></div>
 <audio controls preload="metadata" src="${esc(audio.src)}"></audio></section>` : ''}
 ${cover && !F ? fig(cover, 'cover') : ''}${coverStrip ? '\n' + fig(coverStrip, 'photo strip') : ''}
