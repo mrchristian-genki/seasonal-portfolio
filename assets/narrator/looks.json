@@ -65,7 +65,7 @@
  "categoryBackdrops": {
   "automaton": "workshop-with-robots",
   "case-study": "library-futuristic-1",
-  "dusk": "a-tropical-hawaiian-sunset",
+  "dusk": "hawaii-coast",
   "hike": "hiking-yosemite-1",
   "ireland": "donegal-1",
   "lake-tahoe": "lake-tahoe-beach",
@@ -95,14 +95,15 @@
   "character": "2026-10-14T02:24:12Z",
   "coloring-books": "2026-10-14T02:25:24Z",
   "dogs": "2026-10-14T02:25:49Z",
-  "dusk": "2026-10-14T15:53:42Z",
+  "dusk": "2026-10-14T17:55:50Z",
   "feature": "2026-10-14T02:30:15Z",
   "mini-cast": "2026-10-14T15:50:30Z",
   "ride": "2026-10-14T15:50:30Z",
   "time-machine": "2026-10-14T02:29:20Z"
  },
  "defaults": {
-  "backdrop": "lake-tahoe-beach"
+  "backdrop": "lake-tahoe-beach",
+  "tank": "tahoe-beach-dusk"
  },
  "categoryNames": {
   "ireland": "Ireland"
