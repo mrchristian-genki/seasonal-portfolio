@@ -545,24 +545,37 @@ behind where her head is (the middle of the band).
 
 ### Her template, the Studio and borrowing (Oct 13)
 
-**Her template** (`assets/alta/kit/tank-template.jpg`, 1376 x 768): her tank exactly as the site draws it, with the
-place she'll be a flat grey above the copper ledge. The easiest way to a scene that fits is to **edit the template**:
-the framing stays right, and anything the tool does to her or the tank doesn't matter, because only the strip above the
-ledge is used and she's drawn over it. The edit prompt:
+**Her template** (`assets/alta/kit/tank-template.jpg`, 1376 x 768): her tank, **empty**, exactly as the site frames
+it, with the place a flat grey above the copper ledge. The easiest way to a scene that fits is to **edit the template**:
+the framing stays right, and only the strip above the ledge is used.
 
-> Same image, exactly as it is: the mermaid, her copper ledge, the water and everything below the ledge stay exactly
-> the same. Replace only the flat grey wall above the copper ledge with a softly blurred photograph of [THE PLACE],
-> seen from about table height, as if from behind a large aquarium standing there. The camera looks straight ahead,
-> level; the far wall, the horizon or the treeline sits about halfway between the top of the picture and the ledge.
-> Shallow depth of field: the whole place gently out of focus, like the background of a portrait, with soft, natural
-> light. Nothing new in front of her or on the ledge. No people, no animals, no text, signs, logos or brands. Colours
-> that sit well beside a teal-green tank and weathered copper.
+**Never paint her into a scene** (Oct 14). Her head and shoulders above the ledge are drawn over the scene only while she
+rests; when she dives, rises or glides they go, and the scene shows through. A scene with her painted in leaves a copy of
+her head behind. (The first template had her in it, and 21 scenes made from it did: on Oct 14 her head was taken out of
+them by mirroring the scene in from both sides, a stopgap until each is remade from the empty template.) The Studio turns
+away a picture with her in it.
+
+The edit prompt (Christian's layout: the scene on a line of its own, so it's the one part to change):
+
+> Same image, exactly as it is: the empty tank, its copper ledge, the water and everything below the ledge stay exactly
+> the same. Replace only the flat grey wall above the copper ledge with a softly blurred photograph of
+>
+> [ INSERT SCENE ]
+>
+> Shot like a cinematic film still from about table height, straight ahead and level, as if from behind a large
+> aquarium standing there. Very shallow depth of field: the whole place softly out of focus, with gentle bokeh and
+> nothing sharp. Warm, soft, late-afternoon light; calm, tidy and uncluttered. The far wall, the horizon or the
+> treeline sits about halfway between the top of the picture and the ledge. Composition, in pixels on this 1376 x 768
+> image: everything that matters sits above the ledge, from y 0 to y 290. Keep the middle, from x 560 to x 820 and
+> y 40 to y 290, calm, evenly lit and slightly darker, with no bright lights or strong shapes (her head goes there).
+> Nothing added in the tank, on the ledge or in front of it. Empty of people and animals. No writing, signs, logos or
+> brands anywhere. Natural colours, nothing neon, that sit well beside a teal-green tank and weathered copper.
 
 The prompt above (a new picture) works too; then the horizon goes about a quarter of the way down.
 
 **In the Studio:** Categories, "A.L.T.A.'s tank scenes": name it, pick a category (it fills in a place), choose edit or
-new, copy the prompt and the template, and drop the render back: the preview shows her and her tank in front of it
-(`assets/alta/kit/tank-overlay.webp`, her tank with the place cut out). Add the scene, and pick it for a Note in its
+new, copy the prompt and the template, and drop the render back: the previews show her resting in front of it
+(`assets/alta/kit/tank-overlay.webp`, her tank with the place cut out) and the scene as she dives (`rest-cut.webp`). Add the scene, and pick it for a Note in its
 Episode panel or for a whole category in its column.
 
 **Borrowing:** without a scene of her own, she borrows the Note's backdrop (the one GlazyArray and Robot Marley show)
