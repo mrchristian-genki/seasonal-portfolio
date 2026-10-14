@@ -32,11 +32,6 @@ section.listen.alta audio{position:absolute;width:1px;height:1px;opacity:0;point
 .alta .al-stage.al-has-bd{background:#0a1a1c var(--al-bd) center/cover no-repeat}
 /* until her still (rest-cut) is in, a small copy of it (rest-cut-lq.webp, 9 KB) stands in over the backdrop, so the tank is never empty */
 .alta .al-stage.al-has-bd:not(.al-rc-in){background:url(/assets/alta/parts/rest-cut-lq.webp?v=1) 0 0/100% 100% no-repeat,#0a1a1c var(--al-bd) center/cover no-repeat}
-/* a backdrop borrowed from the Note (js/alta.js lent): only the strip above her ledge, its middle, blurred like GlazyArray's */
-.alta .al-stage.al-bd-lent{background:#0a1a1c}
-.alta .al-stage.al-bd-lent:not(.al-rc-in){background:url(/assets/alta/parts/rest-cut-lq.webp?v=1) 0 0/100% 100% no-repeat,#0a1a1c}
-.alta .al-bdl{left:0;top:0;width:100%;height:40%;overflow:hidden}
-.alta .al-bdl>i{position:absolute;inset:-6%;display:block;background:var(--al-bd) center 45%/cover no-repeat;filter:blur(3px) saturate(.95) brightness(.85)}
 .alta .al-restcut{left:0;top:0;width:100%;height:100%;opacity:1;transition:opacity .4s ease-in-out}
 .alta .al-under .al-restcut{opacity:0}
 .alta .al-src{opacity:0!important}

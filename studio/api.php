@@ -168,7 +168,7 @@ function apply_looks(GitHub $gh, array &$files, array $body): void
     // GlazyArray's looks (Studio, "GlazyArray's look"), all in looks.json, written once: a Note look taken off the
     // site, a new or replaced Note look, and the looks given to whole categories. Holiday looks and hair styles
     // are never replaced or removed from here.
-    if ($rl !== '' || is_array($nl) || is_array($cl) || $rb !== '' || is_array($nb) || is_array($cb) || is_array($cr) || is_array($df) || is_array($hb) || is_array($cn) || is_array($cnr) || is_array($ctk) || is_array($body['newTank'] ?? null) || is_array($body['categoryBackdropChoices'] ?? null) || is_array($body['categoryTankChoices'] ?? null) || is_array($body['marleyLook'] ?? null)) {
+    if ($rl !== '' || is_array($nl) || is_array($cl) || $rb !== '' || is_array($nb) || is_array($cb) || is_array($cr) || is_array($df) || is_array($hb) || is_array($cn) || is_array($cnr) || is_array($ctk) || is_array($body['newTank'] ?? null) || is_array($body['categoryBackdropChoices'] ?? null) || is_array($body['categoryTankChoices'] ?? null) || is_array($body['marleyLook'] ?? null) || is_array($body['newBackdrops'] ?? null) || is_array($body['newTanks'] ?? null) || is_array($body['offerBackdrop'] ?? null) || is_array($body['offerTank'] ?? null)) {
         $lj = json_decode($gh->read(LOOKS_JSON) ?? '{"looks":[]}', true);
         $list = array_values((array) ($lj['looks'] ?? [])); $cats = (array) ($lj['categories'] ?? []);
         $bds = array_values((array) ($lj['backdrops'] ?? [])); $bcats = (array) ($lj['categoryBackdrops'] ?? []);
@@ -187,7 +187,9 @@ function apply_looks(GitHub $gh, array &$files, array $body): void
             $bcats = array_filter($bcats, fn($n) => $n !== $rb);
             foreach ($bchoice as $c => $l) { $bchoice[$c] = array_values(array_filter((array) $l, fn($n) => $n !== $rb)); if (!$bchoice[$c]) unset($bchoice[$c]); }
         }
-        if (is_array($nb)) {
+        // one new backdrop ($nb), or several dropped into a category's pool at once (newBackdrops, up to 20)
+        $nbs = is_array($nb) ? [$nb] : []; foreach (array_slice((array) ($body['newBackdrops'] ?? []), 0, 20) as $x) if (is_array($x)) $nbs[] = $x;
+        foreach ($nbs as $nb) {
             $name = (string) ($nb['name'] ?? ''); $ext = (string) ($nb['ext'] ?? ''); $bsha = (string) ($nb['sha'] ?? '');
             if (!preg_match('/^[a-z0-9-]{1,40}$/', $name) || !in_array($ext, ['webp', 'png', 'jpg'], true) || !preg_match('/^[0-9a-f]{40}$/', $bsha)) json_fail('Bad backdrop.');
             foreach ($bds as $k => $b) if (($b['name'] ?? '') === $name) {
@@ -302,7 +304,8 @@ function apply_looks(GitHub $gh, array &$files, array $body): void
         }
         // a new (or replaced) scene behind A.L.T.A.'s tank (assets/alta/backdrops/<name>.webp; KIT.md Round 8)
         $nt = $body['newTank'] ?? null;
-        if (is_array($nt)) {
+        $nts = is_array($nt) ? [$nt] : []; foreach (array_slice((array) ($body['newTanks'] ?? []), 0, 20) as $x) if (is_array($x)) $nts[] = $x;
+        foreach ($nts as $nt) {
             $name = (string) ($nt['name'] ?? ''); $ext = (string) ($nt['ext'] ?? ''); $tsha = (string) ($nt['sha'] ?? '');
             if (!preg_match('/^[a-z0-9-]{1,40}$/', $name) || !in_array($ext, ['webp', 'png', 'jpg'], true) || !preg_match('/^[0-9a-f]{40}$/', $tsha)) json_fail('Bad tank scene.');
             foreach ($tanks as $k => $b) if (($b['name'] ?? '') === $name) {
@@ -325,6 +328,20 @@ function apply_looks(GitHub $gh, array &$files, array $body): void
                 foreach ($names as $n) if (!in_array($n, $known, true)) json_fail("There's nothing called \"$n\" to offer.");
                 $touch($cat);
                 if ($names) $ch[1][$cat] = $names; else unset($ch[1][$cat]);
+            }
+        }
+        // images added to the pools of several categories at once (Christian, Oct 14): { names: [...], cats: [...] }, from a
+        // category's pool (Characters) or a Note's new image (into all its categories); each only for its own character:
+        // backdrops (GlazyArray, Robot Marley) or A.L.T.A.'s tank scenes. A category's own pick is already in its pool.
+        foreach ([['offerBackdrop', &$bchoice, $bcats, array_map(fn($b) => (string) ($b['name'] ?? ''), $bds)], ['offerTank', &$tchoice, $ctanks, $tankNames]] as $of) {
+            $in = $body[$of[0]] ?? null; if (!is_array($in)) continue;
+            $names = array_values(array_unique(array_map('strval', (array) ($in['names'] ?? []))));
+            foreach ($names as $n) if (!in_array($n, $of[3], true)) json_fail("There's nothing called \"$n\" to offer.");
+            foreach (array_slice((array) ($in['cats'] ?? []), 0, 30) as $cat) {
+                $cat = (string) $cat; if (!preg_match('/^[a-z0-9-]{1,40}$/', $cat) || preg_match('/^\d{4}$/', $cat)) json_fail('Bad category.');
+                $l = array_values((array) ($of[1][$cat] ?? []));
+                foreach ($names as $n) if ($n !== ($of[2][$cat] ?? null) && !in_array($n, $l, true)) $l[] = $n;
+                if ($l) { $of[1][$cat] = $l; $touch($cat); }
             }
         }
         // a look brought in for Robot Marley (Studio, Characters, "Bring in a look"; studio/assets/marleycut.js): her hat
@@ -737,12 +754,32 @@ try {
             if (!$files) json_out(['ok' => true, 'commit' => null]);
             json_out(['ok' => true, 'commit' => $gh->commit($files, 'Studio: the Workshop order', null, $expect)]);
 
+        // A category given to several Notes at once (Studio, Categories, "Find Notes for it"; Christian, Oct 14): one
+        // commit. A Note waiting for review is left for its review (it'd conflict), and said so.
+        case 'POST retag':
+            owner_only();
+            $cat = (string) ($body['cat'] ?? '');
+            if (!preg_match('/^[a-z0-9-]{1,40}$/', $cat) || preg_match('/^\d{4}$/', $cat)) json_fail('Bad category.');
+            $ids = array_slice(array_values(array_unique(array_filter((array) ($body['ids'] ?? []), fn($x) => is_string($x) && valid_id($x)))), 0, 60);
+            if (!$ids) json_fail('No Notes to add it to.');
+            $files = []; $expect = []; $added = []; $skipped = []; $rv = reviews();
+            foreach ($ids as $id) {
+                if (isset($rv[$id])) { $skipped[] = $id; continue; }
+                $raw = $gh->read(EVENTS . "/$id.json"); $e = json_decode($raw ?? 'null', true);
+                if (!is_array($e)) { $skipped[] = $id; continue; }
+                if (in_array($cat, note_cats($e), true)) continue;
+                $e['tags'] = array_values(array_merge(array_map('strval', (array) ($e['tags'] ?? [])), [$cat]));
+                $files[EVENTS . "/$id.json"] = ['text' => repo_json($e)]; $expect[EVENTS . "/$id.json"] = GitHub::blobSha($raw); $added[] = $id;
+            }
+            if (!$files) json_out(['ok' => true, 'commit' => null, 'added' => [], 'skipped' => $skipped]);
+            json_out(['ok' => true, 'commit' => $gh->commit($files, "Studio: $cat on " . count($added) . ' Note' . (count($added) === 1 ? '' : 's'), null, $expect), 'added' => $added, 'skipped' => $skipped]);
+
         case 'POST looks':
             owner_only();
             $files = [];
             apply_looks($gh, $files, ['newLook' => $body['newLook'] ?? null, 'categoryLooks' => $body['categoryLooks'] ?? null,
                 'newBackdrop' => $body['newBackdrop'] ?? null, 'categoryBackdrops' => $body['categoryBackdrops'] ?? null,
-                'categoryRank' => $body['categoryRank'] ?? null, 'defaults' => $body['defaults'] ?? null, 'holidayBackdrops' => $body['holidayBackdrops'] ?? null, 'categoryNames' => $body['categoryNames'] ?? null, 'categoryNarrators' => $body['categoryNarrators'] ?? null, 'categoryTanks' => $body['categoryTanks'] ?? null, 'newTank' => $body['newTank'] ?? null, 'categoryBackdropChoices' => $body['categoryBackdropChoices'] ?? null, 'categoryTankChoices' => $body['categoryTankChoices'] ?? null, 'marleyLook' => $body['marleyLook'] ?? null]);
+                'categoryRank' => $body['categoryRank'] ?? null, 'defaults' => $body['defaults'] ?? null, 'holidayBackdrops' => $body['holidayBackdrops'] ?? null, 'categoryNames' => $body['categoryNames'] ?? null, 'categoryNarrators' => $body['categoryNarrators'] ?? null, 'categoryTanks' => $body['categoryTanks'] ?? null, 'newTank' => $body['newTank'] ?? null, 'newBackdrops' => $body['newBackdrops'] ?? null, 'newTanks' => $body['newTanks'] ?? null, 'offerBackdrop' => $body['offerBackdrop'] ?? null, 'offerTank' => $body['offerTank'] ?? null, 'categoryBackdropChoices' => $body['categoryBackdropChoices'] ?? null, 'categoryTankChoices' => $body['categoryTankChoices'] ?? null, 'marleyLook' => $body['marleyLook'] ?? null]);
             if (!$files) json_fail('Nothing to save.');
             json_out(['ok' => true, 'commit' => $gh->commit($files, "Studio: GlazyArray's looks")]);
 

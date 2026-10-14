@@ -543,10 +543,10 @@ a pine forest, a boathouse, a bike shop, a trailhead.
 **Check:** lay the render under the guide: the band shows the part you want, and nothing sharp or busy sits right
 behind where her head is (the middle of the band).
 
-### Her template, the Studio and borrowing (Oct 13)
+### Her template and the Studio (Oct 13)
 
 **Her template** (`assets/alta/kit/tank-template.jpg`, 1376 x 768): her tank, **empty**, exactly as the site frames
-it, with the place a flat grey above the copper ledge. The easiest way to a scene that fits is to **edit the template**:
+it, with the place a flat chroma green above the copper ledge (Christian's, Oct 14). The easiest way to a scene that fits is to **edit the template**:
 the framing stays right, and only the strip above the ledge is used.
 
 **Never paint her into a scene** (Oct 14). Her head and shoulders above the ledge are drawn over the scene only while she
@@ -558,7 +558,7 @@ away a picture with her in it.
 The edit prompt (Christian's layout: the scene on a line of its own, so it's the one part to change):
 
 > Same image, exactly as it is: the empty tank, its copper ledge, the water and everything below the ledge stay exactly
-> the same. Replace only the flat grey wall above the copper ledge with a softly blurred photograph of
+> the same. Replace only the flat green wall above the copper ledge with a softly blurred photograph of
 >
 > [ INSERT SCENE ]
 >
@@ -578,9 +578,8 @@ new, copy the prompt and the template, and drop the render back: the previews sh
 (`assets/alta/kit/tank-overlay.webp`, her tank with the place cut out) and the scene as she dives (`rest-cut.webp`). Add the scene, and pick it for a Note in its
 Episode panel or for a whole category in its column.
 
-**Borrowing:** without a scene of her own, she borrows the Note's backdrop (the one GlazyArray and Robot Marley show)
-when the Note, its categories or a holiday give it one: blurred, just its middle, in the strip above her ledge. With only
-the site's default backdrop she stays in her hall.
+**No borrowing** (Christian, Oct 14): she uses only her own scenes. Without one that fits the Note, she stays in her
+hall; GlazyArray's and Robot Marley's backdrops are theirs alone (a wide picture doesn't fit her frame).
 
 **Starter places** (for [THE PLACE]; public places only, never the home):
 

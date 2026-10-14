@@ -557,6 +557,25 @@
   // none. A Note's own look beats its category's, which beats the holiday look. Her looks are here too, with a way to
   // add one from a render. ----------
   var CATP = {}, CATBP = {}, CATRP = {}, CATNP = {}, CATTP = {}, DEFP = {}, HOLBP = {}, NEWCATP = {}, CATNEWLOOK = null, CATNEWBD = null, CATNEWTANK = null, CATBCP = {}, CATTCP = {};   // CATBCP/CATTCP: a category's other choices   // pending: looks, backdrops, priorities, defaults, holiday backdrops
+  // FIND NOTES FOR A CATEGORY (Christian, Oct 14: smart tags): the Notes not in it yet whose words fit it (resolve.js
+  // catFit: its name, kin words, its Notes' words, its pools), best first, the strong ones ticked; you choose, and the
+  // category is added to them in one commit (api.php retag). Nothing changes on a Note you don't tick.
+  var FINDCAT = '', FINDSEL = null;
+  function findList(c, J) {
+    var all = (ENTRIES || []).map(function (e) { return { id: e.id, cats: e.cats || [], words: e.words || e.title || '' }; });
+    return (ENTRIES || []).filter(function (e) { return (e.cats || []).indexOf(c) < 0; }).map(function (e) {
+      var me = all.filter(function (x) { return x.id === e.id; })[0], r = window.GAResolve && GAResolve.catFit(J, all, { words: me.words, cats: me.cats, self: me }, c)[0];
+      return { e: e, s: r ? r.s : 0, why: r ? r.why : [] };
+    }).filter(function (x) { return x.s >= 2; }).sort(function (a, b) { return b.s - a.s; }).slice(0, 30);
+  }
+  function findNotes(c, J) {
+    var l = findList(c, J); if (!FINDSEL) { FINDSEL = {}; l.forEach(function (x) { if (x.s >= 3.5) FINDSEL[x.e.id] = 1; }); }
+    var n = Object.keys(FINDSEL).length;
+    return '<div class="catfind">' + (l.length ? '<p class="muted">Notes not in ' + esc(catName(c)) + ' whose words fit it, best first. Tick the ones it belongs on; the strong matches are ticked for you. Only the ticked ones change.</p>' +
+        l.map(function (x) { return '<label class="ga-check"><input type="checkbox" data-fn="' + esc(x.e.id) + '"' + (FINDSEL[x.e.id] ? ' checked' : '') + '> <b>' + esc(x.e.title || x.e.id) + '</b> <small>' + esc(x.why.join(', ')) + (x.e.cats && x.e.cats.length ? ' · now in ' + esc(x.e.cats.map(catName).join(', ')) : '') + '</small></label>'; }).join('') +
+        '<div class="row"><button type="button" class="fnall">Select all</button><button type="button" class="primary fnadd"' + (n ? '' : ' disabled') + '>Add ' + esc(catName(c)) + ' to ' + n + ' Note' + (n === 1 ? '' : 's') + '</button></div>'
+      : '<p class="muted">No other Note\'s words fit ' + esc(catName(c)) + ' yet. As it gains Notes and images it learns what it\'s about.</p>') + '</div>';
+  }
   function renderCats() {
     var box = $('#catsBox'); box.innerHTML = '<p class="muted">Loading…</p>';
     LOOKS = null; renderLookData().then(function (r) {
@@ -577,30 +596,25 @@
       var tanks = J.tankBackdrops || [], ctank = J.categoryTanks || {}, tv = function (c) { return c in CATTP ? CATTP[c] : (ctank[c] || ''); };
       var TOPTS = '<option value="">The default</option>' + tanks.map(function (b) { return '<option value="' + esc(b.name) + '">' + esc(b.name + (b.about ? ' · ' + b.about : '')) + '</option>'; }).join('');
       var bch = J.categoryBackdropChoices || {}, tch = J.categoryTankChoices || {};
-      var bcv = function (c) { return c in CATBCP ? CATBCP[c] : (bch[c] || []); }, tcv = function (c) { return c in CATTCP ? CATTCP[c] : (tch[c] || []); };
       var pending = Object.keys(CATBCP).length + Object.keys(CATTCP).length + Object.keys(CATTP).length + Object.keys(CATNP).length + Object.keys(CATP).length + Object.keys(CATBP).length + Object.keys(CATRP).length + Object.keys(DEFP).length + Object.keys(HOLBP).length + Object.keys(NEWCATP).length;
       box.innerHTML = '<h2>Categories</h2><p class="muted">Every category the Notes use: their kind (Ride, Hike, Mini-Cast) and their own tags. Give one a look and a backdrop and GlazyArray wears them on every Note in it. What she wears is decided in this order: a holiday on its dates (on every Note, unless the Note ignores holidays), the Note\'s own, its categories (the one ticked on the Note, then the highest priority here, then the one changed last), then the defaults ticked below.</p>' +
         '<ul class="catl">' + names.map(function (c) {
           var v = c in CATP ? CATP[c] : (cats[c] || ''), im = v && src(v);
           var bv = c in CATBP ? CATBP[c] : (bcats[c] || ''), bim = bv && bsrc(bv);
-          return '<li><span class="catn"><b>' + esc(catName(c)) + '</b><small>' + count[c] + ' Note' + (count[c] === 1 ? '' : 's') + '</small></span>' +
+          return '<li><span class="catn"><b>' + esc(catName(c)) + '</b><small>' + count[c] + ' Note' + (count[c] === 1 ? '' : 's') + '</small><button type="button" class="link" data-find="' + esc(c) + '">' + (FINDCAT === c ? 'Close' : 'Find Notes for it') + '</button></span>' +
             '<span class="catc"><small>Her look</small><span>' + (im ? '<img alt="" src="' + im + '">' : '<i class="noimg"></i>') + '<select data-cat="' + esc(c) + '">' + opts + '</select></span></span>' +
             '<span class="catc"><small>Backdrop</small><span>' + (bim ? '<img class="bd" alt="" src="' + bim + '">' : '<i class="noimg bd"></i>') + '<select data-catbd="' + esc(c) + '">' + bdopts + '</select></span></span>' +
             '<span class="catc"><small>Narrator</small><span><select data-catnar="' + esc(c) + '">' + NOPTS + '</select></span></span>' +
             (tanks.length ? '<span class="catc"><small>Her tank</small><span><select data-cattank="' + esc(c) + '">' + TOPTS + '</select></span></span>' : '') +
             '<span class="catc catr"><small>Priority</small><input type="number" min="0" max="9" step="1" data-catr="' + esc(c) + '" value="' + rk(c) + '" title="0 to 9: when a Note\'s categories disagree, the higher wins"></span>' +
-            // more to choose from: each Note in the category gets the one that fits its words and colours (resolve.js fit())
-            '<details class="catch"' + (c in CATBCP || c in CATTCP ? ' open' : '') + '><summary>More to choose from: ' + bcv(c).length + ' backdrop' + (bcv(c).length === 1 ? '' : 's') + (tanks.length ? ' · ' + tcv(c).length + ' tank scene' + (tcv(c).length === 1 ? '' : 's') : '') + '</summary>' +
-              '<p class="muted">Each Note in ' + esc(catName(c)) + ' gets whichever of these, and the one picked above, fits its words and colours best (snow in winter, golden leaves in autumn). One image can be offered by any number of categories.</p>' +
-              '<small>Backdrops</small><div class="chips">' + bds.map(function (b) { return '<label class="chip"><input type="checkbox" data-cbc="' + esc(c) + '" value="' + esc(b.name) + '"' + (bcv(c).indexOf(b.name) >= 0 ? ' checked' : '') + '>' + esc(b.name) + '</label>'; }).join('') + '</div>' +
-              (tanks.length ? '<small>A.L.T.A.\'s tank scenes</small><div class="chips">' + tanks.map(function (b) { return '<label class="chip"><input type="checkbox" data-ctc="' + esc(c) + '" value="' + esc(b.name) + '"' + (tcv(c).indexOf(b.name) >= 0 ? ' checked' : '') + '>' + esc(b.name) + '</label>'; }).join('') + '</div>' : '') +
-            '</details></li>';
+            (FINDCAT === c ? findNotes(c, J) : '') + '</li>';
         }).join('') + '</ul>' +
         '<div class="row"><label class="f catnd"><span>Who narrates when nothing else says</span><select id="defNar"><option value="">GlazyArray</option><option value="alta">A.L.T.A.</option><option value="marley">Robot Marley</option></select></label>' +
           (tanks.length ? '<label class="f catnd"><span>Behind her tank when nothing else says</span><select id="defTank"><option value="">The hall (her own)</option>' + TOPTS.replace('<option value="">The default</option>', '') + '</select></label>' : '') +
           '<span class="muted">A Note can choose its own narrator in its Episode script panel; otherwise its categories\' narrator tells it (the highest priority wins), else this one.</span></div>' +
         '<div class="row"><input id="newCat" placeholder="A new category, e.g. Night ride" maxlength="40"><button type="button" id="newCatAdd">Add the category</button><span class="muted">Then give it a look, a backdrop and a priority above, save, and add it to Notes in their style panel.</span></div>' +
         '<div class="row"><button type="button" class="primary" id="catSave"' + (pending ? '' : ' disabled') + '>Save the categories' + (pending ? ' (' + pending + ')' : '') + '</button><span class="muted">Live in about a minute.</span></div>' +
+        '<h3>Image pools</h3><div class="chips ppick" role="tablist"><button type="button" class="chip' + (POOLV.who !== 'tank' ? ' on' : '') + '" data-pk="bd">GlazyArray and Robot Marley\'s backdrops</button><button type="button" class="chip' + (POOLV.who === 'tank' ? ' on' : '') + '" data-pk="tank">A.L.T.A.\'s tank scenes</button></div><div class="cpool" id="catPool"></div>' +
         '<h3>Holidays</h3><p class="muted">On its dates a holiday dresses every Note, except the ones that ignore holidays. Give one a backdrop and that shows too.</p><ul class="catl">' + hols.map(function (h) {
           var b = hb(h), bim = b && bsrc(b);
           return '<li><span class="catn"><b>' + esc(h.name.replace(/-/g, ' ')) + '</b><small>' + esc(h.from + ' to ' + h.to) + '</small></span>' +
@@ -622,24 +636,29 @@
         field('Image prompt', '<textarea id="nbPrompt" rows="5" readonly></textarea>') + '<div class="row"><button type="button" id="nbCopy">Copy the image prompt</button></div>' + bdTpl() +
         '<label class="drop ga-drop" id="nbDrop"><input type="file" id="nbFile" accept="image/png,image/jpeg,image/webp" hidden><b>Bring the render here</b> <span class="muted">or drop it here</span></label><div id="nbOut"></div>' +
         '<div class="row"><button type="button" class="primary" id="nbAdd" disabled>Add the backdrop</button></div>' +
-        '<h3>A.L.T.A.\'s tank scenes</h3><p class="muted">The place behind her glass, so she\'s on location. Only the strip above her copper ledge shows (the top 38%): the horizon or treeline sits about a quarter of the way down, and everything that matters is in the top third. A Note picks one in its Episode panel, a category in its column above. Without one she borrows the Note\'s backdrop (blurred, just the strip); with neither, she\'s in her hall.</p>' +
+        '<h3>A.L.T.A.\'s tank scenes</h3><p class="muted">The place behind her glass, so she\'s on location. Only the strip above her copper ledge shows (the top 38%): the horizon or treeline sits about a quarter of the way down, and everything that matters is in the top third. A Note picks one in its Episode panel, a category in its column above. Without one of hers she\'s in her hall; she doesn\'t use the backdrops.</p>' +
         (tanks.length ? '<div class="lookg bdg tkg">' + tanks.map(function (b) { return '<figure><img alt="" src="/assets/alta/backdrops/' + esc(b.file) + (b.v ? '?r=' + esc(b.v) : '') + '"><figcaption>' + esc(b.name) + '</figcaption></figure>'; }).join('') + '</div>' : '<p class="muted">None yet.</p>') +
         '<div class="grid2">' + field('Name', '<input id="ntName" placeholder="e.g. tahoe-beach-dusk" maxlength="40">', 'Lowercase, with dashes') + field('Give it to', '<select id="ntCat"><option value="">No category yet</option>' + names.map(function (c) { return '<option value="' + esc(c) + '">' + esc(catName(c)) + '</option>'; }).join('') + '</select>') + '</div>' +
         field('The place', '<textarea id="ntScene" rows="2" placeholder="e.g. ' + esc(TANK_SCENES['lake-tahoe']) + '"></textarea>', 'Picking a category fills in a suggestion') +
         field('How you\'ll make it', '<select id="ntWay"><option value="edit">Edit her template (keeps the framing)</option><option value="new">A new picture from the prompt</option></select>') +
         field('Image prompt', '<textarea id="ntPrompt" rows="6" readonly></textarea>') + '<div class="row"><button type="button" id="ntCopy">Copy the image prompt</button></div>' +
-        '<div class="ga-tpl"><img alt="Her tank template" src="/assets/alta/kit/tank-template.jpg?v=2"><span><b>Her tank template</b><br><span class="muted">16:9, 1376 x 768. Her empty tank: the grey is the place; the ledge and everything below it stay.</span><br>' +
-          '<button type="button" id="ntTplCopy">Copy the image</button> <a href="/assets/alta/kit/tank-template.jpg?v=2" download>Download</a> · <a href="/assets/alta/kit/tank-backdrop-guide.jpg" target="_blank" rel="noopener">Layout guide</a></span></div>' +
+        '<div class="ga-tpl"><img alt="Her tank template" src="/assets/alta/kit/tank-template.jpg?v=3"><span><b>Her tank template</b><br><span class="muted">16:9, 1376 x 768. Her empty tank: the green is the place; the ledge and everything below it stay.</span><br>' +
+          '<button type="button" id="ntTplCopy">Copy the image</button> <a href="/assets/alta/kit/tank-template.jpg?v=3" download>Download</a> · <a href="/assets/alta/kit/tank-backdrop-guide.jpg" target="_blank" rel="noopener">Layout guide</a></span></div>' +
         '<label class="drop ga-drop" id="ntDrop"><input type="file" id="ntFile" accept="image/png,image/jpeg,image/webp" hidden><b>Bring the render here</b> <span class="muted">or drop it here: you\'ll see her in front of it</span></label><div id="ntOut"></div>' +
         '<div class="row"><button type="button" class="primary" id="ntAdd" disabled>Add the scene</button></div>';
-      [['data-cbc', CATBCP, bch], ['data-ctc', CATTCP, tch]].forEach(function (k) {
-        $$('input[' + k[0] + ']', box).forEach(function (inp) {
-          inp.onchange = function () {
-            var c = inp.getAttribute(k[0]), now = $$('input[' + k[0] + '="' + c + '"]', box).filter(function (x) { return x.checked; }).map(function (x) { return x.value; });
-            if (now.join() === (k[2][c] || []).join()) delete k[1][c]; else k[1][c] = now; renderCats();
-          };
-        });
-      });
+      var cpd = $('#catPool', box); renderPool(cpd, POOLV.who === 'tank' ? 'tank' : 'bd');
+      $$('[data-find]', box).forEach(function (b) { b.onclick = function () { var c = b.getAttribute('data-find'); FINDCAT = FINDCAT === c ? '' : c; FINDSEL = null; renderCats(); }; });
+      $$('input[data-fn]', box).forEach(function (i) { i.onchange = function () { if (i.checked) FINDSEL[i.getAttribute('data-fn')] = 1; else delete FINDSEL[i.getAttribute('data-fn')]; renderCats(); }; });
+      var fna = $('.fnall', box); if (fna) fna.onclick = function () { var all = $$('input[data-fn]', box), on = all.every(function (i) { return i.checked; }); all.forEach(function (i) { if (on) delete FINDSEL[i.getAttribute('data-fn')]; else FINDSEL[i.getAttribute('data-fn')] = 1; }); renderCats(); };
+      var fad = $('.fnadd', box); if (fad) fad.onclick = function () {
+        var c = FINDCAT, ids = Object.keys(FINDSEL); fad.disabled = true; fad.textContent = 'Adding…';
+        api('retag', { cat: c, ids: ids }).then(function (j) {
+          (ENTRIES || []).forEach(function (e) { if ((j.added || []).indexOf(e.id) >= 0) e.cats = (e.cats || []).concat([c]); });
+          toast(catName(c) + ' is on ' + (j.added || []).length + ' more Note' + ((j.added || []).length === 1 ? '' : 's') + (j.skipped && j.skipped.length ? '; ' + j.skipped.length + ' waiting for review were left as they are' : '') + '. The site updates in about a minute.');
+          FINDCAT = ''; FINDSEL = null; renderCats();
+        }).catch(function (err) { toast(err.message, true); fad.disabled = false; });
+      };
+      $$('[data-pk]', box).forEach(function (b) { b.onclick = function () { POOLV.who = b.getAttribute('data-pk'); POOLV.to = null; $$('[data-pk]', box).forEach(function (x) { x.classList.toggle('on', x === b); }); renderPool(cpd, POOLV.who); }; });
       $$('.catl select[data-catnar]', box).forEach(function (sel) {
         var c = sel.getAttribute('data-catnar'); sel.value = nv(c);
         sel.onchange = function () { if (sel.value === (cnar[c] || '')) delete CATNP[c]; else CATNP[c] = sel.value; renderCats(); };
@@ -720,7 +739,7 @@
       $('#ntCat').onchange = function () { var c = this.value, sc = TANK_SCENES[c] || SCENES[c]; if (!ntScene.value.trim() && sc) ntScene.value = sc; if (!$('#ntName').value.trim() && c) $('#ntName').value = c + '-tank'; ntUpd(); };
       ntScene.oninput = ntUpd; $('#ntWay').onchange = ntUpd; ntUpd();
       $('#ntCopy').onclick = function () { navigator.clipboard.writeText(ntPrompt.value).then(function () { toast('Image prompt copied.'); }); };
-      $('#ntTplCopy').onclick = function () { GALook.copyImage('/assets/alta/kit/tank-template.jpg?v=2').then(function () { toast('Her tank template is on the clipboard.'); }, function (e) { toast(e.message, true); }); };
+      $('#ntTplCopy').onclick = function () { GALook.copyImage('/assets/alta/kit/tank-template.jpg?v=3').then(function () { toast('Her tank template is on the clipboard.'); }, function (e) { toast(e.message, true); }); };
       var takeTank = function (f) {
         if (!f) return; $('#ntOut').innerHTML = '<p class="muted">Working…</p>';
         tankImage(f).then(function (res) { CATNEWTANK = res; $('#ntAdd').disabled = !tankShow($('#ntOut'), res); })
@@ -808,7 +827,7 @@
           var place = TANK_SCENES[c] || SCENES[c] || '';
           return '<tr><th>' + esc(catName(c)) + '</th><td>' + (nCat[c] || 0) + '</td>' +
             '<td>' + (ob.length ? ob.map(esc).join(', ') : '<span class="gapt">None</span> ' + gapBtn(chars[0], 'backdrop', '', SCENES[c] || '', 'The prompt')) + '</td>' +
-            '<td>' + (ot.length ? ot.map(esc).join(', ') : '<span class="gapt">Borrows or her hall</span> ' + (alta ? gapBtn(alta, 'tank', '', place, 'The prompt') : '')) + '</td></tr>';
+            '<td>' + (ot.length ? ot.map(esc).join(', ') : '<span class="gapt">Her hall</span> ' + (alta ? gapBtn(alta, 'tank', '', place, 'The prompt') : '')) + '</td></tr>';
         }).join('');
       };
       var head = '<tr><th></th>' + chars.map(function (c) { return '<th><img alt="" src="' + esc(c.avatar) + '">' + esc(c.name) + '</th>'; }).join('') + '</tr>';
@@ -830,7 +849,7 @@
       var missing = function (c) { return c.pieces.indexOf('look') >= 0 ? occ.filter(function (l) { return !hasLook(c, l); }) : []; };
       var WHAT = { glazyarray: 'Wears looks: her hair and what\'s on it. Made from her template with two prompts; the Studio keys the render and puts her face back, so she still talks and blinks.',
         marley: 'Wears looks: a hat and a charm. Made from two renders of her seated template, one in its own colours and one with the pieces painted cyan; the Studio cuts them.',
-        alta: 'Has scenes behind her tank: the place above her copper ledge. Made from her tank template; without one she borrows the Note\'s backdrop.' };
+        alta: 'Has scenes behind her tank: the place above her copper ledge. Made from her tank template; without one she stays in her hall (she doesn\'t use the backdrops).' };
       var prof = function (id) {
         var c = chars.filter(function (x) { return x.id === id; })[0]; if (!c) return '';
         var st = styles(c), ms = missing(c), unit = id === 'alta' ? 'scene' : 'look';
@@ -876,12 +895,12 @@
             '<label class="drop" id="mlCyD"><input type="file" id="mlCy" accept="image/png,image/jpeg,image/webp" hidden><b>The cyan one</b> <span class="muted">hat and charm painted cyan</span></label></div>' +
           '<div id="mlOut"></div><div class="row"><button type="button" class="primary" id="mlSave" disabled>Add it to her looks</button></div>' +
           '</div>' +
-          // A.L.T.A.: a scene behind her tank (her template with the place grey; only the strip above her ledge shows)
+          // A.L.T.A.: a scene behind her tank (her template with the place green; only the strip above her ledge shows)
           '<div class="ct" data-ct="alta" hidden>' + prof('alta') +
             '<div class="row"><label class="f"><span>Which scene</span><select id="alWhich"><option value="">A new scene</option>' + (J.tankBackdrops || []).map(function (b) { return '<option value="' + esc(b.name) + '">' + esc(b.name.replace(/-/g, ' ')) + ' (replace hers)</option>'; }).join('') + '</select></label></div>' +
             '<div class="grid2">' + field('Name', '<input id="alName" placeholder="e.g. boathouse-night" maxlength="40">', 'Lowercase, with dashes') + field('Give it to', '<select id="alCat"><option value="">No category yet</option>' + Object.keys(cats).sort().map(function (c) { return '<option value="' + esc(c) + '">' + esc(catName(c)) + '</option>'; }).join('') + '</select>') + '</div>' +
             field('The place', '<textarea id="alScene" rows="2" placeholder="e.g. ' + esc(TANK_SCENES['lake-tahoe']) + '"></textarea>', 'Picking a category fills in a suggestion') +
-            '<div class="row"><select id="alWay"><option value="edit">Edit her template (keeps the framing)</option><option value="new">A new picture from the prompt</option></select><button type="button" id="alPr">Copy the prompt</button><button type="button" id="alTpl">Copy her tank template</button><a href="/assets/alta/kit/tank-template.jpg?v=2" download>Download it</a></div>' +
+            '<div class="row"><select id="alWay"><option value="edit">Edit her template (keeps the framing)</option><option value="new">A new picture from the prompt</option></select><button type="button" id="alPr">Copy the prompt</button><button type="button" id="alTpl">Copy her tank template</button><a href="/assets/alta/kit/tank-template.jpg?v=3" download>Download it</a></div>' +
             '<label class="drop ga-drop" id="alDrop"><input type="file" id="alFile" accept="image/png,image/jpeg,image/webp" hidden><b>Bring the render here</b> <span class="muted">or drop it here: you\'ll see her in front of it</span></label><div id="alOut"></div>' +
             '<div class="row"><button type="button" class="primary" id="alSave" disabled>Add the scene</button></div></div>';
       // what the target gives each character
@@ -914,8 +933,7 @@
           row('Tank scene', function (c) {
             if (c.pieces.indexOf('tank') < 0) return '<td class="na">—</td>';
             if (p.tank) return '<td class="ok"><img class="bd" alt="" src="/assets/alta/backdrops/' + esc(p.tank.file) + '"><span>' + esc(p.tank.name) + '</span>' + why(p.tank) + '</td>';
-            var lent = p.backdrop && p.backdrop.from !== 'default' && bdOf(p.backdrop.name);
-            return '<td class="gap">' + (lent ? '<img class="bd" alt="" src="' + bdSrc(lent) + '"><span>Borrows ' + esc(lent.name) + '</span><small>blurred, above her ledge</small>' : '<span>Her hall</span>') + gapBtn(c, 'tank', '', tplace, 'Her own: the prompt') + '</td>';
+            return '<td class="gap"><span>Her hall</span>' + gapBtn(c, 'tank', '', tplace, 'Her own: the prompt') + '</td>';
           }) +
           '</tbody></table></div>';
         wireGaps(o);
@@ -984,10 +1002,16 @@
         CHV.ct = who;
         $$('.ct-tabs [data-ct]', box).forEach(function (b) { b.classList.toggle('on', b.getAttribute('data-ct') === who); b.setAttribute('aria-selected', b.getAttribute('data-ct') === who); });
         $$('.ct[data-ct]', box).forEach(function (d) { d.hidden = d.getAttribute('data-ct') !== who; });
+        var pd = $('.ct[data-ct="' + who + '"] .cpool', box); if (pd) renderPool(pd, pd.getAttribute('data-k'));   // GlazyArray and Robot Marley share one pool
       };
       $$('.ct-tabs [data-ct]', box).forEach(function (b) { b.onclick = function () { ctShow(b.getAttribute('data-ct')); }; });
       ctShow(CHV.ct || 'overview');
       openBi = function (who, set) { ctShow(who); if (set) set(); var h = $('#bi-' + who); if (h && window.easeScroll) easeScroll.to(h); };
+
+      [['glazyarray', 'bd'], ['marley', 'bd'], ['alta', 'tank']].forEach(function (w) {   // each character's category pools (renderPool)
+        var sec = $('.ct[data-ct="' + w[0] + '"]', box); if (!sec) return;
+        var d = document.createElement('div'); d.className = 'cpool'; d.setAttribute('data-k', w[1]); sec.appendChild(d); renderPool(d, w[1]);
+      });
       // GlazyArray's: the render keyed and her face put back (look.js GALook.make), her flair picked, added as a look
       var GA = { rec: null }, gaLook = $('#gaLook'), gaChar = chars.filter(function (c) { return c.id === 'glazyarray'; })[0];
       var gaName = function () { return gaLook.value === '__new' ? slug($('#gaName').value).slice(0, 40) : gaLook.value; };
@@ -1026,7 +1050,7 @@
       $('#alWhich').onchange = function () { var b2 = (J.tankBackdrops || []).filter(function (x) { return x.name === this.value; }, this)[0]; if (b2) { $('#alName').value = b2.name; alScene.value = b2.scene || ''; } else { $('#alName').value = ''; } };
       $('#alCat').onchange = function () { var c = this.value, sc = TANK_SCENES[c] || SCENES[c]; if (!alScene.value.trim() && sc) alScene.value = sc; if (!$('#alName').value.trim() && c) $('#alName').value = c + '-tank'; };
       $('#alPr').onclick = function () { navigator.clipboard.writeText(alPrompt()).then(function () { toast('Her prompt is copied.'); }); };
-      $('#alTpl').onclick = function () { GALook.copyImage('/assets/alta/kit/tank-template.jpg?v=2').then(function () { toast('Her tank template is on the clipboard.'); }, function (e) { toast(e.message, true); }); };
+      $('#alTpl').onclick = function () { GALook.copyImage('/assets/alta/kit/tank-template.jpg?v=3').then(function () { toast('Her tank template is on the clipboard.'); }, function (e) { toast(e.message, true); }); };
       var alTake = function (f) {
         if (!f) return; $('#alOut').innerHTML = '<p class="muted">Working…</p>'; $('#alSave').disabled = true;
         tankImage(f).then(function (res) { AL.rec = res; $('#alSave').disabled = !tankShow($('#alOut'), res); })
@@ -1426,6 +1450,7 @@
     $('#postBody').addEventListener('change', renderFeature);   // the feature's "after paragraph" picks follow the paragraphs
     $('#postBody').addEventListener('change', function () { collect(); renderPhotos(); });    // the photos' "under a subhead" picks follow the subheads (and the template's checklist)
     $('#summary').addEventListener('change', renderMag);
+    ['title', 'place', 'summary', 'postTitle', 'postBody', 'epTitle'].forEach(function (k) { $('#' + k).addEventListener('change', function () { collect(); renderStyle(); }); });   // suggested categories follow what it says
     renderNext();
     var dp = $('#drop-photos');
     ['dragover', 'dragenter'].forEach(function (t) { dp.addEventListener(t, function (ev) { ev.preventDefault(); dp.classList.add('on'); }); });
@@ -1452,11 +1477,52 @@
         if (rr[1].name !== 'alta') { b.innerHTML = ''; return; }
         var Bk = E.narratorBackdrop && E.narratorBackdrop.backdrop;
         var nf = noteFit(), p = window.GAResolve && GAResolve.pick(J, { tank: E.altaBackdrop, cats: noteCats(), backdrop: Bk || undefined, ignoreHolidays: !!E.ignoreHolidays, words: nf.words, palette: nf.palette, month: nf.month }), t = p && p.tank;
-        var lent = !t && p && p.backdrop && p.backdrop.from !== 'default' ? p.backdrop : null;   // field/tools/publish.mjs bdAttr
-        if (!tanks.length) { b.innerHTML = '<p class="muted">Behind her tank: ' + (lent ? 'this Note\'s backdrop, ' + esc(lent.name) + ', borrowed' : 'her hall') + '. Her own scenes are made in Categories.</p>'; return; }
-        b.innerHTML = field('Behind her tank', '<select id="epTank"><option value="">From its categories</option>' + tanks.map(function (x) { return '<option value="' + esc(x.name) + '"' + (E.altaBackdrop === x.name ? ' selected' : '') + '>' + esc(x.name + (x.about ? ' · ' + x.about : '')) + '</option>'; }).join('') + '</select>',
-          t ? esc(t.name) + ' (' + esc(t.why) + ')' : lent ? 'This Note\'s backdrop, ' + esc(lent.name) + ', borrowed' : 'The hall, her own');
+        if (!tanks.length) { b.innerHTML = '<p class="muted">Behind her tank: her hall. Her own scenes are made in Characters, A.L.T.A.</p>'; return; }
+        var np = notePool(J, 'tank'), pinned = !!E.altaBackdrop, nc = noteCats(), AT = TANKNEW;
+        b.innerHTML = '<h3 class="ga-h">Behind her tank</h3>' + (np.length ? '<p class="muted"><b>From its categories\' pools</b> (' + np.length + '): ' + (pinned ? 'this Note keeps the one you picked.' : 'it shows the one that fits its words and colours best.') + ' Pick one to keep it on this Note.</p>' +
+            poolGrid(np, t ? t.name : '', t && t.from === 'category' ? (t.why || '').replace(/^from [^,]*,? ?/, '').replace(/^fits /, '') || 'the only one' : '', true) +
+            (pinned ? '<div class="row"><button type="button" id="epTankLet">Let it choose again</button></div>' : '') : '<p class="muted">Its categories\' pools have none of her scenes yet.</p>') +
+          field('Or any of her scenes', '<select id="epTank"><option value="">From its categories</option>' + tanks.map(function (x) { return '<option value="' + esc(x.name) + '"' + (E.altaBackdrop === x.name ? ' selected' : '') + '>' + esc(x.name + (x.about ? ' · ' + x.about : '')) + '</option>'; }).join('') + '</select>',
+            t ? esc(t.name) + ' (' + esc(t.why) + ')' : 'The hall, her own (no scene of hers fits)') +
+          (owner() ? '<details class="ga-new"' + (AT ? ' open' : '') + '><summary>+ A new scene for this Note</summary><p class="muted">It\'s picked for this Note, and joins the pools of the categories you tick.</p>' + imgCatsHtml('tank') +
+            '<div class="grid2">' + field('Name', '<input id="ntnName" maxlength="40" placeholder="e.g. sumo-snow-pitch">', 'Lowercase, with dashes') + field('The place', '<input id="ntnScene" maxlength="200" placeholder="e.g. a snowy soccer pitch with sumo wrestlers">', 'Goes in the prompt, and helps Notes choose it') + '</div>' +
+            '<div class="row"><button type="button" id="ntnPr">Copy the prompt</button><button type="button" id="ntnTpl">Copy her tank template</button></div>' +
+            '<label class="drop ga-drop" id="ntnDrop"><input type="file" id="ntnFile" accept="image/png,image/jpeg,image/webp" hidden><b>Bring the render here</b> <span class="muted">or drop it here</span></label><div id="ntnOut"></div>' +
+            '<div class="row"><button type="button" class="primary" id="ntnAdd" disabled>Add it and use it here</button></div></details>' : '');
         $('#epTank').onchange = function () { if (this.value) E.altaBackdrop = this.value; else delete E.altaBackdrop; markDirty(); showTank(); };
+        $$('[data-np]', b).forEach(function (el) { el.onclick = function () { E.altaBackdrop = el.getAttribute('data-np'); markDirty(); showTank(); }; });
+        var tl = $('#epTankLet'); if (tl) tl.onclick = function () { delete E.altaBackdrop; markDirty(); showTank(); };
+        if (!$('#ntnAdd')) return;
+        imgCatsWire(b, 'tank', showTank);
+        var nn = $('#ntnName'), ns = $('#ntnScene'); if (AT) { nn.value = AT.name || ''; ns.value = AT.scene || ''; }
+        nn.oninput = function () { TANKNEW = TANKNEW || {}; TANKNEW.name = slug(nn.value).slice(0, 40); };
+        ns.oninput = function () { TANKNEW = TANKNEW || {}; TANKNEW.scene = ns.value; };
+        $('#ntnPr').onclick = function () { navigator.clipboard.writeText(tankPrompt(ns.value.trim(), 'edit')).then(function () { toast('Her prompt is copied.'); }); };
+        $('#ntnTpl').onclick = function () { GALook.copyImage('/assets/alta/kit/tank-template.jpg?v=3').then(function () { toast('Her tank template is on the clipboard.'); }, function (e) { toast(e.message, true); }); };
+        var ntake = function (f) {
+          if (!f) return; $('#ntnOut').innerHTML = '<p class="muted">Working…</p>';
+          tankImage(f).then(function (res) { TANKNEW = Object.assign(TANKNEW || {}, { rec: res, name: slug(nn.value).slice(0, 40), scene: ns.value }); $('#ntnAdd').disabled = !tankShow($('#ntnOut'), res); })
+            .catch(function (e) { $('#ntnOut').innerHTML = ''; toast(e.message, true); });
+        };
+        $('#ntnFile').onchange = function () { ntake(this.files[0]); this.value = ''; };
+        var nd = $('#ntnDrop'); ['dragover', 'dragenter'].forEach(function (t) { nd.addEventListener(t, function (ev) { ev.preventDefault(); }); });
+        nd.addEventListener('drop', function (ev) { ev.preventDefault(); ntake(ev.dataTransfer.files[0]); });
+        $('#ntnAdd').onclick = function () {
+          var btn = this, x = TANKNEW, n = slug(nn.value).slice(0, 40), ic = imgCats('tank');
+          if (!x || !x.rec) return;
+          if (!/^[a-z0-9-]{1,40}$/.test(n)) { toast('Give it a name (lowercase, with dashes).', true); return; }
+          if (tanks.some(function (y) { return y.name === n; })) { toast('There\'s already a scene called ' + n + '.', true); return; }
+          btn.disabled = true; btn.textContent = 'Adding…';
+          Promise.all([api('lookblob', x.rec.blob), x.rec.colors]).then(function (rr) {
+            return api('looks', { newTank: { name: n, ext: x.rec.ext, sha: rr[0].sha, scene: ns.value.trim(), colors: rr[1] }, offerTank: ic.length ? { names: [n], cats: ic } : null });
+          }).then(function () {
+            TANKNEW = null; E.altaBackdrop = n; markDirty(); TANKSAVED[n] = URL.createObjectURL(x.rec.blob);
+            LOOKJ = LOOKJ.then(function (j) { j = Object.assign({}, j); j.tankBackdrops = (j.tankBackdrops || []).concat([{ name: n, file: n + '.' + x.rec.ext, scene: ns.value.trim() }]);
+              var tc = Object.assign({}, j.categoryTankChoices || {}); ic.forEach(function (c) { if ((j.categoryTanks || {})[c] !== n) tc[c] = (tc[c] || []).concat([n]); }); j.categoryTankChoices = tc; return j; });
+            IMGCATS.tank = null;
+            toast('Her ' + n.replace(/-/g, ' ') + ' scene is added and picked for this Note. Save the Note to keep the pick.'); showTank();
+          }).catch(function (err) { toast(err.message, true); btn.disabled = false; btn.textContent = 'Add it and use it here'; });
+        };
       }).catch(function (e) { console.error('tank', e); });
     };
     var showWho0 = showWho; showWho = function () { showWho0(); showTank(); };
@@ -1568,6 +1634,22 @@
   }
   // ---------- her style on this Note: just its categories, each with the cap and backdrop it gives; tick the one this Note
   // takes. The categories' own caps and backdrops are set in the Categories tab, not here ----------
+  // SUGGESTED CATEGORIES while a Note is written (Christian, Oct 14: smart tags): the categories its words fit best
+  // (resolve.js catFit: title, summary, place, episode and post), the strong ones only; one click adds one. Nothing is
+  // added on its own.
+  var ENTLOAD = null;
+  function catSuggest(J) {
+    if (!window.GAResolve || !GAResolve.catFit || !E) return [];
+    if (!ENTRIES) {   // a Note opened straight from its link: the other Notes (what each category is about) come first
+      if (!ENTLOAD) ENTLOAD = api('list').then(function (j) { ENTRIES = ENTRIES || j.entries; renderStyle(); }).catch(function () {});
+      return [];
+    }
+    var all = (ENTRIES || []).filter(function (x) { return x.id !== E.id; }).map(function (x) { return { id: x.id, cats: x.cats || [], words: x.words || x.title || '' }; });
+    var words = [E.title, E.summary, E.place, E.episode && E.episode.title, E.post && E.post.title, E.post && String(E.post.body || '').slice(0, 1200)].filter(Boolean).join(' ');
+    if (wordsCount(words) < 4) return [];
+    return GAResolve.catFit(J, all, { words: words, cats: noteCats() }).filter(function (x) { return x.s >= 3; }).slice(0, 4);
+  }
+  function wordsCount(t) { return (String(t || '').match(/[a-z]{3,}/gi) || []).length; }
   function renderStyle() {
     var box = $('#styleBox'); if (!box) return;
     renderLookData().then(function (r) {
@@ -1591,7 +1673,8 @@
         '<div class="ga-catedit"><span class="ga-cats-h">Categories</span><small>Where this Note is filed on Play, and the categories she can take her style from. Add one, or make a new one by typing its name.</small><span class="chips">' +
           '<span class="chip fixed" title="Its kind, set by the Note\'s type">' + esc(catName(kindTag(E.kind) || '')) + '</span>' +
           (E.tags || []).map(function (t) { return '<span class="chip">' + esc(catName(t)) + '<button type="button" data-untag="' + esc(t) + '" aria-label="Remove ' + esc(catName(t)) + '">×</button></span>'; }).join('') +
-          '<input id="gaTagIn" list="gaCatList" placeholder="Add a category" maxlength="40"><datalist id="gaCatList">' + allCats(r[3]).filter(function (c) { return nc.indexOf(c) < 0; }).map(function (c) { return '<option value="' + esc(catName(c)) + '">'; }).join('') + '</datalist></span></div>' +
+          '<input id="gaTagIn" list="gaCatList" placeholder="Add a category" maxlength="40"><datalist id="gaCatList">' + allCats(r[3]).filter(function (c) { return nc.indexOf(c) < 0; }).map(function (c) { return '<option value="' + esc(catName(c)) + '">'; }).join('') + '</datalist></span>' +
+          (function () { var sg = catSuggest(r[3]); return sg.length ? '<span class="ga-sugg"><small>Suggested from what it says:</small> ' + sg.map(function (x) { return '<button type="button" class="chip sugg" data-sugg="' + esc(x.c) + '" title="' + esc('Its words: ' + x.why.join(', ')) + '">+ ' + esc(catName(x.c)) + '</button>'; }).join('') + '</span>' : ''; })() + '</div>' +
         '<div class="ga-stys"><span class="ga-cats-h">Her style from a category</span>' +
         (nc.length ? '<small>The cap and backdrop each of this Note\'s categories gives her. Tick the one this Note takes. Categories get their styles in the Categories tab.</small>' + nc.map(row).join('') : '<small>This Note has no categories yet.</small>') +
         (now ? '<p class="ga-now"><b>Wearing now:</b> ' + esc(now.look.name.replace(/-/g, ' ')) + ' <small>(' + esc(now.look.why) + ')</small> · ' +
@@ -1607,6 +1690,7 @@
         if (E.narratorBackdrop && E.narratorBackdrop.fit === 'category' && E.narratorBackdrop.from === t) E.narratorBackdrop = null;
         markDirty(); renderStyle(); renderLook(); renderBd(); };
       });
+      $$('[data-sugg]', box).forEach(function (b) { b.onclick = function () { var t = b.getAttribute('data-sugg'); if (noteCats().indexOf(t) < 0) { E.tags = (E.tags || []).concat([t]); markDirty(); } renderStyle(); renderLook(); renderBd(); }; });
       var ti = $('#gaTagIn', box);
       if (ti) { var addTag = function () { var t = tslug(ti.value); if (!t || /^\d{4}$/.test(t)) return; if (noteCats().indexOf(t) < 0) { E.tags = (E.tags || []).concat([t]); markDirty(); } renderStyle(); renderLook(); renderBd(); };
         ti.onkeydown = function (ev) { if (ev.key === 'Enter') { ev.preventDefault(); addTag(); } }; ti.onchange = addTag; }
@@ -1668,6 +1752,7 @@
   // Note's own, else its categories' (one; two different ones are picked here, unpicked means none), else the bar's
   // teal. A new one starts as a few words about the place; the prompt is built from them (look.js bdPrompt), rendered
   // on the backdrop template in any image tool, and brought back here ----------
+  var TANKNEW = null;   // a new tank scene being made on a Note (its Episode panel)
   var LOOKBD = null, BDNEW = null, BDSAVED = {}, CATBDNEW = {}, BDPICK = false;
   // ---------- a picture's three main colours (most of it first), for matching a Note's palette (resolve.js fit()):
   // a small copy (its top part only, for a tank scene: band), grouped three ways ----------
@@ -1708,17 +1793,18 @@
     var look = 'Shot like a cinematic film still from about table height, straight ahead and level, as if from behind a large aquarium standing there. Very shallow depth of field: the whole place softly out of focus, with gentle bokeh and nothing sharp. Warm, soft, late-afternoon light; calm, tidy and uncluttered. The far wall, the horizon or the treeline sits about halfway between the top of the picture and the ledge.';
     var tail = ' Empty of people and animals. No writing, signs, logos or brands anywhere. Natural colours, nothing neon, that sit well beside a teal-green tank and weathered copper.';
     if (way === 'new') return 'A softly blurred photograph, wide 16:9, of\n\n' + place + '\n\n' + look.replace(' The far wall, the horizon or the treeline sits about halfway between the top of the picture and the ledge.', ' The far wall, the horizon or the treeline sits about a quarter of the way down the frame; everything that matters is in the top third, and the lower part is plain floor or ground. Keep the middle of that top third calm and evenly lit, with no bright lights or strong shapes (her head goes there).') + tail;
-    return 'Same image, exactly as it is: the empty tank, its copper ledge, the water and everything below the ledge stay exactly the same. Replace only the flat grey wall above the copper ledge with a softly blurred photograph of\n\n' + place + '\n\n' + look +
+    return 'Same image, exactly as it is: the empty tank, its copper ledge, the water and everything below the ledge stay exactly the same. Replace only the flat green wall above the copper ledge with a softly blurred photograph of\n\n' + place + '\n\n' + look +
       ' Composition, in pixels on this 1376 x 768 image: everything that matters sits above the ledge, from y 0 to y 290. Keep the middle, from x 560 to x 820 and y 40 to y 290, calm, evenly lit and slightly darker, with no bright lights or strong shapes (her head goes there). Nothing added in the tank, on the ledge or in front of it.' + tail;
   }
   // a tank scene's preview: her resting in front of it, and the same scene as she dives (her head and shoulders gone, so
   // only the scene shows above the ledge). A scene with her painted in is refused: her head would stay behind when she
-  // dives (Christian, Oct 14). Returns whether it can be added.
+  // dives (Christian, Oct 14); so is one with her template's green still showing. Returns whether it can be added.
   function tankShow(o, res) {
     o.innerHTML = (res.her ? '<p class="warn">She\'s painted into this picture: when she dives, that copy of her head would stay behind. Make it from her empty tank template (Copy her tank template), or a new picture.</p>' : '') +
+      (res.green ? '<p class="warn">Some of her template\'s green is still showing above the ledge: run it again until the whole wall is the place.</p>' : '') +
       (res.warn ? '<p class="warn">' + esc(res.warn) + '</p>' : '') + '<p class="muted">Resting, and as she dives:</p>';
     res.preview.className = 'ga-prev'; o.appendChild(res.preview); res.dive.className = 'ga-prev'; o.appendChild(res.dive);
-    return !res.her;
+    return !res.her && !res.green;
   }
   // a render cropped to her frame (1376 x 768) as webp, and a preview with her and her tank in front of it
   function tankImage(file) {
@@ -1740,10 +1826,14 @@
       var od = og.getImageData(0, 0, W, 250).data, sd = g.getImageData(0, 0, W, 250).data, sum = 0, n = 0;
       for (var q = 0; q < od.length; q += 4) if (od[q + 3] > 128) { sum += Math.abs(od[q] - sd[q]) + Math.abs(od[q + 1] - sd[q + 1]) + Math.abs(od[q + 2] - sd[q + 2]); n++; }
       var her = n > 0 && sum / n / 3 < 30;
+      // is her template's green still showing above the ledge (the tool left some of the wall)?
+      var gd = g.getImageData(0, 0, W, 285).data, gn = 0;
+      for (var z = 0; z < gd.length; z += 16) if (gd[z + 1] > 120 && gd[z + 1] - gd[z] > 80 && gd[z + 1] - gd[z + 2] > 40) gn++;
+      var green = gn / (gd.length / 16) > 0.03;
       return new Promise(function (ok) { c.toBlob(ok, 'image/webp', 0.85); }).then(function (b) {
         if (b && b.type === 'image/webp') return b;
         return new Promise(function (ok) { c.toBlob(ok, 'image/jpeg', 0.86); });
-      }).then(function (blob) { return { blob: blob, ext: blob.type === 'image/webp' ? 'webp' : 'jpg', preview: pv, dive: dv, her: her, warn: warn, colors: imageColors(c, 0.38) }; });
+      }).then(function (blob) { return { blob: blob, ext: blob.type === 'image/webp' ? 'webp' : 'jpg', preview: pv, dive: dv, her: her, green: green, warn: warn, colors: imageColors(c, 0.38) }; });
     });
   }
   var SCENES = { 'case-study': 'an old library with tall wooden bookshelves, brass reading lamps and a long study table',
@@ -1764,6 +1854,155 @@
       '<a href="' + GALook.BD_GUIDE + '" target="_blank" rel="noopener">Layout guide</a></span></div>';
   }
   function wireTpl(root) { $$('.bdTplCopy', root).forEach(function (b) { b.onclick = function () { GALook.copyImage(GALook.BD_TEMPLATE).then(function () { toast('The backdrop template is on the clipboard.'); }, function (e) { toast(e.message, true); }); }; }); }
+  // ---------- Category pools (Christian, Oct 14): each category holds a pool of images for each character (backdrops
+  // for GlazyArray and Robot Marley, who share them; A.L.T.A.'s own tank scenes), and a Note chooses from all its
+  // categories' pools the one that fits its words and colours best (resolve.js). Drop several in at once and tick every
+  // category they belong in; open any image to tick its categories; copy a similar category's pool into a new one. A
+  // category's first pick (its column above) is in its pool already. Shown in Categories and in each character's tab. ----------
+  var TANKSAVED = {}, POOLP = { bd: {}, tank: {} }, POOLNEW = { bd: [], tank: [] }, POOLV = { bd: '', tank: '', open: '', to: null };
+  function renderPool(d, k) {
+    renderLookData().then(function (r) {
+      var J = r[3] || {}, tank = k === 'tank', lib = tank ? (J.tankBackdrops = J.tankBackdrops || []) : (J.backdrops = J.backdrops || []);
+      var first = tank ? (J.categoryTanks || {}) : (J.categoryBackdrops || {}), saved = tank ? (J.categoryTankChoices || {}) : (J.categoryBackdropChoices || {}), pend = POOLP[k];
+      var ccount = {}; (ENTRIES || []).forEach(function (e) { (e.cats || []).forEach(function (c) { ccount[c] = (ccount[c] || 0) + 1; }); });
+      allCats(J).forEach(function (c) { if (!(c in ccount)) ccount[c] = 0; });
+      var catList = Object.keys(ccount).sort(function (a, b) { return ccount[b] - ccount[a] || (a < b ? -1 : 1); });
+      var cat = POOLV[k] && catList.indexOf(POOLV[k]) >= 0 ? POOLV[k] : catList[0] || '';
+      var has = function (n) { return lib.filter(function (b) { return b.name === n; })[0]; };
+      var more = function (c) { return c in pend ? pend[c] : (saved[c] || []); };
+      var poolOf = function (c) { return [first[c]].concat(more(c)).filter(function (n, i, a) { return n && has(n) && a.indexOf(n) === i; }); };
+      var src = function (b) { return tank ? TANKSAVED[b.name] || '/assets/alta/backdrops/' + esc(b.file) + (b.v ? '?r=' + esc(b.v) : '') : bdSrc(b); };
+      var inCats = function (n) { return catList.filter(function (c) { return poolOf(c).indexOf(n) >= 0; }); };
+      var pool = poolOf(cat), rest = lib.filter(function (b) { return pool.indexOf(b.name) < 0; }), news = POOLNEW[k];
+      if (!POOLV.to || POOLV.toK !== k) { POOLV.to = [cat]; POOLV.toK = k; }
+      var to = POOLV.to.filter(function (c) { return catList.indexOf(c) >= 0; });
+      var npend = Object.keys(pend).length, nok = news.filter(function (x) { return x.ok; }).length;
+      var ticks = function (attr, on, fixed) { return '<div class="chips">' + catList.map(function (c) { var f = fixed && fixed(c); return '<label class="chip"><input type="checkbox" ' + attr + '="' + esc(c) + '"' + (on(c) ? ' checked' : '') + (f ? ' disabled title="its first pick: change it in its column"' : '') + '>' + esc(catName(c)) + '</label>'; }).join('') + '</div>'; };
+      var openN = POOLV.open && has(POOLV.open) ? POOLV.open : '';
+      d.innerHTML = '<h4>Category pools · ' + (tank ? 'A.L.T.A.\'s tank scenes' : 'backdrops for GlazyArray and Robot Marley') + '</h4><p class="muted">The images each category offers. A Note chooses from the pools of all its categories the one that fits its words and colours best; with only one, that one. An image can be in any number of pools, and one added on a Note joins the pools of all its categories.</p>' +
+        '<div class="row"><label class="f"><span>Category</span><select class="pcat">' + catList.map(function (c) { return '<option value="' + esc(c) + '"' + (c === cat ? ' selected' : '') + '>' + esc(catName(c)) + ' (' + ccount[c] + ' Note' + (ccount[c] === 1 ? '' : 's') + ', ' + poolOf(c).length + ' in its pool)</option>'; }).join('') + '</select></label>' +
+          '</div>' +
+        (pool.length ? '<div class="lookg bdg' + (tank ? ' tkg' : '') + ' ppool">' + pool.map(function (n) { var b = has(n), al = inCats(n).filter(function (c) { return c !== cat; }).map(catName);
+          return '<figure><img alt="" src="' + src(b) + '"><figcaption>' + esc(n) + (n === first[cat] ? ' <small>its first pick</small>' : '<button type="button" class="link" data-prm="' + esc(n) + '">Take out</button>') +
+            '<button type="button" class="link" data-pop="' + esc(n) + '">Its categories</button>' +
+            (al.length ? '<small>also in ' + esc(al.slice(0, 4).join(', ') + (al.length > 4 ? ' and ' + (al.length - 4) + ' more' : '')) + '</small>' : '') + '</figcaption></figure>'; }).join('') + '</div>'
+          : '<p class="muted">Nothing in ' + esc(catName(cat)) + '\'s pool yet' + (tank ? ': its Notes show her hall.' : '.') + '</p>') +
+        (openN ? '<div class="sync-box pone"><p><b>' + esc(openN) + '</b>: tick every category it belongs in.</p>' + ticks('data-pin', function (c) { return poolOf(c).indexOf(openN) >= 0; }, function (c) { return first[c] === openN; }) + '<button type="button" class="link pclose">Done</button></div>' : '') +
+        // add images it hasn't got: all of them, or another category's pool (Christian: filter by another tag), one at a time or all
+        (rest.length ? '<details class="padd"' + (POOLV.addOpen ? ' open' : '') + '><summary>Add images to ' + esc(catName(cat)) + '\'s pool</summary>' +
+          '<div class="row"><label class="f"><span>Show</span><select class="pfrom"><option value="">All ' + (tank ? 'her scenes' : 'the backdrops') + ' it hasn\'t got (' + rest.length + ')</option>' + catList.filter(function (c) { return c !== cat && poolOf(c).some(function (n) { return pool.indexOf(n) < 0; }); }).map(function (c) { var m = poolOf(c).filter(function (n) { return pool.indexOf(n) < 0; }).length; return '<option value="' + esc(c) + '"' + (POOLV.from === c ? ' selected' : '') + '>' + esc(catName(c)) + '\'s pool (' + m + ' it hasn\'t got)</option>'; }).join('') + '</select></label>' +
+            '<button type="button" class="pall">Select all</button><button type="button" class="primary paddsel" disabled>Add the selected</button></div>' +
+          '<div class="npool' + (tank ? ' tk' : '') + ' ppickg">' + rest.filter(function (b) { return !POOLV.from || poolOf(POOLV.from).indexOf(b.name) >= 0; }).map(function (b) {
+            return '<button type="button" data-psel="' + esc(b.name) + '" aria-pressed="false"><img alt="" src="' + src(b) + '"><span>' + esc(b.name) + '<small>' + esc(inCats(b.name).map(catName).slice(0, 3).join(', ') || 'in no pool yet') + '</small></span></button>'; }).join('') + '</div></details>' : '') +
+        '<label class="drop ga-drop pdrop"><input type="file" class="pfile" accept="image/png,image/jpeg,image/webp" multiple hidden><b>Drop new ' + (tank ? 'scenes for A.L.T.A.' : 'backdrops for GlazyArray and Robot Marley') + ' here</b> <span class="muted">several at once' + (tank ? ' (made on her tank template)' : ' (21:9, made on the backdrop template)') + '</span></label>' +
+        (news.length ? '<div class="pnew">' + news.map(function (x, i) { return '<div class="pn" data-i="' + i + '"></div>'; }).join('') + '</div><p><b>Add ' + (nok === 1 ? 'it' : 'them') + ' to these categories\' pools:</b></p>' + ticks('data-pto', function (c) { return to.indexOf(c) >= 0; }) : '') +
+        '<div class="row"><button type="button" class="primary psave"' + (npend || nok ? '' : ' disabled') + '>Save the pools' + (nok ? ' (' + nok + ' new)' : '') + '</button>' + (npend ? '<span class="muted">' + (npend > 1 ? npend + ' categories\' pools' : '1 category\'s pool') + ' changed, not saved yet</span>' : '') + '</div>';
+      news.forEach(function (x, i) {
+        var el = $('.pn[data-i="' + i + '"]', d);
+        el.innerHTML = (x.warn ? '<p class="warn">' + esc(x.warn) + '</p>' : '') + '<div class="grid2">' + field('Name', '<input class="pnn" maxlength="40" value="' + esc(x.name) + '">', 'Lowercase, with dashes') + field('What it shows', '<input class="pns" maxlength="200" placeholder="e.g. sumo wrestlers on a snowy soccer pitch" value="' + esc(x.scene || '') + '">', 'A few words: Notes are matched by them') + '</div><button type="button" class="link pnx">Leave it out</button>';
+        if (x.prev) { x.prev.className = 'ga-prev'; el.insertBefore(x.prev, el.firstChild); }
+        if (x.dive) { x.dive.className = 'ga-prev'; el.insertBefore(x.dive, el.children[1]); }
+        $('.pnn', el).oninput = function () { x.name = slug(this.value).slice(0, 40); };
+        $('.pns', el).oninput = function () { x.scene = this.value; };
+        $('.pnx', el).onclick = function () { news.splice(i, 1); renderPool(d, k); };
+      });
+      var setMore = function (c, l) { if (l.join() === (saved[c] || []).join()) delete pend[c]; else pend[c] = l; };
+      $('.pcat', d).onchange = function () { POOLV[k] = this.value; POOLV.to = null; POOLV.from = ''; renderPool(d, k); };
+      $$('[data-prm]', d).forEach(function (b) { b.onclick = function () { var n = b.getAttribute('data-prm'); setMore(cat, more(cat).filter(function (x) { return x !== n; })); renderPool(d, k); }; });
+      var padd = $('.padd', d);
+      if (padd) {
+        padd.ontoggle = function () { POOLV.addOpen = padd.open; };
+        var selN = function () { return $$('[data-psel].on', d).map(function (x) { return x.getAttribute('data-psel'); }); };
+        var selUpd = function () { var n = selN().length, b = $('.paddsel', d); b.disabled = !n; b.textContent = n ? 'Add the ' + n + ' selected' : 'Add the selected'; };
+        $$('[data-psel]', d).forEach(function (x) { x.onclick = function () { x.classList.toggle('on'); x.setAttribute('aria-pressed', x.classList.contains('on')); selUpd(); }; });
+        $('.pall', d).onclick = function () { var all = $$('[data-psel]', d), on = all.every(function (x) { return x.classList.contains('on'); }); all.forEach(function (x) { x.classList.toggle('on', !on); x.setAttribute('aria-pressed', !on); }); selUpd(); };
+        $('.pfrom', d).onchange = function () { POOLV.from = this.value; renderPool(d, k); };
+        $('.paddsel', d).onclick = function () { setMore(cat, more(cat).concat(selN())); renderPool(d, k); };
+      }
+      $$('[data-pop]', d).forEach(function (b) { b.onclick = function () { POOLV.open = b.getAttribute('data-pop'); renderPool(d, k); }; });
+      var pc = $('.pclose', d); if (pc) pc.onclick = function () { POOLV.open = ''; renderPool(d, k); };
+      $$('input[data-pin]', d).forEach(function (inp) { inp.onchange = function () { var c = inp.getAttribute('data-pin'); setMore(c, inp.checked ? more(c).concat([openN]) : more(c).filter(function (x) { return x !== openN; })); renderPool(d, k); }; });
+      $$('input[data-pto]', d).forEach(function (inp) { inp.onchange = function () { POOLV.to = $$('input[data-pto]', d).filter(function (x) { return x.checked; }).map(function (x) { return x.getAttribute('data-pto'); }); }; });
+      var take = function (fl) {
+        fl = [].slice.call(fl || [], 0, 20); if (!fl.length) return;
+        Promise.all(fl.map(function (f) {
+          var base = slug(f.name.replace(/\.[a-z0-9]+$/i, '')).slice(0, 40) || 'scene';
+          return (tank ? tankImage(f) : GALook.backdrop(f)).then(function (res) {
+            var x = { name: base, blob: res.blob, ext: res.ext, prev: res.preview, dive: res.dive, warn: res.warn, colors: res.colors, ok: true };
+            if (res.her) { x.ok = false; x.warn = 'She\'s painted into this picture, so it can\'t be added: when she dives, that copy of her head would stay behind.'; }
+            if (res.green) { x.ok = false; x.warn = 'Some of her template\'s green is still showing above the ledge, so it can\'t be added.'; }
+            news.push(x);
+          }, function (e) { toast(f.name + ': ' + e.message, true); });
+        })).then(function () { renderPool(d, k); });
+      };
+      $('.pfile', d).onchange = function () { take(this.files); this.value = ''; };
+      var dz = $('.pdrop', d);
+      ['dragover', 'dragenter'].forEach(function (t) { dz.addEventListener(t, function (ev) { ev.preventDefault(); }); });
+      dz.addEventListener('drop', function (ev) { ev.preventDefault(); take(ev.dataTransfer.files); });
+      $('.psave', d).onclick = function () {
+        var b = this, ok = news.filter(function (x) { return x.ok; }), names = {}, toNow = POOLV.to || [cat];
+        lib.forEach(function (x) { names[x.name] = 1; });
+        for (var i = 0; i < ok.length; i++) {
+          if (!/^[a-z0-9-]{1,40}$/.test(ok[i].name)) { toast('Give each new one a name (lowercase, with dashes).', true); return; }
+          if (names[ok[i].name]) { toast('There\'s already one called ' + ok[i].name + ': give the new one another name.', true); return; }
+          names[ok[i].name] = 1;
+        }
+        if (ok.length && !toNow.length) { toast('Tick at least one category for the new ones.', true); return; }
+        b.disabled = true; b.textContent = ok.length ? 'Uploading…' : 'Saving…';
+        Promise.all(ok.map(function (x) { return Promise.all([api('lookblob', x.blob), x.colors || blobColors(x.blob)]).then(function (rr) { return { name: x.name, ext: x.ext, sha: rr[0].sha, scene: (x.scene || '').trim(), colors: rr[1], about: '' }; }); }))
+          .then(function (up) {
+            var body = {}, sentP = pend; body[tank ? 'categoryTankChoices' : 'categoryBackdropChoices'] = Object.keys(pend).length ? pend : null;
+            if (up.length) { body[tank ? 'newTanks' : 'newBackdrops'] = up; body[tank ? 'offerTank' : 'offerBackdrop'] = { names: up.map(function (x) { return x.name; }), cats: toNow }; }
+            return api('looks', body).then(function () {
+              // what was saved, in the Studio's copy at once (the site's looks.json follows in about a minute)
+              var key = tank ? 'categoryTankChoices' : 'categoryBackdropChoices', ch = J[key] = Object.assign({}, J[key] || {});
+              Object.keys(sentP).forEach(function (c) { if (sentP[c].length) ch[c] = sentP[c]; else delete ch[c]; });
+              up.forEach(function (x, i) { lib.push({ name: x.name, file: x.name + '.' + x.ext, about: '', scene: x.scene, colors: x.colors }); if (ok[i].prev && !tank) BDSAVED[x.name] = URL.createObjectURL(ok[i].blob);
+                toNow.forEach(function (c) { if (first[c] !== x.name) ch[c] = (ch[c] || []).filter(function (n) { return n !== x.name; }).concat([x.name]); }); });
+              if (tank) up.forEach(function (x, i) { TANKSAVED[x.name] = URL.createObjectURL(ok[i].blob); });
+            });
+          })
+          .then(function () { POOLP[k] = {}; POOLNEW[k] = []; POOLV.to = null; toast('Saved. The site updates in about a minute.'); renderPool(d, k); })
+          .catch(function (err) { toast(err.message, true); b.disabled = false; b.textContent = 'Save the pools'; });
+      };
+    });
+  }
+  // everything a Note's categories offer one character (their pools: a category's first pick and its choices), in the
+  // order resolve.js weighs them (Christian, Oct 14): kind 'bd' (GlazyArray's and Robot Marley's backdrops) or 'tank'
+  function notePool(J, kind) {
+    var first = kind === 'tank' ? J.categoryTanks || {} : J.categoryBackdrops || {}, more = kind === 'tank' ? J.categoryTankChoices || {} : J.categoryBackdropChoices || {};
+    var lib = kind === 'tank' ? J.tankBackdrops || [] : J.backdrops || [], out = [];
+    noteCats().forEach(function (c) { [first[c]].concat(more[c] || []).forEach(function (n) {
+      var b = lib.filter(function (x) { return x.name === n; })[0]; if (!b) return;
+      var o = out.filter(function (x) { return x.b.name === n; })[0]; if (o) o.cats.push(c); else out.push({ b: b, cats: [c] });
+    }); });
+    return out;
+  }
+  // which of the Note's categories a new image made on it joins (Christian, Oct 14): all of them unless some are
+  // unticked; a category typed here is new to the Note too (and to the site once saved)
+  var IMGCATS = { bd: null, tank: null };
+  function imgCats(k) { var nc = noteCats(); return IMGCATS[k] ? IMGCATS[k].filter(function (c) { return nc.indexOf(c) >= 0; }) : nc; }
+  function imgCatsHtml(k) {
+    var nc = noteCats(), on = imgCats(k);
+    return '<div class="imgcats"><span class="ga-cats-h">It joins the pools of</span><span class="chips">' + nc.map(function (c) { return '<label class="chip"><input type="checkbox" data-ic="' + esc(c) + '"' + (on.indexOf(c) >= 0 ? ' checked' : '') + '>' + esc(catName(c)) + '</label>'; }).join('') +
+      '<input class="icnew" placeholder="Add a category" maxlength="40"></span><small>A category you add here goes on this Note too.</small></div>';
+  }
+  function imgCatsWire(root, k, again) {
+    $$('input[data-ic]', root).forEach(function (i) { i.onchange = function () { IMGCATS[k] = $$('input[data-ic]', root).filter(function (x) { return x.checked; }).map(function (x) { return x.getAttribute('data-ic'); }); }; });
+    var n = $('.icnew', root); if (!n) return;
+    var add = function () {
+      var t = String(n.value || '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40); if (!t || /^\d{4}$/.test(t)) return;
+      if (noteCats().indexOf(t) < 0) { E.tags = (E.tags || []).concat([t]); markDirty(); }
+      IMGCATS[k] = imgCats(k).concat([t]).filter(function (c, i, a) { return a.indexOf(c) === i; }); renderStyle(); again();
+    };
+    n.onkeydown = function (ev) { if (ev.key === 'Enter') { ev.preventDefault(); add(); } }; n.onchange = add;
+  }
+  function poolGrid(list, on, picked, tank) {
+    return '<div class="npool' + (tank ? ' tk' : '') + '">' + list.map(function (x) {
+      var src = tank ? TANKSAVED[x.b.name] || '/assets/alta/backdrops/' + esc(x.b.file) + (x.b.v ? '?r=' + esc(x.b.v) : '') : bdSrc(x.b);
+      return '<button type="button" data-np="' + esc(x.b.name) + '" class="' + (x.b.name === on ? 'on' : '') + '" aria-pressed="' + (x.b.name === on) + '"><img alt="" src="' + src + '"><span>' + esc(x.b.name) +
+        '<small>' + (x.b.name === on ? (picked ? 'chosen: ' + esc(picked) : 'this Note\'s own') : 'in ' + esc(x.cats.map(catName).join(', '))) + '</small></span></button>'; }).join('') + '</div>';
+  }
   function renderBd() {
     var box = $('#bdBox'); if (!box) return;
     renderLookData().then(function (r) {
@@ -1776,13 +2015,19 @@
         (Bk && !own ? '<option value="' + esc(Bk.backdrop) + '">' + esc(Bk.backdrop) + (waiting ? ' (new: saves with the Note)' : ' (not made yet)') + '</option>' : '') + '<option value="__new">+ A new backdrop just for this Note…</option>';
       var scene = Bk ? (Bk.scene || (own && own.scene) || '') : '';
       var making = Bk && (!own || waiting || BDNEW === 'replace');
-      box.innerHTML = '<p class="muted">A backdrop just for this Note, in place of its category\'s.</p>' +
+      var J = r[3] || {}, np = notePool(J, 'bd'), now = gaPick(J), auto = now && now.backdrop && now.backdrop.from === 'category' ? now.backdrop : null;
+      var pinned = Bk && own && !waiting && np.some(function (x) { return x.b.name === Bk.backdrop; });
+      box.innerHTML = (np.length ? '<p class="muted"><b>From its categories\' pools</b> (' + np.length + '): ' + (pinned ? 'this Note keeps the one you picked.' : auto ? 'it wears the one that fits its words and colours best.' : 'a holiday or its own backdrop comes first.') + ' Pick one to keep it on this Note.</p>' +
+          poolGrid(np, pinned ? Bk.backdrop : auto ? auto.name : '', pinned ? '' : auto ? (auto.why || '').replace(/^from [^,]*,? ?/, '').replace(/^fits /, '') || 'the only one' : '', false) +
+          (pinned ? '<div class="row"><button type="button" id="bdLet">Let it choose again</button></div>' : '') : '') +
+        '<p class="muted">Or any backdrop, or a new one made for this Note: when you save, a new one joins the pools of the categories you tick for it.</p>' +
         field('This Note\'s own backdrop', '<select id="bdPickSel">' + opts + '</select>') +
         (own && !waiting ? '<img class="ga-bdimg" alt="" src="' + bdSrc(own) + '"><div class="row"><button type="button" id="bdReplace">Replace it with a new render</button></div>' : '') +
         (making ? field('The place', '<textarea id="bdScene" rows="2" placeholder="e.g. ' + esc(sceneFor(nc) || 'a cozy, warmly lit room') + '">' + esc(scene) + '</textarea>', 'A few words; the prompt below is built from them') +
           field('Image prompt', '<textarea id="bdPrompt" rows="5" readonly>' + esc(GALook.bdPrompt(scene || sceneFor(nc))) + '</textarea>') +
           '<div class="row"><button type="button" id="bdCopy">Copy the image prompt</button></div>' + bdTpl() +
-          '<label class="drop ga-drop" id="bdDrop"><input type="file" id="bdFile" accept="image/png,image/jpeg,image/webp" hidden><b>' + (waiting ? 'Choose a different render' : 'Bring the render back') + '</b> <span class="muted">or drop it here</span></label><div id="bdOut"></div>' : '');
+          '<label class="drop ga-drop" id="bdDrop"><input type="file" id="bdFile" accept="image/png,image/jpeg,image/webp" hidden><b>' + (waiting ? 'Choose a different render' : 'Bring the render back') + '</b> <span class="muted">or drop it here</span></label><div id="bdOut"></div>' +
+          (!own ? imgCatsHtml('bd') : '') : '');
       $('#bdPickSel').value = Bk ? Bk.backdrop : ''; renderStyle();
       $('#bdPickSel').onchange = function () {
         var v = this.value;
@@ -1795,9 +2040,11 @@
         E.narratorBackdrop = v ? { backdrop: v, fit: 'existing', scene: (has(v) || {}).scene || '' } : null; BDNEW = null; markDirty(); renderBd();
       };
       var rp = $('#bdReplace'); if (rp) rp.onclick = function () { BDNEW = 'replace'; renderBd(); };
+      $$('[data-np]', box).forEach(function (el) { el.onclick = function () { var v = el.getAttribute('data-np'); E.narratorBackdrop = { backdrop: v, fit: 'existing', scene: (has(v) || {}).scene || '' }; BDNEW = null; markDirty(); renderBd(); }; });
+      var bl = $('#bdLet'); if (bl) bl.onclick = function () { E.narratorBackdrop = null; BDNEW = null; markDirty(); renderBd(); };
       var sc = $('#bdScene'); if (sc) sc.oninput = function () { E.narratorBackdrop.scene = sc.value; $('#bdPrompt').value = GALook.bdPrompt(sc.value || sceneFor(nc)); markDirty(); };
       var cp = $('#bdCopy'); if (cp) cp.onclick = function () { navigator.clipboard.writeText($('#bdPrompt').value).then(function () { toast('Image prompt copied.'); }); };
-      wireTpl(box);
+      wireTpl(box); imgCatsWire(box, 'bd', renderBd);
       var drop = $('#bdDrop'); if (!drop) return;
       function take(f) {
         if (!f) return; $('#bdOut').innerHTML = '<p class="muted">Working…</p>';
@@ -3651,7 +3898,7 @@
       var clips = Object.keys(clipsNew).map(function (n) { return { name: n.replace(/\.mp4$/, ''), loop: clipsNew[n].token }; });
       if (clips.length) L.at(1, clips.length + ' video loop' + (clips.length > 1 ? 's' : ''));
       return api('save', { entry: E, base: BASE.version, newPhotos: uploaded, newClips: clips, removePhotos: removed, newAudio: audioNew ? audioNew.sha : '', removeAudio: audioGone && !!hadAudio, newLook: lookUp, removeLook: LOOKDEL, categoryLooks: Object.keys(CATNEW).length ? CATNEW : null,
-        newBackdrop: bdUp, categoryBackdrops: Object.keys(CATBDNEW).length ? CATBDNEW : null })
+        newBackdrop: bdUp, categoryBackdrops: Object.keys(CATBDNEW).length ? CATBDNEW : null, offerBackdrop: bdUp && imgCats('bd').length ? { names: [bdUp.name], cats: imgCats('bd') } : null })
         .catch(function (err) { E.episode.audio = hadAudio; throw err; });
     }).then(function (j) {
       if (j.entry && j.entry.publishedAt) E.publishedAt = j.entry.publishedAt;   // set by the server the first time it goes live
@@ -3662,7 +3909,7 @@
       if (lookUp) { LOOKSAVED[lookUp.name] = LOOKNEW.url; LOOKNEW = null; LOOKREPL = false; LOOKS = LOOKS.then(function (l) { return l.filter(function (x) { return x.name !== lookUp.name; }).concat([{ name: lookUp.name, file: lookUp.name + '.' + lookUp.ext, about: lookUp.about, flair: lookUp.flair ? Object.keys(lookUp.flair).join('') : undefined }]); }); setTimeout(renderLook, 0); }
       if (bdUp || Object.keys(CATBDNEW).length) {
         if (bdUp) BDSAVED[bdUp.name] = BDNEW.url;
-        var sentB = CATBDNEW, up = bdUp; BDNEW = null; CATBDNEW = {};
+        var sentB = CATBDNEW, up = bdUp; BDNEW = null; CATBDNEW = {}; IMGCATS.bd = null;
         LOOKBD = LOOKBD.then(function (d) { var l = d.list.filter(function (x) { return !up || x.name !== up.name; }); if (up) l = l.concat([{ name: up.name, file: up.name + '.' + up.ext, scene: up.scene }]);
           var c = Object.assign({}, d.cats); Object.keys(sentB).forEach(function (k) { if (sentB[k]) c[k] = sentB[k]; else delete c[k]; }); return { list: l, cats: c }; });
         setTimeout(renderBd, 0);
