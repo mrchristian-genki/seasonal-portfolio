@@ -17,8 +17,10 @@
    looks.json "tankBackdrops", files in assets/alta/backdrops/. NARRATORS are the ones with a player: GlazyArray (js/narrator.js), A.L.T.A. (js/alta.js) and Robot Marley (js/marley.js).
 
    So there is never nothing unless there is nothing at all. pick() also says where each came from, for the Studio.
-   A category can offer more than one backdrop or tank scene (looks.json "categoryBackdropChoices", "categoryTankChoices"):
-   the one that fits the Note's words and colours best is worn (fit(), below).
+   A category can offer more than one backdrop or tank scene (looks.json "categoryBackdropChoices", "categoryTankChoices"),
+   and one image can be offered by any number of categories. A Note chooses from everything all its categories offer
+   (Christian, Oct 14): the one that fits its words and colours best is worn (fit(), below), the leading category's
+   (the order above) counting a little extra, and a tie going to its own pick. Only one on offer: that one.
    note = { look, backdrop, narrator, cats: [...], prefer, ignoreHolidays, words, palette, month }; date = a Date (today by default). */
 (function (root) {
   'use strict';
@@ -39,7 +41,7 @@
   function wordsOf(t) { return (String(t || '').toLowerCase().match(/[a-z]+/g) || []).map(function (w) { return w.length > 4 ? w.replace(/ies$/, 'y').replace(/s$/, '') : w; }).filter(function (w) { return w.length > 2 && !SKIP.test(w); }); }
   function rgb(h) { var n = parseInt(String(h).slice(1), 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; }
   function cdist(a, b) { a = rgb(a); b = rgb(b); var r = (a[0] + b[0]) / 2, d = [a[0] - b[0], a[1] - b[1], a[2] - b[2]]; return Math.sqrt((2 + r / 256) * d[0] * d[0] + 4 * d[1] * d[1] + (2 + (255 - r) / 256) * d[2] * d[2]); }
-  function fit(list, note) {
+  function fit(list, note, lead) {
     var nw = {}; wordsOf(note.words).forEach(function (w) { nw[w] = 1; });
     var pal = (note.palette || []).filter(function (c) { return /^#[0-9a-f]{6}$/i.test(c); });
     var best = null;
@@ -56,6 +58,7 @@
       if (mo && /\s(autumn|aspen|foliage)\s/.test(bw)) { if (mo >= 9 && mo <= 11) { s += 0.3; hit.push('autumn'); } else s -= 2; }
       var cs = 0;
       if (pal.length && b.colors && b.colors.length) { var d = Math.min.apply(null, pal.map(function (p) { return Math.min.apply(null, b.colors.map(function (c) { return cdist(p, c); })); })); cs = Math.max(0, 1 - d / 400) * 0.8; s += cs; }
+      if (lead && lead[b.name]) s += 0.3;   // the leading category's own choices, a little ahead
       if (!best || s > best.s + 1e-9) best = { b: b, s: s, why: hit.length ? hit.slice(0, 3).join(', ') : cs > 0.4 ? 'its colours' : '' };
     });
     return best;
@@ -69,18 +72,25 @@
     var up = hol.filter(function (l) { return l.to >= md; })[0] || hol[0] || null;
     var rank = J.categoryRank || {}, stamp = J.categoryStamp || {}, cats = (note.cats || []).filter(Boolean);
     // more: a category's other choices (looks.json "categoryBackdropChoices" / "categoryTankChoices"): its own pick and
-    // these are offered, and the one that fits the Note best (fit()) is worn
+    // these are offered; with more, everything the Note's categories offer is pooled, leading category first, and the
+    // one that fits the Note best (fit()) is worn, said to come from the first category that offers it
     function byCats(map, have, more) {
       var c = cats.map(function (c, i) {
         var list = [map[c]].concat((more && more[c]) || []).filter(function (n, k, a) { return n && have[n] && a.indexOf(n) === k; });
-        return { c: c, v: list[0], list: list, i: i };
+        return { c: c, v: list[0], list: list, own: list, i: i };
       }).filter(function (x) { return x.v; });
       c.sort(function (a, b) {
         return (b.c === note.prefer) - (a.c === note.prefer) || (rank[b.c] || 0) - (rank[a.c] || 0) ||
           (stamp[b.c] || '').localeCompare(stamp[a.c] || '') || a.i - b.i;
       });
-      var w = c[0] || null;
-      if (w && w.list.length > 1 && (note.words || note.palette)) { var f = fit(w.list.map(function (n) { return have[n]; }), note); w.v = f.b.name; w.fits = f.why; }
+      var w = c[0] || null; if (!w || !more) return w;
+      var pool = [], lead = {}; w.list.forEach(function (n) { lead[n] = 1; });
+      c.forEach(function (x) { x.own.forEach(function (n) { if (pool.indexOf(n) < 0) pool.push(n); }); });
+      w.list = pool;
+      if (pool.length > 1 && (note.words || note.palette)) {
+        var f = fit(pool.map(function (n) { return have[n]; }), note, lead); w.v = f.b.name; w.fits = f.why;
+        w.c = c.filter(function (x) { return x.own.indexOf(f.b.name) >= 0; })[0].c;
+      }
       return w;
     }
     var fits = function (x) { return x.fits ? ', fits ' + x.fits : ''; };
