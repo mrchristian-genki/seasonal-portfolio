@@ -628,8 +628,8 @@
         field('The place', '<textarea id="ntScene" rows="2" placeholder="e.g. ' + esc(TANK_SCENES['lake-tahoe']) + '"></textarea>', 'Picking a category fills in a suggestion') +
         field('How you\'ll make it', '<select id="ntWay"><option value="edit">Edit her template (keeps the framing)</option><option value="new">A new picture from the prompt</option></select>') +
         field('Image prompt', '<textarea id="ntPrompt" rows="6" readonly></textarea>') + '<div class="row"><button type="button" id="ntCopy">Copy the image prompt</button></div>' +
-        '<div class="ga-tpl"><img alt="Her tank template" src="/assets/alta/kit/tank-template.jpg"><span><b>Her tank template</b><br><span class="muted">16:9, 1376 x 768. The grey is the place; she and everything below the ledge stay.</span><br>' +
-          '<button type="button" id="ntTplCopy">Copy the image</button> <a href="/assets/alta/kit/tank-template.jpg" download>Download</a> · <a href="/assets/alta/kit/tank-backdrop-guide.jpg" target="_blank" rel="noopener">Layout guide</a></span></div>' +
+        '<div class="ga-tpl"><img alt="Her tank template" src="/assets/alta/kit/tank-template.jpg?v=2"><span><b>Her tank template</b><br><span class="muted">16:9, 1376 x 768. Her empty tank: the grey is the place; the ledge and everything below it stay.</span><br>' +
+          '<button type="button" id="ntTplCopy">Copy the image</button> <a href="/assets/alta/kit/tank-template.jpg?v=2" download>Download</a> · <a href="/assets/alta/kit/tank-backdrop-guide.jpg" target="_blank" rel="noopener">Layout guide</a></span></div>' +
         '<label class="drop ga-drop" id="ntDrop"><input type="file" id="ntFile" accept="image/png,image/jpeg,image/webp" hidden><b>Bring the render here</b> <span class="muted">or drop it here: you\'ll see her in front of it</span></label><div id="ntOut"></div>' +
         '<div class="row"><button type="button" class="primary" id="ntAdd" disabled>Add the scene</button></div>';
       [['data-cbc', CATBCP, bch], ['data-ctc', CATTCP, tch]].forEach(function (k) {
@@ -720,10 +720,10 @@
       $('#ntCat').onchange = function () { var c = this.value, sc = TANK_SCENES[c] || SCENES[c]; if (!ntScene.value.trim() && sc) ntScene.value = sc; if (!$('#ntName').value.trim() && c) $('#ntName').value = c + '-tank'; ntUpd(); };
       ntScene.oninput = ntUpd; $('#ntWay').onchange = ntUpd; ntUpd();
       $('#ntCopy').onclick = function () { navigator.clipboard.writeText(ntPrompt.value).then(function () { toast('Image prompt copied.'); }); };
-      $('#ntTplCopy').onclick = function () { GALook.copyImage('/assets/alta/kit/tank-template.jpg').then(function () { toast('Her tank template is on the clipboard.'); }, function (e) { toast(e.message, true); }); };
+      $('#ntTplCopy').onclick = function () { GALook.copyImage('/assets/alta/kit/tank-template.jpg?v=2').then(function () { toast('Her tank template is on the clipboard.'); }, function (e) { toast(e.message, true); }); };
       var takeTank = function (f) {
         if (!f) return; $('#ntOut').innerHTML = '<p class="muted">Working…</p>';
-        tankImage(f).then(function (res) { CATNEWTANK = res; var o = $('#ntOut'); o.innerHTML = res.warn ? '<p class="warn">' + esc(res.warn) + '</p>' : ''; res.preview.className = 'ga-prev'; o.appendChild(res.preview); $('#ntAdd').disabled = false; })
+        tankImage(f).then(function (res) { CATNEWTANK = res; $('#ntAdd').disabled = !tankShow($('#ntOut'), res); })
           .catch(function (e) { $('#ntOut').innerHTML = ''; toast(e.message, true); });
       };
       $('#ntFile').onchange = function () { takeTank(this.files[0]); this.value = ''; };
@@ -783,7 +783,7 @@
   // a character's prompt for a piece: a look (by its looks.json entry) or a tank scene (by its place)
   function charPrompt(ch, kind, l, place) {
     var P = ch[kind] || {};
-    if (kind === 'tank') return fillIn(P.prompt, { place: place || '[THE PLACE]' });
+    if (kind === 'tank') return fillIn(P.prompt, { place: place || '[ INSERT SCENE ]' });
     if (P.has === 'file') return fillIn(P.prompt, { look: l.gaLook || l.about || l.name.replace(/-/g, ' '), a: l.gaA || '[the part that takes the first colour]', b: l.gaB || '[the part that takes the second colour]' });
     var i = (P.ideas || {})[l.name] || ['[a hat for ' + l.name.replace(/-/g, ' ') + ']', '[a small charm]', 'hat', 'charm'];
     return fillIn(P.prompt, { hat: i[0], charm: i[1], hatShort: i[2], charmShort: i[3] });
@@ -881,7 +881,7 @@
             '<div class="row"><label class="f"><span>Which scene</span><select id="alWhich"><option value="">A new scene</option>' + (J.tankBackdrops || []).map(function (b) { return '<option value="' + esc(b.name) + '">' + esc(b.name.replace(/-/g, ' ')) + ' (replace hers)</option>'; }).join('') + '</select></label></div>' +
             '<div class="grid2">' + field('Name', '<input id="alName" placeholder="e.g. boathouse-night" maxlength="40">', 'Lowercase, with dashes') + field('Give it to', '<select id="alCat"><option value="">No category yet</option>' + Object.keys(cats).sort().map(function (c) { return '<option value="' + esc(c) + '">' + esc(catName(c)) + '</option>'; }).join('') + '</select>') + '</div>' +
             field('The place', '<textarea id="alScene" rows="2" placeholder="e.g. ' + esc(TANK_SCENES['lake-tahoe']) + '"></textarea>', 'Picking a category fills in a suggestion') +
-            '<div class="row"><select id="alWay"><option value="edit">Edit her template (keeps the framing)</option><option value="new">A new picture from the prompt</option></select><button type="button" id="alPr">Copy the prompt</button><button type="button" id="alTpl">Copy her tank template</button><a href="/assets/alta/kit/tank-template.jpg" download>Download it</a></div>' +
+            '<div class="row"><select id="alWay"><option value="edit">Edit her template (keeps the framing)</option><option value="new">A new picture from the prompt</option></select><button type="button" id="alPr">Copy the prompt</button><button type="button" id="alTpl">Copy her tank template</button><a href="/assets/alta/kit/tank-template.jpg?v=2" download>Download it</a></div>' +
             '<label class="drop ga-drop" id="alDrop"><input type="file" id="alFile" accept="image/png,image/jpeg,image/webp" hidden><b>Bring the render here</b> <span class="muted">or drop it here: you\'ll see her in front of it</span></label><div id="alOut"></div>' +
             '<div class="row"><button type="button" class="primary" id="alSave" disabled>Add the scene</button></div></div>';
       // what the target gives each character
@@ -1026,10 +1026,10 @@
       $('#alWhich').onchange = function () { var b2 = (J.tankBackdrops || []).filter(function (x) { return x.name === this.value; }, this)[0]; if (b2) { $('#alName').value = b2.name; alScene.value = b2.scene || ''; } else { $('#alName').value = ''; } };
       $('#alCat').onchange = function () { var c = this.value, sc = TANK_SCENES[c] || SCENES[c]; if (!alScene.value.trim() && sc) alScene.value = sc; if (!$('#alName').value.trim() && c) $('#alName').value = c + '-tank'; };
       $('#alPr').onclick = function () { navigator.clipboard.writeText(alPrompt()).then(function () { toast('Her prompt is copied.'); }); };
-      $('#alTpl').onclick = function () { GALook.copyImage('/assets/alta/kit/tank-template.jpg').then(function () { toast('Her tank template is on the clipboard.'); }, function (e) { toast(e.message, true); }); };
+      $('#alTpl').onclick = function () { GALook.copyImage('/assets/alta/kit/tank-template.jpg?v=2').then(function () { toast('Her tank template is on the clipboard.'); }, function (e) { toast(e.message, true); }); };
       var alTake = function (f) {
         if (!f) return; $('#alOut').innerHTML = '<p class="muted">Working…</p>'; $('#alSave').disabled = true;
-        tankImage(f).then(function (res) { AL.rec = res; var o = $('#alOut'); o.innerHTML = res.warn ? '<p class="warn">' + esc(res.warn) + '</p>' : ''; res.preview.className = 'ga-prev'; o.appendChild(res.preview); $('#alSave').disabled = false; })
+        tankImage(f).then(function (res) { AL.rec = res; $('#alSave').disabled = !tankShow($('#alOut'), res); })
           .catch(function (e) { $('#alOut').innerHTML = ''; toast(e.message, true); });
       };
       $('#alFile').onchange = function () { alTake(this.files[0]); this.value = ''; };
@@ -1702,17 +1702,29 @@
     science: 'a bright science classroom with a long chalkboard and shelves of equipment',
     showcase: 'a gallery with soft spotlights on the far wall'
   };
+  // Christian's layout (Oct 14): the place on a line of its own between the two halves, so it's the one part to change
   function tankPrompt(place, way) {
-    place = place || '[THE PLACE]';
-    var tail = ' No people, no animals, no text, signs, logos or brands. Colours that sit well beside a teal-green tank and weathered copper.';
-    if (way === 'new') return 'A softly blurred photograph of ' + place + ', seen from about table height, as if from behind a large aquarium standing in the room. Wide 16:9. The camera looks straight ahead, level. The far wall, the horizon or the treeline sits about a quarter of the way down the frame, and everything that matters is in the top third; the lower part is plain floor or ground. Shallow depth of field: the whole scene gently out of focus, like the background of a portrait, with soft, natural light.' + tail;
-    return 'Same image, exactly as it is: the mermaid, her copper ledge, the water and everything below the ledge stay exactly the same. Replace only the flat grey wall above the copper ledge with a softly blurred photograph of ' + place + ', seen from about table height, as if from behind a large aquarium standing there. The camera looks straight ahead, level; the far wall, the horizon or the treeline sits about halfway between the top of the picture and the ledge. Shallow depth of field: the whole place gently out of focus, like the background of a portrait, with soft, natural light. Nothing new in front of her or on the ledge.' + tail;
+    place = place || '[ INSERT SCENE ]';
+    var look = 'Shot like a cinematic film still from about table height, straight ahead and level, as if from behind a large aquarium standing there. Very shallow depth of field: the whole place softly out of focus, with gentle bokeh and nothing sharp. Warm, soft, late-afternoon light; calm, tidy and uncluttered. The far wall, the horizon or the treeline sits about halfway between the top of the picture and the ledge.';
+    var tail = ' Empty of people and animals. No writing, signs, logos or brands anywhere. Natural colours, nothing neon, that sit well beside a teal-green tank and weathered copper.';
+    if (way === 'new') return 'A softly blurred photograph, wide 16:9, of\n\n' + place + '\n\n' + look.replace(' The far wall, the horizon or the treeline sits about halfway between the top of the picture and the ledge.', ' The far wall, the horizon or the treeline sits about a quarter of the way down the frame; everything that matters is in the top third, and the lower part is plain floor or ground. Keep the middle of that top third calm and evenly lit, with no bright lights or strong shapes (her head goes there).') + tail;
+    return 'Same image, exactly as it is: the empty tank, its copper ledge, the water and everything below the ledge stay exactly the same. Replace only the flat grey wall above the copper ledge with a softly blurred photograph of\n\n' + place + '\n\n' + look +
+      ' Composition, in pixels on this 1376 x 768 image: everything that matters sits above the ledge, from y 0 to y 290. Keep the middle, from x 560 to x 820 and y 40 to y 290, calm, evenly lit and slightly darker, with no bright lights or strong shapes (her head goes there). Nothing added in the tank, on the ledge or in front of it.' + tail;
+  }
+  // a tank scene's preview: her resting in front of it, and the same scene as she dives (her head and shoulders gone, so
+  // only the scene shows above the ledge). A scene with her painted in is refused: her head would stay behind when she
+  // dives (Christian, Oct 14). Returns whether it can be added.
+  function tankShow(o, res) {
+    o.innerHTML = (res.her ? '<p class="warn">She\'s painted into this picture: when she dives, that copy of her head would stay behind. Make it from her empty tank template (Copy her tank template), or a new picture.</p>' : '') +
+      (res.warn ? '<p class="warn">' + esc(res.warn) + '</p>' : '') + '<p class="muted">Resting, and as she dives:</p>';
+    res.preview.className = 'ga-prev'; o.appendChild(res.preview); res.dive.className = 'ga-prev'; o.appendChild(res.dive);
+    return !res.her;
   }
   // a render cropped to her frame (1376 x 768) as webp, and a preview with her and her tank in front of it
   function tankImage(file) {
     var url = URL.createObjectURL(file), W = 1376, H = 768;
     var load = function (src) { return new Promise(function (ok, no) { var i = new Image(); i.onload = function () { ok(i); }; i.onerror = function () { no(new Error('That image didn\'t open.')); }; i.src = src; }); };
-    return Promise.all([load(url), load('/assets/alta/kit/tank-overlay.webp')]).then(function (r) {
+    return Promise.all([load(url), load('/assets/alta/kit/tank-overlay.webp'), load('/assets/alta/parts/rest-cut.webp')]).then(function (r) {
       URL.revokeObjectURL(url);
       var src = r[0], c = document.createElement('canvas'); c.width = W; c.height = H;
       var g = c.getContext('2d'), sw = src.naturalWidth, sh = src.naturalHeight, k = Math.max(W / sw, H / sh);
@@ -1720,10 +1732,18 @@
       var warn = Math.abs(sw / sh - W / H) > 0.15 ? 'It isn\'t 16:9 like her template, so it was cropped to fit.' : '';
       var pv = document.createElement('canvas'); pv.width = 688; pv.height = 384;
       var pg = pv.getContext('2d'); pg.drawImage(c, 0, 0, 688, 384); pg.drawImage(r[1], 0, 0, 688, 384);
+      var dv = document.createElement('canvas'); dv.width = 688; dv.height = 384;
+      var dg = dv.getContext('2d'); dg.drawImage(c, 0, 0, 688, 384); dg.drawImage(r[2], 0, 0, 688, 384);
+      // is she painted in? her head, where the overlay has it, against the render there (the old template had her in it)
+      var oc = document.createElement('canvas'); oc.width = W; oc.height = 250;
+      var og = oc.getContext('2d'); og.drawImage(r[1], 0, 0);
+      var od = og.getImageData(0, 0, W, 250).data, sd = g.getImageData(0, 0, W, 250).data, sum = 0, n = 0;
+      for (var q = 0; q < od.length; q += 4) if (od[q + 3] > 128) { sum += Math.abs(od[q] - sd[q]) + Math.abs(od[q + 1] - sd[q + 1]) + Math.abs(od[q + 2] - sd[q + 2]); n++; }
+      var her = n > 0 && sum / n / 3 < 30;
       return new Promise(function (ok) { c.toBlob(ok, 'image/webp', 0.85); }).then(function (b) {
         if (b && b.type === 'image/webp') return b;
         return new Promise(function (ok) { c.toBlob(ok, 'image/jpeg', 0.86); });
-      }).then(function (blob) { return { blob: blob, ext: blob.type === 'image/webp' ? 'webp' : 'jpg', preview: pv, warn: warn, colors: imageColors(c, 0.38) }; });
+      }).then(function (blob) { return { blob: blob, ext: blob.type === 'image/webp' ? 'webp' : 'jpg', preview: pv, dive: dv, her: her, warn: warn, colors: imageColors(c, 0.38) }; });
     });
   }
   var SCENES = { 'case-study': 'an old library with tall wooden bookshelves, brass reading lamps and a long study table',
