@@ -101,7 +101,6 @@
   { "name": "hawaii-coast", "file": "hawaii-coast.webp", "about": "", "v": "tmvavx", "scene": "a tropical shoreline at golden hour, palm trees and calm turquoise water", "colors": ["#5a5033","#e8d3af","#99987c"] },
   { "name": "donegal-cliffs", "file": "donegal-cliffs.webp", "about": "", "v": "tmvavx", "scene": "green sea cliffs above the Atlantic under a soft grey sky", "colors": ["#cdd1d2","#8f999c","#59573c"] },
   { "name": "classroom", "file": "classroom.webp", "about": "", "v": "tmvavx", "scene": "a bright classroom with a long chalkboard, a globe and tall windows", "colors": ["#a78b6e","#554c3f","#daccba"] },
-  { "name": "library", "file": "library.webp", "about": "", "v": "tmvavx", "scene": "a quiet old library with tall wooden bookshelves and warm reading lamps", "colors": ["#492e18","#816144","#cfc0a7"] },
   { "name": "pool-deck", "file": "pool-deck.webp", "about": "", "v": "tmvkor", "scene": "a sunny outdoor swimming pool deck with lane ropes and a lifeguard chair", "colors": ["#213213","#586432","#abaa6e"] },
   { "name": "tahoe-winter-shore", "file": "tahoe-winter-shore.webp", "about": "", "v": "tmvktg", "scene": "a snowy Lake Tahoe shoreline in winter, dark pines and white mountains across the water", "colors": ["#d1d8e0","#6d7c8c","#3f4441"] },
   { "name": "workshop-with-robots", "file": "workshop-with-robots.webp", "about": "", "v": "tmvkvl", "colors": ["#4e341e","#997353","#d7c7b2"] },
@@ -127,7 +126,8 @@
   { "name": "boathouse", "file": "boathouse.webp", "about": "", "v": "tmwezw", "scene": "the inside of an old wooden boathouse, kayaks and paddles on racks, the lake through the open doors", "colors": ["#332c23","#bdb5a4","#6d6457"] },
   { "name": "emerald-bay-mist", "file": "emerald-bay-mist.webp", "about": "", "v": "tmwf0n", "scene": "the shore of Emerald Bay on a still morning, mist on the water and the small rocky island beyond", "colors": ["#212e29","#7a6d50","#eae5de"] },
   { "name": "tahoe-beach-dusk", "file": "tahoe-beach-dusk.webp", "about": "", "v": "tmwf35", "scene": "a sandy Lake Tahoe beach at dusk, smooth granite boulders and pines along the far shore", "colors": ["#e7d9c9","#aba39a","#424442"] },
-  { "name": "tunnel", "file": "tunnel.webp", "about": "", "v": "tmwf3t", "scene": "an old stone wall with an arched tunnel leading out toward the lake", "colors": ["#1d1a14","#423b33","#9e876c"] }
+  { "name": "tunnel", "file": "tunnel.webp", "about": "", "v": "tmwf3t", "scene": "an old stone wall with an arched tunnel leading out toward the lake", "colors": ["#1d1a14","#423b33","#9e876c"] },
+  { "name": "library", "file": "library.webp", "about": "", "v": "tmwf4f", "scene": "a quiet old library with tall wooden bookshelves and warm reading lamps", "colors": ["#2a221d","#4d3f37","#967258"] }
  ],
  "categoryTanks": {
   "aerial": "aerial-tank",
