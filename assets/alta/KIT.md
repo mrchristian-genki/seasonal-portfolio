@@ -546,7 +546,7 @@ behind where her head is (the middle of the band).
 ### Her template, the Studio and borrowing (Oct 13)
 
 **Her template** (`assets/alta/kit/tank-template.jpg`, 1376 x 768): her tank, **empty**, exactly as the site frames
-it, with the place a flat grey above the copper ledge. The easiest way to a scene that fits is to **edit the template**:
+it, with the place a flat chroma green above the copper ledge (Christian's, Oct 14). The easiest way to a scene that fits is to **edit the template**:
 the framing stays right, and only the strip above the ledge is used.
 
 **Never paint her into a scene** (Oct 14). Her head and shoulders above the ledge are drawn over the scene only while she
@@ -558,7 +558,7 @@ away a picture with her in it.
 The edit prompt (Christian's layout: the scene on a line of its own, so it's the one part to change):
 
 > Same image, exactly as it is: the empty tank, its copper ledge, the water and everything below the ledge stay exactly
-> the same. Replace only the flat grey wall above the copper ledge with a softly blurred photograph of
+> the same. Replace only the flat green wall above the copper ledge with a softly blurred photograph of
 >
 > [ INSERT SCENE ]
 >
