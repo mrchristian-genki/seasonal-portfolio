@@ -86,7 +86,8 @@
   "case-study": "2026-10-14T02:23:43Z",
   "character": "2026-10-14T02:24:12Z",
   "coloring-books": "2026-10-14T02:25:24Z",
-  "dogs": "2026-10-14T02:25:49Z"
+  "dogs": "2026-10-14T02:25:49Z",
+  "dusk": "2026-10-14T02:26:36Z"
  },
  "defaults": {
   "backdrop": "lake-tahoe-beach"
@@ -121,7 +122,8 @@
   { "name": "case-study-tank", "file": "case-study-tank.webp", "about": "", "v": "tmvlbj", "scene": "a quiet old library with tall wooden bookshelves and warm reading lamps", "colors": ["#69513e","#311e11","#c1a27e"] },
   { "name": "character-tank", "file": "character-tank.webp", "about": "", "v": "tmvlcc", "colors": ["#252929","#75828e","#c7c3bf"] },
   { "name": "coloring-books-tank", "file": "coloring-books-tank.webp", "about": "", "v": "tmvlec", "colors": ["#4f3620","#94785b","#dbd7ca"] },
-  { "name": "dogs-tank", "file": "dogs-tank.webp", "about": "", "v": "tmvlf1", "scene": "Backyard", "colors": ["#414121","#7f774b","#d6c085"] }
+  { "name": "dogs-tank", "file": "dogs-tank.webp", "about": "", "v": "tmvlf1", "scene": "Backyard", "colors": ["#414121","#7f774b","#d6c085"] },
+  { "name": "dusk-tank", "file": "dusk-tank.webp", "about": "", "v": "tmvlgc", "colors": ["#252929","#75828e","#c7c3bf"] }
  ],
  "categoryTanks": {
   "aerial": "aerial-tank",
@@ -131,6 +133,7 @@
   "character": "character-tank",
   "coloring-books": "coloring-books-tank",
   "dogs": "dogs-tank",
+  "dusk": "dusk-tank",
   "ireland": "donegal-cliffs",
   "lake-tahoe": "tahoe-beach-dusk"
  },
