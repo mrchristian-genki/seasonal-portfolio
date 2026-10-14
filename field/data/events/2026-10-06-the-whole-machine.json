@@ -123,7 +123,10 @@
   "from": "case-study",
   "scene": ""
  },
- "palette": ["#25c0ad", "#b26e34"],
+ "palette": [
+  "#25c0ad",
+  "#b26e34"
+ ],
  "workshop": {
   "order": 3,
   "name": "The whole machine",
