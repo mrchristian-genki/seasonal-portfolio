@@ -202,7 +202,7 @@ ${ICONS}
 <link rel="stylesheet" href="${rel}../css/lake.css?v=2">
 <link rel="stylesheet" href="${rel}../css/narrator.css?v=33">
 <link rel="stylesheet" href="${rel}../css/alta.css?v=12">
-<link rel="stylesheet" href="${rel}../css/marley.css?v=9">
+<link rel="stylesheet" href="${rel}../css/marley.css?v=10">
 <script>/* Logo season from the calendar, as on About. */document.documentElement.dataset.season=["winter","winter","spring","spring","spring","summer","summer","summer","fall","fall","fall","winter"][new Date().getMonth()];</script>
 <link rel="stylesheet" href="${rel}../css/route-dash.css?v=${V}">
 </head>
