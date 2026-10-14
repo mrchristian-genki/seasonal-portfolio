@@ -154,13 +154,12 @@
  "consent": "Marley: the family dog, seen briefly on her visits along the river in some clips.",
  "publishedAt": "2026-10-05T22:12:04Z",
  "narratorLook": {
-  "look": "workshop-goggles",
-  "fit": "category",
-  "from": "mini-cast",
-  "about": "brass workshop goggles pushed up on her forehead: the leather strap in one colour and the padded rims in the other",
-  "why": "Picked from Mini-Cast.",
+  "look": "hawaiian-cap-2",
+  "fit": "existing",
+  "about": "glossy baseball hat worn by robots in Hawaii.",
+  "why": "",
   "prompt": "",
-  "bulb": true
+  "bulb": false
  },
  "palette": [
   "#00f100",
@@ -168,10 +167,9 @@
  ],
  "paletteBy": "hand",
  "narratorBackdrop": {
-  "backdrop": "workshop-with-robots",
-  "fit": "category",
-  "from": "mini-cast",
-  "scene": ""
+  "backdrop": "hiking-yosemite-2",
+  "fit": "existing",
+  "scene": "a hiking trail beside a creek in a red rock canyon"
  },
  "workshop": {
   "order": 4,
