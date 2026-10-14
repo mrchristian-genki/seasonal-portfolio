@@ -14,12 +14,12 @@
   { "name": "halloween", "marley": true, "file": "witch.webp", "from": "10-20", "to": "10-31", "bulb": false, "flair": "ab", "flairK": 1, "v": "tw2d", "flairDye": "ab", "flairBase": ["#3a2a4a","#e07b2a"] },
   { "name": "thanksgiving", "file": "autumn.webp", "from": "11-20", "to": "11-28", "flair": "ab", "flairK": 1, "v": "tw2i", "flairDye": "ab", "flairBase": ["#c46a2a","#7a2a3a"], "marley": {"v":"tmvip6","hat":"thanksgiving","hatBox":[148,-38,211,142],"charm":"thanksgiving","charmBox":[210,307,102,221]} },
   { "name": "winter-holidays", "marley": true, "file": "santa.webp", "from": "12-01", "to": "12-30", "bulb": false, "v": "tw2f", "flair": "ab", "flairK": 1, "flairDye": "ab", "flairBase": ["#c8262c","#f4efe6"] },
-  { "name": "bike-helmet", "file": "bike-helmet.webp", "bulb": false, "about": "a glossy hard-shell bike helmet with a little brass headlamp, its shell in one colour and its rim band in the other", "flair": "ab", "v": "tw2a", "flairDye": "ab", "flairK": 1, "flairBase": ["#1f9e96","#e8735a"] },
   { "name": "trail-cap", "file": "trail-cap.webp", "bulb": false, "about": "a trucker cap with a GA leather patch, its front and brim in one colour and its mesh back in the other", "v": "tw2a", "flair": "ab", "flairK": 1, "flairDye": "ab", "flairBase": ["#2fb5ad","#efe7d6"] },
   { "name": "beach-shades", "file": "beach-shades.webp", "about": "round sunglasses pushed up in her curls, with a gem clip: the frames in one colour and the gem in the other", "v": "tw2e", "flair": "ab", "flairK": 1, "flairDye": "ab", "flairBase": ["#e0533d","#2fb5ad"] },
   { "name": "workshop-goggles", "file": "workshop-goggles.webp", "about": "brass workshop goggles pushed up on her forehead: the leather strap in one colour and the padded rims in the other", "v": "tw2e", "flair": "ab", "flairDye": "ab", "flairK": 1, "flairBase": ["#7a4a2a","#2fb5ad"] },
   { "name": "grad-cap", "file": "grad-cap.webp", "about": "a mortarboard, its board in one colour and its tassel in the other", "v": "tw2a", "bulb": false, "flair": "ab", "flairDye": "ab", "flairK": 1, "flairBase": ["#26355e","#d4a23c"] },
-  { "name": "hawaii", "file": "hawaii.webp", "about": "sunglasses and frangipani flowers", "v": "tmvisi", "marley": true, "flair": "a" }
+  { "name": "hawaii", "file": "hawaii.webp", "about": "sunglasses and frangipani flowers", "v": "tmvisi", "marley": true, "flair": "a" },
+  { "name": "bike-helmet", "file": "bike-helmet.webp", "about": "a glossy hard-shell bike helmet with a little brass headlamp, its shell in one colour and its rim band in the other", "v": "tmwrsf", "bulb": false, "flair": "a" }
  ],
  "categories": {
   "automaton": "workshop-goggles",
