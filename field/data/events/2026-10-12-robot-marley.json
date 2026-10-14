@@ -26,6 +26,23 @@
  "track": null,
  "photos": [
   {
+   "src": "data/photos/2026-10-12-robot-marley/clip-2.mp4",
+   "caption": "A happy robot dog sits in the yard.",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "at": "Built after a real dog",
+   "poster": "data/photos/2026-10-12-robot-marley/clip-2.jpg",
+   "video": true,
+   "from": "gemini_generated_video_2D043F9B.mp4",
+   "takenAt": null,
+   "range": [
+    0,
+    8
+   ]
+  },
+  {
    "src": "data/photos/2026-10-12-robot-marley/clip-6.mp4",
    "poster": "data/photos/2026-10-12-robot-marley/clip-6.jpg",
    "video": true,
@@ -39,54 +56,6 @@
    "range": [
     0,
     8
-   ]
-  },
-  {
-   "src": "data/photos/2026-10-12-robot-marley/clip-7.mp4",
-   "poster": "data/photos/2026-10-12-robot-marley/clip-7.jpg",
-   "video": true,
-   "caption": "Marley and Marley checking each other out on the couch.",
-   "takenAt": "2026:10:12 12:37:51",
-   "w": 960,
-   "h": 540,
-   "use": "post",
-   "cover": false,
-   "from": "side-couch-2.mp4",
-   "range": [
-    0,
-    9.95
-   ]
-  },
-  {
-   "src": "data/photos/2026-10-12-robot-marley/clip-5.mp4",
-   "poster": "data/photos/2026-10-12-robot-marley/clip-5.jpg",
-   "video": true,
-   "caption": "Marley and Marley checking each other out in the yard.",
-   "takenAt": "2026:10:12 12:40:20",
-   "w": 960,
-   "h": 540,
-   "use": "post",
-   "cover": false,
-   "from": "side-yard-2.mp4",
-   "range": [
-    0,
-    8
-   ]
-  },
-  {
-   "src": "data/photos/2026-10-12-robot-marley/clip-9.mp4",
-   "poster": "data/photos/2026-10-12-robot-marley/clip-9.jpg",
-   "video": true,
-   "caption": "Marley and Marley checking each other out in the yard.",
-   "takenAt": "2026:10:12 12:40:20",
-   "w": 960,
-   "h": 540,
-   "use": "post",
-   "cover": false,
-   "from": "side-yard-2.mp4",
-   "range": [
-    0,
-    10.05
    ]
   },
   {
@@ -106,19 +75,35 @@
    ]
   },
   {
-   "src": "data/photos/2026-10-12-robot-marley/clip-1.mp4",
-   "caption": "Robot Marley on the beach at sunset.",
+   "src": "data/photos/2026-10-12-robot-marley/clip-9.mp4",
+   "poster": "data/photos/2026-10-12-robot-marley/clip-9.jpg",
+   "video": true,
+   "caption": "Marley and Marley checking each other out in the yard.",
+   "takenAt": "2026:10:12 12:40:20",
    "w": 960,
    "h": 540,
    "use": "post",
-   "cover": true,
-   "poster": "data/photos/2026-10-12-robot-marley/clip-1.jpg",
-   "video": true,
-   "from": "gemini_generated_video_918B1501.mp4",
-   "takenAt": null,
+   "cover": false,
+   "from": "side-yard-2.mp4",
    "range": [
     0,
-    8
+    10.05
+   ]
+  },
+  {
+   "src": "data/photos/2026-10-12-robot-marley/clip-7.mp4",
+   "poster": "data/photos/2026-10-12-robot-marley/clip-7.jpg",
+   "video": true,
+   "caption": "Marley and Marley checking each other out on the couch.",
+   "takenAt": "2026:10:12 12:37:51",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "side-couch-2.mp4",
+   "range": [
+    0,
+    9.95
    ]
   },
   {
@@ -132,49 +117,16 @@
    "at": "Her own podcast"
   },
   {
-   "src": "data/photos/2026-10-12-robot-marley/clip-2.mp4",
-   "caption": "A happy robot dog sits in the yard.",
+   "src": "data/photos/2026-10-12-robot-marley/clip-1.mp4",
+   "caption": "Robot Marley on the beach at sunset.",
    "w": 960,
    "h": 540,
    "use": "post",
-   "cover": false,
-   "at": "Built after a real dog",
-   "poster": "data/photos/2026-10-12-robot-marley/clip-2.jpg",
+   "cover": true,
+   "poster": "data/photos/2026-10-12-robot-marley/clip-1.jpg",
    "video": true,
-   "from": "gemini_generated_video_2D043F9B.mp4",
+   "from": "gemini_generated_video_918B1501.mp4",
    "takenAt": null,
-   "range": [
-    0,
-    8
-   ]
-  },
-  {
-   "src": "data/photos/2026-10-12-robot-marley/clip-3.mp4",
-   "poster": "data/photos/2026-10-12-robot-marley/clip-3.jpg",
-   "video": true,
-   "caption": "Robot Marley soaring above the lake.",
-   "takenAt": null,
-   "w": 960,
-   "h": 540,
-   "use": "post",
-   "cover": false,
-   "from": "gemini_generated_video_73780258.MP4",
-   "range": [
-    0,
-    8
-   ]
-  },
-  {
-   "src": "data/photos/2026-10-12-robot-marley/clip-4.mp4",
-   "poster": "data/photos/2026-10-12-robot-marley/clip-4.jpg",
-   "video": true,
-   "caption": "Marley climbing the snowy peaks around Lake Tahoe.",
-   "takenAt": null,
-   "w": 960,
-   "h": 540,
-   "use": "post",
-   "cover": false,
-   "from": "gemini_generated_video_CC998773.MP4",
    "range": [
     0,
     8
