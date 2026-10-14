@@ -754,6 +754,26 @@ try {
             if (!$files) json_out(['ok' => true, 'commit' => null]);
             json_out(['ok' => true, 'commit' => $gh->commit($files, 'Studio: the Workshop order', null, $expect)]);
 
+        // A category given to several Notes at once (Studio, Categories, "Find Notes for it"; Christian, Oct 14): one
+        // commit. A Note waiting for review is left for its review (it'd conflict), and said so.
+        case 'POST retag':
+            owner_only();
+            $cat = (string) ($body['cat'] ?? '');
+            if (!preg_match('/^[a-z0-9-]{1,40}$/', $cat) || preg_match('/^\d{4}$/', $cat)) json_fail('Bad category.');
+            $ids = array_slice(array_values(array_unique(array_filter((array) ($body['ids'] ?? []), fn($x) => is_string($x) && valid_id($x)))), 0, 60);
+            if (!$ids) json_fail('No Notes to add it to.');
+            $files = []; $expect = []; $added = []; $skipped = []; $rv = reviews();
+            foreach ($ids as $id) {
+                if (isset($rv[$id])) { $skipped[] = $id; continue; }
+                $raw = $gh->read(EVENTS . "/$id.json"); $e = json_decode($raw ?? 'null', true);
+                if (!is_array($e)) { $skipped[] = $id; continue; }
+                if (in_array($cat, note_cats($e), true)) continue;
+                $e['tags'] = array_values(array_merge(array_map('strval', (array) ($e['tags'] ?? [])), [$cat]));
+                $files[EVENTS . "/$id.json"] = ['text' => repo_json($e)]; $expect[EVENTS . "/$id.json"] = GitHub::blobSha($raw); $added[] = $id;
+            }
+            if (!$files) json_out(['ok' => true, 'commit' => null, 'added' => [], 'skipped' => $skipped]);
+            json_out(['ok' => true, 'commit' => $gh->commit($files, "Studio: $cat on " . count($added) . ' Note' . (count($added) === 1 ? '' : 's'), null, $expect), 'added' => $added, 'skipped' => $skipped]);
+
         case 'POST looks':
             owner_only();
             $files = [];

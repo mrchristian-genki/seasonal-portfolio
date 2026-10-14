@@ -42,7 +42,7 @@
   function rgb(h) { var n = parseInt(String(h).slice(1), 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; }
   function cdist(a, b) { a = rgb(a); b = rgb(b); var r = (a[0] + b[0]) / 2, d = [a[0] - b[0], a[1] - b[1], a[2] - b[2]]; return Math.sqrt((2 + r / 256) * d[0] * d[0] + 4 * d[1] * d[1] + (2 + (255 - r) / 256) * d[2] * d[2]); }
   function fit(list, note, lead) {
-    var nw = {}; wordsOf(note.words).forEach(function (w) { nw[w] = 1; });
+    var nw = {}; wordsOf(note.words).forEach(function (w) { if (!PLAIN.test(w)) nw[w] = 1; });
     var pal = (note.palette || []).filter(function (c) { return /^#[0-9a-f]{6}$/i.test(c); });
     var best = null;
     list.forEach(function (b, k) {
@@ -128,7 +128,48 @@
     else if (dt && tks[dt]) tk = { name: dt, file: tks[dt].file, v: tks[dt].v, from: 'default', why: 'the site default' };
     return { look: look, backdrop: bd, narrator: nar, tank: tk, holiday: on ? on.name : null };
   }
+  // WHICH CATEGORIES FIT A NOTE (Christian, Oct 14, 2026: smart tags): each category is learned from its name and the
+  // words kin to it, the words its Notes share (a word every Note uses counts for little) and what the images in its
+  // pools show; a Note's words are scored against each, its five strongest words counting. For the Studio: categories
+  // suggested while a Note is written, and the Notes a category could take in. notes = [{ cats: [...], words }] (all
+  // the Notes, the list api.php gives); note = { words, cats }. Returns [{ c, s, why: [words] }], best first, without
+  // the Note's own categories.
+  var PLAIN = /^(christian|gehrke|back|year|years|there|here|near|down|hour|hours|each|own|through|where|when|took|take|after|before|first|last|while|off|every|now|real|built|different|day|days|two|three|one|nine|ten|full|just|then|than|what|who|which|out|up|over|our|we|you|your|they|them|some|more|most|very|much|many|also|still|again|get|got|make|made|way|ways|new|good|great|long|little|big|lot|thing|things|time|times|it|is|are|was|were|be|been|has|have|had|not|but|all|any|can|will|would|could|should|into|onto|upon|via|per|let|lets|see|seen|say|said|week|month|today|morning|afternoon|she|he|him|its|it|us)$/;
+  function catFit(J, notes, note, only) {
+    J = J || {}; notes = notes || []; var N = notes.length, df = {}, docs = notes.map(function (n) { var w = {}; wordsOf(n.words).forEach(function (x) { w[x] = 1; }); Object.keys(w).forEach(function (x) { df[x] = (df[x] || 0) + 1; }); return w; });
+    var cats = {}; notes.forEach(function (n) { (n.cats || []).forEach(function (c) { cats[c] = 1; }); });
+    ['categories', 'categoryBackdrops', 'categoryBackdropChoices', 'categoryTanks', 'categoryTankChoices', 'categoryNarrators', 'categoryNames'].forEach(function (k) { Object.keys(J[k] || {}).forEach(function (c) { cats[c] = 1; }); });
+    var img = {}; (J.backdrops || []).concat(J.tankBackdrops || []).forEach(function (b) { img[b.name] = b; });
+    var mine = {}; (note.cats || []).forEach(function (c) { mine[c] = 1; });
+    var nw = {}; wordsOf(note.words).forEach(function (w) { if (!PLAIN.test(w)) nw[w] = 1; });
+    var out = [];
+    (only ? [only] : Object.keys(cats)).forEach(function (c) {
+      if (mine[c] && !only) return;
+      var P = {}, put = function (w, v) { if (v > (P[w] || 0)) P[w] = v; };
+      var name = wordsOf(c.replace(/-/g, ' ') + ' ' + ((J.categoryNames || {})[c] || ''));
+      name.forEach(function (w) { put(w, 3); KIN.forEach(function (g) { if (g.indexOf(w) >= 0) g.forEach(function (x) { put(x, 1.5); }); }); });
+      var mem = docs.filter(function (d, i) { return (notes[i].cats || []).indexOf(c) >= 0 && notes[i] !== note.self; });
+      if (mem.length) {
+        var f = {}; mem.forEach(function (d) { Object.keys(d).forEach(function (w) { f[w] = (f[w] || 0) + 1; }); });
+        // a word its Notes share; with only one or two Notes it's a guess, so it counts less until the category grows
+        var sure = Math.min(1, mem.length / 3);
+        Object.keys(f).forEach(function (w) { if (PLAIN.test(w)) return; var share = f[w] / mem.length, rare = Math.log((N + 1) / ((df[w] || 0) + 0.5)) / Math.log(N + 1.5); if (share >= 0.34) put(w, 2 * share * Math.min(1, rare * 1.4) * sure); });
+      }
+      var pool = [].concat([(J.categoryBackdrops || {})[c]], (J.categoryBackdropChoices || {})[c] || [], [(J.categoryTanks || {})[c]], (J.categoryTankChoices || {})[c] || []);
+      pool.forEach(function (n) { var b = n && img[n]; if (b) wordsOf(b.name.replace(/-/g, ' ') + ' ' + (b.scene || '')).forEach(function (w) { put(w, 0.6); }); });
+      var hits = Object.keys(nw).map(function (w) {
+        if (P[w]) return { w: w, v: P[w] };
+        var k = 0; KIN.forEach(function (g) { if (g.indexOf(w) >= 0) g.forEach(function (x) { if (P[x] && P[x] / 2 > k) k = P[x] / 2; }); });
+        return { w: w, v: k };
+      }).filter(function (h) { return h.v > 0.2; }).sort(function (a, b) { return b.v - a.v; }).slice(0, 5);
+      // someone's category (with-helena) only when the Note names them: never guessed from the places they go
+      if (/^with-/.test(c) && !hits.some(function (h) { return name.indexOf(h.w) >= 0 && h.w !== 'with'; })) return;
+      var sc = hits.reduce(function (t, h) { return t + h.v; }, 0);
+      if (sc > 0) out.push({ c: c, s: Math.round(sc * 100) / 100, why: hits.slice(0, 3).map(function (h) { return h.w; }) });
+    });
+    return out.sort(function (a, b) { return b.s - a.s; });
+  }
   var NARRATORS = { glazyarray: 'GlazyArray', alta: 'A.L.T.A.', marley: 'Robot Marley' };
-  var api = { pick: pick, fit: fit, mmdd: mmdd, NARRATORS: NARRATORS };
+  var api = { pick: pick, fit: fit, catFit: catFit, wordsOf: wordsOf, mmdd: mmdd, NARRATORS: NARRATORS };
   if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.GAResolve = api;
 })(this);

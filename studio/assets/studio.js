@@ -557,6 +557,25 @@
   // none. A Note's own look beats its category's, which beats the holiday look. Her looks are here too, with a way to
   // add one from a render. ----------
   var CATP = {}, CATBP = {}, CATRP = {}, CATNP = {}, CATTP = {}, DEFP = {}, HOLBP = {}, NEWCATP = {}, CATNEWLOOK = null, CATNEWBD = null, CATNEWTANK = null, CATBCP = {}, CATTCP = {};   // CATBCP/CATTCP: a category's other choices   // pending: looks, backdrops, priorities, defaults, holiday backdrops
+  // FIND NOTES FOR A CATEGORY (Christian, Oct 14: smart tags): the Notes not in it yet whose words fit it (resolve.js
+  // catFit: its name, kin words, its Notes' words, its pools), best first, the strong ones ticked; you choose, and the
+  // category is added to them in one commit (api.php retag). Nothing changes on a Note you don't tick.
+  var FINDCAT = '', FINDSEL = null;
+  function findList(c, J) {
+    var all = (ENTRIES || []).map(function (e) { return { id: e.id, cats: e.cats || [], words: e.words || e.title || '' }; });
+    return (ENTRIES || []).filter(function (e) { return (e.cats || []).indexOf(c) < 0; }).map(function (e) {
+      var me = all.filter(function (x) { return x.id === e.id; })[0], r = window.GAResolve && GAResolve.catFit(J, all, { words: me.words, cats: me.cats, self: me }, c)[0];
+      return { e: e, s: r ? r.s : 0, why: r ? r.why : [] };
+    }).filter(function (x) { return x.s >= 2; }).sort(function (a, b) { return b.s - a.s; }).slice(0, 30);
+  }
+  function findNotes(c, J) {
+    var l = findList(c, J); if (!FINDSEL) { FINDSEL = {}; l.forEach(function (x) { if (x.s >= 3.5) FINDSEL[x.e.id] = 1; }); }
+    var n = Object.keys(FINDSEL).length;
+    return '<div class="catfind">' + (l.length ? '<p class="muted">Notes not in ' + esc(catName(c)) + ' whose words fit it, best first. Tick the ones it belongs on; the strong matches are ticked for you. Only the ticked ones change.</p>' +
+        l.map(function (x) { return '<label class="ga-check"><input type="checkbox" data-fn="' + esc(x.e.id) + '"' + (FINDSEL[x.e.id] ? ' checked' : '') + '> <b>' + esc(x.e.title || x.e.id) + '</b> <small>' + esc(x.why.join(', ')) + (x.e.cats && x.e.cats.length ? ' · now in ' + esc(x.e.cats.map(catName).join(', ')) : '') + '</small></label>'; }).join('') +
+        '<div class="row"><button type="button" class="fnall">Select all</button><button type="button" class="primary fnadd"' + (n ? '' : ' disabled') + '>Add ' + esc(catName(c)) + ' to ' + n + ' Note' + (n === 1 ? '' : 's') + '</button></div>'
+      : '<p class="muted">No other Note\'s words fit ' + esc(catName(c)) + ' yet. As it gains Notes and images it learns what it\'s about.</p>') + '</div>';
+  }
   function renderCats() {
     var box = $('#catsBox'); box.innerHTML = '<p class="muted">Loading…</p>';
     LOOKS = null; renderLookData().then(function (r) {
@@ -582,13 +601,13 @@
         '<ul class="catl">' + names.map(function (c) {
           var v = c in CATP ? CATP[c] : (cats[c] || ''), im = v && src(v);
           var bv = c in CATBP ? CATBP[c] : (bcats[c] || ''), bim = bv && bsrc(bv);
-          return '<li><span class="catn"><b>' + esc(catName(c)) + '</b><small>' + count[c] + ' Note' + (count[c] === 1 ? '' : 's') + '</small></span>' +
+          return '<li><span class="catn"><b>' + esc(catName(c)) + '</b><small>' + count[c] + ' Note' + (count[c] === 1 ? '' : 's') + '</small><button type="button" class="link" data-find="' + esc(c) + '">' + (FINDCAT === c ? 'Close' : 'Find Notes for it') + '</button></span>' +
             '<span class="catc"><small>Her look</small><span>' + (im ? '<img alt="" src="' + im + '">' : '<i class="noimg"></i>') + '<select data-cat="' + esc(c) + '">' + opts + '</select></span></span>' +
             '<span class="catc"><small>Backdrop</small><span>' + (bim ? '<img class="bd" alt="" src="' + bim + '">' : '<i class="noimg bd"></i>') + '<select data-catbd="' + esc(c) + '">' + bdopts + '</select></span></span>' +
             '<span class="catc"><small>Narrator</small><span><select data-catnar="' + esc(c) + '">' + NOPTS + '</select></span></span>' +
             (tanks.length ? '<span class="catc"><small>Her tank</small><span><select data-cattank="' + esc(c) + '">' + TOPTS + '</select></span></span>' : '') +
             '<span class="catc catr"><small>Priority</small><input type="number" min="0" max="9" step="1" data-catr="' + esc(c) + '" value="' + rk(c) + '" title="0 to 9: when a Note\'s categories disagree, the higher wins"></span>' +
-            '</li>';
+            (FINDCAT === c ? findNotes(c, J) : '') + '</li>';
         }).join('') + '</ul>' +
         '<div class="row"><label class="f catnd"><span>Who narrates when nothing else says</span><select id="defNar"><option value="">GlazyArray</option><option value="alta">A.L.T.A.</option><option value="marley">Robot Marley</option></select></label>' +
           (tanks.length ? '<label class="f catnd"><span>Behind her tank when nothing else says</span><select id="defTank"><option value="">The hall (her own)</option>' + TOPTS.replace('<option value="">The default</option>', '') + '</select></label>' : '') +
@@ -628,6 +647,17 @@
         '<label class="drop ga-drop" id="ntDrop"><input type="file" id="ntFile" accept="image/png,image/jpeg,image/webp" hidden><b>Bring the render here</b> <span class="muted">or drop it here: you\'ll see her in front of it</span></label><div id="ntOut"></div>' +
         '<div class="row"><button type="button" class="primary" id="ntAdd" disabled>Add the scene</button></div>';
       var cpd = $('#catPool', box); renderPool(cpd, POOLV.who === 'tank' ? 'tank' : 'bd');
+      $$('[data-find]', box).forEach(function (b) { b.onclick = function () { var c = b.getAttribute('data-find'); FINDCAT = FINDCAT === c ? '' : c; FINDSEL = null; renderCats(); }; });
+      $$('input[data-fn]', box).forEach(function (i) { i.onchange = function () { if (i.checked) FINDSEL[i.getAttribute('data-fn')] = 1; else delete FINDSEL[i.getAttribute('data-fn')]; renderCats(); }; });
+      var fna = $('.fnall', box); if (fna) fna.onclick = function () { var all = $$('input[data-fn]', box), on = all.every(function (i) { return i.checked; }); all.forEach(function (i) { if (on) delete FINDSEL[i.getAttribute('data-fn')]; else FINDSEL[i.getAttribute('data-fn')] = 1; }); renderCats(); };
+      var fad = $('.fnadd', box); if (fad) fad.onclick = function () {
+        var c = FINDCAT, ids = Object.keys(FINDSEL); fad.disabled = true; fad.textContent = 'Adding…';
+        api('retag', { cat: c, ids: ids }).then(function (j) {
+          (ENTRIES || []).forEach(function (e) { if ((j.added || []).indexOf(e.id) >= 0) e.cats = (e.cats || []).concat([c]); });
+          toast(catName(c) + ' is on ' + (j.added || []).length + ' more Note' + ((j.added || []).length === 1 ? '' : 's') + (j.skipped && j.skipped.length ? '; ' + j.skipped.length + ' waiting for review were left as they are' : '') + '. The site updates in about a minute.');
+          FINDCAT = ''; FINDSEL = null; renderCats();
+        }).catch(function (err) { toast(err.message, true); fad.disabled = false; });
+      };
       $$('[data-pk]', box).forEach(function (b) { b.onclick = function () { POOLV.who = b.getAttribute('data-pk'); POOLV.to = null; $$('[data-pk]', box).forEach(function (x) { x.classList.toggle('on', x === b); }); renderPool(cpd, POOLV.who); }; });
       $$('.catl select[data-catnar]', box).forEach(function (sel) {
         var c = sel.getAttribute('data-catnar'); sel.value = nv(c);
@@ -1420,6 +1450,7 @@
     $('#postBody').addEventListener('change', renderFeature);   // the feature's "after paragraph" picks follow the paragraphs
     $('#postBody').addEventListener('change', function () { collect(); renderPhotos(); });    // the photos' "under a subhead" picks follow the subheads (and the template's checklist)
     $('#summary').addEventListener('change', renderMag);
+    ['title', 'place', 'summary', 'postTitle', 'postBody', 'epTitle'].forEach(function (k) { $('#' + k).addEventListener('change', function () { collect(); renderStyle(); }); });   // suggested categories follow what it says
     renderNext();
     var dp = $('#drop-photos');
     ['dragover', 'dragenter'].forEach(function (t) { dp.addEventListener(t, function (ev) { ev.preventDefault(); dp.classList.add('on'); }); });
@@ -1453,7 +1484,7 @@
             (pinned ? '<div class="row"><button type="button" id="epTankLet">Let it choose again</button></div>' : '') : '<p class="muted">Its categories\' pools have none of her scenes yet.</p>') +
           field('Or any of her scenes', '<select id="epTank"><option value="">From its categories</option>' + tanks.map(function (x) { return '<option value="' + esc(x.name) + '"' + (E.altaBackdrop === x.name ? ' selected' : '') + '>' + esc(x.name + (x.about ? ' · ' + x.about : '')) + '</option>'; }).join('') + '</select>',
             t ? esc(t.name) + ' (' + esc(t.why) + ')' : 'The hall, her own (no scene of hers fits)') +
-          (owner() ? '<details class="ga-new"' + (AT ? ' open' : '') + '><summary>+ A new scene for this Note</summary><p class="muted">It joins the pools of ' + (nc.length ? esc(nc.map(catName).join(', ')) : 'its categories') + ' and is picked for this Note.</p>' +
+          (owner() ? '<details class="ga-new"' + (AT ? ' open' : '') + '><summary>+ A new scene for this Note</summary><p class="muted">It\'s picked for this Note, and joins the pools of the categories you tick.</p>' + imgCatsHtml('tank') +
             '<div class="grid2">' + field('Name', '<input id="ntnName" maxlength="40" placeholder="e.g. sumo-snow-pitch">', 'Lowercase, with dashes') + field('The place', '<input id="ntnScene" maxlength="200" placeholder="e.g. a snowy soccer pitch with sumo wrestlers">', 'Goes in the prompt, and helps Notes choose it') + '</div>' +
             '<div class="row"><button type="button" id="ntnPr">Copy the prompt</button><button type="button" id="ntnTpl">Copy her tank template</button></div>' +
             '<label class="drop ga-drop" id="ntnDrop"><input type="file" id="ntnFile" accept="image/png,image/jpeg,image/webp" hidden><b>Bring the render here</b> <span class="muted">or drop it here</span></label><div id="ntnOut"></div>' +
@@ -1462,6 +1493,7 @@
         $$('[data-np]', b).forEach(function (el) { el.onclick = function () { E.altaBackdrop = el.getAttribute('data-np'); markDirty(); showTank(); }; });
         var tl = $('#epTankLet'); if (tl) tl.onclick = function () { delete E.altaBackdrop; markDirty(); showTank(); };
         if (!$('#ntnAdd')) return;
+        imgCatsWire(b, 'tank', showTank);
         var nn = $('#ntnName'), ns = $('#ntnScene'); if (AT) { nn.value = AT.name || ''; ns.value = AT.scene || ''; }
         nn.oninput = function () { TANKNEW = TANKNEW || {}; TANKNEW.name = slug(nn.value).slice(0, 40); };
         ns.oninput = function () { TANKNEW = TANKNEW || {}; TANKNEW.scene = ns.value; };
@@ -1476,17 +1508,18 @@
         var nd = $('#ntnDrop'); ['dragover', 'dragenter'].forEach(function (t) { nd.addEventListener(t, function (ev) { ev.preventDefault(); }); });
         nd.addEventListener('drop', function (ev) { ev.preventDefault(); ntake(ev.dataTransfer.files[0]); });
         $('#ntnAdd').onclick = function () {
-          var btn = this, x = TANKNEW, n = slug(nn.value).slice(0, 40);
+          var btn = this, x = TANKNEW, n = slug(nn.value).slice(0, 40), ic = imgCats('tank');
           if (!x || !x.rec) return;
           if (!/^[a-z0-9-]{1,40}$/.test(n)) { toast('Give it a name (lowercase, with dashes).', true); return; }
           if (tanks.some(function (y) { return y.name === n; })) { toast('There\'s already a scene called ' + n + '.', true); return; }
           btn.disabled = true; btn.textContent = 'Adding…';
           Promise.all([api('lookblob', x.rec.blob), x.rec.colors]).then(function (rr) {
-            return api('looks', { newTank: { name: n, ext: x.rec.ext, sha: rr[0].sha, scene: ns.value.trim(), colors: rr[1] }, offerTank: nc.length ? { names: [n], cats: nc } : null });
+            return api('looks', { newTank: { name: n, ext: x.rec.ext, sha: rr[0].sha, scene: ns.value.trim(), colors: rr[1] }, offerTank: ic.length ? { names: [n], cats: ic } : null });
           }).then(function () {
-            TANKNEW = null; E.altaBackdrop = n; markDirty();
+            TANKNEW = null; E.altaBackdrop = n; markDirty(); TANKSAVED[n] = URL.createObjectURL(x.rec.blob);
             LOOKJ = LOOKJ.then(function (j) { j = Object.assign({}, j); j.tankBackdrops = (j.tankBackdrops || []).concat([{ name: n, file: n + '.' + x.rec.ext, scene: ns.value.trim() }]);
-              var tc = Object.assign({}, j.categoryTankChoices || {}); nc.forEach(function (c) { if ((j.categoryTanks || {})[c] !== n) tc[c] = (tc[c] || []).concat([n]); }); j.categoryTankChoices = tc; return j; });
+              var tc = Object.assign({}, j.categoryTankChoices || {}); ic.forEach(function (c) { if ((j.categoryTanks || {})[c] !== n) tc[c] = (tc[c] || []).concat([n]); }); j.categoryTankChoices = tc; return j; });
+            IMGCATS.tank = null;
             toast('Her ' + n.replace(/-/g, ' ') + ' scene is added and picked for this Note. Save the Note to keep the pick.'); showTank();
           }).catch(function (err) { toast(err.message, true); btn.disabled = false; btn.textContent = 'Add it and use it here'; });
         };
@@ -1601,6 +1634,22 @@
   }
   // ---------- her style on this Note: just its categories, each with the cap and backdrop it gives; tick the one this Note
   // takes. The categories' own caps and backdrops are set in the Categories tab, not here ----------
+  // SUGGESTED CATEGORIES while a Note is written (Christian, Oct 14: smart tags): the categories its words fit best
+  // (resolve.js catFit: title, summary, place, episode and post), the strong ones only; one click adds one. Nothing is
+  // added on its own.
+  var ENTLOAD = null;
+  function catSuggest(J) {
+    if (!window.GAResolve || !GAResolve.catFit || !E) return [];
+    if (!ENTRIES) {   // a Note opened straight from its link: the other Notes (what each category is about) come first
+      if (!ENTLOAD) ENTLOAD = api('list').then(function (j) { ENTRIES = ENTRIES || j.entries; renderStyle(); }).catch(function () {});
+      return [];
+    }
+    var all = (ENTRIES || []).filter(function (x) { return x.id !== E.id; }).map(function (x) { return { id: x.id, cats: x.cats || [], words: x.words || x.title || '' }; });
+    var words = [E.title, E.summary, E.place, E.episode && E.episode.title, E.post && E.post.title, E.post && String(E.post.body || '').slice(0, 1200)].filter(Boolean).join(' ');
+    if (wordsCount(words) < 4) return [];
+    return GAResolve.catFit(J, all, { words: words, cats: noteCats() }).filter(function (x) { return x.s >= 3; }).slice(0, 4);
+  }
+  function wordsCount(t) { return (String(t || '').match(/[a-z]{3,}/gi) || []).length; }
   function renderStyle() {
     var box = $('#styleBox'); if (!box) return;
     renderLookData().then(function (r) {
@@ -1624,7 +1673,8 @@
         '<div class="ga-catedit"><span class="ga-cats-h">Categories</span><small>Where this Note is filed on Play, and the categories she can take her style from. Add one, or make a new one by typing its name.</small><span class="chips">' +
           '<span class="chip fixed" title="Its kind, set by the Note\'s type">' + esc(catName(kindTag(E.kind) || '')) + '</span>' +
           (E.tags || []).map(function (t) { return '<span class="chip">' + esc(catName(t)) + '<button type="button" data-untag="' + esc(t) + '" aria-label="Remove ' + esc(catName(t)) + '">×</button></span>'; }).join('') +
-          '<input id="gaTagIn" list="gaCatList" placeholder="Add a category" maxlength="40"><datalist id="gaCatList">' + allCats(r[3]).filter(function (c) { return nc.indexOf(c) < 0; }).map(function (c) { return '<option value="' + esc(catName(c)) + '">'; }).join('') + '</datalist></span></div>' +
+          '<input id="gaTagIn" list="gaCatList" placeholder="Add a category" maxlength="40"><datalist id="gaCatList">' + allCats(r[3]).filter(function (c) { return nc.indexOf(c) < 0; }).map(function (c) { return '<option value="' + esc(catName(c)) + '">'; }).join('') + '</datalist></span>' +
+          (function () { var sg = catSuggest(r[3]); return sg.length ? '<span class="ga-sugg"><small>Suggested from what it says:</small> ' + sg.map(function (x) { return '<button type="button" class="chip sugg" data-sugg="' + esc(x.c) + '" title="' + esc('Its words: ' + x.why.join(', ')) + '">+ ' + esc(catName(x.c)) + '</button>'; }).join('') + '</span>' : ''; })() + '</div>' +
         '<div class="ga-stys"><span class="ga-cats-h">Her style from a category</span>' +
         (nc.length ? '<small>The cap and backdrop each of this Note\'s categories gives her. Tick the one this Note takes. Categories get their styles in the Categories tab.</small>' + nc.map(row).join('') : '<small>This Note has no categories yet.</small>') +
         (now ? '<p class="ga-now"><b>Wearing now:</b> ' + esc(now.look.name.replace(/-/g, ' ')) + ' <small>(' + esc(now.look.why) + ')</small> · ' +
@@ -1640,6 +1690,7 @@
         if (E.narratorBackdrop && E.narratorBackdrop.fit === 'category' && E.narratorBackdrop.from === t) E.narratorBackdrop = null;
         markDirty(); renderStyle(); renderLook(); renderBd(); };
       });
+      $$('[data-sugg]', box).forEach(function (b) { b.onclick = function () { var t = b.getAttribute('data-sugg'); if (noteCats().indexOf(t) < 0) { E.tags = (E.tags || []).concat([t]); markDirty(); } renderStyle(); renderLook(); renderBd(); }; });
       var ti = $('#gaTagIn', box);
       if (ti) { var addTag = function () { var t = tslug(ti.value); if (!t || /^\d{4}$/.test(t)) return; if (noteCats().indexOf(t) < 0) { E.tags = (E.tags || []).concat([t]); markDirty(); } renderStyle(); renderLook(); renderBd(); };
         ti.onkeydown = function (ev) { if (ev.key === 'Enter') { ev.preventDefault(); addTag(); } }; ti.onchange = addTag; }
@@ -1927,6 +1978,25 @@
     }); });
     return out;
   }
+  // which of the Note's categories a new image made on it joins (Christian, Oct 14): all of them unless some are
+  // unticked; a category typed here is new to the Note too (and to the site once saved)
+  var IMGCATS = { bd: null, tank: null };
+  function imgCats(k) { var nc = noteCats(); return IMGCATS[k] ? IMGCATS[k].filter(function (c) { return nc.indexOf(c) >= 0; }) : nc; }
+  function imgCatsHtml(k) {
+    var nc = noteCats(), on = imgCats(k);
+    return '<div class="imgcats"><span class="ga-cats-h">It joins the pools of</span><span class="chips">' + nc.map(function (c) { return '<label class="chip"><input type="checkbox" data-ic="' + esc(c) + '"' + (on.indexOf(c) >= 0 ? ' checked' : '') + '>' + esc(catName(c)) + '</label>'; }).join('') +
+      '<input class="icnew" placeholder="Add a category" maxlength="40"></span><small>A category you add here goes on this Note too.</small></div>';
+  }
+  function imgCatsWire(root, k, again) {
+    $$('input[data-ic]', root).forEach(function (i) { i.onchange = function () { IMGCATS[k] = $$('input[data-ic]', root).filter(function (x) { return x.checked; }).map(function (x) { return x.getAttribute('data-ic'); }); }; });
+    var n = $('.icnew', root); if (!n) return;
+    var add = function () {
+      var t = String(n.value || '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40); if (!t || /^\d{4}$/.test(t)) return;
+      if (noteCats().indexOf(t) < 0) { E.tags = (E.tags || []).concat([t]); markDirty(); }
+      IMGCATS[k] = imgCats(k).concat([t]).filter(function (c, i, a) { return a.indexOf(c) === i; }); renderStyle(); again();
+    };
+    n.onkeydown = function (ev) { if (ev.key === 'Enter') { ev.preventDefault(); add(); } }; n.onchange = add;
+  }
   function poolGrid(list, on, picked, tank) {
     return '<div class="npool' + (tank ? ' tk' : '') + '">' + list.map(function (x) {
       var src = tank ? TANKSAVED[x.b.name] || '/assets/alta/backdrops/' + esc(x.b.file) + (x.b.v ? '?r=' + esc(x.b.v) : '') : bdSrc(x.b);
@@ -1950,13 +2020,14 @@
       box.innerHTML = (np.length ? '<p class="muted"><b>From its categories\' pools</b> (' + np.length + '): ' + (pinned ? 'this Note keeps the one you picked.' : auto ? 'it wears the one that fits its words and colours best.' : 'a holiday or its own backdrop comes first.') + ' Pick one to keep it on this Note.</p>' +
           poolGrid(np, pinned ? Bk.backdrop : auto ? auto.name : '', pinned ? '' : auto ? (auto.why || '').replace(/^from [^,]*,? ?/, '').replace(/^fits /, '') || 'the only one' : '', false) +
           (pinned ? '<div class="row"><button type="button" id="bdLet">Let it choose again</button></div>' : '') : '') +
-        '<p class="muted">Or any backdrop, or a new one just for this Note: a new one joins the pools of ' + (nc.length ? esc(nc.map(catName).join(', ')) : 'its categories') + ' when you save.</p>' +
+        '<p class="muted">Or any backdrop, or a new one made for this Note: when you save, a new one joins the pools of the categories you tick for it.</p>' +
         field('This Note\'s own backdrop', '<select id="bdPickSel">' + opts + '</select>') +
         (own && !waiting ? '<img class="ga-bdimg" alt="" src="' + bdSrc(own) + '"><div class="row"><button type="button" id="bdReplace">Replace it with a new render</button></div>' : '') +
         (making ? field('The place', '<textarea id="bdScene" rows="2" placeholder="e.g. ' + esc(sceneFor(nc) || 'a cozy, warmly lit room') + '">' + esc(scene) + '</textarea>', 'A few words; the prompt below is built from them') +
           field('Image prompt', '<textarea id="bdPrompt" rows="5" readonly>' + esc(GALook.bdPrompt(scene || sceneFor(nc))) + '</textarea>') +
           '<div class="row"><button type="button" id="bdCopy">Copy the image prompt</button></div>' + bdTpl() +
-          '<label class="drop ga-drop" id="bdDrop"><input type="file" id="bdFile" accept="image/png,image/jpeg,image/webp" hidden><b>' + (waiting ? 'Choose a different render' : 'Bring the render back') + '</b> <span class="muted">or drop it here</span></label><div id="bdOut"></div>' : '');
+          '<label class="drop ga-drop" id="bdDrop"><input type="file" id="bdFile" accept="image/png,image/jpeg,image/webp" hidden><b>' + (waiting ? 'Choose a different render' : 'Bring the render back') + '</b> <span class="muted">or drop it here</span></label><div id="bdOut"></div>' +
+          (!own ? imgCatsHtml('bd') : '') : '');
       $('#bdPickSel').value = Bk ? Bk.backdrop : ''; renderStyle();
       $('#bdPickSel').onchange = function () {
         var v = this.value;
@@ -1973,7 +2044,7 @@
       var bl = $('#bdLet'); if (bl) bl.onclick = function () { E.narratorBackdrop = null; BDNEW = null; markDirty(); renderBd(); };
       var sc = $('#bdScene'); if (sc) sc.oninput = function () { E.narratorBackdrop.scene = sc.value; $('#bdPrompt').value = GALook.bdPrompt(sc.value || sceneFor(nc)); markDirty(); };
       var cp = $('#bdCopy'); if (cp) cp.onclick = function () { navigator.clipboard.writeText($('#bdPrompt').value).then(function () { toast('Image prompt copied.'); }); };
-      wireTpl(box);
+      wireTpl(box); imgCatsWire(box, 'bd', renderBd);
       var drop = $('#bdDrop'); if (!drop) return;
       function take(f) {
         if (!f) return; $('#bdOut').innerHTML = '<p class="muted">Working…</p>';
@@ -3827,7 +3898,7 @@
       var clips = Object.keys(clipsNew).map(function (n) { return { name: n.replace(/\.mp4$/, ''), loop: clipsNew[n].token }; });
       if (clips.length) L.at(1, clips.length + ' video loop' + (clips.length > 1 ? 's' : ''));
       return api('save', { entry: E, base: BASE.version, newPhotos: uploaded, newClips: clips, removePhotos: removed, newAudio: audioNew ? audioNew.sha : '', removeAudio: audioGone && !!hadAudio, newLook: lookUp, removeLook: LOOKDEL, categoryLooks: Object.keys(CATNEW).length ? CATNEW : null,
-        newBackdrop: bdUp, categoryBackdrops: Object.keys(CATBDNEW).length ? CATBDNEW : null, offerBackdrop: bdUp && noteCats().length ? { names: [bdUp.name], cats: noteCats() } : null })
+        newBackdrop: bdUp, categoryBackdrops: Object.keys(CATBDNEW).length ? CATBDNEW : null, offerBackdrop: bdUp && imgCats('bd').length ? { names: [bdUp.name], cats: imgCats('bd') } : null })
         .catch(function (err) { E.episode.audio = hadAudio; throw err; });
     }).then(function (j) {
       if (j.entry && j.entry.publishedAt) E.publishedAt = j.entry.publishedAt;   // set by the server the first time it goes live
@@ -3838,7 +3909,7 @@
       if (lookUp) { LOOKSAVED[lookUp.name] = LOOKNEW.url; LOOKNEW = null; LOOKREPL = false; LOOKS = LOOKS.then(function (l) { return l.filter(function (x) { return x.name !== lookUp.name; }).concat([{ name: lookUp.name, file: lookUp.name + '.' + lookUp.ext, about: lookUp.about, flair: lookUp.flair ? Object.keys(lookUp.flair).join('') : undefined }]); }); setTimeout(renderLook, 0); }
       if (bdUp || Object.keys(CATBDNEW).length) {
         if (bdUp) BDSAVED[bdUp.name] = BDNEW.url;
-        var sentB = CATBDNEW, up = bdUp; BDNEW = null; CATBDNEW = {};
+        var sentB = CATBDNEW, up = bdUp; BDNEW = null; CATBDNEW = {}; IMGCATS.bd = null;
         LOOKBD = LOOKBD.then(function (d) { var l = d.list.filter(function (x) { return !up || x.name !== up.name; }); if (up) l = l.concat([{ name: up.name, file: up.name + '.' + up.ext, scene: up.scene }]);
           var c = Object.assign({}, d.cats); Object.keys(sentB).forEach(function (k) { if (sentB[k]) c[k] = sentB[k]; else delete c[k]; }); return { list: l, cats: c }; });
         setTimeout(renderBd, 0);
