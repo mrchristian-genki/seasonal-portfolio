@@ -78,7 +78,14 @@
   { "name": "glass-tunnel-leading-to-lake", "file": "glass-tunnel-leading-to-lake.webp", "about": "", "v": "tmwt8u", "scene": "glass-tunnel-leading-to-lake", "colors": ["#604a39","#23180e","#a9937d"] },
   { "name": "robotic-family-enjoying-room-1", "file": "robotic-family-enjoying-room-1.webp", "about": "", "v": "tmwtn8", "scene": "robotic-family-enjoying-room", "colors": ["#645441","#262219","#ad987f"] },
   { "name": "family-room-in-warm-light-robots", "file": "family-room-in-warm-light-robots.webp", "about": "", "v": "tmwtn8", "scene": "family-room-in-warm-light-robots", "colors": ["#18150c","#524633","#9b9174"] },
-  { "name": "desert-hills-under-dusk-sky-202610141109", "file": "desert-hills-under-dusk-sky-202610141109.webp", "about": "", "v": "tmwtn8", "scene": "desert-hills-under-dusk-sky", "colors": ["#323025","#cba585","#706053"] }
+  { "name": "desert-hills-under-dusk-sky-202610141109", "file": "desert-hills-under-dusk-sky-202610141109.webp", "about": "", "v": "tmwtn8", "scene": "desert-hills-under-dusk-sky", "colors": ["#323025","#cba585","#706053"] },
+  { "name": "robotic-mermaids-greeting-at-portal-2026", "file": "robotic-mermaids-greeting-at-portal-2026.webp", "about": "", "v": "tmwu57", "scene": "robotic-mermaids-greeting-at-portal-2026", "colors": ["#131817","#292722","#483a2b"] },
+  { "name": "robotic-mermaids-jumping-in-air-20261014", "file": "robotic-mermaids-jumping-in-air-20261014.webp", "about": "", "v": "tmwu57", "scene": "robotic-mermaids-jumping-in-air", "colors": ["#cbc1ad","#6b6a63","#36372f"] },
+  { "name": "robotic-family-enjoying-room-tog-2026101", "file": "robotic-family-enjoying-room-tog-2026101.webp", "about": "", "v": "tmwu57", "scene": "robotic-family-enjoying-room", "colors": ["#645441","#262219","#ad987f"] },
+  { "name": "family-room-in-warm-light-20261014111955", "file": "family-room-in-warm-light-20261014111955.webp", "about": "", "v": "tmwu57", "scene": "family-room-in-warm-light", "colors": ["#18150c","#524633","#9b9174"] },
+  { "name": "robotic-dogs-playing-in-den-202610141124", "file": "robotic-dogs-playing-in-den-202610141124.webp", "about": "", "v": "tmwu57", "scene": "robotic-dogs-playing-in-den", "colors": ["#261d13","#53412d","#93795c"] },
+  { "name": "robotic-humanoids-playing-together-20261", "file": "robotic-humanoids-playing-together-20261.webp", "about": "", "v": "tmwu57", "scene": "robotic-humanoids-playing-together", "colors": ["#513d26","#856949","#b29979"] },
+  { "name": "robotic-family-hugging-in-room-202610141", "file": "robotic-family-hugging-in-room-202610141.webp", "about": "", "v": "tmwu57", "scene": "robotic-family-hugging-in-room", "colors": ["#382815","#685135","#998669"] }
  ],
  "categoryBackdrops": {
   "automaton": "workshop-with-robots",
@@ -105,7 +112,7 @@
   "profile": ["library","bike-shop","clockmaker","workshop","workshop-with-robots","old-library","copper-workbench","bike-bench"],
   "ride": ["lake-tahoe-2"],
   "robot": ["clockmaker","workshop-with-robots","library-futuristic-1","red-carpet-gala"],
-  "with-family": ["robotic-family-enjoying-room-1","family-room-in-warm-light-robots","desert-hills-under-dusk-sky-202610141109"],
+  "with-family": ["robotic-family-enjoying-room-1","family-room-in-warm-light-robots","desert-hills-under-dusk-sky-202610141109","robotic-mermaids-greeting-at-portal-2026","robotic-mermaids-jumping-in-air-20261014","robotic-family-enjoying-room-tog-2026101","family-room-in-warm-light-20261014111955","robotic-dogs-playing-in-den-202610141124","robotic-humanoids-playing-together-20261","robotic-family-hugging-in-room-202610141"],
   "with-helena": ["lake-tahoe-beach","donegal-1","donegal-2","donegal-3","donegal-4","donegal-5"],
   "with-marley": ["trailhead","lake-tahoe-beach","biking-forest","hiking-yosemite-1","hiking-yosemite-2","hiking-yosemite-3","creek","foliage","lake-tahoe-2"]
  },
@@ -133,7 +140,7 @@
   "ride": "2026-10-14T15:50:30Z",
   "robot": "2026-10-14T18:12:30Z",
   "time-machine": "2026-10-14T02:29:20Z",
-  "with-family": "2026-10-14T18:21:08Z",
+  "with-family": "2026-10-14T18:31:55Z",
   "with-helena": "2026-10-14T18:12:30Z",
   "with-marley": "2026-10-14T18:12:30Z"
  },
