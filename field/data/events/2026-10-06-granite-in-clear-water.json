@@ -131,5 +131,8 @@
   "fit": "existing",
   "scene": "an old library with tall wooden bookshelves, brass reading lamps and a long study table"
  },
- "palette": ["#2cbaaa", "#56a0d7"]
+ "palette": [
+  "#2cbaaa",
+  "#56a0d7"
+ ]
 }
