@@ -118,18 +118,17 @@
  "source": "Rides/October 6 2026",
  "publishedAt": "2026-10-06T14:21:07Z",
  "narratorLook": {
-  "look": "grad-cap",
-  "fit": "category",
-  "from": "case-study",
-  "about": "a brass mortarboard with a chain tassel",
-  "why": "Picked from Case study.",
+  "look": "aviator-cap-1",
+  "fit": "existing",
+  "about": "Aviator Cap",
+  "why": "",
   "prompt": "",
   "bulb": false
  },
  "narratorBackdrop": {
-  "backdrop": "library",
+  "backdrop": "mist-on-emerald-bay-shore",
   "fit": "existing",
-  "scene": "an old library with tall wooden bookshelves, brass reading lamps and a long study table"
+  "scene": "mist-on-emerald-bay-shore"
  },
  "palette": [
   "#2cbaaa",
