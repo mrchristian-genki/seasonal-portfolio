@@ -182,7 +182,7 @@
   { "name": "buckeye-hot-springs-2", "file": "buckeye-hot-springs-2.webp", "about": "", "v": "tmwmo6", "scene": "Buckeye Hot Springs with natural, undeveloped thermal mineral pools", "colors": ["#8e836c","#51513a","#cac3b8"] },
   { "name": "time-machine-workshop", "file": "time-machine-workshop.webp", "about": "", "v": "tmwmo6", "scene": "an elaborate time machine workshop with copper and turquoise lights", "colors": ["#231c1b","#4e413a","#8c6e5a"] },
   { "name": "alpine-forest-and-wooden-fence", "file": "alpine-forest-and-wooden-fence.webp", "about": "", "v": "tmwmo6", "scene": "alpine forest and wooden fence", "colors": ["#49422b","#7c7854","#cacbbf"] },
-  { "name": "rainbow-trout-in-aquarium-tank-202610111", "file": "rainbow-trout-in-aquarium-tank-202610111.webp", "about": "", "v": "tmwvvh", "colors": ["#e3e3df","#4c514b","#959890"] },
+  { "name": "rainbow-trout-in-aquarium-tank-202610111", "file": "rainbow-trout-in-aquarium-tank-202610111.webp", "about": "", "v": "tmwvvh", "colors": ["#e3e3df","#4c514b","#959890"], "scene": "A family of robots going into a large metal and glass tunnel or tube." },
   { "name": "mermaid-family-jumping-in-the-air", "file": "mermaid-family-jumping-in-the-air.webp", "about": "", "v": "tmwvxb", "scene": "mermaid family jumping in the air", "colors": ["#e8e5dd","#a39b91","#574b36"] },
   { "name": "people-coloring-in-books-together-202610", "file": "people-coloring-in-books-together-202610.webp", "about": "", "v": "tmwwrr", "scene": "A group of people coloring with coloring pens in coloring books in a room filled with treenets, spaceneds, or tree webs. The family is climb", "colors": ["#775e48","#473525","#aa9175"] }
  ],
