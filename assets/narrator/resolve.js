@@ -170,6 +170,6 @@
     return out.sort(function (a, b) { return b.s - a.s; });
   }
   var NARRATORS = { glazyarray: 'GlazyArray', alta: 'A.L.T.A.', marley: 'Robot Marley' };
-  var api = { pick: pick, fit: fit, catFit: catFit, wordsOf: wordsOf, mmdd: mmdd, NARRATORS: NARRATORS };
+  var api = { pick: pick, fit: fit, catFit: catFit, wordsOf: wordsOf, cdist: cdist, mmdd: mmdd, NARRATORS: NARRATORS };
   if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.GAResolve = api;
 })(this);
