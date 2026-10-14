@@ -104,7 +104,8 @@
   { "name": "behind-the-scenes-1", "file": "behind-the-scenes-1.webp", "about": "", "v": "tmvl2h", "colors": ["#423423","#8a7c65","#d8d6c9"] },
   { "name": "with-helena-1", "file": "with-helena-1.webp", "about": "", "v": "tmvl40", "colors": ["#402f1b","#d5d5c2","#8e8369"] },
   { "name": "aerial-1", "file": "aerial-1.webp", "about": "", "v": "tmvl50", "colors": ["#464b3e","#728086","#dde1e4"] },
-  { "name": "hike-1", "file": "hike-1.webp", "about": "", "v": "tmvl5w", "colors": ["#32301e","#6e6142","#c5b290"] }
+  { "name": "hike-1", "file": "hike-1.webp", "about": "", "v": "tmvl5w", "colors": ["#32301e","#6e6142","#c5b290"] },
+  { "name": "profile-1", "file": "profile-1.webp", "about": "", "v": "tmvl7j", "colors": ["#4a321d","#836d55","#bbbfb6"] }
  ],
  "categoryTanks": {
   "ireland": "donegal-cliffs",
