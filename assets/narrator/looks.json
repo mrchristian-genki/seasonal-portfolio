@@ -22,7 +22,8 @@
   { "name": "bike-helmet", "file": "bike-helmet.webp", "about": "a glossy hard-shell bike helmet with a little brass headlamp, its shell in one colour and its rim band in the other", "v": "tmwrsf", "bulb": false, "flair": "a" },
   { "name": "aviator-cap-1", "marley": {"v":"tmx17i","hat":"aviatorcap1","hatBox":[115,-38,275,118],"charm":"aviatorcap1","charmBox":[215,303,83,152]} },
   { "name": "hawaiian-cap-3", "marley": {"v":"tmx190","hat":"hawaiiancap3","hatBox":[203,-34,119,92],"charm":"hawaiiancap3","charmBox":[230,270,58,171]} },
-  { "name": "tailored-irish-tweed-cap", "marley": {"v":"tmx19y","hat":"tailoredirishtweedca","hatBox":[128,-36,252,118],"charm":"tailoredirishtweedca","charmBox":[219,301,78,86]} }
+  { "name": "tailored-irish-tweed-cap", "marley": {"v":"tmx19y","hat":"tailoredirishtweedca","hatBox":[128,-36,252,118],"charm":"tailoredirishtweedca","charmBox":[219,301,78,86]} },
+  { "name": "miner-cap-1", "marley": {"v":"tmx1av","hat":"minercap1","hatBox":[160,-32,189,122],"charm":"minercap1","charmBox":[224,302,66,88]} }
  ],
  "categories": {
   "automaton": "workshop-goggles",
