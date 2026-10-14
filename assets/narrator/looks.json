@@ -81,7 +81,8 @@
  },
  "categoryStamp": {
   "aerial": "2026-10-14T02:22:42Z",
-  "automaton": "2026-10-14T02:22:58Z"
+  "automaton": "2026-10-14T02:22:58Z",
+  "behind-the-scenes": "2026-10-14T02:23:20Z"
  },
  "defaults": {
   "backdrop": "lake-tahoe-beach"
@@ -111,11 +112,13 @@
   { "name": "hike-1", "file": "hike-1.webp", "about": "", "v": "tmvl5w", "colors": ["#32301e","#6e6142","#c5b290"] },
   { "name": "profile-1", "file": "profile-1.webp", "about": "", "v": "tmvl7j", "colors": ["#4a321d","#836d55","#bbbfb6"] },
   { "name": "aerial-tank", "file": "aerial-tank.webp", "about": "", "v": "tmvl9u", "scene": "a wide mountain valley seen from a high ridge, a lake far below", "colors": ["#464b3e","#728086","#dde1e4"] },
-  { "name": "automaton-tank", "file": "automaton-tank.webp", "about": "", "v": "tmvlaa", "scene": "a clockmaker's workshop with brass gears and glass jars on shelves", "colors": ["#4e341e","#997353","#d7c7b2"] }
+  { "name": "automaton-tank", "file": "automaton-tank.webp", "about": "", "v": "tmvlaa", "scene": "a clockmaker's workshop with brass gears and glass jars on shelves", "colors": ["#4e341e","#997353","#d7c7b2"] },
+  { "name": "behind-the-scenes-tank", "file": "behind-the-scenes-tank.webp", "about": "", "v": "tmvlaw", "colors": ["#423423","#8a7c65","#d8d6c9"] }
  ],
  "categoryTanks": {
   "aerial": "aerial-tank",
   "automaton": "automaton-tank",
+  "behind-the-scenes": "behind-the-scenes-tank",
   "ireland": "donegal-cliffs",
   "lake-tahoe": "tahoe-beach-dusk"
  },
