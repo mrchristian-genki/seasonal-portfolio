@@ -387,10 +387,17 @@
   ],
   "cover": "clip-1.mp4"
  },
- "narratorLook": null,
+ "narratorLook": {
+  "look": "hawaiian-cap-2",
+  "fit": "existing",
+  "about": "glossy baseball hat worn by robots in Hawaii.",
+  "why": "",
+  "prompt": "",
+  "bulb": false
+ },
  "narratorBackdrop": {
-  "backdrop": "creek",
-  "fit": "new",
-  "scene": "a cozy maker's workshop with a workbench, tools on the wall and warm hanging lamps"
+  "backdrop": "hiking-1",
+  "fit": "existing",
+  "scene": "granite boulders and pines on a calm lake at golden hour"
  }
 }
