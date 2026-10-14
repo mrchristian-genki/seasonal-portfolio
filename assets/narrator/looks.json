@@ -108,28 +108,7 @@
   "ireland": "Ireland"
  },
  "tankBackdrops": [
-  { "name": "hawaii-coast", "file": "hawaii-coast.webp", "about": "", "v": "tmwfki", "scene": "a tropical shoreline at golden hour, palm trees and calm turquoise water", "colors": ["#5a5033","#e8d3af","#99987c"] },
-  { "name": "donegal-cliffs", "file": "donegal-cliffs.webp", "about": "", "v": "tmwfki", "scene": "green sea cliffs above the Atlantic under a soft grey sky", "colors": ["#cdd1d2","#8f999c","#59573c"] },
-  { "name": "classroom", "file": "classroom.webp", "about": "", "v": "tmwfki", "scene": "a bright classroom with a long chalkboard, a globe and tall windows", "colors": ["#a78b6e","#554c3f","#daccba"] },
-  { "name": "pool-deck", "file": "pool-deck.webp", "about": "", "v": "tmwfki", "scene": "a sunny outdoor swimming pool deck with lane ropes and a lifeguard chair", "colors": ["#213213","#586432","#abaa6e"] },
-  { "name": "tahoe-winter-shore", "file": "tahoe-winter-shore.webp", "about": "", "v": "tmwfki", "scene": "a snowy Lake Tahoe shoreline in winter, dark pines and white mountains across the water", "colors": ["#d1d8e0","#6d7c8c","#3f4441"] },
   { "name": "workshop-with-robots", "file": "workshop-with-robots.webp", "about": "", "v": "tmwfki", "colors": ["#4e341e","#997353","#d7c7b2"], "scene": "A garage workshop filled with robot parts for a robot dog, robot humanoid and robot mermaid." },
-  { "name": "ride-tank", "file": "ride-tank.webp", "about": "", "v": "tmwfki", "colors": ["#362f25","#7d6d5a","#bbad9d"], "scene": "A room full of bikes and biking gear all along the walls." },
-  { "name": "case-study-tank-1", "file": "case-study-tank-1.webp", "about": "", "v": "tmwfki", "colors": ["#69513e","#311e11","#c1a27e"], "scene": "I tall library with a ladder that is wooden and rolls." },
-  { "name": "automaton-1", "file": "automaton-1.webp", "about": "", "v": "tmwfki", "colors": ["#3d2c1c","#79644e","#cabeae"], "scene": "A room full of gears and parts of automatons" },
-  { "name": "with-marley-1", "file": "with-marley-1.webp", "about": "", "v": "tmwfki", "colors": ["#414121","#7f774b","#d6c085"], "scene": "A backyard with a fence" },
-  { "name": "behind-the-scenes-1", "file": "behind-the-scenes-1.webp", "about": "", "v": "tmwfki", "colors": ["#423423","#8a7c65","#d8d6c9"], "scene": "A brick and steal loft style room with big windows and glass and wood furniture." },
-  { "name": "with-helena-1", "file": "with-helena-1.webp", "about": "", "v": "tmwfki", "colors": ["#402f1b","#d5d5c2","#8e8369"], "scene": "A brick and steal loft style room with big windows and glass and wood drafting tables." },
-  { "name": "aerial-1", "file": "aerial-1.webp", "about": "", "v": "tmwfki", "colors": ["#464b3e","#728086","#dde1e4"], "scene": "A cloudy valley with a river in the distance and pine trees." },
-  { "name": "hike-1", "file": "hike-1.webp", "about": "", "v": "tmwfki", "colors": ["#32301e","#6e6142","#c5b290"], "scene": "A wooded forest trail." },
-  { "name": "profile-1", "file": "profile-1.webp", "about": "", "v": "tmwfki", "colors": ["#4a321d","#836d55","#bbbfb6"], "scene": "A red brick and wood studio style room with big windows looking out over pine trees." },
-  { "name": "aerial-tank", "file": "aerial-tank.webp", "about": "", "v": "tmwfki", "scene": "a wide mountain valley seen from a high ridge, a lake far below", "colors": ["#464b3e","#728086","#dde1e4"] },
-  { "name": "automaton-tank", "file": "automaton-tank.webp", "about": "", "v": "tmwfki", "scene": "a clockmaker's workshop with brass gears and glass jars on shelves", "colors": ["#4e341e","#997353","#d7c7b2"] },
-  { "name": "behind-the-scenes-tank", "file": "behind-the-scenes-tank.webp", "about": "", "v": "tmwfki", "colors": ["#423423","#8a7c65","#d8d6c9"], "scene": "A brick and steal loft style room with big windows and glass and wood furniture." },
-  { "name": "case-study-tank", "file": "case-study-tank.webp", "about": "", "v": "tmwfki", "scene": "a quiet old library with tall wooden bookshelves and warm reading lamps", "colors": ["#69513e","#311e11","#c1a27e"] },
-  { "name": "character-tank", "file": "character-tank.webp", "about": "", "v": "tmwfki", "colors": ["#252929","#75828e","#c7c3bf"], "scene": "East side of Lake Tahoe at dusk." },
-  { "name": "dogs-tank", "file": "dogs-tank.webp", "about": "", "v": "tmwfki", "scene": "Backyard", "colors": ["#414121","#7f774b","#d6c085"] },
-  { "name": "dusk-tank", "file": "dusk-tank.webp", "about": "", "v": "tmwfki", "colors": ["#252929","#75828e","#c7c3bf"], "scene": "East side of Lake Tahoe at dusk." },
   { "name": "time-machine-tank", "file": "time-machine-tank.webp", "about": "", "v": "tmwfki", "colors": ["#30241a","#786755","#d2cec2"], "scene": "The room where a time machine is with all it's copper and turquoise parts." },
   { "name": "coloring-books-tank", "file": "coloring-books-tank.webp", "about": "", "v": "tmwejz", "colors": ["#47301f","#9d755c","#d5c3b6"], "scene": "A room full of people relaxing and coloring." },
   { "name": "feature-tank", "file": "feature-tank.webp", "about": "", "v": "tmwekq", "colors": ["#4c6864","#23322d","#a3b3b3"], "scene": "A room full of massive water tanks that each have a room for a mermaid to live in. one is a living room and one is small gym and they are connected by massive water tubes." },
@@ -159,23 +138,21 @@
   { "name": "alpine-forest-and-wooden-fence", "file": "alpine-forest-and-wooden-fence.webp", "about": "", "v": "tmwmo6", "scene": "alpine forest and wooden fence", "colors": ["#49422b","#7c7854","#cacbbf"] }
  ],
  "categoryTanks": {
-  "aerial": "aerial-tank",
-  "automaton": "automaton-tank",
-  "behind-the-scenes": "behind-the-scenes-tank",
-  "case-study": "case-study-tank",
-  "character": "character-tank",
+  "aerial": "a-wide-mountain-valley",
+  "automaton": "a-brass-and-copper-workshop",
+  "case-study": "library",
+  "character": "whale-beach-on-lake-tahoe-at-sunset",
   "coloring-books": "coloring-books-tank",
-  "dogs": "dogs-tank",
-  "dusk": "dusk-tank",
+  "dogs": "a-dogs-ball-in-pine-meadow",
+  "dusk": "a-place-that-suits-dusk",
   "feature": "feature-tank",
-  "ireland": "donegal-cliffs",
   "lake-tahoe": "tahoe-beach-dusk",
   "mini-cast": "workshop-with-robots",
   "time-machine": "time-machine-tank"
  },
  "categoryTankChoices": {
-  "lake-tahoe": ["tahoe-winter-shore","emerald-bay-mist","boathouse"],
-  "mini-cast": ["behind-the-scenes-1","profile-1","behind-the-scenes-tank","boathouse","library","makers-workshop","a-pine-forest-trailhead","a-wide-mountain-valley","makers-workshop-with-tools","tunnels-to-tunnels","travertine-hot-springs","a-dogs-ball-in-pine-meadow","the-boat-house-tubes","whale-beach-on-lake-tahoe-at-sunset","a-massive-futuristic-glowing-library","a-place-that-suits-dusk","fannette-island","buckeye-hot-springs-1","comfortable-room","a-brass-and-copper-workshop","open-high-desert-sagebrush-hills","buckeye-hot-springs-2","time-machine-workshop","alpine-forest-and-wooden-fence"],
-  "ride": ["ride-tank","aerial-1","hike-1","tahoe-beach-dusk"]
+  "lake-tahoe": ["emerald-bay-mist","boathouse"],
+  "mini-cast": ["boathouse","library","makers-workshop","a-pine-forest-trailhead","a-wide-mountain-valley","makers-workshop-with-tools","tunnels-to-tunnels","travertine-hot-springs","a-dogs-ball-in-pine-meadow","the-boat-house-tubes","whale-beach-on-lake-tahoe-at-sunset","a-massive-futuristic-glowing-library","a-place-that-suits-dusk","fannette-island","buckeye-hot-springs-1","comfortable-room","a-brass-and-copper-workshop","open-high-desert-sagebrush-hills","buckeye-hot-springs-2","time-machine-workshop","alpine-forest-and-wooden-fence"],
+  "ride": ["tahoe-beach-dusk","a-pine-forest-trailhead"]
  }
 }
