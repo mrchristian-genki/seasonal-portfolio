@@ -75,7 +75,10 @@
   { "name": "travertine-hot-springs-in-califo", "file": "travertine-hot-springs-in-califo.webp", "about": "", "v": "tmwt8u", "scene": "travertine-hot-springs-in-califo", "colors": ["#2f2718","#856c50","#dac4a8"] },
   { "name": "library-with-wooden-bookshelves", "file": "library-with-wooden-bookshelves.webp", "about": "", "v": "tmwt8u", "scene": "library-with-wooden-bookshelves", "colors": ["#2e251a","#644c36","#bfa47d"] },
   { "name": "dog-ball-and-leash-on", "file": "dog-ball-and-leash-on.webp", "about": "", "v": "tmwt8u", "scene": "dog-ball-and-leash-on", "colors": ["#212118","#48432e","#907843"] },
-  { "name": "glass-tunnel-leading-to-lake", "file": "glass-tunnel-leading-to-lake.webp", "about": "", "v": "tmwt8u", "scene": "glass-tunnel-leading-to-lake", "colors": ["#604a39","#23180e","#a9937d"] }
+  { "name": "glass-tunnel-leading-to-lake", "file": "glass-tunnel-leading-to-lake.webp", "about": "", "v": "tmwt8u", "scene": "glass-tunnel-leading-to-lake", "colors": ["#604a39","#23180e","#a9937d"] },
+  { "name": "robotic-family-enjoying-room-1", "file": "robotic-family-enjoying-room-1.webp", "about": "", "v": "tmwtn8", "scene": "robotic-family-enjoying-room", "colors": ["#645441","#262219","#ad987f"] },
+  { "name": "family-room-in-warm-light-robots", "file": "family-room-in-warm-light-robots.webp", "about": "", "v": "tmwtn8", "scene": "family-room-in-warm-light-robots", "colors": ["#18150c","#524633","#9b9174"] },
+  { "name": "desert-hills-under-dusk-sky-202610141109", "file": "desert-hills-under-dusk-sky-202610141109.webp", "about": "", "v": "tmwtn8", "scene": "desert-hills-under-dusk-sky", "colors": ["#323025","#cba585","#706053"] }
  ],
  "categoryBackdrops": {
   "automaton": "workshop-with-robots",
@@ -102,6 +105,7 @@
   "profile": ["library","bike-shop","clockmaker","workshop","workshop-with-robots","old-library","copper-workbench","bike-bench"],
   "ride": ["lake-tahoe-2"],
   "robot": ["clockmaker","workshop-with-robots","library-futuristic-1","red-carpet-gala"],
+  "with-family": ["robotic-family-enjoying-room-1","family-room-in-warm-light-robots","desert-hills-under-dusk-sky-202610141109"],
   "with-helena": ["lake-tahoe-beach","donegal-1","donegal-2","donegal-3","donegal-4","donegal-5"],
   "with-marley": ["trailhead","lake-tahoe-beach","biking-forest","hiking-yosemite-1","hiking-yosemite-2","hiking-yosemite-3","creek","foliage","lake-tahoe-2"]
  },
@@ -129,6 +133,7 @@
   "ride": "2026-10-14T15:50:30Z",
   "robot": "2026-10-14T18:12:30Z",
   "time-machine": "2026-10-14T02:29:20Z",
+  "with-family": "2026-10-14T18:21:08Z",
   "with-helena": "2026-10-14T18:12:30Z",
   "with-marley": "2026-10-14T18:12:30Z"
  },
