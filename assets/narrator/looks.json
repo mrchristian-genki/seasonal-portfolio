@@ -87,7 +87,8 @@
   "character": "2026-10-14T02:24:12Z",
   "coloring-books": "2026-10-14T02:25:24Z",
   "dogs": "2026-10-14T02:25:49Z",
-  "dusk": "2026-10-14T02:26:36Z"
+  "dusk": "2026-10-14T02:26:36Z",
+  "time-machine": "2026-10-14T02:29:20Z"
  },
  "defaults": {
   "backdrop": "lake-tahoe-beach"
@@ -123,7 +124,8 @@
   { "name": "character-tank", "file": "character-tank.webp", "about": "", "v": "tmvlcc", "colors": ["#252929","#75828e","#c7c3bf"] },
   { "name": "coloring-books-tank", "file": "coloring-books-tank.webp", "about": "", "v": "tmvlec", "colors": ["#4f3620","#94785b","#dbd7ca"] },
   { "name": "dogs-tank", "file": "dogs-tank.webp", "about": "", "v": "tmvlf1", "scene": "Backyard", "colors": ["#414121","#7f774b","#d6c085"] },
-  { "name": "dusk-tank", "file": "dusk-tank.webp", "about": "", "v": "tmvlgc", "colors": ["#252929","#75828e","#c7c3bf"] }
+  { "name": "dusk-tank", "file": "dusk-tank.webp", "about": "", "v": "tmvlgc", "colors": ["#252929","#75828e","#c7c3bf"] },
+  { "name": "time-machine-tank", "file": "time-machine-tank.webp", "about": "", "v": "tmvlkw", "colors": ["#30241a","#786755","#d2cec2"] }
  ],
  "categoryTanks": {
   "aerial": "aerial-tank",
@@ -135,7 +137,8 @@
   "dogs": "dogs-tank",
   "dusk": "dusk-tank",
   "ireland": "donegal-cliffs",
-  "lake-tahoe": "tahoe-beach-dusk"
+  "lake-tahoe": "tahoe-beach-dusk",
+  "time-machine": "time-machine-tank"
  },
  "categoryTankChoices": {
   "lake-tahoe": ["tahoe-winter-shore","emerald-bay-mist","boathouse"]
