@@ -138,8 +138,8 @@
   "feature": "2026-10-14T19:28:39Z",
   "high-desert": "2026-10-14T19:28:39Z",
   "hike": "2026-10-14T19:28:39Z",
-  "ireland": "2026-10-14T19:58:32Z",
-  "mini-cast": "2026-10-14T19:58:32Z",
+  "ireland": "2026-10-14T20:00:38Z",
+  "mini-cast": "2026-10-14T20:00:38Z",
   "profile": "2026-10-14T19:28:39Z",
   "ride": "2026-10-14T19:31:12Z",
   "robot": "2026-10-14T19:28:39Z",
@@ -187,7 +187,10 @@
   { "name": "alpine-forest-and-wooden-fence", "file": "alpine-forest-and-wooden-fence.webp", "about": "", "v": "tmwmo6", "scene": "alpine forest and wooden fence", "colors": ["#49422b","#7c7854","#cacbbf"] },
   { "name": "rainbow-trout-in-aquarium-tank-202610111", "file": "rainbow-trout-in-aquarium-tank-202610111.webp", "about": "", "v": "tmwvvh", "colors": ["#e3e3df","#4c514b","#959890"], "scene": "A family of robots going into a large metal and glass tunnel or tube." },
   { "name": "mermaid-family-jumping-in-the-air", "file": "mermaid-family-jumping-in-the-air.webp", "about": "", "v": "tmwvxb", "scene": "mermaid family jumping in the air", "colors": ["#e8e5dd","#a39b91","#574b36"] },
-  { "name": "people-coloring-in-books-together-202610", "file": "people-coloring-in-books-together-202610.webp", "about": "", "v": "tmwwrr", "scene": "A group of people coloring with coloring pens in coloring books in a room filled with treenets, spaceneds, or tree webs. The family is climb", "colors": ["#775e48","#473525","#aa9175"] }
+  { "name": "people-coloring-in-books-together-202610", "file": "people-coloring-in-books-together-202610.webp", "about": "", "v": "tmwwrr", "scene": "A group of people coloring with coloring pens in coloring books in a room filled with treenets, spaceneds, or tree webs. The family is climb", "colors": ["#775e48","#473525","#aa9175"] },
+  { "name": "ocean-cliffs-behind-aquarium-tank-202610", "file": "ocean-cliffs-behind-aquarium-tank-202610.webp", "about": "", "v": "tmwy92", "scene": "ocean-cliffs-behind-aquarium-tank", "colors": ["#4a453e","#968f83","#e5e4dd"] },
+  { "name": "ireland-wall-with-coastal-outcrop-2026", "file": "ireland-wall-with-coastal-outcrop-2026.webp", "about": "", "v": "tmwy92", "scene": "ireland-wall-with-coastal-outcrop", "colors": ["#947c55","#414026","#d2c7bc"] },
+  { "name": "subterranean-robot-mermaids-in-c-2026101", "file": "subterranean-robot-mermaids-in-c-2026101.webp", "about": "", "v": "tmwy92", "scene": "subterranean-robot-mermaids-ire", "colors": ["#252823","#9cacbb","#56666a"] }
  ],
  "categoryTanks": {
   "aerial": "a-wide-mountain-valley",
@@ -212,8 +215,9 @@
   "feature": ["a-wide-mountain-valley","workshop-with-robots","boathouse","library","makers-workshop","a-pine-forest-trailhead","makers-workshop-with-tools","tunnels-to-tunnels","travertine-hot-springs","a-dogs-ball-in-pine-meadow","the-boat-house-tubes","whale-beach-on-lake-tahoe-at-sunset","a-massive-futuristic-glowing-library","a-place-that-suits-dusk","fannette-island","buckeye-hot-springs-1","comfortable-room","a-brass-and-copper-workshop","open-high-desert-sagebrush-hills","buckeye-hot-springs-2","time-machine-workshop","alpine-forest-and-wooden-fence","rainbow-trout-in-aquarium-tank-202610111","mermaid-family-jumping-in-the-air"],
   "high-desert": ["travertine-hot-springs","open-high-desert-sagebrush-hills"],
   "hike": ["emerald-bay-mist","tahoe-beach-dusk","a-pine-forest-trailhead","a-wide-mountain-valley","travertine-hot-springs","a-dogs-ball-in-pine-meadow","whale-beach-on-lake-tahoe-at-sunset","a-place-that-suits-dusk","fannette-island","buckeye-hot-springs-1","open-high-desert-sagebrush-hills","buckeye-hot-springs-2","alpine-forest-and-wooden-fence","rainbow-trout-in-aquarium-tank-202610111","mermaid-family-jumping-in-the-air"],
+  "ireland": ["ocean-cliffs-behind-aquarium-tank-202610","ireland-wall-with-coastal-outcrop-2026","subterranean-robot-mermaids-in-c-2026101"],
   "lake-tahoe": ["emerald-bay-mist","boathouse"],
-  "mini-cast": ["boathouse","library","makers-workshop","a-pine-forest-trailhead","a-wide-mountain-valley","makers-workshop-with-tools","tunnels-to-tunnels","travertine-hot-springs","a-dogs-ball-in-pine-meadow","the-boat-house-tubes","whale-beach-on-lake-tahoe-at-sunset","a-massive-futuristic-glowing-library","a-place-that-suits-dusk","fannette-island","buckeye-hot-springs-1","comfortable-room","a-brass-and-copper-workshop","open-high-desert-sagebrush-hills","buckeye-hot-springs-2","time-machine-workshop","alpine-forest-and-wooden-fence","rainbow-trout-in-aquarium-tank-202610111","mermaid-family-jumping-in-the-air","people-coloring-in-books-together-202610"],
+  "mini-cast": ["boathouse","library","makers-workshop","a-pine-forest-trailhead","a-wide-mountain-valley","makers-workshop-with-tools","tunnels-to-tunnels","travertine-hot-springs","a-dogs-ball-in-pine-meadow","the-boat-house-tubes","whale-beach-on-lake-tahoe-at-sunset","a-massive-futuristic-glowing-library","a-place-that-suits-dusk","fannette-island","buckeye-hot-springs-1","comfortable-room","a-brass-and-copper-workshop","open-high-desert-sagebrush-hills","buckeye-hot-springs-2","time-machine-workshop","alpine-forest-and-wooden-fence","rainbow-trout-in-aquarium-tank-202610111","mermaid-family-jumping-in-the-air","people-coloring-in-books-together-202610","ocean-cliffs-behind-aquarium-tank-202610","ireland-wall-with-coastal-outcrop-2026","subterranean-robot-mermaids-in-c-2026101"],
   "profile": ["workshop-with-robots","time-machine-tank","feature-tank","boathouse","makers-workshop","the-boat-house-tubes","a-brass-and-copper-workshop","time-machine-workshop","rainbow-trout-in-aquarium-tank-202610111"],
   "ride": ["tahoe-beach-dusk","a-pine-forest-trailhead","emerald-bay-mist","a-wide-mountain-valley","travertine-hot-springs","a-dogs-ball-in-pine-meadow","whale-beach-on-lake-tahoe-at-sunset","a-place-that-suits-dusk","fannette-island","buckeye-hot-springs-1","open-high-desert-sagebrush-hills","buckeye-hot-springs-2","alpine-forest-and-wooden-fence"],
   "robot": ["workshop-with-robots","time-machine-tank","feature-tank","boathouse","makers-workshop","makers-workshop-with-tools","the-boat-house-tubes","a-brass-and-copper-workshop","time-machine-workshop","rainbow-trout-in-aquarium-tank-202610111","mermaid-family-jumping-in-the-air"],
