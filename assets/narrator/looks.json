@@ -147,7 +147,7 @@
   "web": "2026-10-14T19:28:39Z",
   "with-family": "2026-10-14T19:28:39Z",
   "with-helena": "2026-10-14T20:01:44Z",
-  "with-marley": "2026-10-14T18:12:30Z"
+  "with-marley": "2026-10-14T20:02:35Z"
  },
  "defaults": {
   "backdrop": "lake-tahoe-beach",
@@ -224,6 +224,7 @@
   "time-machine": ["time-machine-workshop"],
   "web": ["workshop-with-robots","time-machine-tank","feature-tank","library","the-boat-house-tubes","a-massive-futuristic-glowing-library","a-brass-and-copper-workshop","time-machine-workshop"],
   "with-family": ["mermaid-family-jumping-in-the-air","workshop-with-robots","coloring-books-tank","feature-tank","boathouse","the-boat-house-tubes","comfortable-room","rainbow-trout-in-aquarium-tank-202610111","people-coloring-in-books-together-202610"],
-  "with-helena": ["coloring-books-tank","comfortable-room","open-high-desert-sagebrush-hills","people-coloring-in-books-together-202610"]
+  "with-helena": ["coloring-books-tank","comfortable-room","open-high-desert-sagebrush-hills","people-coloring-in-books-together-202610"],
+  "with-marley": ["emerald-bay-mist","tahoe-beach-dusk","a-pine-forest-trailhead","travertine-hot-springs","a-dogs-ball-in-pine-meadow","whale-beach-on-lake-tahoe-at-sunset","a-place-that-suits-dusk","fannette-island","buckeye-hot-springs-1","comfortable-room","open-high-desert-sagebrush-hills","buckeye-hot-springs-2","alpine-forest-and-wooden-fence","ireland-wall-with-coastal-outcrop-2026"]
  }
 }
