@@ -98,7 +98,8 @@
   { "name": "tahoe-winter-shore", "file": "tahoe-winter-shore.webp", "about": "", "v": "tmvktg", "scene": "a snowy Lake Tahoe shoreline in winter, dark pines and white mountains across the water", "colors": ["#d1d8e0","#6d7c8c","#3f4441"] },
   { "name": "workshop-with-robots", "file": "workshop-with-robots.webp", "about": "", "v": "tmvkvl", "colors": ["#4e341e","#997353","#d7c7b2"] },
   { "name": "ride-tank", "file": "ride-tank.webp", "about": "", "v": "tmvkxj", "colors": ["#362f25","#7d6d5a","#bbad9d"] },
-  { "name": "case-study-tank-1", "file": "case-study-tank-1.webp", "about": "", "v": "tmvkyk", "colors": ["#69513e","#311e11","#c1a27e"] }
+  { "name": "case-study-tank-1", "file": "case-study-tank-1.webp", "about": "", "v": "tmvkyk", "colors": ["#69513e","#311e11","#c1a27e"] },
+  { "name": "automaton-1", "file": "automaton-1.webp", "about": "", "v": "tmvkzn", "colors": ["#3d2c1c","#79644e","#cabeae"] }
  ],
  "categoryTanks": {
   "ireland": "donegal-cliffs",
