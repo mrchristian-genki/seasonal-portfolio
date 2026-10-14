@@ -29,12 +29,18 @@
   { "name": "cowboy-hat-1", "file": "cowboy-hat-1.webp", "about": "A Cowboy Hat", "v": "tmx50z", "marley": true, "bulb": false, "flair": "ab" }
  ],
  "categories": {
-  "automaton": "workshop-goggles",
+  "aerial": "aviator-cap-1",
+  "automaton": "cowboy-hat-1",
+  "behind-the-scenes": "chefs-hat",
   "case-study": "grad-cap",
   "hike": "trail-cap",
+  "ireland": "tailored-irish-tweed-cap",
   "lake-tahoe": "beach-shades",
   "mini-cast": "workshop-goggles",
-  "ride": "bike-helmet"
+  "profile": "bob",
+  "ride": "bike-helmet",
+  "with-helena": "trail-cap",
+  "with-marley": "hawaiian-cap-3"
  },
  "backdrops": [
   { "name": "library", "file": "library.webp", "about": "", "v": "tmia4z", "scene": "an old library with tall wooden bookshelves, brass reading lamps and a long study table", "colors": ["#19140a","#54391d","#94693e"] },
@@ -134,9 +140,9 @@
   "ride": 3
  },
  "categoryStamp": {
-  "aerial": "2026-10-14T19:31:12Z",
-  "automaton": "2026-10-14T19:31:12Z",
-  "behind-the-scenes": "2026-10-14T18:12:30Z",
+  "aerial": "2026-10-14T22:31:12Z",
+  "automaton": "2026-10-14T22:31:12Z",
+  "behind-the-scenes": "2026-10-14T22:31:12Z",
   "case-study": "2026-10-14T19:31:12Z",
   "character": "2026-10-14T19:28:39Z",
   "coloring-books": "2026-10-14T19:28:39Z",
@@ -145,16 +151,16 @@
   "feature": "2026-10-14T19:28:39Z",
   "high-desert": "2026-10-14T19:28:39Z",
   "hike": "2026-10-14T19:28:39Z",
-  "ireland": "2026-10-14T20:00:38Z",
+  "ireland": "2026-10-14T22:31:12Z",
   "mini-cast": "2026-10-14T20:00:38Z",
-  "profile": "2026-10-14T19:28:39Z",
+  "profile": "2026-10-14T22:31:12Z",
   "ride": "2026-10-14T19:31:12Z",
   "robot": "2026-10-14T19:28:39Z",
   "time-machine": "2026-10-14T19:28:39Z",
   "web": "2026-10-14T19:28:39Z",
   "with-family": "2026-10-14T19:28:39Z",
-  "with-helena": "2026-10-14T20:01:44Z",
-  "with-marley": "2026-10-14T20:02:35Z"
+  "with-helena": "2026-10-14T22:31:12Z",
+  "with-marley": "2026-10-14T22:31:12Z"
  },
  "defaults": {
   "backdrop": "lake-tahoe-beach",
