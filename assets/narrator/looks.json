@@ -95,7 +95,8 @@
   "dogs": "2026-10-14T02:25:49Z",
   "dusk": "2026-10-14T02:26:36Z",
   "feature": "2026-10-14T02:30:15Z",
-  "mini-cast": "2026-10-14T15:36:08Z",
+  "mini-cast": "2026-10-14T15:50:30Z",
+  "ride": "2026-10-14T15:50:30Z",
   "time-machine": "2026-10-14T02:29:20Z"
  },
  "defaults": {
@@ -134,7 +135,26 @@
   { "name": "emerald-bay-mist", "file": "emerald-bay-mist.webp", "about": "", "v": "tmwf0n", "scene": "the shore of Emerald Bay on a still morning, mist on the water and the small rocky island beyond", "colors": ["#212e29","#7a6d50","#eae5de"] },
   { "name": "tahoe-beach-dusk", "file": "tahoe-beach-dusk.webp", "about": "", "v": "tmwf35", "scene": "a sandy Lake Tahoe beach at dusk, smooth granite boulders and pines along the far shore", "colors": ["#e7d9c9","#aba39a","#424442"] },
   { "name": "tunnel", "file": "tunnel.webp", "about": "", "v": "tmwf3t", "scene": "an old stone wall with an arched tunnel leading out toward the lake", "colors": ["#1d1a14","#423b33","#9e876c"] },
-  { "name": "library", "file": "library.webp", "about": "", "v": "tmwf4f", "scene": "a quiet old library with tall wooden bookshelves and warm reading lamps", "colors": ["#2a221d","#4d3f37","#967258"] }
+  { "name": "library", "file": "library.webp", "about": "", "v": "tmwf4f", "scene": "a quiet old library with tall wooden bookshelves and warm reading lamps", "colors": ["#2a221d","#4d3f37","#967258"] },
+  { "name": "makers-workshop", "file": "makers-workshop.webp", "about": "", "v": "tmwmo6", "scene": "a cozy maker's workshop with tools on the far wall and warm hanging lamps", "colors": ["#36281b","#5e4b3b","#c1a688"] },
+  { "name": "a-pine-forest-trailhead", "file": "a-pine-forest-trailhead.webp", "about": "", "v": "tmwmo6", "scene": "a pine forest trailhead in late afternoon light", "colors": ["#3e331f","#6f5837","#b29169"] },
+  { "name": "a-wide-mountain-valley", "file": "a-wide-mountain-valley.webp", "about": "", "v": "tmwmo6", "scene": "a wide mountain valley seen from a high ridge, a lake far below", "colors": ["#283d3e","#6d797e","#e2e0d9"] },
+  { "name": "makers-workshop-with-tools", "file": "makers-workshop-with-tools.webp", "about": "", "v": "tmwmo6", "scene": "a cozy maker's workshop with tools on the far wall and warm hanging lamps", "colors": ["#1c1e1c","#413d35","#ac8e70"] },
+  { "name": "tunnels-to-tunnels", "file": "tunnels-to-tunnels.webp", "about": "", "v": "tmwmo6", "scene": "at the base of a massive water tunnel that the robot mermaid uses to get in and out of Lake Tahoe and into the streams and rivers underground our aquifers", "colors": ["#1f1c16","#413a32","#9a8369"] },
+  { "name": "travertine-hot-springs", "file": "travertine-hot-springs.webp", "about": "", "v": "tmwmo6", "scene": "Travertine Hot Springs a natural geothermal mineral pools located just southeast of Bridgeport, California, in Mono County. Perched on a high desert hillside overlooking the Bridgeport Valley", "colors": ["#aa9782","#c3c7ca","#7c6e55"] },
+  { "name": "a-dogs-ball-in-pine-meadow", "file": "a-dogs-ball-in-pine-meadow.webp", "about": "", "v": "tmwmo6", "scene": "a sunny pine meadow with a dog's ball and leash resting on a log", "colors": ["#3f3a28","#756547","#b69b72"] },
+  { "name": "the-boat-house-tubes", "file": "the-boat-house-tubes.webp", "about": "", "v": "tmwmo6", "scene": "The inside a big high tech boat house with massive clear water tubes going in and out the size big enough for a robot mermaid to use to get and out of the boat house, the boat house is full of high te", "colors": ["#3a3128","#6d6355","#b9b4a6"] },
+  { "name": "whale-beach-on-lake-tahoe-at-sunset", "file": "whale-beach-on-lake-tahoe-at-sunset.webp", "about": "", "v": "tmwmo6", "scene": "Whale Beach on Lake Tahoe at sunset in the summer.", "colors": ["#e7d9ca","#ada399","#494946"] },
+  { "name": "a-massive-futuristic-glowing-library", "file": "a-massive-futuristic-glowing-library.webp", "about": "", "v": "tmwmo6", "scene": "a massive futuristic glowing version of The Long Room in the Old Library at Trinity College Dublin", "colors": ["#2e2621","#4d3f37","#80634f"] },
+  { "name": "a-place-that-suits-dusk", "file": "a-place-that-suits-dusk.webp", "about": "", "v": "tmwmo6", "scene": "a place that suits Dusk", "colors": ["#252516","#aaaaa8","#6c6252"] },
+  { "name": "fannette-island", "file": "fannette-island.webp", "about": "", "v": "tmwmo6", "scene": "at the base of Fannette Island is the only island in Lake Tahoe, located inside Emerald Bay on the lake's west shore in California. with emerald bay and lake tahoe", "colors": ["#202d29","#70674d","#e8e3dc"] },
+  { "name": "buckeye-hot-springs-1", "file": "buckeye-hot-springs-1.webp", "about": "", "v": "tmwmo6", "scene": "Buckeye Hot Springs with natural, undeveloped thermal mineral pools located along Buckeye Creek in the Eastern Sierra Mountains near Bridgeport, California", "colors": ["#756755","#443b2b","#a99a8b"] },
+  { "name": "comfortable-room", "file": "comfortable-room.webp", "about": "", "v": "tmwmo6", "scene": "Comfortable room", "colors": ["#543821","#907d64","#bebba9"] },
+  { "name": "a-brass-and-copper-workshop", "file": "a-brass-and-copper-workshop.webp", "about": "", "v": "tmwmo6", "scene": "A brass and copper workshop", "colors": ["#4b311e","#82644f","#c7b2a0"] },
+  { "name": "open-high-desert-sagebrush-hills", "file": "open-high-desert-sagebrush-hills.webp", "about": "", "v": "tmwmo6", "scene": "open high-desert sagebrush hills under a wide dusk sky", "colors": ["#615849","#c9c5d1","#beabac"] },
+  { "name": "buckeye-hot-springs-2", "file": "buckeye-hot-springs-2.webp", "about": "", "v": "tmwmo6", "scene": "Buckeye Hot Springs with natural, undeveloped thermal mineral pools", "colors": ["#8e836c","#51513a","#cac3b8"] },
+  { "name": "time-machine-workshop", "file": "time-machine-workshop.webp", "about": "", "v": "tmwmo6", "scene": "an elaborate time machine workshop with copper and turquoise lights", "colors": ["#231c1b","#4e413a","#8c6e5a"] },
+  { "name": "alpine-forest-and-wooden-fence", "file": "alpine-forest-and-wooden-fence.webp", "about": "", "v": "tmwmo6", "scene": "alpine forest and wooden fence", "colors": ["#49422b","#7c7854","#cacbbf"] }
  ],
  "categoryTanks": {
   "aerial": "aerial-tank",
@@ -152,6 +172,8 @@
   "time-machine": "time-machine-tank"
  },
  "categoryTankChoices": {
-  "lake-tahoe": ["tahoe-winter-shore","emerald-bay-mist","boathouse"]
+  "lake-tahoe": ["tahoe-winter-shore","emerald-bay-mist","boathouse"],
+  "mini-cast": ["behind-the-scenes-1","profile-1","behind-the-scenes-tank","boathouse","library","makers-workshop","a-pine-forest-trailhead","a-wide-mountain-valley","makers-workshop-with-tools","tunnels-to-tunnels","travertine-hot-springs","a-dogs-ball-in-pine-meadow","the-boat-house-tubes","whale-beach-on-lake-tahoe-at-sunset","a-massive-futuristic-glowing-library","a-place-that-suits-dusk","fannette-island","buckeye-hot-springs-1","comfortable-room","a-brass-and-copper-workshop","open-high-desert-sagebrush-hills","buckeye-hot-springs-2","time-machine-workshop","alpine-forest-and-wooden-fence"],
+  "ride": ["ride-tank","aerial-1","hike-1","tahoe-beach-dusk"]
  }
 }
