@@ -384,8 +384,8 @@ ${e.summary ? `<p class="mag-deck">${esc(e.summary)}</p>` : ''}
 <h1>${esc(e.post && e.post.title || e.title)}</h1>
 ${e.summary ? `<p class="lede">${esc(e.summary)}</p>` : ''}`}
 ${alta ? `<section class="listen alta" data-narrator="alta"${palAttr(e)}${cueAttr(e)}${bdAttr(e)} aria-label="${audio ? 'Listen to the episode' : 'A.L.T.A. in her tank'}"><div><span class="listen-label">${audio ? `Listen · ${mmss(audio.sec)}` : 'Coming soon'}</span><b>${esc(e.episode.title || e.title)}</b></div>
-${audio ? `<audio controls preload="metadata" src="${esc(audio.src)}"></audio>` : ''}</section>` : marley ? `<section class="listen mly-bar" data-narrator="marley"${palAttr(e).replace('data-palette', 'data-seatpal')} aria-label="Listen to the episode"><div><span class="listen-label">Listen · ${mmss(audio.sec)}</span><b>${esc(e.episode.title || e.title)}</b></div>
-<div class="marley"${mlyBdAttr(e)} aria-label="Robot Marley, telling the episode"></div>
+${audio ? `<audio controls preload="metadata" src="${esc(audio.src)}"></audio>` : ''}</section>` : marley ? `<section class="listen mly-bar" data-narrator="marley" aria-label="Listen to the episode"><div><span class="listen-label">Listen · ${mmss(audio.sec)}</span><b>${esc(e.episode.title || e.title)}</b></div>
+<div class="marley"${mlyBdAttr(e)}${palAttr(e)} aria-label="Robot Marley, telling the episode"></div>
 <audio controls preload="metadata" src="${esc(audio.src)}"></audio></section>` : audio ? `<section class="listen" aria-label="Listen to the episode"${lookAttr(e)}><div><span class="listen-label">Listen · ${mmss(audio.sec)}</span><b>${esc(e.episode.title || e.title)}</b></div>
 <audio controls preload="metadata" src="${esc(audio.src)}"></audio></section>` : ''}
 ${cover && !F ? fig(cover, 'cover') : ''}${coverStrip ? '\n' + fig(coverStrip, 'photo strip') : ''}

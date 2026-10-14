@@ -6,8 +6,8 @@
    so her parts cross-fade to it and back. The clips carry their own masks (colour over mask, drawn in a canvas),
    so whatever is behind her shows.
 
-   On the element: data-palette="#collar #charm" (a Note's two colours), data-seatpal (a Note's colours for her stump's
-   carvings only: every Note she tells has it), data-charm="heart" (else her bone),
+   On the element: data-palette="#collar #charm" (a Note's two colours), data-seatpal (colours for her stump's carvings
+   only, where no data-palette is given; every Note she tells gives data-palette, Christian, Oct 14), data-charm="heart" (else her bone),
    data-controls (her buttons below her). el.marley = { move(k), tilt(deg), blink(), eyes(mood), say(shape), talk(),
    charm(k), colours([a, b] | null) }. Every change eases; with reduced motion she stays still unless asked. */
 (function () {
