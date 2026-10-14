@@ -883,3 +883,7 @@ dialog.pfp::backdrop{background:rgba(20,12,6,.7)}
 .chfold>summary h3{display:inline}
 .chfold>summary small{color:var(--ink2);margin-left:8px}
 .cgal figcaption .chg{display:block;margin:4px auto 0;font-size:12px;padding:3px 10px}
+/* Cancel upload (studio.js upGuard): fades in at the foot of the screen while something has been going up for a while */
+#upCancel{position:fixed;left:50%;bottom:22px;transform:translate(-50%,12px);z-index:60;opacity:0;pointer-events:none;background:var(--card);color:var(--bad);border:1px solid var(--bad);box-shadow:0 6px 20px rgba(0,0,0,.25);transition:opacity .8s ease-in-out,transform .8s ease-in-out}
+#upCancel.on{opacity:1;pointer-events:auto;transform:translate(-50%,0)}
+@media (prefers-reduced-motion:reduce){#upCancel{transition:none}}
