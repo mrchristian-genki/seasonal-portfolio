@@ -109,19 +109,17 @@
  "consent": "No people appear. The covers and pages are Christian's own books.",
  "publishedAt": "2026-10-06T03:40:49Z",
  "narratorLook": {
-  "look": "grad-cap",
-  "fit": "category",
-  "from": "case-study",
-  "about": "a brass mortarboard with a chain tassel",
-  "why": "Picked from Case study.",
+  "look": "cowboy-hat-1",
+  "fit": "existing",
+  "about": "A Cowboy Hat",
+  "why": "",
   "prompt": "",
   "bulb": false
  },
  "narratorBackdrop": {
-  "backdrop": "library",
-  "fit": "category",
-  "from": "case-study",
-  "scene": ""
+  "backdrop": "people-relaxing-and-coloring-books",
+  "fit": "existing",
+  "scene": "people-relaxing-and-coloring-books"
  },
  "palette": [
   "#38b1c0",
