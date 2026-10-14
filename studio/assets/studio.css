@@ -796,3 +796,27 @@ dialog.pfp::backdrop{background:rgba(20,12,6,.7)}
 .panel.chars .ml-prev{display:flex;gap:12px;flex-wrap:wrap;margin:10px 0}
 .panel.chars .ml-cv{width:min(260px,45%);height:auto;border-radius:10px;border:1px solid var(--line);animation:sync-in .7s ease-in-out}
 @media (prefers-reduced-motion:reduce){.panel.chars .ml-cv{animation:none}}
+/* Characters, Bring in a piece: who it's for, then their box */
+.panel.chars .bi-who{margin:6px 0 12px} .panel.chars .bi-who .chip{display:inline-flex;align-items:center;gap:8px;padding:5px 14px 5px 6px;border:1px solid var(--line);border-radius:999px;background:transparent;cursor:pointer;transition:background-color .6s ease-in-out,border-color .6s ease-in-out}
+.panel.chars .bi-who .chip img{width:28px;height:28px;border-radius:50%;object-fit:cover;background:#0f4d47}
+.panel.chars .bi-who .chip.on{border-color:var(--accent);background:var(--soft)}
+.panel.chars .bi{animation:sync-in .7s ease-in-out} .panel.chars .bi h4{margin:4px 0 8px}
+@media (prefers-reduced-motion:reduce){.panel.chars .bi{animation:none}}
+.panel.chars [hidden]{display:none!important} .panel.chars .ct .row{align-items:flex-end}
+.panel.chars .row .f input,.panel.chars .row .f select{flex:none;height:auto}
+/* Characters: a tab each (Overview, then each character): a profile, what they wear, what's missing, their own box */
+.panel.chars .ct-tabs{margin:4px 0 16px;gap:8px} .panel.chars .ct-tabs .chip{display:inline-flex;align-items:center;gap:8px;padding:6px 16px 6px 6px;border:1px solid var(--line);border-radius:999px;background:transparent;cursor:pointer;font-weight:600;transition:background-color .6s ease-in-out,border-color .6s ease-in-out}
+.panel.chars .ct-tabs .chip[data-ct="overview"]{padding-left:16px}
+.panel.chars .ct-tabs .chip img{width:30px;height:30px;border-radius:50%;object-fit:cover;background:#0f4d47}
+.panel.chars .ct-tabs .chip.on{border-color:var(--accent);background:var(--soft)}
+.panel.chars .ct{animation:sync-in .7s ease-in-out}
+.panel.chars .cprof{display:flex;gap:18px;align-items:center;padding:14px;border:1px solid var(--line);border-radius:14px;background:#fafcfc;margin:0 0 14px}
+.panel.chars .cprof img{width:120px;height:120px;border-radius:16px;object-fit:cover;background:#0f4d47;flex:none}
+.panel.chars .cprof h3{margin:0 0 4px} .panel.chars .cprof p{margin:4px 0}
+.panel.chars .cmiss{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 10px} .panel.chars .cmiss span{display:inline-flex;align-items:center;gap:8px;padding:4px 6px 4px 12px;border:1px solid var(--line);border-radius:999px;color:#9a5b1e} .panel.chars .cmiss small{color:var(--ink3)}
+.panel.chars .cgal{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;margin:6px 0 14px}
+.panel.chars .cgal figure{margin:0;text-align:center} .panel.chars .cgal img{width:100%;aspect-ratio:4/3;object-fit:contain;background:#0f4d47;border-radius:8px}
+.panel.chars .ct[data-ct="alta"] .cgal img{object-fit:cover;object-position:50% 20%}
+.panel.chars .cgal figcaption{font-size:12px;color:var(--ink2)}
+@media (max-width:640px){.panel.chars .cprof{flex-direction:column;align-items:flex-start}.panel.chars .cprof img{width:96px;height:96px}}
+@media (prefers-reduced-motion:reduce){.panel.chars .ct{animation:none}}
