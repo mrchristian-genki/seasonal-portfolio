@@ -168,7 +168,7 @@ function apply_looks(GitHub $gh, array &$files, array $body): void
     // GlazyArray's looks (Studio, "GlazyArray's look"), all in looks.json, written once: a Note look taken off the
     // site, a new or replaced Note look, and the looks given to whole categories. Holiday looks and hair styles
     // are never replaced or removed from here.
-    if ($rl !== '' || is_array($nl) || is_array($cl) || $rb !== '' || is_array($nb) || is_array($cb) || is_array($cr) || is_array($df) || is_array($hb) || is_array($cn) || is_array($cnr) || is_array($ctk) || is_array($body['newTank'] ?? null) || is_array($body['categoryBackdropChoices'] ?? null) || is_array($body['categoryTankChoices'] ?? null) || is_array($body['marleyLook'] ?? null) || is_array($body['newBackdrops'] ?? null) || is_array($body['newTanks'] ?? null) || is_array($body['offerBackdrop'] ?? null) || is_array($body['offerTank'] ?? null)) {
+    if ($rl !== '' || is_array($nl) || is_array($cl) || $rb !== '' || is_array($nb) || is_array($cb) || is_array($cr) || is_array($df) || is_array($hb) || is_array($cn) || is_array($cnr) || is_array($ctk) || is_array($body['newTank'] ?? null) || is_array($body['categoryBackdropChoices'] ?? null) || is_array($body['categoryTankChoices'] ?? null) || is_array($body['marleyLook'] ?? null) || is_array($body['newBackdrops'] ?? null) || is_array($body['newTanks'] ?? null) || is_array($body['offerBackdrop'] ?? null) || is_array($body['offerTank'] ?? null) || is_array($body['sceneEdits'] ?? null)) {
         $lj = json_decode($gh->read(LOOKS_JSON) ?? '{"looks":[]}', true);
         $list = array_values((array) ($lj['looks'] ?? [])); $cats = (array) ($lj['categories'] ?? []);
         $bds = array_values((array) ($lj['backdrops'] ?? [])); $bcats = (array) ($lj['categoryBackdrops'] ?? []);
@@ -329,6 +329,14 @@ function apply_looks(GitHub $gh, array &$files, array $body): void
                 $touch($cat);
                 if ($names) $ch[1][$cat] = $names; else unset($ch[1][$cat]);
             }
+        }
+        // what an image shows, written for one already there (Characters, What's needed: a scene without words can't be
+        // matched by a Note's words): [{ kind: 'bd' | 'tank', name, scene }], '' to clear it
+        foreach (array_slice((array) ($body['sceneEdits'] ?? []), 0, 60) as $se) {
+            if (!is_array($se)) continue;
+            $n = (string) ($se['name'] ?? ''); $sc = mb_substr(trim((string) ($se['scene'] ?? '')), 0, 400);
+            if (($se['kind'] ?? '') === 'tank') { foreach ($tanks as $k => $b) if (($b['name'] ?? '') === $n) { if ($sc === '') unset($tanks[$k]['scene']); else $tanks[$k]['scene'] = $sc; } }
+            else { foreach ($bds as $k => $b) if (($b['name'] ?? '') === $n) { if ($sc === '') unset($bds[$k]['scene']); else $bds[$k]['scene'] = $sc; } }
         }
         // images added to the pools of several categories at once (Christian, Oct 14): { names: [...], cats: [...] }, from a
         // category's pool (Characters) or a Note's new image (into all its categories); each only for its own character:
@@ -779,7 +787,7 @@ try {
             $files = [];
             apply_looks($gh, $files, ['newLook' => $body['newLook'] ?? null, 'categoryLooks' => $body['categoryLooks'] ?? null,
                 'newBackdrop' => $body['newBackdrop'] ?? null, 'categoryBackdrops' => $body['categoryBackdrops'] ?? null,
-                'categoryRank' => $body['categoryRank'] ?? null, 'defaults' => $body['defaults'] ?? null, 'holidayBackdrops' => $body['holidayBackdrops'] ?? null, 'categoryNames' => $body['categoryNames'] ?? null, 'categoryNarrators' => $body['categoryNarrators'] ?? null, 'categoryTanks' => $body['categoryTanks'] ?? null, 'newTank' => $body['newTank'] ?? null, 'newBackdrops' => $body['newBackdrops'] ?? null, 'newTanks' => $body['newTanks'] ?? null, 'offerBackdrop' => $body['offerBackdrop'] ?? null, 'offerTank' => $body['offerTank'] ?? null, 'categoryBackdropChoices' => $body['categoryBackdropChoices'] ?? null, 'categoryTankChoices' => $body['categoryTankChoices'] ?? null, 'marleyLook' => $body['marleyLook'] ?? null]);
+                'categoryRank' => $body['categoryRank'] ?? null, 'defaults' => $body['defaults'] ?? null, 'holidayBackdrops' => $body['holidayBackdrops'] ?? null, 'categoryNames' => $body['categoryNames'] ?? null, 'categoryNarrators' => $body['categoryNarrators'] ?? null, 'categoryTanks' => $body['categoryTanks'] ?? null, 'newTank' => $body['newTank'] ?? null, 'newBackdrops' => $body['newBackdrops'] ?? null, 'newTanks' => $body['newTanks'] ?? null, 'offerBackdrop' => $body['offerBackdrop'] ?? null, 'offerTank' => $body['offerTank'] ?? null, 'sceneEdits' => $body['sceneEdits'] ?? null, 'categoryBackdropChoices' => $body['categoryBackdropChoices'] ?? null, 'categoryTankChoices' => $body['categoryTankChoices'] ?? null, 'marleyLook' => $body['marleyLook'] ?? null]);
             if (!$files) json_fail('Nothing to save.');
             json_out(['ok' => true, 'commit' => $gh->commit($files, "Studio: GlazyArray's looks")]);
 
