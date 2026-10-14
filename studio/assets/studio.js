@@ -622,7 +622,7 @@
         field('Image prompt', '<textarea id="nbPrompt" rows="5" readonly></textarea>') + '<div class="row"><button type="button" id="nbCopy">Copy the image prompt</button></div>' + bdTpl() +
         '<label class="drop ga-drop" id="nbDrop"><input type="file" id="nbFile" accept="image/png,image/jpeg,image/webp" hidden><b>Bring the render here</b> <span class="muted">or drop it here</span></label><div id="nbOut"></div>' +
         '<div class="row"><button type="button" class="primary" id="nbAdd" disabled>Add the backdrop</button></div>' +
-        '<h3>A.L.T.A.\'s tank scenes</h3><p class="muted">The place behind her glass, so she\'s on location. Only the strip above her copper ledge shows (the top 38%): the horizon or treeline sits about a quarter of the way down, and everything that matters is in the top third. A Note picks one in its Episode panel, a category in its column above. Without one she borrows the Note\'s backdrop (blurred, just the strip); with neither, she\'s in her hall.</p>' +
+        '<h3>A.L.T.A.\'s tank scenes</h3><p class="muted">The place behind her glass, so she\'s on location. Only the strip above her copper ledge shows (the top 38%): the horizon or treeline sits about a quarter of the way down, and everything that matters is in the top third. A Note picks one in its Episode panel, a category in its column above. Without one of hers she\'s in her hall; she doesn\'t use the backdrops.</p>' +
         (tanks.length ? '<div class="lookg bdg tkg">' + tanks.map(function (b) { return '<figure><img alt="" src="/assets/alta/backdrops/' + esc(b.file) + (b.v ? '?r=' + esc(b.v) : '') + '"><figcaption>' + esc(b.name) + '</figcaption></figure>'; }).join('') + '</div>' : '<p class="muted">None yet.</p>') +
         '<div class="grid2">' + field('Name', '<input id="ntName" placeholder="e.g. tahoe-beach-dusk" maxlength="40">', 'Lowercase, with dashes') + field('Give it to', '<select id="ntCat"><option value="">No category yet</option>' + names.map(function (c) { return '<option value="' + esc(c) + '">' + esc(catName(c)) + '</option>'; }).join('') + '</select>') + '</div>' +
         field('The place', '<textarea id="ntScene" rows="2" placeholder="e.g. ' + esc(TANK_SCENES['lake-tahoe']) + '"></textarea>', 'Picking a category fills in a suggestion') +
@@ -808,7 +808,7 @@
           var place = TANK_SCENES[c] || SCENES[c] || '';
           return '<tr><th>' + esc(catName(c)) + '</th><td>' + (nCat[c] || 0) + '</td>' +
             '<td>' + (ob.length ? ob.map(esc).join(', ') : '<span class="gapt">None</span> ' + gapBtn(chars[0], 'backdrop', '', SCENES[c] || '', 'The prompt')) + '</td>' +
-            '<td>' + (ot.length ? ot.map(esc).join(', ') : '<span class="gapt">Borrows or her hall</span> ' + (alta ? gapBtn(alta, 'tank', '', place, 'The prompt') : '')) + '</td></tr>';
+            '<td>' + (ot.length ? ot.map(esc).join(', ') : '<span class="gapt">Her hall</span> ' + (alta ? gapBtn(alta, 'tank', '', place, 'The prompt') : '')) + '</td></tr>';
         }).join('');
       };
       var head = '<tr><th></th>' + chars.map(function (c) { return '<th><img alt="" src="' + esc(c.avatar) + '">' + esc(c.name) + '</th>'; }).join('') + '</tr>';
@@ -830,7 +830,7 @@
       var missing = function (c) { return c.pieces.indexOf('look') >= 0 ? occ.filter(function (l) { return !hasLook(c, l); }) : []; };
       var WHAT = { glazyarray: 'Wears looks: her hair and what\'s on it. Made from her template with two prompts; the Studio keys the render and puts her face back, so she still talks and blinks.',
         marley: 'Wears looks: a hat and a charm. Made from two renders of her seated template, one in its own colours and one with the pieces painted cyan; the Studio cuts them.',
-        alta: 'Has scenes behind her tank: the place above her copper ledge. Made from her tank template; without one she borrows the Note\'s backdrop.' };
+        alta: 'Has scenes behind her tank: the place above her copper ledge. Made from her tank template; without one she stays in her hall (she doesn\'t use the backdrops).' };
       var prof = function (id) {
         var c = chars.filter(function (x) { return x.id === id; })[0]; if (!c) return '';
         var st = styles(c), ms = missing(c), unit = id === 'alta' ? 'scene' : 'look';
@@ -914,8 +914,7 @@
           row('Tank scene', function (c) {
             if (c.pieces.indexOf('tank') < 0) return '<td class="na">—</td>';
             if (p.tank) return '<td class="ok"><img class="bd" alt="" src="/assets/alta/backdrops/' + esc(p.tank.file) + '"><span>' + esc(p.tank.name) + '</span>' + why(p.tank) + '</td>';
-            var lent = p.backdrop && p.backdrop.from !== 'default' && bdOf(p.backdrop.name);
-            return '<td class="gap">' + (lent ? '<img class="bd" alt="" src="' + bdSrc(lent) + '"><span>Borrows ' + esc(lent.name) + '</span><small>blurred, above her ledge</small>' : '<span>Her hall</span>') + gapBtn(c, 'tank', '', tplace, 'Her own: the prompt') + '</td>';
+            return '<td class="gap"><span>Her hall</span>' + gapBtn(c, 'tank', '', tplace, 'Her own: the prompt') + '</td>';
           }) +
           '</tbody></table></div>';
         wireGaps(o);
@@ -1452,10 +1451,9 @@
         if (rr[1].name !== 'alta') { b.innerHTML = ''; return; }
         var Bk = E.narratorBackdrop && E.narratorBackdrop.backdrop;
         var nf = noteFit(), p = window.GAResolve && GAResolve.pick(J, { tank: E.altaBackdrop, cats: noteCats(), backdrop: Bk || undefined, ignoreHolidays: !!E.ignoreHolidays, words: nf.words, palette: nf.palette, month: nf.month }), t = p && p.tank;
-        var lent = !t && p && p.backdrop && p.backdrop.from !== 'default' ? p.backdrop : null;   // field/tools/publish.mjs bdAttr
-        if (!tanks.length) { b.innerHTML = '<p class="muted">Behind her tank: ' + (lent ? 'this Note\'s backdrop, ' + esc(lent.name) + ', borrowed' : 'her hall') + '. Her own scenes are made in Categories.</p>'; return; }
+        if (!tanks.length) { b.innerHTML = '<p class="muted">Behind her tank: her hall. Her own scenes are made in Characters, A.L.T.A.</p>'; return; }
         b.innerHTML = field('Behind her tank', '<select id="epTank"><option value="">From its categories</option>' + tanks.map(function (x) { return '<option value="' + esc(x.name) + '"' + (E.altaBackdrop === x.name ? ' selected' : '') + '>' + esc(x.name + (x.about ? ' · ' + x.about : '')) + '</option>'; }).join('') + '</select>',
-          t ? esc(t.name) + ' (' + esc(t.why) + ')' : lent ? 'This Note\'s backdrop, ' + esc(lent.name) + ', borrowed' : 'The hall, her own');
+          t ? esc(t.name) + ' (' + esc(t.why) + ')' : 'The hall, her own (no scene of hers fits)');
         $('#epTank').onchange = function () { if (this.value) E.altaBackdrop = this.value; else delete E.altaBackdrop; markDirty(); showTank(); };
       }).catch(function (e) { console.error('tank', e); });
     };

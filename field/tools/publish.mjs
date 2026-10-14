@@ -86,14 +86,12 @@ const narratorOf = (e) => pickFor(e).narrator.name;
 // a feature's photo spreads: e.feature.lookbook is one, or a list of them
 const books = (e) => { const L = e.feature && e.feature.lookbook; return (Array.isArray(L) ? L : L ? [L] : []).filter((b) => b && typeof b === 'object'); };
 // the scene behind A.L.T.A.'s tank on this Note (KIT.md Round 8), when it has one and its file is there
-// Without a scene of her own she borrows the Note's backdrop (the one GlazyArray and Robot Marley show) when the Note,
-// its categories or a holiday give it one, so she's on location too; with only the site's default she stays in her
-// hall (Christian, Oct 13). js/alta.js shows a borrowed one blurred, in the strip above her ledge.
+// Only her own scenes: she no longer borrows the Note's backdrop (GlazyArray's and Robot Marley's); without a scene
+// of hers she stays in her hall (Christian, Oct 14).
 const bdAttr = (e) => {
   const t = pickFor(e).tank;
   if (t && /^[\w.-]+\.(webp|jpg|png)$/.test(t.file || '') && fs.existsSync(path.join(SITE, 'assets/alta/backdrops', t.file))) return ` data-bd="/assets/alta/backdrops/${t.file}${t.v ? '?v=' + t.v : ''}"`;
-  const n = noteBd(e);
-  return n && n.from !== 'default' ? n.attr : '';
+  return '';
 };
 // the scene behind Robot Marley on this Note (js/marley.js): its backdrop as the site picks it (its own, its
 // categories', a holiday's, the default; the same backdrops as GlazyArray's), when its file is there
@@ -203,7 +201,7 @@ ${ICONS}
 <link rel="stylesheet" href="${rel}../css/logo.css?v=11">
 <link rel="stylesheet" href="${rel}../css/lake.css?v=2">
 <link rel="stylesheet" href="${rel}../css/narrator.css?v=33">
-<link rel="stylesheet" href="${rel}../css/alta.css?v=11">
+<link rel="stylesheet" href="${rel}../css/alta.css?v=12">
 <link rel="stylesheet" href="${rel}../css/marley.css?v=9">
 <script>/* Logo season from the calendar, as on About. */document.documentElement.dataset.season=["winter","winter","spring","spring","spring","summer","summer","summer","fall","fall","fall","winter"][new Date().getMonth()];</script>
 <link rel="stylesheet" href="${rel}../css/route-dash.css?v=${V}">
@@ -224,7 +222,7 @@ const foot = (rel) => `<footer class="foot"><p>${esc(show.narrationNote)}</p>
 <script src="${rel}../js/lake.js?v=4" defer></script>
 <script src="${rel}../assets/narrator/resolve.js?v=5" defer></script>
 <script src="${rel}../js/narrator.js?v=45" defer></script>
-<script src="${rel}../js/alta.js?v=16" defer></script>
+<script src="${rel}../js/alta.js?v=17" defer></script>
 <script src="${rel}../js/marley.js?v=14" defer></script>
 </body>
 </html>
