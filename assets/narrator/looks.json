@@ -60,7 +60,22 @@
   { "name": "bike-bench", "file": "bike-bench.webp", "about": "", "v": "tmwm08", "scene": "a small bike shop garage with mountain bikes hanging on a wall rack, tools on a pegboard and a wooden workbench, with bright gold tones", "colors": ["#61432b","#231a0e","#d68c4a"] },
   { "name": "behind-the-scenes", "file": "behind-the-scenes.webp", "about": "", "v": "tmwm08", "scene": "a place that suits Behind the scenes", "colors": ["#111410","#453929","#7b6347"] },
   { "name": "aerial-of-river-and-valley", "file": "aerial-of-river-and-valley.webp", "about": "", "v": "tmwm08", "scene": "a place that suits Aerial. A river from high up flowing through a valley.", "colors": ["#393929","#191b13","#74643e"] },
-  { "name": "a-tropical-hawaiian-sunset", "file": "a-tropical-hawaiian-sunset.webp", "about": "", "v": "tmwmti", "scene": "A tropical hawaiian sunset.", "colors": ["#3b585a","#9f917f","#372e20"] }
+  { "name": "a-tropical-hawaiian-sunset", "file": "a-tropical-hawaiian-sunset.webp", "about": "", "v": "tmwmti", "scene": "A tropical hawaiian sunset.", "colors": ["#3b585a","#9f917f","#372e20"] },
+  { "name": "desert-hills-under-dusk-sky", "file": "desert-hills-under-dusk-sky.webp", "about": "", "v": "tmwt8u", "scene": "desert-hills-under-dusk-sky", "colors": ["#323025","#cba585","#706053"] },
+  { "name": "lake-tahoe-beach-at-dusk", "file": "lake-tahoe-beach-at-dusk.webp", "about": "", "v": "tmwt8u", "scene": "lake-tahoe-beach-at-dusk", "colors": ["#dabe9b","#3f392e","#a08b73"] },
+  { "name": "mist-on-emerald-bay-shore", "file": "mist-on-emerald-bay-shore.webp", "about": "", "v": "tmwt8u", "scene": "mist-on-emerald-bay-shore", "colors": ["#a49176","#e3cca7","#363b31"] },
+  { "name": "futuristic-boathouse-with-water-tubs", "file": "futuristic-boathouse-with-water-tubs.webp", "about": "", "v": "tmwt8u", "scene": "futuristic-boathouse-with-water-tubs", "colors": ["#282620","#696352","#cdc1a7"] },
+  { "name": "time-machine-room-with-equipment", "file": "time-machine-room-with-equipment.webp", "about": "", "v": "tmwt8u", "scene": "time-machine-room-with-equipment", "colors": ["#211d13","#4b402d","#9b7d57"] },
+  { "name": "people-relaxing-and-coloring-books", "file": "people-relaxing-and-coloring-books.webp", "about": "", "v": "tmwt8u", "scene": "people-relaxing-and-coloring-books", "colors": ["#756146","#bcac98","#292215"] },
+  { "name": "garage-workshop-with-robot-parts", "file": "garage-workshop-with-robot-parts.webp", "about": "", "v": "tmwt8u", "scene": "garage-workshop-with-robot-parts", "colors": ["#181710","#403424","#9e825f"] },
+  { "name": "water-tanks-containing-mermaid", "file": "water-tanks-containing-mermaid.webp", "about": "", "v": "tmwt8u", "scene": "water-tanks-containing-mermaid", "colors": ["#20211a","#4c4b3b","#9a8666"] },
+  { "name": "time-machine-workshop-in-light", "file": "time-machine-workshop-in-light.webp", "about": "", "v": "tmwt8u", "scene": "time-machine-workshop-in-light", "colors": ["#1e1b13","#5a462f","#967c5b"] },
+  { "name": "time-machine-workshop-in-light-2", "file": "time-machine-workshop-in-light-2.webp", "about": "", "v": "tmwt8u", "scene": "time-machine-workshop-in-light", "colors": ["#1e1b13","#5a462f","#967c5b"] },
+  { "name": "buckeye-hot-springs-thermal-pools", "file": "buckeye-hot-springs-thermal-pools.webp", "about": "", "v": "tmwt8u", "scene": "buckeye-hot-springs-thermal-pools", "colors": ["#211d11","#5a4a33","#ac9577"] },
+  { "name": "travertine-hot-springs-in-califo", "file": "travertine-hot-springs-in-califo.webp", "about": "", "v": "tmwt8u", "scene": "travertine-hot-springs-in-califo", "colors": ["#2f2718","#856c50","#dac4a8"] },
+  { "name": "library-with-wooden-bookshelves", "file": "library-with-wooden-bookshelves.webp", "about": "", "v": "tmwt8u", "scene": "library-with-wooden-bookshelves", "colors": ["#2e251a","#644c36","#bfa47d"] },
+  { "name": "dog-ball-and-leash-on", "file": "dog-ball-and-leash-on.webp", "about": "", "v": "tmwt8u", "scene": "dog-ball-and-leash-on", "colors": ["#212118","#48432e","#907843"] },
+  { "name": "glass-tunnel-leading-to-lake", "file": "glass-tunnel-leading-to-lake.webp", "about": "", "v": "tmwt8u", "scene": "glass-tunnel-leading-to-lake", "colors": ["#604a39","#23180e","#a9937d"] }
  ],
  "categoryBackdrops": {
   "automaton": "workshop-with-robots",
@@ -73,11 +88,22 @@
   "ride": "biking-forest"
  },
  "categoryBackdropChoices": {
+  "aerial": ["lake-tahoe-beach","hiking-yosemite-1","lake-tahoe-beach-winter","donegal-1","donegal-2","donegal-4","donegal-5","aerial-of-river-and-valley"],
+  "behind-the-scenes": ["clockmaker","workshop","workshop-with-robots","copper-workbench","bike-bench","behind-the-scenes"],
+  "coloring-books": ["library","old-library"],
+  "dogs": ["trailhead","lake-tahoe-beach","biking-forest","hiking-1","hiking-yosemite-1","hiking-yosemite-2","hiking-yosemite-3","hawaii-coast","creek","foliage","donegal-2","donegal-3","lake-tahoe-2"],
+  "dusk": ["biking-forest","hiking-1","hiking-yosemite-1","hiking-yosemite-2","hiking-yosemite-3","hawaii-coast","donegal-2"],
+  "feature": ["library-futuristic-1","red-carpet-gala"],
+  "high-desert": ["hiking-yosemite-2"],
   "hike": ["hiking-yosemite-2","hiking-yosemite-3","trailhead","foliage","creek"],
   "ireland": ["donegal-2","donegal-3","donegal-4","donegal-5"],
   "lake-tahoe": ["lake-tahoe-beach-winter","hiking-1","biking-forest","lake-tahoe-2"],
-  "mini-cast": ["old-library","copper-workbench","bike-bench","behind-the-scenes","aerial-of-river-and-valley"],
-  "ride": ["lake-tahoe-2"]
+  "mini-cast": ["old-library","copper-workbench","bike-bench","behind-the-scenes","aerial-of-river-and-valley","desert-hills-under-dusk-sky","lake-tahoe-beach-at-dusk","mist-on-emerald-bay-shore","futuristic-boathouse-with-water-tubs","time-machine-room-with-equipment","people-relaxing-and-coloring-books","garage-workshop-with-robot-parts","water-tanks-containing-mermaid","time-machine-workshop-in-light","time-machine-workshop-in-light-2","buckeye-hot-springs-thermal-pools","travertine-hot-springs-in-califo","library-with-wooden-bookshelves","dog-ball-and-leash-on","glass-tunnel-leading-to-lake"],
+  "profile": ["library","bike-shop","clockmaker","workshop","workshop-with-robots","old-library","copper-workbench","bike-bench"],
+  "ride": ["lake-tahoe-2"],
+  "robot": ["clockmaker","workshop-with-robots","library-futuristic-1","red-carpet-gala"],
+  "with-helena": ["lake-tahoe-beach","donegal-1","donegal-2","donegal-3","donegal-4","donegal-5"],
+  "with-marley": ["trailhead","lake-tahoe-beach","biking-forest","hiking-yosemite-1","hiking-yosemite-2","hiking-yosemite-3","creek","foliage","lake-tahoe-2"]
  },
  "categoryRank": {
   "automaton": 2,
@@ -88,18 +114,23 @@
   "ride": 3
  },
  "categoryStamp": {
-  "aerial": "2026-10-14T02:22:42Z",
+  "aerial": "2026-10-14T18:12:30Z",
   "automaton": "2026-10-14T02:22:58Z",
-  "behind-the-scenes": "2026-10-14T02:23:20Z",
+  "behind-the-scenes": "2026-10-14T18:12:30Z",
   "case-study": "2026-10-14T02:23:43Z",
   "character": "2026-10-14T02:24:12Z",
-  "coloring-books": "2026-10-14T02:25:24Z",
-  "dogs": "2026-10-14T02:25:49Z",
-  "dusk": "2026-10-14T17:55:50Z",
-  "feature": "2026-10-14T02:30:15Z",
-  "mini-cast": "2026-10-14T15:50:30Z",
+  "coloring-books": "2026-10-14T18:12:30Z",
+  "dogs": "2026-10-14T18:12:30Z",
+  "dusk": "2026-10-14T18:12:30Z",
+  "feature": "2026-10-14T18:12:30Z",
+  "high-desert": "2026-10-14T18:12:30Z",
+  "mini-cast": "2026-10-14T18:12:30Z",
+  "profile": "2026-10-14T18:12:30Z",
   "ride": "2026-10-14T15:50:30Z",
-  "time-machine": "2026-10-14T02:29:20Z"
+  "robot": "2026-10-14T18:12:30Z",
+  "time-machine": "2026-10-14T02:29:20Z",
+  "with-helena": "2026-10-14T18:12:30Z",
+  "with-marley": "2026-10-14T18:12:30Z"
  },
  "defaults": {
   "backdrop": "lake-tahoe-beach",
