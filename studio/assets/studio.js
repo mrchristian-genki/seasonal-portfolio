@@ -847,10 +847,8 @@
       // each character's tab: who you're working on (a profile), what they wear now, what's missing, and their own box
       var thumbOf = function (c, l) {   // a look's picture for a character: GlazyArray's head in it, Robot Marley's hat
         if (c.id !== 'marley') return lookSrc(l);
-        var m = l.marley, h = m && typeof m === 'object' ? m.hat : BUILTIN_HAT[l.name];
-        return h ? '/assets/marley/parts/web/hat-' + h + '.' + (m && m.ext === 'png' ? 'png' : 'webp') + (m && m.v ? '?v=' + m.v : '') : c.avatar;
+        return hatSrc(l) || c.avatar;
       };
-      var BUILTIN_HAT = { halloween: 'halloween', 'winter-holidays': 'winter', 'st-patricks': 'stpatricks', hawaii: 'hawaii', 'tahoe-winter': 'beanie' };   // her built-in looks' hats (js/marley.js HOL)
       var styles = function (c) {
         if (c.id === 'alta') return (J.tankBackdrops || []).map(function (b) { return { name: b.name, img: '/assets/alta/backdrops/' + b.file + (b.v ? '?r=' + b.v : ''), sub: b.scene || '' }; });
         if (c.pieces.indexOf('look') < 0) return [];
@@ -1022,7 +1020,7 @@
             var l = byName[p.look.name] || (p.look.name === 'curls' ? { name: 'curls' } : null);
             if (c.look.has === 'file') return hasLook(c, l) ? '<td class="ok">' + (l.file ? '<img alt="" src="' + lookSrc(l) + '">' : '') + '<span>' + esc(p.look.name) + '</span>' + why(p.look) + '</td>' : '<td class="gap"><span>' + esc(p.look.name) + '</span>' + why(p.look) + gapBtn(c, 'look', p.look.name) + '</td>';
             // the others wear a look only when it's a holiday's or one made for them; a cap stays GlazyArray's
-            if (l && hasLook(c, l)) return '<td class="ok"><span>' + esc(l.name) + '</span>' + why(p.look) + '</td>';
+            if (l && hasLook(c, l)) return '<td class="ok">' + (c.id === 'marley' && hatSrc(l) ? '<img class="hat" alt="" src="' + hatSrc(l) + '">' : '') + '<span>' + esc(l.name) + '</span>' + why(p.look) + '</td>';
             if (l && (l.from || l.marley)) return '<td class="gap"><span>' + esc(l.name) + '</span>' + why(p.look) + gapBtn(c, 'look', l.name) + '</td>';
             return '<td class="na"><span>Her own</span><small>' + esc(p.look.name) + ' is GlazyArray\'s</small></td>';
           }) +
@@ -1594,7 +1592,8 @@
       return renderLookData().then(function (r) { var p = window.GAResolve && GAResolve.pick(r[3], { narrator: E.episode.narrator, cats: noteCats() }); return p ? p.narrator : { name: E.episode.narrator || 'glazyarray', why: '' }; });
     };
     var whoNow = NARNOW = E.episode.narrator || 'glazyarray';
-    var showWho = function () { who().then(function (n) { whoNow = NARNOW = n.name; var w = $('#epWho'); var lh = document.querySelector('#f-look > summary small'); if (lh) lh.textContent = lookHint(n.name); if (w) w.textContent = (NAR_NAME[n.name] || 'GlazyArray') + ' tells it' + (n.why ? ' (' + n.why + ')' : '') + '. The audio prompt is in their voice.'; }); };
+    var showWho = function () { who().then(function (n) { var was = NARNOW; whoNow = NARNOW = n.name; if (was !== n.name) renderStyle();   // her caps when Robot Marley tells it
+      var w = $('#epWho'); var lh = document.querySelector('#f-look > summary small'); if (lh) lh.textContent = lookHint(n.name); if (w) w.textContent = (NAR_NAME[n.name] || 'GlazyArray') + ' tells it' + (n.why ? ' (' + n.why + ')' : '') + '. The audio prompt is in their voice.'; }); };
     $('#epNarrator').onchange = function () { collect(); markDirty(); showWho(); };
     // the scene behind A.L.T.A.'s tank, when she tells it and there are scenes to pick from (looks.json tankBackdrops)
     var showTank = function () {
@@ -1668,6 +1667,13 @@
   var LOOKPICK = false, LOOKREPL = false;   // LOOKREPL: Replace pressed, so the prompt and the drop zone show   // two category looks on this Note and none picked yet (for the next steps)
   var LOOKS = null, LOOKCATS = null, CATNEW = {}, LOOKNEW = null, LOOKSAVED = {}, LOOKDEL = null;   // CATNEW: category -> look ('' for none), waiting for Save   // LOOKNEW: { name, blob, ext, url } waiting for Save;
   // LOOKSAVED: name -> this session's image, shown until the site has it; LOOKDEL: a look to take off the site on Save
+  // Robot Marley's hat for a look (Christian, Oct 14: she has caps now): her brought-in hat (looks.json "marley" is an
+  // object: hat, its file's ext and version) or one of her built-in looks' (js/marley.js HOL); '' when she has none
+  var HAT_BUILTIN = { halloween: 'halloween', 'winter-holidays': 'winter', 'st-patricks': 'stpatricks', hawaii: 'hawaii', 'tahoe-winter': 'beanie' };
+  function hatSrc(l) {
+    var m = l && l.marley, h = m && typeof m === 'object' ? m.hat : m ? HAT_BUILTIN[l.name] : '';
+    return h ? '/assets/marley/parts/web/hat-' + h + '.' + (m && m.ext === 'png' ? 'png' : 'webp') + (m && m.v ? '?v=' + m.v : '') : '';
+  }
   function lookSrc(l) { return LOOKSAVED[l.name] || (l.file ? '/assets/narrator/looks/' + esc(l.file) + (l.v ? '?r=' + esc(l.v) : '') : '/assets/marley/marley-avatar.jpg'); }   // a look with no file is Robot Marley's alone (hawaii)
   // this Note's categories (Play's filter tags, as field/tools/publish.mjs makes them): its own tags, then its kind
   function noteCats() {
@@ -1788,11 +1794,13 @@
       var implied = !chosen && !ownL && !ownB && styled.length === 1 ? styled[0] : '';
       var wasPick = LOOKPICK; LOOKPICK = false; if (wasPick !== LOOKPICK) setTimeout(renderNext, 0);   // priorities settle two categories now
       var now = gaPick(r[3]);
+      var mly = NARNOW === 'marley';
       var row = function (c) {
         var l = lk(cats[c]), b = bd(bcats[c]), on = chosen === c || implied === c;
         return '<label class="ga-sty' + (on ? ' on' : '') + '"><input type="checkbox" data-c="' + esc(c) + '"' + (on ? ' checked' : '') + (implied === c ? ' disabled' : '') + '>' +
           '<span class="ga-sty-n">' + esc(catName(c)) + (implied === c ? '<small>its only category with a style</small>' : '') + '</span>' +
-          '<span class="ga-sty-t">' + (l ? '<img alt="" title="' + esc(l.name) + '" src="' + lookSrc(l) + '">' : '<i>no cap</i>') + '</span>' +
+          // the cap of whoever tells it: Robot Marley's hat when she does (hers, or her own look when she has none for it)
+          '<span class="ga-sty-t' + (mly ? ' hat' : '') + '">' + (l ? (mly ? (hatSrc(l) ? '<img alt="" title="' + esc(l.name) + ' (Robot Marley\'s)" src="' + hatSrc(l) + '">' : '<i>her own</i>') : '<img alt="" title="' + esc(l.name) + '" src="' + lookSrc(l) + '">') : '<i>no cap</i>') + '</span>' +
           '<span class="ga-sty-t bd">' + (b ? '<img alt="" title="' + esc(b.name) + '" src="' + bdSrc(b) + '">' : '<i>no backdrop</i>') + '</span></label>';
       };
       if (box.getAttribute('data-for') !== (E.id || 'new')) { box.setAttribute('data-for', E.id || 'new'); var ow = $('#gaOwn'); if (ow) ow.open = gaOwnOpen(); }
@@ -1803,7 +1811,7 @@
           '<input id="gaTagIn" list="gaCatList" placeholder="Add a category" maxlength="40"><datalist id="gaCatList">' + allCats(r[3]).filter(function (c) { return nc.indexOf(c) < 0; }).map(function (c) { return '<option value="' + esc(catName(c)) + '">'; }).join('') + '</datalist></span>' +
           (function () { var sg = catSuggest(r[3]); return sg.length ? '<span class="ga-sugg"><small>Suggested from what it says:</small> ' + sg.map(function (x) { return '<button type="button" class="chip sugg" data-sugg="' + esc(x.c) + '" title="' + esc('Its words: ' + x.why.join(', ')) + '">+ ' + esc(catName(x.c)) + '</button>'; }).join('') + '</span>' : ''; })() + '</div>' +
         '<div class="ga-stys"><span class="ga-cats-h">Her style from a category</span>' +
-        (nc.length ? '<small>The cap and backdrop each of this Note\'s categories gives her. Tick the one this Note takes. Categories get their styles in the Categories tab.</small>' + nc.map(row).join('') : '<small>This Note has no categories yet.</small>') +
+        (nc.length ? '<small>The cap and backdrop each of this Note\'s categories gives ' + (mly ? 'Robot Marley (her caps)' : 'her') + '. Tick the one this Note takes. Categories get their styles in the Categories tab.</small>' + nc.map(row).join('') : '<small>This Note has no categories yet.</small>') +
         (now ? '<p class="ga-now"><b>Wearing now:</b> ' + esc(now.look.name.replace(/-/g, ' ')) + ' <small>(' + esc(now.look.why) + ')</small> · ' +
           (now.backdrop ? esc(now.backdrop.name.replace(/-/g, ' ')) + ' <small>(' + esc(now.backdrop.why) + ')</small>' : 'no backdrop') + '</p>' : '') +
         '<label class="ga-check"><input type="checkbox" id="gaNoHol"' + (E.ignoreHolidays ? ' checked' : '') + '> Ignore holidays <small>(holiday looks and backdrops dress every Note on their dates, except this one)</small></label>' +

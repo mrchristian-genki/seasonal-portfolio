@@ -245,7 +245,9 @@ function apply_looks(GitHub $gh, array &$files, array $body): void
             }
             // v: changes with every version, so a replaced image isn't served from a cache
             $look = ['name' => $name, 'file' => "$name.$ext", 'about' => mb_substr(trim((string) ($nl['about'] ?? '')), 0, 120), 'v' => base_convert((string) time(), 10, 36)];
-            if (!empty($was['marley'])) { $look['marley'] = true; if ($look['about'] === '') $look['about'] = (string) ($was['about'] ?? ''); }
+            // Robot Marley's side of the look stays as it was: her built-in one (true) or her brought-in hat and charm
+            // (an object; Oct 14: this was set to true, and her seven new caps lost their hats when GlazyArray's came in)
+            if (!empty($was['marley'])) { $look['marley'] = $was['marley']; if ($look['about'] === '') $look['about'] = (string) ($was['about'] ?? ''); }
             if (($nl['bulb'] ?? true) === false) $look['bulb'] = false;
             // her flair: the masks of the parts that take the Note's palette (look.js), one per colour
             $fl = '';
