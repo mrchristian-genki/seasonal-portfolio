@@ -121,19 +121,17 @@
  "consent": "Marley: the family dog, drawn into the header in her jellyfish.",
  "publishedAt": "2026-10-06T02:26:03Z",
  "narratorLook": {
-  "look": "grad-cap",
-  "fit": "category",
-  "from": "case-study",
-  "about": "a brass mortarboard with a chain tassel",
-  "why": "Picked from Case study.",
+  "look": "miner-cap-1",
+  "fit": "existing",
+  "about": "I miner's cap and lamp.",
+  "why": "",
   "prompt": "",
   "bulb": false
  },
  "narratorBackdrop": {
-  "backdrop": "library",
-  "fit": "category",
-  "from": "case-study",
-  "scene": ""
+  "backdrop": "water-tanks-containing-mermaid",
+  "fit": "existing",
+  "scene": "water-tanks-containing-mermaid"
  },
  "palette": [
   "#34a3b2",
