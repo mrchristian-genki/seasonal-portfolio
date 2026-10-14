@@ -86,7 +86,6 @@
   "ireland": "Ireland"
  },
  "tankBackdrops": [
-  { "name": "boathouse", "file": "boathouse.webp", "about": "", "v": "tmvavx", "scene": "the inside of an old wooden boathouse, kayaks and paddles on racks, the lake through the open doors", "colors": ["#1d150f","#5a4d3d","#9f9f94"] },
   { "name": "pool-deck", "file": "pool-deck.webp", "about": "", "v": "tmvavx", "scene": "a sunny outdoor swimming pool deck with lane ropes and a lifeguard chair", "colors": ["#243615","#535d32","#919357"] },
   { "name": "tahoe-winter-shore", "file": "tahoe-winter-shore.webp", "about": "", "v": "tmvavx", "scene": "a snowy Lake Tahoe shoreline in winter, dark pines and white mountains across the water", "colors": ["#ced5dd","#728191","#4d5351"] },
   { "name": "emerald-bay-mist", "file": "emerald-bay-mist.webp", "about": "", "v": "tmvavx", "scene": "the shore of Emerald Bay on a still morning, mist on the water and the small rocky island beyond", "colors": ["#455358","#dde0e0","#8b9598"] },
@@ -95,7 +94,8 @@
   { "name": "hawaii-coast", "file": "hawaii-coast.webp", "about": "", "v": "tmvavx", "scene": "a tropical shoreline at golden hour, palm trees and calm turquoise water", "colors": ["#5a5033","#e8d3af","#99987c"] },
   { "name": "donegal-cliffs", "file": "donegal-cliffs.webp", "about": "", "v": "tmvavx", "scene": "green sea cliffs above the Atlantic under a soft grey sky", "colors": ["#cdd1d2","#8f999c","#59573c"] },
   { "name": "classroom", "file": "classroom.webp", "about": "", "v": "tmvavx", "scene": "a bright classroom with a long chalkboard, a globe and tall windows", "colors": ["#a78b6e","#554c3f","#daccba"] },
-  { "name": "library", "file": "library.webp", "about": "", "v": "tmvavx", "scene": "a quiet old library with tall wooden bookshelves and warm reading lamps", "colors": ["#492e18","#816144","#cfc0a7"] }
+  { "name": "library", "file": "library.webp", "about": "", "v": "tmvavx", "scene": "a quiet old library with tall wooden bookshelves and warm reading lamps", "colors": ["#492e18","#816144","#cfc0a7"] },
+  { "name": "boathouse", "file": "boathouse.webp", "about": "", "v": "tmvkn3", "scene": "the inside of an old wooden boathouse, kayaks and paddles on racks, the lake through the open doors", "colors": ["#221811","#615545","#b5b5ad"] }
  ],
  "categoryTanks": {
   "ireland": "donegal-cliffs",
