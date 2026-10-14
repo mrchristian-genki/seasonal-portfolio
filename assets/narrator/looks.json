@@ -20,13 +20,13 @@
   { "name": "grad-cap", "file": "grad-cap.webp", "about": "a mortarboard, its board in one colour and its tassel in the other", "v": "tw2a", "bulb": false, "flair": "ab", "flairDye": "ab", "flairK": 1, "flairBase": ["#26355e","#d4a23c"] },
   { "name": "hawaii", "file": "hawaii.webp", "about": "sunglasses and frangipani flowers", "v": "tmvisi", "marley": true, "flair": "a" },
   { "name": "bike-helmet", "file": "bike-helmet.webp", "about": "a glossy hard-shell bike helmet with a little brass headlamp, its shell in one colour and its rim band in the other", "v": "tmwrsf", "bulb": false, "flair": "a" },
-  { "name": "cowboy-hat-1", "marley": {"v":"tmx1c0","hat":"cowboyhat1","hatBox":[121,-38,264,106],"charm":"cowboyhat1","charmBox":[221,278,75,112]} },
   { "name": "aviator-cap-1", "file": "aviator-cap-1.webp", "about": "Aviator Cap", "v": "tmx4uo", "marley": true, "bulb": false, "flair": "ab" },
   { "name": "tailored-irish-tweed-cap", "file": "tailored-irish-tweed-cap.webp", "about": "Tailored Irish Tweed Cap", "v": "tmx4vr", "marley": true, "bulb": false, "flair": "ab" },
   { "name": "hawaiian-cap-2", "file": "hawaiian-cap-2.webp", "about": "glossy baseball hat worn by robots in Hawaii.", "v": "tmx4x4", "marley": true, "bulb": false, "flair": "ab" },
   { "name": "hawaiian-cap-3", "file": "hawaiian-cap-3.webp", "about": "glossy baseball hat worn by robots in Hawaii.", "v": "tmx4xy", "marley": true, "bulb": false, "flair": "ab" },
   { "name": "miner-cap-1", "file": "miner-cap-1.webp", "about": "I miner's cap and lamp.", "v": "tmx4yz", "marley": true, "bulb": false, "flair": "ab" },
-  { "name": "chefs-hat", "file": "chefs-hat.webp", "about": "A chef's hat.", "v": "tmx500", "marley": true, "bulb": false, "flair": "ab" }
+  { "name": "chefs-hat", "file": "chefs-hat.webp", "about": "A chef's hat.", "v": "tmx500", "marley": true, "bulb": false, "flair": "ab" },
+  { "name": "cowboy-hat-1", "file": "cowboy-hat-1.webp", "about": "A Cowboy Hat", "v": "tmx50z", "marley": true, "bulb": false, "flair": "ab" }
  ],
  "categories": {
   "automaton": "workshop-goggles",
