@@ -34,6 +34,9 @@
   // only picked: sunglasses pushed up on her head (worn as a hat) and a flower lei (as a charm, too big to swing).
   // Tahoe winter (Oct 13): a knit beanie and a pinecone charm, on its dates (01-02 to 01-31)
   var HOL = { halloween: ['halloween', 'broom', 'Halloween'], 'winter-holidays': ['winter', 'snowglobe', 'Winter holidays'], 'st-patricks': ['stpatricks', 'clover', 'St. Patrick\'s'], hawaii: ['hawaii', 'lei', 'Hawaii'], 'tahoe-winter': ['beanie', 'wintercone', 'Tahoe winter'] };
+  // A Note's colours on her hat, charm, collar and stump: off while Christian rebuilds her dyed skins (Oct 14: the
+  // flat colour masks covered her caps and charm); true turns them back on
+  var TINT = false;
   var HCHARMS = ['broom', 'snowglobe', 'clover', 'lei', 'wintercone'];   // the leaf has no cyan render yet; her own white ball is the cyan cut dyed white
   // looks brought in from the Studio (Characters, "Bring in a look", Oct 13): a look in looks.json whose "marley" names
   // her pieces ({ hat, charm, hatBox, charmBox, v, label }) joins the ones above, no code needed; its files carry their
@@ -200,7 +203,7 @@
       else if (holK) { holK = ''; hat(''); charm(charmBefore || 'bone'); }
     }
     function colours(p) {
-      pal = p && /^#[0-9a-f]{6}$/i.test(p[0]) && /^#[0-9a-f]{6}$/i.test(p[1]) ? p : null;
+      pal = TINT && p && /^#[0-9a-f]{6}$/i.test(p[0]) && /^#[0-9a-f]{6}$/i.test(p[1]) ? p : null;
       [].forEach.call(hatEl.querySelectorAll('.mly-hatk'), function (w) {
         var o = w.querySelector('.mly-own'), d = w.querySelector('.mly-dyed'), i = w.querySelector('.mly-dye');
         if (i && pal) i.style.background = pal[0];
@@ -210,7 +213,7 @@
       if (pal) [].forEach.call(st.querySelectorAll('.mly-dc'), function (i) { i.style.background = pal[0]; });
       // her stump: the Note's colours (data-seatpal, set on every Note she tells) or these
       var sb = el.getAttribute('data-seatpal') ? el : (el.closest && el.closest('[data-seatpal]')) || el;
-      var sp = (sb.getAttribute('data-seatpal') || '').split(' ')[0], sc = pal ? pal[0] : /^#[0-9a-f]{6}$/i.test(sp) ? sp : '';
+      var sp = (sb.getAttribute('data-seatpal') || '').split(' ')[0], sc = !TINT ? '' : pal ? pal[0] : /^#[0-9a-f]{6}$/i.test(sp) ? sp : '';
       var sd = st.querySelector('.mly-sd'), sdi = st.querySelector('.mly-sdi');
       if (sd) { if (sc) sdi.style.background = sc; sd.style.opacity = sc ? 1 : 0; }
       var own = ch.querySelector('.mly-own'), dy = ch.querySelector('.mly-dyed'), i = ch.querySelector('.mly-dye'), o = OWN[chK], show = !!(pal || o);
