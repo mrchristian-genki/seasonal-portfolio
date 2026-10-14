@@ -223,7 +223,7 @@ const foot = (rel) => `<footer class="foot"><p>${esc(show.narrationNote)}</p>
 <script src="${rel}../assets/narrator/resolve.js?v=7" defer></script>
 <script src="${rel}../js/narrator.js?v=45" defer></script>
 <script src="${rel}../js/alta.js?v=18" defer></script>
-<script src="${rel}../js/marley.js?v=15" defer></script>
+<script src="${rel}../js/marley.js?v=16" defer></script>
 </body>
 </html>
 `;
