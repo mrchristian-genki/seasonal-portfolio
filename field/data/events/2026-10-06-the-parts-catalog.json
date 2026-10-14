@@ -129,9 +129,9 @@
   "bulb": false
  },
  "narratorBackdrop": {
-  "backdrop": "water-tanks-containing-mermaid",
+  "backdrop": "time-machine-room-with-equipment",
   "fit": "existing",
-  "scene": "water-tanks-containing-mermaid"
+  "scene": "time-machine-room-with-equipment"
  },
  "palette": [
   "#34a3b2",
