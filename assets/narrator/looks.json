@@ -99,7 +99,8 @@
   { "name": "workshop-with-robots", "file": "workshop-with-robots.webp", "about": "", "v": "tmvkvl", "colors": ["#4e341e","#997353","#d7c7b2"] },
   { "name": "ride-tank", "file": "ride-tank.webp", "about": "", "v": "tmvkxj", "colors": ["#362f25","#7d6d5a","#bbad9d"] },
   { "name": "case-study-tank-1", "file": "case-study-tank-1.webp", "about": "", "v": "tmvkyk", "colors": ["#69513e","#311e11","#c1a27e"] },
-  { "name": "automaton-1", "file": "automaton-1.webp", "about": "", "v": "tmvkzn", "colors": ["#3d2c1c","#79644e","#cabeae"] }
+  { "name": "automaton-1", "file": "automaton-1.webp", "about": "", "v": "tmvkzn", "colors": ["#3d2c1c","#79644e","#cabeae"] },
+  { "name": "with-marley-1", "file": "with-marley-1.webp", "about": "", "v": "tmvl0s", "colors": ["#414121","#7f774b","#d6c085"] }
  ],
  "categoryTanks": {
   "ireland": "donegal-cliffs",
