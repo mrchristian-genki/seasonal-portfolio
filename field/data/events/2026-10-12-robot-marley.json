@@ -388,9 +388,9 @@
   "cover": "clip-1.mp4"
  },
  "narratorLook": {
-  "look": "cowboy-hat-1",
+  "look": "halloween",
   "fit": "existing",
-  "about": "A Cowboy Hat",
+  "about": "",
   "why": "",
   "prompt": "",
   "bulb": false
