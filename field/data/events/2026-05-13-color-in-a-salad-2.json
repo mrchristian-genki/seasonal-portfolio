@@ -231,10 +231,10 @@
  "consent": "",
  "source": "Rides/Color in a Salad 2",
  "narratorLook": {
-  "look": "chefs-hat",
+  "look": "chefs-hat-white",
   "fit": "existing",
   "about": "A chef's hat.",
-  "why": "The whole Note is salads, page after page.",
+  "why": "",
   "prompt": "",
   "bulb": false
  },
