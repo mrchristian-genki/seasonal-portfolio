@@ -1,0 +1,347 @@
+{
+ "id": "2026-05-13-color-in-a-salad-2",
+ "title": "Color in a Salad 2",
+ "date": "2026-05-13",
+ "kind": "showcase",
+ "place": "",
+ "status": "published",
+ "summary": "Color in a Salad: Vol. 1 is Christian's coloring book, published on Amazon on May 13, 2026 and made with his ProPre engine. Every salad comes as a pair, its ingredients on one page and the finished dish on the other, so once it's colored in it works as a cookbook.",
+ "trailhead": null,
+ "links": [],
+ "track": null,
+ "photos": [
+  {
+   "src": "data/photos/2026-05-13-color-in-a-salad-2/clip-4.mp4",
+   "poster": "data/photos/2026-05-13-color-in-a-salad-2/clip-4.jpg",
+   "video": true,
+   "caption": "Making a Caeser Salad in the kitchen with the whole team.",
+   "takenAt": "2026:10:15 09:55:51",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": true,
+   "from": "Robotic_woman_tossing_salad_leaves_20261015095130.mp4",
+   "range": [
+    0,
+    9.95
+   ]
+  },
+  {
+   "src": "data/photos/2026-05-13-color-in-a-salad-2/clip-1.mp4",
+   "poster": "data/photos/2026-05-13-color-in-a-salad-2/clip-1.jpg",
+   "video": true,
+   "caption": "Coloring in the ingredients to a Cobb Salad.",
+   "takenAt": "2026:10:15 10:00:51",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "color-in-salad-caeser-1.mp4",
+   "range": [
+    0,
+    4.78
+   ]
+  },
+  {
+   "src": "data/photos/2026-05-13-color-in-a-salad-2/clip-2.mp4",
+   "poster": "data/photos/2026-05-13-color-in-a-salad-2/clip-2.jpg",
+   "video": true,
+   "caption": "Coloring in a beet salad ingredients.",
+   "takenAt": "2026:10:15 10:01:05",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "color-in-salad-beet-2.mp4",
+   "range": [
+    0,
+    5.06
+   ]
+  },
+  {
+   "src": "data/photos/2026-05-13-color-in-a-salad-2/clip-3.mp4",
+   "poster": "data/photos/2026-05-13-color-in-a-salad-2/clip-3.jpg",
+   "video": true,
+   "caption": "Coloring in a beet salad.",
+   "takenAt": "2026:10:15 10:01:10",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "color-in-salad-beet-1.mp4",
+   "range": [
+    0,
+    5.06
+   ]
+  },
+  {
+   "src": "data/photos/2026-05-13-color-in-a-salad-2/01.jpg",
+   "caption": "A beet and goat cheese salad with walnuts and greens, a glass of wine, and hills outside the window.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Beet_and_goat_cheese_salad_202605121412.jpeg"
+  },
+  {
+   "src": "data/photos/2026-05-13-color-in-a-salad-2/02.jpg",
+   "caption": "The beet and goat cheese salad as a botanical study: three beets, arugula, chèvre, walnut, balsamic and microgreens.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Beet_goat_cheese_salad_ingredien…_202605121412.jpeg"
+  },
+  {
+   "src": "data/photos/2026-05-13-color-in-a-salad-2/03.jpg",
+   "caption": "Caprese ingredients: buffalo mozzarella, San Marzano tomatoes, basil and olive oil.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Botanical_illustration_caprese_i…_202605121412.jpeg"
+  },
+  {
+   "src": "data/photos/2026-05-13-color-in-a-salad-2/08.jpg",
+   "caption": "The Caesar salad as a reference plate: romaine, egg, anchovies, lemon, garlic, Parmigiano and croutons.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Caesar_salad_ingredients_botanic…_202605121412.jpeg"
+  },
+  {
+   "src": "data/photos/2026-05-13-color-in-a-salad-2/09.jpg",
+   "caption": "A caprese plate in a stone archway above the sea.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Caprese_salad_on_table_202605121412.jpeg"
+  },
+  {
+   "src": "data/photos/2026-05-13-color-in-a-salad-2/11.jpg",
+   "caption": "The Cobb salad's ingredients, charted like an old textbook plate.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Cobb_salad_ingredients_botanical…_202605121412.jpeg"
+  },
+  {
+   "src": "data/photos/2026-05-13-color-in-a-salad-2/12.jpg",
+   "caption": "A Cobb salad built in rows: greens, bacon, egg, chicken, blue cheese, avocado and cherry tomatoes.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Cobb_salad_on_chilled_plate_202605121412.jpeg"
+  },
+  {
+   "src": "data/photos/2026-05-13-color-in-a-salad-2/13.jpg",
+   "caption": "Amazon Book Cover",
+   "takenAt": null,
+   "w": 522,
+   "h": 522,
+   "use": "post",
+   "cover": false,
+   "from": "color-in-a-salad-book-cover.jpg"
+  },
+  {
+   "src": "data/photos/2026-05-13-color-in-a-salad-2/14.jpg",
+   "caption": "Color in version of a beet and goat cheese salad with walnuts and greens, a glass of wine, and hills outside the window.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Copy_of_Beet_and_goat_202605121412.jpeg"
+  },
+  {
+   "src": "data/photos/2026-05-13-color-in-a-salad-2/15.jpg",
+   "caption": "Color in version of a the beet and goat cheese salad as a botanical study: three beets, arugula, chèvre, walnut, balsamic and microgreens.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Copy_of_Beet_goat_cheese_202605121412.jpeg"
+  },
+  {
+   "src": "data/photos/2026-05-13-color-in-a-salad-2/16.jpg",
+   "caption": "Caprese ingredients: buffalo mozzarella, San Marzano tomatoes, basil and olive oil.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Copy_of_Botanical_illustration_caprese_202605121412.jpeg"
+  },
+  {
+   "src": "data/photos/2026-05-13-color-in-a-salad-2/18.jpg",
+   "caption": "The Caesar salad as a reference plate: romaine, egg, anchovies, lemon, garlic, Parmigiano and croutons.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Copy_of_Caesar_salad_ingredients_202605121428.jpeg"
+  },
+  {
+   "src": "data/photos/2026-05-13-color-in-a-salad-2/19.jpg",
+   "caption": "A caprese plate in a stone archway above the sea.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Copy_of_Caprese_salad_on_202605121412.jpeg"
+  },
+  {
+   "src": "data/photos/2026-05-13-color-in-a-salad-2/22.jpg",
+   "caption": "A Cobb salad built in rows: greens, bacon, egg, chicken, blue cheese, avocado and cherry tomatoes.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Copy_of_Cobb_salad_on_202605121412.jpeg"
+  }
+ ],
+ "fieldNotes": "The entry's kind is \"ride\", but the photos are salad coloring pages with no notes, place or track. Is the kind right, or should this be a making-of / prototype Note in another category?\nShowcase.\n\nThere are no notes at all. What is Color in a Salad 2: a coloring book you made, made with AI, a gift, a sequel to a first set? Who is it for and how did you make it? The draft avoids saying any of this.\nColor in a Salad is a coloring book at Amazon. I used my ProPre (Pro Pree) engine to make them. https://www.christiangehrke.com/?workshop+winter+night+propre-engine\n\nOnly photos 01 to 12 were visible to me. Photos 13 to 40 have placeholder captions; please share them or describe them.\nRemoved all the ones that are not needed. only need a few to show off the book look.\n\nPhoto 10 shows a beer brand label and logo (and banner logos). Keep, crop, or swap that page, given the show avoids brands?\nAll fixed in pre-production using the propre engine as they are fake. Built into the prompt tool.\n\nSeveral pages have text errors that could reflect on the work if published: 02 says \"Loved Leaf Magnification\", 03 repeats the San Marzano label twice, 05's title looks misspelled, 08's Worcestershire label is garbled, 11 has \"Penicilliourt veineiring\". Fix before publishing, or call it out as part of the story?\nThat is fine.\n\nShould the post mention how the pages were made (tools, AI, print format) and whether they can be downloaded or printed? None of that is in the entry.\nYes\n\nIs there something real for a \"What I learned\" line? I left it off rather than guess.\nAlso the books have ingredients for salads one one page and the salad on the other. So when you are done coloring it in you can use it as a cookbook.\n\nThe cover (13.jpg) reads \"Color in a Salad: Vol. 1, Right-Handed Edition\", but the Note is titled Color in a Salad 2. Is this Volume 2, or should the title match the cover?\nThere is not and we can come up with a fun name like from crayons to croutons or something like that please.\n\nclip-4 says \"with the whole team\": who appears in it, and are they OK being shown?\nAI team that I created. not real. GlazyArray the robot humanoid and Robot Marley and then ALTA.\n\nWho colored pages 14 to 22: you by hand, or ProPre previews? The post just says they're shown colored in.\nAI did not ProPre. These are what AI thinks they can be color in like but that is up to the person coloring the book.\n\nOK to name Amazon in the episode? The script says only that the book is published and ready to order; the post names Amazon.\nYes please. I would like to sell books.\n\nAnything to add on format (paperback, page count, what the Right-Handed Edition means)?\nNo.\n\nThe draft still describes the bread salad, poke, tiled-table and night-market pages, which are no longer among the photos. Keep those lines or trim them?\nIt is in the book so if we can still mention it and get them to buy the book to find out more.\n\nIs \"From Crayons to Croutons\" the title you want for the post, or should it be another fun name?\nthink of something fun.\n\nDo you want the Amazon link to the book added to the post?\nyes. https://www.amazon.com/Color-Salad-Famous-Salads-Right-Handed/dp/B0H2SDMLDH/ref=sr_1_1?crid=1OYZSGT1F5NRH&dib=eyJ2IjoiMSJ9.bxDlXsPE4se38qGbQhMrkQ3c5thRv6DlbVyRJyvSNnsdr9Di4yJivqS8A-vr3Ba6nX5_FK0b82bJUtjAgg0_hKx9pMF5XSUYqST3apanWJz4y1DQC6OXaNg-DOiJwNNEBYthXrMVnMuvk9O36vYoda5xqIiyeJuLAilgUELiVwPSLzFTq08AENKdIXlmI0Z4rcIONDXDQsFwhJPAZAlmYAteLAQ6jkleJ38YtsGw72Q.VlSHvY1fg-bZUVDQQY5CPJrqOgxWizREr6B3O_dcssI&dib_tag=se&keywords=color+in+a+salad&qid=1792084153&sprefix=color+in+a+salad%2Caps%2C202&sr=8-1 (short version)\n\nPhotos 19 and 22 weren't visible to me; their captions are kept from the line-art versions. Are they colored previews too?\nyes colored versions of their partners with the same caption.\n\nI used the short Amazon link https://www.amazon.com/dp/B0H2SDMLDH (the long one minus the search tracking). Does it open the book for you?\nYes\n\nNew post title: \"Romaine Inside the Lines\". OK, or keep \"From Crayons to Croutons\"?\nLove it!",
+ "post": {
+  "title": "Romaine Inside the Lines",
+  "body": "These are a few pages from Color in a Salad: Vol. 1, a coloring book I published on Amazon on May 13, 2026: salads drawn in clean black outlines, waiting for color.\n\n## The beet salad, twice\n\nThe set opens with a beet and goat cheese salad on a wooden table, with rolling hills outside the window and a glass of wine beside the plate. The next page takes that same salad apart as a botanical study. Three beets are shown with their leaves and roots, Detroit dark red, golden and Chioggia, each with a cross-section, plus arugula, a round of chèvre, a walnut cut open, a bottle of balsamic and a patch of microgreens.\n\n## A dish, then its parts\n\nThat pattern runs through the book: a finished dish, then the ingredients on their own. There's a caprese study with buffalo mozzarella, San Marzano tomatoes, basil and olive oil, and a caprese plate in a stone archway above the sea. There's a page of bread salad ingredients, ciabatta, heirloom tomato, cucumber, red onion, olives and capers, and a bowl getting its dressing poured in front of a window that looks out over a vineyard. A tiled table holds a big patterned bowl of salad with small dishes of olives and dips. A night-market table holds a minced salad with herbs and lime, sticky rice in a woven basket, and stalls behind it.\n\n> That pattern runs through the book: a finished dish, then the ingredients on their own.\n\n## The reference plates\n\nThe reference plates are the ones I'd look at longest. The Caesar plate lays out romaine, a cut egg with its yolk and white labeled, anchovies in a tin, lemon, garlic, Parmigiano and croutons. The poke page puts ahi, avocado, edamame, cucumber, pickled ginger, sesame and green onion in a ring, with tropical leaves around the edge. The Cobb gets two pages: the ingredients as a chart, then the salad itself, built in neat rows on a plate, greens, bacon, egg, chicken, blue cheese, avocado and cherry tomatoes.\n\nThe bread salad, the tiled table, the night market and the poke aren't pictured here. For those, you'll have to open the book.\n\n## How I made them\n\nI made the pages with my ProPre engine, the prompt tool I wrote about in [a winter night in the workshop](https://www.christiangehrke.com/?workshop+winter+night+propre-engine). Every label, tin and bottle in the book is invented. That's built into the prompt tool, so a page can show a tin of anchovies or a bottle of Worcestershire without anyone's real brand on it.\n\nA few pages are shown here colored in, next to their line art. Those colored versions are AI previews, not ProPre: one idea of how a page could turn out. How yours looks is up to you and your pencils.\n\nThere's also a short clip of my AI team making a Caesar salad in the kitchen: GlazyArray, Robot Marley and A.L.T.A., the characters I created for this show. None of them are real, but they did a fine job with the romaine.\n\n[Color in a Salad: Vol. 1 is on Amazon now](https://www.amazon.com/dp/B0H2SDMLDH).\n\nWhat I learned: pairing every salad with its ingredients, the ingredients on one page and the salad on the other, gives the book a second life. When you're done coloring it in, you can use it as a cookbook."
+ },
+ "episode": {
+  "title": "A salad, in outline",
+  "script": "Narrated by GlazyArray.\n\nMay thirteenth, twenty twenty-six. A book of salads went out into the world without a single color on its pages. That was the point.\n\nColor in a Salad was a stack of coloring pages, every one of them a salad, every one of them drawn in clean black lines and left open for whoever picked up the pencils.\n\nIt was a real book, published on Amazon that day and ready to order. Christian made the pages with his own Pro Pree engine. Every tin and bottle in them was invented on purpose, so no one's label ever slipped onto a page.\n\nIt opened at a wooden table. A plate of beets and goat cheese, a glass of wine, and hills rolling away outside the window. Then the same salad came apart on the next page, like a lesson. Three kinds of beets, each one sliced to show its rings. Arugula with its little flowers. A walnut cut in half. A round of soft cheese.\n\n***\n\nThat was the rhythm of the whole book. A finished dish, then the pieces it was made from.\n\nA caprese plate sat in a stone archway, with the sea and tall rocks beyond it. A bowl of bread salad caught a ribbon of dressing in front of a window full of vineyard rows. A big patterned bowl waited on a tiled table, with olives and dips on the side. And at a night market, a plate of minced salad with herbs and a wedge of lime sat next to sticky rice in a woven basket, the stalls glowing behind it.\n\nThe reference pages were the quiet stars. The Caesar, laid out piece by piece, right down to a labeled egg yolk. The poke, set in a ring of tropical leaves. And the Cobb, which got two pages. First its ingredients, charted like an old textbook. Then the salad itself, built in tidy rows across the plate, greens and bacon and egg and chicken and avocado and a line of little tomatoes at the bottom.\n\nNot all of those pages made it into this Note. The bread salad, the tiled table, the night market and the poke were waiting in the book itself, for anyone who wanted to see the rest.\n\nA few pages had been colored in, too, by AI, just to show one way they could go. The real colors were up to whoever held the pencils.\n\nThere was even a little clip of a Caesar salad coming together in a kitchen, made by Christian's AI team. Robot Marley was there, and A.L.T.A., and, I'll admit, so was I. I'll say no more than that.\n\nPairing every dish with its parts is a good eye at work. It turns a pretty picture into something you learn from while you color it.\n\nAnd it had a second life built in. With the ingredients on one page and the salad on the other, a finished book could leave the coloring table and go to the kitchen, as a cookbook.\n\n***\n\nSome salads are for eating. These ones were for taking your time first.",
+  "audio": "data/audio/2026-05-13-color-in-a-salad-2.mp3"
+ },
+ "questions": [
+  "The kitchen and coloring clips are dated Oct 15, 2026, months after the May 13 release. The text leaves them undated; is that right?"
+ ],
+ "consent": "",
+ "source": "Rides/Color in a Salad 2",
+ "narratorLook": {
+  "look": "chefs-hat",
+  "fit": "existing",
+  "about": "A chef's hat.",
+  "why": "The whole Note is salads, page after page.",
+  "prompt": "",
+  "bulb": false
+ },
+ "narratorBackdrop": {
+  "backdrop": "people-relaxing-and-coloring-books",
+  "fit": "existing",
+  "scene": ""
+ },
+ "palette": [
+  "#34b2b1",
+  "#b27834"
+ ],
+ "feature": {
+  "theme": "studiofloor",
+  "masthead": "STUDIO FLOOR",
+  "tagline": "Makers, in their own words",
+  "issue": "The Ten-Year Issue",
+  "label": "Showcase",
+  "byline": "By GlazyArray, Senior Editor",
+  "blocks": [
+   {
+    "type": "box",
+    "title": "A finished dish, then its parts",
+    "before": "The reference plates",
+    "kicker": "Toolbox",
+    "text": "The method behind the set is a pairing: each salad appears once as a finished dish, set at a table or in a place, and once taken apart into its ingredients.\n\nThe beet and goat cheese salad shows it first: a plate by a window with rolling hills, then a botanical study of three beets, Detroit dark red, golden and Chioggia, each with a cross-section, plus arugula, chèvre, a walnut, balsamic and microgreens.\n\nEvery page is drawn in clean black outlines, waiting for color."
+   },
+   {
+    "type": "timeline",
+    "title": "Selected works",
+    "items": [
+     [
+      "The opening page",
+      "A beet and goat cheese salad on a wooden table, hills outside the window, a glass of wine beside the plate"
+     ],
+     [
+      "The next page",
+      "The same salad taken apart as a botanical study: three beets with their leaves and roots, each with a cross-section"
+     ],
+     [
+      "Caprese",
+      "An ingredient study of buffalo mozzarella, San Marzano tomatoes, basil and olive oil, and a plate in a stone archway above the sea"
+     ],
+     [
+      "Bread salad",
+      "Ciabatta, heirloom tomato, cucumber, red onion, olives and capers, and a bowl getting its dressing in front of a vineyard window"
+     ],
+     [
+      "Night market",
+      "A minced salad with herbs and lime, sticky rice in a woven basket, stalls behind it"
+     ],
+     [
+      "The reference plates",
+      "The Caesar with its egg yolk and white labeled, the poke in a ring of tropical leaves, and the Cobb across two pages"
+     ]
+    ]
+   }
+  ],
+  "coverLines": [
+   "A finished dish, then its parts: inside Color in a Salad 2",
+   "Three beets, each with a cross-section",
+   "The Cobb gets two pages",
+   "A caprese plate in a stone archway above the sea",
+   "The Caesar, right down to a labeled egg yolk"
+  ],
+  "qa": {
+   "title": "In conversation",
+   "items": [
+    {
+     "q": "What are these pages?",
+     "a": "These are the pages for Color in a Salad 2: salads drawn in clean black outlines, waiting for color."
+    },
+    {
+     "q": "How is the set put together?",
+     "a": "That pattern runs through the set: a finished dish, then the ingredients on their own."
+    },
+    {
+     "q": "Which pages hold your eye?",
+     "a": "The reference plates are the ones I'd look at longest."
+    },
+    {
+     "q": "Why does the Cobb get more room than the rest?",
+     "a": "The Cobb gets two pages: the ingredients as a chart, then the salad itself, built in neat rows on a plate, greens, bacon, egg, chicken, blue cheese, avocado and cherry tomatoes."
+    }
+   ]
+  },
+  "spotted": [
+   {
+    "label": "In the clips",
+    "text": "Coloring in the ingredients to a Cobb salad."
+   },
+   {
+    "label": "In the clips",
+    "text": "Coloring in a beet salad, then its ingredients."
+   },
+   {
+    "label": "On the shelf",
+    "text": "The book's cover, shown among the set's pictures."
+   }
+  ],
+  "questions": [
+   "What tools made the pages (drawing app, AI image model, pencils for the clips)? The Toolbox box describes only the method because the Note doesn't name any tools.",
+   "Was there a Color in a Salad 1, and when did each come out? Selected works follows page order only, since the Note gives no dates beyond October 15, 2026.",
+   "Is the book for sale, and do you want a link in Spotted? Photo 13 is captioned as its Amazon book cover but no URL is given.",
+   "The cover clip says 'with the whole team': who is on the team, and are they OK appearing? They stay unnamed for now. (The caption also spells it 'Caeser'.)",
+   "The Note's kind is 'ride', but this is a coloring book: should it be changed?"
+  ]
+ },
+ "publishedAt": "2026-10-15T18:03:36Z"
+}
