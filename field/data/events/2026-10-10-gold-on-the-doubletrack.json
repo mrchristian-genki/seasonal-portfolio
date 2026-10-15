@@ -2148,5 +2148,13 @@
   "backdrop": "foliage",
   "fit": "new",
   "scene": "a small bike shop garage with mountain bikes hanging on a wall rack, tools on a pegboard and a wooden workbench"
+ },
+ "narratorLook": {
+  "look": "bike-helmet",
+  "fit": "existing",
+  "about": "a glossy hard-shell bike helmet with a little brass headlamp, its shell in one colour and its rim band in the other",
+  "why": "",
+  "prompt": "",
+  "bulb": false
  }
 }
