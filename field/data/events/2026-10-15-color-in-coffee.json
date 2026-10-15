@@ -4,7 +4,7 @@
  "date": "2026-10-15",
  "kind": "showcase",
  "place": "",
- "status": "audio",
+ "status": "published",
  "summary": "Christian's AI-generated coffee coloring book, Color In Coffee: Vol. 1, published May 13, 2026 and available on Amazon: cafés, whole cities inside cups, a train platform of vending machines, drying beds and wild Arabica beans. The book's pages are black and white, shown here beside AI-colored versions he picked.",
  "trailhead": null,
  "links": [],
@@ -525,5 +525,6 @@
   "backdrop": "people-relaxing-and-coloring-books",
   "fit": "existing",
   "scene": ""
- }
+ },
+ "publishedAt": "2026-10-15T14:30:50Z"
 }
