@@ -26,7 +26,8 @@
   { "name": "hawaiian-cap-3", "file": "hawaiian-cap-3.webp", "about": "glossy baseball hat worn by robots in Hawaii.", "v": "tmx4xy", "marley": {"v":"tmx190","hat":"hawaiiancap3","hatBox":[203,-34,119,92],"charm":"hawaiiancap3","charmBox":[230,270,58,171]}, "bulb": false, "flair": "ab" },
   { "name": "miner-cap-1", "file": "miner-cap-1.webp", "about": "I miner's cap and lamp.", "v": "tmx4yz", "marley": {"v":"tmx1av","hat":"minercap1","hatBox":[160,-32,189,122],"charm":"minercap1","charmBox":[224,302,66,88]}, "bulb": false, "flair": "ab" },
   { "name": "chefs-hat", "file": "chefs-hat.webp", "about": "A chef's hat.", "v": "tmx500", "marley": {"v":"tmx1p6","hat":"chefshat","hatBox":[156,-40,195,104],"charm":"chefshat","charmBox":[213,303,94,81]}, "bulb": false, "flair": "ab" },
-  { "name": "cowboy-hat-1", "file": "cowboy-hat-1.webp", "about": "A Cowboy Hat", "v": "tmx50z", "marley": {"v":"tmx1c0","hat":"cowboyhat1","hatBox":[121,-38,264,106],"charm":"cowboyhat1","charmBox":[221,278,75,112]}, "bulb": false, "flair": "ab" }
+  { "name": "cowboy-hat-1", "file": "cowboy-hat-1.webp", "about": "A Cowboy Hat", "v": "tmx50z", "marley": {"v":"tmx1c0","hat":"cowboyhat1","hatBox":[121,-38,264,106],"charm":"cowboyhat1","charmBox":[221,278,75,112]}, "bulb": false, "flair": "ab" },
+  { "name": "chefs-hat-white", "file": "chefs-hat-white.webp", "about": "A chef's hat.", "v": "tmyrdi", "bulb": false, "flair": "ab" }
  ],
  "categories": {
   "aerial": "aviator-cap-1",
