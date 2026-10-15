@@ -1592,7 +1592,7 @@
       return renderLookData().then(function (r) { var p = window.GAResolve && GAResolve.pick(r[3], { narrator: E.episode.narrator, cats: noteCats() }); return p ? p.narrator : { name: E.episode.narrator || 'glazyarray', why: '' }; });
     };
     var whoNow = NARNOW = E.episode.narrator || 'glazyarray';
-    var showWho = function () { who().then(function (n) { var was = NARNOW; whoNow = NARNOW = n.name; if (was !== n.name) renderStyle();   // her caps when Robot Marley tells it
+    var showWho = function () { who().then(function (n) { var was = NARNOW; whoNow = NARNOW = n.name; if (was !== n.name) { renderLook(); renderStyle(); }   // her caps when Robot Marley tells it
       var w = $('#epWho'); var lh = document.querySelector('#f-look > summary small'); if (lh) lh.textContent = lookHint(n.name); if (w) w.textContent = (NAR_NAME[n.name] || 'GlazyArray') + ' tells it' + (n.why ? ' (' + n.why + ')' : '') + '. The audio prompt is in their voice.'; }); };
     $('#epNarrator').onchange = function () { collect(); markDirty(); showWho(); };
     // the scene behind A.L.T.A.'s tank, when she tells it and there are scenes to pick from (looks.json tankBackdrops)
@@ -1800,7 +1800,7 @@
         return '<label class="ga-sty' + (on ? ' on' : '') + '"><input type="checkbox" data-c="' + esc(c) + '"' + (on ? ' checked' : '') + (implied === c ? ' disabled' : '') + '>' +
           '<span class="ga-sty-n">' + esc(catName(c)) + (implied === c ? '<small>its only category with a style</small>' : '') + '</span>' +
           // the cap of whoever tells it: Robot Marley's hat when she does (hers, or her own look when she has none for it)
-          '<span class="ga-sty-t' + (mly ? ' hat' : '') + '">' + (l ? (mly ? (hatSrc(l) ? '<img alt="" title="' + esc(l.name) + ' (Robot Marley\'s)" src="' + hatSrc(l) + '">' : '<i>her own</i>') : '<img alt="" title="' + esc(l.name) + '" src="' + lookSrc(l) + '">') : '<i>no cap</i>') + '</span>' +
+          (NARNOW === 'alta' ? '' : '<span class="ga-sty-t' + (mly ? ' hat' : '') + '">' + (l ? (mly ? (hatSrc(l) ? '<img alt="" title="' + esc(l.name) + ' (Robot Marley\'s)" src="' + hatSrc(l) + '">' : '<i>her own</i>') : '<img alt="" title="' + esc(l.name) + '" src="' + lookSrc(l) + '">') : '<i>no cap</i>') + '</span>') +
           '<span class="ga-sty-t bd">' + (b ? '<img alt="" title="' + esc(b.name) + '" src="' + bdSrc(b) + '">' : '<i>no backdrop</i>') + '</span></label>';
       };
       if (box.getAttribute('data-for') !== (E.id || 'new')) { box.setAttribute('data-for', E.id || 'new'); var ow = $('#gaOwn'); if (ow) ow.open = gaOwnOpen(); }
@@ -2215,6 +2215,23 @@
       var entry = L && list.filter(function (l) { return l.name === L.look; })[0];
       var made = L && (L.look === 'curls' || !!entry), own = !!entry && !entry.to && !entry.rotate && !entry.marley;   // own: a Note look (not a holiday or hair style)
       var waiting = LOOKNEW && L && LOOKNEW.name === L.look;
+      // only the caps of whoever tells it (Christian, Oct 15): Robot Marley's hats when she does, A.L.T.A. none
+      var mly = NARNOW === 'marley';
+      if (NARNOW === 'alta') { box.innerHTML = '<p class="muted">A.L.T.A. tells this Note, and she wears no cap. Pick GlazyArray or Robot Marley as its narrator to give it one.</p>'; renderStyle(); return; }
+      if (mly) {
+        var mine = list.filter(function (l) { return hatSrc(l) && l.name !== LOOKDEL; }), on = mine.filter(function (l) { return L && l.name === L.look; })[0];
+        box.innerHTML = '<p class="muted">A cap just for this Note, in place of its category\'s: Robot Marley\'s caps. New ones for her come in from the Characters tab (Bring in a look for Robot Marley).</p>' +
+          field('This Note\'s own cap', '<select id="lookPick"><option value="">None: her category or holiday look</option>' + mine.map(function (l) { return '<option value="' + esc(l.name) + '">' + esc(l.name + (l.about ? ' · ' + l.about : '')) + '</option>'; }).join('') +
+            (L && !on ? '<option value="' + esc(L.look) + '">' + esc(L.look) + ' (GlazyArray\'s only: Robot Marley wears her own)</option>' : '') + '</select>', L && L.why ? esc(L.why) : '') +
+          (on ? '<img class="ga-made hat" alt="" title="' + esc(on.name) + ' (Robot Marley\'s)" src="' + hatSrc(on) + '">' : '');
+        $('#lookPick').value = L ? L.look : ''; renderStyle();
+        $('#lookPick').onchange = function () {
+          var v = this.value, l = mine.filter(function (x) { return x.name === v; })[0];
+          E.narratorLook = !v ? null : L && L.look === v ? L : { look: v, fit: 'existing', about: (l && l.about) || '', why: '', prompt: '', bulb: !(l && l.bulb === false) };
+          markDirty(); renderLook();
+        };
+        return;
+      }
       var opts = '<option value="">None: her category or holiday look</option><option value="curls">curls</option>' + list.filter(function (l) { return l.name !== LOOKDEL; }).map(function (l) { return '<option value="' + esc(l.name) + '">' + esc(l.name + (l.about ? ' · ' + l.about : '')) + '</option>'; }).join('') +
         (L && !made ? '<option value="' + esc(L.look) + '">' + esc(L.look) + (waiting ? ' (new: saves with the Note)' : ' (not made yet)') + '</option>' : '') +
         '<option value="__new">+ A new look just for this Note…</option>';
