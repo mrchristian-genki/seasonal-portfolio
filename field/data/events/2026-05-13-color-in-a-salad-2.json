@@ -343,5 +343,8 @@
    "The Note's kind is 'ride', but this is a coloring book: should it be changed?"
   ]
  },
- "publishedAt": "2026-10-15T18:03:36Z"
+ "publishedAt": "2026-10-15T18:03:36Z",
+ "tags": [
+  "coloring-books"
+ ]
 }
