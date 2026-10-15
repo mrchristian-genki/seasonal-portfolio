@@ -213,10 +213,9 @@
   "from": "mini-cast"
  },
  "narratorBackdrop": {
-  "backdrop": "workshop-with-robots",
-  "fit": "category",
-  "scene": "",
-  "from": "mini-cast"
+  "backdrop": "futuristic-boathouse-with-water-tubs",
+  "fit": "existing",
+  "scene": "futuristic-boathouse-with-water-tubs"
  },
  "palette": [
   "#329ab4",
