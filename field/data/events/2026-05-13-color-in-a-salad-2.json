@@ -244,8 +244,8 @@
   "scene": ""
  },
  "palette": [
-  "#34b2b1",
-  "#b27834"
+  "#f3ffef",
+  "#00a7ab"
  ],
  "feature": {
   "theme": "studiofloor",
@@ -346,5 +346,6 @@
  "publishedAt": "2026-10-15T18:03:36Z",
  "tags": [
   "coloring-books"
- ]
+ ],
+ "paletteBy": "hand"
 }
