@@ -1,0 +1,412 @@
+{
+ "id": "2026-10-15-color-in-coffee",
+ "title": "COLOR IN - COFFEE",
+ "date": "2026-10-15",
+ "kind": "showcase",
+ "place": "",
+ "status": "draft",
+ "summary": "Christian's AI-generated coffee coloring book, published May 13, 2026 and available on Amazon: cafés, whole cities inside cups, a train platform of vending machines, drying beds and wild Arabica beans, each page shown in color and in black and white.",
+ "trailhead": null,
+ "links": [],
+ "track": null,
+ "photos": [
+  {
+   "src": "data/photos/2026-10-15-color-in-coffee/01.jpg",
+   "caption": "A tea room with carved screens, hanging lanterns, a coffee pot on a brazier and a sailboat out the window.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": true,
+   "from": "Ancient_coffeehouse_in_Mokha_202605121507.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-15-color-in-coffee/02.jpg",
+   "caption": "A coffee and a croissant on a marble table, under a crystal chandelier in a mirrored café.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Caffe_Degli_Specchi_coffee_culture_202605121507.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-15-color-in-coffee/03.jpg",
+   "caption": "A café corner: a velvet bench, coffee and water, a basilica in the mirror and an orchestra through the arch.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Caffè_Florian_interior_red_velvet_202605121507.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-15-color-in-coffee/04.jpg",
+   "caption": "A harbor city inside a cup of black coffee, a domed capitol at its center.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Café_cubano_foam_map_Havana_202605121506.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-15-color-in-coffee/05.jpg",
+   "caption": "Coffee vending machines on a crowded train platform.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Canned_coffee_machine_Tokyo_plat…_202605121507.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-15-color-in-coffee/06.jpg",
+   "caption": "A cappuccino and a croissant on a marble counter, a piazza out the window.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Cappuccino_and_cornetto_at_counter_202605121507.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-15-color-in-coffee/07.jpg",
+   "caption": "Rome in a cappuccino: the Tiber and the Colosseum in the foam.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Cappuccino_with_Rome_pattern_202605121507.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-15-color-in-coffee/08.jpg",
+   "caption": "A painted bus on a mountain road and small cups of el tinto, Colombia.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Chiva_bus_coffee_stop_mountain_202605121507.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-15-color-in-coffee/09.jpg",
+   "caption": "Two coffee beans with mountains inside: wild Arabica from the Kaffa region, Ethiopia.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Coffee_cherry_with_two_seeds_202605121507.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-15-color-in-coffee/10.jpg",
+   "caption": "Raking coffee on raised drying beds, a moka pot and notebook nearby.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Coffee_drying_beds_Sidama_202605121506.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-15-color-in-coffee/11.jpg",
+   "caption": "A cup holding mountains, a river and little tanks, framed in gears and coffee cherries.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Coffee_fermentation_and_mountain_202605121506.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-15-color-in-coffee/12.jpg",
+   "caption": "A glass of coffee as a cutaway of the karst near Trieste: plateau, sea, caves and underground rivers.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Coffee_layers_on_marble_table_202605121506.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-15-color-in-coffee/13.jpg",
+   "caption": "A woman and child processing coffee beans",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Coffee_processing_on_Colombian_farm_202605121507.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-15-color-in-coffee/14.jpg",
+   "caption": "I visual inside a cup of coffee showing the land in a cup of coffee.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Coffee_thermos_cup_farm_coffee_202605121507.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-15-color-in-coffee/15.jpg",
+   "caption": "I visual inside a cup of coffee showing a map in a cup of coffee.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Coffee_trade_in_Mokha_Qahwa_202605121507.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-15-color-in-coffee/16.jpg",
+   "caption": "A man scooping water while processing coffee",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Coffee_washing_station_at_dawn_202605121507.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-15-color-in-coffee/17.jpg",
+   "caption": "Six cups of coffee and inside each is a visual of where that coffee comes from.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Colombian_coffee_cupping_bowls_202605121507.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-15-color-in-coffee/18.jpg",
+   "caption": "Cover of the book.",
+   "takenAt": null,
+   "w": 522,
+   "h": 522,
+   "use": "post",
+   "cover": false,
+   "from": "color-in-coffee-v1-cover.jpg"
+  },
+  {
+   "src": "data/photos/2026-10-15-color-in-coffee/19.jpg",
+   "caption": "A timeline displayed on top. of coffee being brewed.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Commuter_world_in_coffee_can_202605121506.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-15-color-in-coffee/20.jpg",
+   "caption": "A tea room with carved screens, hanging lanterns, a coffee pot on a brazier and a sailboat out the window. - COLOR",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Copy_of_Ancient_coffeehouse_in_202605121507.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-15-color-in-coffee/21.jpg",
+   "caption": "A coffee and a croissant on a marble table, under a crystal chandelier in a mirrored café. - COLOR",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Copy_of_Caffe_Degli_Specchi_202605121507.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-15-color-in-coffee/22.jpg",
+   "caption": "A coffee and a croissant on a marble table, under a crystal chandelier in a mirrored café. - COLOR",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Copy_of_Caffè_Florian_interior_202605121507.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-15-color-in-coffee/23.jpg",
+   "caption": "A harbor city inside a cup of black coffee, a domed capitol at its center. - COLOR",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Copy_of_Café_cubano_foam_202605121507.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-15-color-in-coffee/24.jpg",
+   "caption": "Coffee vending machines on a crowded train platform. - COLOR",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Copy_of_Canned_coffee_machine_202605121507.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-15-color-in-coffee/25.jpg",
+   "caption": "A cappuccino and a croissant on a marble counter, a piazza out the window. - COLOR",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Copy_of_Cappuccino_and_cornetto_202605121507.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-15-color-in-coffee/26.jpg",
+   "caption": "Rome in a cappuccino: the Tiber and the Colosseum in the foam. - COLOR",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Copy_of_Cappuccino_with_Rome_202605121507.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-15-color-in-coffee/27.jpg",
+   "caption": "A painted bus on a mountain road and small cups of el tinto, Colombia. - COLOR",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Copy_of_Chiva_bus_coffee_202605121507.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-15-color-in-coffee/28.jpg",
+   "caption": "Two coffee beans with mountains inside: wild Arabica from the Kaffa region, Ethiopia. - COLOR",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Copy_of_Coffee_cherry_with_202605121507.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-15-color-in-coffee/29.jpg",
+   "caption": "Raking coffee on raised drying beds, a moka pot and notebook nearby. - COLOR",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Copy_of_Coffee_drying_beds_202605121507.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-15-color-in-coffee/30.jpg",
+   "caption": "A cup holding mountains, a river and little tanks, framed in gears and coffee cherries. - COLOR",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Copy_of_Coffee_fermentation_and_202605121507.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-15-color-in-coffee/31.jpg",
+   "caption": "A glass of coffee as a cutaway of the karst near Trieste: plateau, sea, caves and underground rivers. - COLOR",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Copy_of_Coffee_layers_on_202605121506.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-15-color-in-coffee/32.jpg",
+   "caption": "A woman and child processing coffee beans - COLOR",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Copy_of_Coffee_processing_on_202605121507.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-15-color-in-coffee/33.jpg",
+   "caption": "I visual inside a cup of coffee showing the land in a cup of coffee. - COLOR",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Copy_of_Coffee_thermos_cup_202605121507.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-15-color-in-coffee/34.jpg",
+   "caption": "I visual inside a cup of coffee showing a map in a cup of coffee. - COLOR",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Copy_of_Coffee_trade_in_202605121507.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-15-color-in-coffee/35.jpg",
+   "caption": "A man scooping water while processing coffee. - COLOR",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Copy_of_Coffee_washing_station_202605121507.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-15-color-in-coffee/36.jpg",
+   "caption": "Six cups of coffee and inside each is a visual of where that coffee comes from. - COLOR",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Copy_of_Colombian_coffee_cupping_202605121507.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-15-color-in-coffee/37.jpg",
+   "caption": "A timeline displayed on top. of coffee being brewed. - COLOR",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Copy_of_Commuter_world_in_202605121507.jpeg"
+  }
+ ],
+ "fieldNotes": "The entry is marked kind \"ride\" but there are no notes, figures or ride photos, only coffee coloring pages. Is \"ride\" a mistake? Should this be a making-of or Mini-Cast instead?\nThis is a showcase and we are showing off one of my Coloring Books. This book is available on Amazon and now and we want to try and showcase all the little details of the book and the overall vibe of coloring the book.\n\nDid you make these pages, and how (with AI, which prompts, what for)? The draft doesn't say you made them until you confirm.\nThis is an AI generated Coloring Book. The prompts were crafted over time and meticulously  refined to be hyper tailored for the subject.\n\nWhy coffee, and what are they for: a book, a gift, someone to color them? Any story behind the set would give the episode a real turn.\nLove coffee and thought it would be fun to color in coffee while you drink coffee coloring in a coffee ship while you color in coffee. It's like the coffee table book for coffee tables that turns into a coffee table. You can color in coffee while you color in coffee.\n\nOnly photos 01 to 12 were visible to me; 13 to 40 have placeholder captions. Please send them or describe them.\nAll of them are a pair aside from the cover. One color and one black and white. We should highlight a few together and then show off the rest in a photo spread.\n\nSeveral pages carry brand names or garbled AI text (05: BOSS, Georgia, UCC and scrambled Japanese signs; 03: a café name on the wall; 09: a reversed-letter banner; 07: a café name and a price). Keep, fix or leave those pages out?\nAll been fixed pre prompt and pre image generation. That was considered when creating the image and all are fake.\n\nDo you have a date, place or time for when these were made or colored, for a cold open?\nPublication date\nMay 13, 2026",
+ "post": {
+  "title": "Color in: coffee",
+  "body": "This Note is a showcase of one of my coloring books. Every page is about coffee. It came out on May 13, 2026, and it's available on Amazon now.\n\nI love coffee, and I thought it would be fun to color in coffee while you drink coffee. It's a coffee table book about the coffee on the table. You can color in coffee while you color in coffee.\n\nThe book is AI-generated. The prompts were crafted over time and refined again and again until they were tailored to the subject, page by page. Any lettering and signs in the scenes were planned in the prompts before a single image was made, and all the names on them are made up.\n\nEvery page comes as a pair, one in color and one in black and white, apart from the cover. Here are a few of them up close, and then the rest in a spread.\n\nA few of them are rooms. A tea room with carved screens and hanging lanterns, a pot on a little brazier and a sailboat out the window. A mirrored café with a crystal chandelier, a coffee and a croissant on a marble table. A café corner with a velvet bench, where one mirror shows a domed basilica and pigeons and the archway beside it shows an orchestra playing.\n\nSome of them put a whole place inside the cup. A harbor city floats in a cup of black coffee, with a domed capitol in the middle and ships around the rim. Rome sits in a cappuccino, the Tiber curling through the foam past the Colosseum. A glass of coffee becomes a cutaway of the karst near Trieste, with the plateau on top, the Adriatic on the horizon and caves and underground rivers below. Another cup holds mountains, a river and a row of little tanks, framed in gears and coffee cherries.\n\nAnd some go back to where coffee starts. Two coffee beans with mountains inside them, ringed by a banner about wild Arabica from the Kaffa region of Ethiopia. Two people raking coffee on raised drying beds, with a moka pot and a notebook on a table nearby. A painted bus on a mountain road in Colombia, and a woman pouring small cups of el tinto.\n\nThere's one from a train platform too: a row of coffee vending machines, hot and cold, and a man in a suit holding a can while the crowd waits for the train.\n\nThe black and white pages are line art, left open for your color. Pour a cup first."
+ },
+ "episode": {
+  "title": "Color in: coffee",
+  "script": "Narrated by GlazyArray.\n\nOn May thirteenth, twenty twenty-six, a book came out that was meant to sit right next to a cup. It's Christian's coloring book, and every page in it is about coffee.\n\nThe idea was simple and a little bit silly. Christian loves coffee. So why not color in coffee while you drink coffee? A coffee table book about the coffee on the table.\n\nThe pages were made with AI. Christian crafted the prompts over time and kept refining them until each one fit its subject. That kind of patience with the details is what makes a page worth sitting down with. And every page comes twice, once in color and once in black and white, waiting for yours.\n\n***\n\nSome are rooms you could sit down in. A tea room with carved screens and lanterns, a little pot warming on a brazier, and a sailboat drifting past the window. A café lined with mirrors, a crystal chandelier overhead, and on the marble table, a coffee and a croissant. Another café corner, where one mirror holds a domed basilica and a few pigeons, and the arch beside it holds an orchestra in the middle of a song.\n\n***\n\nThen the pages start doing something sneakier. They put whole places inside the cup.\n\nA harbor city floats in a cup of black coffee, ships nosing around the rim. Rome turns up in a cappuccino, the Tiber curling through the foam right past the Colosseum. And a glass of coffee opens up like a cutaway of the hills near Trieste, the sea on the horizon and caves and rivers running underneath.\n\nI'll admit I liked that one best. It's the kind of drawing that makes you look twice at your own cup.\n\n***\n\nA few pages go back to the beginning. Two coffee beans with mountains folded inside them, from the wild forests of Ethiopia. Two people raking coffee across raised drying beds. A painted bus on a winding Colombian road, and a woman pouring small cups for whoever stops.\n\nAnd one page lands somewhere else entirely: a crowded train platform, a wall of vending machines, hot and cold, and a man in a suit with a can in his hand, waiting like everyone else.\n\n***\n\nThe book is on Amazon now. Every black and white page is left open, waiting for someone to bring the color.\n\nSome Notes are a long day outside. This one fits on a table, next to a cup. Ideally a full one.",
+  "audio": null
+ },
+ "questions": [
+  "Which file is the book's cover? I used 04 for now.",
+  "Photos 01 to 12 all look black and white to me. Which files are the color versions, and which pages pair with which, so I can show a few pairs side by side and put the rest in the spread?",
+  "Photos 13 to 40 still have placeholder captions. Can you send them or describe them?",
+  "Some names on the pages match real ones: BOSS, Georgia and UCC on 05 are real canned-coffee brands, and the wall sign on 03 reads like Caffè Florian, a real Venice café. OK to show them as they are?",
+  "What's the book's exact title, and do you want a link to its Amazon page in the post?"
+ ],
+ "consent": "",
+ "source": "Rides/COLOR IN - COFFEE",
+ "feature": {
+  "theme": "studiofloor",
+  "masthead": "STUDIO FLOOR",
+  "tagline": "Makers, in their own words",
+  "issue": "The Ten-Year Issue",
+  "label": "Showcase",
+  "byline": "By GlazyArray, Senior Editor",
+  "blocks": []
+ }
+}
