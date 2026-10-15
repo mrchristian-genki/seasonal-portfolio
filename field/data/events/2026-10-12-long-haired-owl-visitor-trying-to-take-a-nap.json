@@ -123,9 +123,9 @@
   "#b27f34"
  ],
  "narratorBackdrop": {
-  "backdrop": "foliage",
+  "backdrop": "hiking-yosemite-1",
   "fit": "existing",
-  "scene": ""
+  "scene": "a dirt hiking trail through granite and pines in a mountain valley at golden hour, a granite dome beyond"
  },
  "feature": {
   "theme": "contour",
@@ -259,5 +259,13 @@
    }
   ]
  },
- "publishedAt": "2026-10-12T23:07:52Z"
+ "publishedAt": "2026-10-12T23:07:52Z",
+ "narratorLook": {
+  "look": "aviator-cap-1",
+  "fit": "existing",
+  "about": "Aviator Cap",
+  "why": "",
+  "prompt": "",
+  "bulb": false
+ }
 }
