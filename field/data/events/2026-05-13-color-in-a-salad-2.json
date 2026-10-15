@@ -239,8 +239,8 @@
   "bulb": false
  },
  "narratorBackdrop": {
-  "backdrop": "people-relaxing-and-coloring-books",
-  "fit": "existing",
+  "backdrop": "robot-kitchen",
+  "fit": "new",
   "scene": ""
  },
  "palette": [

@@ -101,7 +101,8 @@
   { "name": "robotic-humanoids-playing-together-20261", "file": "robotic-humanoids-playing-together-20261.webp", "about": "", "v": "tmwu57", "scene": "robotic-humanoids-playing-together", "colors": ["#513d26","#856949","#b29979"] },
   { "name": "robotic-family-hugging-in-room-202610141", "file": "robotic-family-hugging-in-room-202610141.webp", "about": "", "v": "tmwu57", "scene": "robotic-family-hugging-in-room", "colors": ["#382815","#685135","#998669"] },
   { "name": "ireland-mermaids-underwater-in-tubes", "file": "ireland-mermaids-underwater-in-tubes.webp", "about": "", "v": "tmwy4q", "scene": "ireland mermaids underwater in tubes", "colors": ["#162b32","#43676f","#99b1c1"] },
-  { "name": "robotic-mermaids-swimming-in-sub-2026101", "file": "robotic-mermaids-swimming-in-sub-2026101.webp", "about": "", "v": "tmwy5k", "scene": "robotic-mermaids-swimming-in-tubs", "colors": ["#172828","#395b5d","#7594a0"] }
+  { "name": "robotic-mermaids-swimming-in-sub-2026101", "file": "robotic-mermaids-swimming-in-sub-2026101.webp", "about": "", "v": "tmwy5k", "scene": "robotic-mermaids-swimming-in-tubs", "colors": ["#172828","#395b5d","#7594a0"] },
+  { "name": "robot-kitchen", "file": "robot-kitchen.webp", "about": "", "v": "tmyrm7", "colors": ["#292720","#7c6952","#cbb99e"] }
  ],
  "categoryBackdrops": {
   "automaton": "workshop-with-robots",
@@ -122,7 +123,7 @@
  "categoryBackdropChoices": {
   "aerial": ["lake-tahoe-beach","hiking-yosemite-1","lake-tahoe-beach-winter","donegal-1","donegal-2","donegal-4","donegal-5","aerial-of-river-and-valley"],
   "behind-the-scenes": ["clockmaker","workshop","workshop-with-robots","copper-workbench","bike-bench","behind-the-scenes"],
-  "coloring-books": ["library","old-library"],
+  "coloring-books": ["library","old-library","robot-kitchen"],
   "dogs": ["trailhead","lake-tahoe-beach","biking-forest","hiking-1","hiking-yosemite-1","hiking-yosemite-2","hiking-yosemite-3","hawaii-coast","creek","foliage","donegal-2","donegal-3","lake-tahoe-2"],
   "dusk": ["biking-forest","hiking-1","hiking-yosemite-1","hiking-yosemite-2","hiking-yosemite-3","hawaii-coast","donegal-2"],
   "feature": ["library-futuristic-1","red-carpet-gala"],
@@ -134,6 +135,7 @@
   "profile": ["library","bike-shop","clockmaker","workshop","workshop-with-robots","old-library","copper-workbench","bike-bench"],
   "ride": ["lake-tahoe-2"],
   "robot": ["clockmaker","workshop-with-robots","library-futuristic-1","red-carpet-gala"],
+  "showcase": ["robot-kitchen"],
   "with-family": ["robotic-family-enjoying-room-1","family-room-in-warm-light-robots","desert-hills-under-dusk-sky-202610141109","robotic-mermaids-greeting-at-portal-2026","robotic-mermaids-jumping-in-air-20261014","robotic-family-enjoying-room-tog-2026101","family-room-in-warm-light-20261014111955","robotic-dogs-playing-in-den-202610141124","robotic-humanoids-playing-together-20261","robotic-family-hugging-in-room-202610141"],
   "with-helena": ["lake-tahoe-beach","donegal-1","donegal-2","donegal-3","donegal-4","donegal-5"],
   "with-marley": ["trailhead","lake-tahoe-beach","biking-forest","hiking-yosemite-1","hiking-yosemite-2","hiking-yosemite-3","creek","foliage","lake-tahoe-2"]
@@ -152,7 +154,7 @@
   "behind-the-scenes": "2026-10-15T19:14:45Z",
   "case-study": "2026-10-14T19:31:12Z",
   "character": "2026-10-14T19:28:39Z",
-  "coloring-books": "2026-10-15T19:14:45Z",
+  "coloring-books": "2026-10-15T19:32:31Z",
   "dogs": "2026-10-15T19:14:45Z",
   "dusk": "2026-10-14T19:28:39Z",
   "feature": "2026-10-14T19:28:39Z",
@@ -163,6 +165,7 @@
   "profile": "2026-10-14T22:31:12Z",
   "ride": "2026-10-14T19:31:12Z",
   "robot": "2026-10-14T19:28:39Z",
+  "showcase": "2026-10-15T19:32:31Z",
   "time-machine": "2026-10-15T19:14:45Z",
   "web": "2026-10-14T19:28:39Z",
   "with-family": "2026-10-15T19:14:45Z",
