@@ -388,9 +388,9 @@
   "cover": "clip-1.mp4"
  },
  "narratorLook": {
-  "look": "hawaiian-cap-2",
+  "look": "cowboy-hat-1",
   "fit": "existing",
-  "about": "glossy baseball hat worn by robots in Hawaii.",
+  "about": "A Cowboy Hat",
   "why": "",
   "prompt": "",
   "bulb": false
