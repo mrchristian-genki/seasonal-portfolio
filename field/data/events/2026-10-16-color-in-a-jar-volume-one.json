@@ -11,103 +11,173 @@
  "track": null,
  "photos": [
   {
-   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/15.jpg",
-   "caption": "The oasis and camel scene companions.",
-   "takenAt": null,
-   "w": 1376,
-   "h": 768,
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/clip-4.mp4",
+   "poster": "data/photos/2026-10-16-color-in-a-jar-volume-one/clip-4.jpg",
+   "video": true,
+   "caption": "Enjoying the polar auroras.",
+   "takenAt": "2026:10:16 13:21:45",
+   "w": 960,
+   "h": 540,
    "use": "post",
    "cover": false,
-   "from": "Camel_resting_in_oasis_companions.jpg",
-   "at": "Oasis Scene"
+   "from": "gemini_generated_video_09e6d84f.mp4",
+   "range": [
+    0,
+    9.95
+   ]
   },
   {
-   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/18.jpg",
-   "caption": "Fall and the squirril scene companions.",
-   "takenAt": null,
-   "w": 1376,
-   "h": 768,
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/clip-9.mp4",
+   "caption": "Enjoying the oasis.",
+   "takenAt": "2026:10:16 13:21:29",
+   "w": 960,
+   "h": 540,
    "use": "post",
    "cover": false,
-   "from": "Canning_jar_with_leaves_squirrel_companions.jpg",
-   "at": "Fall Squirrel scene"
+   "from": "gemini_generated_video_9a25a552.mp4",
+   "at": "Oasis Scene",
+   "poster": "data/photos/2026-10-16-color-in-a-jar-volume-one/clip-9.jpg",
+   "video": true,
+   "range": [
+    0,
+    10
+   ]
   },
   {
-   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/27.jpg",
-   "caption": "Sunflower orchard scene companions.",
-   "takenAt": null,
-   "w": 1376,
-   "h": 768,
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/clip-2.mp4",
+   "caption": "Enjoying the foliage.",
+   "takenAt": "2026:10:16 13:21:56",
+   "w": 960,
+   "h": 540,
    "use": "post",
    "cover": false,
-   "from": "Cookie_jar_with_sunflowers_companions.jpg",
-   "at": "Sunflower orchard Scene"
+   "from": "gemini_generated_video_6e9e7944.mp4",
+   "at": "Fall Squirrel scene",
+   "poster": "data/photos/2026-10-16-color-in-a-jar-volume-one/clip-2.jpg",
+   "video": true,
+   "range": [
+    0,
+    9.9
+   ]
   },
   {
-   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/34.jpg",
-   "caption": "Beach scene companions.",
-   "takenAt": null,
-   "w": 1376,
-   "h": 768,
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/clip-8.mp4",
+   "caption": "Enjoying the sunflowers at sunset.",
+   "takenAt": "2026:10:16 13:21:31",
+   "w": 960,
+   "h": 540,
    "use": "post",
    "cover": false,
-   "from": "Glass_jar_with_beach_scene_companions.jpg",
-   "at": "The Beach"
+   "from": "gemini_generated_video_03d2a4be.mp4",
+   "at": "Sunflower orchard Scene",
+   "poster": "data/photos/2026-10-16-color-in-a-jar-volume-one/clip-8.jpg",
+   "video": true,
+   "range": [
+    0,
+    10
+   ]
   },
   {
-   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/39.jpg",
-   "caption": "Peach orchard scene companions.",
-   "takenAt": null,
-   "w": 1376,
-   "h": 768,
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/clip-1.mp4",
+   "caption": "Enjoying the beach.",
+   "takenAt": "2026:10:16 13:21:59",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "gemini_generated_video_43081507.mp4",
+   "at": "The Beach",
+   "poster": "data/photos/2026-10-16-color-in-a-jar-volume-one/clip-1.jpg",
+   "video": true,
+   "range": [
+    0,
+    10
+   ]
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/clip-10.mp4",
+   "caption": "Enjoying the peaches.",
+   "takenAt": "2026:10:16 13:21:25",
+   "w": 960,
+   "h": 540,
    "use": "post",
    "cover": true,
-   "from": "Mason_jar_with_peach_grove_companions.jpg",
-   "at": "Peach orchard Scene"
+   "from": "gemini_generated_video_af2d0ead.mp4",
+   "at": "Peach orchard Scene",
+   "poster": "data/photos/2026-10-16-color-in-a-jar-volume-one/clip-10.jpg",
+   "video": true,
+   "range": [
+    0,
+    10
+   ]
   },
   {
-   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/40.jpg",
-   "caption": "Gnarled graveyard scene companions.",
-   "takenAt": null,
-   "w": 1376,
-   "h": 768,
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/clip-6.mp4",
+   "caption": "Enjoying the gnarly graveyard.",
+   "takenAt": "2026:10:16 13:21:38",
+   "w": 960,
+   "h": 540,
    "use": "post",
    "cover": false,
-   "from": "Gnarled_jar_with_graveyard_scene_companions.jpg",
-   "at": "Gnarled Graveyard Scene"
+   "from": "gemini_generated_video_5db8b2f3.mp4",
+   "at": "Gnarled Graveyard Scene",
+   "poster": "data/photos/2026-10-16-color-in-a-jar-volume-one/clip-6.jpg",
+   "video": true,
+   "range": [
+    0,
+    10
+   ]
   },
   {
-   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/41.jpg",
-   "caption": "Jungle scene companions.",
-   "takenAt": null,
-   "w": 1376,
-   "h": 768,
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/clip-7.mp4",
+   "caption": "Enjoying the jungle waterfall.",
+   "takenAt": "2026:10:16 13:21:35",
+   "w": 960,
+   "h": 540,
    "use": "post",
    "cover": false,
-   "from": "Jar_with_jungle_scene_companions.jpg",
-   "at": "Jungle Scene"
+   "from": "gemini_generated_video_735e80e4.mp4",
+   "at": "Jungle Scene",
+   "poster": "data/photos/2026-10-16-color-in-a-jar-volume-one/clip-7.jpg",
+   "video": true,
+   "range": [
+    0,
+    10
+   ]
   },
   {
-   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/44.jpg",
-   "caption": "Deep sea scene companions.",
-   "takenAt": null,
-   "w": 1376,
-   "h": 768,
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/clip-5.mp4",
+   "caption": "Enjoying the deep ocean.",
+   "takenAt": "2026:10:16 13:21:42",
+   "w": 960,
+   "h": 540,
    "use": "post",
    "cover": false,
-   "from": "Jar_with_deep_ocean_creatures_companions.jpg",
-   "at": "Deep Sea Scene"
+   "from": "gemini_generated_video_660ca2b0.mp4",
+   "at": "Deep Sea Scene",
+   "poster": "data/photos/2026-10-16-color-in-a-jar-volume-one/clip-5.jpg",
+   "video": true,
+   "range": [
+    0,
+    10
+   ]
   },
   {
-   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/47.jpg",
-   "caption": "Pirate scene companions.",
-   "takenAt": null,
-   "w": 1376,
-   "h": 768,
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/clip-3.mp4",
+   "caption": "Enjoying the pirates treasure.",
+   "takenAt": "2026:10:16 13:21:52",
+   "w": 960,
+   "h": 540,
    "use": "post",
    "cover": false,
-   "from": "Bottle_with_tropical_island_companions.jpg",
-   "at": "Pirate Scene"
+   "from": "gemini_generated_video_703e4f95.mp4",
+   "at": "Pirate Scene",
+   "poster": "data/photos/2026-10-16-color-in-a-jar-volume-one/clip-3.jpg",
+   "video": true,
+   "range": [
+    0,
+    9.85
+   ]
   },
   {
    "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/49.jpg",
@@ -308,17 +378,6 @@
    "at": "Pirate Scene"
   },
   {
-   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/42.jpg",
-   "caption": "Polar scene companions.",
-   "takenAt": null,
-   "w": 1376,
-   "h": 768,
-   "use": "post",
-   "cover": false,
-   "from": "Polar_bear_on_iceberg_Aurora_companions.jpg",
-   "at": "The polar cap in a bottle"
-  },
-  {
    "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/75.jpg",
    "caption": "Polar jar scene - color.",
    "takenAt": null,
@@ -478,9 +537,11 @@
       "name": "",
       "when": "The oasis and camel scene companions.",
       "alt": "The oasis and camel scene companions.",
-      "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/15.jpg",
-      "w": 1376,
-      "h": 768
+      "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/clip-9.mp4",
+      "w": 960,
+      "h": 540,
+      "video": true,
+      "poster": "data/photos/2026-10-16-color-in-a-jar-volume-one/clip-9.jpg"
      },
      {
       "name": "",
@@ -509,9 +570,11 @@
       "name": "",
       "when": "Fall and the squirril scene companions.",
       "alt": "Fall and the squirril scene companions.",
-      "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/18.jpg",
-      "w": 1376,
-      "h": 768
+      "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/clip-2.mp4",
+      "w": 960,
+      "h": 540,
+      "video": true,
+      "poster": "data/photos/2026-10-16-color-in-a-jar-volume-one/clip-2.jpg"
      },
      {
       "name": "",
@@ -540,9 +603,11 @@
       "name": "",
       "when": "Beach scene companions.",
       "alt": "Beach scene companions.",
-      "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/34.jpg",
-      "w": 1376,
-      "h": 768
+      "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/clip-1.mp4",
+      "w": 960,
+      "h": 540,
+      "video": true,
+      "poster": "data/photos/2026-10-16-color-in-a-jar-volume-one/clip-1.jpg"
      },
      {
       "name": "",
@@ -571,9 +636,11 @@
       "name": "",
       "when": "Jungle scene companions.",
       "alt": "Jungle scene companions.",
-      "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/41.jpg",
-      "w": 1376,
-      "h": 768
+      "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/clip-7.mp4",
+      "w": 960,
+      "h": 540,
+      "video": true,
+      "poster": "data/photos/2026-10-16-color-in-a-jar-volume-one/clip-7.jpg"
      },
      {
       "name": "",
@@ -602,9 +669,11 @@
       "name": "",
       "when": "Gnarled graveyard scene companions.",
       "alt": "Gnarled graveyard scene companions.",
-      "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/40.jpg",
-      "w": 1376,
-      "h": 768
+      "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/clip-6.mp4",
+      "w": 960,
+      "h": 540,
+      "video": true,
+      "poster": "data/photos/2026-10-16-color-in-a-jar-volume-one/clip-6.jpg"
      },
      {
       "name": "",
@@ -633,9 +702,11 @@
       "name": "",
       "when": "Sunflower orchard scene companions.",
       "alt": "Sunflower orchard scene companions.",
-      "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/27.jpg",
-      "w": 1376,
-      "h": 768
+      "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/clip-8.mp4",
+      "w": 960,
+      "h": 540,
+      "video": true,
+      "poster": "data/photos/2026-10-16-color-in-a-jar-volume-one/clip-8.jpg"
      },
      {
       "name": "",
@@ -664,9 +735,11 @@
       "name": "",
       "when": "Peach orchard scene companions.",
       "alt": "Peach orchard scene companions.",
-      "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/39.jpg",
-      "w": 1376,
-      "h": 768
+      "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/clip-10.mp4",
+      "w": 960,
+      "h": 540,
+      "video": true,
+      "poster": "data/photos/2026-10-16-color-in-a-jar-volume-one/clip-10.jpg"
      },
      {
       "name": "",
@@ -695,9 +768,11 @@
       "name": "",
       "when": "Deep sea scene companions.",
       "alt": "Deep sea scene companions.",
-      "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/44.jpg",
-      "w": 1376,
-      "h": 768
+      "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/clip-5.mp4",
+      "w": 960,
+      "h": 540,
+      "video": true,
+      "poster": "data/photos/2026-10-16-color-in-a-jar-volume-one/clip-5.jpg"
      },
      {
       "name": "",
@@ -726,9 +801,11 @@
       "name": "",
       "when": "Pirate scene companions.",
       "alt": "Pirate scene companions.",
-      "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/47.jpg",
-      "w": 1376,
-      "h": 768
+      "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/clip-3.mp4",
+      "w": 960,
+      "h": 540,
+      "video": true,
+      "poster": "data/photos/2026-10-16-color-in-a-jar-volume-one/clip-3.jpg"
      },
      {
       "name": "",
@@ -757,9 +834,11 @@
       "name": "",
       "when": "Polar scene companions.",
       "alt": "Polar scene companions.",
-      "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/42.jpg",
-      "w": 1376,
-      "h": 768
+      "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/clip-4.mp4",
+      "w": 960,
+      "h": 540,
+      "video": true,
+      "poster": "data/photos/2026-10-16-color-in-a-jar-volume-one/clip-4.jpg"
      },
      {
       "name": "",
@@ -782,8 +861,8 @@
   ]
  },
  "palette": [
-  "#55bfce",
-  "#d6a966"
+  "#b2a234",
+  "#a1d05d"
  ],
  "publishedAt": "2026-10-16T18:35:30Z"
 }
