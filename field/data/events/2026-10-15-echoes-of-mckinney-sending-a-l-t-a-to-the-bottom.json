@@ -11,6 +11,22 @@
  "track": null,
  "photos": [
   {
+   "src": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-12.mp4",
+   "poster": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-12.jpg",
+   "video": true,
+   "caption": "The Bathymetric Cyber-Chart",
+   "takenAt": "2026:10:15 16:44:34",
+   "w": 960,
+   "h": 532,
+   "use": "post",
+   "cover": true,
+   "from": "The Bathymetric Cyber-Chart Loop.mp4",
+   "range": [
+    0,
+    9.95
+   ]
+  },
+  {
    "src": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-1.mp4",
    "poster": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-1.jpg",
    "video": true,
@@ -19,7 +35,7 @@
    "w": 960,
    "h": 540,
    "use": "post",
-   "cover": true,
+   "cover": false,
    "from": "Ascent to the Sunlight .mp4",
    "range": [
     0,
@@ -75,19 +91,19 @@
    ]
   },
   {
-   "src": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-5.mp4",
-   "poster": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-5.jpg",
+   "src": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-7.mp4",
+   "poster": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-7.jpg",
    "video": true,
-   "caption": "Simulated tsunami from an underwater landslide.",
-   "takenAt": "2026:10:15 14:57:32",
+   "caption": "Simulated tsunami from the beach of a tsunami from an underwater landslide.",
+   "takenAt": "2026:10:15 14:58:43",
    "w": 960,
    "h": 540,
    "use": "post",
    "cover": false,
-   "from": "Tahoe Tsunami - 3.mp4",
+   "from": "Tahoe Tsunami - 1.mp4",
    "range": [
     0,
-    4.84
+    4.8
    ]
   },
   {
@@ -104,22 +120,6 @@
    "range": [
     0,
     4.87
-   ]
-  },
-  {
-   "src": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-7.mp4",
-   "poster": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-7.jpg",
-   "video": true,
-   "caption": "Simulated tsunami from the beach of a tsunami from an underwater landslide.",
-   "takenAt": "2026:10:15 14:58:43",
-   "w": 960,
-   "h": 540,
-   "use": "post",
-   "cover": false,
-   "from": "Tahoe Tsunami - 1.mp4",
-   "range": [
-    0,
-    4.8
    ]
   },
   {
@@ -360,8 +360,8 @@
   ]
  },
  "palette": [
-  "#27aabe",
-  "#527fdb"
+  "#349bb2",
+  "#5d7dd0"
  ],
  "publishedAt": "2026-10-16T00:28:34Z"
 }
