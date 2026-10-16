@@ -101,7 +101,7 @@
    "w": 960,
    "h": 540,
    "use": "post",
-   "cover": true,
+   "cover": false,
    "from": "gemini_generated_video_af2d0ead.mp4",
    "at": "Peach orchard Scene",
    "poster": "data/photos/2026-10-16-color-in-a-jar-volume-one/clip-10.jpg",
@@ -118,7 +118,7 @@
    "w": 960,
    "h": 540,
    "use": "post",
-   "cover": false,
+   "cover": true,
    "from": "gemini_generated_video_5db8b2f3.mp4",
    "at": "Gnarled Graveyard Scene",
    "poster": "data/photos/2026-10-16-color-in-a-jar-volume-one/clip-6.jpg",
@@ -861,8 +861,8 @@
   ]
  },
  "palette": [
-  "#b2a234",
-  "#a1d05d"
+  "#347cb2",
+  "#b26e34"
  ],
  "publishedAt": "2026-10-16T18:35:30Z"
 }
