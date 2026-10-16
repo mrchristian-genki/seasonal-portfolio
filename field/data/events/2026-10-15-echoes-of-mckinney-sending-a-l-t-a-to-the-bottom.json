@@ -19,7 +19,7 @@
    "w": 960,
    "h": 532,
    "use": "post",
-   "cover": true,
+   "cover": false,
    "from": "The Bathymetric Cyber-Chart Loop.mp4",
    "range": [
     0,
@@ -225,7 +225,7 @@
    "w": 960,
    "h": 552,
    "use": "post",
-   "cover": false,
+   "cover": true,
    "from": "Mechanical_mermaid_hovering_unde…_20261016052814.mp4",
    "range": [
     0,
@@ -477,8 +477,8 @@
   }
  },
  "palette": [
-  "#349bb2",
-  "#5d7dd0"
+  "#349db2",
+  "#5d7fd0"
  ],
  "publishedAt": "2026-10-16T00:28:34Z"
 }
