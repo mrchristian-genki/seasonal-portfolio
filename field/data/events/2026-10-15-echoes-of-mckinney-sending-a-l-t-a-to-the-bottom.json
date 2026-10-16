@@ -75,32 +75,21 @@
    ]
   },
   {
-   "src": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-10.mp4",
-   "poster": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-10.jpg",
-   "video": true,
-   "caption": "A.L.T.A  diving into the deep waters of Lake Tahoe.",
-   "takenAt": "2026:10:15 17:09:47",
+   "src": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-19.mp4",
+   "caption": "A.L.T.A down into the deep abyssal chasm of Lake Tahoe.",
+   "takenAt": "2026:10:16 07:34:09",
    "w": 960,
-   "h": 540,
+   "h": 532,
    "use": "post",
    "cover": false,
-   "from": "Diving into the deep.mp4",
+   "from": "down into the deep abyssal chasm of Lake Tahoe.mp4",
+   "at": "The side quest",
+   "poster": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-19.jpg",
+   "video": true,
    "range": [
     0,
-    9.95
-   ],
-   "at": "The side quest"
-  },
-  {
-   "src": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/03.jpg",
-   "caption": "A.L.T.A dives past the edge of the shelf at 120 feet, seen from the companion drone.",
-   "takenAt": null,
-   "w": 1376,
-   "h": 768,
-   "use": "post",
-   "cover": false,
-   "from": "Over the Shelf Drop-Off.jpg",
-   "at": "The side quest"
+    9.85
+   ]
   },
   {
    "src": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-8.mp4",
