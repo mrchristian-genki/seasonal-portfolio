@@ -194,26 +194,38 @@
    "at": "The side quest"
   },
   {
-   "src": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/04.jpg",
-   "caption": "The fault scan at the bottom of Lake Tahoe.",
-   "takenAt": null,
-   "w": 1376,
-   "h": 768,
+   "src": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-21.mp4",
+   "caption": "A.L.T.A in the deep water scanning a jagged sublacustrine fault scarp deep beneath Lake Tahoe",
+   "takenAt": "2026:10:16 07:49:28",
+   "w": 960,
+   "h": 666,
    "use": "post",
    "cover": false,
-   "from": "Mermaid_automaton_character_turn…_20261016063922 (1).jpg",
-   "at": "The side quest"
+   "from": "gemini_generated_video_827045de.mp4",
+   "at": "The side quest",
+   "poster": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-21.jpg",
+   "video": true,
+   "range": [
+    0,
+    10.05
+   ]
   },
   {
-   "src": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/05.jpg",
-   "caption": "The megablock inspection.",
-   "takenAt": null,
-   "w": 1376,
-   "h": 768,
+   "src": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-20.mp4",
+   "caption": "A.L.T.A in the deep water scanning a massive granite boulder deep beneath Lake Tahoe.",
+   "takenAt": "2026:10:16 07:49:24",
+   "w": 960,
+   "h": 542,
    "use": "post",
    "cover": false,
-   "from": "Mermaid_automaton_character_turn…_20261016063908 (2).jpg",
-   "at": "The side quest"
+   "from": "gemini_generated_video_abab223b.mp4",
+   "at": "The side quest",
+   "poster": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-20.jpg",
+   "video": true,
+   "range": [
+    0,
+    10.05
+   ]
   },
   {
    "src": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-13.mp4",
