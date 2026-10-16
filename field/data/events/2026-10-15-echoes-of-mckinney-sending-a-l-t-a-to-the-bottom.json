@@ -109,23 +109,6 @@
    "at": "The side quest"
   },
   {
-   "src": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-4.mp4",
-   "poster": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-4.jpg",
-   "video": true,
-   "caption": "A.L.T.A  checking mega blocks on her way down to the deep of Lake Tahoe.",
-   "takenAt": "2026:10:15 14:20:37",
-   "w": 960,
-   "h": 542,
-   "use": "post",
-   "cover": false,
-   "from": "The Abyssal Descent.mp4",
-   "range": [
-    0,
-    10.05
-   ],
-   "at": "The side quest"
-  },
-  {
    "src": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-2.mp4",
    "poster": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-2.jpg",
    "video": true,
@@ -177,23 +160,6 @@
    "at": "The side quest"
   },
   {
-   "src": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-11.mp4",
-   "poster": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-11.jpg",
-   "video": true,
-   "caption": "A.L.T.A  performing a Bathymetry Visualizer scan.",
-   "takenAt": "2026:10:15 17:09:52",
-   "w": 960,
-   "h": 556,
-   "use": "post",
-   "cover": false,
-   "from": "Bathymetry Visualizer.mp4",
-   "range": [
-    0,
-    9.85
-   ],
-   "at": "The side quest"
-  },
-  {
    "src": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-21.mp4",
    "caption": "A.L.T.A in the deep water scanning a jagged sublacustrine fault scarp deep beneath Lake Tahoe",
    "takenAt": "2026:10:16 07:49:28",
@@ -211,21 +177,21 @@
    ]
   },
   {
-   "src": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-20.mp4",
-   "caption": "A.L.T.A in the deep water scanning a massive granite boulder deep beneath Lake Tahoe.",
-   "takenAt": "2026:10:16 07:49:24",
+   "src": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-11.mp4",
+   "poster": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-11.jpg",
+   "video": true,
+   "caption": "A.L.T.A  performing a Bathymetry Visualizer scan.",
+   "takenAt": "2026:10:15 17:09:52",
    "w": 960,
-   "h": 542,
+   "h": 556,
    "use": "post",
    "cover": false,
-   "from": "gemini_generated_video_abab223b.mp4",
-   "at": "The side quest",
-   "poster": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-20.jpg",
-   "video": true,
+   "from": "Bathymetry Visualizer.mp4",
    "range": [
     0,
-    10.05
-   ]
+    9.85
+   ],
+   "at": "The side quest"
   },
   {
    "src": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-13.mp4",
