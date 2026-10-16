@@ -189,26 +189,6 @@
    ]
   },
   {
-   "src": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/01.jpg",
-   "caption": "An AI-made 3D chart of the McKinney Bay landslide: the collapse scar, the Tahoe City Shelf, the debris avalanche and the megablocks on the flat floor, on a screen reading SYSTEM OK.",
-   "takenAt": null,
-   "w": 1600,
-   "h": 1236,
-   "use": "post",
-   "cover": false,
-   "from": "Map Closer to Bay.jpeg"
-  },
-  {
-   "src": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/02.jpg",
-   "caption": "A second take on the chart: Lake Tahoe bathymetry and geology, with the collapse amphitheater, the steep escarpment, scattered giant megablocks and the West Tahoe Fault.",
-   "takenAt": null,
-   "w": 1376,
-   "h": 768,
-   "use": "post",
-   "cover": false,
-   "from": "Map Full Lake.jpg"
-  },
-  {
    "src": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/03.jpg",
    "caption": "Act I: A.L.T.A. dives past the edge of the shelf at 120 feet, seen from the companion drone.",
    "takenAt": null,
