@@ -11,16 +11,6 @@
  "track": null,
  "photos": [
   {
-   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/08.jpg",
-   "caption": "The message in a bottle, colored in: an island with a hammock, campfire and treasure chest.",
-   "takenAt": null,
-   "w": 1600,
-   "h": 1600,
-   "use": "post",
-   "cover": false,
-   "from": "Bottle_with_tropical_island_color.jpg"
-  },
-  {
    "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/09.jpg",
    "caption": "The island as a full scene: a brass robot and a robot dog in a pirate hat at the chest, a mermaid in the shallows.",
    "takenAt": null,
@@ -29,36 +19,6 @@
    "use": "post",
    "cover": false,
    "from": "Bottle_with_tropical_island_companions.jpg"
-  },
-  {
-   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/10.jpg",
-   "caption": "The same bottle as line art, ready to color.",
-   "takenAt": null,
-   "w": 1024,
-   "h": 1024,
-   "use": "post",
-   "cover": false,
-   "from": "Bottle_with_tropical_island_scene_202605071242.jpeg"
-  },
-  {
-   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/12.jpg",
-   "caption": "An oasis in a jar: a pool between palms and a camel resting beside it.",
-   "takenAt": null,
-   "w": 1024,
-   "h": 1024,
-   "use": "post",
-   "cover": false,
-   "from": "Camel_resting_in_oasis_202605081315.jpeg"
-  },
-  {
-   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/14.jpg",
-   "caption": "A page from Color in a Jar, Volume One.",
-   "takenAt": null,
-   "w": 1024,
-   "h": 1024,
-   "use": "post",
-   "cover": false,
-   "from": "Camel_resting_in_oasis_color.jpeg"
   },
   {
    "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/15.jpg",
@@ -71,26 +31,6 @@
    "from": "Camel_resting_in_oasis_companions.jpg"
   },
   {
-   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/16.jpg",
-   "caption": "A page from Color in a Jar, Volume One.",
-   "takenAt": null,
-   "w": 1024,
-   "h": 1024,
-   "use": "post",
-   "cover": false,
-   "from": "Canning_jar_with_leaves_squirrel_202605081315.jpeg"
-  },
-  {
-   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/17.jpg",
-   "caption": "A page from Color in a Jar, Volume One.",
-   "takenAt": null,
-   "w": 1600,
-   "h": 1600,
-   "use": "post",
-   "cover": false,
-   "from": "Canning_jar_with_leaves_squirrel_color.jpg"
-  },
-  {
    "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/18.jpg",
    "caption": "A page from Color in a Jar, Volume One.",
    "takenAt": null,
@@ -101,58 +41,8 @@
    "from": "Canning_jar_with_leaves_squirrel_companions.jpg"
   },
   {
-   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/19.jpg",
-   "caption": "A page from Color in a Jar, Volume One.",
-   "takenAt": null,
-   "w": 1024,
-   "h": 1024,
-   "use": "post",
-   "cover": false,
-   "from": "Canning_jar_with_pear_orchard_202605081315.jpeg"
-  },
-  {
-   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/20.jpg",
-   "caption": "A page from Color in a Jar, Volume One.",
-   "takenAt": null,
-   "w": 1024,
-   "h": 1024,
-   "use": "post",
-   "cover": false,
-   "from": "Canning_jar_with_pear_orchard_202605130948.jpeg"
-  },
-  {
-   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/22.jpg",
-   "caption": "A page from Color in a Jar, Volume One.",
-   "takenAt": null,
-   "w": 1000,
-   "h": 1000,
-   "use": "post",
-   "cover": false,
-   "from": "color-in-jar-west-cover.jpg"
-  },
-  {
-   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/24.jpg",
-   "caption": "A page from Color in a Jar, Volume One.",
-   "takenAt": null,
-   "w": 1024,
-   "h": 1024,
-   "use": "post",
-   "cover": false,
-   "from": "Cookie_jar_with_sunflowers_202605081315.jpeg"
-  },
-  {
-   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/26.jpg",
-   "caption": "A page from Color in a Jar, Volume One.",
-   "takenAt": null,
-   "w": 1024,
-   "h": 1024,
-   "use": "post",
-   "cover": false,
-   "from": "Cookie_jar_with_sunflowers_color.jpeg"
-  },
-  {
    "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/27.jpg",
-   "caption": "A page from Color in a Jar, Volume One.",
+   "caption": "Sunflower orchard scene companions.",
    "takenAt": null,
    "w": 1376,
    "h": 768,
@@ -161,28 +51,8 @@
    "from": "Cookie_jar_with_sunflowers_companions.jpg"
   },
   {
-   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/32.jpg",
-   "caption": "A page from Color in a Jar, Volume One.",
-   "takenAt": null,
-   "w": 1024,
-   "h": 1024,
-   "use": "post",
-   "cover": false,
-   "from": "Glass_jar_with_beach_scene_202605081315.jpeg"
-  },
-  {
-   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/33.jpg",
-   "caption": "A page from Color in a Jar, Volume One.",
-   "takenAt": null,
-   "w": 1600,
-   "h": 1600,
-   "use": "post",
-   "cover": false,
-   "from": "Glass_jar_with_beach_scene_color.jpg"
-  },
-  {
    "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/34.jpg",
-   "caption": "A page from Color in a Jar, Volume One.",
+   "caption": "Beach scene companions.",
    "takenAt": null,
    "w": 1376,
    "h": 768,
@@ -191,8 +61,248 @@
    "from": "Glass_jar_with_beach_scene_companions.jpg"
   },
   {
-   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/36.jpg",
-   "caption": "A page from Color in a Jar, Volume One.",
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/39.jpg",
+   "caption": "Peach orchard scene companions.",
+   "takenAt": null,
+   "w": 1376,
+   "h": 768,
+   "use": "post",
+   "cover": true,
+   "from": "Mason_jar_with_peach_grove_companions.jpg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/40.jpg",
+   "caption": "Gnarled graveyard scene companions.",
+   "takenAt": null,
+   "w": 1376,
+   "h": 768,
+   "use": "post",
+   "cover": false,
+   "from": "Gnarled_jar_with_graveyard_scene_companions.jpg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/41.jpg",
+   "caption": "Jungle scene companions.",
+   "takenAt": null,
+   "w": 1376,
+   "h": 768,
+   "use": "post",
+   "cover": false,
+   "from": "Jar_with_jungle_scene_companions.jpg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/42.jpg",
+   "caption": "Polar scene companions.",
+   "takenAt": null,
+   "w": 1376,
+   "h": 768,
+   "use": "post",
+   "cover": false,
+   "from": "Polar_bear_on_iceberg_Aurora_companions.jpg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/43.jpg",
+   "caption": "Beach scene companions.",
+   "takenAt": null,
+   "w": 1376,
+   "h": 768,
+   "use": "post",
+   "cover": false,
+   "from": "Glass_jar_with_beach_scene_companions.jpg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/44.jpg",
+   "caption": "Deep sea scene companions.",
+   "takenAt": null,
+   "w": 1376,
+   "h": 768,
+   "use": "post",
+   "cover": false,
+   "from": "Jar_with_deep_ocean_creatures_companions.jpg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/45.jpg",
+   "caption": "Sunflower scene companions.",
+   "takenAt": null,
+   "w": 1376,
+   "h": 768,
+   "use": "post",
+   "cover": false,
+   "from": "Cookie_jar_with_sunflowers_companions.jpg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/46.jpg",
+   "caption": "Fall squirrel scene companions.",
+   "takenAt": null,
+   "w": 1376,
+   "h": 768,
+   "use": "post",
+   "cover": false,
+   "from": "Canning_jar_with_leaves_squirrel_companions.jpg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/47.jpg",
+   "caption": "Pirate scene companions.",
+   "takenAt": null,
+   "w": 1376,
+   "h": 768,
+   "use": "post",
+   "cover": false,
+   "from": "Bottle_with_tropical_island_companions.jpg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/48.jpg",
+   "caption": "Oasis scene companions.",
+   "takenAt": null,
+   "w": 1376,
+   "h": 768,
+   "use": "post",
+   "cover": false,
+   "from": "Camel_resting_in_oasis_companions.jpg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/49.jpg",
+   "caption": "Peach orchard jar scene - color.",
+   "takenAt": null,
+   "w": 1600,
+   "h": 1600,
+   "use": "post",
+   "cover": false,
+   "from": "Mason_jar_with_peach_grove_color.jpg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/50.jpg",
+   "caption": "Polar jar scene - black and white.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Polar_bear_on_iceberg_Aurora_202605081315.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/51.jpg",
+   "caption": "Strawberry Patch Harvest jar scene - color.",
+   "takenAt": null,
+   "w": 1600,
+   "h": 1600,
+   "use": "post",
+   "cover": false,
+   "from": "Jelly_jar_with_strawberry_patch_color.jpg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/52.jpg",
+   "caption": "Peach Harvest jar scene - black and white.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Mason_jar_with_peach_grove_202605081315.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/53.jpg",
+   "caption": "Jungle jar scene - color.",
+   "takenAt": null,
+   "w": 1600,
+   "h": 1600,
+   "use": "post",
+   "cover": false,
+   "from": "Jar_with_jungle_scene_color.jpg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/54.jpg",
+   "caption": "Strawberry Patch Harvest jar scene - black and white.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Jelly_jar_with_strawberry_patch_202605081315.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/55.jpg",
+   "caption": "Jungle jar scene - black and white.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Jar_with_jungle_scene_202605081315.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/56.jpg",
+   "caption": "Deep Sea jar scene - color.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Jar_with_deep_ocean_creatures_color.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/57.jpg",
+   "caption": "Deep Sea jar scene - black and white.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Jar_with_deep_ocean_creatures_202605081315.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/58.jpg",
+   "caption": "Harvest Nights scene - color.",
+   "takenAt": null,
+   "w": 1600,
+   "h": 1600,
+   "use": "post",
+   "cover": false,
+   "from": "Jar_with_cornfield_night_scene_color.jpg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/59.jpg",
+   "caption": "Harvest Nights scene - black and white.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Jar_with_cornfield_night_scene_202605081315.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/62.jpg",
+   "caption": "Gnarled Graveyard jar scene - black and white.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Gnarled_jar_with_graveyard_scene_202605081315.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/63.jpg",
+   "caption": "Beach Jar - color.",
+   "takenAt": null,
+   "w": 1600,
+   "h": 1600,
+   "use": "post",
+   "cover": false,
+   "from": "Glass_jar_with_beach_scene_color.jpg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/64.jpg",
+   "caption": "Ferns and Lizard Jar - color",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Glass_jar_with_fern_forest_color.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/65.jpg",
+   "caption": "Ferns and Lizard Jar - black and white.",
    "takenAt": null,
    "w": 1024,
    "h": 1024,
@@ -201,14 +311,124 @@
    "from": "Glass_jar_with_fern_forest_202605081315.jpeg"
   },
   {
-   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/38.jpg",
-   "caption": "A page from Color in a Jar, Volume One.",
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/66.jpg",
+   "caption": "Beach Jar - black and white.",
    "takenAt": null,
    "w": 1024,
    "h": 1024,
    "use": "post",
    "cover": false,
-   "from": "Glass_jar_with_fern_forest_color.jpeg"
+   "from": "Glass_jar_with_beach_scene_202605081315.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/67.jpg",
+   "caption": "Sunflower Jar Scene - Color",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Cookie_jar_with_sunflowers_color.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/68.jpg",
+   "caption": "Fall and Squirrel Jar Scene - Color.",
+   "takenAt": null,
+   "w": 1600,
+   "h": 1600,
+   "use": "post",
+   "cover": false,
+   "from": "Canning_jar_with_leaves_squirrel_color.jpg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/69.jpg",
+   "caption": "Sunflower jar - black and white.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Cookie_jar_with_sunflowers_202605081315.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/70.jpg",
+   "caption": "Fall and Squirrel Jar Scene - black and white.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Canning_jar_with_leaves_squirrel_202605081315.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/71.jpg",
+   "caption": "Oasis scene - color.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Camel_resting_in_oasis_color.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/72.jpg",
+   "caption": "Oasis scene - black and white.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Camel_resting_in_oasis_202605081315.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/73.jpg",
+   "caption": "Pirate Treasure Jar Scene - black and white.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Bottle_with_tropical_island_scene_202605071242.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/74.jpg",
+   "caption": "Pirate Treasure Jar Scene - color.",
+   "takenAt": null,
+   "w": 1600,
+   "h": 1600,
+   "use": "post",
+   "cover": false,
+   "from": "Bottle_with_tropical_island_color.jpg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/75.jpg",
+   "caption": "Polar jar scene - color.",
+   "takenAt": null,
+   "w": 1600,
+   "h": 1600,
+   "use": "post",
+   "cover": false,
+   "from": "Polar_bear_on_iceberg_Aurora_color.jpg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/76.jpg",
+   "caption": "Gnarled Graveyard jar scene - color.",
+   "takenAt": null,
+   "w": 1600,
+   "h": 1600,
+   "use": "post",
+   "cover": false,
+   "from": "Gnarled_jar_with_graveyard_scene_color.jpg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/77.jpg",
+   "caption": "The cover of the book. Color in the West.",
+   "takenAt": null,
+   "w": 1000,
+   "h": 1000,
+   "use": "post",
+   "cover": false,
+   "from": "color-in-jar-west-cover.jpg"
   }
  ],
  "fieldNotes": "",
