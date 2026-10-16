@@ -27,22 +27,6 @@
    ]
   },
   {
-   "src": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-15.mp4",
-   "poster": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-15.jpg",
-   "video": true,
-   "caption": "McKinney Bay Landslide - Fault Lines going North and South",
-   "takenAt": "2026:10:16 05:57:07",
-   "w": 960,
-   "h": 540,
-   "use": "post",
-   "cover": false,
-   "from": "McKinney Bay - fault-lines - south.mp4",
-   "range": [
-    0,
-    4.47
-   ]
-  },
-  {
    "src": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-16.mp4",
    "poster": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-16.jpg",
    "video": true,
@@ -56,6 +40,22 @@
    "range": [
     0,
     2.3
+   ]
+  },
+  {
+   "src": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-15.mp4",
+   "poster": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-15.jpg",
+   "video": true,
+   "caption": "McKinney Bay Landslide - Fault Lines going North and South",
+   "takenAt": "2026:10:16 05:57:07",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "McKinney Bay - fault-lines - south.mp4",
+   "range": [
+    0,
+    4.47
    ]
   },
   {
@@ -91,6 +91,32 @@
    ]
   },
   {
+   "src": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/03.jpg",
+   "caption": "A.L.T.A dives past the edge of the shelf at 120 feet, seen from the companion drone.",
+   "takenAt": null,
+   "w": 1376,
+   "h": 768,
+   "use": "post",
+   "cover": false,
+   "from": "Over the Shelf Drop-Off.jpg"
+  },
+  {
+   "src": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-8.mp4",
+   "poster": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-8.jpg",
+   "video": true,
+   "caption": "A.L.T.A  scanning the Twilight Graben at 780 feet.",
+   "takenAt": "2026:10:15 17:09:42",
+   "w": 960,
+   "h": 538,
+   "use": "post",
+   "cover": false,
+   "from": "Scanning the Twilight Graben.mp4",
+   "range": [
+    0,
+    9.95
+   ]
+  },
+  {
    "src": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-4.mp4",
    "poster": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-4.jpg",
    "video": true,
@@ -110,7 +136,7 @@
    "src": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-2.mp4",
    "poster": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-2.jpg",
    "video": true,
-   "caption": "A.L.T.A  inspecting the mega blocks.",
+   "caption": "A.L.T.A  inspecting the mega blocks at 1420 feet down.",
    "takenAt": "2026:10:15 14:20:32",
    "w": 960,
    "h": 540,
@@ -126,7 +152,7 @@
    "src": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-3.mp4",
    "poster": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-3.jpg",
    "video": true,
-   "caption": "A.L.T.A  performing an active fault scan.",
+   "caption": "A.L.T.A  performing an active fault scan at 1420 feet down.",
    "takenAt": "2026:10:15 14:20:26",
    "w": 960,
    "h": 540,
@@ -142,7 +168,7 @@
    "src": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-9.mp4",
    "poster": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-9.jpg",
    "video": true,
-   "caption": "Rover HUD watching A.L.T.A  perform a scan.",
+   "caption": "Rover HUD watching A.L.T.A  perform a scan at 1580 feet down.",
    "takenAt": "2026:10:15 17:09:38",
    "w": 960,
    "h": 540,
@@ -152,22 +178,6 @@
    "range": [
     0,
     10.05
-   ]
-  },
-  {
-   "src": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-8.mp4",
-   "poster": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-8.jpg",
-   "video": true,
-   "caption": "A.L.T.A  scanning the Twilight Graben.",
-   "takenAt": "2026:10:15 17:09:42",
-   "w": 960,
-   "h": 538,
-   "use": "post",
-   "cover": false,
-   "from": "Scanning the Twilight Graben.mp4",
-   "range": [
-    0,
-    9.95
    ]
   },
   {
@@ -187,20 +197,30 @@
    ]
   },
   {
-   "src": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/03.jpg",
-   "caption": "A.L.T.A dives past the edge of the shelf at 120 feet, seen from the companion drone.",
+   "src": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/04.jpg",
+   "caption": "The fault scan at the bottom of Lake Tahoe.",
    "takenAt": null,
    "w": 1376,
    "h": 768,
    "use": "post",
    "cover": false,
-   "from": "Over the Shelf Drop-Off.jpg"
+   "from": "Mermaid_automaton_character_turn…_20261016063922 (1).jpg"
+  },
+  {
+   "src": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/05.jpg",
+   "caption": "The megablock inspection.",
+   "takenAt": null,
+   "w": 1376,
+   "h": 768,
+   "use": "post",
+   "cover": false,
+   "from": "Mermaid_automaton_character_turn…_20261016063908 (2).jpg"
   },
   {
    "src": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-13.mp4",
    "poster": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-13.jpg",
    "video": true,
-   "caption": "Integrity 100%, lidar retracting, A.L.T.A. starts her climb from 1,620 feet.",
+   "caption": "A.L.T.A. starts her climb from 1,620 feet back to the surface.",
    "takenAt": "2026:10:16 05:30:08",
    "w": 960,
    "h": 552,
@@ -211,26 +231,6 @@
     0,
     8
    ]
-  },
-  {
-   "src": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/04.jpg",
-   "caption": "The fault scan.",
-   "takenAt": null,
-   "w": 1376,
-   "h": 768,
-   "use": "post",
-   "cover": false,
-   "from": "Mermaid_automaton_character_turn…_20261016063922 (1).jpg"
-  },
-  {
-   "src": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/05.jpg",
-   "caption": "The megablock inspection",
-   "takenAt": null,
-   "w": 1376,
-   "h": 768,
-   "use": "post",
-   "cover": false,
-   "from": "Mermaid_automaton_character_turn…_20261016063908 (2).jpg"
   },
   {
    "src": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-7.mp4",
@@ -270,7 +270,7 @@
    "src": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-1.mp4",
    "poster": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-1.jpg",
    "video": true,
-   "caption": "A.L.T.A  swimming to the surface.",
+   "caption": "A.L.T.A  nearly back to the surface.",
    "takenAt": "2026:10:15 14:20:21",
    "w": 960,
    "h": 540,
