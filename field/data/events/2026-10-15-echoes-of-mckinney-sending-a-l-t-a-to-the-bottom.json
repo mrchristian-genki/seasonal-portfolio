@@ -24,8 +24,7 @@
    "range": [
     0,
     8
-   ],
-   "at": "The landslide"
+   ]
   },
   {
    "src": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-16.mp4",
@@ -41,8 +40,7 @@
    "range": [
     0,
     2.3
-   ],
-   "at": "The landslide"
+   ]
   },
   {
    "src": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-18.mp4",
@@ -58,8 +56,7 @@
    "range": [
     0,
     2.85
-   ],
-   "at": "The landslide"
+   ]
   },
   {
    "src": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-17.mp4",
@@ -75,8 +72,7 @@
    "range": [
     0,
     2.87
-   ],
-   "at": "The landslide"
+   ]
   },
   {
    "src": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-10.mp4",
@@ -435,7 +431,7 @@
   "lookbook": {
    "title": "McKinney Bay Landslide",
    "dek": "The McKinney Bay Landslide was a prehistoric underwater landslide in Lake Tahoe that triggered a massive megatsunami between 12,000 and 21,000 years ago",
-   "before": "The wave",
+   "before": "The landslide",
    "items": [
     {
      "name": "McKinney Bay Landslide - Orbiting Holographic Lake",
