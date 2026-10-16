@@ -431,16 +431,6 @@
    "The seamless loop, and how to ask for one",
    "The wave at Sand Harbor, as it might have looked"
   ],
-  "renders": [
-   {
-    "for": "Spread: the megablock inspection (Act III)",
-    "prompt": "Gritty expedition photograph, deep underwater on the dark floor of an alpine lake: an ornate clockwork mermaid automaton of patinated bronze and verdigris copper hovers weightless before a colossal, silt-dusted granite block the size of a building. She rests one articulated brass hand on the cold rock; a fan of emerald-green scanning light spreads from her palm across its face. Two warm amber beams from her eyes light drifting specks of fine sediment, and her chest core glows soft turquoise. Everything else is pitch black. Documentary framing, slight grain, high contrast, no text, no lettering, no numbers, no logos."
-   },
-   {
-    "for": "Spread: the fault scan (Act IV)",
-    "prompt": "Gritty expedition photograph from a small research drone following close behind a patinated bronze clockwork mermaid automaton as she swims along a dark, razor-sharp ridge on the deep lake floor where the bottom drops away abruptly. Deep turquoise pulses of light trace the fracture line in the rock like glowing veins, and soft ripples of light spread from her fingertips into the dark freshwater. Fine particles drift in a gentle current. Cold, sunless, cinematic but documentary, slight grain, no screen overlay, no text, no lettering, no numbers, no logos."
-   }
-  ],
   "questions": [
    "The template wants six pictures and the Note has four. You said the two Sand Harbor renders belong in the same spread: do you want to add those two instead of the two new prompts above?",
    "All four photos are marked ai: false, but you said every picture is made with AI. Should they all be switched to ai: true so the spread carries the Made with AI label?",
