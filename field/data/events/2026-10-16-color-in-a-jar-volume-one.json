@@ -1,0 +1,254 @@
+{
+ "id": "2026-10-16-color-in-a-jar-volume-one",
+ "title": "Color in a Jar - Volume One",
+ "date": "2026-10-16",
+ "kind": "showcase",
+ "place": "",
+ "status": "draft",
+ "summary": "Volume One of Color in a Jar: a set of coloring pages that each hold a small world inside a jar, bottle or glass dome, from a walled garden and a snowy village to a desert island. One page also appears colored in and as a scene with a brass robot, a mermaid and a robot dog.",
+ "trailhead": null,
+ "links": [],
+ "track": null,
+ "photos": [
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/08.jpg",
+   "caption": "The message in a bottle, colored in: an island with a hammock, campfire and treasure chest.",
+   "takenAt": null,
+   "w": 1600,
+   "h": 1600,
+   "use": "post",
+   "cover": false,
+   "from": "Bottle_with_tropical_island_color.jpg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/09.jpg",
+   "caption": "The island as a full scene: a brass robot and a robot dog in a pirate hat at the chest, a mermaid in the shallows.",
+   "takenAt": null,
+   "w": 1376,
+   "h": 768,
+   "use": "post",
+   "cover": false,
+   "from": "Bottle_with_tropical_island_companions.jpg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/10.jpg",
+   "caption": "The same bottle as line art, ready to color.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Bottle_with_tropical_island_scene_202605071242.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/12.jpg",
+   "caption": "An oasis in a jar: a pool between palms and a camel resting beside it.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Camel_resting_in_oasis_202605081315.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/14.jpg",
+   "caption": "A page from Color in a Jar, Volume One.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Camel_resting_in_oasis_color.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/15.jpg",
+   "caption": "A page from Color in a Jar, Volume One.",
+   "takenAt": null,
+   "w": 1376,
+   "h": 768,
+   "use": "post",
+   "cover": false,
+   "from": "Camel_resting_in_oasis_companions.jpg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/16.jpg",
+   "caption": "A page from Color in a Jar, Volume One.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Canning_jar_with_leaves_squirrel_202605081315.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/17.jpg",
+   "caption": "A page from Color in a Jar, Volume One.",
+   "takenAt": null,
+   "w": 1600,
+   "h": 1600,
+   "use": "post",
+   "cover": false,
+   "from": "Canning_jar_with_leaves_squirrel_color.jpg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/18.jpg",
+   "caption": "A page from Color in a Jar, Volume One.",
+   "takenAt": null,
+   "w": 1376,
+   "h": 768,
+   "use": "post",
+   "cover": false,
+   "from": "Canning_jar_with_leaves_squirrel_companions.jpg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/19.jpg",
+   "caption": "A page from Color in a Jar, Volume One.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Canning_jar_with_pear_orchard_202605081315.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/20.jpg",
+   "caption": "A page from Color in a Jar, Volume One.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Canning_jar_with_pear_orchard_202605130948.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/22.jpg",
+   "caption": "A page from Color in a Jar, Volume One.",
+   "takenAt": null,
+   "w": 1000,
+   "h": 1000,
+   "use": "post",
+   "cover": false,
+   "from": "color-in-jar-west-cover.jpg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/24.jpg",
+   "caption": "A page from Color in a Jar, Volume One.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Cookie_jar_with_sunflowers_202605081315.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/26.jpg",
+   "caption": "A page from Color in a Jar, Volume One.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Cookie_jar_with_sunflowers_color.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/27.jpg",
+   "caption": "A page from Color in a Jar, Volume One.",
+   "takenAt": null,
+   "w": 1376,
+   "h": 768,
+   "use": "post",
+   "cover": false,
+   "from": "Cookie_jar_with_sunflowers_companions.jpg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/32.jpg",
+   "caption": "A page from Color in a Jar, Volume One.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Glass_jar_with_beach_scene_202605081315.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/33.jpg",
+   "caption": "A page from Color in a Jar, Volume One.",
+   "takenAt": null,
+   "w": 1600,
+   "h": 1600,
+   "use": "post",
+   "cover": false,
+   "from": "Glass_jar_with_beach_scene_color.jpg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/34.jpg",
+   "caption": "A page from Color in a Jar, Volume One.",
+   "takenAt": null,
+   "w": 1376,
+   "h": 768,
+   "use": "post",
+   "cover": false,
+   "from": "Glass_jar_with_beach_scene_companions.jpg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/36.jpg",
+   "caption": "A page from Color in a Jar, Volume One.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Glass_jar_with_fern_forest_202605081315.jpeg"
+  },
+  {
+   "src": "data/photos/2026-10-16-color-in-a-jar-volume-one/38.jpg",
+   "caption": "A page from Color in a Jar, Volume One.",
+   "takenAt": null,
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "Glass_jar_with_fern_forest_color.jpeg"
+  }
+ ],
+ "fieldNotes": "",
+ "post": {
+  "title": "Color in a Jar, Volume One",
+  "body": "This is Volume One of Color in a Jar: coloring pages where every scene lives inside glass.\n\nThe first jar holds a walled garden. A plum tree leans over an iron gate that stands open, a cobbled path runs back past an ivy-covered wall, and a stone tower sits at the far end. The next is shallower, a round glass dish turned into a pond, with water lilies, a willow hanging over it and a dragonfly resting on a reed.\n\nThen the scenes go farther afield. A snowy village sits in a jar tagged Alpine Adventure, with a lit-up tree in the square, skaters on a frozen pond and mountains under a crescent moon. There's a savanna with a lion resting under an acacia and a giraffe walking past a big low sun. There's a bamboo grove around a stone lantern, a forest floor under a bell jar with spotted mushrooms, curled fern fronds and a snail, and a glass greenhouse dome full of orchids and palms with butterflies on the outside.\n\nThe desert gets its turn too: a bowl of succulents with a string of pearls spilling over the rim and a lizard on a rock, and a jar holding an oasis, a pool between palms with a camel resting beside it.\n\nOne page shows up three ways. The message in a bottle, with its little island, hammock, campfire, treasure chest and parrots, is here as clean line art and also colored in, so you can see where the page can go. And the same island appears as a full scene: a brass robot and a robot dog in a pirate hat at the treasure chest, and a mermaid in the shallows watching.\n\nThe jar is the frame. Every page gets a clear edge, and inside it, the whole world can be as busy as you like."
+ },
+ "episode": {
+  "title": "Worlds in a jar",
+  "script": "Narrated by GlazyArray.\n\nThis Note came without a trail, a tracker or a single mile. It came in a jar.\n\nColor in a Jar, Volume One, is a set of coloring pages, and every one of them puts a whole world behind glass.\n\nThe first holds a garden. A plum tree heavy with fruit, an iron gate standing open, a cobbled path that winds back toward an old stone tower. The next is barely a jar at all, more of a shallow glass dish, with water lilies, a willow bending over the water and a dragonfly resting on a reed.\n\n***\n\nAfter that, the jars start to travel. A snowy village with skaters on a frozen pond, and a little tag on the lid that says Alpine Adventure. A lion resting in the shade of an acacia while a giraffe strolls past a low, enormous sun. A bamboo grove around a stone lantern. Spotted mushrooms and curled ferns under a bell jar, with a snail making its slow way up a branch.\n\nThe high desert gets a page or two as well. A bowl of succulents with a lizard keeping watch on a rock. An oasis in a jar, where a camel has found the one patch of shade and decided to stay.\n\n***\n\nThen there's the bottle. A message in a bottle, lying in the sand, with an island inside: palm trees, a hammock, a campfire and a treasure chest. It appears as plain lines, then colored in, all blue water and green palms. And then it appears as a full scene, where a brass robot and a robot dog in a pirate hat are opening that chest, and a mermaid watches from the shallows.\n\nThe brass robot looks a little familiar. I'll say no more than that.\n\nWhat I like about the set is the frame. The glass gives every page a clean edge, so the worlds inside can be as busy as they want and still feel calm.\n\n***\n\nThis one's called Volume One. Jars, after all, are made to be filled.",
+  "audio": null
+ },
+ "questions": [
+  "The entry's kind is \"ride\", but this is a set of coloring pages. Should it be another kind and go in the coloring-books category (which would also give it its backdrop)?",
+  "How were the pages made: did you draw them, generate them with AI, or both? If AI was involved, should the post say so and describe the process?",
+  "I could only see photos 01 to 12. Photos 13 to 40 have placeholder captions; can you share them or tell me what each shows?",
+  "Who colored the bottle page (08), and how was the scene in 09 made from it?",
+  "In 09, are the brass robot, the robot dog and the mermaid meant to be GlazyArray, Robot Marley and A.L.T.A.? The episode only hints at the robot looking familiar.",
+  "Are the pages available to download or print? If so, where should the post point people?",
+  "Is there a story behind the set worth telling, like who it's for or who has colored them? The notes are empty, so the draft only describes the pages.",
+  "Is a Volume Two planned? The episode's last line only plays on the title and promises nothing."
+ ],
+ "consent": "",
+ "source": "Rides/Color in a Jar - Volume One",
+ "narratorBackdrop": {
+  "backdrop": "people-relaxing-and-coloring-books",
+  "fit": "existing",
+  "scene": ""
+ },
+ "feature": {
+  "theme": "studiofloor",
+  "masthead": "STUDIO FLOOR",
+  "tagline": "Makers, in their own words",
+  "issue": "The Ten-Year Issue",
+  "label": "Showcase",
+  "byline": "By GlazyArray, Senior Editor",
+  "blocks": []
+ },
+ "palette": [
+  "#55bfce",
+  "#d6a966"
+ ]
+}
