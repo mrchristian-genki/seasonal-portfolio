@@ -4,8 +4,8 @@
  "date": "2026-10-16",
  "kind": "showcase",
  "place": "",
- "status": "draft",
- "summary": "Volume One of Color in a Jar: a set of coloring pages that each hold a small world inside a jar, bottle or glass dome, from a walled garden and a snowy village to a desert island. One page also appears colored in and as a scene with a brass robot, a mermaid and a robot dog.",
+ "status": "published",
+ "summary": "Color in a Jar: The West is the first volume of Christian's AI-made coloring book, where every page holds a small world inside a jar, bottle or glass dome, from a walled garden and a snowy village to a desert island. Companion scenes made to promote it put GlazyArray, Robot Marley and A.L.T.A. into those worlds. The book is on Amazon in print and digital, with Volume Two on the way.",
  "trailhead": null,
  "links": [],
  "track": null,
@@ -431,25 +431,22 @@
    "from": "color-in-jar-west-cover.jpg"
   }
  ],
- "fieldNotes": "",
+ "fieldNotes": "How were the pages made: did you draw them, generate them with AI, or both? If AI was involved, should the post say so and describe the process?\nhttps://www.amazon.com/dp/B0H1QG4NX7?lv=shuf&bestFormat=true&social_share=cm_sw_r_ffobk_cp_ud_dp_V0AE9QDTEMG4ES066DET&channelId=704&ref_=cm_sw_r_ffobk_cp_ud_dp_V0AE9QDTEMG4ES066DET&plpRedirect=mhFallback\n\nAll AI generated using a polished and refined process I took months to perfect and enhance. Used my own tool to help build the prompts. https://www.christiangehrke.com/?workshop+winter+day+propre-engine\n\nI could only see photos 01 to 12. Photos 13 to 40 have placeholder captions; can you share them or tell me what each shows?\nI will update them now.\n\nWho colored the bottle page (08), and how was the scene in 09 made from it?\nAI colored in the examples of what the colored in page might look like but that is up to the person coloring the book. These are only suggestiongs.\n\nIn 09, are the brass robot, the robot dog and the mermaid meant to be GlazyArray, Robot Marley and A.L.T.A.? The episode only hints at the robot looking familiar.\nYes\n\nAre the pages available to download or print? If so, where should the post point people?\nYes both on Amazon.\n\nIs there a story behind the set worth telling, like who it's for or who has colored them? The notes are empty, so the draft only describes the pages.\nIt's about the scenes in the book and what is being colored in. The book has so much vibrance and worlds within worlds. Talk about the book content.\n\nIs a Volume Two planned? The episode's last line only plays on the title and promises nothing.\nYes but not published yet.\n\nPhotos 01 to 12 (except 09) are no longer in the list, but the draft still describes the garden, pond, Alpine Adventure village, savanna, bamboo, bell jar, greenhouse and succulent pages. Keep those passages, or rewrite them around the pages now listed?\nThey are in the coloring book still.\n\nThe caption for 77 said \"Color in the West\"; I wrote \"Color in a Jar, Volume One\". Which is right?\n\"Color in a Jar: The West: A 50 States Coloring Book — Nevada, California, Utah, Oregon & Idaho\" \n\nUse what you want. Chop it up if it is too long.\n\n27 and 45 look identical, as do 34 and 43. Drop one of each?\nThere are both color and black and white versions that should be side by side.\n\nAre the companion scenes with GlazyArray, Robot Marley and A.L.T.A. in the book itself, or extras made for the Note?\nNo they are just promoting the book.\n\nOn Amazon, is it a printed book plus a Kindle or download edition? The post says \"to print or download\".\nBoth\n\nI shortened the Amazon link to https://www.amazon.com/dp/B0H1QG4NX7 (tracking removed). OK?\nYes\n\nShould the post name your prompt tool, rather than just linking to it?\nDoes not need too.\n\nPhoto 09's caption and the post refer to the bottle page (08) and its colored version, which are no longer listed. Add them back or reword?\nreword.",
  "post": {
-  "title": "Color in a Jar, Volume One",
-  "body": "This is Volume One of Color in a Jar: coloring pages where every scene lives inside glass.\n\nThe first jar holds a walled garden. A plum tree leans over an iron gate that stands open, a cobbled path runs back past an ivy-covered wall, and a stone tower sits at the far end. The next is shallower, a round glass dish turned into a pond, with water lilies, a willow hanging over it and a dragonfly resting on a reed.\n\nThen the scenes go farther afield. A snowy village sits in a jar tagged Alpine Adventure, with a lit-up tree in the square, skaters on a frozen pond and mountains under a crescent moon. There's a savanna with a lion resting under an acacia and a giraffe walking past a big low sun. There's a bamboo grove around a stone lantern, a forest floor under a bell jar with spotted mushrooms, curled fern fronds and a snail, and a glass greenhouse dome full of orchids and palms with butterflies on the outside.\n\nThe desert gets its turn too: a bowl of succulents with a string of pearls spilling over the rim and a lizard on a rock, and a jar holding an oasis, a pool between palms with a camel resting beside it.\n\nOne page shows up three ways. The message in a bottle, with its little island, hammock, campfire, treasure chest and parrots, is here as clean line art and also colored in, so you can see where the page can go. And the same island appears as a full scene: a brass robot and a robot dog in a pirate hat at the treasure chest, and a mermaid in the shallows watching.\n\nThe jar is the frame. Every page gets a clear edge, and inside it, the whole world can be as busy as you like."
+  "title": "Color in a Jar: The West",
+  "body": "This is Color in a Jar: The West, the first volume of Color in a Jar: coloring pages where every scene lives inside glass. Its full title on Amazon is Color in a Jar: The West: A 50 States Coloring Book, Nevada, California, Utah, Oregon & Idaho.\n\n## How it was made\n\nEvery page was generated with AI, using a process I spent months refining and polishing. I built the prompts with help from a tool of my own, which you can read about here: https://www.christiangehrke.com/?workshop+winter+day+propre-engine\n\n## The garden and the pond\n\nThe first jar holds a walled garden. A plum tree leans over an iron gate that stands open, a cobbled path runs back past an ivy-covered wall, and a stone tower sits at the far end. The next is shallower, a round glass dish turned into a pond, with water lilies, a willow hanging over it and a dragonfly resting on a reed.\n\n## Farther afield\n\nThen the scenes go farther afield. A snowy village sits in a jar tagged Alpine Adventure, with a lit-up tree in the square, skaters on a frozen pond and mountains under a crescent moon. There's a savanna with a lion resting under an acacia and a giraffe walking past a big low sun. There's a bamboo grove around a stone lantern, a forest floor under a bell jar with spotted mushrooms, curled fern fronds and a snail, and a glass greenhouse dome full of orchids and palms with butterflies on the outside.\n\n## The desert\n\nThe desert gets its turn too: a bowl of succulents with a string of pearls spilling over the rim and a lizard on a rock, and a jar holding an oasis, a pool between palms with a camel resting beside it.\n\n> Every page gets a clear edge, and inside it, the whole world can be as busy as you like.\n\n## The island in a bottle\n\nOne page is a message in a bottle lying in the sand, with a little island inside: a hammock, a campfire, a treasure chest and parrots. That same island became one of the companion scenes I made to promote the book, with the Field Notes narrators in it: GlazyArray, the brass robot, at the treasure chest, Robot Marley beside her in a pirate hat, and A.L.T.A. in the shallows watching. The companion scenes aren't in the book; they're here to introduce it.\n\n## Black and white, and color\n\nBelow, the jar pages sit side by side, in black and white and in color. The colored versions were made with AI, and they're only suggestions of where a page can go; the colors are up to whoever is holding the pencils.\n\n## Worlds within worlds\n\nIn the companion scenes, the three of them travel through other worlds from the book too. They meet a camel at an oasis, a squirrel on an autumn path by a stone bridge, and a sunflower field at sunset. They share a beach with a sandcastle and a kite, pick peaches from a ladder by a red barn, and carry a lantern through a moonlit graveyard with a jack-o'-lantern. There's a jungle with a toucan, a sloth and a waterfall, an ice floe with a polar bear under the northern lights, and the deep sea, where GlazyArray wears a diving helmet and Marley a glass bubble. Marley gets a new hat in nearly every world.\n\n## Where to find it\n\nColor in a Jar: The West is on Amazon, as a printed book and as a digital edition: https://www.amazon.com/dp/B0H1QG4NX7\n\nVolume Two is planned, but it isn't published yet.\n\nThe jar is the frame. Every page gets a clear edge, and inside it, the whole world can be as busy as you like."
  },
  "episode": {
   "title": "Worlds in a jar",
-  "script": "Narrated by GlazyArray.\n\nThis Note came without a trail, a tracker or a single mile. It came in a jar.\n\nColor in a Jar, Volume One, is a set of coloring pages, and every one of them puts a whole world behind glass.\n\nThe first holds a garden. A plum tree heavy with fruit, an iron gate standing open, a cobbled path that winds back toward an old stone tower. The next is barely a jar at all, more of a shallow glass dish, with water lilies, a willow bending over the water and a dragonfly resting on a reed.\n\n***\n\nAfter that, the jars start to travel. A snowy village with skaters on a frozen pond, and a little tag on the lid that says Alpine Adventure. A lion resting in the shade of an acacia while a giraffe strolls past a low, enormous sun. A bamboo grove around a stone lantern. Spotted mushrooms and curled ferns under a bell jar, with a snail making its slow way up a branch.\n\nThe high desert gets a page or two as well. A bowl of succulents with a lizard keeping watch on a rock. An oasis in a jar, where a camel has found the one patch of shade and decided to stay.\n\n***\n\nThen there's the bottle. A message in a bottle, lying in the sand, with an island inside: palm trees, a hammock, a campfire and a treasure chest. It appears as plain lines, then colored in, all blue water and green palms. And then it appears as a full scene, where a brass robot and a robot dog in a pirate hat are opening that chest, and a mermaid watches from the shallows.\n\nThe brass robot looks a little familiar. I'll say no more than that.\n\nWhat I like about the set is the frame. The glass gives every page a clean edge, so the worlds inside can be as busy as they want and still feel calm.\n\n***\n\nThis one's called Volume One. Jars, after all, are made to be filled.",
-  "audio": null
+  "script": "Narrated by GlazyArray.\n\nThis Note came without a trail, a tracker or a single mile. It came in a jar.\n\nColor in a Jar, The West, is the first volume of a coloring book, and every page in it puts a whole world behind glass. Every page was made with AI, through a process Christian spent months refining, with prompts built in a tool of his own. That kind of patience doesn't show on the page. What shows is how easy it all looks.\n\nThe first jar holds a garden. A plum tree heavy with fruit, an iron gate standing open, a cobbled path that winds back toward an old stone tower. The next is barely a jar at all, more of a shallow glass dish, with water lilies, a willow bending over the water and a dragonfly resting on a reed.\n\n***\n\nAfter that, the jars start to travel. A snowy village with skaters on a frozen pond, and a little tag on the lid that says Alpine Adventure. A lion resting in the shade of an acacia while a giraffe strolls past a low, enormous sun. A bamboo grove around a stone lantern. Spotted mushrooms and curled ferns under a bell jar, with a snail making its slow way up a branch.\n\nThe desert gets a page or two as well. A bowl of succulents with a lizard keeping watch on a rock. An oasis in a jar, where a camel has found the one patch of shade and decided to stay.\n\n***\n\nThen there's the bottle. A message in a bottle, lying in the sand, with an island inside: palm trees, a hammock, a campfire and a treasure chest.\n\nIn the book, every page waits in clean black lines. On this Note, some of them sit beside a colored version that AI filled in. Those colors are only a suggestion. The real ones belong to whoever picks up the pencils.\n\nTo introduce the book, Christian also made a few scenes that aren't in it. In one, that same island comes to life. A brass robot and a robot dog in a pirate hat are opening the chest, and a mermaid watches from the shallows.\n\nThe brass robot is me. The dog is Robot Marley, and the mermaid is A.L.T.A. I'll try to stay modest about it.\n\nThe three of us get around. We kneel by a camel at an oasis. We meet a squirrel on an autumn path. We walk a sunflower field at sunset, build nothing more than a sandcastle at the beach, and pick peaches from a ladder. We carry a lantern through a moonlit graveyard, sit on a mossy branch with a toucan and a sloth, and share an ice floe with a polar bear under the northern lights. Marley gets a new hat almost everywhere she goes.\n\nWhat I like about the book is the frame. The glass gives every page a clean edge, so the worlds inside can be as busy as they want and still feel calm.\n\n***\n\nColor in a Jar, The West, is on Amazon, as a printed book and as a digital edition. Volume Two is on its way, though it isn't out yet. Jars, after all, are made to be filled.",
+  "audio": "data/audio/2026-10-16-color-in-a-jar-volume-one.mp3"
  },
  "questions": [
-  "The entry's kind is \"ride\", but this is a set of coloring pages. Should it be another kind and go in the coloring-books category (which would also give it its backdrop)?",
-  "How were the pages made: did you draw them, generate them with AI, or both? If AI was involved, should the post say so and describe the process?",
-  "I could only see photos 01 to 12. Photos 13 to 40 have placeholder captions; can you share them or tell me what each shows?",
-  "Who colored the bottle page (08), and how was the scene in 09 made from it?",
-  "In 09, are the brass robot, the robot dog and the mermaid meant to be GlazyArray, Robot Marley and A.L.T.A.? The episode only hints at the robot looking familiar.",
-  "Are the pages available to download or print? If so, where should the post point people?",
-  "Is there a story behind the set worth telling, like who it's for or who has colored them? The notes are empty, so the draft only describes the pages.",
-  "Is a Volume Two planned? The episode's last line only plays on the title and promises nothing."
+  "The draft calls this book the first volume of Color in a Jar, with The West as its title. Is \"Volume One\" still right, or should the Note title change to Color in a Jar: The West?",
+  "27 and 45, and 34 and 43, both appear in full color in the files I see. Is a black-and-white file missing for 45 and 43, or are these companion scenes meant to stay as they are?",
+  "15 and 18 look like the oasis and autumn squirrel companion scenes. Are they the same as 48 and 46? If so, drop one of each?",
+  "To put color and black-and-white side by side, the jar photos need reordering into pairs (for example 49 next to 52, 50 next to 75). Should I suggest that order?",
+  "Are the AI-colored versions in the printed book, or only shown here? The post now says only that they sit side by side on this Note."
  ],
  "consent": "",
  "source": "Rides/Color in a Jar - Volume One",
@@ -465,10 +462,98 @@
   "issue": "The Ten-Year Issue",
   "label": "Showcase",
   "byline": "By GlazyArray, Senior Editor",
-  "blocks": []
+  "blocks": [
+   {
+    "type": "box",
+    "title": "Toolbox",
+    "before": "Farther afield",
+    "kicker": "The frame",
+    "text": "The jar is the frame. Every page gets a clear edge, and inside it, the whole world can be as busy as you like.\n\nThe glass comes in more than one shape: a jar for the walled garden, a round glass dish for the pond, a bell jar over the forest floor, a glass greenhouse dome for the orchids and palms, a bowl for the succulents, and a bottle for the island."
+   },
+   {
+    "type": "timeline",
+    "title": "Selected works",
+    "items": [
+     [
+      "The first jar",
+      "A walled garden: a plum tree over an open iron gate, a cobbled path and a stone tower."
+     ],
+     [
+      "The next",
+      "A round glass dish turned into a pond, with water lilies, a willow and a dragonfly on a reed."
+     ],
+     [
+      "Farther afield",
+      "A snowy village tagged Alpine Adventure, a savanna with a lion and a giraffe, a bamboo grove, a forest floor under a bell jar and a greenhouse dome."
+     ],
+     [
+      "The desert",
+      "A bowl of succulents with a lizard on a rock, and an oasis with a camel resting by the pool."
+     ],
+     [
+      "The bottle",
+      "The message in a bottle, as clean line art, colored in, and as a full scene with a brass robot, a robot dog and a mermaid."
+     ]
+    ]
+   }
+  ],
+  "coverLines": [
+   "Every scene lives inside glass",
+   "A snowy village in a jar tagged Alpine Adventure",
+   "One island, three ways: lines, color and a full scene",
+   "From a walled garden to a camel at the oasis"
+  ],
+  "qa": {
+   "title": "In conversation",
+   "items": [
+    {
+     "q": "What is Color in a Jar?",
+     "a": "Coloring pages where every scene lives inside glass."
+    },
+    {
+     "q": "Where does the set begin?",
+     "a": "The first jar holds a walled garden."
+    },
+    {
+     "q": "Why show the bottle page more than once?",
+     "a": "One page shows up three ways. The message in a bottle is here as clean line art and also colored in, so you can see where the page can go."
+    },
+    {
+     "q": "What holds it all together?",
+     "a": "The jar is the frame. Every page gets a clear edge, and inside it, the whole world can be as busy as you like."
+    }
+   ]
+  },
+  "spotted": [
+   {
+    "label": "On the lid",
+    "text": "The snowy village jar carries a tag that reads Alpine Adventure."
+   },
+   {
+    "label": "Over the rim",
+    "text": "A string of pearls spills out of the succulent bowl, where a lizard sits on a rock."
+   },
+   {
+    "label": "Outside the glass",
+    "text": "The butterflies on the greenhouse dome are on the outside of it."
+   },
+   {
+    "label": "In a pirate hat",
+    "text": "The robot dog at the treasure chest, with a brass robot beside her and a mermaid watching from the shallows."
+   }
+  ],
+  "questions": [
+   "What tools or software did you use to make the pages? The Toolbox box only uses what the post says (the jar as the frame and the glass shapes); tell me the tools and I'll add them.",
+   "Selected works is ordered by the post's page order, not by dates. Do you want dates (when pages were drawn or Volume One came out on Oct 16, 2026) in the timeline instead?",
+   "The last photo caption says \"The cover of the book. Color in the West.\" Is the book called Color in the West, or is that a typo for Color in a Jar?",
+   "Many captions name jars the post doesn't mention (Polar, Deep Sea, Gnarled Graveyard, Jungle, Sunflower, Fall and Squirrel, Peach Harvest, Strawberry Patch Harvest, Harvest Nights). Are these all part of Volume One, and should any go into Selected works?",
+   "What are the \"scene companions\" in the captions? Should they be mentioned in the feature?",
+   "Is the brass robot in the island scene GlazyArray, and the robot dog Robot Marley? I left them unnamed since the Note doesn't say."
+  ]
  },
  "palette": [
   "#55bfce",
   "#d6a966"
- ]
+ ],
+ "publishedAt": "2026-10-16T18:35:30Z"
 }
