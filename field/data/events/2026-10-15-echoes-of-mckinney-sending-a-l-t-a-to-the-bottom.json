@@ -19,7 +19,7 @@
    "w": 960,
    "h": 540,
    "use": "post",
-   "cover": false,
+   "cover": true,
    "from": "Ascent to the Sunlight .mp4",
    "range": [
     0,
@@ -193,7 +193,7 @@
    "w": 1600,
    "h": 1236,
    "use": "post",
-   "cover": true,
+   "cover": false,
    "from": "Map Closer to Bay.jpeg"
   },
   {
@@ -360,8 +360,8 @@
   ]
  },
  "palette": [
-  "#348cb2",
-  "#5d6fd0"
+  "#27aabe",
+  "#527fdb"
  ],
  "publishedAt": "2026-10-16T00:28:34Z"
 }
