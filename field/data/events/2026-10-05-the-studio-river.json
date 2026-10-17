@@ -253,5 +253,14 @@
    "The Build log follows the order the post tells it in, not dates. Can you give dates or PR numbers (within #77 to #103) for each entry so it can read like a real commit log?",
    "Is it right to say orange came after blue? The post says green came first, then blue, but doesn't say when orange was added."
   ]
+ },
+ "workshop": {
+  "order": null,
+  "name": "A river through the Studio",
+  "tagline": "",
+  "pull": "",
+  "numbers": [],
+  "links": [],
+  "media": []
  }
 }
