@@ -20,20 +20,12 @@
  "track": null,
  "photos": [
   {
-   "src": "data/photos/2026-10-05-the-studio-river/cover.jpg",
-   "caption": "One of the Studio's six share cards: green at night, with the brass panel over the river.",
-   "w": 1200,
-   "h": 630,
-   "use": "post",
-   "cover": true
-  },
-  {
    "src": "data/photos/2026-10-05-the-studio-river/clip-1.mp4",
    "caption": "The Studio as working.",
    "w": 960,
    "h": 540,
-   "use": "skip",
-   "cover": false,
+   "use": "post",
+   "cover": true,
    "poster": "data/photos/2026-10-05-the-studio-river/clip-1.jpg",
    "video": true,
    "from": "738934173_1792197343098130.mp4",
@@ -42,6 +34,14 @@
     0,
     8
    ]
+  },
+  {
+   "src": "data/photos/2026-10-05-the-studio-river/cover.jpg",
+   "caption": "One of the Studio's six share cards: green at night, with the brass panel over the river.",
+   "w": 1200,
+   "h": 630,
+   "use": "post",
+   "cover": false
   },
   {
    "src": "data/photos/2026-10-05-the-studio-river/panel.mp4",
