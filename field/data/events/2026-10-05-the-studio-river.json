@@ -36,25 +36,6 @@
    ]
   },
   {
-   "src": "data/photos/2026-10-05-the-studio-river/cover.jpg",
-   "caption": "One of the Studio's six share cards: green at night, with the brass panel over the river.",
-   "w": 1200,
-   "h": 630,
-   "use": "post",
-   "cover": false
-  },
-  {
-   "src": "data/photos/2026-10-05-the-studio-river/panel.mp4",
-   "poster": "data/photos/2026-10-05-the-studio-river/panel.jpg",
-   "video": true,
-   "ai": false,
-   "caption": "The panel up close: CHANGE LIQUID thrown, the green lamp breathing while the river turns, then STUDIO draining and filling green.",
-   "w": 960,
-   "h": 540,
-   "use": "skip",
-   "cover": false
-  },
-  {
    "src": "data/photos/2026-10-05-the-studio-river/dusk.mp4",
    "poster": "data/photos/2026-10-05-the-studio-river/dusk.jpg",
    "video": true,
@@ -96,22 +77,6 @@
    "w": 960,
    "h": 540,
    "use": "post",
-   "cover": false
-  },
-  {
-   "src": "data/photos/2026-10-05-the-studio-river/before.jpg",
-   "caption": "Where it started: the earlier header, with a bigger nameplate and a switch on the river bank.",
-   "w": 1200,
-   "h": 630,
-   "use": "skip",
-   "cover": false
-  },
-  {
-   "src": "data/photos/2026-10-05-the-studio-river/cards.jpg",
-   "caption": "Six share cards, one for each look, so a shared link's preview matches what was on screen.",
-   "w": 1200,
-   "h": 945,
-   "use": "skip",
    "cover": false
   },
   {
@@ -214,9 +179,6 @@
   ],
   "cover": "blue-green.mp4",
   "media": [
-   {
-    "photo": "cover.jpg"
-   },
    {
     "photo": "green-orange.mp4"
    },
