@@ -124,7 +124,7 @@
  "fieldNotes": "Case study of the Studio header, built over Oct 2026 (PRs #77 to #103 in seasonal-portfolio). Facts from the commit history: liquids blue (1080p renders), green (4K), orange; one-way change cycle; 18 header + 18 footer clips, 124 files across sizes; tube light model learned from blue-night footage and re-applied to every clip; ends of each change graded to the loops; per-look share cards via ?look=; page skin, rivets and liquid-filled STUDIO letters (CSS text-filling technique); glowing buttons. Clips are screen recordings of the login page.",
  "post": {
   "title": "A river through the Studio",
-  "body": "The Studio is the private side of this site, where a day out becomes a Field Note. It deserved a front door that felt like a workshop, so its header became a glowing river running through a crack in an old workbench, with a brass STUDIO panel bolted on above it.\n\nIt began green, from rendered 4K footage. Then I wanted a blue river, and the best I could render was 1080p. That turned out fine: the header is a short, wide strip, so 1920 pixels across is all it ever needs. The first version jumped when you switched. Every change now plays its own clip and crossfades in, and the buttons wait until it's done.\n\nThe controls took the longest. I tried handwheels, then bypass valves with lit windows, then valves down in the footer, then lamps beside them. It was all too much. What stuck is the smallest version: two little toggles on the panel, each between jewel pilot lamps. DAY/NIGHT plays dusk or dawn. CHANGE LIQUID only goes one way round, blue to green to orange and back to blue, so every change has exactly one clip.\n\nThat one-way rule is what made it buildable. Three liquids, day and night, each with a loop, a dusk and dawn, and a change to the next liquid: 18 clips for the river and 18 more for the glowing pipe in the footer. With each one in a few sizes for different screens, that's 124 video files behind one header.\n\nThe renders never quite agreed with each other. A glass tube on the river bank was lit in one clip and dark in the next, and a new render would arrive with the lamps glowing green when the loop it hands over to has them orange. So every clip goes through the same light model before it's used. The tube's glow is measured once from the blue night footage, then painted back in the colour of the liquid, scaled by how dark the scene is. Both ends of each change are graded to match the loops they meet, so the hand-offs don't show.\n\nThen the liquid started spreading. The rivets in the brass rails fill with its colour. The page itself shifts: gold on walnut for orange, steel on slate for blue, verdigris on bronze for green. The STUDIO letters fill with it too, a slow wave running through them, borrowed from an old CSS trick for text filling with water. On every change they drain and fill again.\n\nEven the links remember. The address carries the look, so a link shared at night with the orange liquid opens that way, and its preview card shows it.\n\nWhat I learned: less is more, again. The valves were fun to build and wrong to keep. And it only feels like one machine when the light agrees everywhere, so measure the light once and paint it back the same way in every clip."
+  "body": "The Studio is the private side of this site, where a day out becomes a Field Note. It deserved a front door that felt like a workshop, so its header became a glowing river running through a crack in an old workbench, with a brass STUDIO panel bolted on above it.\n\n## Green, then blue\n\nIt began green, from rendered 4K footage. Then I wanted a blue river, and the best I could render was 1080p. That turned out fine: the header is a short, wide strip, so 1920 pixels across is all it ever needs. The first version jumped when you switched. Every change now plays its own clip and crossfades in, and the buttons wait until it's done.\n\n## Two small toggles\n\nThe controls took the longest. I tried handwheels, then bypass valves with lit windows, then valves down in the footer, then lamps beside them. It was all too much. What stuck is the smallest version: two little toggles on the panel, each between jewel pilot lamps. DAY/NIGHT plays dusk or dawn. CHANGE LIQUID only goes one way round, blue to green to orange and back to blue, so every change has exactly one clip.\n\nThat one-way rule is what made it buildable. Three liquids, day and night, each with a loop, a dusk and dawn, and a change to the next liquid: 18 clips for the river and 18 more for the glowing pipe in the footer. With each one in a few sizes for different screens, that's 124 video files behind one header.\n\n> That one-way rule is what made it buildable.\n\n## One light model\n\nThe renders never quite agreed with each other. A glass tube on the river bank was lit in one clip and dark in the next, and a new render would arrive with the lamps glowing green when the loop it hands over to has them orange. So every clip goes through the same light model before it's used. The tube's glow is measured once from the blue night footage, then painted back in the colour of the liquid, scaled by how dark the scene is. Both ends of each change are graded to match the loops they meet, so the hand-offs don't show.\n\n## The liquid spreads\n\nThen the liquid started spreading. The rivets in the brass rails fill with its colour. The page itself shifts: gold on walnut for orange, steel on slate for blue, verdigris on bronze for green. The STUDIO letters fill with it too, a slow wave running through them, borrowed from an old CSS trick for text filling with water. On every change they drain and fill again.\n\nEven the links remember. The address carries the look, so a link shared at night with the orange liquid opens that way, and its preview card shows it.\n\nWhat I learned: less is more, again. The valves were fun to build and wrong to keep. And it only feels like one machine when the light agrees everywhere, so measure the light once and paint it back the same way in every clip."
  },
  "episode": {
   "title": "A river through the Studio",
@@ -207,6 +207,108 @@
     "photo": "three-skins.jpg",
     "after": 6
    }
+  ]
+ },
+ "feature": {
+  "theme": "sourceorder",
+  "masthead": "SOURCE ORDER",
+  "tagline": "Build it right, then build it beautiful",
+  "issue": "Issue 404: Not Found (Yet)",
+  "label": "Build Notes",
+  "byline": "By GlazyArray, Web Desk",
+  "blocks": [
+   {
+    "type": "box",
+    "title": "TL;DR",
+    "before": "Green, then blue",
+    "kicker": "Build Notes",
+    "text": "The Studio's header is a glowing river in a crack of an old workbench: three liquids (blue, green, orange), day and night, run by two small toggles. The liquid only changes one way round, so every change has exactly one clip: 18 for the river, 18 for the footer pipe, 124 files across sizes.\n\nEvery clip goes through one light model, learned from the blue night footage, and the ends of each change are graded to the loops they meet. The liquid now fills the rivets, the page skin and the STUDIO letters, and the address carries the look."
+   },
+   {
+    "type": "steps",
+    "title": "How it's built",
+    "before": "One light model",
+    "items": [
+     {
+      "title": "Render the river",
+      "text": "Green came first, from 4K footage. Blue could only be rendered at 1080p, which is plenty: the header is a short, wide strip, so 1920 pixels across is all it needs. Orange makes the third liquid."
+     },
+     {
+      "title": "Give every change its own clip",
+      "text": "The first version jumped on a switch. Now each change plays its own clip and crossfades in, and the buttons wait until it's done."
+     },
+     {
+      "title": "Cut the controls down",
+      "text": "Handwheels, bypass valves with lit windows, valves in the footer and lamps beside them were all tried and cut. What stayed: two little toggles on the panel, each between jewel pilot lamps."
+     },
+     {
+      "title": "Run the liquids one way round",
+      "text": "CHANGE LIQUID goes blue to green to orange and back to blue, so every change has exactly one clip. With day and night, that's 18 clips for the river and 18 for the footer pipe, 124 files across sizes."
+     },
+     {
+      "title": "Put every clip through one light model",
+      "text": "The glass tube's glow is measured once from the blue night footage, then painted back in the liquid's colour, scaled by how dark the scene is. Both ends of each change are graded to the loops they meet."
+     },
+     {
+      "title": "Let the liquid spread",
+      "text": "The rivets in the brass rails fill with its colour, the page skin shifts with it, and the STUDIO letters fill with a slow wave using a CSS text-filling technique, draining and refilling on every change."
+     },
+     {
+      "title": "Put the look in the address",
+      "text": "A ?look= link opens in the same liquid and time of day it was shared in, and its preview card shows it."
+     }
+    ]
+   },
+   {
+    "type": "timeline",
+    "title": "Build log",
+    "items": [
+     [
+      "First",
+      "A green river, from rendered 4K footage"
+     ],
+     [
+      "Then",
+      "A blue river, rendered at 1080p; orange joins as the third liquid"
+     ],
+     [
+      "Fix",
+      "The first version jumped on a switch; every change gets its own crossfading clip, and the buttons wait"
+     ],
+     [
+      "Controls",
+      "Handwheels, then bypass valves with lit windows, then valves in the footer, then lamps beside them"
+     ],
+     [
+      "Kept",
+      "Two toggles between jewel pilot lamps, and a one-way change cycle"
+     ],
+     [
+      "Light",
+      "A tube light model learned from the blue night footage, re-applied to every clip; change ends graded to the loops"
+     ],
+     [
+      "Spread",
+      "Rivets, page skin, liquid-filled STUDIO letters and glowing buttons"
+     ],
+     [
+      "Share",
+      "Per-look share cards via ?look="
+     ]
+    ]
+   }
+  ],
+  "coverLines": [
+   "36 clips, 124 files, one header: inside the Studio's glowing river",
+   "Handwheels, valves, lamps: why the controls came down to two toggles",
+   "Measure the light once: how one glass tube's glow was painted back into every clip",
+   "STUDIO letters that drain and fill with the liquid, borrowed from an old CSS trick",
+   "Links that remember: share it orange at night and it opens orange at night"
+  ],
+  "questions": [
+   "The code block (\"The code\") was left out: the Note has no code in it. Which snippet should it show, copied exactly (for example the CSS text-filling for the STUDIO letters, the light model, or the ?look= handling), and what's its file name?",
+   "The Build log follows the order the post tells it in, not dates. Can you give dates or PR numbers (within #77 to #103) for each entry so it can read like a real commit log?",
+   "Is it right to say orange came after blue? The post says green came first, then blue, but doesn't say when orange was added."
   ]
  }
 }
