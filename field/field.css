@@ -113,6 +113,8 @@ table.zones td,table.zones th{padding:6px 8px;border-bottom:1px solid var(--line
 .lightbox{border:0;padding:0;background:transparent;max-width:min(96vw,1200px)}
 .lightbox::backdrop{background:rgba(5,20,18,.85)}
 .lightbox img{display:block;max-width:100%;max-height:82vh;border-radius:10px}
+.lightbox{touch-action:pan-y pinch-zoom} .lightbox img{transition:opacity .3s ease-in-out} .lightbox img.swap{opacity:0}   /* swiping through (field.js) */
+@media (prefers-reduced-motion:reduce){.lightbox img{transition:none}}
 .lightbox p{color:#fff;margin:10px 4px 0}
 .lightbox .x{position:absolute;top:8px;right:8px;width:36px;height:36px;border-radius:50%;border:0;background:rgba(255,255,255,.9);font-size:22px;line-height:1}
 .toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);background:var(--ink);color:#fff;padding:9px 16px;border-radius:999px;font-weight:600;font-size:14px;opacity:0;transition:opacity .5s ease,transform .5s ease;pointer-events:none;z-index:2000}

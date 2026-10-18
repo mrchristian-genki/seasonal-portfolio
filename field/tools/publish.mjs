@@ -217,7 +217,7 @@ const foot = (rel) => `<footer class="foot"><p>${esc(show.narrationNote)}</p>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" defer></script>
 <script src="${rel}../js/route-view.js?v=${V}" defer></script>
 <script src="${rel}../js/audio-rules.js?v=1" defer></script>
-<script src="${rel}../js/motion.js?v=1" defer></script>
+<script src="${rel}../js/motion.js?v=2" defer></script>
 <script src="${rel}play.js?v=${V}" defer></script>
 <script src="${rel}../js/lake.js?v=4" defer></script>
 <script src="${rel}../assets/narrator/resolve.js?v=7" defer></script>

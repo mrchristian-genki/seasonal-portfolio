@@ -327,3 +327,20 @@ html.night-page .pi-more a[data-pi-story]{color:#16232f;box-shadow:0 2px 10px rg
   .pi-tagbar::-webkit-scrollbar{display:none}
   .pi-tagbar button{flex:none}
 }
+
+/* Swiping through (js/play-inline.js stepIn, Oct 18): ‹ › at the sides of the viewer and of a modal's card; the picture
+   and its line slide a little and fade, the next fades in. Once it's moved, the opening pop no longer holds it */
+.pi-nav{position:fixed;top:50%;translate:0 -50%;z-index:2;width:42px;height:42px;border-radius:50%;border:1px solid var(--pi-line);background:var(--pi-card);color:var(--pi-ink);
+  font-size:28px;line-height:1;cursor:pointer;opacity:.85;transition:opacity .6s ease-in-out}
+.pi-nav:hover{opacity:1}
+.pi-nav[hidden]{display:none}
+.pi-prev{left:14px} .pi-next{right:14px}
+.pi-focus .pi-nav{position:absolute}
+.pi-focus .pi-prev{left:10px} .pi-focus .pi-next{right:10px}
+.pi-lb-in,.pi-focus{touch-action:pan-y pinch-zoom}
+.pi-lb-in.pi-moved{animation:none}
+.pi-lb-in{transition:opacity .3s ease-in-out,transform .3s ease-in-out}
+.pi-lb-in.pi-swap{opacity:0;transform:translateX(var(--dx,0))}
+.pi-focus>img,.pi-focus>video,.pi-focus>p{transition:opacity .3s ease-in-out,transform .45s ease-in-out}
+.pi-focus.pi-swap>img,.pi-focus.pi-swap>video,.pi-focus.pi-swap>p{opacity:0;transform:translateX(var(--dx,0))}
+@media (prefers-reduced-motion:reduce){.pi-nav,.pi-lb-in,.pi-focus>img,.pi-focus>video,.pi-focus>p{transition:none}}
