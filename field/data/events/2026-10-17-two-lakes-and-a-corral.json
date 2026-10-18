@@ -2134,6 +2134,22 @@
  },
  "photos": [
   {
+   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/clip-3.mp4",
+   "poster": "data/photos/2026-10-17-two-lakes-and-a-corral/clip-3.jpg",
+   "video": true,
+   "caption": "Flying over the ledge.",
+   "takenAt": "2026:10:17 16:36:51",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": true,
+   "from": "dji_fly_20261017_123748_809_1792266848233_video.MOV",
+   "range": [
+    0,
+    12
+   ]
+  },
+  {
    "src": "data/photos/2026-10-17-two-lakes-and-a-corral/05.jpg",
    "caption": "Two horses at a red gate beside an old wooden barn, 11:14.",
    "takenAt": "2026:10:17 11:14:46",
@@ -2142,127 +2158,6 @@
    "use": "post",
    "cover": false,
    "from": "IMG_7949.jpg"
-  },
-  {
-   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/01.jpg",
-   "caption": "Sage slopes, scattered pines and ridges under a clear sky, 11:31.",
-   "takenAt": "2026:10:17 11:31:09",
-   "w": 1600,
-   "h": 900,
-   "use": "post",
-   "cover": false,
-   "from": "dji_fly_20261017_113110_786_1792262899368_aeb.JPG + dji_fly_20261017_113110_787_1792262900944_aeb.JPG + dji_fly_20261017_113110_788_1792262902508_aeb.JPG",
-   "hdr": 3
-  },
-  {
-   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/02.jpg",
-   "caption": "The 3 exposures behind the HDR photo, darkest to brightest.",
-   "takenAt": "2026:10:17 11:31:09",
-   "w": 2149,
-   "h": 400,
-   "use": "skip",
-   "cover": false,
-   "from": "dji_fly_20261017_113110_786_1792262899368_aeb.JPG + dji_fly_20261017_113110_787_1792262900944_aeb.JPG + dji_fly_20261017_113110_788_1792262902508_aeb.JPG",
-   "strip": 3
-  },
-  {
-   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/03.jpg",
-   "caption": "A dry draw running down through the pines toward the far ridges.",
-   "takenAt": "2026:10:17 11:31:18",
-   "w": 1600,
-   "h": 900,
-   "use": "post",
-   "cover": false,
-   "from": "dji_fly_20261017_113118_789_1792262893108_aeb.JPG + dji_fly_20261017_113118_790_1792262895222_aeb.JPG + dji_fly_20261017_113120_791_1792262897307_aeb.JPG",
-   "hdr": 3
-  },
-  {
-   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/04.jpg",
-   "caption": "The 3 exposures behind the HDR photo, darkest to brightest.",
-   "takenAt": "2026:10:17 11:31:18",
-   "w": 2149,
-   "h": 400,
-   "use": "skip",
-   "cover": false,
-   "from": "dji_fly_20261017_113118_789_1792262893108_aeb.JPG + dji_fly_20261017_113118_790_1792262895222_aeb.JPG + dji_fly_20261017_113120_791_1792262897307_aeb.JPG",
-   "strip": 3
-  },
-  {
-   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/07.jpg",
-   "caption": "A deep blue lake ringed by pines, a dirt road along its right shore.",
-   "takenAt": "2026:10:17 11:31:25",
-   "w": 1600,
-   "h": 900,
-   "use": "post",
-   "cover": false,
-   "from": "dji_fly_20261017_113124_792_1792262888298_aeb.JPG + dji_fly_20261017_113124_793_1792262889776_aeb.JPG + dji_fly_20261017_113126_794_1792262891340_aeb.JPG",
-   "hdr": 3
-  },
-  {
-   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/08.jpg",
-   "caption": "The 3 exposures behind the HDR photo, darkest to brightest.",
-   "takenAt": "2026:10:17 11:31:25",
-   "w": 2149,
-   "h": 400,
-   "use": "skip",
-   "cover": false,
-   "from": "dji_fly_20261017_113124_792_1792262888298_aeb.JPG + dji_fly_20261017_113124_793_1792262889776_aeb.JPG + dji_fly_20261017_113126_794_1792262891340_aeb.JPG",
-   "strip": 3
-  },
-  {
-   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/10.jpg",
-   "caption": "The 3 exposures behind the HDR photo, darkest to brightest.",
-   "takenAt": "2026:10:17 11:31:30",
-   "w": 2149,
-   "h": 400,
-   "use": "skip",
-   "cover": false,
-   "from": "dji_fly_20261017_113130_795_1792262883092_aeb.JPG + dji_fly_20261017_113130_796_1792262884620_aeb.JPG + dji_fly_20261017_113130_797_1792262886226_aeb.JPG",
-   "strip": 3
-  },
-  {
-   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/11.jpg",
-   "caption": "A green lake under bare slopes, a road along its edge, 11:33.",
-   "takenAt": "2026:10:17 11:33:18",
-   "w": 1600,
-   "h": 900,
-   "use": "post",
-   "cover": false,
-   "from": "dji_fly_20261017_113318_799_1792262753205_aeb.JPG + dji_fly_20261017_113318_800_1792262754674_aeb.JPG + dji_fly_20261017_113318_801_1792262756286_aeb.JPG",
-   "hdr": 3
-  },
-  {
-   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/12.jpg",
-   "caption": "The 3 exposures behind the HDR photo, darkest to brightest.",
-   "takenAt": "2026:10:17 11:33:18",
-   "w": 2149,
-   "h": 400,
-   "use": "skip",
-   "cover": false,
-   "from": "dji_fly_20261017_113318_799_1792262753205_aeb.JPG + dji_fly_20261017_113318_800_1792262754674_aeb.JPG + dji_fly_20261017_113318_801_1792262756286_aeb.JPG",
-   "strip": 3
-  },
-  {
-   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/13.jpg",
-   "caption": "A blue lake past a dry meadow, peaks behind it.",
-   "takenAt": "2026:10:17 11:33:46",
-   "w": 1600,
-   "h": 900,
-   "use": "post",
-   "cover": false,
-   "from": "dji_fly_20261017_113346_802_1792262747991_aeb.JPG + dji_fly_20261017_113346_803_1792262749510_aeb.JPG + dji_fly_20261017_113346_804_1792262751131_aeb.JPG",
-   "hdr": 3
-  },
-  {
-   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/14.jpg",
-   "caption": "The 3 exposures behind the HDR photo, darkest to brightest.",
-   "takenAt": "2026:10:17 11:33:46",
-   "w": 2149,
-   "h": 400,
-   "use": "skip",
-   "cover": false,
-   "from": "dji_fly_20261017_113346_802_1792262747991_aeb.JPG + dji_fly_20261017_113346_803_1792262749510_aeb.JPG + dji_fly_20261017_113346_804_1792262751131_aeb.JPG",
-   "strip": 3
   },
   {
    "src": "data/photos/2026-10-17-two-lakes-and-a-corral/19.jpg",
@@ -2283,154 +2178,6 @@
    "use": "post",
    "cover": false,
    "from": "IMG_7992.jpg"
-  },
-  {
-   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/15.jpg",
-   "caption": "A long valley of pines between gray slopes, 12:38.",
-   "takenAt": "2026:10:17 12:38:52",
-   "w": 1600,
-   "h": 900,
-   "use": "post",
-   "cover": false,
-   "from": "dji_fly_20261017_123852_810_1792266445784_aeb.JPG + dji_fly_20261017_123852_811_1792266447411_aeb.JPG + dji_fly_20261017_123852_812_1792266449126_aeb.JPG",
-   "hdr": 3
-  },
-  {
-   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/16.jpg",
-   "caption": "The 3 exposures behind the HDR photo, darkest to brightest.",
-   "takenAt": "2026:10:17 12:38:52",
-   "w": 2149,
-   "h": 400,
-   "use": "skip",
-   "cover": false,
-   "from": "dji_fly_20261017_123852_810_1792266445784_aeb.JPG + dji_fly_20261017_123852_811_1792266447411_aeb.JPG + dji_fly_20261017_123852_812_1792266449126_aeb.JPG",
-   "strip": 3
-  },
-  {
-   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/17.jpg",
-   "caption": "The same valley from the edge of a rock outcrop.",
-   "takenAt": "2026:10:17 12:39:05",
-   "w": 1600,
-   "h": 900,
-   "use": "post",
-   "cover": false,
-   "from": "dji_fly_20261017_123906_813_1792266439864_aeb.JPG + dji_fly_20261017_123906_814_1792266442020_aeb.JPG + dji_fly_20261017_123906_815_1792266443704_aeb.JPG",
-   "hdr": 3
-  },
-  {
-   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/18.jpg",
-   "caption": "The 3 exposures behind the HDR photo, darkest to brightest.",
-   "takenAt": "2026:10:17 12:39:05",
-   "w": 2149,
-   "h": 400,
-   "use": "skip",
-   "cover": false,
-   "from": "dji_fly_20261017_123906_813_1792266439864_aeb.JPG + dji_fly_20261017_123906_814_1792266442020_aeb.JPG + dji_fly_20261017_123906_815_1792266443704_aeb.JPG",
-   "strip": 3
-  },
-  {
-   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/21.jpg",
-   "caption": "12:39.",
-   "takenAt": "2026:10:17 12:39:45",
-   "w": 1600,
-   "h": 900,
-   "use": "post",
-   "cover": false,
-   "from": "dji_fly_20261017_123944_816_1792266434153_aeb.JPG + dji_fly_20261017_123944_817_1792266436228_aeb.JPG + dji_fly_20261017_123946_818_1792266437795_aeb.JPG",
-   "hdr": 3
-  },
-  {
-   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/22.jpg",
-   "caption": "The 3 exposures behind the HDR photo, darkest to brightest.",
-   "takenAt": "2026:10:17 12:39:45",
-   "w": 2149,
-   "h": 400,
-   "use": "skip",
-   "cover": false,
-   "from": "dji_fly_20261017_123944_816_1792266434153_aeb.JPG + dji_fly_20261017_123944_817_1792266436228_aeb.JPG + dji_fly_20261017_123946_818_1792266437795_aeb.JPG",
-   "strip": 3
-  },
-  {
-   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/23.jpg",
-   "caption": "12:39.",
-   "takenAt": "2026:10:17 12:39:51",
-   "w": 1600,
-   "h": 900,
-   "use": "post",
-   "cover": false,
-   "from": "dji_fly_20261017_123950_819_1792266428591_aeb.JPG + dji_fly_20261017_123952_820_1792266430327_aeb.JPG + dji_fly_20261017_123952_821_1792266432075_aeb.JPG",
-   "hdr": 3
-  },
-  {
-   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/24.jpg",
-   "caption": "The 3 exposures behind the HDR photo, darkest to brightest.",
-   "takenAt": "2026:10:17 12:39:51",
-   "w": 2149,
-   "h": 400,
-   "use": "skip",
-   "cover": false,
-   "from": "dji_fly_20261017_123950_819_1792266428591_aeb.JPG + dji_fly_20261017_123952_820_1792266430327_aeb.JPG + dji_fly_20261017_123952_821_1792266432075_aeb.JPG",
-   "strip": 3
-  },
-  {
-   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/25.jpg",
-   "caption": "12:40.",
-   "takenAt": "2026:10:17 12:40:20",
-   "w": 1600,
-   "h": 900,
-   "use": "post",
-   "cover": false,
-   "from": "dji_fly_20261017_124020_822_1792266423604_aeb.JPG + dji_fly_20261017_124020_823_1792266425230_aeb.JPG + dji_fly_20261017_124020_824_1792266426875_aeb.JPG",
-   "hdr": 3
-  },
-  {
-   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/26.jpg",
-   "caption": "The 3 exposures behind the HDR photo, darkest to brightest.",
-   "takenAt": "2026:10:17 12:40:20",
-   "w": 2149,
-   "h": 400,
-   "use": "skip",
-   "cover": false,
-   "from": "dji_fly_20261017_124020_822_1792266423604_aeb.JPG + dji_fly_20261017_124020_823_1792266425230_aeb.JPG + dji_fly_20261017_124020_824_1792266426875_aeb.JPG",
-   "strip": 3
-  },
-  {
-   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/27.jpg",
-   "caption": "12:43.",
-   "takenAt": "2026:10:17 12:43:27",
-   "w": 1600,
-   "h": 900,
-   "use": "post",
-   "cover": false,
-   "from": "dji_fly_20261017_124326_834_1792266400565_aeb.JPG + dji_fly_20261017_124326_835_1792266402154_aeb.JPG + dji_fly_20261017_124328_836_1792266404233_aeb.JPG",
-   "hdr": 3
-  },
-  {
-   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/28.jpg",
-   "caption": "The 3 exposures behind the HDR photo, darkest to brightest.",
-   "takenAt": "2026:10:17 12:43:27",
-   "w": 2149,
-   "h": 400,
-   "use": "skip",
-   "cover": false,
-   "from": "dji_fly_20261017_124326_834_1792266400565_aeb.JPG + dji_fly_20261017_124326_835_1792266402154_aeb.JPG + dji_fly_20261017_124328_836_1792266404233_aeb.JPG",
-   "strip": 3
-  },
-  {
-   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/clip-2.mp4",
-   "poster": "data/photos/2026-10-17-two-lakes-and-a-corral/clip-2.jpg",
-   "video": true,
-   "caption": "Coming down the hillside towards the upper lake.",
-   "takenAt": "2026:10:17 13:03:54",
-   "w": 960,
-   "h": 540,
-   "use": "post",
-   "cover": false,
-   "from": "dji_fly_20261017_124332_837_1792266716122_video.mov",
-   "range": [
-    0,
-    17.35
-   ]
   },
   {
    "src": "data/photos/2026-10-17-two-lakes-and-a-corral/clip-1.mp4",
@@ -2465,22 +2212,6 @@
    ]
   },
   {
-   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/clip-3.mp4",
-   "poster": "data/photos/2026-10-17-two-lakes-and-a-corral/clip-3.jpg",
-   "video": true,
-   "caption": "Flying over the ledge.",
-   "takenAt": "2026:10:17 16:36:51",
-   "w": 960,
-   "h": 540,
-   "use": "post",
-   "cover": true,
-   "from": "dji_fly_20261017_123748_809_1792266848233_video.MOV",
-   "range": [
-    0,
-    12
-   ]
-  },
-  {
    "src": "data/photos/2026-10-17-two-lakes-and-a-corral/clip-4.mp4",
    "poster": "data/photos/2026-10-17-two-lakes-and-a-corral/clip-4.jpg",
    "video": true,
@@ -2494,6 +2225,22 @@
    "range": [
     0,
     10
+   ]
+  },
+  {
+   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/clip-2.mp4",
+   "poster": "data/photos/2026-10-17-two-lakes-and-a-corral/clip-2.jpg",
+   "video": true,
+   "caption": "Coming down the hillside towards the upper lake.",
+   "takenAt": "2026:10:17 13:03:54",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261017_124332_837_1792266716122_video.mov",
+   "range": [
+    0,
+    17.35
    ]
   },
   {
