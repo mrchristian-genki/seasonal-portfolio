@@ -244,3 +244,5 @@ figure video{display:block;width:100%;border-radius:12px;background:#000}
 @media (max-width:640px){.post .duo{gap:8px;margin:22px -8px}.post .duo figcaption{font-size:12px}}
 .post figure.tall{max-width:min(100%,440px);margin-left:auto;margin-right:auto}
 
+/* the Note's own line on what's real (publish.mjs mediaNote) */
+.media-note{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin:4px 0 16px;font-size:14px;color:var(--ink-2,#3f5a64)}

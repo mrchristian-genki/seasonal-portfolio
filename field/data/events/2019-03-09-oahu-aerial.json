@@ -258,7 +258,8 @@
    "h": 768,
    "use": "post",
    "cover": true,
-   "from": "Aerial_view_of_Oahu_island_20261009123735.jpg"
+   "from": "Aerial_view_of_Oahu_island_20261009123735.jpg",
+   "ai": true
   },
   {
    "src": "data/photos/2019-03-09-oahu-aerial/02.jpg",

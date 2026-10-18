@@ -235,6 +235,16 @@ const still = (c) => (c.video ? c.poster : c.src).replace('../', '');   // a cov
 for (const e of events) {
   const dir = path.join(OUT, e.id), media = path.join(OUT, 'media', e.id);
   fs.mkdirSync(dir, { recursive: true }); fs.rmSync(media, { recursive: true, force: true }); fs.mkdirSync(media, { recursive: true });
+  // REAL OR MADE WITH AI (Christian, Oct 19: be as clear about what's real as about what's AI). The Note says it once
+  // (e.media, set in the Studio): real "Real photographs and video", ai, or mixed with each picture marked; a picture
+  // says it itself with ai true or false. A picture nothing speaks for gets no label: never "Made with AI" by default
+  const MEDIA = ['real', 'ai', 'mixed'].includes(e.media) ? e.media : '';
+  const aiOf = (ai) => ai === true ? true : ai === false ? false : MEDIA === 'real' ? false : MEDIA === 'ai' ? true : null;
+  const AIB = '<span class="ai-badge">Made with AI</span>', REALB = (w) => `<span class="real-badge">${w || 'Real photo'}</span>`;
+  const capBadge = (p) => p.ai === true ? AIB + ' ' : p.ai === false && MEDIA !== 'real' ? REALB(p.video ? 'Real video' : 'Real photo') + ' ' : '';   // a Note that's all real says so once, at the top
+  const mediaNote = MEDIA === 'real' ? `<p class="media-note">${REALB('Real photographs and video')} Every picture in this Note is real.</p>`
+    : MEDIA === 'ai' ? `<p class="media-note">${AIB} The pictures in this Note were made with AI.</p>`
+    : MEDIA === 'mixed' ? `<p class="media-note">${REALB('Real photographs and video')} Pictures made with AI are marked ${AIB}</p>` : '';
   const photos = (e.photos || []).filter((p) => p.use !== 'skip').map((p, i) => {
     const name = String(i + 1).padStart(2, '0') + '.jpg';
     if (p.video) {   // a short clip (with its poster frame)
@@ -243,12 +253,12 @@ for (const e of events) {
       fs.copyFileSync(path.join(FIELD, p.poster), path.join(media, base + '.jpg'));
       // same name, new clip or new poster frame: let caches go
       const tag = '?v=' + vtag(p.src, p.poster);
-      return { src: `../media/${e.id}/${base}.mp4${tag}`, poster: `../media/${e.id}/${base}.jpg${tag}`, abs: `${show.siteUrl}media/${e.id}/${base}.jpg${tag}`, caption: p.caption || '', w: p.w, h: p.h, cover: !!p.cover, video: true, ai: !!p.ai, table: p.table || null, after: p.after, file: path.basename(p.src), at: p.at || null };
+      return { src: `../media/${e.id}/${base}.mp4${tag}`, poster: `../media/${e.id}/${base}.jpg${tag}`, abs: `${show.siteUrl}media/${e.id}/${base}.jpg${tag}`, caption: p.caption || '', w: p.w, h: p.h, cover: !!p.cover, video: true, ai: aiOf(p.ai), table: p.table || null, after: p.after, file: path.basename(p.src), at: p.at || null };
     }
     fs.copyFileSync(path.join(FIELD, p.src), path.join(media, name));
     // a photo's name is its place in the Note, so after a reorder the same name holds another picture: its tag tells caches
     const tag = '?v=' + vtag(p.src);
-    return { src: `../media/${e.id}/${name}${tag}`, abs: `${show.siteUrl}media/${e.id}/${name}${tag}`, caption: p.caption || '', w: p.w, h: p.h, cover: !!p.cover, ai: !!p.ai, strip: p.strip || 0, file: path.basename(p.src), at: p.at || null };
+    return { src: `../media/${e.id}/${name}${tag}`, abs: `${show.siteUrl}media/${e.id}/${name}${tag}`, caption: p.caption || '', w: p.w, h: p.h, cover: !!p.cover, ai: aiOf(p.ai), strip: p.strip || 0, file: path.basename(p.src), at: p.at || null };
   });
   // the cover heads the post: a photo, or a loop playing silently (its poster frame stands in for it on cards and shares)
   const cover = photos.find((p) => p.cover) || photos.find((p) => !p.video) || null;
@@ -290,8 +300,8 @@ for (const e of events) {
   const tableFig = () => `<figure class="table"><div class="table-top">${table.map((p, k) =>
     `<a class="print p${k + 1}" href="${esc(p.src)}" data-lightbox data-video title="${esc(p.caption)}"><video src="${esc(p.src)}" poster="${esc(p.poster)}" width="${p.w}" height="${p.h}" muted loop playsinline preload="none" data-autoplay aria-label="${esc(p.caption)}"></video><span class="print-cap">${esc(p.caption)}</span></a>`).join('')}</div>${tableCap ? `<figcaption><span class="ai-badge">Animated with AI</span> ${esc(tableCap.tableCaption)}</figcaption>` : ''}</figure>`;
   const fig = (p, cls) => p.video
-    ? `<figure class="${cls || 'photo'} clip"><a href="${esc(p.src)}" data-lightbox data-video><video src="${esc(p.src)}" poster="${esc(p.poster)}" width="${p.w}" height="${p.h}" muted loop playsinline preload="none" data-autoplay></video></a>${p.caption ? `<figcaption>${p.ai ? '<span class="ai-badge">Made with AI</span> ' : ''}${esc(p.caption)}</figcaption>` : ''}</figure>`
-    : `<figure class="${cls || 'photo'}"><a href="${esc(p.src)}" data-lightbox><img src="${esc(p.src)}" alt="${esc(p.caption)}" width="${p.w}" height="${p.h}" loading="lazy"></a>${p.caption ? `<figcaption>${p.ai ? '<span class="ai-badge">Made with AI</span> ' : ''}${esc(p.caption)}</figcaption>` : ''}</figure>`;
+    ? `<figure class="${cls || 'photo'} clip"><a href="${esc(p.src)}" data-lightbox data-video><video src="${esc(p.src)}" poster="${esc(p.poster)}" width="${p.w}" height="${p.h}" muted loop playsinline preload="none" data-autoplay></video></a>${p.caption ? `<figcaption>${capBadge(p)}${esc(p.caption)}</figcaption>` : ''}</figure>`
+    : `<figure class="${cls || 'photo'}"><a href="${esc(p.src)}" data-lightbox><img src="${esc(p.src)}" alt="${esc(p.caption)}" width="${p.w}" height="${p.h}" loading="lazy"></a>${p.caption ? `<figcaption>${capBadge(p)}${esc(p.caption)}</figcaption>` : ''}</figure>`;
   // A feature's look books, its photo spreads (e.feature.lookbook: one, or a list of them): pictures in a grid, each
   // book set just before the subhead it names ("before"; at the end of the story if none or not found)
   // (an item whose file is missing is left out with a warning, rather than stopping the whole site from building)
@@ -302,11 +312,12 @@ for (const e of events) {
   // set in the Studio): ai "Made with AI", real "Real photographs", mixed a label on each picture (x.ai); none set, the
   // look books' "Made with AI" as before
   const LAYOUTS = ['hero2', 'hero3', 'side', 'grid2', 'grid3', 'strip'];
-  const bookBadge = (ai) => ai ? '<span class="ai-badge">Made with AI</span>' : '<span class="real-badge">Real photograph</span>';
-  const bookHtml = (LB, n) => { const lay = LAYOUTS.includes(LB.layout) ? LB.layout : 'hero2', lab = ['ai', 'real', 'mixed'].includes(LB.label) ? LB.label : 'ai', big = lay === 'hero2' || lay === 'hero3' || lay === 'side';
+  const itemAI = (x) => x.ai === true ? true : x.ai === false ? false : (() => { const p = (e.photos || []).find((q) => path.basename(String(q.src)) === path.basename(String(x.src || ''))); return p ? aiOf(p.ai) : MEDIA ? aiOf(undefined) : true; })();   // a picture only in the spread: the look books' renders
+  const bookLabel = (LB) => { if (['ai', 'real', 'mixed'].includes(LB.label)) return LB.label; const k = (LB.items || []).map(itemAI); return k.every((v) => v === true) ? 'ai' : k.every((v) => v === false) ? (MEDIA === 'real' ? 'none' : 'real') : 'each'; };
+  const bookHtml = (LB, n) => { const lay = LAYOUTS.includes(LB.layout) ? LB.layout : 'hero2', lab = bookLabel(LB), big = lay === 'hero2' || lay === 'hero3' || lay === 'side';
     return `<section class="mag-book"><h2 class="sub">${esc(LB.title || 'The look book')}</h2>${LB.dek ? `<p class="mag-book-dek">${esc(LB.dek)}</p>` : ''}<div class="mag-book-grid L-${lay}">${LB.items.map((x, k) => {
     // the first book's files are look-01…, a second book's look2-01…, and so on
-    const base = 'look' + (n ? n + 1 : '') + '-' + String(k + 1).padStart(2, '0'), alt = esc(x.alt || (LB.label ? x.when || x.name || '' : `GlazyArray in ${String(x.name || '').toLowerCase()}`)), cap = `<figcaption>${lab === 'mixed' ? bookBadge(!!x.ai) + ' ' : ''}<b>${esc(x.name || '')}</b> ${esc(x.when || '')}</figcaption>`;
+    const base = 'look' + (n ? n + 1 : '') + '-' + String(k + 1).padStart(2, '0'), alt = esc(x.alt || (LB.label ? x.when || x.name || '' : `GlazyArray in ${String(x.name || '').toLowerCase()}`)), ia = lab === 'mixed' ? !!x.ai : lab === 'each' ? itemAI(x) : null, cap = `<figcaption>${ia === true ? AIB + ' ' : ia === false ? REALB(x.video ? 'Real video' : 'Real photo') + ' ' : ''}<b>${esc(x.name || '')}</b> ${esc(x.when || '')}</figcaption>`;
     const wide = big && k === 0 ? ' wide' : '';
     if (x.video && /\.mp4$/.test(x.src || '') && x.poster) {   // a loop: plays silently, its poster frame until it does
       fs.copyFileSync(path.join(FIELD, x.src), path.join(media, base + '.mp4')); fs.copyFileSync(path.join(FIELD, x.poster), path.join(media, base + '.jpg'));
@@ -315,7 +326,7 @@ for (const e of events) {
     }
     const f = base + '.jpg'; fs.copyFileSync(path.join(FIELD, x.src), path.join(media, f));
     return `<figure class="mag-look${wide}"><a href="../media/${e.id}/${f}" data-lightbox><img src="../media/${e.id}/${f}" alt="${alt}" width="${x.w}" height="${x.h}" loading="lazy"></a>${cap}</figure>`;
-  }).join('')}</div>${lab === 'mixed' ? '' : `<p class="mag-book-ai">${lab === 'real' ? '<span class="real-badge">Real photographs</span>' : '<span class="ai-badge">Made with AI</span>'}</p>`}</section>\n`; };
+  }).join('')}</div>${lab === 'real' ? `<p class="mag-book-ai">${REALB('Real photographs')}</p>` : lab === 'ai' ? `<p class="mag-book-ai">${AIB}</p>` : ''}</section>\n`; };
   const lbDone = new Set();
   // A feature's blocks (e.feature.blocks), the furniture any magazine template can use, each set just before the
   // subhead it names ("before"; at the end of the story if none): a spec box ("specs": rows of [label, value]), a
@@ -375,7 +386,7 @@ for (const e of events) {
   const magCover = F && cover ? `<header class="mag-cover"${mastStyle}><div class="mag-img">${cover.video ? `<video src="${esc(cover.src)}" poster="${esc(cover.poster)}" muted loop playsinline preload="metadata" data-autoplay></video>` : `<img src="${esc(cover.src)}" alt="${esc(cover.caption)}" width="${cover.w}" height="${cover.h}">`}</div>
 <div class="mag-top"><b class="mag-mast">${String(F.masthead || '').trim().split(/\s+/).map((w) => `<span>${esc(w)}</span>`).join(' ')}</b>${F.tagline ? `<span class="mag-tag">${esc(F.tagline)}</span>` : ''}</div>
 ${F.issue ? `<span class="mag-issue">${esc(F.issue)}</span>` : ''}${(F.coverLines || []).length ? `<ul class="mag-lines">${F.coverLines.map((l) => `<li>${esc(l)}</li>`).join('')}</ul>` : ''}
-</header>${cover.caption ? `<p class="mag-cap">${F.coverLabel === 'real' ? '<span class="real-badge">Real photograph</span>' : '<span class="ai-badge">Made with AI</span>'} ${esc(cover.caption)}</p>` : ''}` : '';
+</header>${cover.caption ? `<p class="mag-cap">${(F.coverLabel || (cover.ai === true ? 'ai' : cover.ai === false ? 'real' : '')) === 'real' ? REALB(cover.video ? 'Real video' : 'Real photograph') + ' ' : (F.coverLabel || (cover.ai === true ? 'ai' : '')) === 'ai' ? AIB + ' ' : ''}${esc(cover.caption)}</p>` : ''}` : '';
   const magQa = F && F.qa && (F.qa.items || []).length ? `<section class="mag-qa${/^marley$/.test(F.qa.who || '') ? ` qa-${F.qa.who}` : ''}"><h2>${esc(F.qa.title || 'Questions')}</h2><dl>${F.qa.items.map((x) => `<dt>${esc(x.q)}</dt><dd>${esc(x.a)}</dd>`).join('')}</dl></section>` : '';
   const magSpot = F && (F.spotted || []).length ? `<aside class="mag-spot"><h2>Spotted</h2><ul>${F.spotted.map((x) => `<li><b>${x.url ? `<a href="${esc(x.url)}">${esc(x.label)}</a>` : esc(x.label)}</b> ${esc(x.text)}</li>`).join('')}</ul></aside>` : '';
   const url = `${show.siteUrl}${e.id}/`, title = `${e.post && e.post.title || e.title} · ${show.showTitle}`;
@@ -387,10 +398,10 @@ ${F.issue ? `<span class="mag-issue">${esc(F.issue)}</span>` : ''}${(F.coverLine
 ${theme && THEME_FONTS[theme] ? `<link rel="stylesheet" href="https://fonts.googleapis.com/css2?${THEME_FONTS[theme]}&display=swap">\n` : ''}${magCover}${F ? `<header class="mag-head"><p class="mag-label">${esc(F.label || 'Feature')}</p>
 <h1>${esc(e.post && e.post.title || e.title)}</h1>
 ${e.summary ? `<p class="mag-deck">${esc(e.summary)}</p>` : ''}
-<p class="mag-byline">${F.byline ? `<span>${esc(F.byline)}</span>` : ''}<span><time datetime="${esc(e.date)}">${day(e.date, true)}</time>${e.place ? ` · ${esc(e.place)}` : ''}</span></p></header>
+<p class="mag-byline">${F.byline ? `<span>${esc(F.byline)}</span>` : ''}<span><time datetime="${esc(e.date)}">${day(e.date, true)}</time>${e.place ? ` · ${esc(e.place)}` : ''}</span></p>${mediaNote}</header>
 ` : ''}${F ? '' : '<p class="kicker">'}${F ? '' : `<span class="kind ${esc(e.kind)}">${KIND[e.kind] || esc(e.kind)}</span> · <time datetime="${esc(e.date)}">${day(e.date, true)}</time>${e.place ? ` · ${esc(e.place)}` : ''}</p>
 <h1>${esc(e.post && e.post.title || e.title)}</h1>
-${e.summary ? `<p class="lede">${esc(e.summary)}</p>` : ''}`}
+${e.summary ? `<p class="lede">${esc(e.summary)}</p>` : ''}${mediaNote}`}
 ${alta ? `<section class="listen alta" data-narrator="alta"${palAttr(e)}${cueAttr(e)}${bdAttr(e)} aria-label="${audio ? 'Listen to the episode' : 'A.L.T.A. in her tank'}"><div><span class="listen-label">${audio ? `Listen · ${mmss(audio.sec)}` : 'Coming soon'}</span><b>${esc(e.episode.title || e.title)}</b></div>
 ${audio ? `<audio controls preload="metadata" src="${esc(audio.src)}"></audio>` : ''}</section>` : marley ? `<section class="listen mly-bar" data-narrator="marley" aria-label="Listen to the episode"><div><span class="listen-label">Listen · ${mmss(audio.sec)}</span><b>${esc(e.episode.title || e.title)}</b></div>
 <div class="marley"${mlyBdAttr(e)}${palAttr(e)} aria-label="Robot Marley, telling the episode"></div>
