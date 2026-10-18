@@ -1527,38 +1527,48 @@
       var i = NTABS.map(function (t) { return t[0]; }).indexOf(mem.tab), d = ev.key === 'ArrowRight' ? 1 : ev.key === 'ArrowLeft' ? -1 : 0;
       if (!d) return; ev.preventDefault(); var to = NTABS[(i + d + NTABS.length) % NTABS.length][0]; showTab(to); $('#nt-' + to).focus();
     });
-    mem.tab = ''; showTab(want, null, true);
     mountSubs(mem);
+    mem.tab = ''; showTab(want, null, true);
     tabDots();
   }
-  // inside Ride (step 2, Oct 18): Route & Gauges, Photos (n), Loops (n), one at a time, the same fade as the tabs;
-  // a Note with no track has its Photos first and its Track last
-  function subDefs() {
+  // sub-tabs inside a tab, one at a time with the same fade: inside Ride (step 2, Oct 18) Route & Gauges, Photos (n),
+  // Loops (n), a Note with no track having its Photos first and its Track last; inside Publish (step 3) Layout & Story
+  // and Social (drawn from full-size photos, so only once it's shown)
+  function subDefs(tab) {
+    if (tab === 'publish') return [['layout', 'Layout<span class="nt-x"> & Story</span>', ['magazine', 'spread', 'feature']], ['social', 'Social', ['social']]];
     var r = ['route', hasTrack(E.kind) ? 'Route<span class="nt-x"> & Gauges</span>' : 'Track', ['track']], ph = ['photos', 'Photos', ['photos', 'more']], lo = ['loops', 'Loops', ['loops']];
     return hasTrack(E.kind) ? [r, ph, lo] : [ph, lo, r];
   }
   function mountSubs(mem) {
-    var pane = $('#pane-ride'); if (!pane) return;
-    var defs = subDefs(), nav = document.createElement('nav'); nav.className = 'nsubs'; nav.id = 'nsubs'; nav.setAttribute('role', 'tablist'); nav.setAttribute('aria-label', 'Route, photos and loops');
-    nav.innerHTML = defs.map(function (d) { return '<button type="button" role="tab" data-nsub="' + d[0] + '" id="ns-' + d[0] + '" aria-controls="sub-' + d[0] + '">' + d[1] + '<b class="ns-n"></b></button>'; }).join('');
-    pane.insertBefore(nav, pane.firstChild);
-    defs.forEach(function (d) {
-      var sp = document.createElement('div'); sp.className = 'nsub-pane'; sp.id = 'sub-' + d[0]; sp.setAttribute('data-nsub', d[0]); sp.setAttribute('role', 'tabpanel'); sp.setAttribute('aria-labelledby', 'ns-' + d[0]); sp.hidden = true;
-      d[2].forEach(function (k) { var f = $('#f-' + k); if (f) sp.appendChild(f); });
-      pane.appendChild(sp);
+    mem.subs = mem.subs || {};
+    ['ride', 'publish'].forEach(function (tab) {
+      var pane = $('#pane-' + tab); if (!pane) return;
+      var defs = subDefs(tab).filter(function (d) { return d[2].some(function (k) { return $('#f-' + k); }); });
+      if (defs.length < 2) return;
+      var nav = document.createElement('nav'); nav.className = 'nsubs'; nav.id = 'nsubs-' + tab; nav.setAttribute('role', 'tablist'); nav.setAttribute('aria-label', tab === 'ride' ? 'Route, photos and loops' : 'Layout and social');
+      nav.innerHTML = defs.map(function (d) { return '<button type="button" role="tab" data-nsub="' + d[0] + '" id="ns-' + d[0] + '" aria-controls="sub-' + d[0] + '">' + d[1] + '<b class="ns-n"></b></button>'; }).join('');
+      pane.insertBefore(nav, pane.firstChild);
+      defs.forEach(function (d) {
+        var sp = document.createElement('div'); sp.className = 'nsub-pane'; sp.id = 'sub-' + d[0]; sp.setAttribute('data-nsub', d[0]); sp.setAttribute('role', 'tabpanel'); sp.setAttribute('aria-labelledby', 'ns-' + d[0]); sp.hidden = true;
+        d[2].forEach(function (k) { var f = $('#f-' + k); if (f) sp.appendChild(f); });
+        pane.appendChild(sp);
+      });
+      $$('button', nav).forEach(function (b) { b.onclick = function () { showSub(b.getAttribute('data-nsub')); }; });
+      var was = mem.subs[tab], want = was && $('#sub-' + was) && $('#sub-' + was).closest('.ntab-pane') === pane ? was : defs[0][0];
+      mem.subs[tab] = ''; showSub(want, null, true);
     });
-    $$('button', nav).forEach(function (b) { b.onclick = function () { showSub(b.getAttribute('data-nsub')); }; });
-    var want = mem.sub && $('#sub-' + mem.sub) ? mem.sub : defs[0][0];
-    mem.sub = ''; showSub(want, null, true); subCounts();
+    subCounts();
   }
   function showSub(t, then, first) {
-    var mem = NTAB[E.id || '_new'], nav = $('#nsubs'), to = $('#sub-' + t); if (!nav || !mem || !to) return;
-    if (mem.sub === t) { if (then) then(); return; }
-    var from = mem.sub && $('#sub-' + mem.sub), go = ++NTABGO; mem.sub = t;
+    var mem = NTAB[E.id || '_new'], to = $('#sub-' + t), pane = to && to.closest('.ntab-pane'), tab = pane && pane.getAttribute('data-ntab'), nav = tab && $('#nsubs-' + tab);
+    if (!nav || !mem) return;
+    if (mem.subs[tab] === t) { if (then) then(); return; }
+    var from = mem.subs[tab] && $('#sub-' + mem.subs[tab]), go = ++NTABGO; mem.subs[tab] = t;
     $$('button', nav).forEach(function (b) { b.setAttribute('aria-selected', b.getAttribute('data-nsub') === t ? 'true' : 'false'); });
     var swap = function () {
       if (go !== NTABGO) return;
-      $$('.nsub-pane', app).forEach(function (p) { p.hidden = p !== to; p.classList.remove('nt-out', 'nt-in'); });
+      $$('.nsub-pane', pane).forEach(function (p) { p.hidden = p !== to; p.classList.remove('nt-out', 'nt-in'); });
+      if (!pane.hidden) $$('details.fold', to).forEach(function (d) { if (!d.open) d.open = true; });   // opened as it first shows (Social draws then)
       if (!STILL && !first) { void to.offsetWidth; to.classList.add('nt-in'); }
       setTimeout(function () { dispatchEvent(new Event('resize')); }, 60);   // the map measures itself again
       if (then) setTimeout(then, STILL ? 0 : 120);
@@ -1566,7 +1576,7 @@
     if (from && !STILL && !first) { from.classList.add('nt-out'); setTimeout(swap, 320); } else swap();
   }
   function subCounts() {
-    var nav = $('#nsubs'); if (!nav || !E) return;
+    var nav = $('#nsubs-ride'); if (!nav || !E) return;
     var nPh = E.photos.filter(function (p) { return !p.video && !p.strip; }).length, nLo = E.photos.filter(function (p) { return p.video; }).length;
     var set = function (k, n) { var b = $('[data-nsub="' + k + '"] .ns-n', nav); if (b) b.textContent = n ? ' (' + n + ')' : ''; };
     set('photos', nPh); set('loops', nLo);
@@ -1583,7 +1593,7 @@
     var swap = function () {
       if (go !== NTABGO) return;
       $$('.ntab-pane', app).forEach(function (p) { p.hidden = p !== to; p.classList.remove('nt-out', 'nt-in'); });
-      $$('details.fold', to).forEach(function (d) { if (!d.open) d.open = true; });   // opened as the tab first shows (Social and the map draw then)
+      $$('details.fold', to).forEach(function (d) { var sp = d.closest('.nsub-pane'); if (!d.open && !(sp && sp.hidden)) d.open = true; });   // opened as the tab first shows (the map draws then; Social when its sub-tab shows)
       // where it was on this tab, or its top just under the bar; the summary stays put while it's on screen
       if (!first && scrollY > top) scrollTo(0, mem.y[t] > top ? mem.y[t] : top);
       if (!STILL && !first) { void to.offsetWidth; to.classList.add('nt-in'); }
@@ -3022,16 +3032,17 @@
           '<div class="row"><button type="button" class="link spUp"' + (i ? '' : ' disabled') + '>Up</button><button type="button" class="link spDown"' + (i < items.length - 1 ? '' : ' disabled') + '>Down</button>' +
           '<button type="button" class="link spSw">Swap</button><button type="button" class="link spRm">Remove from the spread</button>' + (x.video ? '<small class="muted">Loop</small>' : '') + (i === 0 ? '<small class="muted">The first is set wide.</small>' : '') + '</div></div></div>';
       }).join('') + '</div>' +
-      '<div class="row">' + (pick.length ? '<select id="spAdd"><option value="">Add a picture from this Note…</option>' + pick.map(function (p) {
-        return '<option value="' + esc(p.src) + '">' + esc(photoName(p) + (p.video ? ' (loop)' : '') + (p.caption ? ': ' + p.caption.slice(0, 50) : '')) + '</option>'; }).join('') + '</select>'
+      (pick.length ? '<h3 class="spPickH">Add a picture from this Note</h3><div class="spPick">' + pick.map(function (p) {
+        return '<button type="button" class="spAddPic" data-src="' + esc(p.src) + '" title="' + esc(photoName(p) + (p.video ? ' (loop)' : '') + (p.caption ? ': ' + p.caption.slice(0, 80) : '')) + '"><img src="' + esc(thumbOf(p)) + '" alt="" loading="lazy">' + (p.video ? '<i>Loop</i>' : '') + '<span>+</span></button>'; }).join('') + '</div>' : '') +
+      '<div class="row">' + (pick.length ? ''
         : '<span class="muted">' + ((E.photos || []).length ? 'Every photo of this Note is in the spread.' : 'Add photos under Photos first.') + '</span>') +
       (LB ? '<button type="button" class="link" id="spDrop">Remove the whole spread</button>' : '') + '</div>';
     var ensure = function () { E.feature = E.feature || {}; if (!spreads().length) { E.feature.lookbook = { title: 'The photo spread', dek: '', before: '', items: [] }; SPI = 0; } return spreadCur(); };
     var changed = function () { markDirty(); renderSpread(); };
-    var add = $('#spAdd'); if (add) add.onchange = function () {
-      if (!this.value) return; var s = this.value, p = (E.photos || []).find(function (q) { return q.src === s; }); if (!p) return;
+    $$('.spAddPic', box).forEach(function (b) { b.onclick = function () {
+      var s = b.getAttribute('data-src'), p = (E.photos || []).find(function (q) { return q.src === s; }); if (!p) return;
       ensure().items.push({ name: '', when: p.caption || '', alt: p.caption || '' }); spreadPut(ensure().items.length - 1, p); changed();
-    };
+    }; });
     var t = $('#spTitle'); if (t) t.oninput = function () { ensure().title = this.value; markDirty(); };
     var dk = $('#spDek'); if (dk) dk.oninput = function () { ensure().dek = this.value; markDirty(); };
     var bf = $('#spBefore'); if (bf) bf.onchange = function () { ensure().before = this.value; changed(); };
