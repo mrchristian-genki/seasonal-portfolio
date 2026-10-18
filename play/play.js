@@ -24,8 +24,8 @@
     clips.forEach(function (v) { io.observe(v); });
   }
 
-  // Lightbox for any photo (or clip) link: swipe (or ‹ ›, ← →) to the next or previous one on the page, each change
-  // a short cross-fade (../js/motion.js swipeNav and lbList)
+  // Lightbox for any photo (or clip) link: swipe (or ← →) to the next or previous one on the page, each change a
+  // short cross-fade (../js/motion.js swipeNav and lbList); no arrows on it (Christian, Oct 19: they covered the pictures)
   var box = null, list = [], at = -1;
   function fill(a) {
     var img = a.querySelector('img'), cap = a.parentNode.querySelector('figcaption'), bi = box.querySelector('img'), bv = box.querySelector('video');
@@ -34,7 +34,6 @@
     if (isVid) { bv.src = a.getAttribute('href'); bv.muted = true; var p = bv.play(); if (p && p.catch) p.catch(function () {}); }
     else { bv.pause(); bv.removeAttribute('src'); bi.src = a.getAttribute('href'); bi.alt = img ? img.alt : ''; }
     box.querySelector('p').textContent = (cap ? cap.textContent : '') + (list.length > 1 ? (cap && cap.textContent ? '  ·  ' : '') + (at + 1) + ' of ' + list.length : '');
-    box.querySelector('.lb-prev').hidden = at <= 0; box.querySelector('.lb-next').hidden = at >= list.length - 1;
   }
   function step(d) {
     var to = at + d; if (!box || !box.open || to < 0 || to >= list.length) return false;
@@ -50,11 +49,8 @@
     if (!box) {
       box = document.createElement('dialog'); box.className = 'lightbox';
       if (window.softDialog) softDialog(box, 450);   // ../js/motion.js: it fades out as it closes
-      box.innerHTML = '<div class="lb-in"><img alt=""><video controls loop playsinline hidden></video><p></p></div>' +
-        '<button type="button" class="lb-prev" aria-label="Previous">&lsaquo;</button><button type="button" class="lb-next" aria-label="Next">&rsaquo;</button><button type="button" class="lb-x" aria-label="Close">&times;</button>';
+      box.innerHTML = '<div class="lb-in"><img alt=""><video controls loop playsinline hidden></video><p></p></div><button type="button" class="lb-x" aria-label="Close">&times;</button>';
       box.querySelector('.lb-x').onclick = function () { box.close(); };
-      box.querySelector('.lb-prev').onclick = function () { step(-1); };
-      box.querySelector('.lb-next').onclick = function () { step(1); };
       box.addEventListener('click', function (e) { if (e.target === box) box.close(); });
       box.addEventListener('close', function () { var v = box.querySelector('video'); v.pause(); v.removeAttribute('src'); v.load(); });
       if (window.swipeNav) swipeNav(box, step);
