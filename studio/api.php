@@ -641,6 +641,14 @@ try {
             $guide = $gh->read('field/SHOW-GUIDE.md') ?? '';
             json_out(['feature' => (new Drafter($cfg, $guide))->feature((array) ($body['note'] ?? []), (array) ($body['template'] ?? []), array_values(array_map('strval', (array) ($body['missing'] ?? []))), (string) ($body['instruction'] ?? ''))]);
 
+        // Ask Claude: one instruction about any part of the whole Note, from the drafting or the magazine panel.
+        case 'POST revise':
+            @set_time_limit(240);
+            $guide = $gh->read('field/SHOW-GUIDE.md') ?? '';
+            $ins = trim((string) ($body['instruction'] ?? ''));
+            if ($ins === '') json_fail('Say what to change.');
+            json_out(['revise' => (new Drafter($cfg, $guide))->revise((array) ($body['note'] ?? []), mb_substr($ins, 0, 4000), preg_replace('/[^a-z ]/', '', (string) ($body['from'] ?? '')))]);
+
         // The episode script brought back in line with the post's sections (the Episode script panel).
         case 'POST rescript':
             @set_time_limit(240);

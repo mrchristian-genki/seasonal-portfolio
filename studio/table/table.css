@@ -810,3 +810,11 @@ details.fold .fold-in>h3:first-child{margin-top:0}
 .epsync p{margin:0 0 8px}
 .epsync.stale{background:#fdf3dc;border-color:#e2b45b}
 @media (prefers-reduced-motion:reduce){.secs li,.secs .link,.epsync{transition:none}}
+
+/* ASK CLAUDE (studio.js askBox): the same box in the drafting panel and the magazine panel */
+.ask{margin:14px 0 10px;padding:12px;border:1px solid color-mix(in srgb,var(--liq) 35%,var(--line));border-radius:10px;background:color-mix(in srgb,var(--liq) 6%,transparent)}
+.ask h3{margin:0 0 2px}
+.ask .row{align-items:flex-start;margin-top:8px}
+.ask .askIn{flex:1;min-width:0}
+.ask .askOut{margin:8px 0 0;font-size:14px;color:var(--ink2)}
+.ask .askOut:empty{display:none}

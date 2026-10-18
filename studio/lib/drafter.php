@@ -246,6 +246,92 @@ TXT;
         'additionalProperties' => false,
     ];
 
+    private const REVISE_BLOCK = [
+        'type' => 'object',
+        'properties' => [
+            'replaces' => ['type' => 'integer', 'description' => 'The index in magazine.blocks of the block this changes; -1 for a new block.'],
+            'type' => ['type' => 'string', 'enum' => ['specs', 'stats', 'goodbad', 'verdict', 'box', 'steps', 'timeline', 'code']],
+            'title' => ['type' => 'string'], 'before' => ['type' => 'string'], 'kicker' => ['type' => 'string'], 'text' => ['type' => 'string'], 'note' => ['type' => 'string'],
+            'pairs' => ['type' => 'array', 'items' => ['type' => 'array', 'items' => ['type' => 'string']]],
+            'good' => ['type' => 'array', 'items' => ['type' => 'string']], 'bad' => ['type' => 'array', 'items' => ['type' => 'string']],
+            'score' => ['type' => 'string'], 'out_of' => ['type' => 'string'], 'seal' => ['type' => 'string'],
+            'steps' => ['type' => 'array', 'items' => ['type' => 'object', 'properties' => ['title' => ['type' => 'string'], 'text' => ['type' => 'string']], 'required' => ['title', 'text'], 'additionalProperties' => false]],
+            'file' => ['type' => 'string'], 'code' => ['type' => 'string'],
+        ],
+        'required' => ['replaces', 'type', 'title', 'before', 'kicker', 'text', 'note', 'pairs', 'good', 'bad', 'score', 'out_of', 'seal', 'steps', 'file', 'code'],
+        'additionalProperties' => false,
+    ];
+
+    private const REVISE = [
+        'type' => 'object',
+        'properties' => [
+            'changed' => ['type' => 'array', 'items' => ['type' => 'string', 'enum' => ['summary', 'post_title', 'post_body', 'episode_title', 'episode_script', 'captions', 'masthead', 'tagline', 'issue', 'label', 'byline', 'cover_lines', 'blocks', 'qa', 'spotted']],
+                'description' => 'Only the parts this answer changes; everything else is left exactly as it is.'],
+            'summary' => ['type' => 'string'], 'post_title' => ['type' => 'string'],
+            'post_body' => ['type' => 'string', 'description' => 'The whole post when it changes.'],
+            'renamed' => ['type' => 'array', 'items' => ['type' => 'object', 'properties' => ['from' => ['type' => 'string'], 'to' => ['type' => 'string']], 'required' => ['from', 'to'], 'additionalProperties' => false],
+                'description' => 'Each "## " subhead renamed in post_body: its old and new wording (without "## ").'],
+            'episode_title' => ['type' => 'string'], 'episode_script' => ['type' => 'string', 'description' => 'The whole script when it changes.'],
+            'captions' => ['type' => 'array', 'items' => ['type' => 'object', 'properties' => ['photo' => ['type' => 'string'], 'caption' => ['type' => 'string']], 'required' => ['photo', 'caption'], 'additionalProperties' => false],
+                'description' => 'Only the captions that change.'],
+            'masthead' => ['type' => 'string'], 'tagline' => ['type' => 'string'], 'issue' => ['type' => 'string'], 'label' => ['type' => 'string'], 'byline' => ['type' => 'string'],
+            'cover_lines' => ['type' => 'array', 'items' => ['type' => 'string']],
+            'blocks' => ['type' => 'array', 'items' => self::REVISE_BLOCK, 'description' => 'Only the magazine blocks that change or are new.'],
+            'remove_blocks' => ['type' => 'array', 'items' => ['type' => 'integer'], 'description' => 'Indexes in magazine.blocks to take out.'],
+            'qa' => ['type' => 'object', 'properties' => ['title' => ['type' => 'string'], 'items' => ['type' => 'array', 'items' => ['type' => 'object', 'properties' => ['q' => ['type' => 'string'], 'a' => ['type' => 'string']], 'required' => ['q', 'a'], 'additionalProperties' => false]]], 'required' => ['title', 'items'], 'additionalProperties' => false],
+            'spotted' => ['type' => 'array', 'items' => ['type' => 'object', 'properties' => ['label' => ['type' => 'string'], 'text' => ['type' => 'string'], 'url' => ['type' => 'string']], 'required' => ['label', 'text', 'url'], 'additionalProperties' => false]],
+            'questions' => ['type' => 'array', 'items' => ['type' => 'string'], 'description' => 'What Christian should answer before this goes out; empty when nothing is open.'],
+            'notes' => ['type' => 'string', 'description' => 'One or two plain sentences on what was changed, for Christian.'],
+        ],
+        'required' => ['changed', 'summary', 'post_title', 'post_body', 'renamed', 'episode_title', 'episode_script', 'captions', 'masthead', 'tagline', 'issue', 'label', 'byline', 'cover_lines', 'blocks', 'remove_blocks', 'qa', 'spotted', 'questions', 'notes'],
+        'additionalProperties' => false,
+    ];
+
+    /**
+     * Ask Claude (Christian, Oct 18: the drafting and the magazine helpers act together): one instruction about any part
+     * of the whole Note (the notes, the post, the script, the captions, the magazine's cover, blocks, Q&A and Spotted box),
+     * answered with only the parts it changes. $from says which panel asked, as a hint to where to look first.
+     */
+    public function revise(array $note, string $instruction, string $from = ''): array
+    {
+        $client = new Client(apiKey: $this->cfg['anthropic_api_key'], baseUrl: $this->cfg['anthropic_base_url'] ?? null);
+        $system = <<<TXT
+You help Christian change one Field Note on christiangehrke.com. You see the whole Note: his notes, the post, the episode script, the photos and their captions, and, when it is dressed as a magazine feature, its cover, blocks, Q&A, Spotted box and photo spreads. Do what the instruction asks, wherever in the Note it needs doing, and change nothing else. The show guide below is the authority; follow its hard rules exactly.
+
+- List in "changed" only the parts you change, and return those in full (the whole post, the whole script). Leave every other field empty: an empty field that isn't listed in "changed" is ignored.
+- Keep the Note telling one story: when a change in one part makes another wrong (a number in the post and in a stats block, a section the script follows, a cover line that points at something no longer there), change that part too and list it.
+- Keep the post's "## " subheads unless asked; photos, spreads and blocks sit under them by name. If you rename one, list it in "renamed".
+- Magazine parts only when the Note is dressed as a magazine (magazine is not null). A block: give "replaces" as the index of the one it changes in magazine.blocks, or -1 for a new one; take one out with remove_blocks.
+- Every fact, number, name and quote comes from the Note. Never invent people, results, specs, scores, dates or feelings; ask in questions instead. People stay anonymous unless the Note says they agreed to be named. Never mention home.
+- The post is Christian's first person; the script is the narrator's voice (narrator); the magazine byline is its narrator. Q&A answers are Christian's own words from the notes or the post.
+- No brands, logos or text inside any image prompt.
+
+The show guide:
+
+{$this->showGuide}
+TXT;
+        $msg = "The whole Note, as JSON:\n" . json_encode($note, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) .
+            ($from !== '' ? "\n\nAsked from the Studio's $from panel." : '') . "\n\nInstruction: $instruction";
+        $message = $client->beta->messages->create(
+            model: self::MODEL,
+            maxTokens: 16000,
+            system: $system,
+            messages: [['role' => 'user', 'content' => $msg]],
+            outputConfig: ['effort' => 'medium', 'format' => ['type' => 'json_schema', 'schema' => self::REVISE]],
+            fallbacks: 'default',
+            betas: ['server-side-fallback-2026-07-01'],
+        );
+        if ($message->stopReason === 'refusal') throw new RuntimeException('Claude declined this change.');
+        if ($message->stopReason === 'max_tokens') throw new RuntimeException('The answer ran out of room before it finished. Try a smaller change.');
+        foreach ($message->content as $block) {
+            if ($block->type === 'text') {
+                $out = json_decode($block->text, true);
+                if (is_array($out) && isset($out['changed'])) return $out;
+            }
+        }
+        throw new RuntimeException('Claude sent back something that was not a change to the Note.');
+    }
+
     /**
      * The episode script brought back in line with the post (Christian, Oct 18): when the post's "## " sections are moved,
      * added or taken out, the script follows them in the same order, keeping its own words, voice and length.
@@ -317,6 +403,7 @@ How to work:
 - Other people stay anonymous unless the entry says they agreed to be named.
 - Write captions for every photo listed: short, plain, only what is visible, with the time when it helps the story.
 - If there is a current draft, revise it rather than starting over, unless the instruction asks for a new one.
+- The whole Note works together. When it is dressed as a magazine feature (magazine: its cover, blocks, Q&A, Spotted box and photo spreads) or has pictures set under subheads (placements), keep the post's "## " subheads, their wording and their order unless the instruction says otherwise: those parts sit under them by name. Keep the post, the script and the magazine's parts telling the same story, and don't repeat a question the magazine has already asked (magazineQuestions).
 - GlazyArray's backdrop: follow the show guide's section "The backdrop".
 - GlazyArray's look: follow the show guide's section "GlazyArray's look". Prefer one of her looks when it fits; suggest a new one only when the Note clearly calls for it; "none" is the usual answer.
 - Questions: list what Christian should confirm or add before this is published. Keep them short and specific. An empty list is fine when nothing is open.
