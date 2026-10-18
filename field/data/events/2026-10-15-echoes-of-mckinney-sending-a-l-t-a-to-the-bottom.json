@@ -27,22 +27,6 @@
    ]
   },
   {
-   "src": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-18.mp4",
-   "poster": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-18.jpg",
-   "video": true,
-   "caption": "McKinney Bay Landslide - Fault lines near the South of Lake Tahoe",
-   "takenAt": "2026:10:16 07:21:59",
-   "w": 960,
-   "h": 540,
-   "use": "post",
-   "cover": false,
-   "from": "McKinney Bay - fault-lines - south.mp4",
-   "range": [
-    0,
-    2.85
-   ]
-  },
-  {
    "src": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-16.mp4",
    "poster": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-16.jpg",
    "video": true,
@@ -273,9 +257,7 @@
   "audio": "data/audio/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom.mp3",
   "narrator": "alta"
  },
- "questions": [
-  "clip-18 still shows under the wave clips after a save and reload, but the entry I get lists it third, right after clip-16. The draft can't fix that: the page is reading a different saved order than the entry. Can you check the photo order stored for this Note in the Studio (or re-drag clip-18 and save) so the page matches the entry?"
- ],
+ "questions": [],
  "consent": "",
  "source": "Rides/October 15 2026",
  "narratorLook": {

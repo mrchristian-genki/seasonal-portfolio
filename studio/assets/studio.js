@@ -1494,7 +1494,7 @@
 
   // ---------- the Note's four tabs (Christian, Oct 18: thirteen sections stacked made a long scroll): Draft, Audio/Cast,
   // Ride (Hike, or Media for a Note with no track) and Publish, in a bar that stays at the top. Each tab holds its
-  // sections, all open; a tab change fades out and in (at once with reduced motion), each tab keeps how far down you
+  // sections, which still fold (Oct 18: the ones used now and then stay shut until opened, as the Note's stage says); a tab change fades out and in (at once with reduced motion), each tab keeps how far down you
   // were, and the tab sits in the address (#note/<id>/audio). A section's link (the next steps, the checklist) opens
   // its tab first ----------
   var NTABS = [['draft', 'Draft', ['details', 'drafting', 'post']], ['audio', 'Audio/Cast', ['look', 'episode', 'audio']],
@@ -1520,8 +1520,6 @@
       if (!pane.firstChild) pane.innerHTML = '<p class="panel muted">Nothing here for this Note yet.</p>';
       last.parentNode.insertBefore(pane, last.nextSibling); last = pane;
     });
-    // its sections are open, always: a heading, not a fold
-    $$('.ntab-pane summary', app).forEach(function (sm) { if (sm.parentNode.classList.contains('fold')) sm.addEventListener('click', function (ev) { ev.preventDefault(); }); });
     $$('button', nav).forEach(function (b) { b.onclick = function () { showTab(b.getAttribute('data-ntab')); }; });
     nav.addEventListener('keydown', function (ev) {   // ← and → move along the tabs
       var i = NTABS.map(function (t) { return t[0]; }).indexOf(mem.tab), d = ev.key === 'ArrowRight' ? 1 : ev.key === 'ArrowLeft' ? -1 : 0;
@@ -1568,7 +1566,6 @@
     var swap = function () {
       if (go !== NTABGO) return;
       $$('.nsub-pane', pane).forEach(function (p) { p.hidden = p !== to; p.classList.remove('nt-out', 'nt-in'); });
-      if (!pane.hidden) $$('details.fold', to).forEach(function (d) { if (!d.open) d.open = true; });   // opened as it first shows (Social draws then)
       if (!STILL && !first) { void to.offsetWidth; to.classList.add('nt-in'); }
       setTimeout(function () { dispatchEvent(new Event('resize')); }, 60);   // the map measures itself again
       if (then) setTimeout(then, STILL ? 0 : 120);
@@ -1593,7 +1590,6 @@
     var swap = function () {
       if (go !== NTABGO) return;
       $$('.ntab-pane', app).forEach(function (p) { p.hidden = p !== to; p.classList.remove('nt-out', 'nt-in'); });
-      $$('details.fold', to).forEach(function (d) { var sp = d.closest('.nsub-pane'); if (!d.open && !(sp && sp.hidden)) d.open = true; });   // opened as the tab first shows (the map draws then; Social when its sub-tab shows)
       // where it was on this tab, or its top just under the bar; the summary stays put while it's on screen
       if (!first && scrollY > top) scrollTo(0, mem.y[t] > top ? mem.y[t] : top);
       if (!STILL && !first) { void to.offsetWidth; to.classList.add('nt-in'); }
@@ -1652,14 +1648,14 @@
       fold('drafting', 'Notes and drafting', qs ? qs + ' open question' + (qs > 1 ? 's' : '') : hasScript ? 'done' : '', !hasScript || qs > 0,
         '<h3>Your notes</h3><div id="voiceNotes"></div>' + field('', '<textarea id="fieldNotes" rows="8" placeholder="What happened, in your words: who came, what you saw, what to leave out.">' + esc(E.fieldNotes) + '</textarea>') +
         '<div class="draft"><h3>Draft with Claude</h3><div class="row"><input id="instr" placeholder="Optional: e.g. shorter, or add the bit about the hammock"><button id="draft" class="primary">Draft with Claude</button></div>' +
-        '<div id="questions"></div></div>') +
+        '<div id="questions"></div>' + askBox('drafting') + '</div>') +
       fold('post', 'Post', E.post.title || '', !isLive, field('Card summary', '<textarea id="summary" rows="2">' + esc(E.summary) + '</textarea>') +
-        field('Title', '<input id="postTitle" value="' + esc(E.post.title) + '">') + field('Text', '<textarea id="postBody" rows="14">' + esc(E.post.body) + '</textarea>', 'First person. A blank line between paragraphs. End with "What I learned: …" when there is something real.')) +
+        field('Title', '<input id="postTitle" value="' + esc(E.post.title) + '">') + field('Text', '<textarea id="postBody" rows="14">' + esc(E.post.body) + '</textarea>', 'First person. A blank line between paragraphs. End with "What I learned: …" when there is something real.') + '<div id="postSecs"></div>') +
       fold('episode', 'Episode script', E.episode.title || '', !isLive, field('Title', '<input id="epTitle" value="' + esc(E.episode.title) + '">') +
         field('Narrator', '<select id="epNarrator"><option value="">From its categories</option><option value="glazyarray"' + (E.episode.narrator === 'glazyarray' ? ' selected' : '') + '>GlazyArray</option>' +
           '<option value="alta"' + (E.episode.narrator === 'alta' ? ' selected' : '') + '>A.L.T.A.</option>' +
           '<option value="marley"' + (E.episode.narrator === 'marley' ? ' selected' : '') + '>Robot Marley</option></select>', '<span id="epWho"></span>') +
-        '<div id="epTankBox"></div>' + field('Script', '<textarea id="epScript" rows="16">' + esc(E.episode.script) + '</textarea>', '<span id="epCount"></span>')) +
+        '<div id="epTankBox"></div><div id="epSync"></div>' + field('Script', '<textarea id="epScript" rows="16">' + esc(E.episode.script) + '</textarea>', '<span id="epCount"></span>')) +
       fold('look', 'Narrator style', lookHint(), false,
         '<div id="styleBox"></div><details class="ga-own" id="gaOwn"' + (gaOwnOpen() ? ' open' : '') + '><summary>Or give this Note its own cap or backdrop</summary>' +
         '<h3 class="ga-h">Her cap</h3><div id="lookBox"></div><h3 class="ga-h">The backdrop</h3><div id="bdBox"></div></details>') +
@@ -1692,6 +1688,8 @@
     driveAudio().then(function () { renderDriveFiles(); renderVoiceNotes(); renderNext(); });
     ['postBody', 'epScript', 'fieldNotes'].forEach(function (k) { $('#' + k).addEventListener('change', renderNext); });
     $('#postBody').addEventListener('change', renderFeature);   // the feature's "after paragraph" picks follow the paragraphs
+    $('#postBody').addEventListener('change', function () { renderSecs(); renderSync(); });   // its sections, and whether the script still follows them
+    renderSecs(); renderSync();
     $('#postBody').addEventListener('change', function () { collect(); renderPhotos(); });    // the photos' "under a subhead" picks follow the subheads (and the template's checklist)
     $('#summary').addEventListener('change', renderMag);
     ['title', 'place', 'summary', 'postTitle', 'postBody', 'epTitle'].forEach(function (k) { $('#' + k).addEventListener('change', function () { collect(); renderStyle(); }); });   // suggested categories follow what it says
@@ -1703,7 +1701,7 @@
     $('#pickPhotos').onchange = function () { addPhotos(this.files); this.value = ''; };
     $('#draft').onclick = function () { draft(); };
     LOOKREPL = false; if (BDNEW === 'replace') BDNEW = null;
-    renderLook(); renderBd();
+    renderLook(); renderBd(); wireAsk(app);
     $('#save').onclick = save;
     $('#publish').onclick = publish;
     // who tells it: its own choice, else its categories' (the site's one rule), shown under the picker; her voice prompt follows
@@ -2437,6 +2435,7 @@
       p.caption = $('textarea', d).value.trim();
       p.use = $('.use', d).checked ? (p.use === 'skip' ? 'post' : (p.use || 'post')) : 'skip';
       p.cover = $('.cover', d).checked;
+      var ai = $('.isai', d); if (ai) { if (ai.checked) p.ai = true; else delete p.ai; }
       var a = $('.phAt', d); if (a) { if (a.value) p.at = a.value; else delete p.at; }
     });
   }
@@ -2779,6 +2778,180 @@
       else addPhotos([f]);
     };
   }
+  // ---------- Ask Claude (Christian, Oct 18): one box, in the drafting panel and in the magazine panel, that can change any
+  // part of the whole Note (api.php revise): Claude answers with only the parts it changed, they go in, and one Undo puts
+  // the Note back as it was. Both boxes share what's typed, the answer and the Undo ----------
+  var ASK = { busy: false, text: '', said: '', undo: null };
+  function askBox(where) {
+    return '<div class="ask" data-ask="' + where + '"><h3>Ask Claude</h3><small class="muted">Anything in this Note: the post, the script, the captions, where the photos sit and the photo spreads' + (E.feature && E.feature.masthead ? ', the magazine\'s cover, blocks and Q&amp;A' : '') + '. It changes only what it needs to, and keeps the rest in step.</small>' +
+      '<div class="row"><textarea class="askIn" rows="2" placeholder="e.g. shorten the wave section, and update the stats and the script to match"></textarea><button type="button" class="primary askGo">Ask Claude</button></div><p class="askOut"></p></div>';
+  }
+  function askPaint() {
+    $$('.ask', app).forEach(function (b) {
+      var go = $('.askGo', b), out = $('.askOut', b), inp = $('.askIn', b);
+      if (inp && document.activeElement !== inp) inp.value = ASK.text;
+      go.disabled = ASK.busy; go.textContent = ASK.busy ? 'Claude is working…' : 'Ask Claude';
+      out.innerHTML = ASK.said ? esc(ASK.said) + (ASK.undo ? ' <button type="button" class="link askUndo">Undo</button>' : '') : '';
+      var u = $('.askUndo', b); if (u) u.onclick = askUndo;
+    });
+  }
+  function wireAsk(root) {
+    $$('.ask', root).forEach(function (b) {
+      var inp = $('.askIn', b); inp.oninput = function () { ASK.text = inp.value; };
+      $('.askGo', b).onclick = function () { ask(inp.value.trim(), b.getAttribute('data-ask')); };
+    });
+    askPaint();
+  }
+  function ask(text, where) {
+    if (!text) { toast('Say what to change first.', true); return; }
+    if (ASK.busy) return;
+    collect(); var before = clone(E);   // for Undo: the Note as the editor has it now
+    ASK.busy = true; ASK.said = ''; askPaint();
+    api('revise', { note: noteForClaude(), instruction: text, from: where }).then(function (j) {
+      var got = askApply(j.revise || {});
+      ASK.undo = got.length ? before : null; ASK.text = got.length ? '' : ASK.text;
+      ASK.said = got.length ? 'Changed ' + got.join(', ') + '. ' + ((j.revise || {}).notes || '') + ' Read it through, then Save.' : 'Nothing changed. ' + ((j.revise || {}).notes || 'See its questions.');
+      toast(got.length ? 'Claude changed ' + got.join(', ') + '.' : 'Claude didn\'t change anything.', !got.length);
+    }).catch(function (err) { ASK.said = ''; toast('Couldn\'t ask Claude: ' + err.message, true); })
+      .then(function () { ASK.busy = false; askPaint(); });
+  }
+  var ASK_NAMES = { summary: 'the card summary', post_title: 'the post\'s title', post_body: 'the post', episode_title: 'the episode title', episode_script: 'the script', captions: 'captions',
+    masthead: 'the masthead', tagline: 'the tagline', issue: 'the issue line', label: 'the label', byline: 'the byline', cover_lines: 'the cover lines', blocks: 'magazine blocks', qa: 'the Q&A', spotted: 'the Spotted box',
+    photos: 'where the photos sit', cover_photo: 'the cover photo', photo_order: 'the photo order', spreads: 'photo spreads' };
+  function askApply(r) {
+    var ch = {}, got = []; (r.changed || []).forEach(function (k) { ch[k] = 1; });
+    var setv = function (id, v) { var el = $('#' + id); if (el) el.value = v; };
+    if (ch.summary && r.summary) { setv('summary', r.summary); got.push('summary'); }
+    if (ch.post_title && r.post_title) { setv('postTitle', r.post_title); got.push('post_title'); }
+    if (ch.post_body && r.post_body) { setv('postBody', r.post_body.trim()); got.push('post_body'); }
+    if (ch.episode_title && r.episode_title) { setv('epTitle', r.episode_title); got.push('episode_title'); }
+    if (ch.episode_script && r.episode_script) { setv('epScript', r.episode_script.trim()); got.push('episode_script'); }
+    collect();
+    // a renamed subhead: what sat under it follows it
+    (r.renamed || []).forEach(function (x) {
+      if (!x.from || !x.to || x.from === x.to) return;
+      E.photos.forEach(function (p) { if (p.at === x.from) p.at = x.to; });
+      spreads().forEach(function (b) { if (b.before === x.from) b.before = x.to; });
+      if (E.feature) (E.feature.blocks || []).forEach(function (b) { if (b.before === x.from) b.before = x.to; });
+      if (Array.isArray(E.episode.sections)) E.episode.sections = E.episode.sections.map(function (t) { return t === x.from ? x.to : t; });
+    });
+    if (ch.episode_script && got.indexOf('episode_script') >= 0) E.episode.sections = subheads();   // its script was just written for the post as it is
+    if (ch.captions && (r.captions || []).length) { var n = 0; r.captions.forEach(function (c) { E.photos.forEach(function (p) { if (photoName(p) === c.photo && c.caption) { p.caption = c.caption; n++; } }); }); if (n) got.push('captions'); }
+    var F = E.feature && E.feature.masthead ? E.feature : null;
+    if (F) {
+      ['masthead', 'tagline', 'issue', 'label', 'byline'].forEach(function (k) { if (ch[k] && r[k]) { F[k] = r[k]; got.push(k); } });
+      if (ch.cover_lines && (r.cover_lines || []).length) { F.coverLines = r.cover_lines.slice(0, 5); got.push('cover_lines'); }
+      if (ch.blocks && ((r.blocks || []).length || (r.remove_blocks || []).length)) {
+        var B = (F.blocks || []).slice(), drop = {};
+        (r.blocks || []).forEach(function (b) { var nb = magBlock(b); if (b.replaces >= 0 && B[b.replaces]) { var old = B[b.replaces]; ['rows', 'items', 'note', 'text', 'kicker', 'title', 'before', 'good', 'bad', 'score', 'outOf', 'seal', 'scores', 'steps', 'file', 'code'].forEach(function (k) { if (k in nb) old[k] = nb[k]; }); } else B.push(nb); });
+        (r.remove_blocks || []).forEach(function (i) { drop[i] = 1; });
+        F.blocks = B.filter(function (_, i) { return !drop[i]; }); got.push('blocks');
+      }
+      if (ch.qa && r.qa && (r.qa.items || []).length) { F.qa = { title: r.qa.title || (F.qa && F.qa.title) || 'Questions', items: r.qa.items }; got.push('qa'); }
+      if (ch.spotted && (r.spotted || []).length) { F.spotted = r.spotted.map(function (y) { var o = { label: y.label, text: y.text }; if (y.url) o.url = y.url; return o; }); got.push('spotted'); }
+    }
+    // the pictures: where each sits, the cover, the order, the spreads (their real/AI label stays Christian's)
+    var byName = function (n) { return E.photos.filter(function (p) { return photoName(p) === n; })[0]; };
+    if (ch.photos && (r.photos || []).length) {
+      var subs = subheads(), k = 0;
+      r.photos.forEach(function (x) { var p = byName(x.photo); if (!p) return; if (x.under_subhead && subs.indexOf(x.under_subhead) >= 0) p.at = x.under_subhead; else delete p.at; p.use = x.use === false ? 'skip' : (p.use === 'skip' ? 'post' : p.use || 'post'); k++; });
+      if (k) got.push('photos');
+    }
+    if (ch.cover_photo && r.cover_photo && byName(r.cover_photo)) { E.photos.forEach(function (p) { p.cover = photoName(p) === r.cover_photo; }); got.push('cover_photo'); }
+    if (ch.photo_order && (r.photo_order || []).length) {
+      var rank = {}; r.photo_order.forEach(function (n, i) { rank[n] = i; });
+      var U = photoUnits(), all = E.photos.slice(), at = function (u) { var m = Infinity; u.forEach(function (i) { var n = photoName(all[i]); if (n in rank) m = Math.min(m, rank[n]); }); return m === Infinity ? 1e6 + u[0] : m; };
+      U.sort(function (a, b) { return at(a) - at(b); });
+      E.photos = [].concat.apply([], U.map(function (u) { return u.map(function (i) { return all[i]; }); })); got.push('photo_order');
+    }
+    if (ch.spreads && ((r.spreads || []).length || (r.remove_spreads || []).length)) {
+      var L = spreads().slice(), gone = {};
+      var items = function (pics) { return (pics || []).map(function (x) { var p = byName(x.photo); if (!p || p.strip) return null; var o = { name: x.name || '', when: x.line || p.caption || '', alt: x.line || p.caption || '', src: p.src, w: p.w || 1600, h: p.h || 900 }; if (p.video) { o.video = true; o.poster = p.poster; } return o; }).filter(Boolean); };
+      (r.spreads || []).forEach(function (b) {
+        var its = items(b.pictures); if (!its.length) return;
+        var o = b.replaces >= 0 && L[b.replaces] ? L[b.replaces] : null;
+        if (o) { o.title = b.title || o.title; o.dek = b.dek; o.before = b.before; o.layout = b.layout; o.items = its.map(function (x) { var was = (o.items || []).filter(function (y) { return y.src === x.src; })[0]; if (was && was.ai) x.ai = true; return x; }); }
+        else L.push({ title: b.title || 'The photo spread', dek: b.dek || '', before: b.before || '', layout: b.layout || 'hero2', items: its });   // no label: Christian chooses it in the Photo spread panel
+      });
+      (r.remove_spreads || []).forEach(function (i) { gone[i] = 1; });
+      E.feature = E.feature || {}; setSpreads(L.filter(function (_, i) { return !gone[i]; })); got.push('spreads');
+    }
+    if (Array.isArray(r.questions)) E.questions = r.questions;
+    if (got.length || Array.isArray(r.questions)) { renderSpread(); markDirty(); count(); renderPhotos(); renderQuestions(); renderMag(); renderSecs(); renderSync(); renderNext(); }
+    return got.map(function (k) { return ASK_NAMES[k] || k; });
+  }
+  function askUndo() {
+    if (!ASK.undo) return;
+    E = ASK.undo; ASK.undo = null; ASK.said = 'Put back as it was before Claude\'s change.';
+    markDirty(); render(); toast('Put back as it was.');
+  }
+
+  // ---------- the post's sections and the script (Christian, Oct 18): a "## " subhead and everything under it move
+  // together (↑ ↓), and the photos, spreads and blocks set under a subhead go with it, since they name it. The script
+  // follows the post: it remembers the order it was written for (episode.sections), and when the sections have moved,
+  // been added or taken out since, the Episode script panel and the next steps say so, and Claude brings the script
+  // back in line (api.php rescript), keeping its own words where they still fit ----------
+  function postParts() {   // [{title, paras}] in order; the opening before the first subhead has no title, and "What I learned:" stays last
+    var ps = ($('#postBody') ? $('#postBody').value : E.post.body || '').split(/\n\s*\n/).map(function (t) { return t.trim(); }).filter(Boolean);
+    var parts = [{ title: '', paras: [] }], tail = null;
+    if (ps.length && /^What I learned:/i.test(ps[ps.length - 1])) tail = ps.pop();
+    ps.forEach(function (t) { if (/^## /.test(t)) parts.push({ title: t.slice(3).trim(), paras: [t] }); else parts[parts.length - 1].paras.push(t); });
+    return { parts: parts, tail: tail };
+  }
+  function moveSection(k, d) {   // k: the index among the titled parts
+    var P = postParts(), head = P.parts[0], T = P.parts.slice(1), j = k + d;
+    if (j < 0 || j >= T.length) return;
+    var a = T[k]; T[k] = T[j]; T[j] = a;
+    var all = head.paras.concat([].concat.apply([], T.map(function (x) { return x.paras; }))).concat(P.tail ? [P.tail] : []);
+    $('#postBody').value = all.join('\n\n'); markDirty(); collect();
+    renderSecs(T[j].title); renderSync(); renderPhotos(); renderNext();
+  }
+  function renderSecs(moved) {
+    var box = $('#postSecs'); if (!box) return;
+    var T = postParts().parts.slice(1);
+    if (T.length < 2) { box.innerHTML = ''; return; }
+    box.innerHTML = '<div class="secs"><b>Its sections</b> <small class="muted">↑ and ↓ move a section, its subhead and everything under it; its photos go with it.</small><ol>' + T.map(function (x, k) {
+      return '<li' + (x.title === moved ? ' class="moved"' : '') + '><span>' + esc(x.title) + '</span><small class="muted">' + (x.paras.length - 1) + ' paragraph' + (x.paras.length === 2 ? '' : 's') + '</small>' +
+        '<button type="button" class="link secUp" data-k="' + k + '" aria-label="Move ' + esc(x.title) + ' earlier"' + (k ? '' : ' disabled') + '>↑</button>' +
+        '<button type="button" class="link secDn" data-k="' + k + '" aria-label="Move ' + esc(x.title) + ' later"' + (k < T.length - 1 ? '' : ' disabled') + '>↓</button></li>';
+    }).join('') + '</ol></div>';
+    $$('.secUp', box).forEach(function (b) { b.onclick = function () { moveSection(+b.getAttribute('data-k'), -1); }; });
+    $$('.secDn', box).forEach(function (b) { b.onclick = function () { moveSection(+b.getAttribute('data-k'), 1); }; });
+    var m = $('li.moved', box); if (m) { setTimeout(function () { m.classList.remove('moved'); }, 900); var f = $(moved && $('.secUp:not(:disabled)', m) ? '.secUp' : '.secDn', m); if (f && !f.disabled) f.focus(); }
+  }
+  function sameList(a, b) { return a.length === b.length && a.every(function (x, i) { return x === b[i]; }); }
+  function scriptStale() {   // the sections the script was written for, when known, against the post's now
+    var was = E.episode.sections, script = $('#epScript') ? $('#epScript').value.trim() : E.episode.script;
+    return !!(script && Array.isArray(was) && !sameList(was, subheads()));
+  }
+  var RESCRIPTING = false;
+  function renderSync() {
+    var box = $('#epSync'); if (!box) return;
+    var script = $('#epScript') ? $('#epScript').value.trim() : E.episode.script, now = subheads(), stale = scriptStale();
+    if (!script || (!stale && now.length < 2)) { box.innerHTML = ''; return; }
+    box.innerHTML = '<div class="epsync' + (stale ? ' stale' : '') + '">' +
+      (stale ? '<p><b>The post\'s sections have changed since the script was written.</b> It follows: ' + esc(E.episode.sections.join(' → ') || 'no sections') + '. The post now: ' + esc(now.join(' → ') || 'no sections') + '.</p>'
+        : '<p class="muted">The script follows the post\'s sections: ' + esc(now.join(' → ')) + '. When you move one, it can follow.</p>') +
+      '<div class="row"><button type="button" class="' + (stale ? 'primary' : 'small') + '" id="rescript"' + (RESCRIPTING ? ' disabled' : '') + '>' + (RESCRIPTING ? 'Claude is rewriting the script…' : 'Match the script to the post') + '</button>' +
+      (stale ? '<button type="button" class="link" id="rescriptKeep">It\'s fine as it is</button>' : '') + '</div></div>';
+    var b = $('#rescript'); if (b) b.onclick = function () { rescript(); };
+    var k = $('#rescriptKeep'); if (k) k.onclick = function () { E.episode.sections = subheads(); markDirty(); renderSync(); renderNext(); };
+  }
+  function rescript() {
+    collect();
+    if (!E.episode.script) { toast('There\'s no script yet to bring in line.', true); return Promise.resolve(); }
+    RESCRIPTING = true; renderSync();
+    var had = !!(audioNew || (E.episode.audio && !audioGone));
+    return api('rescript', { note: { title: E.title, kind: E.kind, place: E.place, narrator: NAR_NAME[NARNOW] || 'GlazyArray', post: { title: E.post.title, body: E.post.body },
+      episode: { title: E.episode.title, script: E.episode.script }, sectionsBefore: Array.isArray(E.episode.sections) ? E.episode.sections : null, sectionsNow: subheads() } })
+      .then(function (j) {
+        var r = j.rescript || {};
+        $('#epScript').value = String(r.episode_script || '').trim() || $('#epScript').value; count(); collect();
+        E.episode.sections = subheads(); markDirty();
+        toast('The script follows the post now. ' + (r.notes ? r.notes + ' ' : '') + 'Read it through' + (had ? ', then record the audio again: it was made from the old script.' : '.'));
+      }).catch(function (err) { toast('Couldn\'t rewrite the script: ' + err.message, true); })
+      .then(function () { RESCRIPTING = false; renderSync(); renderNext(); });
+  }
   function subheads() { return ($('#postBody') ? $('#postBody').value : E.post.body || '').split(/\n\s*\n/).map(function (t) { return t.trim(); }).filter(function (t) { return /^## /.test(t); }).map(function (t) { return t.slice(3).trim(); }); }
   function renderPhotos() {
     var box = $('#photos'), none = $('#noPhotos');
@@ -2812,7 +2985,8 @@
         '<div class="meta"><small>' + esc(n) + (p.hdr ? ' · HDR of ' + p.hdr : '') + (p.strip ? ' · its ' + p.strip + ' exposures' : '') + (p.table ? ' · on the table' : '') + (p.takenAt ? ' · ' + esc(String(p.takenAt).slice(11, 16)) : '') + (fresh[n] || clipsNew[n] ? ' · new' : '') + '</small>' +
         '<textarea rows="2" placeholder="Caption">' + esc(p.caption) + '</textarea>' +
         '<div class="opts"><label><input type="checkbox" class="use"' + (p.use !== 'skip' ? ' checked' : '') + '> Use</label>' +
-        '<label><input type="radio" name="cover" class="cover"' + (p.cover ? ' checked' : '') + '> Cover</label>' + (clip ? '<button type="button" class="link pfBtn">Poster frame</button>' : '') +
+        '<label><input type="radio" name="cover" class="cover"' + (p.cover ? ' checked' : '') + '> Cover</label>' +
+        '<label title="Its caption on the site carries the Made with AI label"><input type="checkbox" class="isai"' + (p.ai ? ' checked' : '') + '> Made with AI</label>' + (clip ? '<button type="button" class="link pfBtn">Poster frame</button>' : '') +
         (canSwap(p, i) ? '<button type="button" class="link swBtn">Swap</button>' : '') + '<button class="link rm">Remove</button>' + mv(i) + '</div>' + at(p) + '</div></div>';
     }).join('');
     $$('.ph', box).forEach(function (d) {
@@ -3011,6 +3185,24 @@
     if (x.video && x.poster) n = x.poster.split('/').pop();
     return fresh[n] ? fresh[n].thumb : posterNew[n] ? posterNew[n].thumb || '' : 'api.php?a=photo&id=' + encodeURIComponent(E.id) + '&n=' + encodeURIComponent(n);
   }
+  // a spread's layout (publish.mjs bookHtml, css/feature.css .L-*), as small pictures of itself; the magazine template's
+  // own come first, marked; and its label, which only Christian sets: Made with AI, Real photographs, or each picture its own
+  var SP_LAYOUTS = [['hero2', 'One big, then two across'], ['hero3', 'One big, then three across'], ['side', 'One big beside two'], ['grid2', 'Two across'], ['grid3', 'Three across'], ['strip', 'A row to swipe along']];
+  function spLayoutPick(LB) {
+    var F = E.feature && E.feature.masthead ? E.feature : null, t = F ? magOf(F) : null, pref = (t && t.layouts) || [], cur = LB.layout || 'hero2';
+    var list = SP_LAYOUTS.slice().sort(function (a, b) { var x = pref.indexOf(a[0]), y = pref.indexOf(b[0]); return (x < 0 ? 9 : x) - (y < 0 ? 9 : y); });
+    return '<div class="spLays"><b>Layout</b><div class="spLayRow">' + list.map(function (l) {
+      var n = l[0] === 'side' ? 3 : l[0] === 'grid2' ? 4 : l[0] === 'strip' ? 4 : 5;
+      return '<button type="button" class="spLay' + (cur === l[0] ? ' on' : '') + '" data-l="' + l[0] + '" aria-pressed="' + (cur === l[0]) + '"><i class="lay lay-' + l[0] + '">' + new Array(n + 1).join('<b></b>') + '</i><span>' + esc(l[1]) +
+        (pref.indexOf(l[0]) >= 0 && t ? '<small>suits ' + esc(t.masthead) + '</small>' : '') + '</span></button>';
+    }).join('') + '</div></div>';
+  }
+  function spLabelPick(LB) {
+    var v = LB.label || '';
+    var opt = function (k, t) { return '<label><input type="radio" name="spLabel" value="' + k + '"' + (v === k ? ' checked' : '') + '> ' + t + '</label>'; };
+    return '<div class="spLabel' + (v ? '' : ' unset') + '"><b>Its pictures are</b> ' + opt('real', 'Real photographs') + opt('ai', 'Made with AI') + opt('mixed', 'Some of each (marked one by one)') +
+      (v ? '' : '<small>Not chosen yet, so the site labels it Made with AI.</small>') + '</div>';
+  }
   function renderSpread() {
     var box = $('#spreadBox'); if (!box || !E) return;
     var hs = $('#f-spread > summary small'); if (hs) hs.textContent = spreadHint();
@@ -3024,13 +3216,14 @@
         '<button type="button" class="link" id="spNew">+ A new spread</button></div>' : '') +
       (LB ? '<div class="grid2">' + field('Title', '<input id="spTitle" value="' + esc(LB.title || '') + '" placeholder="Out and about">') +
         field('Before the subhead', '<select id="spBefore"><option value="">At the end of the story</option>' + subs.map(function (s) { return '<option' + (s === LB.before ? ' selected' : '') + '>' + esc(s) + '</option>'; }).join('') + '</select>') + '</div>' +
-        field('Line under the title', '<textarea id="spDek" rows="2">' + esc(LB.dek || '') + '</textarea>') : '') +
+        field('Line under the title', '<textarea id="spDek" rows="2">' + esc(LB.dek || '') + '</textarea>') + spLayoutPick(LB) + spLabelPick(LB) : '') +
       '<div class="spItems">' + items.map(function (x, i) {
         return '<div class="spItem" data-i="' + i + '"><img src="' + esc(spreadThumb(x)) + '" alt="" loading="lazy"><div class="spF">' +
+          (LB && LB.label === 'mixed' ? '<label class="spAi"><input type="checkbox" class="spAiIn"' + (x.ai ? ' checked' : '') + '> Made with AI <small class="muted">(else Real photograph)</small></label>' : '') +
           '<input class="spName" value="' + esc(x.name || '') + '" placeholder="Its name (set in capitals)">' +
           '<input class="spWhen" value="' + esc(x.when || '') + '" placeholder="A line about it">' +
           '<div class="row"><button type="button" class="link spUp"' + (i ? '' : ' disabled') + '>Up</button><button type="button" class="link spDown"' + (i < items.length - 1 ? '' : ' disabled') + '>Down</button>' +
-          '<button type="button" class="link spSw">Swap</button><button type="button" class="link spRm">Remove from the spread</button>' + (x.video ? '<small class="muted">Loop</small>' : '') + (i === 0 ? '<small class="muted">The first is set wide.</small>' : '') + '</div></div></div>';
+          '<button type="button" class="link spSw">Swap</button><button type="button" class="link spRm">Remove from the spread</button>' + (x.video ? '<small class="muted">Loop</small>' : '') + (i === 0 && /^(hero2|hero3|side|)$/.test(LB && LB.layout || '') ? '<small class="muted">The first is set big.</small>' : '') + '</div></div></div>';
       }).join('') + '</div>' +
       (pick.length ? '<h3 class="spPickH">Add a picture from this Note</h3><div class="spPick">' + pick.map(function (p) {
         return '<button type="button" class="spAddPic" data-src="' + esc(p.src) + '" title="' + esc(photoName(p) + (p.video ? ' (loop)' : '') + (p.caption ? ': ' + p.caption.slice(0, 80) : '')) + '"><img src="' + esc(thumbOf(p)) + '" alt="" loading="lazy">' + (p.video ? '<i>Loop</i>' : '') + '<span>+</span></button>'; }).join('') + '</div>' : '') +
@@ -3055,6 +3248,9 @@
       $('.spSw', d).onclick = function () { spreadSwap(i); };
       $('.spRm', d).onclick = function () { L.splice(i, 1); if (!L.length) setSpreads(spreads().filter(function (b) { return b !== spreadCur(); })); changed(); renderPhotos(); };
     });
+    $$('.spLay', box).forEach(function (b) { b.onclick = function () { ensure().layout = b.getAttribute('data-l'); changed(); }; });
+    $$('[name="spLabel"]', box).forEach(function (r) { r.onchange = function () { var c = ensure(); c.label = r.value; if (r.value === 'mixed') c.items.forEach(function (x) { var p = (E.photos || []).find(function (q) { return q.src === x.src; }); if (x.ai == null && p && p.ai) x.ai = true; }); changed(); }; });
+    $$('.spAiIn', box).forEach(function (c) { c.onchange = function () { var x = spreadCur().items[+c.closest('.spItem').getAttribute('data-i')]; if (c.checked) x.ai = true; else delete x.ai; markDirty(); }; });
     var dr = $('#spDrop'); if (dr) dr.onclick = function () { if (!confirm('Remove this whole photo spread? Its pictures stay in the Note\'s folder.')) return; var c = spreadCur(); setSpreads(spreads().filter(function (b) { return b !== c; })); changed(); };
     $$('.spTab', box).forEach(function (b) { b.onclick = function () { SPI = +b.getAttribute('data-n'); renderSpread(); }; });
     var nw = $('#spNew'); if (nw) nw.onclick = function () { var l = spreads().slice(); l.push({ title: 'A new spread', dek: '', before: '', items: [] }); E.feature.lookbook = l; SPI = l.length - 1; changed(); };
@@ -3092,15 +3288,21 @@
     out.push({ k: 'pictures', l: 'At least ' + want + ' pictures besides the cover (' + pics + ' now)', ok: pics >= want, by: 'picture', why: pics < want ? (want - pics) + ' more: photos, loops or renders' : '' });
     return out;
   }
-  function magNote() {   // what Claude is shown: the Note as it stands in the editor
+  // What Claude is shown, by every helper (Christian, Oct 18: the drafting and the magazine helpers act together): the
+  // whole Note as it stands in the editor, its notes, post, script, photos and where they sit, the magazine's parts and
+  // its spreads, and both helpers' open questions
+  function noteForClaude() {
     collect();
-    var s = E.track && E.track.stats;
+    var s = E.track && E.track.stats, F = E.feature && E.feature.masthead ? E.feature : null;
     return { title: E.title, date: E.date, kind: E.kind, place: E.place, whoAppears: E.consent, notes: E.fieldNotes, summary: E.summary,
-      postTitle: E.post.title, postBody: E.post.body, episodeScript: E.episode.script,
+      postTitle: E.post.title, postBody: E.post.body, episodeTitle: E.episode.title, episodeScript: E.episode.script, narrator: NAR_NAME[NARNOW] || 'GlazyArray',
       figures: s ? { distanceMiles: mi(s.distanceKm), highPointFeet: ft(s.maxEleM), movingTime: dur(s.movingSec) } : null,
-      photos: E.photos.filter(function (p) { return p.use !== 'skip' && !p.strip; }).map(function (p) { return { file: photoName(p), caption: p.caption || '', loop: !!p.video, ai: !!p.ai, cover: !!p.cover }; }),
-      feature: E.feature };
+      photos: E.photos.filter(function (p) { return p.use !== 'skip' && !p.strip; }).map(function (p) { return { file: photoName(p), caption: p.caption || '', loop: !!p.video, ai: !!p.ai, cover: !!p.cover, underSubhead: p.at || '' }; }),
+      magazine: F ? { masthead: F.masthead, tagline: F.tagline || '', issue: F.issue || '', label: F.label || '', byline: F.byline || '', coverLines: F.coverLines || [], blocks: F.blocks || [], qa: F.qa || null, spotted: F.spotted || [], layouts: (magOf(F) || {}).layouts || [] } : null,
+      spreads: spreads().map(function (b, i) { return { index: i, title: b.title || '', dek: b.dek || '', before: b.before || '', layout: b.layout || 'hero2', pictures: (b.items || []).map(function (x) { return { photo: String(x.src || '').split('/').pop(), name: x.name || '', line: x.when || '' }; }) }; }),
+      questions: E.questions || [], magazineQuestions: F ? (F.questions || []) : [] };
   }
+  function magNote() { var n = noteForClaude(); n.feature = E.feature; return n; }   // the magazine writer also gets its template's own fields
   function magBlock(b) {   // Claude's block (flat fields) as publish.mjs wants it
     var o = { type: b.type }, set = function (k, v) { if (v != null && v !== '' && !(Array.isArray(v) && !v.length)) o[k] = v; };
     set('title', b.title); set('before', b.before);
@@ -3191,9 +3393,12 @@
         ((F.renders || []).length ? '<div class="magRenders"><h3>Pictures to make</h3><p class="muted">Paste a prompt into your image tool, then add the result under Photos. No text or logos inside a render.</p>' + F.renders.map(function (r, i) {
           return '<div class="magRender"><b>' + esc(r.for) + '</b><p>' + esc(r.prompt) + '</p><button type="button" class="link magCopy" data-i="' + i + '">Copy</button> <button type="button" class="link magDone" data-i="' + i + '">Done, remove it</button></div>';
         }).join('') + '</div>' : '') +
+        askBox('magazine') +
         '<h3>The cover</h3><div class="grid2">' + field('Masthead', inp('masthead', t && t.masthead)) + field('Tagline', inp('tagline', t && t.tagline)) +
           field('Issue', inp('issue', t && t.issue)) + field('Label over the headline', inp('label', t && t.label)) + field('Byline', inp('byline', t && t.byline)) + '</div>' +
         field('Cover lines', '<textarea class="magF" data-k="coverLines" rows="4" placeholder="One per line, 3 to 5. The first is set large.">' + esc((F.coverLines || []).join('\n')) + '</textarea>', 'Each one points at something really in the Note.') +
+        '<div class="spLabel' + (F.coverLabel ? '' : ' unset') + '"><b>The cover picture is</b> <label><input type="radio" name="coverLabel" value="real"' + (F.coverLabel === 'real' ? ' checked' : '') + '> A real photograph</label>' +
+          '<label><input type="radio" name="coverLabel" value="ai"' + (F.coverLabel === 'ai' ? ' checked' : '') + '> Made with AI</label>' + (F.coverLabel ? '' : '<small>Not chosen yet, so the site labels it Made with AI.</small>') + '</div>' +
         '<h3>The parts</h3>' + magParts(F) +
         '<button type="button" class="link" id="magOff">Take the magazine look off</button>';
     }
@@ -3213,7 +3418,8 @@
     var w = $('#magWrite'); if (w) w.onclick = function () { magWrite(magNeeds(F, t).filter(function (x) { return !x.ok && x.by !== 'hand'; }).map(function (x) { return x.k; }), t, w); };
     $$('.magCopy', box).forEach(function (b) { b.onclick = function () { navigator.clipboard.writeText(F.renders[+b.getAttribute('data-i')].prompt).then(function () { toast('Prompt copied.'); }); }; });
     $$('.magDone', box).forEach(function (b) { b.onclick = function () { F.renders.splice(+b.getAttribute('data-i'), 1); if (!F.renders.length) delete F.renders; markDirty(); renderMag(); }; });
-    magPartsWire(F, box);
+    magPartsWire(F, box); wireAsk(box);
+    $$('[name="coverLabel"]', box).forEach(function (r) { r.onchange = function () { F.coverLabel = r.value; markDirty(); renderMag(); }; });
     $('#magOff').onclick = function () {
       if (!confirm('Take the magazine look off this Note? Its cover text, blocks, Q&A and Spotted box go too (the post and photos stay).')) return;
       delete E.feature; markDirty(); renderMag();
@@ -3744,6 +3950,9 @@
     if (q) out.push({ t: 'Answer Claude\'s ' + (q === 1 ? 'question' : q + ' questions'), d: 'The script isn\'t final until they\'re answered. Answer them one by one, then send them all at once.', b: 'Answer', go: '#questions' });
     if (drafted && !q && !val('epScript')) out.push({ t: 'Write the episode script', d: 'The episode is read from it. Draft with Claude writes one from the post, or write your own.', b: 'Go to the script', go: '#epScript' });
     if (drafted && !q && LOOKPICK) out.push({ t: 'Pick the narrator style', d: 'More than one of this Note\'s categories gives her a cap or backdrop. Tick the one this Note takes.', b: 'Pick it', go: '#f-look' });
+    var unl = spreads().filter(function (b) { return !b.label; }).length, mc = E.feature && E.feature.masthead && !E.feature.coverLabel;
+    if (unl || mc) out.push({ t: 'Label ' + (unl && mc ? 'the cover and the photo spread' + (unl > 1 ? 's' : '') : unl ? 'the photo spread' + (unl > 1 ? 's' : '') : 'the magazine cover'), d: 'Say whether ' + (unl + (mc ? 1 : 0) > 1 ? 'they are' : 'it is') + ' real photographs or made with AI. Until then the site says Made with AI.', b: 'Label ' + (unl + (mc ? 1 : 0) > 1 ? 'them' : 'it'), go: unl ? '#spreadBox' : '#magBox' });
+    if (drafted && !q && scriptStale()) out.push({ t: 'Bring the script in line with the post', d: 'The post\'s sections have moved since the script was written. Claude can rewrite the script to follow them, keeping its words where they fit.', b: 'Match it', go: '#epSync' });
     if (drafted && !q && val('epScript') && !audio) out.push({ t: 'Record the episode', d: 'Copy the audio prompt, render it with your voice tool, then drop the audio in or choose it from Drive.', b: 'Go to the audio', go: '#copyPrompt' });
     if (videos && !loops && !E.loopsDone) out.push({ t: 'Trim video loops', d: videos + ' video' + (videos > 1 ? 's' : '') + ' in the Drive folder. Pick the moments worth a short silent loop.', b: 'Trim loops', go: '#loops', done: 'loops' });
     if (dirty) out.push({ t: 'Save', d: 'Keep what you have so far.', b: 'Save', run: save });
@@ -4140,6 +4349,8 @@
       var facts = { title: E.title, date: E.date, kind: E.kind, place: E.place, whoAppears: E.consent, notes: E.fieldNotes, figures: figures(),
         photos: E.photos.filter(function (p) { return p.use !== 'skip'; }).map(function (p) { return { file: photoName(p), takenAt: p.takenAt || null, video: !!p.video, caption: p.caption || '' }; }),
         currentDraft: (E.post.body || E.episode.script) ? { summary: E.summary, post: E.post, episode: { title: E.episode.title, script: E.episode.script } } : null,
+        magazine: noteForClaude().magazine, magazineQuestions: (E.feature && E.feature.questions) || [], spreads: noteForClaude().spreads,
+        placements: E.photos.filter(function (p) { return p.at; }).map(function (p) { return { file: photoName(p), underSubhead: p.at }; }),
         narrator: NAR_NAME[NARNOW] || 'GlazyArray',   // who tells the episode (its own choice or its categories'): the script is in their voice
         narratorLook: E.narratorLook ? E.narratorLook.look : null, narratorBackdrop: E.narratorBackdrop ? E.narratorBackdrop.backdrop : null,   // her look already chosen: Claude keeps it (fit existing) unless asked
         instruction: opts.instruction || $('#instr').value.trim() };
@@ -4148,7 +4359,7 @@
       var d = j.draft;
       $('#summary').value = d.summary || ''; $('#postTitle').value = d.post_title || ''; $('#postBody').value = d.post_body || '';
       $('#epTitle').value = d.episode_title || ''; $('#epScript').value = d.episode_script || ''; count();
-      collect();
+      collect(); E.episode.sections = subheads(); renderSecs(); renderSync();
       (d.captions || []).forEach(function (c) { E.photos.forEach(function (p) { if (photoName(p) === c.photo && !p.caption) p.caption = c.caption; }); });
       if (d.cover && E.photos.some(function (p) { return photoName(p) === d.cover; }) && !E.photos.some(function (p) { return p.cover; })) E.photos.forEach(function (p) { p.cover = photoName(p) === d.cover; });
       E.questions = d.questions || [];

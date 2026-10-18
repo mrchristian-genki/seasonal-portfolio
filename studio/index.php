@@ -60,7 +60,7 @@ $alt = 'The Studio by ' . $tod . ': a brass STUDIO panel with its day/night dial
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&family=Special+Elite&display=swap">
 <link rel="stylesheet" href="../css/route-dash.css?v=<?= STUDIO_VERSION ?>-3">
 <link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>-73">
-<link rel="stylesheet" href="table/table.css?v=82">
+<link rel="stylesheet" href="table/table.css?v=85">
 </head>
 <?php if (!$in): ?>
 <body class="login">
@@ -164,7 +164,7 @@ $alt = 'The Studio by ' . $tod . ': a brass STUDIO panel with its day/night dial
 <script src="assets/look.js?v=<?= STUDIO_VERSION ?>-7"></script>
 <script src="assets/marleycut.js?v=<?= STUDIO_VERSION ?>-2"></script>
 <script src="../js/motion.js?v=1"></script>
-<script src="assets/studio.js?v=<?= STUDIO_VERSION ?>-95"></script>
+<script src="assets/studio.js?v=<?= STUDIO_VERSION ?>-98"></script>
 <?php endif; ?>
 <script src="../js/audio-rules.js?v=1"></script>
 <script src="table/table.js?v=25"></script>

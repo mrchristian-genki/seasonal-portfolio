@@ -297,17 +297,25 @@ for (const e of events) {
   // (an item whose file is missing is left out with a warning, rather than stopping the whole site from building)
   const lbHas = (x) => { const ok = !!x.src && fs.existsSync(path.join(FIELD, x.src)) && (!x.poster || fs.existsSync(path.join(FIELD, x.poster))); if (!ok) console.warn(`${e.id}: look book picture missing, left out: ${x.src}`); return ok; };
   const LBS = books(e).map((b) => ({ ...b, items: (b.items || []).filter(lbHas) })).filter((b) => b.items.length);
-  const bookHtml = (LB, n) => `<section class="mag-book"><h2 class="sub">${esc(LB.title || 'The look book')}</h2>${LB.dek ? `<p class="mag-book-dek">${esc(LB.dek)}</p>` : ''}<div class="mag-book-grid">${LB.items.map((x, k) => {
+  // its layout (Oct 18, LB.layout): hero2 one big then two across (the first look books'), hero3 one big then three
+  // across, side one big beside two stacked, grid2 and grid3 even rows, strip one row to swipe along. Its label (LB.label,
+  // set in the Studio): ai "Made with AI", real "Real photographs", mixed a label on each picture (x.ai); none set, the
+  // look books' "Made with AI" as before
+  const LAYOUTS = ['hero2', 'hero3', 'side', 'grid2', 'grid3', 'strip'];
+  const bookBadge = (ai) => ai ? '<span class="ai-badge">Made with AI</span>' : '<span class="real-badge">Real photograph</span>';
+  const bookHtml = (LB, n) => { const lay = LAYOUTS.includes(LB.layout) ? LB.layout : 'hero2', lab = ['ai', 'real', 'mixed'].includes(LB.label) ? LB.label : 'ai', big = lay === 'hero2' || lay === 'hero3' || lay === 'side';
+    return `<section class="mag-book"><h2 class="sub">${esc(LB.title || 'The look book')}</h2>${LB.dek ? `<p class="mag-book-dek">${esc(LB.dek)}</p>` : ''}<div class="mag-book-grid L-${lay}">${LB.items.map((x, k) => {
     // the first book's files are look-01…, a second book's look2-01…, and so on
-    const base = 'look' + (n ? n + 1 : '') + '-' + String(k + 1).padStart(2, '0'), alt = esc(x.alt || `GlazyArray in ${String(x.name || '').toLowerCase()}`), cap = `<figcaption><b>${esc(x.name || '')}</b> ${esc(x.when || '')}</figcaption>`;
+    const base = 'look' + (n ? n + 1 : '') + '-' + String(k + 1).padStart(2, '0'), alt = esc(x.alt || (LB.label ? x.when || x.name || '' : `GlazyArray in ${String(x.name || '').toLowerCase()}`)), cap = `<figcaption>${lab === 'mixed' ? bookBadge(!!x.ai) + ' ' : ''}<b>${esc(x.name || '')}</b> ${esc(x.when || '')}</figcaption>`;
+    const wide = big && k === 0 ? ' wide' : '';
     if (x.video && /\.mp4$/.test(x.src || '') && x.poster) {   // a loop: plays silently, its poster frame until it does
       fs.copyFileSync(path.join(FIELD, x.src), path.join(media, base + '.mp4')); fs.copyFileSync(path.join(FIELD, x.poster), path.join(media, base + '.jpg'));
       const tag = '?v=' + vtag(x.src, x.poster);
-      return `<figure class="mag-look clip${k === 0 ? ' wide' : ''}"><a href="../media/${e.id}/${base}.mp4${tag}" data-lightbox data-video><video src="../media/${e.id}/${base}.mp4${tag}" poster="../media/${e.id}/${base}.jpg${tag}" width="${x.w}" height="${x.h}" muted loop playsinline preload="none" data-autoplay aria-label="${alt}"></video></a>${cap}</figure>`;
+      return `<figure class="mag-look clip${wide}"><a href="../media/${e.id}/${base}.mp4${tag}" data-lightbox data-video><video src="../media/${e.id}/${base}.mp4${tag}" poster="../media/${e.id}/${base}.jpg${tag}" width="${x.w}" height="${x.h}" muted loop playsinline preload="none" data-autoplay aria-label="${alt}"></video></a>${cap}</figure>`;
     }
     const f = base + '.jpg'; fs.copyFileSync(path.join(FIELD, x.src), path.join(media, f));
-    return `<figure class="mag-look${k === 0 ? ' wide' : ''}"><a href="../media/${e.id}/${f}" data-lightbox><img src="../media/${e.id}/${f}" alt="${alt}" width="${x.w}" height="${x.h}" loading="lazy"></a>${cap}</figure>`;
-  }).join('')}</div><p class="mag-book-ai"><span class="ai-badge">Made with AI</span></p></section>\n`;
+    return `<figure class="mag-look${wide}"><a href="../media/${e.id}/${f}" data-lightbox><img src="../media/${e.id}/${f}" alt="${alt}" width="${x.w}" height="${x.h}" loading="lazy"></a>${cap}</figure>`;
+  }).join('')}</div>${lab === 'mixed' ? '' : `<p class="mag-book-ai">${lab === 'real' ? '<span class="real-badge">Real photographs</span>' : '<span class="ai-badge">Made with AI</span>'}</p>`}</section>\n`; };
   const lbDone = new Set();
   // A feature's blocks (e.feature.blocks), the furniture any magazine template can use, each set just before the
   // subhead it names ("before"; at the end of the story if none): a spec box ("specs": rows of [label, value]), a
@@ -367,7 +375,7 @@ for (const e of events) {
   const magCover = F && cover ? `<header class="mag-cover"${mastStyle}><div class="mag-img">${cover.video ? `<video src="${esc(cover.src)}" poster="${esc(cover.poster)}" muted loop playsinline preload="metadata" data-autoplay></video>` : `<img src="${esc(cover.src)}" alt="${esc(cover.caption)}" width="${cover.w}" height="${cover.h}">`}</div>
 <div class="mag-top"><b class="mag-mast">${String(F.masthead || '').trim().split(/\s+/).map((w) => `<span>${esc(w)}</span>`).join(' ')}</b>${F.tagline ? `<span class="mag-tag">${esc(F.tagline)}</span>` : ''}</div>
 ${F.issue ? `<span class="mag-issue">${esc(F.issue)}</span>` : ''}${(F.coverLines || []).length ? `<ul class="mag-lines">${F.coverLines.map((l) => `<li>${esc(l)}</li>`).join('')}</ul>` : ''}
-</header>${cover.caption ? `<p class="mag-cap"><span class="ai-badge">Made with AI</span> ${esc(cover.caption)}</p>` : ''}` : '';
+</header>${cover.caption ? `<p class="mag-cap">${F.coverLabel === 'real' ? '<span class="real-badge">Real photograph</span>' : '<span class="ai-badge">Made with AI</span>'} ${esc(cover.caption)}</p>` : ''}` : '';
   const magQa = F && F.qa && (F.qa.items || []).length ? `<section class="mag-qa${/^marley$/.test(F.qa.who || '') ? ` qa-${F.qa.who}` : ''}"><h2>${esc(F.qa.title || 'Questions')}</h2><dl>${F.qa.items.map((x) => `<dt>${esc(x.q)}</dt><dd>${esc(x.a)}</dd>`).join('')}</dl></section>` : '';
   const magSpot = F && (F.spotted || []).length ? `<aside class="mag-spot"><h2>Spotted</h2><ul>${F.spotted.map((x) => `<li><b>${x.url ? `<a href="${esc(x.url)}">${esc(x.label)}</a>` : esc(x.label)}</b> ${esc(x.text)}</li>`).join('')}</ul></aside>` : '';
   const url = `${show.siteUrl}${e.id}/`, title = `${e.post && e.post.title || e.title} · ${show.showTitle}`;

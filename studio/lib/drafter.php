@@ -236,6 +236,160 @@ TXT;
         throw new RuntimeException('Claude sent back something that was not the feature\'s parts.');
     }
 
+    private const RESCRIPT = [
+        'type' => 'object',
+        'properties' => [
+            'episode_script' => ['type' => 'string', 'description' => 'The whole script, rewritten to follow the post\'s sections in their order. Paragraphs separated by a blank line; *** on its own line between sections.'],
+            'notes' => ['type' => 'string', 'description' => 'One or two plain sentences on what moved or changed, for Christian.'],
+        ],
+        'required' => ['episode_script', 'notes'],
+        'additionalProperties' => false,
+    ];
+
+    private const REVISE_BLOCK = [
+        'type' => 'object',
+        'properties' => [
+            'replaces' => ['type' => 'integer', 'description' => 'The index in magazine.blocks of the block this changes; -1 for a new block.'],
+            'type' => ['type' => 'string', 'enum' => ['specs', 'stats', 'goodbad', 'verdict', 'box', 'steps', 'timeline', 'code']],
+            'title' => ['type' => 'string'], 'before' => ['type' => 'string'], 'kicker' => ['type' => 'string'], 'text' => ['type' => 'string'], 'note' => ['type' => 'string'],
+            'pairs' => ['type' => 'array', 'items' => ['type' => 'array', 'items' => ['type' => 'string']]],
+            'good' => ['type' => 'array', 'items' => ['type' => 'string']], 'bad' => ['type' => 'array', 'items' => ['type' => 'string']],
+            'score' => ['type' => 'string'], 'out_of' => ['type' => 'string'], 'seal' => ['type' => 'string'],
+            'steps' => ['type' => 'array', 'items' => ['type' => 'object', 'properties' => ['title' => ['type' => 'string'], 'text' => ['type' => 'string']], 'required' => ['title', 'text'], 'additionalProperties' => false]],
+            'file' => ['type' => 'string'], 'code' => ['type' => 'string'],
+        ],
+        'required' => ['replaces', 'type', 'title', 'before', 'kicker', 'text', 'note', 'pairs', 'good', 'bad', 'score', 'out_of', 'seal', 'steps', 'file', 'code'],
+        'additionalProperties' => false,
+    ];
+
+    private const REVISE = [
+        'type' => 'object',
+        'properties' => [
+            'changed' => ['type' => 'array', 'items' => ['type' => 'string', 'enum' => ['summary', 'post_title', 'post_body', 'episode_title', 'episode_script', 'captions', 'masthead', 'tagline', 'issue', 'label', 'byline', 'cover_lines', 'blocks', 'qa', 'spotted', 'photos', 'cover_photo', 'photo_order', 'spreads']],
+                'description' => 'Only the parts this answer changes; everything else is left exactly as it is.'],
+            'summary' => ['type' => 'string'], 'post_title' => ['type' => 'string'],
+            'post_body' => ['type' => 'string', 'description' => 'The whole post when it changes.'],
+            'renamed' => ['type' => 'array', 'items' => ['type' => 'object', 'properties' => ['from' => ['type' => 'string'], 'to' => ['type' => 'string']], 'required' => ['from', 'to'], 'additionalProperties' => false],
+                'description' => 'Each "## " subhead renamed in post_body: its old and new wording (without "## ").'],
+            'episode_title' => ['type' => 'string'], 'episode_script' => ['type' => 'string', 'description' => 'The whole script when it changes.'],
+            'captions' => ['type' => 'array', 'items' => ['type' => 'object', 'properties' => ['photo' => ['type' => 'string'], 'caption' => ['type' => 'string']], 'required' => ['photo', 'caption'], 'additionalProperties' => false],
+                'description' => 'Only the captions that change.'],
+            'masthead' => ['type' => 'string'], 'tagline' => ['type' => 'string'], 'issue' => ['type' => 'string'], 'label' => ['type' => 'string'], 'byline' => ['type' => 'string'],
+            'cover_lines' => ['type' => 'array', 'items' => ['type' => 'string']],
+            'blocks' => ['type' => 'array', 'items' => self::REVISE_BLOCK, 'description' => 'Only the magazine blocks that change or are new.'],
+            'remove_blocks' => ['type' => 'array', 'items' => ['type' => 'integer'], 'description' => 'Indexes in magazine.blocks to take out.'],
+            'qa' => ['type' => 'object', 'properties' => ['title' => ['type' => 'string'], 'items' => ['type' => 'array', 'items' => ['type' => 'object', 'properties' => ['q' => ['type' => 'string'], 'a' => ['type' => 'string']], 'required' => ['q', 'a'], 'additionalProperties' => false]]], 'required' => ['title', 'items'], 'additionalProperties' => false],
+            'spotted' => ['type' => 'array', 'items' => ['type' => 'object', 'properties' => ['label' => ['type' => 'string'], 'text' => ['type' => 'string'], 'url' => ['type' => 'string']], 'required' => ['label', 'text', 'url'], 'additionalProperties' => false]],
+            'photos' => ['type' => 'array', 'description' => 'Only the photos whose place changes: under a subhead (its wording without "## "), or "" to be spread through the story; use false to leave it out of the post.',
+                'items' => ['type' => 'object', 'properties' => ['photo' => ['type' => 'string'], 'under_subhead' => ['type' => 'string'], 'use' => ['type' => 'boolean']], 'required' => ['photo', 'under_subhead', 'use'], 'additionalProperties' => false]],
+            'cover_photo' => ['type' => 'string', 'description' => 'The file of the photo that opens the Note, when it changes.'],
+            'photo_order' => ['type' => 'array', 'items' => ['type' => 'string'], 'description' => 'Every photo file in its new order, when the order changes.'],
+            'spreads' => ['type' => 'array', 'description' => 'Only the photo spreads that change or are new.',
+                'items' => ['type' => 'object', 'properties' => [
+                    'replaces' => ['type' => 'integer', 'description' => 'The index in spreads of the one this changes; -1 for a new one.'],
+                    'title' => ['type' => 'string'], 'dek' => ['type' => 'string', 'description' => 'A line under its title.'],
+                    'before' => ['type' => 'string', 'description' => 'The subhead it sits before (without "## "); empty for the end of the story.'],
+                    'layout' => ['type' => 'string', 'enum' => ['hero2', 'hero3', 'side', 'grid2', 'grid3', 'strip']],
+                    'pictures' => ['type' => 'array', 'items' => ['type' => 'object', 'properties' => ['photo' => ['type' => 'string'], 'name' => ['type' => 'string'], 'line' => ['type' => 'string']], 'required' => ['photo', 'name', 'line'], 'additionalProperties' => false]],
+                ], 'required' => ['replaces', 'title', 'dek', 'before', 'layout', 'pictures'], 'additionalProperties' => false]],
+            'remove_spreads' => ['type' => 'array', 'items' => ['type' => 'integer'], 'description' => 'Indexes in spreads to take out.'],
+            'questions' => ['type' => 'array', 'items' => ['type' => 'string'], 'description' => 'What Christian should answer before this goes out; empty when nothing is open.'],
+            'notes' => ['type' => 'string', 'description' => 'One or two plain sentences on what was changed, for Christian.'],
+        ],
+        'required' => ['changed', 'summary', 'post_title', 'post_body', 'renamed', 'episode_title', 'episode_script', 'captions', 'masthead', 'tagline', 'issue', 'label', 'byline', 'cover_lines', 'blocks', 'remove_blocks', 'qa', 'spotted', 'photos', 'cover_photo', 'photo_order', 'spreads', 'remove_spreads', 'questions', 'notes'],
+        'additionalProperties' => false,
+    ];
+
+    /**
+     * Ask Claude (Christian, Oct 18: the drafting and the magazine helpers act together): one instruction about any part
+     * of the whole Note (the notes, the post, the script, the captions, the magazine's cover, blocks, Q&A and Spotted box),
+     * answered with only the parts it changes. $from says which panel asked, as a hint to where to look first.
+     */
+    public function revise(array $note, string $instruction, string $from = ''): array
+    {
+        $client = new Client(apiKey: $this->cfg['anthropic_api_key'], baseUrl: $this->cfg['anthropic_base_url'] ?? null);
+        $system = <<<TXT
+You help Christian change one Field Note on christiangehrke.com. You see the whole Note: his notes, the post, the episode script, the photos and their captions, and, when it is dressed as a magazine feature, its cover, blocks, Q&A, Spotted box and photo spreads. Do what the instruction asks, wherever in the Note it needs doing, and change nothing else. The show guide below is the authority; follow its hard rules exactly.
+
+- List in "changed" only the parts you change, and return those in full (the whole post, the whole script). Leave every other field empty: an empty field that isn't listed in "changed" is ignored.
+- Keep the Note telling one story: when a change in one part makes another wrong (a number in the post and in a stats block, a section the script follows, a cover line that points at something no longer there), change that part too and list it.
+- Keep the post's "## " subheads unless asked; photos, spreads and blocks sit under them by name. If you rename one, list it in "renamed".
+- Magazine parts only when the Note is dressed as a magazine (magazine is not null). A block: give "replaces" as the index of the one it changes in magazine.blocks, or -1 for a new one; take one out with remove_blocks.
+- Every fact, number, name and quote comes from the Note. Never invent people, results, specs, scores, dates or feelings; ask in questions instead. People stay anonymous unless the Note says they agreed to be named. Never mention home.
+- The post is Christian's first person; the script is the narrator's voice (narrator); the magazine byline is its narrator. Q&A answers are Christian's own words from the notes or the post.
+- No brands, logos or text inside any image prompt.
+- Pictures are part of the design too: where each photo sits (under a subhead, or spread through the story, or left out), the cover, the order, and photo spreads (a titled grid of the Note's own photos and loops, each with a name and a line, set before a subhead). Use only photo files the Note has. Pick a spread's layout for its pictures: hero2 (one big, then two across) or hero3 (one big, then three across) when one picture leads; side (one big beside two) for exactly three; grid2 or grid3 for an even set; strip for a sequence to swipe along. When the Note wears a magazine, prefer its template's layouts (magazine.layouts, first the best). A picture in a spread shows there instead of between the paragraphs.
+- Never decide whether a picture is a real photograph or made with AI: that label is Christian's alone, so leave it to him.
+
+The show guide:
+
+{$this->showGuide}
+TXT;
+        $msg = "The whole Note, as JSON:\n" . json_encode($note, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) .
+            ($from !== '' ? "\n\nAsked from the Studio's $from panel." : '') . "\n\nInstruction: $instruction";
+        $message = $client->beta->messages->create(
+            model: self::MODEL,
+            maxTokens: 16000,
+            system: $system,
+            messages: [['role' => 'user', 'content' => $msg]],
+            outputConfig: ['effort' => 'medium', 'format' => ['type' => 'json_schema', 'schema' => self::REVISE]],
+            fallbacks: 'default',
+            betas: ['server-side-fallback-2026-07-01'],
+        );
+        if ($message->stopReason === 'refusal') throw new RuntimeException('Claude declined this change.');
+        if ($message->stopReason === 'max_tokens') throw new RuntimeException('The answer ran out of room before it finished. Try a smaller change.');
+        foreach ($message->content as $block) {
+            if ($block->type === 'text') {
+                $out = json_decode($block->text, true);
+                if (is_array($out) && isset($out['changed'])) return $out;
+            }
+        }
+        throw new RuntimeException('Claude sent back something that was not a change to the Note.');
+    }
+
+    /**
+     * The episode script brought back in line with the post (Christian, Oct 18): when the post's "## " sections are moved,
+     * added or taken out, the script follows them in the same order, keeping its own words, voice and length.
+     */
+    public function rescript(array $note, string $instruction = ''): array
+    {
+        $client = new Client(apiKey: $this->cfg['anthropic_api_key'], baseUrl: $this->cfg['anthropic_base_url'] ?? null);
+        $system = <<<TXT
+You keep one Field Note's episode script in step with its post on christiangehrke.com. The show guide below is the authority; follow its hard rules exactly.
+
+- The post is the timeline. Its "## " subheads, in order, are the sections; the script tells the same story in the same order, one part per section, with *** on its own line between parts. An opening before the first part and a closing after the last stay where they are.
+- Keep the script's own words wherever they still fit: move whole passages with the section they belong to rather than rewriting them. Change wording only where the new order needs it (a "then", a "first", a callback that now comes before what it refers to).
+- A section that's new in the post gets a short part in the script, from the post's own facts. A section taken out of the post takes its part out of the script.
+- Never add facts, numbers, names or feelings that aren't in the post or the script. Keep the narrator, their voice and person, and roughly the same length.
+- Don't read the subheads out as titles; they are only the order.
+- People stay anonymous unless the Note says they agreed to be named. Never mention home.
+
+The show guide:
+
+{$this->showGuide}
+TXT;
+        $msg = "The Note, as JSON (post.body is the timeline; episode.script is the script to bring in line; sectionsBefore is the order the script was written for, when known):\n" .
+            json_encode($note, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . ($instruction !== '' ? "\n\nInstruction: $instruction" : '');
+        $message = $client->beta->messages->create(
+            model: self::MODEL,
+            maxTokens: 12000,
+            system: $system,
+            messages: [['role' => 'user', 'content' => $msg]],
+            outputConfig: ['effort' => 'medium', 'format' => ['type' => 'json_schema', 'schema' => self::RESCRIPT]],
+            fallbacks: 'default',
+            betas: ['server-side-fallback-2026-07-01'],
+        );
+        if ($message->stopReason === 'refusal') throw new RuntimeException('Claude declined to rewrite the script.');
+        if ($message->stopReason === 'max_tokens') throw new RuntimeException('The script ran out of room before it finished. Try again.');
+        foreach ($message->content as $block) {
+            if ($block->type === 'text') {
+                $out = json_decode($block->text, true);
+                if (is_array($out) && isset($out['episode_script'])) return $out;
+            }
+        }
+        throw new RuntimeException('Claude sent back something that was not a script.');
+    }
+
     /** Her looks as the site has them (assets/narrator/looks.json): name, what it is, and whether it's a holiday or hair day. */
     /** Her looks as the site has them (assets/narrator/looks.json): name, and what it is. */
     private static function looks(array $looks): array
@@ -264,6 +418,7 @@ How to work:
 - Other people stay anonymous unless the entry says they agreed to be named.
 - Write captions for every photo listed: short, plain, only what is visible, with the time when it helps the story.
 - If there is a current draft, revise it rather than starting over, unless the instruction asks for a new one.
+- The whole Note works together. When it is dressed as a magazine feature (magazine: its cover, blocks, Q&A, Spotted box and photo spreads) or has pictures set under subheads (placements), keep the post's "## " subheads, their wording and their order unless the instruction says otherwise: those parts sit under them by name. Keep the post, the script and the magazine's parts telling the same story, and don't repeat a question the magazine has already asked (magazineQuestions).
 - GlazyArray's backdrop: follow the show guide's section "The backdrop".
 - GlazyArray's look: follow the show guide's section "GlazyArray's look". Prefer one of her looks when it fits; suggest a new one only when the Note clearly calls for it; "none" is the usual answer.
 - Questions: list what Christian should confirm or add before this is published. Keep them short and specific. An empty list is fine when nothing is open.
