@@ -723,3 +723,26 @@ details.fold .fold-in>h3:first-child{margin-top:0}
 #f-social h3 small{font-weight:400;color:var(--ink3);font-size:13px;margin-left:6px}
 #f-social textarea,#f-social #socTags{width:100%;box-sizing:border-box}
 .soc-wait{color:#cfc6b4;font-size:13px;line-height:1.45;padding:18px;margin:0}
+
+/* THE NOTE'S FOUR TABS (studio.js mountTabs/showTab, Oct 18): a bar that stays at the top under the summary, the
+   tab you're on lit in the river's colour; its sections are open headings, not folds. A tab change fades out and
+   in (motion rule), at once with reduced motion. A dot marks a tab with something to do */
+.ntabs{position:sticky;top:0;z-index:50;display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:4px;margin:0 0 14px;border-radius:999px;
+  background:color-mix(in srgb,var(--sk-bg) 88%,transparent);border:1px solid color-mix(in srgb,var(--liq) 30%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 6px 14px rgba(8,4,0,.35)}
+.ntabs button{position:relative;background:transparent;border:0;box-shadow:none;color:var(--sk-dim);padding:9px 8px;border-radius:999px;font-weight:700;font-size:15px;cursor:pointer;min-width:0;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:background-color .6s ease-in-out,color .6s ease-in-out}
+.ntabs button:hover{color:#f3e6d2;background:color-mix(in srgb,var(--liq) 14%,transparent)}
+.ntabs button[aria-selected=true]{background:#f3e6d2;color:#1d2a26}
+.ntabs button:focus-visible{outline:2px solid color-mix(in srgb,var(--liq) 80%,transparent);outline-offset:1px}
+.ntabs .nt-dot{display:inline-block;vertical-align:.45em;margin-left:5px;width:7px;height:7px;border-radius:50%;background:#e2b45b;opacity:0;transition:opacity .8s ease-in-out}
+.ntabs button.has .nt-dot{opacity:1}
+.ntab-pane [id]{scroll-margin-top:90px}
+.ntab-pane details.fold>summary{cursor:default}
+.ntab-pane details.fold>summary::after{display:none}
+.ntab-pane details.fold>summary:hover h2{color:inherit}
+.ntab-pane.nt-out{opacity:0;transition:opacity .32s ease-in-out}
+.ntab-pane.nt-in{animation:ntIn .6s ease-in-out}
+@keyframes ntIn{from{opacity:0;translate:0 6px}to{opacity:1;translate:0 0}}
+@media (max-width:640px){.ntabs{border-radius:18px;gap:2px}.ntabs button{font-size:13.5px;padding:9px 4px}.ntabs .nt-dot{margin-left:3px;width:6px;height:6px}}
+@media (max-width:440px){.ntabs .nt-x{display:none}}
+@media (prefers-reduced-motion:reduce){.ntab-pane.nt-in{animation:none}.ntabs button,.ntabs .nt-dot{transition:none}}
