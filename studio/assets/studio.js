@@ -1528,7 +1528,48 @@
       if (!d) return; ev.preventDefault(); var to = NTABS[(i + d + NTABS.length) % NTABS.length][0]; showTab(to); $('#nt-' + to).focus();
     });
     mem.tab = ''; showTab(want, null, true);
+    mountSubs(mem);
     tabDots();
+  }
+  // inside Ride (step 2, Oct 18): Route & Gauges, Photos (n), Loops (n), one at a time, the same fade as the tabs;
+  // a Note with no track has its Photos first and its Track last
+  function subDefs() {
+    var r = ['route', hasTrack(E.kind) ? 'Route<span class="nt-x"> & Gauges</span>' : 'Track', ['track']], ph = ['photos', 'Photos', ['photos', 'more']], lo = ['loops', 'Loops', ['loops']];
+    return hasTrack(E.kind) ? [r, ph, lo] : [ph, lo, r];
+  }
+  function mountSubs(mem) {
+    var pane = $('#pane-ride'); if (!pane) return;
+    var defs = subDefs(), nav = document.createElement('nav'); nav.className = 'nsubs'; nav.id = 'nsubs'; nav.setAttribute('role', 'tablist'); nav.setAttribute('aria-label', 'Route, photos and loops');
+    nav.innerHTML = defs.map(function (d) { return '<button type="button" role="tab" data-nsub="' + d[0] + '" id="ns-' + d[0] + '" aria-controls="sub-' + d[0] + '">' + d[1] + '<b class="ns-n"></b></button>'; }).join('');
+    pane.insertBefore(nav, pane.firstChild);
+    defs.forEach(function (d) {
+      var sp = document.createElement('div'); sp.className = 'nsub-pane'; sp.id = 'sub-' + d[0]; sp.setAttribute('data-nsub', d[0]); sp.setAttribute('role', 'tabpanel'); sp.setAttribute('aria-labelledby', 'ns-' + d[0]); sp.hidden = true;
+      d[2].forEach(function (k) { var f = $('#f-' + k); if (f) sp.appendChild(f); });
+      pane.appendChild(sp);
+    });
+    $$('button', nav).forEach(function (b) { b.onclick = function () { showSub(b.getAttribute('data-nsub')); }; });
+    var want = mem.sub && $('#sub-' + mem.sub) ? mem.sub : defs[0][0];
+    mem.sub = ''; showSub(want, null, true); subCounts();
+  }
+  function showSub(t, then, first) {
+    var mem = NTAB[E.id || '_new'], nav = $('#nsubs'), to = $('#sub-' + t); if (!nav || !mem || !to) return;
+    if (mem.sub === t) { if (then) then(); return; }
+    var from = mem.sub && $('#sub-' + mem.sub), go = ++NTABGO; mem.sub = t;
+    $$('button', nav).forEach(function (b) { b.setAttribute('aria-selected', b.getAttribute('data-nsub') === t ? 'true' : 'false'); });
+    var swap = function () {
+      if (go !== NTABGO) return;
+      $$('.nsub-pane', app).forEach(function (p) { p.hidden = p !== to; p.classList.remove('nt-out', 'nt-in'); });
+      if (!STILL && !first) { void to.offsetWidth; to.classList.add('nt-in'); }
+      setTimeout(function () { dispatchEvent(new Event('resize')); }, 60);   // the map measures itself again
+      if (then) setTimeout(then, STILL ? 0 : 120);
+    };
+    if (from && !STILL && !first) { from.classList.add('nt-out'); setTimeout(swap, 320); } else swap();
+  }
+  function subCounts() {
+    var nav = $('#nsubs'); if (!nav || !E) return;
+    var nPh = E.photos.filter(function (p) { return !p.video && !p.strip; }).length, nLo = E.photos.filter(function (p) { return p.video; }).length;
+    var set = function (k, n) { var b = $('[data-nsub="' + k + '"] .ns-n', nav); if (b) b.textContent = n ? ' (' + n + ')' : ''; };
+    set('photos', nPh); set('loops', nLo);
   }
   function showTab(t, then, first) {
     var mem = NTAB[E.id || '_new'], nav = $('#ntabs'); if (!nav || !mem) return;
@@ -1616,12 +1657,12 @@
       fold('photos', 'Photos', [nPh ? nPh + ' photo' + (nPh > 1 ? 's' : '') : '', nLoop ? nLoop + ' loop' + (nLoop > 1 ? 's' : '') : ''].filter(Boolean).join(' · '), !isLive,
         (later ? '' : dropPhotos) + '<p class="swapBar" id="swapBar" hidden></p><p class="muted" id="photoOrderHint">The post shows them in this order, top to bottom: ↑ and ↓ move one. Once the post has subheads ("## " lines), each can sit right under one.</p><div id="photos" class="photos"></div>' + (later ? '<p class="muted" id="noPhotos">No photos yet. Add some under Add more.</p>' : '')) +
       (E.id ? fold('social', 'Social', E.social && E.social.instagram ? 'captions written' : isLive ? 'next: share it' : 'Instagram and Facebook', false, '<div id="socialBox"></div>') : '') +
-      (trackTop ? fold('track', 'Track', E.track ? 'on the map' : '', !isLive, '<div id="track"></div>') : '') +
+      fold('track', 'Track', E.track ? 'on the map' : trackTop ? '' : 'none yet', !isLive, (trackTop ? '' : '<p class="muted">Only if you want to add one.</p>') + '<div id="track"></div>') +
       fold('loops', 'Video loops', '', false, '<div id="loopBox"></div>') +
       fold('magazine', 'Magazine template', magHint(), false, '<div id="magBox"></div>') +
       fold('spread', 'Photo spread', spreadHint(), false, '<div id="spreadBox"></div>') +
       fold('feature', 'Workshop feature', E.workshop ? (E.workshop.name || 'on the Workshop tab') : 'not a feature', false, '<div id="featBox"></div>') +
-      (later ? fold('more', 'Add more', 'photos' + (trackTop ? '' : ', a track'), false, '<p class="muted">Only if you want to add to what\'s here.</p>' + (trackTop ? '' : '<h3>Track</h3><div id="track"></div>') + '<h3>Photos</h3>' + dropPhotos) : '') +
+      (later ? fold('more', 'Add more', 'photos', false, '<p class="muted">Only if you want to add to what\'s here.</p>' + dropPhotos) : '') +
       '<footer class="savebar"><span id="saveState" class="muted">' + (E.id ? 'Saved' : 'Not saved yet') + '</span>' +
         '<button type="button" id="publish" class="pub"><span class="pub-t">Publish</span><small class="pub-n"></small></button><button id="save" class="primary">' + (owner() ? 'Save' : 'Save for review') + '</button></footer>';
     mountTabs(hasScript && !E.episode.audio ? 'audio' : 'draft');
@@ -2755,8 +2796,9 @@
           '<input type="radio" name="cover" class="cover" hidden' + (p.cover ? ' checked' : '') + '>' +
           '<button class="link rm">Remove</button></div></div></div>';
       }
-      return '<div class="ph' + (p.use === 'skip' ? ' off' : '') + '" data-i="' + i + '">' +
+      return '<div class="ph' + (p.use === 'skip' ? ' off' : '') + (PHEDIT === n ? ' edit' : '') + '" data-i="' + i + '">' +
         (clip ? clipView(p, n) : '<img src="' + esc(photoUrl(p)) + '" alt="" loading="lazy">') +
+        '<button type="button" class="ph-cap' + (p.caption ? '' : ' need') + '" aria-expanded="' + (PHEDIT === n ? 'true' : 'false') + '"><span>' + esc(p.caption || 'Add a caption') + '</span></button>' +
         '<div class="meta"><small>' + esc(n) + (p.hdr ? ' · HDR of ' + p.hdr : '') + (p.strip ? ' · its ' + p.strip + ' exposures' : '') + (p.table ? ' · on the table' : '') + (p.takenAt ? ' · ' + esc(String(p.takenAt).slice(11, 16)) : '') + (fresh[n] || clipsNew[n] ? ' · new' : '') + '</small>' +
         '<textarea rows="2" placeholder="Caption">' + esc(p.caption) + '</textarea>' +
         '<div class="opts"><label><input type="checkbox" class="use"' + (p.use !== 'skip' ? ' checked' : '') + '> Use</label>' +
@@ -2765,6 +2807,12 @@
     }).join('');
     $$('.ph', box).forEach(function (d) {
       $('textarea', d).addEventListener('input', markDirty);
+      var cb = $('.ph-cap', d);
+      if (cb) {
+        var flip = function () { phEdit(d); };
+        cb.onclick = flip; var im = $(':scope > img', d); if (im) im.onclick = flip;
+        $('textarea', d).addEventListener('input', function () { cb.firstChild.textContent = this.value.trim() || 'Add a caption'; cb.classList.toggle('need', !this.value.trim()); });
+      }
       $$('input', d).forEach(function (i) { i.addEventListener('change', function () { markDirty(); collect(); d.classList.toggle('off', !$('.use', d).checked); if (i.classList.contains('cover')) repalette(); renderFeature(); renderMag(); }); });
       var pa = $('.phAt', d); if (pa) pa.onchange = function () { markDirty(); collect(); };
       var pu = $('.phUp', d), pd = $('.phDn', d), ix = +d.getAttribute('data-i');
@@ -2796,7 +2844,21 @@
           .then(function (b) { v.src = URL.createObjectURL(b); v.play(); }).catch(function () { toast('Couldn\'t load that clip.', true); });
       };
     });
-    renderFeature(); renderMag(); renderSpread();
+    subCounts(); renderFeature(); renderMag(); renderSpread();
+  }
+  // the photo grid (step 2): a photo's caption, use, cover, order and place open under it when tapped, one at a time;
+  // the grid moves aside smoothly (each card glides from where it was), at once with reduced motion
+  var PHEDIT = '';
+  function phEdit(d) {
+    var box = $('#photos'), cards = $$('.ph', box), was = cards.map(function (c) { return c.getBoundingClientRect(); });
+    var n = photoName(E.photos[+d.getAttribute('data-i')]), on = !d.classList.contains('edit');
+    PHEDIT = on ? n : '';
+    cards.forEach(function (c) { var me = c === d && on; c.classList.toggle('edit', me); var b = $('.ph-cap', c); if (b) b.setAttribute('aria-expanded', me ? 'true' : 'false'); });
+    if (!STILL && cards[0] && cards[0].animate) cards.forEach(function (c, k) {
+      var r = c.getBoundingClientRect(), dx = was[k].left - r.left, dy = was[k].top - r.top;
+      if (dx || dy) c.animate([{ transform: 'translate(' + dx + 'px,' + dy + 'px)' }, { transform: 'none' }], { duration: 550, easing: 'ease-in-out' });
+    });
+    if (on) { var ta = $('textarea', d); setTimeout(function () { ta.focus({ preventScroll: true }); ta.setSelectionRange(ta.value.length, ta.value.length); if (d.getBoundingClientRect().bottom > innerHeight - 80 && window.easeScroll) easeScroll.to(d); }, STILL ? 0 : 560); }
   }
 
   // ---------- the Workshop feature: this Note as one of the big projects on the Workshop tab (E.workshop). The
@@ -3605,7 +3667,9 @@
       var f = el.matches('input,textarea,select,button') ? el : $('textarea,input,select,button', el);
       if (f) setTimeout(function () { f.focus({ preventScroll: true }); }, 400);
     };
-    var t = ntabOf(el); if (t) showTab(t, glide); else glide();
+    var sp = el.closest('.nsub-pane'), sub = sp && sp.getAttribute('data-nsub'), t = ntabOf(el);
+    var inSub = function () { if (sub) showSub(sub, glide); else glide(); };
+    if (t) showTab(t, inSub); else inSub();
   }
   // How ready the note is to publish: every part the post, the card and the episode need. Title and post
   // text are a must (it can't go out without them); the rest only make the Publish button brighter, from
