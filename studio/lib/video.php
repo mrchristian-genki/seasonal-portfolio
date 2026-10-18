@@ -208,6 +208,28 @@ final class Video {
         return is_file($f) ? $f : null;
     }
 
+    /** Loops cut here in the last two weeks, newest first, so ones made in a Note that was never saved (a page
+        reloaded, a phone that dropped the tab; Christian, Oct 18) can be put into a Note again. */
+    public function recent(int $max = 60): array {
+        $out = [];
+        foreach (glob($this->dir() . '/*.mp4') ?: [] as $f) {
+            if (!preg_match('#/([0-9a-f]{16})-(\d{1,9})-(\d{1,9})\.mp4$#', $f, $m)) continue;
+            $tok = "{$m[1]}-{$m[2]}-{$m[3]}";
+            if (!is_file($this->dir() . "/$tok.jpg")) continue;
+            $out[] = ['token' => $tok, 'made' => filemtime($f), 'sec' => round(($m[3] - $m[2]) / 1000, 2), 'range' => [$m[2] / 1000, $m[3] / 1000], 'bytes' => filesize($f), 'f' => $f];
+        }
+        usort($out, fn($a, $b) => $b['made'] <=> $a['made']);
+        $out = array_slice($out, 0, $max);
+        foreach ($out as &$c) {
+            // the video it came from, by name, as ffmpeg's log has it ("Input #0, …, from '/…/IMG_1234.MOV':")
+            $log = $this->dir() . "/{$c['token']}.log";
+            $c['from'] = is_file($log) && preg_match("#Input \#0, [^\n]*? from '([^\n]+)':#", (string) file_get_contents($log, false, null, 0, 65536), $mm) ? basename($mm[1]) : null;
+            [$c['w'], $c['h']] = $this->dims($c['f']);
+            unset($c['f']);
+        }
+        return $out;
+    }
+
     // work older than two weeks goes
     private function sweep(): void {
         foreach (glob($this->dir() . '/*') ?: [] as $f) if (is_file($f) && filemtime($f) < time() - 14 * 86400) @unlink($f);

@@ -71,8 +71,10 @@ final class Drive {
                 foreach ($this->longIn($f) as $rel) {
                     $short = $this->shorten($rel);
                     $long["$f/$short"] = $rel;
+                    // one named file takes no filters: rclone refuses "--exclude" with it ("can't limit to single files
+                    // when using filters", Oct 18), and a long name is never .DS_Store anyway
                     $steps[] = implode(' ', array_map('escapeshellarg', array_merge([
-                        $this->rclone, 'copyto', $this->remote . ':' . $f . '/' . $rel, $this->dest($f) . '/' . $short], $flags)));
+                        $this->rclone, 'copyto', $this->remote . ':' . $f . '/' . $rel, $this->dest($f) . '/' . $short], array_slice($flags, 3))));
                 }
             }
             file_put_contents($this->longFile(), json_encode($long, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), LOCK_EX);
