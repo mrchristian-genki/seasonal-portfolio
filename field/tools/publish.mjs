@@ -19,6 +19,7 @@ import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { createRequire } from 'node:module';
+import { buildMagazines, magSlug } from './magazines.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const FIELD = path.resolve(here, '..');
@@ -38,6 +39,7 @@ const KINDS = (() => { try { return JSON.parse(fs.readFileSync(new URL('../data/
 const KIND = Object.fromEntries(KINDS.slice().reverse().map((k) => [k.id, k.name]));
 // the web fonts a feature's magazine theme brings (css/feature.css .mag-<theme>), loaded only on its page: from the
 // magazine templates (field/data/magazines.json), the ones the Studio's Magazine template panel offers
+const MAGT = Object.fromEntries((() => { try { return JSON.parse(fs.readFileSync(new URL('../data/magazines.json', import.meta.url), 'utf8')).templates; } catch { return []; } })().map((t) => [t.id, t]));   // the magazines, by id
 const THEME_FONTS = Object.fromEntries(((() => { try { return JSON.parse(fs.readFileSync(new URL('../data/magazines.json', import.meta.url), 'utf8')).templates; } catch { return []; } })() || [])
   .filter((t) => t.fonts).map((t) => [t.id, t.fonts]));
 // a Note's tags, for Play's filters and its address words: what kind it is, its own tags (field/data/events, "tags"),
@@ -398,7 +400,7 @@ ${F.issue ? `<span class="mag-issue">${esc(F.issue)}</span>` : ''}${(F.coverLine
 ${theme && THEME_FONTS[theme] ? `<link rel="stylesheet" href="https://fonts.googleapis.com/css2?${THEME_FONTS[theme]}&display=swap">\n` : ''}${magCover}${F ? `<header class="mag-head"><p class="mag-label">${esc(F.label || 'Feature')}</p>
 <h1>${esc(e.post && e.post.title || e.title)}</h1>
 ${e.summary ? `<p class="mag-deck">${esc(e.summary)}</p>` : ''}
-<p class="mag-byline">${F.byline ? `<span>${esc(F.byline)}</span>` : ''}<span><time datetime="${esc(e.date)}">${day(e.date, true)}</time>${e.place ? ` · ${esc(e.place)}` : ''}</span></p>${mediaNote}</header>
+<p class="mag-byline">${F.byline ? `<span>${esc(F.byline)}</span>` : ''}<span><time datetime="${esc(e.date)}">${day(e.date, true)}</time>${e.place ? ` · ${esc(e.place)}` : ''}</span></p>${mediaNote}${MAGT[theme || 'riveting'] ? `<p class="mag-from"><a href="/magazine/${magSlug(MAGT[theme || 'riveting'])}/">More from ${esc(MAGT[theme || 'riveting'].masthead)} →</a> <a href="/magazine/">The newsstand</a></p>` : ''}</header>
 ` : ''}${F ? '' : '<p class="kicker">'}${F ? '' : `<span class="kind ${esc(e.kind)}">${KIND[e.kind] || esc(e.kind)}</span> · <time datetime="${esc(e.date)}">${day(e.date, true)}</time>${e.place ? ` · ${esc(e.place)}` : ''}</p>
 <h1>${esc(e.post && e.post.title || e.title)}</h1>
 ${e.summary ? `<p class="lede">${esc(e.summary)}</p>` : ''}${mediaNote}`}
@@ -431,6 +433,10 @@ pages.forEach((p, i) => {
   const link = (q, label) => q ? `<a href="../${q.e.id}/"><span>${label}</span>${esc(q.e.post && q.e.post.title || q.e.title)}</a>` : '<span></span>';
   fs.writeFileSync(f, fs.readFileSync(f, 'utf8').replace('<nav class="pager" id="pager"></nav>', `<nav class="pager">${link(older, '← Earlier')}${link(newer, 'Later →')}</nav>`));
 });
+
+// The magazines (field/tools/magazines.mjs): the newsstand at /magazine/ and a page for every magazine a published Note wears
+const MAGS = buildMagazines({ SITE, FIELD, pages, esc, day, V, ICONS, shareMeta, show, THEME_FONTS });
+console.log(`magazine/: ${MAGS.length} magazines (${MAGS.map((m) => `${m.slug} ${m.count}`).join(', ')})`);
 
 // Galleries: Daydreams (AI series) and From Above (drone photography), from field/data/gallery.json
 // and the media fetched by tools/gallery.py.
@@ -535,7 +541,7 @@ const aboveHTML = MAN && MAN.above.length ? `<section id="above" class="block"><
 const ddHTML = series.length ? `<section id="daydreams" class="block"><h2 class="sec">Daydreams ${AI}</h2><p class="sub">Ideas that only exist as pictures, so far. ${esc(G.tools)}</p>
 <div class="series">${series.map((q) => serieCard(q, '')).join('')}</div><p class="more"><a href="daydreams/">All ${series.length} series →</a></p></section>` : '';
 fs.writeFileSync(path.join(OUT, 'index.html'), head('Play · Christian Gehrke', show.about, show.siteUrl, pages[0] && pages[0].cover && pages[0].cover.abs, '') +
-  `<main class="index"><p class="season-line">Spring, when everything is starting</p><h1>Play</h1><p class="lede">The fun part. Rides, hikes and foraging, a decade of flying, and the things I make, real and imagined.</p>
+  `<main class="index"><p class="season-line">Spring, when everything is starting</p><h1>Play</h1><p class="lede">The fun part. Rides, hikes and foraging, a decade of flying, and the things I make, real and imagined.</p>${MAGS.length ? `<p class="zn-link"><a href="/magazine/">The newsstand: the Notes as ${MAGS.length} made-up magazines →</a></p>` : ''}
 <section id="field-notes" class="block"><h2 class="sec">${esc(show.showTitle)}</h2><p class="sub">${esc(show.about)}</p>
 ${pages.length ? `<div class="cards">${cards}</div>` : '<p class="empty">The first one is on its way.</p>'}</section>
 ${ytHTML}

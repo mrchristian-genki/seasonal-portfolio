@@ -192,7 +192,7 @@
     var m = /^note\/(.+?)(?:\/(draft|audio|ride|publish))?$/.exec(v || '');
     if (m) { NTABWANT = m[2] || ''; return edit(m[1]); }
     if (v === 'new') return edit(null);
-    if (v === 'drive' || ((v === 'categories' || v === 'characters' || v === 'people' || v === 'stats') && owner())) return showList(v);
+    if (v === 'drive' || ((v === 'categories' || v === 'characters' || v === 'magazines' || v === 'people' || v === 'stats') && owner())) return showList(v);
     return showList();
   }
   function listen() {                    // Back and Forward (switch.js loads after this file, so at start)
@@ -208,17 +208,18 @@
   // site's Stats (owner only). Drive has its own tab, since bringing in is now and then and the Notes are every day;
   // the Notes tab says in a line when Drive has something new (driveHint)
   function showList(tab) {
-    tab = tab === 'drive' || ((tab === 'categories' || tab === 'characters' || tab === 'people' || tab === 'stats') && owner()) ? tab : 'notes';
+    tab = tab === 'drive' || ((tab === 'categories' || tab === 'characters' || tab === 'magazines' || tab === 'people' || tab === 'stats') && owner()) ? tab : 'notes';
     if (dirty && !confirm('Leave without saving?')) return;
     dirty = false; E = null; fresh = {}; removed = []; INBOX = null; audioNew = null; audioGone = false; DRIVEAUD = null; DRIVETRK = null; trackRaw = null; trackSwap = false; clipsNew = {}; posterNew = {}; DRIVEVID = null; UPVID = []; stopTrim();
     route(tab);
-    var tabs = '<nav class="tabs" role="tablist">' + [['notes', 'Notes'], ['drive', 'Drive']].concat(owner() ? [['categories', 'Categories'], ['characters', 'Characters'], ['people', 'People'], ['stats', 'Stats']] : []).map(function (t) {
+    var tabs = '<nav class="tabs" role="tablist">' + [['notes', 'Notes'], ['drive', 'Drive']].concat(owner() ? [['categories', 'Categories'], ['characters', 'Characters'], ['magazines', 'Magazines'], ['people', 'People'], ['stats', 'Stats']] : []).map(function (t) {
       return '<button type="button" role="tab" data-tab="' + t[0] + '" aria-selected="' + (t[0] === tab) + '">' + t[1] + '</button>'; }).join('') + '</nav>';
     app.innerHTML = '<div class="head"><h1>Field Notes</h1>' + tabs + '<span class="me">' + esc(CFG.me ? CFG.me.name : '') + (owner() ? '' : ' · editor') + '</span>' +
       (tab === 'notes' ? '<button id="new" class="primary">New entry</button>' : '') + '</div>' +
       '<section id="queue" class="panel queue" hidden></section><section id="peopleBox" class="panel people"' + (tab === 'people' ? '' : ' hidden') + '></section><section id="catsBox" class="panel cats"' + (tab === 'categories' ? '' : ' hidden') + '></section>' +
       '<section id="statsBox" class="panel site-stats"' + (tab === 'stats' ? '' : ' hidden') + '></section>' +
       '<section id="charsBox" class="panel cats chars"' + (tab === 'characters' ? '' : ' hidden') + '></section>' +
+      '<section id="magsBox" class="panel mags"' + (tab === 'magazines' ? '' : ' hidden') + '></section>' +
       '<p id="driveHint" class="drive-hint" hidden></p>' +
       '<section id="drive" class="panel drive"' + (tab === 'drive' ? '' : ' hidden') + '><p class="muted">Checking Google Drive…</p></section><section id="wsOrder" class="panel wsorder" hidden></section><div id="list" class="cards"' + (tab === 'notes' ? '' : ' hidden') + '><p class="muted">Loading entries…</p></div>';
     if ($('#new')) $('#new').onclick = function () { edit(null); };
@@ -232,6 +233,7 @@
       if (lastDrive) renderDrive(lastDrive);
       if (tab === 'categories') renderCats();
       if (tab === 'characters') renderChars();
+      if (tab === 'magazines') renderMags();
       if (tab !== 'notes') return;   // the other tabs only needed the list for their counts
       var st = {}; (CFG.statuses || []).forEach(function (s) { st[s.id] = s.label; });
       // notes waiting for the owner's review, first
@@ -831,6 +833,69 @@
     return fillIn(P.prompt, { hat: i[0], charm: i[1], hatShort: i[2], charmShort: i[3] });
   }
   function hasLook(ch, l) { return !!l && (l.name === 'curls' ? ch.look.has === 'file' : ch.look.has === 'file' ? !!l.file : !!l[ch.look.has]); }
+  // ---------- the Magazines tab (Christian, Oct 19): christiangehrke.com/magazine/, a newsstand of the made-up magazines,
+  // each with its own page once a published Note wears it (field/tools/magazines.mjs). Here, each magazine's pieces
+  // (field/data/magazine-art.json): what each is for, its size, an image prompt for when there's no real footage, and a
+  // place to bring a picture in, saying whether it's a real photo or made with AI (api.php magart) ----------
+  var MAGUP = {};
+  function magSlugOf(t) { return String(t.masthead || t.id).toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); }
+  function renderMags() {
+    var box = $('#magsBox'); if (!box) return;
+    var A = CFG.magazineArt || {}, count = {};
+    (ENTRIES || []).forEach(function (e) { if (e.mag && e.status === 'published') count[e.mag] = (count[e.mag] || 0) + 1; });
+    var list = mags().slice().sort(function (a, b) { var x = (A[a.id] || {}).slots ? 1 : 0, y = (A[b.id] || {}).slots ? 1 : 0; return y - x || (count[b.id] || 0) - (count[a.id] || 0); });
+    box.innerHTML = '<h2>The magazines</h2><p class="muted">Each magazine gets its own page at <a href="/magazine/" target="_blank" rel="noopener">christiangehrke.com/magazine/</a> as soon as a published Note wears it, and every deploy builds them again. Its pieces dress the page around the stories: bring a picture in for each, and say whether it\'s a real photo or made with AI. Your own photos and footage come first where they fit; each piece has a prompt for when there isn\'t one.</p>' +
+      list.map(function (t) {
+        var M = A[t.id] || {}, slots = M.slots || [], art = M.art || {}, n = count[t.id] || 0, have = slots.filter(function (x) { return art[x.key]; }).length;
+        return '<details class="mag-sec"' + (slots.length && MAGUP.open === t.id ? ' open' : '') + ' data-mag="' + esc(t.id) + '"><summary><span class="mag-sw">' + (t.swatches || []).map(function (c) { return '<i data-bg="' + esc(c) + '"></i>'; }).join('') + '</span>' +
+          '<b>' + esc(t.masthead) + '</b><small>' + esc(t.category) + ' · ' + n + ' ' + (n === 1 ? 'story' : 'stories') + (slots.length ? ' · ' + have + ' of ' + slots.length + ' pieces in' : ' · no pieces listed yet') + '</small></summary>' +
+          '<p class="muted">' + (n ? 'Live at <a href="/magazine/' + magSlugOf(t) + '/" target="_blank" rel="noopener">/magazine/' + magSlugOf(t) + '/</a>. ' : 'No page yet: it turns up with its first published Note. ') + esc(t.format) + '.</p>' +
+          (slots.length ? '<div class="mag-slots">' + slots.map(function (x) {
+            var a = art[x.key], up = MAGUP[t.id + '/' + x.key];
+            return '<div class="mag-slot" data-key="' + esc(x.key) + '">' +
+              '<div class="mag-slot-pic">' + (up ? '<img alt="" src="' + up.url + '">' : a ? '<img alt="" src="/assets/magazines/' + esc(t.id) + '/' + esc(a.file) + '?v=' + esc(a.v || '') + '">' : '<span>Not in yet</span>') +
+                (a && !up ? '<em class="' + (a.source === 'ai' ? 'ai' : 'real') + '">' + (a.source === 'ai' ? 'Made with AI' : 'Real photo') + '</em>' : '') + '</div>' +
+              '<div class="mag-slot-t"><b>' + esc(x.label) + '</b> <small class="muted">' + esc(x.size) + '</small>' + (x.realFirst ? ' <span class="mag-real1">Your own footage first</span>' : '') +
+                '<p class="muted">' + esc(x.use) + '</p>' +
+                '<details class="mag-prompt"><summary>Image prompt</summary><textarea readonly rows="5">' + esc(x.prompt) + '</textarea><button type="button" class="small magCopy">Copy the prompt</button></details>' +
+                '<div class="row"><label class="small pick">' + (a ? 'Replace the picture' : 'Bring a picture in') + '<input type="file" accept="image/jpeg,image/png,image/webp" hidden class="magFile"></label>' +
+                  ((up || a) ? '<label><input type="radio" name="src-' + esc(t.id + x.key) + '" value="real"' + (((up && up.source) || (a && a.source)) === 'real' ? ' checked' : '') + '> Real photo</label><label><input type="radio" name="src-' + esc(t.id + x.key) + '" value="ai"' + (((up && up.source) || (a && a.source)) === 'ai' ? ' checked' : '') + '> Made with AI</label>' : '') +
+                  (up ? '<button type="button" class="primary magSave"' + (up.source ? '' : ' disabled') + '>' + (up.busy ? 'Saving…' : 'Save it') + '</button><button type="button" class="link magDrop">Don\'t use it</button>' : a ? '<button type="button" class="link magDel">Take it off</button>' : '') + '</div></div></div>';
+          }).join('') + '</div>' : '<p class="muted">Ask Claude for this magazine\'s set of pieces and prompts.</p>') + '</details>';
+      }).join('');
+    dataStyles(box);
+    $$('.mag-sec', box).forEach(function (sec) {
+      var id = sec.getAttribute('data-mag');
+      sec.addEventListener('toggle', function () { if (sec.open) MAGUP.open = id; });
+      $$('.mag-slot', sec).forEach(function (el) {
+        var key = el.getAttribute('data-key'), k = id + '/' + key, up = MAGUP[k];
+        var cp = $('.magCopy', el); if (cp) cp.onclick = function () { navigator.clipboard.writeText($('textarea', el).value).then(function () { toast('Prompt copied.'); }); };
+        $('.magFile', el).onchange = function () {
+          var f = this.files[0]; this.value = ''; if (!f) return;
+          var keep = f.type === 'image/png' && f.size < 1400000;   // a transparent PNG stays one when it's small enough
+          (keep ? Promise.resolve({ blob: f }) : shrink(f, 2400, 0.86).then(function (r) { return r.blob.size < 1450000 ? r : shrink(f, 2000, 0.78); })).then(function (r) {
+            if (MAGUP[k] && MAGUP[k].url) URL.revokeObjectURL(MAGUP[k].url);
+            MAGUP[k] = { blob: r.blob, ext: keep ? 'png' : 'jpg', url: URL.createObjectURL(r.blob), source: '' }; MAGUP.open = id; renderMags();
+          }).catch(function () { toast('That picture couldn\'t be read.', true); });
+        };
+        $$('input[type=radio]', el).forEach(function (r) { r.onchange = function () {
+          if (up) { up.source = r.value; renderMags(); return; }
+          api('magart', { mag: id, key: key, source: r.value }).then(function (j) { (CFG.magazineArt[id] || {}).art = j.art; toast('Saved. The magazine updates in about a minute.'); renderMags(); }).catch(function (e) { toast(e.message, true); });
+        }; });
+        var sv = $('.magSave', el); if (sv) sv.onclick = function () {
+          up.busy = true; renderMags();
+          api('lookblob', up.blob).then(function (r) { return api('magart', { mag: id, key: key, sha: r.sha, ext: up.ext, source: up.source }); }).then(function (j) {
+            CFG.magazineArt[id].art = j.art; URL.revokeObjectURL(up.url); delete MAGUP[k]; toast('Saved. The magazine updates in about a minute.'); renderMags();
+          }).catch(function (e) { up.busy = false; toast(e.message, true); renderMags(); });
+        };
+        var dr = $('.magDrop', el); if (dr) dr.onclick = function () { URL.revokeObjectURL(up.url); delete MAGUP[k]; renderMags(); };
+        var dl = $('.magDel', el); if (dl) dl.onclick = function () {
+          if (!confirm('Take this picture off the magazine?')) return;
+          api('magart', { mag: id, key: key, remove: true }).then(function (j) { CFG.magazineArt[id].art = j.art; toast('Taken off.'); renderMags(); }).catch(function (e) { toast(e.message, true); });
+        };
+      });
+    });
+  }
   function renderChars() {
     var box = $('#charsBox'); if (!box) return; box.innerHTML = '<p class="muted">Loading…</p>';
     charsData().then(function (rr) {

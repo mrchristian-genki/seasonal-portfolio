@@ -76,7 +76,8 @@ function list_row(array $e): array {
     return ['id' => $e['id'], 'title' => $e['title'] ?? '', 'date' => $e['date'] ?? '', 'kind' => $e['kind'] ?? '',
         'status' => $e['status'] ?? 'notes', 'photos' => count($e['photos'] ?? []) - $loops, 'loops' => $loops, 'summary' => $e['summary'] ?? '',
         'place' => trim(explode(',', (string) ($e['place'] ?? ''))[0]), 'audio' => !empty($e['episode']['audio']),
-        'cover' => preg_match('/^[a-z0-9-]{1,40}\.jpg$/', $cover) ? $cover : '', 'cats' => note_cats($e), 'look' => (string) ($e['narratorLook']['look'] ?? ''),
+        'cover' => preg_match('/^[a-z0-9-]{1,40}\.jpg$/', $cover) ? $cover : '', 'cats' => note_cats($e),
+        'mag' => !empty($e['feature']['masthead']) ? (string) ($e['feature']['theme'] ?? 'riveting') : '',   // the magazine it wears (the Magazines tab) 'look' => (string) ($e['narratorLook']['look'] ?? ''),
         // what else picks its narrator's style (assets/narrator/resolve.js), for the Characters tab
         'bd' => (string) ($e['narratorBackdrop']['backdrop'] ?? ''), 'tank' => (string) ($e['altaBackdrop'] ?? ''), 'nar' => (string) ($e['episode']['narrator'] ?? ''),
         'prefer' => (string) (($e['narratorLook']['fit'] ?? '') === 'category' ? ($e['narratorLook']['from'] ?? '') : ''), 'noh' => !empty($e['ignoreHolidays']),
@@ -130,6 +131,7 @@ function set_review(string $id, ?array $r): void {
     file_put_contents(reviews_file(), json_encode($all, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
 }
 const LOOKS_JSON = 'assets/narrator/looks.json';
+const MAG_ART = 'field/data/magazine-art.json';   // the magazines' own pictures (field/tools/magazines.mjs)
 /** looks.json the way it's kept: one look per line. */
 function looks_json(array $list, array $cats = [], array $bds = [], array $bcats = [], array $more = []): string
 {
@@ -433,6 +435,7 @@ try {
                 'audioPrompts' => $show['audioPrompts'] ?? new stdClass(),   // a Note told by someone else (episode.narrator): their own voice
                 'siteUrl' => $show['siteUrl'] ?? '',
                 'magazines' => (json_decode($gh->read('field/data/magazines.json') ?? '{}', true)['templates'] ?? []),   // the Magazine template panel's choices
+                'magazineArt' => (json_decode($gh->read(MAG_ART) ?? '{}', true)['magazines'] ?? new stdClass()),   // the Magazines tab: each magazine's pieces and prompts
                 'kinds' => note_kinds(),   // the Kind menu's choices (field/data/kinds.json)
                 'me' => studio_me(),
             ]);
@@ -797,6 +800,36 @@ try {
             }
             if (!$files) json_out(['ok' => true, 'commit' => null, 'added' => [], 'skipped' => $skipped]);
             json_out(['ok' => true, 'commit' => $gh->commit($files, "Studio: $cat on " . count($added) . ' Note' . (count($added) === 1 ? '' : 's'), null, $expect), 'added' => $added, 'skipped' => $skipped]);
+
+        // The Magazines tab: a picture for one of a magazine's pieces (its blob already up through lookblob), said to be a
+        // real photo or made with AI; or only that label changed; or the picture taken off. One commit: the file under
+        // assets/magazines/<id>/ and its entry in magazine-art.json (written as the file is, 1-space indents)
+        case 'POST magart':
+            owner_only();
+            $mag = (string) ($body['mag'] ?? ''); $key = (string) ($body['key'] ?? ''); $src = (string) ($body['source'] ?? '');
+            if (!preg_match('/^[a-z]{2,20}$/', $mag) || !preg_match('/^[a-z0-9-]{1,20}$/', $key)) json_fail('Bad piece.');
+            $A = json_decode($gh->read(MAG_ART) ?? '', true); if (!is_array($A)) json_fail('magazine-art.json is missing.');
+            $M = &$A['magazines'][$mag]; if (!isset($M['slots']) || !array_filter($M['slots'], fn($x) => ($x['key'] ?? '') === $key)) json_fail('That magazine has no such piece.');
+            $files = []; $was = $M['art'][$key] ?? null;
+            if (!empty($body['remove'])) {
+                if ($was && !empty($was['file'])) $files["assets/magazines/$mag/{$was['file']}"] = null;
+                unset($M['art'][$key]);
+            } else {
+                if (!in_array($src, ['real', 'ai'], true)) json_fail('Say whether it is a real photo or made with AI.');
+                $sha = (string) ($body['sha'] ?? ''); $ext = (string) ($body['ext'] ?? '');
+                if ($sha !== '') {
+                    if (!preg_match('/^[0-9a-f]{40}$/', $sha) || !in_array($ext, ['jpg', 'png', 'webp'], true)) json_fail('Bad picture.');
+                    if ($was && !empty($was['file']) && $was['file'] !== "$key.$ext") $files["assets/magazines/$mag/{$was['file']}"] = null;
+                    $files["assets/magazines/$mag/$key.$ext"] = ['sha' => $sha];
+                    $M['art'][$key] = ['file' => "$key.$ext", 'source' => $src, 'v' => base_convert((string) time(), 10, 36)];
+                } elseif ($was) { $M['art'][$key]['source'] = $src; }
+                else json_fail('Bring a picture in first.');
+            }
+            if (empty($M['art'])) $M['art'] = new stdClass();
+            unset($M);
+            $j = json_encode($A, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+            $files[MAG_ART] = ['text' => preg_replace_callback('/^( +)/m', fn($m) => str_repeat(' ', intdiv(strlen($m[1]), 4)), $j) . "\n"];
+            json_out(['ok' => true, 'commit' => $gh->commit($files, "Studio: $mag's $key"), 'art' => $A['magazines'][$mag]['art']]);
 
         case 'POST looks':
             owner_only();

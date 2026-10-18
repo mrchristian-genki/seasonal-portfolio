@@ -1,0 +1,26 @@
+{
+ "about": "The magazines' own pictures (christiangehrke.com/magazine/, built by field/tools/magazines.mjs from publish.mjs). Each magazine lists the pieces its pages use (slots: where it goes, its size, and an image prompt for when there is no real footage to use; realFirst says Christian's own photos or footage are the better choice). The Studio's Magazines tab brings a picture in for a slot and says whether it is a real photo or made with AI; the file goes to assets/magazines/<id>/<key>.<ext> and its entry under art. No brands, logos or text inside any render.",
+ "magazines": {
+  "lineofsight": {
+   "slots": [
+    { "key": "masthead", "label": "The masthead picture", "use": "Behind the magazine's name at the top of every issue and on its cover on the newsstand. The upper left stays quiet for the name.", "size": "2400 × 1350 (16:9)", "realFirst": true,
+      "prompt": "An aerial photograph taken from a drone about 120 meters up at blue hour, over a calm alpine lake ringed by pale granite and dark pines. The last light is on the far ridgeline, the water holds the sky. The upper left third is clean, deep blue sky with nothing in it, room for a title. Wide 16:9, crisp, natural colour, true to a real camera. No text, no letters, no numbers, no logos, no aircraft in the frame." },
+    { "key": "opener", "label": "The section opener", "use": "A wide band that opens \"In this issue\".", "size": "2520 × 1080 (21:9)", "realFirst": true,
+      "prompt": "A straight-down drone view of a shoreline where turquoise shallows meet deep blue water, pale granite boulders scattered through the shallows like a pattern. Abstract and graphic, even midday light, very wide 21:9. No people, no boats, no text, no letters, no numbers, no logos." },
+    { "key": "texture", "label": "The page texture", "use": "A faint background behind the whole issue, repeated as a tile.", "size": "2048 × 2048, seamless", "realFirst": false,
+      "prompt": "A seamless, tileable background texture on deep navy blue: faint concentric radar rings and a fine square grid drawn in thin soft green and pale blue lines, very low contrast so text can sit on it, flat, no shading, no glow. No text, no letters, no numbers, no symbols, no logos." },
+    { "key": "mark", "label": "The contents mark", "use": "A small drawing beside the contents list.", "size": "800 × 800, transparent PNG", "realFirst": false,
+      "prompt": "A small flat line drawing of a generic, unbranded four-rotor camera drone seen from directly above, thin pale green lines on a transparent background, minimal and technical like a blueprint detail. No text, no letters, no numbers, no logos, no brand shapes." },
+    { "key": "spread-1", "label": "From the logbook: the wide one", "use": "The big picture of the issue's photo spread.", "size": "2400 × 1350 (16:9)", "realFirst": true,
+      "prompt": "A drone photograph making a low pass over a forested ridge at golden hour, long shadows across the slopes, soft haze filling the valleys behind, warm light on the treetops. Wide 16:9, natural colour, true to a real camera. No text, no letters, no logos, no aircraft in the frame." },
+    { "key": "spread-2", "label": "From the logbook: straight down", "use": "One of the small pictures in the photo spread.", "size": "1600 × 1600 (1:1)", "realFirst": true,
+      "prompt": "A straight-down drone photograph of a dirt trail winding through grey-green sage and scattered pines, its shape drawing a soft S across the frame, late afternoon light with long tree shadows. Square, natural colour. No people, no text, no letters, no logos." },
+    { "key": "spread-3", "label": "From the logbook: the lone tree", "use": "One of the small pictures in the photo spread.", "size": "1600 × 1600 (1:1)", "realFirst": true,
+      "prompt": "A drone photograph orbiting a lone wind-bent pine on a bare granite dome high above a blue lake, late afternoon, the lake and ridges falling away behind. Square, natural colour, true to a real camera. No people, no text, no letters, no logos." },
+    { "key": "spread-4", "label": "From the logbook: the coast", "use": "One of the small pictures in the photo spread.", "size": "1600 × 1600 (1:1)", "realFirst": true,
+      "prompt": "A drone photograph from about 100 meters over sea cliffs and white surf in clear morning light, green headland above, deep blue water with lighter reef patches below. Square, natural colour. No people, no boats, no text, no letters, no logos." }
+   ],
+   "art": {}
+  }
+ }
+}

@@ -246,3 +246,4 @@ figure video{display:block;width:100%;border-radius:12px;background:#000}
 
 /* the Note's own line on what's real (publish.mjs mediaNote) */
 .media-note{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin:4px 0 16px;font-size:14px;color:var(--ink-2,#3f5a64)}
+.zn-link{margin:-4px 0 18px;font-weight:800}.zn-link a{color:var(--accent,#d8618f);text-decoration:none}
