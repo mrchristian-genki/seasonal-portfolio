@@ -189,8 +189,8 @@
     else history.replaceState(null, '', location.pathname + '#' + v);
   }
   function open(v) {
-    var m = /^note\/(.+)$/.exec(v || '');
-    if (m) return edit(m[1]);
+    var m = /^note\/(.+?)(?:\/(draft|audio|ride|publish))?$/.exec(v || '');
+    if (m) { NTABWANT = m[2] || ''; return edit(m[1]); }
     if (v === 'new') return edit(null);
     if (v === 'drive' || ((v === 'categories' || v === 'characters' || v === 'people' || v === 'stats') && owner())) return showList(v);
     return showList();
@@ -1492,6 +1492,72 @@
     }).catch(function (err) { toast(err.message, true); showList(); });
   }
 
+  // ---------- the Note's four tabs (Christian, Oct 18: thirteen sections stacked made a long scroll): Draft, Audio/Cast,
+  // Ride (Hike, or Media for a Note with no track) and Publish, in a bar that stays at the top. Each tab holds its
+  // sections, all open; a tab change fades out and in (at once with reduced motion), each tab keeps how far down you
+  // were, and the tab sits in the address (#note/<id>/audio). A section's link (the next steps, the checklist) opens
+  // its tab first ----------
+  var NTABS = [['draft', 'Draft', ['details', 'drafting', 'post']], ['audio', 'Audio/Cast', ['look', 'episode', 'audio']],
+    ['ride', 'Ride', ['track', 'photos', 'loops', 'more']], ['publish', 'Publish', ['magazine', 'spread', 'feature', 'social']]];
+  var NTAB = {}, NTABWANT = '', NTABGO = 0;
+  var STILL = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function rideLabel(kind) { return hasTrack(kind || E.kind) ? kindName(kind || E.kind) : 'Media'; }
+  function ntabOf(el) { var p = el && el.closest && el.closest('.ntab-pane'); return p ? p.getAttribute('data-ntab') : ''; }
+  function mountTabs(stage) {
+    var sum = $('#sum'); if (!sum) return;
+    if (E.id && !NTAB[E.id] && NTAB._new) { NTAB[E.id] = NTAB._new; delete NTAB._new; }   // a new Note keeps its tab through its first save
+    var mem = NTAB[E.id || '_new'] = NTAB[E.id || '_new'] || { y: {} };
+    var want = [NTABWANT, mem.tab, stage].filter(function (t) { return NTABS.some(function (x) { return x[0] === t; }); })[0] || 'draft';
+    NTABWANT = '';
+    var nav = document.createElement('nav'); nav.className = 'ntabs'; nav.id = 'ntabs'; nav.setAttribute('role', 'tablist'); nav.setAttribute('aria-label', 'Parts of this Note');
+    nav.innerHTML = NTABS.map(function (t) { return '<button type="button" role="tab" data-ntab="' + t[0] + '" id="nt-' + t[0] + '" aria-controls="pane-' + t[0] + '"><span class="nt-l">' + (t[0] === 'ride' ? esc(rideLabel()) : esc(t[1]).replace('/', '<span class="nt-x">/') + (t[1].indexOf('/') > 0 ? '</span>' : '')) + '</span><i class="nt-dot" aria-hidden="true"></i></button>'; }).join('');
+    sum.parentNode.insertBefore(nav, sum.nextSibling);
+    var last = nav;
+    NTABS.forEach(function (t) {
+      var pane = document.createElement('div'); pane.className = 'ntab-pane'; pane.id = 'pane-' + t[0]; pane.setAttribute('data-ntab', t[0]);
+      pane.setAttribute('role', 'tabpanel'); pane.setAttribute('aria-labelledby', 'nt-' + t[0]); pane.hidden = true;
+      t[2].forEach(function (k) { var f = $('#f-' + k); if (f) pane.appendChild(f); });
+      if (!pane.firstChild) pane.innerHTML = '<p class="panel muted">Nothing here for this Note yet.</p>';
+      last.parentNode.insertBefore(pane, last.nextSibling); last = pane;
+    });
+    // its sections are open, always: a heading, not a fold
+    $$('.ntab-pane summary', app).forEach(function (sm) { if (sm.parentNode.classList.contains('fold')) sm.addEventListener('click', function (ev) { ev.preventDefault(); }); });
+    $$('button', nav).forEach(function (b) { b.onclick = function () { showTab(b.getAttribute('data-ntab')); }; });
+    nav.addEventListener('keydown', function (ev) {   // ← and → move along the tabs
+      var i = NTABS.map(function (t) { return t[0]; }).indexOf(mem.tab), d = ev.key === 'ArrowRight' ? 1 : ev.key === 'ArrowLeft' ? -1 : 0;
+      if (!d) return; ev.preventDefault(); var to = NTABS[(i + d + NTABS.length) % NTABS.length][0]; showTab(to); $('#nt-' + to).focus();
+    });
+    mem.tab = ''; showTab(want, null, true);
+    tabDots();
+  }
+  function showTab(t, then, first) {
+    var mem = NTAB[E.id || '_new'], nav = $('#ntabs'); if (!nav || !mem) return;
+    var to = $('#pane-' + t); if (!to) return;
+    if (mem.tab === t) { if (then) then(); return; }
+    var from = mem.tab && $('#pane-' + mem.tab), go = ++NTABGO, top = nav.offsetTop;
+    if (mem.tab) mem.y[mem.tab] = scrollY;
+    mem.tab = t;
+    $$('button', nav).forEach(function (b) { var on = b.getAttribute('data-ntab') === t; b.setAttribute('aria-selected', on ? 'true' : 'false'); b.tabIndex = on ? 0 : -1; });
+    if (E.id) route('note/' + E.id + '/' + t, true);
+    var swap = function () {
+      if (go !== NTABGO) return;
+      $$('.ntab-pane', app).forEach(function (p) { p.hidden = p !== to; p.classList.remove('nt-out', 'nt-in'); });
+      $$('details.fold', to).forEach(function (d) { if (!d.open) d.open = true; });   // opened as the tab first shows (Social and the map draw then)
+      // where it was on this tab, or its top just under the bar; the summary stays put while it's on screen
+      if (!first && scrollY > top) scrollTo(0, mem.y[t] > top ? mem.y[t] : top);
+      if (!STILL && !first) { void to.offsetWidth; to.classList.add('nt-in'); }
+      setTimeout(function () { dispatchEvent(new Event('resize')); }, 60);
+      if (then) setTimeout(then, STILL ? 0 : 120);
+    };
+    if (from && !STILL && !first) { from.classList.add('nt-out'); setTimeout(swap, 320); } else swap();
+  }
+  // a dot on a tab with something to do: Claude's questions, the audio once the script is final, a ride's track
+  function tabDots() {
+    var nav = $('#ntabs'); if (!nav || !E) return;
+    var dot = { draft: (E.questions || []).length > 0, audio: !!E.episode.script && !(E.questions || []).length && !(audioNew || (E.episode.audio && !audioGone)), ride: hasTrack(E.kind) && !E.track && !trackRaw, publish: false };
+    $$('button', nav).forEach(function (b) { b.classList.toggle('has', !!dot[b.getAttribute('data-ntab')]); });
+  }
+
   // a section of the editor that folds: open or closed by the note's stage, unless you've toggled it on this note
   var FOLD = {};
   function fold(key, title, hint, open, inner) {
@@ -1558,6 +1624,7 @@
       (later ? fold('more', 'Add more', 'photos' + (trackTop ? '' : ', a track'), false, '<p class="muted">Only if you want to add to what\'s here.</p>' + (trackTop ? '' : '<h3>Track</h3><div id="track"></div>') + '<h3>Photos</h3>' + dropPhotos) : '') +
       '<footer class="savebar"><span id="saveState" class="muted">' + (E.id ? 'Saved' : 'Not saved yet') + '</span>' +
         '<button type="button" id="publish" class="pub"><span class="pub-t">Publish</span><small class="pub-n"></small></button><button id="save" class="primary">' + (owner() ? 'Save' : 'Save for review') + '</button></footer>';
+    mountTabs(hasScript && !E.episode.audio ? 'audio' : 'draft');
     // remember what's opened or closed on this note
     $$('details.fold', app).forEach(function (d) { d.addEventListener('toggle', function () { (FOLD[E.id || '_new'] = FOLD[E.id || '_new'] || {})[d.getAttribute('data-fold')] = d.open; if (d.open) setTimeout(function () { dispatchEvent(new Event('resize')); }, 30); }); });   // a map drawn while folded needs to measure itself again
 
@@ -1567,6 +1634,7 @@
     $('#back').onclick = showList;
     ['title', 'place', 'consent', 'fieldNotes', 'summary', 'postTitle', 'postBody', 'epTitle', 'epScript'].forEach(function (k) { $('#' + k).addEventListener('input', markDirty); });
     ['kind', 'date'].forEach(function (k) { $('#' + k).addEventListener('change', markDirty); });
+    $('#kind').addEventListener('change', function () { var b = $('#ntabs [data-ntab="ride"] .nt-l'); if (b) b.textContent = rideLabel(this.value); });
     $('#title').addEventListener('input', function () { $('#sumTitle').textContent = this.value.trim() || 'New entry'; });
     $('#epScript').addEventListener('input', count); count();
     SWAP = null; renderTrack(); renderPhotos(); renderSwapBar(); renderQuestions(); renderAudio(); renderLoops();
@@ -3531,10 +3599,13 @@
   var savedStatus = null;
   function go(sel) {
     var el = $(sel); if (!el) return;
-    for (var d = el.closest('details'); d; d = d.parentElement && d.parentElement.closest('details')) d.open = true;
-    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    var f = el.matches('input,textarea,select,button') ? el : $('textarea,input,select,button', el);
-    if (f) setTimeout(function () { f.focus({ preventScroll: true }); }, 400);
+    var glide = function () {
+      for (var d = el.closest('details'); d; d = d.parentElement && d.parentElement.closest('details')) d.open = true;
+      if (window.easeScroll) easeScroll.to(el); else el.scrollIntoView({ block: 'center' });
+      var f = el.matches('input,textarea,select,button') ? el : $('textarea,input,select,button', el);
+      if (f) setTimeout(function () { f.focus({ preventScroll: true }); }, 400);
+    };
+    var t = ntabOf(el); if (t) showTab(t, glide); else glide();
   }
   // How ready the note is to publish: every part the post, the card and the episode need. Title and post
   // text are a must (it can't go out without them); the rest only make the Publish button brighter, from
@@ -3629,7 +3700,7 @@
   // only what changed is redrawn: a click on a chip lands even when leaving a field just redrew the summary
   function put(el, html) { if (el && el._h !== html) { el.innerHTML = html; el._h = html; } }
   function renderNext() {
-    renderPublish();
+    renderPublish(); tabDots();
     if (!E || !$('#sum')) return;
     var st = stageOf(), stEl = $('#status');
     if (stEl && !publishing && savedStatus !== 'published' && stEl.value !== st.status) { stEl.value = st.status; E.status = st.status; }
