@@ -1,8 +1,9 @@
 /* MOTION (CLAUDE.md "Motion: nothing is fast or instant"), shared by the homepage and the Play pages.
    easeScroll(top[, box]): a scroll to a spot is a slow, eased glide (web/tumble.js tumbleTo), longer for longer
    distances, stopped at once by a wheel, touch or key; easeScroll.to(el) glides to an element (its scroll-margin
-   kept). In-page # links glide too. softDialog(d, ms[, keep]): d.close() fades the dialog out first (css .shut),
-   Esc too, unless keep() says another layer takes the Esc. With reduced motion everything happens at once. */
+   kept). In-page # links glide too. swipeNav(el, go) and lbList(a): swiping (and ← →) through enlarged media.
+   softDialog(d, ms[, keep]): d.close() fades the dialog out first (css .shut), Esc too, unless keep() says another
+   layer takes the Esc. With reduced motion everything happens at once. */
 (function () {
   'use strict';
   var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches, EV = ['wheel', 'touchstart', 'keydown'];
@@ -42,6 +43,39 @@
     if ((at < 0 ? '' : location.href.slice(at)) !== h) try { history.pushState(null, '', h); } catch (er) {}
     if (t) easeScroll.to(t); else easeScroll(0);
   });
+
+  // SWIPING THROUGH WHAT'S ENLARGED (Christian, Oct 18: anything opened big swipes to the next or previous). swipeNav(el,
+  // go) calls go(1) on a swipe to the left and go(-1) on one to the right, and the same for → and ← while el is open
+  // (or has focus); go returns false when there's nowhere to go. The click a swipe ends with is swallowed, so a swipe
+  // never closes a viewer that closes on a tap. lbList(a): the enlargeable links ([data-lightbox], the home page's [data-pi-box])
+  // around a, in page order: those in its dialog, or on the page outside any dialog, showing ones only, each picture once
+  window.swipeNav = function (el, go) {
+    if (el._swipe) return el; el._swipe = true;
+    var x0 = null, y0 = 0, t0 = 0, id = null;
+    el.addEventListener('pointerdown', function (e) { if (e.pointerType === 'mouse' && e.button) return; x0 = e.clientX; y0 = e.clientY; t0 = Date.now(); id = e.pointerId; }, true);
+    el.addEventListener('pointerup', function (e) {
+      if (x0 == null || e.pointerId !== id) return;
+      var dx = e.clientX - x0, dy = e.clientY - y0; x0 = null;
+      if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.4 && Date.now() - t0 < 900 && go(dx < 0 ? 1 : -1) !== false) el._swiped = Date.now();
+    }, true);
+    el.addEventListener('pointercancel', function () { x0 = null; }, true);
+    el.addEventListener('click', function (e) { if (el._swiped && Date.now() - el._swiped < 450) { e.stopPropagation(); e.preventDefault(); } }, true);
+    document.addEventListener('keydown', function (e) {   // while it's open (focus can sit on the page behind a viewer)
+      if (!(el.open || el.contains(document.activeElement)) || e.defaultPrevented) return;
+      if ((e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') || (e.target.closest && e.target.closest('input,textarea,select,video,audio'))) return;
+      if (go(e.key === 'ArrowRight' ? 1 : -1) !== false) e.preventDefault();
+    });
+    return el;
+  };
+  window.lbList = function (a) {
+    var scope = a.closest('dialog'), seen = {}, out = [];
+    [].forEach.call((scope || document).querySelectorAll('[data-lightbox],[data-pi-box]'), function (x) {
+      if ((!scope && x.closest('dialog')) || !x.getClientRects().length) return;
+      var h = x.getAttribute('href'); if (seen[h] && x !== a) return; seen[h] = 1; out.push(x);
+    });
+    if (out.indexOf(a) < 0) out.push(a);
+    return out;
+  };
 
   window.softDialog = function (d, ms, keep) {
     if (d._soft) return d; d._soft = true;

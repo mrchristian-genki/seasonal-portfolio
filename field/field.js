@@ -120,10 +120,13 @@
         };
       });
       app.querySelectorAll('[data-ph]').forEach(function (b) {
-        b.onclick = function () { var p = e.photos[+b.dataset.ph], d = document.getElementById('lightbox'); if (p.video) { window.open(p.src, '_blank'); return; } d.querySelector('img').src = p.src; d.querySelector('img').alt = p.caption; d.querySelector('p').textContent = p.caption; d.showModal(); };
+        b.onclick = function () { var p = e.photos[+b.dataset.ph]; if (p.video) { window.open(p.src, '_blank'); return; } LB.list = e.photos.filter(function (q) { return !q.video; }); LB.at = LB.list.indexOf(p); lbShow(); document.getElementById('lightbox').showModal(); };
       });
     });
   }
+
+  var LB = { list: [], at: 0, t: 0 };
+  function lbShow() { var p = LB.list[LB.at], d = document.getElementById('lightbox'); if (!p) return; d.querySelector('img').src = p.src; d.querySelector('img').alt = p.caption; d.querySelector('p').textContent = p.caption + (LB.list.length > 1 ? '  ·  ' + (LB.at + 1) + ' of ' + LB.list.length : ''); }
 
   // ── Check a ride: what gets cut, before anything is published ─────────
   function check() {
@@ -217,6 +220,12 @@
   unitLabel();
   var lb = document.getElementById('lightbox');
   lb.querySelector('.x').onclick = function () { lb.close(); };
+  // swipe (or ← →) to the next or previous photo of the ride (../js/motion.js swipeNav), each a short cross-fade
+  if (window.swipeNav) swipeNav(lb, function (d) {
+    var to = LB.at + d; if (!lb.open || to < 0 || to >= LB.list.length) return false;
+    LB.at = to; var im = lb.querySelector('img'); im.classList.add('swap'); clearTimeout(LB.t);
+    LB.t = setTimeout(function () { lbShow(); im.classList.remove('swap'); }, 300);
+  });
   lb.addEventListener('click', function (ev) { if (ev.target === lb) lb.close(); });
   get('data/show.json').then(function (s) { SHOW = s; addEventListener('hashchange', route); route(); });
 })();
