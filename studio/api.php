@@ -540,6 +540,17 @@ try {
             $revRaw = $inReview ? $gh->read(EVENTS . "/$id.json", rb($id)) : null;
             $ver = note_versions($liveRaw, $revRaw);
             if ($ver !== ['live' => $base['live'] ?? null, 'review' => $base['review'] ?? null]) note_stale($gh, $id);
+            // A new Note's pictures are named under data/photos/new/ until its first save, and the photo spread's copies of
+            // them weren't moved with it (Oct 18: a new Note with a spread couldn't be saved at all); a refused first save
+            // could also leave some under the address it tried. They are this entry's own: put them in its folder.
+            $own = function ($v) use ($id) { return is_string($v) && preg_match('#^data/photos/[a-z0-9-]{1,90}/([a-z0-9-]{1,40}\.(jpg|mp4))$#', $v, $m) ? "data/photos/$id/{$m[1]}" : $v; };
+            foreach ($e['photos'] ?? [] as $i => $p) foreach (['src', 'poster'] as $k) if (isset($p[$k])) $e['photos'][$i][$k] = $own($p[$k]);
+            if (isset($e['feature']['lookbook']) && is_array($e['feature']['lookbook'])) {
+                $one = isset($e['feature']['lookbook']['items']);
+                $L = $one ? [$e['feature']['lookbook']] : $e['feature']['lookbook'];
+                foreach ($L as $bi => $b) if (is_array($b) && is_array($b['items'] ?? null)) foreach ($b['items'] as $xi => $x) foreach (['src', 'poster'] as $k) if (isset($x[$k])) $L[$bi]['items'][$xi][$k] = $own($x[$k]);
+                $e['feature']['lookbook'] = $one ? $L[0] : $L;
+            }
             // Photos and clips may only point into this entry's own folder.
             foreach ($e['photos'] ?? [] as $p) {
                 foreach (['src', 'poster'] as $k) {
