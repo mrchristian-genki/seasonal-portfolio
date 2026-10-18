@@ -1644,6 +1644,9 @@
         field('Place', '<input id="place" value="' + esc(E.place) + '" placeholder="Trailhead or public land, never closer to home">') +
         '<input type="hidden" id="status" value="' + esc(E.status) + '">' +
         field('Who appears', '<input id="consent" value="' + esc(E.consent || '') + '" placeholder="e.g. Christian and Marley only">') +
+        field('Its pictures are', '<select id="media"><option value="">Not said yet</option><option value="real"' + (E.media === 'real' ? ' selected' : '') + '>Real photos and video</option>' +
+          '<option value="mixed"' + (E.media === 'mixed' ? ' selected' : '') + '>Real, with some made with AI (marked one by one)</option><option value="ai"' + (E.media === 'ai' ? ' selected' : '') + '>Made with AI</option></select>',
+          'Said once at the top of the Note, so it\'s clear what\'s real. A picture can still say otherwise in its own editor.') +
       '</div>') +
       fold('drafting', 'Notes and drafting', qs ? qs + ' open question' + (qs > 1 ? 's' : '') : hasScript ? 'done' : '', !hasScript || qs > 0,
         '<h3>Your notes</h3><div id="voiceNotes"></div>' + field('', '<textarea id="fieldNotes" rows="8" placeholder="What happened, in your words: who came, what you saw, what to leave out.">' + esc(E.fieldNotes) + '</textarea>') +
@@ -1680,7 +1683,8 @@
     if (sf) { var socialOn = function () { if (!sf.open || sf._on) return; sf._on = true; StudioSocial.mount($('#socialBox'), socialHelpers); }; sf.addEventListener('toggle', socialOn); socialOn(); }
     $('#back').onclick = showList;
     ['title', 'place', 'consent', 'fieldNotes', 'summary', 'postTitle', 'postBody', 'epTitle', 'epScript'].forEach(function (k) { $('#' + k).addEventListener('input', markDirty); });
-    ['kind', 'date'].forEach(function (k) { $('#' + k).addEventListener('change', markDirty); });
+    ['kind', 'date', 'media'].forEach(function (k) { $('#' + k).addEventListener('change', markDirty); });
+    $('#media').addEventListener('change', function () { collect(); renderPhotos(); renderNext(); });
     $('#kind').addEventListener('change', function () { var b = $('#ntabs [data-ntab="ride"] .nt-l'); if (b) b.textContent = rideLabel(this.value); });
     $('#title').addEventListener('input', function () { $('#sumTitle').textContent = this.value.trim() || 'New entry'; });
     $('#epScript').addEventListener('input', count); count();
@@ -2425,7 +2429,7 @@
 
   function collect() {
     E.title = $('#title').value.trim(); E.kind = $('#kind').value; E.place = $('#place').value.trim(); E.status = $('#status').value;
-    E.consent = $('#consent').value.trim(); E.fieldNotes = $('#fieldNotes').value; E.summary = $('#summary').value.trim();
+    E.consent = $('#consent').value.trim(); var md = $('#media'); if (md) { if (md.value) E.media = md.value; else delete E.media; } E.fieldNotes = $('#fieldNotes').value; E.summary = $('#summary').value.trim();
     E.post.title = $('#postTitle').value.trim(); E.post.body = $('#postBody').value.trim();
     E.episode.title = $('#epTitle').value.trim(); E.episode.script = $('#epScript').value.trim();
     var nv = $('#epNarrator') ? $('#epNarrator').value : ''; if (nv) E.episode.narrator = nv; else delete E.episode.narrator;
@@ -2435,7 +2439,7 @@
       p.caption = $('textarea', d).value.trim();
       p.use = $('.use', d).checked ? (p.use === 'skip' ? 'post' : (p.use || 'post')) : 'skip';
       p.cover = $('.cover', d).checked;
-      var ai = $('.isai', d); if (ai) { if (ai.checked) p.ai = true; else delete p.ai; }
+      var ai = $('.isai', d); if (ai) { if (ai.value === 'ai') p.ai = true; else if (ai.value === 'real') p.ai = false; else delete p.ai; }
       var a = $('.phAt', d); if (a) { if (a.value) p.at = a.value; else delete p.at; }
     });
   }
@@ -2986,7 +2990,7 @@
         '<textarea rows="2" placeholder="Caption">' + esc(p.caption) + '</textarea>' +
         '<div class="opts"><label><input type="checkbox" class="use"' + (p.use !== 'skip' ? ' checked' : '') + '> Use</label>' +
         '<label><input type="radio" name="cover" class="cover"' + (p.cover ? ' checked' : '') + '> Cover</label>' +
-        '<label title="Its caption on the site carries the Made with AI label"><input type="checkbox" class="isai"' + (p.ai ? ' checked' : '') + '> Made with AI</label>' + (clip ? '<button type="button" class="link pfBtn">Poster frame</button>' : '') +
+        '<select class="isai" aria-label="Real or made with AI"><option value="">' + (E.media === 'real' ? 'Real (as the Note says)' : E.media === 'ai' ? 'Made with AI (as the Note says)' : 'Real or AI: not said') + '</option><option value="real"' + (p.ai === false ? ' selected' : '') + '>Real photo</option><option value="ai"' + (p.ai === true ? ' selected' : '') + '>Made with AI</option></select>' + (clip ? '<button type="button" class="link pfBtn">Poster frame</button>' : '') +
         (canSwap(p, i) ? '<button type="button" class="link swBtn">Swap</button>' : '') + '<button class="link rm">Remove</button>' + mv(i) + '</div>' + at(p) + '</div></div>';
     }).join('');
     $$('.ph', box).forEach(function (d) {
@@ -2999,6 +3003,7 @@
       }
       $$('input', d).forEach(function (i) { i.addEventListener('change', function () { markDirty(); collect(); d.classList.toggle('off', !$('.use', d).checked); if (i.classList.contains('cover')) repalette(); renderFeature(); renderMag(); }); });
       var pa = $('.phAt', d); if (pa) pa.onchange = function () { markDirty(); collect(); };
+      var pi = $('.isai', d); if (pi) pi.onchange = function () { markDirty(); collect(); };
       var pu = $('.phUp', d), pd = $('.phDn', d), ix = +d.getAttribute('data-i');
       if (pu) pu.onclick = function () { movePhoto(ix, -1); };
       if (pd) pd.onclick = function () { movePhoto(ix, 1); };
@@ -3201,7 +3206,7 @@
     var v = LB.label || '';
     var opt = function (k, t) { return '<label><input type="radio" name="spLabel" value="' + k + '"' + (v === k ? ' checked' : '') + '> ' + t + '</label>'; };
     return '<div class="spLabel' + (v ? '' : ' unset') + '"><b>Its pictures are</b> ' + opt('real', 'Real photographs') + opt('ai', 'Made with AI') + opt('mixed', 'Some of each (marked one by one)') +
-      (v ? '' : '<small>Not chosen yet, so the site labels it Made with AI.</small>') + '</div>';
+      (v ? '' : '<small>Not chosen: it follows its pictures (and the Note), and says nothing where they don\'t say.</small>') + '</div>';
   }
   function renderSpread() {
     var box = $('#spreadBox'); if (!box || !E) return;
@@ -3297,7 +3302,7 @@
     return { title: E.title, date: E.date, kind: E.kind, place: E.place, whoAppears: E.consent, notes: E.fieldNotes, summary: E.summary,
       postTitle: E.post.title, postBody: E.post.body, episodeTitle: E.episode.title, episodeScript: E.episode.script, narrator: NAR_NAME[NARNOW] || 'GlazyArray',
       figures: s ? { distanceMiles: mi(s.distanceKm), highPointFeet: ft(s.maxEleM), movingTime: dur(s.movingSec) } : null,
-      photos: E.photos.filter(function (p) { return p.use !== 'skip' && !p.strip; }).map(function (p) { return { file: photoName(p), caption: p.caption || '', loop: !!p.video, ai: !!p.ai, cover: !!p.cover, underSubhead: p.at || '' }; }),
+      photos: E.photos.filter(function (p) { return p.use !== 'skip' && !p.strip; }).map(function (p) { return { file: photoName(p), caption: p.caption || '', loop: !!p.video, realOrAI: p.ai === true ? 'made with AI' : p.ai === false ? 'real' : (E.media === 'real' ? 'real' : E.media === 'ai' ? 'made with AI' : 'not said'), cover: !!p.cover, underSubhead: p.at || '' }; }),
       magazine: F ? { masthead: F.masthead, tagline: F.tagline || '', issue: F.issue || '', label: F.label || '', byline: F.byline || '', coverLines: F.coverLines || [], blocks: F.blocks || [], qa: F.qa || null, spotted: F.spotted || [], layouts: (magOf(F) || {}).layouts || [] } : null,
       spreads: spreads().map(function (b, i) { return { index: i, title: b.title || '', dek: b.dek || '', before: b.before || '', layout: b.layout || 'hero2', pictures: (b.items || []).map(function (x) { return { photo: String(x.src || '').split('/').pop(), name: x.name || '', line: x.when || '' }; }) }; }),
       questions: E.questions || [], magazineQuestions: F ? (F.questions || []) : [] };
@@ -3398,7 +3403,7 @@
           field('Issue', inp('issue', t && t.issue)) + field('Label over the headline', inp('label', t && t.label)) + field('Byline', inp('byline', t && t.byline)) + '</div>' +
         field('Cover lines', '<textarea class="magF" data-k="coverLines" rows="4" placeholder="One per line, 3 to 5. The first is set large.">' + esc((F.coverLines || []).join('\n')) + '</textarea>', 'Each one points at something really in the Note.') +
         '<div class="spLabel' + (F.coverLabel ? '' : ' unset') + '"><b>The cover picture is</b> <label><input type="radio" name="coverLabel" value="real"' + (F.coverLabel === 'real' ? ' checked' : '') + '> A real photograph</label>' +
-          '<label><input type="radio" name="coverLabel" value="ai"' + (F.coverLabel === 'ai' ? ' checked' : '') + '> Made with AI</label>' + (F.coverLabel ? '' : '<small>Not chosen yet, so the site labels it Made with AI.</small>') + '</div>' +
+          '<label><input type="radio" name="coverLabel" value="ai"' + (F.coverLabel === 'ai' ? ' checked' : '') + '> Made with AI</label>' + (F.coverLabel ? '' : '<small>Not chosen: it follows the cover picture (and the Note), and says nothing where they don\'t say.</small>') + '</div>' +
         '<h3>The parts</h3>' + magParts(F) +
         '<button type="button" class="link" id="magOff">Take the magazine look off</button>';
     }
@@ -3950,8 +3955,7 @@
     if (q) out.push({ t: 'Answer Claude\'s ' + (q === 1 ? 'question' : q + ' questions'), d: 'The script isn\'t final until they\'re answered. Answer them one by one, then send them all at once.', b: 'Answer', go: '#questions' });
     if (drafted && !q && !val('epScript')) out.push({ t: 'Write the episode script', d: 'The episode is read from it. Draft with Claude writes one from the post, or write your own.', b: 'Go to the script', go: '#epScript' });
     if (drafted && !q && LOOKPICK) out.push({ t: 'Pick the narrator style', d: 'More than one of this Note\'s categories gives her a cap or backdrop. Tick the one this Note takes.', b: 'Pick it', go: '#f-look' });
-    var unl = spreads().filter(function (b) { return !b.label; }).length, mc = E.feature && E.feature.masthead && !E.feature.coverLabel;
-    if (unl || mc) out.push({ t: 'Label ' + (unl && mc ? 'the cover and the photo spread' + (unl > 1 ? 's' : '') : unl ? 'the photo spread' + (unl > 1 ? 's' : '') : 'the magazine cover'), d: 'Say whether ' + (unl + (mc ? 1 : 0) > 1 ? 'they are' : 'it is') + ' real photographs or made with AI. Until then the site says Made with AI.', b: 'Label ' + (unl + (mc ? 1 : 0) > 1 ? 'them' : 'it'), go: unl ? '#spreadBox' : '#magBox' });
+    if (E.photos.length && !E.media) out.push({ t: 'Say what\'s real', d: 'Are this Note\'s pictures real photos and video, made with AI, or some of each? It\'s said once at the top of the Note, and the pictures follow it.', b: 'Say it', go: '#media' });
     if (drafted && !q && scriptStale()) out.push({ t: 'Bring the script in line with the post', d: 'The post\'s sections have moved since the script was written. Claude can rewrite the script to follow them, keeping its words where they fit.', b: 'Match it', go: '#epSync' });
     if (drafted && !q && val('epScript') && !audio) out.push({ t: 'Record the episode', d: 'Copy the audio prompt, render it with your voice tool, then drop the audio in or choose it from Drive.', b: 'Go to the audio', go: '#copyPrompt' });
     if (videos && !loops && !E.loopsDone) out.push({ t: 'Trim video loops', d: videos + ' video' + (videos > 1 ? 's' : '') + ' in the Drive folder. Pick the moments worth a short silent loop.', b: 'Trim loops', go: '#loops', done: 'loops' });

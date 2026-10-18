@@ -2163,7 +2163,8 @@
    "range": [
     0,
     7.65
-   ]
+   ],
+   "ai": false
   },
   {
    "src": "data/photos/2026-10-17-two-lakes-and-a-corral/05.jpg",
@@ -2409,7 +2410,8 @@
    ],
    "label": "real",
    "layout": "strip"
-  }
+  },
+  "coverLabel": "real"
  },
  "palette": [
   "#a5c138",
