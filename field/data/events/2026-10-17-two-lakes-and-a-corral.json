@@ -2150,6 +2150,22 @@
    ]
   },
   {
+   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/clip-7.mp4",
+   "poster": "data/photos/2026-10-17-two-lakes-and-a-corral/clip-7.jpg",
+   "video": true,
+   "caption": "Hammock time is happy time.",
+   "takenAt": "2026:10:17 17:57:29",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261017_123636_808_1792266626476_video.mov",
+   "range": [
+    0,
+    7.65
+   ]
+  },
+  {
    "src": "data/photos/2026-10-17-two-lakes-and-a-corral/05.jpg",
    "caption": "Two horses at a red gate beside an old wooden barn, 11:14.",
    "takenAt": "2026:10:17 11:14:46",
