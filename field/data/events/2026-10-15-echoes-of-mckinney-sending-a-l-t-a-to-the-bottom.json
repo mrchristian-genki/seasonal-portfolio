@@ -405,7 +405,9 @@
      "video": true,
      "poster": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-17.jpg"
     }
-   ]
+   ],
+   "layout": "grid2",
+   "label": "ai"
   }
  },
  "palette": [
