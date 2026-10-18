@@ -2142,7 +2142,7 @@
    "w": 960,
    "h": 540,
    "use": "post",
-   "cover": true,
+   "cover": false,
    "from": "dji_fly_20261017_123748_809_1792266848233_video.MOV",
    "range": [
     0,
@@ -2158,7 +2158,7 @@
    "w": 960,
    "h": 540,
    "use": "post",
-   "cover": false,
+   "cover": true,
    "from": "dji_fly_20261017_123636_808_1792266626476_video.mov",
    "range": [
     0,
@@ -2410,8 +2410,8 @@
   }
  },
  "palette": [
-  "#4db4ef",
-  "#8590f4"
+  "#a5c138",
+  "#69a0d3"
  ],
  "dashboard": {
   "speed": false,
