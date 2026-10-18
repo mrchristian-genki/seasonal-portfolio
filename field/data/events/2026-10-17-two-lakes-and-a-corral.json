@@ -2406,7 +2406,9 @@
      "w": 1600,
      "h": 900
     }
-   ]
+   ],
+   "label": "real",
+   "layout": "strip"
   }
  },
  "palette": [
