@@ -3777,7 +3777,11 @@
           var k = made(f.name), on = VT && VT.name === f.name;
           return '<li' + (on ? ' class="on"' : '') + '><span><b>' + esc(f.name.split('/').pop()) + '</b> <small>' + size(f.bytes) + (f.up ? ' · dropped in' : '') + (k ? ' · ' + k + ' loop' + (k > 1 ? 's' : '') + ' made' : '') + '</small></span>' +
             (on ? '' : '<button type="button" class="small trimVid" data-n="' + esc(f.name) + '" data-u="' + esc(f.up || '') + '">' + (k ? 'Trim another' : 'Trim a loop') + '</button>') + '</li>';
-        }).join('') + '</ul>' : E.source ? '<p class="muted">No videos in this note\'s Drive folder.</p>' : '') + '<div id="trimmer"></div>';
+        }).join('') + '</ul>' : E.source ? '<p class="muted">No videos in this note\'s Drive folder.</p>' : '') + '<div id="trimmer"></div>' +
+        '<details id="lostLoops"' + (LOSTOPEN ? ' open' : '') + '><summary>Clips cut lately</summary><div class="lost"></div></details>';
+      var ll = $('#lostLoops');
+      ll.addEventListener('toggle', function () { LOSTOPEN = ll.open; if (ll.open) renderLost(); });
+      if (LOSTOPEN) renderLost();
       $$('.trimVid', box).forEach(function (b) { b.onclick = function () { openTrim(b.getAttribute('data-n'), b.getAttribute('data-u')); }; });
       var dz = $('#drop-video');
       ['dragover', 'dragenter'].forEach(function (t) { dz.addEventListener(t, function (ev) { ev.preventDefault(); dz.classList.add('on'); }); });
@@ -3786,6 +3790,41 @@
       $('#pickVideo').onchange = function () { [].slice.call(this.files).forEach(upVideo); this.value = ''; };
       if (VT) drawTrim();
     });
+  }
+  // Loops cut on the server in the last two weeks (api.php loops). One made in a Note that was never saved (a page
+  // reloaded, a phone that dropped the tab) is still there, and goes back into this Note from here (Christian, Oct 18).
+  var LOSTOPEN = false;
+  function renderLost() {
+    var box = $('#lostLoops .lost'); if (!box) return;
+    box.innerHTML = '<p class="muted">Looking…</p>';
+    api('loops').then(function (j) {
+      box = $('#lostLoops .lost'); if (!box) return;
+      var here = function (c) {
+        if (Object.keys(clipsNew).some(function (n) { return clipsNew[n].token === c.token; })) return true;
+        return E.photos.some(function (p) { return p.video && p.range && String(p.from || '').split('/').pop() === c.from && Math.abs(p.range[0] - c.range[0]) < 0.02 && Math.abs(p.range[1] - c.range[1]) < 0.02; });
+      };
+      var L = j.loops || [];
+      box.innerHTML = '<p class="muted">Every loop cut in the Studio stays on the server for two weeks, saved or not. One made in a Note that never got saved can go into this Note from here.</p>' +
+        (L.length ? '<ul class="vids lostL">' + L.map(function (c, i) {
+          var d = new Date(c.made * 1000), on = here(c);
+          return '<li><img src="api.php?a=vfile&t=poster&k=' + esc(c.token) + '" alt="" loading="lazy"><span><b>' + esc(c.from || 'A loop') + '</b> <small>' + mmss(c.range[0]) + '–' + mmss(c.range[1]) + ' · ' + c.sec + ' s · cut ' +
+            esc(d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) + ' ' + d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' })) + '</small></span>' +
+            (on ? '<small>In this Note</small>' : '<button type="button" class="small addLost" data-i="' + i + '">Add</button>') + '</li>';
+        }).join('') + '</ul>' : '<p class="muted">No loops from the last two weeks.</p>');
+      $$('.addLost', box).forEach(function (b) {
+        b.onclick = function () {
+          var c = L[+b.getAttribute('data-i')];
+          collect(); markOrder();
+          var name = nextClip();
+          clipsNew[name + '.mp4'] = { token: c.token };
+          E.photos.push({ src: 'data/photos/' + (E.id || 'new') + '/' + name + '.mp4', poster: 'data/photos/' + (E.id || 'new') + '/' + name + '.jpg', video: true,
+            caption: '', takenAt: null, w: c.w, h: c.h, use: 'post', cover: false, from: c.from || '', range: c.range });
+          settleNew(); markDirty(); renderPhotos();
+          b.outerHTML = '<small>In this Note</small>';
+          toast(name + ' is back in Photos. Save to keep it.');
+        };
+      });
+    }).catch(function (err) { var bx = $('#lostLoops .lost'); if (bx) bx.innerHTML = '<p class="muted">Couldn\'t list them: ' + esc(err.message) + '</p>'; });
   }
   // A video dropped into the note goes up in pieces to the server's video work folder (api.php videopart), then
   // opens in the trimmer like a Drive one. One at a time; the rest wait their turn.
@@ -4458,6 +4497,9 @@
     if (first) {
       E.id = E.date + '-' + (slug(E.title) || E.kind);
       E.photos.forEach(function (p) { p.src = 'data/photos/' + E.id + '/' + photoName(p); if (p.poster) p.poster = 'data/photos/' + E.id + '/' + p.poster.split('/').pop(); });
+      // the photo spread's copies of them move too (they stayed under new/ and the save was refused; Oct 18)
+      var LB = E.feature && E.feature.lookbook;
+      (LB ? (LB.items ? [LB] : LB) : []).forEach(function (b) { (b && b.items || []).forEach(function (x) { ['src', 'poster'].forEach(function (k) { if (x[k]) x[k] = 'data/photos/' + E.id + '/' + String(x[k]).split('/').pop(); }); }); });
     }
     var btn = $('#save'); btn.disabled = true; btn.textContent = 'Saving…';
     var names = Object.keys(fresh).concat(Object.keys(posterNew)), uploaded = [];

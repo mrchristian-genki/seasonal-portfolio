@@ -714,6 +714,10 @@ try {
             if ($bytes === false || strlen($bytes) > 3_000_000) json_fail('Bad upload piece.');
             json_out((new Video($cfg))->upPart((string) ($body['up'] ?? ''), (string) ($body['ext'] ?? ''), (int) ($body['i'] ?? -1), $bytes, !empty($body['last']) && $body['last'] !== '0'));
 
+        // loops cut in the last two weeks, to put into a Note again (one made in a Note that never got saved)
+        case 'GET loops':
+            json_out(['loops' => (new Video($cfg))->recent()]);
+
         case 'GET vfile':
             $t = (string) ($_GET['t'] ?? '');
             if (!in_array($t, ['preview', 'loop', 'poster'], true)) json_fail('No such file.', 404);
