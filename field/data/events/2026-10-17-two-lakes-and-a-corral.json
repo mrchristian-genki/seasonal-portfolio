@@ -1,0 +1,2617 @@
+{
+ "id": "2026-10-17-two-lakes-and-a-corral",
+ "title": "Two lakes and a corral",
+ "date": "2026-10-17",
+ "kind": "ride",
+ "place": "",
+ "status": "draft",
+ "summary": "Christian, Helena and Marley spent October 17 at the Highland Lakes above Bear Valley: about nine miles of riding with roughly twelve hundred feet of climbing, a horse corral on the way up, drone views over both Upper and Lower Highland Lake, and a day by the water with the hammock up.",
+ "trailhead": null,
+ "links": [],
+ "track": {
+  "stats": {
+   "distanceKm": 13.96,
+   "movingSec": 3980,
+   "elapsedSec": 13011,
+   "gainM": 364,
+   "lossM": 358,
+   "minEleM": 2403,
+   "maxEleM": 2643,
+   "avgKmh": 12.6,
+   "maxKmh": 31.1,
+   "start": "2026-10-17T17:54:39.000Z"
+  },
+  "line": [
+   [
+    38.52468,
+    -119.81207,
+    2416,
+    0
+   ],
+   [
+    38.52453,
+    -119.8116,
+    2419,
+    12
+   ],
+   [
+    38.52392,
+    -119.81118,
+    2421,
+    39
+   ],
+   [
+    38.5236,
+    -119.81073,
+    2422,
+    63
+   ],
+   [
+    38.52286,
+    -119.80931,
+    2423,
+    105
+   ],
+   [
+    38.5225,
+    -119.80833,
+    2428,
+    127
+   ],
+   [
+    38.52245,
+    -119.80718,
+    2440,
+    171
+   ],
+   [
+    38.52228,
+    -119.80692,
+    2441,
+    179
+   ],
+   [
+    38.52234,
+    -119.80606,
+    2445,
+    205
+   ],
+   [
+    38.52223,
+    -119.80598,
+    2446,
+    210
+   ],
+   [
+    38.52187,
+    -119.80605,
+    2448,
+    220
+   ],
+   [
+    38.52165,
+    -119.80594,
+    2448,
+    226
+   ],
+   [
+    38.52135,
+    -119.80549,
+    2446,
+    238
+   ],
+   [
+    38.52015,
+    -119.80478,
+    2446,
+    273
+   ],
+   [
+    38.51928,
+    -119.80437,
+    2448,
+    306
+   ],
+   [
+    38.51836,
+    -119.8041,
+    2449,
+    337
+   ],
+   [
+    38.51808,
+    -119.80385,
+    2447,
+    348
+   ],
+   [
+    38.51719,
+    -119.80363,
+    2449,
+    373
+   ],
+   [
+    38.51635,
+    -119.80309,
+    2455,
+    401
+   ],
+   [
+    38.51574,
+    -119.80304,
+    2459,
+    423
+   ],
+   [
+    38.51495,
+    -119.80239,
+    2457,
+    455
+   ],
+   [
+    38.51458,
+    -119.80229,
+    2457,
+    464
+   ],
+   [
+    38.51372,
+    -119.80267,
+    2465,
+    493
+   ],
+   [
+    38.51345,
+    -119.80263,
+    2468,
+    508
+   ],
+   [
+    38.51336,
+    -119.80282,
+    2469,
+    517
+   ],
+   [
+    38.51297,
+    -119.80278,
+    2474,
+    537
+   ],
+   [
+    38.51254,
+    -119.80258,
+    2480,
+    561
+   ],
+   [
+    38.51173,
+    -119.8031,
+    2495,
+    612
+   ],
+   [
+    38.51166,
+    -119.80368,
+    2497,
+    637
+   ],
+   [
+    38.51141,
+    -119.80393,
+    2502,
+    659
+   ],
+   [
+    38.51127,
+    -119.80372,
+    2506,
+    673
+   ],
+   [
+    38.51089,
+    -119.80407,
+    2514,
+    702
+   ],
+   [
+    38.51062,
+    -119.80388,
+    2519,
+    730
+   ],
+   [
+    38.51038,
+    -119.80277,
+    2530,
+    781
+   ],
+   [
+    38.50991,
+    -119.80177,
+    2540,
+    832
+   ],
+   [
+    38.50954,
+    -119.80141,
+    2541,
+    851
+   ],
+   [
+    38.50916,
+    -119.80133,
+    2544,
+    864
+   ],
+   [
+    38.50856,
+    -119.80071,
+    2552,
+    891
+   ],
+   [
+    38.5081,
+    -119.80063,
+    2558,
+    914
+   ],
+   [
+    38.50764,
+    -119.80069,
+    2562,
+    938
+   ],
+   [
+    38.50733,
+    -119.80096,
+    2563,
+    952
+   ],
+   [
+    38.50694,
+    -119.80106,
+    2564,
+    961
+   ],
+   [
+    38.50679,
+    -119.80139,
+    2566,
+    968
+   ],
+   [
+    38.50612,
+    -119.80204,
+    2571,
+    1008
+   ],
+   [
+    38.50599,
+    -119.8026,
+    2571,
+    1021
+   ],
+   [
+    38.50585,
+    -119.80278,
+    2571,
+    1026
+   ],
+   [
+    38.50462,
+    -119.80373,
+    2578,
+    1190
+   ],
+   [
+    38.50427,
+    -119.80334,
+    2582,
+    1205
+   ],
+   [
+    38.50372,
+    -119.80238,
+    2586,
+    1236
+   ],
+   [
+    38.50322,
+    -119.80072,
+    2594,
+    1287
+   ],
+   [
+    38.50291,
+    -119.80027,
+    2592,
+    1301
+   ],
+   [
+    38.50216,
+    -119.79958,
+    2594,
+    1329
+   ],
+   [
+    38.50151,
+    -119.79911,
+    2603,
+    1379
+   ],
+   [
+    38.5006,
+    -119.79899,
+    2615,
+    1445
+   ],
+   [
+    38.50014,
+    -119.79905,
+    2621,
+    1473
+   ],
+   [
+    38.49969,
+    -119.79896,
+    2627,
+    1499
+   ],
+   [
+    38.49791,
+    -119.79913,
+    2639,
+    1583
+   ],
+   [
+    38.49754,
+    -119.79893,
+    2637,
+    1590
+   ],
+   [
+    38.49737,
+    -119.79845,
+    2634,
+    1597
+   ],
+   [
+    38.49734,
+    -119.79801,
+    2626,
+    1606
+   ],
+   [
+    38.49708,
+    -119.79776,
+    2625,
+    1611
+   ],
+   [
+    38.49647,
+    -119.79757,
+    2618,
+    1623
+   ],
+   [
+    38.49609,
+    -119.79777,
+    2617,
+    1629
+   ],
+   [
+    38.49575,
+    -119.79841,
+    2616,
+    1640
+   ],
+   [
+    38.49554,
+    -119.79847,
+    2616,
+    1646
+   ],
+   [
+    38.49529,
+    -119.79846,
+    2615,
+    1660
+   ],
+   [
+    38.49458,
+    -119.7978,
+    2616,
+    3235
+   ],
+   [
+    38.49532,
+    -119.79849,
+    2615,
+    3281
+   ],
+   [
+    38.49558,
+    -119.79861,
+    2616,
+    3295
+   ],
+   [
+    38.4957,
+    -119.79885,
+    2617,
+    3305
+   ],
+   [
+    38.49558,
+    -119.79984,
+    2616,
+    3320
+   ],
+   [
+    38.49523,
+    -119.80098,
+    2616,
+    3337
+   ],
+   [
+    38.49408,
+    -119.80338,
+    2616,
+    3369
+   ],
+   [
+    38.49256,
+    -119.80456,
+    2618,
+    3408
+   ],
+   [
+    38.49207,
+    -119.80468,
+    2618,
+    3417
+   ],
+   [
+    38.49099,
+    -119.80577,
+    2622,
+    3450
+   ],
+   [
+    38.4902,
+    -119.80641,
+    2627,
+    3474
+   ],
+   [
+    38.48988,
+    -119.80661,
+    2628,
+    3484
+   ],
+   [
+    38.48952,
+    -119.80653,
+    2629,
+    3493
+   ],
+   [
+    38.48862,
+    -119.80695,
+    2630,
+    3521
+   ],
+   [
+    38.4884,
+    -119.80713,
+    2631,
+    3530
+   ],
+   [
+    38.48856,
+    -119.80756,
+    2632,
+    3549
+   ],
+   [
+    38.48817,
+    -119.80741,
+    2632,
+    3785
+   ],
+   [
+    38.48795,
+    -119.80787,
+    2631,
+    3799
+   ],
+   [
+    38.48747,
+    -119.80791,
+    2632,
+    3813
+   ],
+   [
+    38.48704,
+    -119.80813,
+    2631,
+    3826
+   ],
+   [
+    38.4863,
+    -119.80865,
+    2631,
+    3851
+   ],
+   [
+    38.48603,
+    -119.80903,
+    2630,
+    7865
+   ],
+   [
+    38.48527,
+    -119.80974,
+    2629,
+    7891
+   ],
+   [
+    38.48487,
+    -119.80994,
+    2627,
+    7953
+   ],
+   [
+    38.48472,
+    -119.80952,
+    2628,
+    7973
+   ],
+   [
+    38.4847,
+    -119.80895,
+    2628,
+    7994
+   ],
+   [
+    38.48485,
+    -119.80852,
+    2628,
+    8007
+   ],
+   [
+    38.48477,
+    -119.80842,
+    2630,
+    8014
+   ],
+   [
+    38.48482,
+    -119.80812,
+    2632,
+    8027
+   ],
+   [
+    38.48527,
+    -119.80728,
+    2628,
+    8096
+   ],
+   [
+    38.48638,
+    -119.80627,
+    2629,
+    8360
+   ],
+   [
+    38.48636,
+    -119.80636,
+    2629,
+    8361
+   ],
+   [
+    38.48654,
+    -119.80621,
+    2630,
+    8376
+   ],
+   [
+    38.4872,
+    -119.80618,
+    2627,
+    8599
+   ],
+   [
+    38.48848,
+    -119.80727,
+    2629,
+    8649
+   ],
+   [
+    38.4883,
+    -119.80772,
+    2633,
+    8872
+   ],
+   [
+    38.48732,
+    -119.80795,
+    2630,
+    8898
+   ],
+   [
+    38.48642,
+    -119.80862,
+    2630,
+    8928
+   ],
+   [
+    38.48608,
+    -119.80867,
+    2626,
+    8937
+   ],
+   [
+    38.48634,
+    -119.80872,
+    2633,
+    10403
+   ],
+   [
+    38.48714,
+    -119.80804,
+    2633,
+    10436
+   ],
+   [
+    38.48787,
+    -119.80786,
+    2633,
+    10469
+   ],
+   [
+    38.48832,
+    -119.80716,
+    2632,
+    10493
+   ],
+   [
+    38.48872,
+    -119.80687,
+    2633,
+    10507
+   ],
+   [
+    38.48994,
+    -119.80653,
+    2632,
+    10546
+   ],
+   [
+    38.49034,
+    -119.80626,
+    2628,
+    10556
+   ],
+   [
+    38.49113,
+    -119.80564,
+    2623,
+    10574
+   ],
+   [
+    38.49194,
+    -119.80464,
+    2620,
+    10594
+   ],
+   [
+    38.49203,
+    -119.80471,
+    2620,
+    10598
+   ],
+   [
+    38.49262,
+    -119.80452,
+    2622,
+    10641
+   ],
+   [
+    38.49377,
+    -119.80362,
+    2620,
+    10680
+   ],
+   [
+    38.49412,
+    -119.80327,
+    2619,
+    10691
+   ],
+   [
+    38.49522,
+    -119.80098,
+    2618,
+    10759
+   ],
+   [
+    38.49561,
+    -119.79964,
+    2617,
+    10792
+   ],
+   [
+    38.49569,
+    -119.79842,
+    2616,
+    10896
+   ],
+   [
+    38.4958,
+    -119.79842,
+    2616,
+    10901
+   ],
+   [
+    38.49599,
+    -119.79789,
+    2616,
+    10917
+   ],
+   [
+    38.49635,
+    -119.79755,
+    2618,
+    10934
+   ],
+   [
+    38.49679,
+    -119.79768,
+    2623,
+    10959
+   ],
+   [
+    38.49734,
+    -119.79807,
+    2628,
+    10998
+   ],
+   [
+    38.49742,
+    -119.79866,
+    2635,
+    11028
+   ],
+   [
+    38.49776,
+    -119.79906,
+    2637,
+    11050
+   ],
+   [
+    38.49822,
+    -119.79912,
+    2641,
+    11072
+   ],
+   [
+    38.49964,
+    -119.79895,
+    2628,
+    11121
+   ],
+   [
+    38.50163,
+    -119.7991,
+    2597,
+    11193
+   ],
+   [
+    38.50264,
+    -119.79992,
+    2589,
+    11234
+   ],
+   [
+    38.50326,
+    -119.80062,
+    2588,
+    11255
+   ],
+   [
+    38.50346,
+    -119.80111,
+    2590,
+    11271
+   ],
+   [
+    38.50344,
+    -119.80154,
+    2586,
+    11280
+   ],
+   [
+    38.50363,
+    -119.80207,
+    2585,
+    11287
+   ],
+   [
+    38.50428,
+    -119.8033,
+    2576,
+    11302
+   ],
+   [
+    38.50472,
+    -119.80372,
+    2576,
+    11311
+   ],
+   [
+    38.50598,
+    -119.80263,
+    2574,
+    11359
+   ],
+   [
+    38.5061,
+    -119.80205,
+    2571,
+    11371
+   ],
+   [
+    38.50682,
+    -119.80134,
+    2568,
+    11437
+   ],
+   [
+    38.50694,
+    -119.80104,
+    2567,
+    11445
+   ],
+   [
+    38.50724,
+    -119.801,
+    2566,
+    11452
+   ],
+   [
+    38.50773,
+    -119.80064,
+    2561,
+    11481
+   ],
+   [
+    38.5082,
+    -119.80061,
+    2556,
+    11499
+   ],
+   [
+    38.50867,
+    -119.80081,
+    2550,
+    11509
+   ],
+   [
+    38.50885,
+    -119.80109,
+    2547,
+    11513
+   ],
+   [
+    38.50927,
+    -119.80137,
+    2544,
+    11520
+   ],
+   [
+    38.50958,
+    -119.80142,
+    2543,
+    11529
+   ],
+   [
+    38.50997,
+    -119.80183,
+    2540,
+    11541
+   ],
+   [
+    38.5102,
+    -119.80222,
+    2537,
+    11554
+   ],
+   [
+    38.5105,
+    -119.80314,
+    2526,
+    11598
+   ],
+   [
+    38.51048,
+    -119.80355,
+    2522,
+    11605
+   ],
+   [
+    38.51073,
+    -119.8042,
+    2514,
+    11622
+   ],
+   [
+    38.51125,
+    -119.80375,
+    2505,
+    11644
+   ],
+   [
+    38.51162,
+    -119.80384,
+    2498,
+    11697
+   ],
+   [
+    38.51166,
+    -119.80325,
+    2494,
+    11721
+   ],
+   [
+    38.51177,
+    -119.80304,
+    2492,
+    11730
+   ],
+   [
+    38.5125,
+    -119.80259,
+    2480,
+    11748
+   ],
+   [
+    38.51271,
+    -119.80257,
+    2477,
+    11753
+   ],
+   [
+    38.51311,
+    -119.80288,
+    2471,
+    11768
+   ],
+   [
+    38.51337,
+    -119.80284,
+    2468,
+    11778
+   ],
+   [
+    38.51356,
+    -119.80258,
+    2464,
+    11784
+   ],
+   [
+    38.51383,
+    -119.80269,
+    2460,
+    11790
+   ],
+   [
+    38.51405,
+    -119.80258,
+    2458,
+    11795
+   ],
+   [
+    38.51421,
+    -119.80267,
+    2457,
+    11799
+   ],
+   [
+    38.51411,
+    -119.80252,
+    2455,
+    11880
+   ],
+   [
+    38.51444,
+    -119.80227,
+    2455,
+    11887
+   ],
+   [
+    38.51491,
+    -119.80236,
+    2457,
+    11896
+   ],
+   [
+    38.51589,
+    -119.80309,
+    2456,
+    11918
+   ],
+   [
+    38.51648,
+    -119.80315,
+    2453,
+    11929
+   ],
+   [
+    38.51734,
+    -119.80371,
+    2450,
+    11946
+   ],
+   [
+    38.51815,
+    -119.80388,
+    2449,
+    11965
+   ],
+   [
+    38.51846,
+    -119.80415,
+    2448,
+    11973
+   ],
+   [
+    38.51909,
+    -119.80428,
+    2449,
+    11984
+   ],
+   [
+    38.51961,
+    -119.80463,
+    2448,
+    11995
+   ],
+   [
+    38.52018,
+    -119.80483,
+    2446,
+    12005
+   ],
+   [
+    38.52139,
+    -119.80555,
+    2448,
+    12037
+   ],
+   [
+    38.52172,
+    -119.80599,
+    2445,
+    12050
+   ],
+   [
+    38.5223,
+    -119.80598,
+    2446,
+    12068
+   ],
+   [
+    38.52226,
+    -119.80681,
+    2437,
+    12081
+   ],
+   [
+    38.52249,
+    -119.80718,
+    2435,
+    12086
+   ],
+   [
+    38.52246,
+    -119.80829,
+    2427,
+    12101
+   ],
+   [
+    38.52282,
+    -119.80892,
+    2424,
+    12109
+   ],
+   [
+    38.52293,
+    -119.80952,
+    2422,
+    12116
+   ],
+   [
+    38.52401,
+    -119.81131,
+    2417,
+    12150
+   ],
+   [
+    38.52439,
+    -119.8114,
+    2417,
+    12156
+   ],
+   [
+    38.52455,
+    -119.81157,
+    2416,
+    12160
+   ],
+   [
+    38.52473,
+    -119.81221,
+    2417,
+    12169
+   ]
+  ],
+  "profile": [
+   [
+    0,
+    2416
+   ],
+   [
+    0.056,
+    2421
+   ],
+   [
+    0.112,
+    2420
+   ],
+   [
+    0.168,
+    2422
+   ],
+   [
+    0.223,
+    2422
+   ],
+   [
+    0.279,
+    2421
+   ],
+   [
+    0.335,
+    2424
+   ],
+   [
+    0.391,
+    2426
+   ],
+   [
+    0.447,
+    2433
+   ],
+   [
+    0.503,
+    2438
+   ],
+   [
+    0.559,
+    2441
+   ],
+   [
+    0.614,
+    2445
+   ],
+   [
+    0.67,
+    2448
+   ],
+   [
+    0.726,
+    2447
+   ],
+   [
+    0.782,
+    2445
+   ],
+   [
+    0.838,
+    2444
+   ],
+   [
+    0.894,
+    2446
+   ],
+   [
+    0.949,
+    2448
+   ],
+   [
+    1.005,
+    2448
+   ],
+   [
+    1.061,
+    2449
+   ],
+   [
+    1.117,
+    2449
+   ],
+   [
+    1.173,
+    2447
+   ],
+   [
+    1.229,
+    2449
+   ],
+   [
+    1.285,
+    2450
+   ],
+   [
+    1.34,
+    2454
+   ],
+   [
+    1.396,
+    2457
+   ],
+   [
+    1.452,
+    2457
+   ],
+   [
+    1.508,
+    2457
+   ],
+   [
+    1.564,
+    2457
+   ],
+   [
+    1.62,
+    2459
+   ],
+   [
+    1.676,
+    2466
+   ],
+   [
+    1.731,
+    2469
+   ],
+   [
+    1.787,
+    2477
+   ],
+   [
+    1.843,
+    2484
+   ],
+   [
+    1.899,
+    2492
+   ],
+   [
+    1.955,
+    2497
+   ],
+   [
+    2.011,
+    2503
+   ],
+   [
+    2.066,
+    2511
+   ],
+   [
+    2.122,
+    2520
+   ],
+   [
+    2.178,
+    2527
+   ],
+   [
+    2.234,
+    2533
+   ],
+   [
+    2.29,
+    2539
+   ],
+   [
+    2.346,
+    2541
+   ],
+   [
+    2.402,
+    2544
+   ],
+   [
+    2.457,
+    2548
+   ],
+   [
+    2.513,
+    2553
+   ],
+   [
+    2.569,
+    2559
+   ],
+   [
+    2.625,
+    2563
+   ],
+   [
+    2.681,
+    2564
+   ],
+   [
+    2.737,
+    2567
+   ],
+   [
+    2.793,
+    2570
+   ],
+   [
+    2.848,
+    2571
+   ],
+   [
+    2.904,
+    2573
+   ],
+   [
+    2.96,
+    2575
+   ],
+   [
+    3.016,
+    2577
+   ],
+   [
+    3.072,
+    2580
+   ],
+   [
+    3.128,
+    2580
+   ],
+   [
+    3.183,
+    2582
+   ],
+   [
+    3.239,
+    2591
+   ],
+   [
+    3.295,
+    2596
+   ],
+   [
+    3.351,
+    2594
+   ],
+   [
+    3.407,
+    2592
+   ],
+   [
+    3.463,
+    2595
+   ],
+   [
+    3.519,
+    2595
+   ],
+   [
+    3.574,
+    2601
+   ],
+   [
+    3.63,
+    2607
+   ],
+   [
+    3.686,
+    2614
+   ],
+   [
+    3.742,
+    2620
+   ],
+   [
+    3.798,
+    2627
+   ],
+   [
+    3.854,
+    2634
+   ],
+   [
+    3.91,
+    2640
+   ],
+   [
+    3.965,
+    2641
+   ],
+   [
+    4.021,
+    2638
+   ],
+   [
+    4.077,
+    2635
+   ],
+   [
+    4.133,
+    2626
+   ],
+   [
+    4.189,
+    2624
+   ],
+   [
+    4.245,
+    2618
+   ],
+   [
+    4.301,
+    2617
+   ],
+   [
+    4.356,
+    2616
+   ],
+   [
+    4.412,
+    2616
+   ],
+   [
+    4.468,
+    2617
+   ],
+   [
+    4.524,
+    2616
+   ],
+   [
+    4.58,
+    2615
+   ],
+   [
+    4.636,
+    2616
+   ],
+   [
+    4.691,
+    2616
+   ],
+   [
+    4.747,
+    2616
+   ],
+   [
+    4.803,
+    2617
+   ],
+   [
+    4.859,
+    2616
+   ],
+   [
+    4.915,
+    2616
+   ],
+   [
+    4.971,
+    2617
+   ],
+   [
+    5.027,
+    2617
+   ],
+   [
+    5.082,
+    2616
+   ],
+   [
+    5.138,
+    2616
+   ],
+   [
+    5.194,
+    2619
+   ],
+   [
+    5.25,
+    2618
+   ],
+   [
+    5.306,
+    2618
+   ],
+   [
+    5.362,
+    2618
+   ],
+   [
+    5.418,
+    2620
+   ],
+   [
+    5.473,
+    2621
+   ],
+   [
+    5.529,
+    2623
+   ],
+   [
+    5.585,
+    2626
+   ],
+   [
+    5.641,
+    2628
+   ],
+   [
+    5.697,
+    2629
+   ],
+   [
+    5.753,
+    2630
+   ],
+   [
+    5.808,
+    2630
+   ],
+   [
+    5.864,
+    2632
+   ],
+   [
+    5.92,
+    2631
+   ],
+   [
+    5.976,
+    2631
+   ],
+   [
+    6.032,
+    2633
+   ],
+   [
+    6.088,
+    2631
+   ],
+   [
+    6.144,
+    2630
+   ],
+   [
+    6.199,
+    2626
+   ],
+   [
+    6.255,
+    2631
+   ],
+   [
+    6.311,
+    2629
+   ],
+   [
+    6.367,
+    2627
+   ],
+   [
+    6.423,
+    2630
+   ],
+   [
+    6.479,
+    2628
+   ],
+   [
+    6.535,
+    2633
+   ],
+   [
+    6.59,
+    2631
+   ],
+   [
+    6.646,
+    2628
+   ],
+   [
+    6.702,
+    2630
+   ],
+   [
+    6.758,
+    2630
+   ],
+   [
+    6.814,
+    2629
+   ],
+   [
+    6.87,
+    2628
+   ],
+   [
+    6.925,
+    2626
+   ],
+   [
+    6.981,
+    2626
+   ],
+   [
+    7.037,
+    2628
+   ],
+   [
+    7.093,
+    2631
+   ],
+   [
+    7.149,
+    2632
+   ],
+   [
+    7.205,
+    2630
+   ],
+   [
+    7.261,
+    2630
+   ],
+   [
+    7.316,
+    2630
+   ],
+   [
+    7.372,
+    2629
+   ],
+   [
+    7.428,
+    2632
+   ],
+   [
+    7.484,
+    2633
+   ],
+   [
+    7.54,
+    2633
+   ],
+   [
+    7.596,
+    2633
+   ],
+   [
+    7.652,
+    2632
+   ],
+   [
+    7.707,
+    2633
+   ],
+   [
+    7.763,
+    2634
+   ],
+   [
+    7.819,
+    2633
+   ],
+   [
+    7.875,
+    2631
+   ],
+   [
+    7.931,
+    2627
+   ],
+   [
+    7.987,
+    2624
+   ],
+   [
+    8.043,
+    2622
+   ],
+   [
+    8.098,
+    2621
+   ],
+   [
+    8.154,
+    2620
+   ],
+   [
+    8.21,
+    2621
+   ],
+   [
+    8.266,
+    2621
+   ],
+   [
+    8.322,
+    2620
+   ],
+   [
+    8.378,
+    2620
+   ],
+   [
+    8.433,
+    2620
+   ],
+   [
+    8.489,
+    2620
+   ],
+   [
+    8.545,
+    2620
+   ],
+   [
+    8.601,
+    2619
+   ],
+   [
+    8.657,
+    2618
+   ],
+   [
+    8.713,
+    2617
+   ],
+   [
+    8.769,
+    2617
+   ],
+   [
+    8.824,
+    2617
+   ],
+   [
+    8.88,
+    2615
+   ],
+   [
+    8.936,
+    2616
+   ],
+   [
+    8.992,
+    2617
+   ],
+   [
+    9.048,
+    2622
+   ],
+   [
+    9.104,
+    2627
+   ],
+   [
+    9.16,
+    2633
+   ],
+   [
+    9.215,
+    2637
+   ],
+   [
+    9.271,
+    2640
+   ],
+   [
+    9.327,
+    2642
+   ],
+   [
+    9.383,
+    2634
+   ],
+   [
+    9.439,
+    2628
+   ],
+   [
+    9.495,
+    2620
+   ],
+   [
+    9.55,
+    2615
+   ],
+   [
+    9.606,
+    2605
+   ],
+   [
+    9.662,
+    2597
+   ],
+   [
+    9.718,
+    2591
+   ],
+   [
+    9.774,
+    2590
+   ],
+   [
+    9.83,
+    2589
+   ],
+   [
+    9.886,
+    2588
+   ],
+   [
+    9.941,
+    2589
+   ],
+   [
+    9.997,
+    2586
+   ],
+   [
+    10.053,
+    2582
+   ],
+   [
+    10.109,
+    2576
+   ],
+   [
+    10.165,
+    2576
+   ],
+   [
+    10.221,
+    2576
+   ],
+   [
+    10.277,
+    2574
+   ],
+   [
+    10.332,
+    2573
+   ],
+   [
+    10.388,
+    2573
+   ],
+   [
+    10.444,
+    2570
+   ],
+   [
+    10.5,
+    2569
+   ],
+   [
+    10.556,
+    2567
+   ],
+   [
+    10.612,
+    2566
+   ],
+   [
+    10.667,
+    2561
+   ],
+   [
+    10.723,
+    2556
+   ],
+   [
+    10.779,
+    2549
+   ],
+   [
+    10.835,
+    2544
+   ],
+   [
+    10.891,
+    2543
+   ],
+   [
+    10.947,
+    2540
+   ],
+   [
+    11.003,
+    2535
+   ],
+   [
+    11.058,
+    2529
+   ],
+   [
+    11.114,
+    2522
+   ],
+   [
+    11.17,
+    2516
+   ],
+   [
+    11.226,
+    2508
+   ],
+   [
+    11.282,
+    2504
+   ],
+   [
+    11.338,
+    2495
+   ],
+   [
+    11.394,
+    2489
+   ],
+   [
+    11.449,
+    2482
+   ],
+   [
+    11.505,
+    2473
+   ],
+   [
+    11.561,
+    2468
+   ],
+   [
+    11.617,
+    2461
+   ],
+   [
+    11.673,
+    2455
+   ],
+   [
+    11.729,
+    2455
+   ],
+   [
+    11.785,
+    2457
+   ],
+   [
+    11.84,
+    2458
+   ],
+   [
+    11.896,
+    2456
+   ],
+   [
+    11.952,
+    2454
+   ],
+   [
+    12.008,
+    2452
+   ],
+   [
+    12.064,
+    2450
+   ],
+   [
+    12.12,
+    2449
+   ],
+   [
+    12.175,
+    2449
+   ],
+   [
+    12.231,
+    2448
+   ],
+   [
+    12.287,
+    2448
+   ],
+   [
+    12.343,
+    2449
+   ],
+   [
+    12.399,
+    2447
+   ],
+   [
+    12.455,
+    2445
+   ],
+   [
+    12.511,
+    2448
+   ],
+   [
+    12.566,
+    2447
+   ],
+   [
+    12.622,
+    2445
+   ],
+   [
+    12.678,
+    2446
+   ],
+   [
+    12.734,
+    2440
+   ],
+   [
+    12.79,
+    2436
+   ],
+   [
+    12.846,
+    2433
+   ],
+   [
+    12.902,
+    2427
+   ],
+   [
+    12.957,
+    2425
+   ],
+   [
+    13.013,
+    2422
+   ],
+   [
+    13.069,
+    2421
+   ],
+   [
+    13.125,
+    2420
+   ],
+   [
+    13.181,
+    2418
+   ],
+   [
+    13.237,
+    2417
+   ],
+   [
+    13.292,
+    2416
+   ],
+   [
+    13.348,
+    2417
+   ]
+  ],
+  "trim": {
+   "notes": [
+    "No trailhead near the start: trimmed the first 984 ft.",
+    "No trailhead near the end: trimmed the last 984 ft."
+   ],
+   "rawPoints": 1247,
+   "shownKm": 13.35,
+   "keptFrom": 24,
+   "keptTo": 1215,
+   "startTrailhead": null,
+   "endTrailhead": null
+  }
+ },
+ "photos": [
+  {
+   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/05.jpg",
+   "caption": "Two horses at a red gate beside an old wooden barn, 11:14.",
+   "takenAt": "2026:10:17 11:14:46",
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "IMG_7949.jpg"
+  },
+  {
+   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/01.jpg",
+   "caption": "Sage slopes, scattered pines and ridges under a clear sky, 11:31.",
+   "takenAt": "2026:10:17 11:31:09",
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": true,
+   "from": "dji_fly_20261017_113110_786_1792262899368_aeb.JPG + dji_fly_20261017_113110_787_1792262900944_aeb.JPG + dji_fly_20261017_113110_788_1792262902508_aeb.JPG",
+   "hdr": 3
+  },
+  {
+   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/02.jpg",
+   "caption": "The 3 exposures behind the HDR photo, darkest to brightest.",
+   "takenAt": "2026:10:17 11:31:09",
+   "w": 2149,
+   "h": 400,
+   "use": "skip",
+   "cover": false,
+   "from": "dji_fly_20261017_113110_786_1792262899368_aeb.JPG + dji_fly_20261017_113110_787_1792262900944_aeb.JPG + dji_fly_20261017_113110_788_1792262902508_aeb.JPG",
+   "strip": 3
+  },
+  {
+   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/03.jpg",
+   "caption": "A dry draw running down through the pines toward the far ridges.",
+   "takenAt": "2026:10:17 11:31:18",
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261017_113118_789_1792262893108_aeb.JPG + dji_fly_20261017_113118_790_1792262895222_aeb.JPG + dji_fly_20261017_113120_791_1792262897307_aeb.JPG",
+   "hdr": 3
+  },
+  {
+   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/04.jpg",
+   "caption": "The 3 exposures behind the HDR photo, darkest to brightest.",
+   "takenAt": "2026:10:17 11:31:18",
+   "w": 2149,
+   "h": 400,
+   "use": "skip",
+   "cover": false,
+   "from": "dji_fly_20261017_113118_789_1792262893108_aeb.JPG + dji_fly_20261017_113118_790_1792262895222_aeb.JPG + dji_fly_20261017_113120_791_1792262897307_aeb.JPG",
+   "strip": 3
+  },
+  {
+   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/07.jpg",
+   "caption": "A deep blue lake ringed by pines, a dirt road along its right shore.",
+   "takenAt": "2026:10:17 11:31:25",
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261017_113124_792_1792262888298_aeb.JPG + dji_fly_20261017_113124_793_1792262889776_aeb.JPG + dji_fly_20261017_113126_794_1792262891340_aeb.JPG",
+   "hdr": 3
+  },
+  {
+   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/08.jpg",
+   "caption": "The 3 exposures behind the HDR photo, darkest to brightest.",
+   "takenAt": "2026:10:17 11:31:25",
+   "w": 2149,
+   "h": 400,
+   "use": "skip",
+   "cover": false,
+   "from": "dji_fly_20261017_113124_792_1792262888298_aeb.JPG + dji_fly_20261017_113124_793_1792262889776_aeb.JPG + dji_fly_20261017_113126_794_1792262891340_aeb.JPG",
+   "strip": 3
+  },
+  {
+   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/09.jpg",
+   "caption": "The same lake, the road curving past its near end.",
+   "takenAt": "2026:10:17 11:31:30",
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261017_113130_795_1792262883092_aeb.JPG + dji_fly_20261017_113130_796_1792262884620_aeb.JPG + dji_fly_20261017_113130_797_1792262886226_aeb.JPG",
+   "hdr": 3
+  },
+  {
+   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/10.jpg",
+   "caption": "The 3 exposures behind the HDR photo, darkest to brightest.",
+   "takenAt": "2026:10:17 11:31:30",
+   "w": 2149,
+   "h": 400,
+   "use": "skip",
+   "cover": false,
+   "from": "dji_fly_20261017_113130_795_1792262883092_aeb.JPG + dji_fly_20261017_113130_796_1792262884620_aeb.JPG + dji_fly_20261017_113130_797_1792262886226_aeb.JPG",
+   "strip": 3
+  },
+  {
+   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/11.jpg",
+   "caption": "A green lake under bare slopes, a road along its edge, 11:33.",
+   "takenAt": "2026:10:17 11:33:18",
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261017_113318_799_1792262753205_aeb.JPG + dji_fly_20261017_113318_800_1792262754674_aeb.JPG + dji_fly_20261017_113318_801_1792262756286_aeb.JPG",
+   "hdr": 3
+  },
+  {
+   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/12.jpg",
+   "caption": "The 3 exposures behind the HDR photo, darkest to brightest.",
+   "takenAt": "2026:10:17 11:33:18",
+   "w": 2149,
+   "h": 400,
+   "use": "skip",
+   "cover": false,
+   "from": "dji_fly_20261017_113318_799_1792262753205_aeb.JPG + dji_fly_20261017_113318_800_1792262754674_aeb.JPG + dji_fly_20261017_113318_801_1792262756286_aeb.JPG",
+   "strip": 3
+  },
+  {
+   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/13.jpg",
+   "caption": "A blue lake past a dry meadow, peaks behind it.",
+   "takenAt": "2026:10:17 11:33:46",
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261017_113346_802_1792262747991_aeb.JPG + dji_fly_20261017_113346_803_1792262749510_aeb.JPG + dji_fly_20261017_113346_804_1792262751131_aeb.JPG",
+   "hdr": 3
+  },
+  {
+   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/14.jpg",
+   "caption": "The 3 exposures behind the HDR photo, darkest to brightest.",
+   "takenAt": "2026:10:17 11:33:46",
+   "w": 2149,
+   "h": 400,
+   "use": "skip",
+   "cover": false,
+   "from": "dji_fly_20261017_113346_802_1792262747991_aeb.JPG + dji_fly_20261017_113346_803_1792262749510_aeb.JPG + dji_fly_20261017_113346_804_1792262751131_aeb.JPG",
+   "strip": 3
+  },
+  {
+   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/19.jpg",
+   "caption": "Marley in her harness at the water's edge, 12:24.",
+   "takenAt": "2026:10:17 12:24:17",
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "IMG_7991.jpg"
+  },
+  {
+   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/20.jpg",
+   "caption": "Marley on the grassy shore, a towel spread out beside her.",
+   "takenAt": "2026:10:17 12:24:23",
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "IMG_7992.jpg"
+  },
+  {
+   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/15.jpg",
+   "caption": "A long valley of pines between gray slopes, 12:38.",
+   "takenAt": "2026:10:17 12:38:52",
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261017_123852_810_1792266445784_aeb.JPG + dji_fly_20261017_123852_811_1792266447411_aeb.JPG + dji_fly_20261017_123852_812_1792266449126_aeb.JPG",
+   "hdr": 3
+  },
+  {
+   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/16.jpg",
+   "caption": "The 3 exposures behind the HDR photo, darkest to brightest.",
+   "takenAt": "2026:10:17 12:38:52",
+   "w": 2149,
+   "h": 400,
+   "use": "skip",
+   "cover": false,
+   "from": "dji_fly_20261017_123852_810_1792266445784_aeb.JPG + dji_fly_20261017_123852_811_1792266447411_aeb.JPG + dji_fly_20261017_123852_812_1792266449126_aeb.JPG",
+   "strip": 3
+  },
+  {
+   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/17.jpg",
+   "caption": "The same valley from the edge of a rock outcrop.",
+   "takenAt": "2026:10:17 12:39:05",
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261017_123906_813_1792266439864_aeb.JPG + dji_fly_20261017_123906_814_1792266442020_aeb.JPG + dji_fly_20261017_123906_815_1792266443704_aeb.JPG",
+   "hdr": 3
+  },
+  {
+   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/18.jpg",
+   "caption": "The 3 exposures behind the HDR photo, darkest to brightest.",
+   "takenAt": "2026:10:17 12:39:05",
+   "w": 2149,
+   "h": 400,
+   "use": "skip",
+   "cover": false,
+   "from": "dji_fly_20261017_123906_813_1792266439864_aeb.JPG + dji_fly_20261017_123906_814_1792266442020_aeb.JPG + dji_fly_20261017_123906_815_1792266443704_aeb.JPG",
+   "strip": 3
+  },
+  {
+   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/21.jpg",
+   "caption": "12:39.",
+   "takenAt": "2026:10:17 12:39:45",
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261017_123944_816_1792266434153_aeb.JPG + dji_fly_20261017_123944_817_1792266436228_aeb.JPG + dji_fly_20261017_123946_818_1792266437795_aeb.JPG",
+   "hdr": 3
+  },
+  {
+   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/22.jpg",
+   "caption": "The 3 exposures behind the HDR photo, darkest to brightest.",
+   "takenAt": "2026:10:17 12:39:45",
+   "w": 2149,
+   "h": 400,
+   "use": "skip",
+   "cover": false,
+   "from": "dji_fly_20261017_123944_816_1792266434153_aeb.JPG + dji_fly_20261017_123944_817_1792266436228_aeb.JPG + dji_fly_20261017_123946_818_1792266437795_aeb.JPG",
+   "strip": 3
+  },
+  {
+   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/23.jpg",
+   "caption": "12:39.",
+   "takenAt": "2026:10:17 12:39:51",
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261017_123950_819_1792266428591_aeb.JPG + dji_fly_20261017_123952_820_1792266430327_aeb.JPG + dji_fly_20261017_123952_821_1792266432075_aeb.JPG",
+   "hdr": 3
+  },
+  {
+   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/24.jpg",
+   "caption": "The 3 exposures behind the HDR photo, darkest to brightest.",
+   "takenAt": "2026:10:17 12:39:51",
+   "w": 2149,
+   "h": 400,
+   "use": "skip",
+   "cover": false,
+   "from": "dji_fly_20261017_123950_819_1792266428591_aeb.JPG + dji_fly_20261017_123952_820_1792266430327_aeb.JPG + dji_fly_20261017_123952_821_1792266432075_aeb.JPG",
+   "strip": 3
+  },
+  {
+   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/25.jpg",
+   "caption": "12:40.",
+   "takenAt": "2026:10:17 12:40:20",
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261017_124020_822_1792266423604_aeb.JPG + dji_fly_20261017_124020_823_1792266425230_aeb.JPG + dji_fly_20261017_124020_824_1792266426875_aeb.JPG",
+   "hdr": 3
+  },
+  {
+   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/26.jpg",
+   "caption": "The 3 exposures behind the HDR photo, darkest to brightest.",
+   "takenAt": "2026:10:17 12:40:20",
+   "w": 2149,
+   "h": 400,
+   "use": "skip",
+   "cover": false,
+   "from": "dji_fly_20261017_124020_822_1792266423604_aeb.JPG + dji_fly_20261017_124020_823_1792266425230_aeb.JPG + dji_fly_20261017_124020_824_1792266426875_aeb.JPG",
+   "strip": 3
+  },
+  {
+   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/27.jpg",
+   "caption": "12:43.",
+   "takenAt": "2026:10:17 12:43:27",
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261017_124326_834_1792266400565_aeb.JPG + dji_fly_20261017_124326_835_1792266402154_aeb.JPG + dji_fly_20261017_124328_836_1792266404233_aeb.JPG",
+   "hdr": 3
+  },
+  {
+   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/28.jpg",
+   "caption": "The 3 exposures behind the HDR photo, darkest to brightest.",
+   "takenAt": "2026:10:17 12:43:27",
+   "w": 2149,
+   "h": 400,
+   "use": "skip",
+   "cover": false,
+   "from": "dji_fly_20261017_124326_834_1792266400565_aeb.JPG + dji_fly_20261017_124326_835_1792266402154_aeb.JPG + dji_fly_20261017_124328_836_1792266404233_aeb.JPG",
+   "strip": 3
+  },
+  {
+   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/clip-2.mp4",
+   "poster": "data/photos/2026-10-17-two-lakes-and-a-corral/clip-2.jpg",
+   "video": true,
+   "caption": "Coming down the hillside towards the upper lake.",
+   "takenAt": "2026:10:17 13:03:54",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261017_124332_837_1792266716122_video.mov",
+   "range": [
+    0,
+    17.35
+   ]
+  },
+  {
+   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/clip-1.mp4",
+   "poster": "data/photos/2026-10-17-two-lakes-and-a-corral/clip-1.jpg",
+   "video": true,
+   "caption": "Flying over highland lakes.",
+   "takenAt": "2026:10:17 16:33:48",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261017_113352_805_1792262746412_video.mov",
+   "range": [
+    0,
+    7.35
+   ]
+  },
+  {
+   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/clip-5.mp4",
+   "poster": "data/photos/2026-10-17-two-lakes-and-a-corral/clip-5.jpg",
+   "video": true,
+   "caption": "Marley swimming.",
+   "takenAt": "2026:10:17 16:34:38",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261017_113720_807_1792262460543_video.mov",
+   "range": [
+    0,
+    17.35
+   ]
+  },
+  {
+   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/clip-3.mp4",
+   "poster": "data/photos/2026-10-17-two-lakes-and-a-corral/clip-3.jpg",
+   "video": true,
+   "caption": "Flying over the ledge.",
+   "takenAt": "2026:10:17 16:36:51",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261017_123748_809_1792266848233_video.MOV",
+   "range": [
+    0,
+    12
+   ]
+  },
+  {
+   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/clip-4.mp4",
+   "poster": "data/photos/2026-10-17-two-lakes-and-a-corral/clip-4.jpg",
+   "video": true,
+   "caption": "Under the tree and over the lake.",
+   "takenAt": "2026:10:17 16:36:51",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261017_123636_808_1792266626476_video.mov",
+   "range": [
+    0,
+    10
+   ]
+  },
+  {
+   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/clip-6.mp4",
+   "poster": "data/photos/2026-10-17-two-lakes-and-a-corral/clip-6.jpg",
+   "video": true,
+   "caption": "Both lakes.",
+   "takenAt": "2026:10:17 16:41:02",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261017_113218_798_1792262881530_video.mov",
+   "range": [
+    0,
+    21.2
+   ]
+  }
+ ],
+ "fieldNotes": "A title of your own? I used 'Two lakes and a corral' for the post.\nGo ahead. We were on the Bear Valley Highland lakes. There’s two campgrounds. We parked near the just past the first campground up Highland lakes, and then after the we rode our bikes up to the Highland lakes and cruised around near the second campground. We kind of hung out there for the day, and then we rode our bikes back. Marley ran along the whole time. Helena was with me. We both rode our bikes and we just had a had a fun time. Put up the hammock and flew the drone, so the footage is all from the aerial of the drone and yeah, everything was hunky-dory\n\nThe entry sets Robot Marley as narrator, so the script now opens with \"Narrated by Robot Marley.\" instead of GlazyArray's tag line. Is that right?\nYes\n\nThe drone clip is stamped 4:33 PM, but the track ends around 2:30. Was it flown after the ride, or is the camera clock off?\nI think the drone is off. I did not fly after 2:30 home now after driving an hour and it’s 4:57 pm.\n\nWhich lake is which (Upper or Lower Highland Lake) for the blue one and the green one? I left them unnamed.\nBoth are in there.\n\nI couldn't see 23.jpg, 25.jpg or 27.jpg. What's in them, for captions?\nLake photos of both lakes. One of a valley looking west of both lakes.\n\nWas the hammock up at the spot where Marley and the towel are (12:24)?\nYes.\n\nI changed the episode title to \"Up to the Highland Lakes\", since the ride was up and back, not a loop. OK?\nOk",
+ "post": {
+  "title": "Two lakes and a corral",
+  "body": "Helena and I started rolling just before eleven on a clear October morning, up at the Highland Lakes above Bear Valley. There are two campgrounds up there. We parked just past the first one and rode our bikes up toward the lakes, with Marley running along the whole way. The ride stayed high the whole time, between about 7,900 and 8,700 feet.\n\n## The corral\n\nTwenty minutes in we passed a corral by an old wooden barn. Two horses stood at the red gate, and one of them watched me the whole time I had the camera up.\n\n## Both lakes from above\n\nBy half past eleven I had the drone up, and from there the country opened out: sage slopes, pines in loose groups and ridges stacked to the horizon under a sky without a cloud in it. From up there I could see both lakes, Upper and Lower Highland Lake. One was deep blue with a dirt road along its shore. The other was green, tucked under bare slopes. All the aerial shots and the clip are from the drone.\n\n## The hammock by the water\n\nWe cruised around near the second campground and mostly hung out there for the day. We put up the hammock right there by the water, and a little before half past twelve Marley was down at the edge of the lake. She stood on the grass in her harness while the lake moved behind her, and we had a towel spread out on the shore.\n\n> The time standing still is where the day happened.\n\nAfter that I sent the drone out for one more long look back down a valley of pines between gray slopes, past the edge of a rock outcrop, then over both lakes again and out over a valley to the west of them. Then we rode our bikes back.\n\n## The numbers\n\nThe numbers: about 8.7 miles, about 1,200 feet of climbing and about the same back down, an hour and six minutes of moving time, and three and a half hours out in total. Most of the day was the stops, and the photos show why. We just had a fun time, and everything went right.\n\nWhat I learned: on a ride like this the moving time is the small number. The time standing still is where the day happened."
+ },
+ "episode": {
+  "title": "Up to the Highland Lakes",
+  "script": "Narrated by Robot Marley.\n\nIt was a clear October morning, just before eleven, when Christian and Ha-Leen-Ah started rolling at the Highland Lakes, up above Bear Valley.\n\nThey had parked just past the first of the two campgrounds. Both of them were on bikes. Marley ran along beside them, the whole way.\n\nThe ride stayed high. Its lowest point was close to seven thousand nine hundred feet, and the top was near eighty-seven hundred.\n\nTwenty minutes in, they passed a corral beside an old wooden barn. Two horses stood at a red gate. One of them looked straight at the camera, the way horses do when they suspect you might have something for them. Christian took the picture anyway.\n\n***\n\nBy half past eleven the drone was up, and the country opened out below it. Sage on the slopes. Pines standing in loose groups. Ridges lined up one behind the other, all the way to the edge of a sky with nothing in it but blue.\n\nAnd below, both lakes, Upper and Lower Highland Lake. One was a deep, dark blue, with a dirt road curving along its shore. The other was green, tucked in under bare hillsides, like it was keeping to itself.\n\nChristian has an eye for this. He didn't stop at one frame. He shot the blue lake, then shot it again with the road bending past the near end, because the road is what tells you how big the water really is. That's the difference between a snapshot and a picture someone can step into.\n\n***\n\nNear the second campground, they slowed right down. They cruised around, put up the hammock by the water, and mostly just stayed.\n\nA little before half past twelve, Marley was down at the lake's edge, right by the hammock. She stood on the grass in her harness, the lake shining behind her, a towel spread out on the shore. She looked at the camera with the patience of a dog who knows the treats come after the photos.\n\nThen the drone went out for one more long look, past the edge of a rock outcrop, back down a valley of pines between gray slopes. It swung over both lakes one more time, and out over a valley to the west.\n\nAnd then they rode back.\n\n***\n\nThe ride came to about nine miles, with about twelve hundred feet of climbing and nearly as much coming back down. They were moving for a little over an hour. They were out for three and a half.\n\nI'll leave the arithmetic to you. But I think the best part of that day happened while the wheels weren't turning.\n\nSome rides are about the miles. This one was about the stops.",
+  "audio": null,
+  "narrator": "marley"
+ },
+ "questions": [
+  "For captions: are 23.jpg and 25.jpg the two lakes and 27.jpg the valley looking west, in that order?",
+  "The horse that 'watched me the whole time' and Marley 'knowing the treats come after the photos' are my guesses, not from your notes. Keep them, or cut?",
+  "The drone clip's clock was off. Are the times on the drone stills (11:31 to 12:43) right, or off too?"
+ ],
+ "consent": "",
+ "source": "Rides/October 17 2026",
+ "feature": {
+  "theme": "colcobble",
+  "masthead": "COL & COBBLE",
+  "tagline": "Riding, slowly told",
+  "issue": "The Climbing Issue",
+  "label": "Ride Report",
+  "byline": "By GlazyArray, Cycling Desk",
+  "blocks": [
+   {
+    "type": "stats",
+    "title": "The numbers",
+    "items": [
+     [
+      "8.7 mi",
+      "Distance, up and back"
+     ],
+     [
+      "about 1,200 ft",
+      "Climbing, and about the same back down"
+     ],
+     [
+      "8,671 ft",
+      "High point"
+     ],
+     [
+      "1 h 6 m",
+      "Moving time"
+     ],
+     [
+      "3.5 h",
+      "Out in total"
+     ]
+    ],
+    "note": "Up to the Highland Lakes and back, from the track."
+   },
+   {
+    "type": "goodbad",
+    "title": "Smooth / Rough",
+    "good": [
+     "A clear October morning, not a cloud in the sky",
+     "Marley ran along the whole way",
+     "Two horses at a red gate by an old wooden barn, twenty minutes in",
+     "Both Upper and Lower Highland Lake from the drone, one deep blue, one green",
+     "The hammock up by the water near the second campground"
+    ],
+    "bad": [
+     "The drone's clock ran ahead: its clip is stamped 4:33 PM, long after the ride ended around 2:30"
+    ]
+   },
+   {
+    "type": "box",
+    "title": "The hammock by the water",
+    "before": "The numbers",
+    "kicker": "The stop",
+    "text": "Near the second campground, Christian and Helena slowed right down. They cruised around, put up the hammock by the water and mostly hung out there for the day.\n\nA little before half past twelve, Marley was down at the lake's edge, right by the hammock, standing on the grass in her harness with a towel spread out on the shore. Then the drone went out for one more long look: down a valley of pines, past a rock outcrop, over both lakes and out to a valley to the west."
+   }
+  ],
+  "coverLines": [
+   "Two lakes and a corral: up to the Highland Lakes above Bear Valley",
+   "Upper and Lower Highland Lake, seen from the drone",
+   "Marley ran along the whole way",
+   "An hour of riding, three and a half hours out: why the stops were the day"
+  ],
+  "questions": [
+   "The notes say everything went right, so the only Rough item is the drone's clock being off (clip stamped 4:33 PM). Keep it as a light Rough line, or leave the Rough side empty?",
+   "The stats use 8.7 miles, 8,671 ft high point and 1 h 6 m from the track, and about 1,200 ft of climbing and three and a half hours out from the post. Can you confirm the climbing and total time against the track?"
+  ]
+ },
+ "palette": [
+  "#36a0ef",
+  "#787cf4"
+ ]
+}
