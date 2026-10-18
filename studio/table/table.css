@@ -725,7 +725,7 @@ details.fold .fold-in>h3:first-child{margin-top:0}
 .soc-wait{color:#cfc6b4;font-size:13px;line-height:1.45;padding:18px;margin:0}
 
 /* THE NOTE'S FOUR TABS (studio.js mountTabs/showTab, Oct 18): a bar that stays at the top under the summary, the
-   tab you're on lit in the river's colour; its sections are open headings, not folds. A tab change fades out and
+   tab you're on lit in the river's colour; its sections still fold. A tab change fades out and
    in (motion rule), at once with reduced motion. A dot marks a tab with something to do */
 .ntabs{position:sticky;top:0;z-index:50;display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:4px;margin:0 0 14px;border-radius:999px;
   background:color-mix(in srgb,var(--sk-bg) 88%,transparent);border:1px solid color-mix(in srgb,var(--liq) 30%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 6px 14px rgba(8,4,0,.35)}
@@ -737,9 +737,6 @@ details.fold .fold-in>h3:first-child{margin-top:0}
 .ntabs .nt-dot{display:inline-block;vertical-align:.45em;margin-left:5px;width:7px;height:7px;border-radius:50%;background:#e2b45b;opacity:0;transition:opacity .8s ease-in-out}
 .ntabs button.has .nt-dot{opacity:1}
 .ntab-pane [id]{scroll-margin-top:90px}
-.ntab-pane details.fold>summary{cursor:default}
-.ntab-pane details.fold>summary::after{display:none}
-.ntab-pane details.fold>summary:hover h2{color:inherit}
 .ntab-pane.nt-out{opacity:0;transition:opacity .32s ease-in-out}
 .ntab-pane.nt-in{animation:ntIn .6s ease-in-out}
 @keyframes ntIn{from{opacity:0;translate:0 6px}to{opacity:1;translate:0 0}}
@@ -799,3 +796,17 @@ details.fold .fold-in>h3:first-child{margin-top:0}
 .spAddPic:hover{transform:translateY(-2px);box-shadow:0 0 0 2px color-mix(in srgb,var(--liq) 55%,transparent)}
 .spAddPic:hover span{opacity:1}
 @media (prefers-reduced-motion:reduce){.spAddPic{transition:none}.spAddPic:hover{transform:none}}
+
+/* THE POST'S SECTIONS (studio.js renderSecs): each subhead with ↑ ↓, a moved one glowing a moment; and the script's
+   line under Episode script (renderSync), amber when the post's sections have moved since it was written */
+.secs{margin:8px 0 4px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:color-mix(in srgb,var(--paper),#fff 45%)}
+.secs ol{margin:8px 0 0;padding-left:22px}
+.secs li{display:flex;align-items:center;gap:8px;padding:4px 6px;border-radius:6px;transition:background-color .9s ease-in-out}
+.secs li span{flex:1;font-weight:700;min-width:0}
+.secs li.moved{background:color-mix(in srgb,var(--liq) 22%,transparent)}
+.secs .link{font-size:18px;line-height:1;padding:2px 7px;border-radius:6px;transition:background-color .6s ease-in-out}
+.secs .link:disabled{opacity:.3;cursor:default}
+.epsync{margin:6px 0 10px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;transition:background-color .8s ease-in-out,border-color .8s ease-in-out}
+.epsync p{margin:0 0 8px}
+.epsync.stale{background:#fdf3dc;border-color:#e2b45b}
+@media (prefers-reduced-motion:reduce){.secs li,.secs .link,.epsync{transition:none}}

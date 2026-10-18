@@ -1494,7 +1494,7 @@
 
   // ---------- the Note's four tabs (Christian, Oct 18: thirteen sections stacked made a long scroll): Draft, Audio/Cast,
   // Ride (Hike, or Media for a Note with no track) and Publish, in a bar that stays at the top. Each tab holds its
-  // sections, all open; a tab change fades out and in (at once with reduced motion), each tab keeps how far down you
+  // sections, which still fold (Oct 18: the ones used now and then stay shut until opened, as the Note's stage says); a tab change fades out and in (at once with reduced motion), each tab keeps how far down you
   // were, and the tab sits in the address (#note/<id>/audio). A section's link (the next steps, the checklist) opens
   // its tab first ----------
   var NTABS = [['draft', 'Draft', ['details', 'drafting', 'post']], ['audio', 'Audio/Cast', ['look', 'episode', 'audio']],
@@ -1520,8 +1520,6 @@
       if (!pane.firstChild) pane.innerHTML = '<p class="panel muted">Nothing here for this Note yet.</p>';
       last.parentNode.insertBefore(pane, last.nextSibling); last = pane;
     });
-    // its sections are open, always: a heading, not a fold
-    $$('.ntab-pane summary', app).forEach(function (sm) { if (sm.parentNode.classList.contains('fold')) sm.addEventListener('click', function (ev) { ev.preventDefault(); }); });
     $$('button', nav).forEach(function (b) { b.onclick = function () { showTab(b.getAttribute('data-ntab')); }; });
     nav.addEventListener('keydown', function (ev) {   // ← and → move along the tabs
       var i = NTABS.map(function (t) { return t[0]; }).indexOf(mem.tab), d = ev.key === 'ArrowRight' ? 1 : ev.key === 'ArrowLeft' ? -1 : 0;
@@ -1568,7 +1566,6 @@
     var swap = function () {
       if (go !== NTABGO) return;
       $$('.nsub-pane', pane).forEach(function (p) { p.hidden = p !== to; p.classList.remove('nt-out', 'nt-in'); });
-      if (!pane.hidden) $$('details.fold', to).forEach(function (d) { if (!d.open) d.open = true; });   // opened as it first shows (Social draws then)
       if (!STILL && !first) { void to.offsetWidth; to.classList.add('nt-in'); }
       setTimeout(function () { dispatchEvent(new Event('resize')); }, 60);   // the map measures itself again
       if (then) setTimeout(then, STILL ? 0 : 120);
@@ -1593,7 +1590,6 @@
     var swap = function () {
       if (go !== NTABGO) return;
       $$('.ntab-pane', app).forEach(function (p) { p.hidden = p !== to; p.classList.remove('nt-out', 'nt-in'); });
-      $$('details.fold', to).forEach(function (d) { var sp = d.closest('.nsub-pane'); if (!d.open && !(sp && sp.hidden)) d.open = true; });   // opened as the tab first shows (the map draws then; Social when its sub-tab shows)
       // where it was on this tab, or its top just under the bar; the summary stays put while it's on screen
       if (!first && scrollY > top) scrollTo(0, mem.y[t] > top ? mem.y[t] : top);
       if (!STILL && !first) { void to.offsetWidth; to.classList.add('nt-in'); }
@@ -1654,12 +1650,12 @@
         '<div class="draft"><h3>Draft with Claude</h3><div class="row"><input id="instr" placeholder="Optional: e.g. shorter, or add the bit about the hammock"><button id="draft" class="primary">Draft with Claude</button></div>' +
         '<div id="questions"></div></div>') +
       fold('post', 'Post', E.post.title || '', !isLive, field('Card summary', '<textarea id="summary" rows="2">' + esc(E.summary) + '</textarea>') +
-        field('Title', '<input id="postTitle" value="' + esc(E.post.title) + '">') + field('Text', '<textarea id="postBody" rows="14">' + esc(E.post.body) + '</textarea>', 'First person. A blank line between paragraphs. End with "What I learned: …" when there is something real.')) +
+        field('Title', '<input id="postTitle" value="' + esc(E.post.title) + '">') + field('Text', '<textarea id="postBody" rows="14">' + esc(E.post.body) + '</textarea>', 'First person. A blank line between paragraphs. End with "What I learned: …" when there is something real.') + '<div id="postSecs"></div>') +
       fold('episode', 'Episode script', E.episode.title || '', !isLive, field('Title', '<input id="epTitle" value="' + esc(E.episode.title) + '">') +
         field('Narrator', '<select id="epNarrator"><option value="">From its categories</option><option value="glazyarray"' + (E.episode.narrator === 'glazyarray' ? ' selected' : '') + '>GlazyArray</option>' +
           '<option value="alta"' + (E.episode.narrator === 'alta' ? ' selected' : '') + '>A.L.T.A.</option>' +
           '<option value="marley"' + (E.episode.narrator === 'marley' ? ' selected' : '') + '>Robot Marley</option></select>', '<span id="epWho"></span>') +
-        '<div id="epTankBox"></div>' + field('Script', '<textarea id="epScript" rows="16">' + esc(E.episode.script) + '</textarea>', '<span id="epCount"></span>')) +
+        '<div id="epTankBox"></div><div id="epSync"></div>' + field('Script', '<textarea id="epScript" rows="16">' + esc(E.episode.script) + '</textarea>', '<span id="epCount"></span>')) +
       fold('look', 'Narrator style', lookHint(), false,
         '<div id="styleBox"></div><details class="ga-own" id="gaOwn"' + (gaOwnOpen() ? ' open' : '') + '><summary>Or give this Note its own cap or backdrop</summary>' +
         '<h3 class="ga-h">Her cap</h3><div id="lookBox"></div><h3 class="ga-h">The backdrop</h3><div id="bdBox"></div></details>') +
@@ -1692,6 +1688,8 @@
     driveAudio().then(function () { renderDriveFiles(); renderVoiceNotes(); renderNext(); });
     ['postBody', 'epScript', 'fieldNotes'].forEach(function (k) { $('#' + k).addEventListener('change', renderNext); });
     $('#postBody').addEventListener('change', renderFeature);   // the feature's "after paragraph" picks follow the paragraphs
+    $('#postBody').addEventListener('change', function () { renderSecs(); renderSync(); });   // its sections, and whether the script still follows them
+    renderSecs(); renderSync();
     $('#postBody').addEventListener('change', function () { collect(); renderPhotos(); });    // the photos' "under a subhead" picks follow the subheads (and the template's checklist)
     $('#summary').addEventListener('change', renderMag);
     ['title', 'place', 'summary', 'postTitle', 'postBody', 'epTitle'].forEach(function (k) { $('#' + k).addEventListener('change', function () { collect(); renderStyle(); }); });   // suggested categories follow what it says
@@ -2779,6 +2777,72 @@
       else addPhotos([f]);
     };
   }
+  // ---------- the post's sections and the script (Christian, Oct 18): a "## " subhead and everything under it move
+  // together (↑ ↓), and the photos, spreads and blocks set under a subhead go with it, since they name it. The script
+  // follows the post: it remembers the order it was written for (episode.sections), and when the sections have moved,
+  // been added or taken out since, the Episode script panel and the next steps say so, and Claude brings the script
+  // back in line (api.php rescript), keeping its own words where they still fit ----------
+  function postParts() {   // [{title, paras}] in order; the opening before the first subhead has no title, and "What I learned:" stays last
+    var ps = ($('#postBody') ? $('#postBody').value : E.post.body || '').split(/\n\s*\n/).map(function (t) { return t.trim(); }).filter(Boolean);
+    var parts = [{ title: '', paras: [] }], tail = null;
+    if (ps.length && /^What I learned:/i.test(ps[ps.length - 1])) tail = ps.pop();
+    ps.forEach(function (t) { if (/^## /.test(t)) parts.push({ title: t.slice(3).trim(), paras: [t] }); else parts[parts.length - 1].paras.push(t); });
+    return { parts: parts, tail: tail };
+  }
+  function moveSection(k, d) {   // k: the index among the titled parts
+    var P = postParts(), head = P.parts[0], T = P.parts.slice(1), j = k + d;
+    if (j < 0 || j >= T.length) return;
+    var a = T[k]; T[k] = T[j]; T[j] = a;
+    var all = head.paras.concat([].concat.apply([], T.map(function (x) { return x.paras; }))).concat(P.tail ? [P.tail] : []);
+    $('#postBody').value = all.join('\n\n'); markDirty(); collect();
+    renderSecs(T[j].title); renderSync(); renderPhotos(); renderNext();
+  }
+  function renderSecs(moved) {
+    var box = $('#postSecs'); if (!box) return;
+    var T = postParts().parts.slice(1);
+    if (T.length < 2) { box.innerHTML = ''; return; }
+    box.innerHTML = '<div class="secs"><b>Its sections</b> <small class="muted">↑ and ↓ move a section, its subhead and everything under it; its photos go with it.</small><ol>' + T.map(function (x, k) {
+      return '<li' + (x.title === moved ? ' class="moved"' : '') + '><span>' + esc(x.title) + '</span><small class="muted">' + (x.paras.length - 1) + ' paragraph' + (x.paras.length === 2 ? '' : 's') + '</small>' +
+        '<button type="button" class="link secUp" data-k="' + k + '" aria-label="Move ' + esc(x.title) + ' earlier"' + (k ? '' : ' disabled') + '>↑</button>' +
+        '<button type="button" class="link secDn" data-k="' + k + '" aria-label="Move ' + esc(x.title) + ' later"' + (k < T.length - 1 ? '' : ' disabled') + '>↓</button></li>';
+    }).join('') + '</ol></div>';
+    $$('.secUp', box).forEach(function (b) { b.onclick = function () { moveSection(+b.getAttribute('data-k'), -1); }; });
+    $$('.secDn', box).forEach(function (b) { b.onclick = function () { moveSection(+b.getAttribute('data-k'), 1); }; });
+    var m = $('li.moved', box); if (m) { setTimeout(function () { m.classList.remove('moved'); }, 900); var f = $(moved && $('.secUp:not(:disabled)', m) ? '.secUp' : '.secDn', m); if (f && !f.disabled) f.focus(); }
+  }
+  function sameList(a, b) { return a.length === b.length && a.every(function (x, i) { return x === b[i]; }); }
+  function scriptStale() {   // the sections the script was written for, when known, against the post's now
+    var was = E.episode.sections, script = $('#epScript') ? $('#epScript').value.trim() : E.episode.script;
+    return !!(script && Array.isArray(was) && !sameList(was, subheads()));
+  }
+  var RESCRIPTING = false;
+  function renderSync() {
+    var box = $('#epSync'); if (!box) return;
+    var script = $('#epScript') ? $('#epScript').value.trim() : E.episode.script, now = subheads(), stale = scriptStale();
+    if (!script || (!stale && now.length < 2)) { box.innerHTML = ''; return; }
+    box.innerHTML = '<div class="epsync' + (stale ? ' stale' : '') + '">' +
+      (stale ? '<p><b>The post\'s sections have changed since the script was written.</b> It follows: ' + esc(E.episode.sections.join(' → ') || 'no sections') + '. The post now: ' + esc(now.join(' → ') || 'no sections') + '.</p>'
+        : '<p class="muted">The script follows the post\'s sections: ' + esc(now.join(' → ')) + '. When you move one, it can follow.</p>') +
+      '<div class="row"><button type="button" class="' + (stale ? 'primary' : 'small') + '" id="rescript"' + (RESCRIPTING ? ' disabled' : '') + '>' + (RESCRIPTING ? 'Claude is rewriting the script…' : 'Match the script to the post') + '</button>' +
+      (stale ? '<button type="button" class="link" id="rescriptKeep">It\'s fine as it is</button>' : '') + '</div></div>';
+    var b = $('#rescript'); if (b) b.onclick = function () { rescript(); };
+    var k = $('#rescriptKeep'); if (k) k.onclick = function () { E.episode.sections = subheads(); markDirty(); renderSync(); renderNext(); };
+  }
+  function rescript() {
+    collect();
+    if (!E.episode.script) { toast('There\'s no script yet to bring in line.', true); return Promise.resolve(); }
+    RESCRIPTING = true; renderSync();
+    var had = !!(audioNew || (E.episode.audio && !audioGone));
+    return api('rescript', { note: { title: E.title, kind: E.kind, place: E.place, narrator: NAR_NAME[NARNOW] || 'GlazyArray', post: { title: E.post.title, body: E.post.body },
+      episode: { title: E.episode.title, script: E.episode.script }, sectionsBefore: Array.isArray(E.episode.sections) ? E.episode.sections : null, sectionsNow: subheads() } })
+      .then(function (j) {
+        var r = j.rescript || {};
+        $('#epScript').value = String(r.episode_script || '').trim() || $('#epScript').value; count(); collect();
+        E.episode.sections = subheads(); markDirty();
+        toast('The script follows the post now. ' + (r.notes ? r.notes + ' ' : '') + 'Read it through' + (had ? ', then record the audio again: it was made from the old script.' : '.'));
+      }).catch(function (err) { toast('Couldn\'t rewrite the script: ' + err.message, true); })
+      .then(function () { RESCRIPTING = false; renderSync(); renderNext(); });
+  }
   function subheads() { return ($('#postBody') ? $('#postBody').value : E.post.body || '').split(/\n\s*\n/).map(function (t) { return t.trim(); }).filter(function (t) { return /^## /.test(t); }).map(function (t) { return t.slice(3).trim(); }); }
   function renderPhotos() {
     var box = $('#photos'), none = $('#noPhotos');
@@ -3744,6 +3808,7 @@
     if (q) out.push({ t: 'Answer Claude\'s ' + (q === 1 ? 'question' : q + ' questions'), d: 'The script isn\'t final until they\'re answered. Answer them one by one, then send them all at once.', b: 'Answer', go: '#questions' });
     if (drafted && !q && !val('epScript')) out.push({ t: 'Write the episode script', d: 'The episode is read from it. Draft with Claude writes one from the post, or write your own.', b: 'Go to the script', go: '#epScript' });
     if (drafted && !q && LOOKPICK) out.push({ t: 'Pick the narrator style', d: 'More than one of this Note\'s categories gives her a cap or backdrop. Tick the one this Note takes.', b: 'Pick it', go: '#f-look' });
+    if (drafted && !q && scriptStale()) out.push({ t: 'Bring the script in line with the post', d: 'The post\'s sections have moved since the script was written. Claude can rewrite the script to follow them, keeping its words where they fit.', b: 'Match it', go: '#epSync' });
     if (drafted && !q && val('epScript') && !audio) out.push({ t: 'Record the episode', d: 'Copy the audio prompt, render it with your voice tool, then drop the audio in or choose it from Drive.', b: 'Go to the audio', go: '#copyPrompt' });
     if (videos && !loops && !E.loopsDone) out.push({ t: 'Trim video loops', d: videos + ' video' + (videos > 1 ? 's' : '') + ' in the Drive folder. Pick the moments worth a short silent loop.', b: 'Trim loops', go: '#loops', done: 'loops' });
     if (dirty) out.push({ t: 'Save', d: 'Keep what you have so far.', b: 'Save', run: save });
@@ -4148,7 +4213,7 @@
       var d = j.draft;
       $('#summary').value = d.summary || ''; $('#postTitle').value = d.post_title || ''; $('#postBody').value = d.post_body || '';
       $('#epTitle').value = d.episode_title || ''; $('#epScript').value = d.episode_script || ''; count();
-      collect();
+      collect(); E.episode.sections = subheads(); renderSecs(); renderSync();
       (d.captions || []).forEach(function (c) { E.photos.forEach(function (p) { if (photoName(p) === c.photo && !p.caption) p.caption = c.caption; }); });
       if (d.cover && E.photos.some(function (p) { return photoName(p) === d.cover; }) && !E.photos.some(function (p) { return p.cover; })) E.photos.forEach(function (p) { p.cover = photoName(p) === d.cover; });
       E.questions = d.questions || [];

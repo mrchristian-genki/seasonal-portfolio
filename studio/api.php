@@ -641,6 +641,12 @@ try {
             $guide = $gh->read('field/SHOW-GUIDE.md') ?? '';
             json_out(['feature' => (new Drafter($cfg, $guide))->feature((array) ($body['note'] ?? []), (array) ($body['template'] ?? []), array_values(array_map('strval', (array) ($body['missing'] ?? []))), (string) ($body['instruction'] ?? ''))]);
 
+        // The episode script brought back in line with the post's sections (the Episode script panel).
+        case 'POST rescript':
+            @set_time_limit(240);
+            $guide = $gh->read('field/SHOW-GUIDE.md') ?? '';
+            json_out(['rescript' => (new Drafter($cfg, $guide))->rescript((array) ($body['note'] ?? []), (string) ($body['instruction'] ?? ''))]);
+
         // The Social panel's captions (Instagram and Facebook), from the written Note.
         case 'POST social':
             @set_time_limit(120);

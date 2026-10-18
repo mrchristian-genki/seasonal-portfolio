@@ -236,6 +236,59 @@ TXT;
         throw new RuntimeException('Claude sent back something that was not the feature\'s parts.');
     }
 
+    private const RESCRIPT = [
+        'type' => 'object',
+        'properties' => [
+            'episode_script' => ['type' => 'string', 'description' => 'The whole script, rewritten to follow the post\'s sections in their order. Paragraphs separated by a blank line; *** on its own line between sections.'],
+            'notes' => ['type' => 'string', 'description' => 'One or two plain sentences on what moved or changed, for Christian.'],
+        ],
+        'required' => ['episode_script', 'notes'],
+        'additionalProperties' => false,
+    ];
+
+    /**
+     * The episode script brought back in line with the post (Christian, Oct 18): when the post's "## " sections are moved,
+     * added or taken out, the script follows them in the same order, keeping its own words, voice and length.
+     */
+    public function rescript(array $note, string $instruction = ''): array
+    {
+        $client = new Client(apiKey: $this->cfg['anthropic_api_key'], baseUrl: $this->cfg['anthropic_base_url'] ?? null);
+        $system = <<<TXT
+You keep one Field Note's episode script in step with its post on christiangehrke.com. The show guide below is the authority; follow its hard rules exactly.
+
+- The post is the timeline. Its "## " subheads, in order, are the sections; the script tells the same story in the same order, one part per section, with *** on its own line between parts. An opening before the first part and a closing after the last stay where they are.
+- Keep the script's own words wherever they still fit: move whole passages with the section they belong to rather than rewriting them. Change wording only where the new order needs it (a "then", a "first", a callback that now comes before what it refers to).
+- A section that's new in the post gets a short part in the script, from the post's own facts. A section taken out of the post takes its part out of the script.
+- Never add facts, numbers, names or feelings that aren't in the post or the script. Keep the narrator, their voice and person, and roughly the same length.
+- Don't read the subheads out as titles; they are only the order.
+- People stay anonymous unless the Note says they agreed to be named. Never mention home.
+
+The show guide:
+
+{$this->showGuide}
+TXT;
+        $msg = "The Note, as JSON (post.body is the timeline; episode.script is the script to bring in line; sectionsBefore is the order the script was written for, when known):\n" .
+            json_encode($note, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . ($instruction !== '' ? "\n\nInstruction: $instruction" : '');
+        $message = $client->beta->messages->create(
+            model: self::MODEL,
+            maxTokens: 12000,
+            system: $system,
+            messages: [['role' => 'user', 'content' => $msg]],
+            outputConfig: ['effort' => 'medium', 'format' => ['type' => 'json_schema', 'schema' => self::RESCRIPT]],
+            fallbacks: 'default',
+            betas: ['server-side-fallback-2026-07-01'],
+        );
+        if ($message->stopReason === 'refusal') throw new RuntimeException('Claude declined to rewrite the script.');
+        if ($message->stopReason === 'max_tokens') throw new RuntimeException('The script ran out of room before it finished. Try again.');
+        foreach ($message->content as $block) {
+            if ($block->type === 'text') {
+                $out = json_decode($block->text, true);
+                if (is_array($out) && isset($out['episode_script'])) return $out;
+            }
+        }
+        throw new RuntimeException('Claude sent back something that was not a script.');
+    }
+
     /** Her looks as the site has them (assets/narrator/looks.json): name, what it is, and whether it's a holiday or hair day. */
     /** Her looks as the site has them (assets/narrator/looks.json): name, and what it is. */
     private static function looks(array $looks): array
