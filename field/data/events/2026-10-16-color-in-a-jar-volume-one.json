@@ -559,7 +559,9 @@
       "w": 1024,
       "h": 1024
      }
-    ]
+    ],
+    "label": "ai",
+    "layout": "side"
    },
    {
     "title": "Fall and the squirrel",
@@ -592,7 +594,9 @@
       "w": 1600,
       "h": 1600
      }
-    ]
+    ],
+    "label": "ai",
+    "layout": "side"
    },
    {
     "title": "The Beach",
@@ -625,7 +629,9 @@
       "w": 1600,
       "h": 1600
      }
-    ]
+    ],
+    "label": "ai",
+    "layout": "side"
    },
    {
     "title": "The Jungle Scene",
@@ -658,7 +664,9 @@
       "w": 1600,
       "h": 1600
      }
-    ]
+    ],
+    "label": "ai",
+    "layout": "side"
    },
    {
     "title": "The Gnarled Graveyard",
@@ -691,7 +699,9 @@
       "w": 1600,
       "h": 1600
      }
-    ]
+    ],
+    "label": "ai",
+    "layout": "side"
    },
    {
     "title": "The Sunflower Scene",
@@ -724,7 +734,9 @@
       "w": 1024,
       "h": 1024
      }
-    ]
+    ],
+    "label": "ai",
+    "layout": "side"
    },
    {
     "title": "The Peach Tree Orchard",
@@ -757,7 +769,9 @@
       "w": 1600,
       "h": 1600
      }
-    ]
+    ],
+    "layout": "side",
+    "label": "ai"
    },
    {
     "title": "The Deep Sea Scene",
@@ -790,7 +804,9 @@
       "w": 1024,
       "h": 1024
      }
-    ]
+    ],
+    "layout": "side",
+    "label": "ai"
    },
    {
     "title": "The Pirate Scene",
@@ -823,7 +839,9 @@
       "w": 1600,
       "h": 1600
      }
-    ]
+    ],
+    "layout": "side",
+    "label": "ai"
    },
    {
     "title": "The Polar Scene",
@@ -856,9 +874,12 @@
       "w": 1600,
       "h": 1600
      }
-    ]
+    ],
+    "layout": "side",
+    "label": "ai"
    }
-  ]
+  ],
+  "coverLabel": "ai"
  },
  "palette": [
   "#347cb2",
