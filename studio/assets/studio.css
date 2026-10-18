@@ -81,6 +81,8 @@ body.login .login-box input{background:#140d07;color:#f4e6c8;border:1px solid #6
 body.login .login-box input:focus{outline:2px solid #c9a36a;outline-offset:1px}
 body.login .login-box button{background:linear-gradient(180deg,#e2c483,#b8944f 55%,#9a7a3c);color:#2a1c0a;border:0;font-weight:800;box-shadow:0 3px 6px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,240,200,.6)}
 body.login .login-box .err{color:#ffb4a0}
+.login-box label.keep{flex-direction:row;align-items:center;gap:8px;font-weight:400;cursor:pointer}
+.login-box label.keep input{width:18px;height:18px;margin:0;flex:none;accent-color:#c9a36a;box-shadow:none}
 .login-box{background:var(--paper,#f4ead6);border:0;border-radius:3px;box-shadow:8px 12px 18px rgba(20,10,2,.45);padding:28px;width:min(100%,360px);display:flex;flex-direction:column;gap:14px}
 .login-box .sub{margin:-8px 0 4px;color:var(--ink3)} .login-box label{display:flex;flex-direction:column;gap:6px;font-weight:600;font-size:14px}
 
