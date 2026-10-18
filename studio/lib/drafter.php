@@ -265,7 +265,7 @@ TXT;
     private const REVISE = [
         'type' => 'object',
         'properties' => [
-            'changed' => ['type' => 'array', 'items' => ['type' => 'string', 'enum' => ['summary', 'post_title', 'post_body', 'episode_title', 'episode_script', 'captions', 'masthead', 'tagline', 'issue', 'label', 'byline', 'cover_lines', 'blocks', 'qa', 'spotted']],
+            'changed' => ['type' => 'array', 'items' => ['type' => 'string', 'enum' => ['summary', 'post_title', 'post_body', 'episode_title', 'episode_script', 'captions', 'masthead', 'tagline', 'issue', 'label', 'byline', 'cover_lines', 'blocks', 'qa', 'spotted', 'photos', 'cover_photo', 'photo_order', 'spreads']],
                 'description' => 'Only the parts this answer changes; everything else is left exactly as it is.'],
             'summary' => ['type' => 'string'], 'post_title' => ['type' => 'string'],
             'post_body' => ['type' => 'string', 'description' => 'The whole post when it changes.'],
@@ -280,10 +280,23 @@ TXT;
             'remove_blocks' => ['type' => 'array', 'items' => ['type' => 'integer'], 'description' => 'Indexes in magazine.blocks to take out.'],
             'qa' => ['type' => 'object', 'properties' => ['title' => ['type' => 'string'], 'items' => ['type' => 'array', 'items' => ['type' => 'object', 'properties' => ['q' => ['type' => 'string'], 'a' => ['type' => 'string']], 'required' => ['q', 'a'], 'additionalProperties' => false]]], 'required' => ['title', 'items'], 'additionalProperties' => false],
             'spotted' => ['type' => 'array', 'items' => ['type' => 'object', 'properties' => ['label' => ['type' => 'string'], 'text' => ['type' => 'string'], 'url' => ['type' => 'string']], 'required' => ['label', 'text', 'url'], 'additionalProperties' => false]],
+            'photos' => ['type' => 'array', 'description' => 'Only the photos whose place changes: under a subhead (its wording without "## "), or "" to be spread through the story; use false to leave it out of the post.',
+                'items' => ['type' => 'object', 'properties' => ['photo' => ['type' => 'string'], 'under_subhead' => ['type' => 'string'], 'use' => ['type' => 'boolean']], 'required' => ['photo', 'under_subhead', 'use'], 'additionalProperties' => false]],
+            'cover_photo' => ['type' => 'string', 'description' => 'The file of the photo that opens the Note, when it changes.'],
+            'photo_order' => ['type' => 'array', 'items' => ['type' => 'string'], 'description' => 'Every photo file in its new order, when the order changes.'],
+            'spreads' => ['type' => 'array', 'description' => 'Only the photo spreads that change or are new.',
+                'items' => ['type' => 'object', 'properties' => [
+                    'replaces' => ['type' => 'integer', 'description' => 'The index in spreads of the one this changes; -1 for a new one.'],
+                    'title' => ['type' => 'string'], 'dek' => ['type' => 'string', 'description' => 'A line under its title.'],
+                    'before' => ['type' => 'string', 'description' => 'The subhead it sits before (without "## "); empty for the end of the story.'],
+                    'layout' => ['type' => 'string', 'enum' => ['hero2', 'hero3', 'side', 'grid2', 'grid3', 'strip']],
+                    'pictures' => ['type' => 'array', 'items' => ['type' => 'object', 'properties' => ['photo' => ['type' => 'string'], 'name' => ['type' => 'string'], 'line' => ['type' => 'string']], 'required' => ['photo', 'name', 'line'], 'additionalProperties' => false]],
+                ], 'required' => ['replaces', 'title', 'dek', 'before', 'layout', 'pictures'], 'additionalProperties' => false]],
+            'remove_spreads' => ['type' => 'array', 'items' => ['type' => 'integer'], 'description' => 'Indexes in spreads to take out.'],
             'questions' => ['type' => 'array', 'items' => ['type' => 'string'], 'description' => 'What Christian should answer before this goes out; empty when nothing is open.'],
             'notes' => ['type' => 'string', 'description' => 'One or two plain sentences on what was changed, for Christian.'],
         ],
-        'required' => ['changed', 'summary', 'post_title', 'post_body', 'renamed', 'episode_title', 'episode_script', 'captions', 'masthead', 'tagline', 'issue', 'label', 'byline', 'cover_lines', 'blocks', 'remove_blocks', 'qa', 'spotted', 'questions', 'notes'],
+        'required' => ['changed', 'summary', 'post_title', 'post_body', 'renamed', 'episode_title', 'episode_script', 'captions', 'masthead', 'tagline', 'issue', 'label', 'byline', 'cover_lines', 'blocks', 'remove_blocks', 'qa', 'spotted', 'photos', 'cover_photo', 'photo_order', 'spreads', 'remove_spreads', 'questions', 'notes'],
         'additionalProperties' => false,
     ];
 
@@ -305,6 +318,8 @@ You help Christian change one Field Note on christiangehrke.com. You see the who
 - Every fact, number, name and quote comes from the Note. Never invent people, results, specs, scores, dates or feelings; ask in questions instead. People stay anonymous unless the Note says they agreed to be named. Never mention home.
 - The post is Christian's first person; the script is the narrator's voice (narrator); the magazine byline is its narrator. Q&A answers are Christian's own words from the notes or the post.
 - No brands, logos or text inside any image prompt.
+- Pictures are part of the design too: where each photo sits (under a subhead, or spread through the story, or left out), the cover, the order, and photo spreads (a titled grid of the Note's own photos and loops, each with a name and a line, set before a subhead). Use only photo files the Note has. Pick a spread's layout for its pictures: hero2 (one big, then two across) or hero3 (one big, then three across) when one picture leads; side (one big beside two) for exactly three; grid2 or grid3 for an even set; strip for a sequence to swipe along. When the Note wears a magazine, prefer its template's layouts (magazine.layouts, first the best). A picture in a spread shows there instead of between the paragraphs.
+- Never decide whether a picture is a real photograph or made with AI: that label is Christian's alone, so leave it to him.
 
 The show guide:
 

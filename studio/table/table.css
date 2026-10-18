@@ -818,3 +818,28 @@ details.fold .fold-in>h3:first-child{margin-top:0}
 .ask .askIn{flex:1;min-width:0}
 .ask .askOut{margin:8px 0 0;font-size:14px;color:var(--ink2)}
 .ask .askOut:empty{display:none}
+
+/* A PHOTO SPREAD'S LAYOUT AND LABEL (studio.js spLayoutPick, spLabelPick): each layout as a small picture of itself,
+   the template's own first; the label amber until Christian chooses it */
+.spLays{margin:10px 0}
+.spLayRow{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:8px;margin-top:6px}
+.spLay{display:flex;flex-direction:column;align-items:flex-start;gap:6px;padding:8px;border:1px solid var(--line);border-radius:8px;background:color-mix(in srgb,var(--paper),#fff 45%);box-shadow:none;cursor:pointer;text-align:left;font-size:12.5px;line-height:1.25;
+  transition:border-color .6s ease-in-out,box-shadow .6s ease-in-out,transform .6s ease-in-out}
+.spLay:hover{transform:translateY(-1px);border-color:color-mix(in srgb,var(--liq) 60%,var(--line))}
+.spLay.on{border-color:var(--liq-d);box-shadow:0 0 0 2px color-mix(in srgb,var(--liq) 45%,transparent)}
+.spLay small{display:block;color:#9a6a14;font-weight:700}
+.lay{display:grid;gap:3px;width:100%;height:46px}
+.lay b{background:color-mix(in srgb,var(--liq-d) 55%,#cbd5d3);border-radius:2px}
+.lay-hero2{grid-template-columns:1fr 1fr;grid-template-rows:1.4fr 1fr 1fr}.lay-hero2 b:first-child{grid-column:1/-1}
+.lay-hero3{grid-template-columns:repeat(3,1fr);grid-template-rows:1.4fr 1fr}.lay-hero3 b:first-child{grid-column:1/-1}.lay-hero3 b:nth-child(5){display:none}
+.lay-side{grid-template-columns:2fr 1fr;grid-template-rows:1fr 1fr}.lay-side b:first-child{grid-row:span 2}
+.lay-grid2{grid-template-columns:1fr 1fr}
+.lay-grid3{grid-template-columns:repeat(3,1fr)}.lay-grid3 b:nth-child(n+4){display:none}
+.lay-strip{grid-auto-flow:column;grid-auto-columns:38%;overflow:hidden}
+.spLabel{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;margin:10px 0;padding:8px 10px;border:1px solid var(--line);border-radius:8px;transition:background-color .8s ease-in-out,border-color .8s ease-in-out}
+.spLabel.unset{background:#fdf3dc;border-color:#e2b45b}
+.spLabel small{flex-basis:100%;color:#9a6a14}
+.spAi{display:block;font-size:13px;margin-bottom:4px}
+@media (prefers-reduced-motion:reduce){.spLay,.spLabel{transition:none}.spLay:hover{transform:none}}
+.spLabel label{display:inline-flex;flex-direction:row;align-items:center;gap:6px;margin:0;font-weight:600}
+.spLabel label input{margin:0}

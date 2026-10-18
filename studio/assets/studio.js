@@ -2435,6 +2435,7 @@
       p.caption = $('textarea', d).value.trim();
       p.use = $('.use', d).checked ? (p.use === 'skip' ? 'post' : (p.use || 'post')) : 'skip';
       p.cover = $('.cover', d).checked;
+      var ai = $('.isai', d); if (ai) { if (ai.checked) p.ai = true; else delete p.ai; }
       var a = $('.phAt', d); if (a) { if (a.value) p.at = a.value; else delete p.at; }
     });
   }
@@ -2782,7 +2783,7 @@
   // the Note back as it was. Both boxes share what's typed, the answer and the Undo ----------
   var ASK = { busy: false, text: '', said: '', undo: null };
   function askBox(where) {
-    return '<div class="ask" data-ask="' + where + '"><h3>Ask Claude</h3><small class="muted">Anything in this Note: the post, the script, the captions' + (E.feature && E.feature.masthead ? ', the magazine\'s cover, blocks and Q&amp;A' : '') + '. It changes only what it needs to, and keeps the rest in step.</small>' +
+    return '<div class="ask" data-ask="' + where + '"><h3>Ask Claude</h3><small class="muted">Anything in this Note: the post, the script, the captions, where the photos sit and the photo spreads' + (E.feature && E.feature.masthead ? ', the magazine\'s cover, blocks and Q&amp;A' : '') + '. It changes only what it needs to, and keeps the rest in step.</small>' +
       '<div class="row"><textarea class="askIn" rows="2" placeholder="e.g. shorten the wave section, and update the stats and the script to match"></textarea><button type="button" class="primary askGo">Ask Claude</button></div><p class="askOut"></p></div>';
   }
   function askPaint() {
@@ -2815,7 +2816,8 @@
       .then(function () { ASK.busy = false; askPaint(); });
   }
   var ASK_NAMES = { summary: 'the card summary', post_title: 'the post\'s title', post_body: 'the post', episode_title: 'the episode title', episode_script: 'the script', captions: 'captions',
-    masthead: 'the masthead', tagline: 'the tagline', issue: 'the issue line', label: 'the label', byline: 'the byline', cover_lines: 'the cover lines', blocks: 'magazine blocks', qa: 'the Q&A', spotted: 'the Spotted box' };
+    masthead: 'the masthead', tagline: 'the tagline', issue: 'the issue line', label: 'the label', byline: 'the byline', cover_lines: 'the cover lines', blocks: 'magazine blocks', qa: 'the Q&A', spotted: 'the Spotted box',
+    photos: 'where the photos sit', cover_photo: 'the cover photo', photo_order: 'the photo order', spreads: 'photo spreads' };
   function askApply(r) {
     var ch = {}, got = []; (r.changed || []).forEach(function (k) { ch[k] = 1; });
     var setv = function (id, v) { var el = $('#' + id); if (el) el.value = v; };
@@ -2848,8 +2850,34 @@
       if (ch.qa && r.qa && (r.qa.items || []).length) { F.qa = { title: r.qa.title || (F.qa && F.qa.title) || 'Questions', items: r.qa.items }; got.push('qa'); }
       if (ch.spotted && (r.spotted || []).length) { F.spotted = r.spotted.map(function (y) { var o = { label: y.label, text: y.text }; if (y.url) o.url = y.url; return o; }); got.push('spotted'); }
     }
+    // the pictures: where each sits, the cover, the order, the spreads (their real/AI label stays Christian's)
+    var byName = function (n) { return E.photos.filter(function (p) { return photoName(p) === n; })[0]; };
+    if (ch.photos && (r.photos || []).length) {
+      var subs = subheads(), k = 0;
+      r.photos.forEach(function (x) { var p = byName(x.photo); if (!p) return; if (x.under_subhead && subs.indexOf(x.under_subhead) >= 0) p.at = x.under_subhead; else delete p.at; p.use = x.use === false ? 'skip' : (p.use === 'skip' ? 'post' : p.use || 'post'); k++; });
+      if (k) got.push('photos');
+    }
+    if (ch.cover_photo && r.cover_photo && byName(r.cover_photo)) { E.photos.forEach(function (p) { p.cover = photoName(p) === r.cover_photo; }); got.push('cover_photo'); }
+    if (ch.photo_order && (r.photo_order || []).length) {
+      var rank = {}; r.photo_order.forEach(function (n, i) { rank[n] = i; });
+      var U = photoUnits(), all = E.photos.slice(), at = function (u) { var m = Infinity; u.forEach(function (i) { var n = photoName(all[i]); if (n in rank) m = Math.min(m, rank[n]); }); return m === Infinity ? 1e6 + u[0] : m; };
+      U.sort(function (a, b) { return at(a) - at(b); });
+      E.photos = [].concat.apply([], U.map(function (u) { return u.map(function (i) { return all[i]; }); })); got.push('photo_order');
+    }
+    if (ch.spreads && ((r.spreads || []).length || (r.remove_spreads || []).length)) {
+      var L = spreads().slice(), gone = {};
+      var items = function (pics) { return (pics || []).map(function (x) { var p = byName(x.photo); if (!p || p.strip) return null; var o = { name: x.name || '', when: x.line || p.caption || '', alt: x.line || p.caption || '', src: p.src, w: p.w || 1600, h: p.h || 900 }; if (p.video) { o.video = true; o.poster = p.poster; } return o; }).filter(Boolean); };
+      (r.spreads || []).forEach(function (b) {
+        var its = items(b.pictures); if (!its.length) return;
+        var o = b.replaces >= 0 && L[b.replaces] ? L[b.replaces] : null;
+        if (o) { o.title = b.title || o.title; o.dek = b.dek; o.before = b.before; o.layout = b.layout; o.items = its.map(function (x) { var was = (o.items || []).filter(function (y) { return y.src === x.src; })[0]; if (was && was.ai) x.ai = true; return x; }); }
+        else L.push({ title: b.title || 'The photo spread', dek: b.dek || '', before: b.before || '', layout: b.layout || 'hero2', items: its });   // no label: Christian chooses it in the Photo spread panel
+      });
+      (r.remove_spreads || []).forEach(function (i) { gone[i] = 1; });
+      E.feature = E.feature || {}; setSpreads(L.filter(function (_, i) { return !gone[i]; })); got.push('spreads');
+    }
     if (Array.isArray(r.questions)) E.questions = r.questions;
-    if (got.length || Array.isArray(r.questions)) { markDirty(); count(); renderPhotos(); renderQuestions(); renderMag(); renderSecs(); renderSync(); renderNext(); }
+    if (got.length || Array.isArray(r.questions)) { renderSpread(); markDirty(); count(); renderPhotos(); renderQuestions(); renderMag(); renderSecs(); renderSync(); renderNext(); }
     return got.map(function (k) { return ASK_NAMES[k] || k; });
   }
   function askUndo() {
@@ -2957,7 +2985,8 @@
         '<div class="meta"><small>' + esc(n) + (p.hdr ? ' · HDR of ' + p.hdr : '') + (p.strip ? ' · its ' + p.strip + ' exposures' : '') + (p.table ? ' · on the table' : '') + (p.takenAt ? ' · ' + esc(String(p.takenAt).slice(11, 16)) : '') + (fresh[n] || clipsNew[n] ? ' · new' : '') + '</small>' +
         '<textarea rows="2" placeholder="Caption">' + esc(p.caption) + '</textarea>' +
         '<div class="opts"><label><input type="checkbox" class="use"' + (p.use !== 'skip' ? ' checked' : '') + '> Use</label>' +
-        '<label><input type="radio" name="cover" class="cover"' + (p.cover ? ' checked' : '') + '> Cover</label>' + (clip ? '<button type="button" class="link pfBtn">Poster frame</button>' : '') +
+        '<label><input type="radio" name="cover" class="cover"' + (p.cover ? ' checked' : '') + '> Cover</label>' +
+        '<label title="Its caption on the site carries the Made with AI label"><input type="checkbox" class="isai"' + (p.ai ? ' checked' : '') + '> Made with AI</label>' + (clip ? '<button type="button" class="link pfBtn">Poster frame</button>' : '') +
         (canSwap(p, i) ? '<button type="button" class="link swBtn">Swap</button>' : '') + '<button class="link rm">Remove</button>' + mv(i) + '</div>' + at(p) + '</div></div>';
     }).join('');
     $$('.ph', box).forEach(function (d) {
@@ -3156,6 +3185,24 @@
     if (x.video && x.poster) n = x.poster.split('/').pop();
     return fresh[n] ? fresh[n].thumb : posterNew[n] ? posterNew[n].thumb || '' : 'api.php?a=photo&id=' + encodeURIComponent(E.id) + '&n=' + encodeURIComponent(n);
   }
+  // a spread's layout (publish.mjs bookHtml, css/feature.css .L-*), as small pictures of itself; the magazine template's
+  // own come first, marked; and its label, which only Christian sets: Made with AI, Real photographs, or each picture its own
+  var SP_LAYOUTS = [['hero2', 'One big, then two across'], ['hero3', 'One big, then three across'], ['side', 'One big beside two'], ['grid2', 'Two across'], ['grid3', 'Three across'], ['strip', 'A row to swipe along']];
+  function spLayoutPick(LB) {
+    var F = E.feature && E.feature.masthead ? E.feature : null, t = F ? magOf(F) : null, pref = (t && t.layouts) || [], cur = LB.layout || 'hero2';
+    var list = SP_LAYOUTS.slice().sort(function (a, b) { var x = pref.indexOf(a[0]), y = pref.indexOf(b[0]); return (x < 0 ? 9 : x) - (y < 0 ? 9 : y); });
+    return '<div class="spLays"><b>Layout</b><div class="spLayRow">' + list.map(function (l) {
+      var n = l[0] === 'side' ? 3 : l[0] === 'grid2' ? 4 : l[0] === 'strip' ? 4 : 5;
+      return '<button type="button" class="spLay' + (cur === l[0] ? ' on' : '') + '" data-l="' + l[0] + '" aria-pressed="' + (cur === l[0]) + '"><i class="lay lay-' + l[0] + '">' + new Array(n + 1).join('<b></b>') + '</i><span>' + esc(l[1]) +
+        (pref.indexOf(l[0]) >= 0 && t ? '<small>suits ' + esc(t.masthead) + '</small>' : '') + '</span></button>';
+    }).join('') + '</div></div>';
+  }
+  function spLabelPick(LB) {
+    var v = LB.label || '';
+    var opt = function (k, t) { return '<label><input type="radio" name="spLabel" value="' + k + '"' + (v === k ? ' checked' : '') + '> ' + t + '</label>'; };
+    return '<div class="spLabel' + (v ? '' : ' unset') + '"><b>Its pictures are</b> ' + opt('real', 'Real photographs') + opt('ai', 'Made with AI') + opt('mixed', 'Some of each (marked one by one)') +
+      (v ? '' : '<small>Not chosen yet, so the site labels it Made with AI.</small>') + '</div>';
+  }
   function renderSpread() {
     var box = $('#spreadBox'); if (!box || !E) return;
     var hs = $('#f-spread > summary small'); if (hs) hs.textContent = spreadHint();
@@ -3169,13 +3216,14 @@
         '<button type="button" class="link" id="spNew">+ A new spread</button></div>' : '') +
       (LB ? '<div class="grid2">' + field('Title', '<input id="spTitle" value="' + esc(LB.title || '') + '" placeholder="Out and about">') +
         field('Before the subhead', '<select id="spBefore"><option value="">At the end of the story</option>' + subs.map(function (s) { return '<option' + (s === LB.before ? ' selected' : '') + '>' + esc(s) + '</option>'; }).join('') + '</select>') + '</div>' +
-        field('Line under the title', '<textarea id="spDek" rows="2">' + esc(LB.dek || '') + '</textarea>') : '') +
+        field('Line under the title', '<textarea id="spDek" rows="2">' + esc(LB.dek || '') + '</textarea>') + spLayoutPick(LB) + spLabelPick(LB) : '') +
       '<div class="spItems">' + items.map(function (x, i) {
         return '<div class="spItem" data-i="' + i + '"><img src="' + esc(spreadThumb(x)) + '" alt="" loading="lazy"><div class="spF">' +
+          (LB && LB.label === 'mixed' ? '<label class="spAi"><input type="checkbox" class="spAiIn"' + (x.ai ? ' checked' : '') + '> Made with AI <small class="muted">(else Real photograph)</small></label>' : '') +
           '<input class="spName" value="' + esc(x.name || '') + '" placeholder="Its name (set in capitals)">' +
           '<input class="spWhen" value="' + esc(x.when || '') + '" placeholder="A line about it">' +
           '<div class="row"><button type="button" class="link spUp"' + (i ? '' : ' disabled') + '>Up</button><button type="button" class="link spDown"' + (i < items.length - 1 ? '' : ' disabled') + '>Down</button>' +
-          '<button type="button" class="link spSw">Swap</button><button type="button" class="link spRm">Remove from the spread</button>' + (x.video ? '<small class="muted">Loop</small>' : '') + (i === 0 ? '<small class="muted">The first is set wide.</small>' : '') + '</div></div></div>';
+          '<button type="button" class="link spSw">Swap</button><button type="button" class="link spRm">Remove from the spread</button>' + (x.video ? '<small class="muted">Loop</small>' : '') + (i === 0 && /^(hero2|hero3|side|)$/.test(LB && LB.layout || '') ? '<small class="muted">The first is set big.</small>' : '') + '</div></div></div>';
       }).join('') + '</div>' +
       (pick.length ? '<h3 class="spPickH">Add a picture from this Note</h3><div class="spPick">' + pick.map(function (p) {
         return '<button type="button" class="spAddPic" data-src="' + esc(p.src) + '" title="' + esc(photoName(p) + (p.video ? ' (loop)' : '') + (p.caption ? ': ' + p.caption.slice(0, 80) : '')) + '"><img src="' + esc(thumbOf(p)) + '" alt="" loading="lazy">' + (p.video ? '<i>Loop</i>' : '') + '<span>+</span></button>'; }).join('') + '</div>' : '') +
@@ -3200,6 +3248,9 @@
       $('.spSw', d).onclick = function () { spreadSwap(i); };
       $('.spRm', d).onclick = function () { L.splice(i, 1); if (!L.length) setSpreads(spreads().filter(function (b) { return b !== spreadCur(); })); changed(); renderPhotos(); };
     });
+    $$('.spLay', box).forEach(function (b) { b.onclick = function () { ensure().layout = b.getAttribute('data-l'); changed(); }; });
+    $$('[name="spLabel"]', box).forEach(function (r) { r.onchange = function () { var c = ensure(); c.label = r.value; if (r.value === 'mixed') c.items.forEach(function (x) { var p = (E.photos || []).find(function (q) { return q.src === x.src; }); if (x.ai == null && p && p.ai) x.ai = true; }); changed(); }; });
+    $$('.spAiIn', box).forEach(function (c) { c.onchange = function () { var x = spreadCur().items[+c.closest('.spItem').getAttribute('data-i')]; if (c.checked) x.ai = true; else delete x.ai; markDirty(); }; });
     var dr = $('#spDrop'); if (dr) dr.onclick = function () { if (!confirm('Remove this whole photo spread? Its pictures stay in the Note\'s folder.')) return; var c = spreadCur(); setSpreads(spreads().filter(function (b) { return b !== c; })); changed(); };
     $$('.spTab', box).forEach(function (b) { b.onclick = function () { SPI = +b.getAttribute('data-n'); renderSpread(); }; });
     var nw = $('#spNew'); if (nw) nw.onclick = function () { var l = spreads().slice(); l.push({ title: 'A new spread', dek: '', before: '', items: [] }); E.feature.lookbook = l; SPI = l.length - 1; changed(); };
@@ -3247,8 +3298,8 @@
       postTitle: E.post.title, postBody: E.post.body, episodeTitle: E.episode.title, episodeScript: E.episode.script, narrator: NAR_NAME[NARNOW] || 'GlazyArray',
       figures: s ? { distanceMiles: mi(s.distanceKm), highPointFeet: ft(s.maxEleM), movingTime: dur(s.movingSec) } : null,
       photos: E.photos.filter(function (p) { return p.use !== 'skip' && !p.strip; }).map(function (p) { return { file: photoName(p), caption: p.caption || '', loop: !!p.video, ai: !!p.ai, cover: !!p.cover, underSubhead: p.at || '' }; }),
-      magazine: F ? { masthead: F.masthead, tagline: F.tagline || '', issue: F.issue || '', label: F.label || '', byline: F.byline || '', coverLines: F.coverLines || [], blocks: F.blocks || [], qa: F.qa || null, spotted: F.spotted || [] } : null,
-      spreads: spreads().map(function (b) { return { title: b.title || '', before: b.before || '', pictures: (b.items || []).map(function (x) { return x.name || x.when || ''; }) }; }),
+      magazine: F ? { masthead: F.masthead, tagline: F.tagline || '', issue: F.issue || '', label: F.label || '', byline: F.byline || '', coverLines: F.coverLines || [], blocks: F.blocks || [], qa: F.qa || null, spotted: F.spotted || [], layouts: (magOf(F) || {}).layouts || [] } : null,
+      spreads: spreads().map(function (b, i) { return { index: i, title: b.title || '', dek: b.dek || '', before: b.before || '', layout: b.layout || 'hero2', pictures: (b.items || []).map(function (x) { return { photo: String(x.src || '').split('/').pop(), name: x.name || '', line: x.when || '' }; }) }; }),
       questions: E.questions || [], magazineQuestions: F ? (F.questions || []) : [] };
   }
   function magNote() { var n = noteForClaude(); n.feature = E.feature; return n; }   // the magazine writer also gets its template's own fields
@@ -3346,6 +3397,8 @@
         '<h3>The cover</h3><div class="grid2">' + field('Masthead', inp('masthead', t && t.masthead)) + field('Tagline', inp('tagline', t && t.tagline)) +
           field('Issue', inp('issue', t && t.issue)) + field('Label over the headline', inp('label', t && t.label)) + field('Byline', inp('byline', t && t.byline)) + '</div>' +
         field('Cover lines', '<textarea class="magF" data-k="coverLines" rows="4" placeholder="One per line, 3 to 5. The first is set large.">' + esc((F.coverLines || []).join('\n')) + '</textarea>', 'Each one points at something really in the Note.') +
+        '<div class="spLabel' + (F.coverLabel ? '' : ' unset') + '"><b>The cover picture is</b> <label><input type="radio" name="coverLabel" value="real"' + (F.coverLabel === 'real' ? ' checked' : '') + '> A real photograph</label>' +
+          '<label><input type="radio" name="coverLabel" value="ai"' + (F.coverLabel === 'ai' ? ' checked' : '') + '> Made with AI</label>' + (F.coverLabel ? '' : '<small>Not chosen yet, so the site labels it Made with AI.</small>') + '</div>' +
         '<h3>The parts</h3>' + magParts(F) +
         '<button type="button" class="link" id="magOff">Take the magazine look off</button>';
     }
@@ -3366,6 +3419,7 @@
     $$('.magCopy', box).forEach(function (b) { b.onclick = function () { navigator.clipboard.writeText(F.renders[+b.getAttribute('data-i')].prompt).then(function () { toast('Prompt copied.'); }); }; });
     $$('.magDone', box).forEach(function (b) { b.onclick = function () { F.renders.splice(+b.getAttribute('data-i'), 1); if (!F.renders.length) delete F.renders; markDirty(); renderMag(); }; });
     magPartsWire(F, box); wireAsk(box);
+    $$('[name="coverLabel"]', box).forEach(function (r) { r.onchange = function () { F.coverLabel = r.value; markDirty(); renderMag(); }; });
     $('#magOff').onclick = function () {
       if (!confirm('Take the magazine look off this Note? Its cover text, blocks, Q&A and Spotted box go too (the post and photos stay).')) return;
       delete E.feature; markDirty(); renderMag();
@@ -3896,6 +3950,8 @@
     if (q) out.push({ t: 'Answer Claude\'s ' + (q === 1 ? 'question' : q + ' questions'), d: 'The script isn\'t final until they\'re answered. Answer them one by one, then send them all at once.', b: 'Answer', go: '#questions' });
     if (drafted && !q && !val('epScript')) out.push({ t: 'Write the episode script', d: 'The episode is read from it. Draft with Claude writes one from the post, or write your own.', b: 'Go to the script', go: '#epScript' });
     if (drafted && !q && LOOKPICK) out.push({ t: 'Pick the narrator style', d: 'More than one of this Note\'s categories gives her a cap or backdrop. Tick the one this Note takes.', b: 'Pick it', go: '#f-look' });
+    var unl = spreads().filter(function (b) { return !b.label; }).length, mc = E.feature && E.feature.masthead && !E.feature.coverLabel;
+    if (unl || mc) out.push({ t: 'Label ' + (unl && mc ? 'the cover and the photo spread' + (unl > 1 ? 's' : '') : unl ? 'the photo spread' + (unl > 1 ? 's' : '') : 'the magazine cover'), d: 'Say whether ' + (unl + (mc ? 1 : 0) > 1 ? 'they are' : 'it is') + ' real photographs or made with AI. Until then the site says Made with AI.', b: 'Label ' + (unl + (mc ? 1 : 0) > 1 ? 'them' : 'it'), go: unl ? '#spreadBox' : '#magBox' });
     if (drafted && !q && scriptStale()) out.push({ t: 'Bring the script in line with the post', d: 'The post\'s sections have moved since the script was written. Claude can rewrite the script to follow them, keeping its words where they fit.', b: 'Match it', go: '#epSync' });
     if (drafted && !q && val('epScript') && !audio) out.push({ t: 'Record the episode', d: 'Copy the audio prompt, render it with your voice tool, then drop the audio in or choose it from Drive.', b: 'Go to the audio', go: '#copyPrompt' });
     if (videos && !loops && !E.loopsDone) out.push({ t: 'Trim video loops', d: videos + ' video' + (videos > 1 ? 's' : '') + ' in the Drive folder. Pick the moments worth a short silent loop.', b: 'Trim loops', go: '#loops', done: 'loops' });
