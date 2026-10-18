@@ -349,28 +349,19 @@
     d.addEventListener('click', function (e) { if (e.target === d && down === d) close(); down = null; });
   }
   function start(root) { var v = root.querySelector('video'); if (v) { v.muted = true; var p = v.play(); if (p && p.catch) p.catch(function () {}); } }
-  // Swiping through (Christian, Oct 18): in the viewer and in a modal's card, a swipe (or ‹ ›, ← →) goes to the next or
-  // previous picture or clip around it (js/motion.js swipeNav, lbList); it slides a little and fades, the next fades in.
+  // Swiping through (Christian, Oct 18): in the viewer and in a modal's card, a swipe (or ← →) goes to the next or
+  // previous picture or clip around it, with no arrows on it (Oct 19: they covered the pictures) (js/motion.js swipeNav, lbList); it slides a little and fades, the next fades in.
   // host keeps the list and where you are; put(el, a) draws a into el
-  var NAV = '<button type="button" class="pi-nav pi-prev" aria-label="Previous">‹</button><button type="button" class="pi-nav pi-next" aria-label="Next">›</button>';
-  function navState(host) {
-    var p = host.querySelector('.pi-prev'), n = host.querySelector('.pi-next');
-    if (p) p.hidden = host._at <= 0; if (n) n.hidden = host._at >= host._list.length - 1;
-  }
-  function navWire(host, step) {
-    host._list = window.lbList ? lbList(host._a) : [host._a]; host._at = host._list.indexOf(host._a);
-    [['.pi-prev', -1], ['.pi-next', 1]].forEach(function (x) { var b = host.querySelector(x[0]); if (b) b.addEventListener('click', function (e) { e.stopPropagation(); step(x[1]); }); });
-    navState(host);
-  }
+  function navWire(host) { host._list = window.lbList ? lbList(host._a) : [host._a]; host._at = host._list.indexOf(host._a); }
   function stepIn(host, el, d, put) {
     var to = host._at + d; if (!host._list || to < 0 || to >= host._list.length) return false;
     host._at = to;
-    var draw = function () { var v = el.querySelector('video'); if (v) v.pause(); put(el, host._list[to]); start(el); navState(host); };
+    var draw = function () { var v = el.querySelector('video'); if (v) v.pause(); put(el, host._list[to]); start(el); };
     if (reduce) { draw(); return; }
     clearTimeout(host._sw); el.classList.add('pi-moved'); el.style.setProperty('--dx', (d > 0 ? -24 : 24) + 'px'); el.classList.add('pi-swap');
     host._sw = setTimeout(function () { draw(); el.style.setProperty('--dx', (d > 0 ? 24 : -24) + 'px'); void el.offsetWidth; el.classList.remove('pi-swap'); }, 300);
   }
-  function putFocus(f, a) { [].slice.call(f.children).forEach(function (c) { if (!c.classList.contains('pi-close') && !c.classList.contains('pi-nav')) c.remove(); }); f.insertAdjacentHTML('afterbegin', media(a)); }
+  function putFocus(f, a) { [].slice.call(f.children).forEach(function (c) { if (!c.classList.contains('pi-close')) c.remove(); }); f.insertAdjacentHTML('afterbegin', media(a)); }
   function putLb(el, a) { el.innerHTML = media(a); }
 
   // Inside a modal (a Daydreams series, a story): the card itself fills with the picture or clip.
@@ -378,10 +369,10 @@
   function focusIn(d, a) {
     focusOut(d, true);
     var f = document.createElement('div'); f.className = 'pi-focus';
-    f.innerHTML = media(a) + '<button type="button" class="pi-close pi-focus-x" aria-label="Back to the gallery">×</button>' + NAV;
+    f.innerHTML = media(a) + '<button type="button" class="pi-close pi-focus-x" aria-label="Back to the gallery">×</button>';
     f.addEventListener('click', function () { focusOut(d); });
     d.appendChild(f); d._focus = f; start(f);
-    f._a = a; navWire(f, function (k) { return stepIn(f, f, k, putFocus); });
+    f._a = a; navWire(f);
     if (window.swipeNav) swipeNav(d, function (k) { var h = d._focus; return h ? stepIn(h, h, k, putFocus) : false; });
     requestAnimationFrame(function () { f.classList.add('on'); });
     if (!d._focusHooked) {
@@ -409,12 +400,12 @@
       dlg.addEventListener('cancel', function (e) { e.preventDefault(); lbClose(); });
       document.body.appendChild(dlg);
     }
-    dlg.innerHTML = '<div class="pi-lb-in">' + media(a) + '</div><button type="button" class="pi-close" aria-label="Close">×</button>' + NAV;
+    dlg.innerHTML = '<div class="pi-lb-in">' + media(a) + '</div><button type="button" class="pi-close" aria-label="Close">×</button>';
     dlg.classList.remove('out');
     if (!dlg.open) dlg.showModal();
     start(dlg);
     var lbStep = function (k) { var el = dlg.querySelector('.pi-lb-in'); return el ? stepIn(dlg, el, k, putLb) : false; };
-    dlg._a = a; navWire(dlg, lbStep);
+    dlg._a = a; navWire(dlg);
     if (window.swipeNav) swipeNav(dlg, function (k) { return dlg.open ? lbStep(k) : false; });
   }
   function lbClose() {
