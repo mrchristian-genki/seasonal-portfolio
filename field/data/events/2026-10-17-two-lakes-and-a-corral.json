@@ -2210,17 +2210,6 @@
    "strip": 3
   },
   {
-   "src": "data/photos/2026-10-17-two-lakes-and-a-corral/09.jpg",
-   "caption": "The same lake, the road curving past its near end.",
-   "takenAt": "2026:10:17 11:31:30",
-   "w": 1600,
-   "h": 900,
-   "use": "post",
-   "cover": false,
-   "from": "dji_fly_20261017_113130_795_1792262883092_aeb.JPG + dji_fly_20261017_113130_796_1792262884620_aeb.JPG + dji_fly_20261017_113130_797_1792262886226_aeb.JPG",
-   "hdr": 3
-  },
-  {
    "src": "data/photos/2026-10-17-two-lakes-and-a-corral/10.jpg",
    "caption": "The 3 exposures behind the HDR photo, darkest to brightest.",
    "takenAt": "2026:10:17 11:31:30",
@@ -2608,10 +2597,62 @@
   "questions": [
    "The notes say everything went right, so the only Rough item is the drone's clock being off (clip stamped 4:33 PM). Keep it as a light Rough line, or leave the Rough side empty?",
    "The stats use 8.7 miles, 8,671 ft high point and 1 h 6 m from the track, and about 1,200 ft of climbing and three and a half hours out from the post. Can you confirm the climbing and total time against the track?"
-  ]
+  ],
+  "lookbook": {
+   "title": "The photo spread",
+   "dek": "",
+   "before": "",
+   "items": [
+    {
+     "name": "",
+     "when": "Sage slopes, scattered pines and ridges under a clear sky, 11:31.",
+     "alt": "Sage slopes, scattered pines and ridges under a clear sky, 11:31.",
+     "src": "data/photos/2026-10-17-two-lakes-and-a-corral/01.jpg",
+     "w": 1600,
+     "h": 900
+    },
+    {
+     "name": "",
+     "when": "A dry draw running down through the pines toward the far ridges.",
+     "alt": "A dry draw running down through the pines toward the far ridges.",
+     "src": "data/photos/2026-10-17-two-lakes-and-a-corral/03.jpg",
+     "w": 1600,
+     "h": 900
+    },
+    {
+     "name": "",
+     "when": "A deep blue lake ringed by pines, a dirt road along its right shore.",
+     "alt": "A deep blue lake ringed by pines, a dirt road along its right shore.",
+     "src": "data/photos/2026-10-17-two-lakes-and-a-corral/07.jpg",
+     "w": 1600,
+     "h": 900
+    },
+    {
+     "name": "",
+     "when": "A green lake under bare slopes, a road along its edge, 11:33.",
+     "alt": "A green lake under bare slopes, a road along its edge, 11:33.",
+     "src": "data/photos/2026-10-17-two-lakes-and-a-corral/11.jpg",
+     "w": 1600,
+     "h": 900
+    },
+    {
+     "name": "",
+     "when": "A blue lake past a dry meadow, peaks behind it.",
+     "alt": "A blue lake past a dry meadow, peaks behind it.",
+     "src": "data/photos/2026-10-17-two-lakes-and-a-corral/13.jpg",
+     "w": 1600,
+     "h": 900
+    }
+   ]
+  }
  },
  "palette": [
   "#4db4ef",
   "#8590f4"
- ]
+ ],
+ "dashboard": {
+  "speed": false,
+  "updown": false,
+  "facts": false
+ }
 }
