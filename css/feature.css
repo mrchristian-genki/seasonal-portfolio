@@ -421,3 +421,7 @@ html.night-page .feature.mag-studiofloor .mag-qa dd{background:#3d3d3d}
 .feature .mag-cover[data-mast] .mag-lines li:first-child{color:var(--mast-l)}
 /* the Note's own line on what's real (publish.mjs mediaNote), under the byline */
 .feature .mag-head .media-note{justify-content:center;margin:10px 0 0;font:14px/1.4 var(--mg-sans,inherit);color:var(--mg-ink2,#435a5f)}
+/* a Note in a magazine links to it and to the newsstand (publish.mjs, field/tools/magazines.mjs) */
+.feature .mag-head .mag-from{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 18px;margin:12px 0 0;font:800 12.5px/1.4 var(--mg-sans,inherit);letter-spacing:.06em}
+.feature .mag-head .mag-from a{color:var(--mg-red,#c8335c);text-decoration:none;transition:opacity .6s ease-in-out}
+.feature .mag-head .mag-from a:hover{opacity:.75}

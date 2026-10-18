@@ -6,3 +6,6 @@ studio/assets/track.js
 # share cards, made by field/tools/cards.py on each deploy
 field/data/cards/
 __pycache__/
+
+# the magazines, built by field/tools/magazines.mjs on each deploy
+/magazine/

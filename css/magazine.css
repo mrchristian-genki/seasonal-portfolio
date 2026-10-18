@@ -1,0 +1,91 @@
+/* THE MAGAZINES (field/tools/magazines.mjs): the newsstand at /magazine/ and each magazine's own page. A magazine's
+   page is main.feature.mag-<id>, so its colours and type are its template's (css/feature.css); this file is the
+   page around them: the bar at the top, the contents, the stories, the stand of other magazines. Calm, eased motion
+   only (CLAUDE.md); nothing moves with reduced motion */
+.zine-body{margin:0;background:#f6f3ec;color:#1c2b2a;font-family:"Nunito",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.zine{max-width:1080px;margin:0 auto;padding:10px 16px 48px;box-sizing:border-box}
+.zine.feature{padding-bottom:10px}.zn-after{padding-top:0}
+.zine.feature{background-image:var(--zn-tex,none);background-size:520px;background-repeat:repeat}
+.zine img,.zine video{max-width:100%}
+.zine a{color:inherit}
+.zn-top{display:flex;justify-content:space-between;gap:12px;padding:6px 0 14px;font:800 13px/1.3 "Nunito",system-ui,sans-serif;letter-spacing:.04em}
+.zn-top a{text-decoration:none;color:var(--mg-ink2,#3f5a64);transition:color .6s ease-in-out}
+.zn-top a:hover{color:var(--mg-red,#c8335c)}
+.ai-badge,.real-badge{display:inline-block;font:800 10.5px/1.3 "Nunito",Arial,sans-serif;letter-spacing:.06em;text-transform:uppercase;border-radius:999px;padding:3px 9px;white-space:nowrap;vertical-align:middle}
+.ai-badge{background:#efe9fb;color:#6b4bb8}
+.real-badge{background:#e2f4ec;color:#2f8f6b}
+
+/* this issue's cover */
+.zine .zn-cover .mag-mast{margin:0}
+.zine .zn-cover-pic{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.zine .zn-cap{text-align:left;display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center}
+.zine .zn-cap a{color:var(--mg-ink,#1c2b2a);font-weight:700}
+.zn-about{margin:16px 0 30px;max-width:44em;font:italic 17px/1.55 var(--mg-text,Georgia,serif);color:var(--mg-ink2,#3f5a64)}
+
+/* in this issue */
+.zn-contents{display:grid;grid-template-columns:1fr;gap:6px 30px;margin:0 0 40px}
+.zn-opener{margin:0 0 18px;border-radius:10px;overflow:hidden;position:relative}
+.zn-opener img,.zn-opener video{display:block;width:100%;aspect-ratio:21/9;object-fit:cover}
+.zn-opener figcaption{position:absolute;left:10px;bottom:10px}
+.zn-contents h2{display:flex;align-items:center;gap:10px;margin:0 0 6px;padding-bottom:8px;border-bottom:2px solid var(--mg-rule,#1d3b3a);font:800 clamp(22px,3vw,30px)/1.1 var(--mg-serif,Georgia,serif);letter-spacing:.06em;text-transform:uppercase;color:var(--mg-ink,#10302f)}
+.zn-mark{width:46px;height:46px;object-fit:contain}
+.zn-contents ol{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:1fr;gap:0 30px}
+@media (min-width:760px){.zn-contents ol{grid-template-columns:1fr 1fr}}
+.zn-contents li a{display:grid;grid-template-columns:auto 1fr;gap:14px;padding:14px 0;border-bottom:1px solid color-mix(in srgb,var(--mg-rule,#1d3b3a) 25%,transparent);text-decoration:none;transition:background-color .6s ease-in-out}
+.zn-contents li a:hover{background:color-mix(in srgb,var(--mg-red,#c8335c) 6%,transparent)}
+.zn-n{font:800 34px/1 var(--mg-serif,Georgia,serif);color:var(--mg-red,#c8335c);min-width:1.4em}
+.zn-kicker{display:block;font:800 11px/1.3 var(--mg-sans,"Nunito",sans-serif);letter-spacing:.16em;text-transform:uppercase;color:var(--mg-red,#c8335c);margin-bottom:3px}
+.zn-contents b,.zn-feat b{display:block;font:800 clamp(18px,2.2vw,21px)/1.2 var(--mg-serif,Georgia,serif);color:var(--mg-ink,#10302f)}
+.zn-deck{display:block;margin-top:5px;font:15px/1.5 var(--mg-text,Georgia,serif);color:var(--mg-ink2,#435a5f)}
+
+/* the stories */
+.zn-feats{display:grid;grid-template-columns:1fr;gap:26px;margin:0 0 44px}
+@media (min-width:760px){.zn-feats{grid-template-columns:1fr 1fr}.zn-feat.lead{grid-column:1/-1}.zn-feat.lead a{display:grid;grid-template-columns:1.5fr 1fr;gap:24px;align-items:center}}
+.zn-feat{margin:0;border-top:3px solid var(--mg-rule,#1d3b3a);padding-top:12px}
+.zn-feat a{display:block;text-decoration:none;transition:transform .6s ease-in-out}
+.zn-feat a:hover{transform:translateY(-2px)}
+.zn-feat-pic{display:block;border-radius:8px;overflow:hidden;background:#0b2a28}
+.zn-feat-pic img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover}
+.zn-feat-body{display:block;margin-top:12px}
+.zn-feat.lead b{font-size:clamp(24px,3.4vw,34px)}
+.zn-by{display:block;margin-top:8px;font:700 11.5px/1.4 var(--mg-sans,"Nunito",sans-serif);letter-spacing:.1em;text-transform:uppercase;color:var(--mg-ink3,#7a8c90)}
+.zn-read{display:inline-block;margin-top:10px;font:800 13px/1.3 var(--mg-sans,"Nunito",sans-serif);color:var(--mg-red,#c8335c)}
+.zn-label{margin:8px 0 0}
+.zine .zn-logbook{margin:0 0 44px}
+
+/* the stand: the other magazines on a magazine's page, and the whole rack on the newsstand */
+.zn-more{margin:10px 0 30px;padding-top:18px;border-top:2px solid var(--mg-rule,#1d3b3a)}
+.zn-more h2{margin:0 0 14px;font:800 14px/1.3 "Nunito",sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--mg-ink2,#3f5a64)}
+.zn-stand-row{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:8px;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+.zn-stand-row .zn-stand-item{flex:0 0 min(46%,210px);scroll-snap-align:start}
+.zn-rack{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:26px 20px}
+.zn-stand-item{display:block;text-decoration:none;color:inherit;transition:transform .6s ease-in-out}
+.zn-stand-item:hover{transform:translateY(-3px)}
+.zine .zn-stand-item .zn-stand-cover.mag-cover{display:block;aspect-ratio:3/4;margin:0;border-radius:6px;box-shadow:0 10px 24px -14px rgba(0,0,0,.6)}
+.zine .zn-stand-item .mag-mast{font-size:clamp(20px,2.6vw,30px)}
+.zine .zn-stand-item .mag-tag{font-size:11px}
+.zine .zn-stand-item .mag-issue{font-size:10px;padding:4px 9px}
+.zn-stand-meta{display:block;margin-top:9px;font:600 13px/1.4 "Nunito",sans-serif;color:#4c5f63}
+.zn-stand-meta b{display:block;font-weight:800;letter-spacing:.08em;text-transform:uppercase;font-size:11.5px;color:#1c2b2a}
+.zn-stand-head{margin:10px 0 30px;max-width:44em}
+.zn-stand-head h1{margin:6px 0 10px;font:800 clamp(34px,6vw,58px)/1.02 Georgia,"Times New Roman",serif;letter-spacing:-.01em}
+.zn-lede{margin:0;font:18px/1.55 Georgia,serif;color:#3f5a64}
+.zn-newsstand .zn-kicker{color:#c8335c}
+.zn-foot{margin-top:36px;padding-top:14px;border-top:1px solid rgba(0,0,0,.12);font:14px/1.5 "Nunito",sans-serif;color:#5b6c70}
+@media (prefers-reduced-motion:reduce){.zn-feat a,.zn-stand-item,.zn-top a,.zn-contents li a{transition:none}.zn-feat a:hover,.zn-stand-item:hover{transform:none}}
+
+/* the lightbox (play/play.js, loaded here too): a picture or loop opens big, swipe for the next */
+.lightbox{border:0;padding:0;background:transparent;max-width:min(96vw,1400px)}
+.lightbox::backdrop{background:rgba(5,20,18,.88)}
+.lightbox[open]{animation:lbIn .5s cubic-bezier(.2,.8,.3,1) both}.lightbox[open]::backdrop{animation:lbFade .5s ease both}
+.lightbox.shut{animation:lbOut .45s ease both}.lightbox.shut::backdrop{animation:lbFade .45s ease reverse both}
+@keyframes lbIn{from{opacity:0;transform:scale(.97)}}@keyframes lbOut{to{opacity:0;transform:scale(.98)}}@keyframes lbFade{from{opacity:0}}
+@media (prefers-reduced-motion:reduce){.lightbox[open],.lightbox[open]::backdrop,.lightbox.shut,.lightbox.shut::backdrop{animation:none}}
+.lightbox img{max-height:84vh;max-height:84dvh;border-radius:10px;margin:auto}
+.lightbox p{color:#fff;margin:10px 4px 0;font-size:15px}
+.lightbox button{position:absolute;top:8px;right:8px;width:38px;height:38px;border-radius:50%;border:0;background:rgba(255,255,255,.92);font-size:22px;cursor:pointer}
+.lightbox video{max-width:100%;max-height:84vh;max-height:84dvh;border-radius:10px;display:block;margin:auto;background:#000}
+.lightbox .lb-in{touch-action:pan-y pinch-zoom;transition:opacity .3s ease-in-out,transform .3s ease-in-out}
+.lightbox .lb-in.lb-swap{opacity:0;transform:translateX(var(--dx,0))}
+.lightbox [hidden]{display:none}
+@media (prefers-reduced-motion:reduce){.lightbox .lb-in{transition:none}}
