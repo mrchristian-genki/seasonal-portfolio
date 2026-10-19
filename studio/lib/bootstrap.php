@@ -111,6 +111,31 @@ function studio_failures(string $since): array {
     $all = is_file($f) ? (json_decode((string) file_get_contents($f), true) ?: []) : [];
     return array_filter($all, fn($k) => $k >= $since, ARRAY_FILTER_USE_KEY);
 }
+/* The Studio's own errors per day (what api.php couldn't do, and why), for the Stats tab: the access log only says
+   "api.php" failed (Christian, Oct 19: 143 of them). Counted by request and message, numbers folded so one fault
+   counts once, the last 60 days; private like the rest of studio-private. */
+function studio_errors_file(): string { return studio_private_dir() . '/studio-errors.json'; }
+function studio_note_error(string $action, string $message): void {
+    $h = @fopen(studio_errors_file(), 'c+');
+    if (!$h || !flock($h, LOCK_EX)) return;
+    $all = json_decode((string) stream_get_contents($h), true) ?: [];
+    $key = substr(($action !== '' ? $action : '?') . ': ' . preg_replace('/\d+/', '#', trim(preg_replace('/\s+/', ' ', $message))), 0, 200);
+    $d = date('Y-m-d');
+    $all[$d][$key] = (int) ($all[$d][$key] ?? 0) + 1;
+    ksort($all);
+    $all = array_slice($all, -60, null, true);
+    ftruncate($h, 0); rewind($h); fwrite($h, json_encode($all, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+    flock($h, LOCK_UN); fclose($h);
+    @chmod(studio_errors_file(), 0600);
+}
+function studio_errors(string $since): array {
+    $f = studio_errors_file();
+    $all = is_file($f) ? (json_decode((string) file_get_contents($f), true) ?: []) : [];
+    $out = [];
+    foreach ($all as $d => $byKey) if ($d >= $since) foreach ($byKey as $k => $n) $out[$k] = ($out[$k] ?? 0) + $n;
+    arsort($out);
+    return array_slice($out, 0, 20, true);
+}
 function studio_clear_failures(): void {
     $f = studio_throttle_file();
     if (is_file($f)) unlink($f);

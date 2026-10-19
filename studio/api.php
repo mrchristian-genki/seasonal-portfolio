@@ -772,7 +772,7 @@ try {
             $health = null;
             try { $health = (new SiteHealth($cfg))->report(!empty($_GET['fresh'])); } catch (Throwable $e) { $health = ['at' => time(), 'checks' => [], 'error' => $e->getMessage()]; }
             json_out(['source' => $st->source(), 'days' => $st->days($since), 'today' => date('Y-m-d'), 'error' => $err,
-                'health' => $health, 'logins' => studio_failures($since)]);
+                'health' => $health, 'logins' => studio_failures($since), 'studioErrors' => studio_errors($since)]);
 
         case 'GET users':
             owner_only();
@@ -895,5 +895,6 @@ try {
     json_fail('A Note changed while this was saving. Try again.', 409);
 } catch (Throwable $t) {
     error_log('studio: ' . $t->getMessage());
+    studio_note_error(($_SERVER['REQUEST_METHOD'] ?? '') . ' ' . ($action ?? ''), $t->getMessage());
     json_fail($t->getMessage(), 500);
 }
