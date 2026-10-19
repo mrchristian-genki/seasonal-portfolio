@@ -31,6 +31,23 @@ Nothing here is built yet. This is the plan to mark up; the first map is built f
 | The House, a lamp in the window | Websites since 1997, about, get in touch | web | Web tab |
 | The Observatory, a brass dome | The Tumble, the browser time machine | | /web/ |
 | The Parts Depot: walls of labelled drawers, jars of gears and lenses, a rolling ladder. Every part kept because it's going to become something | The Parts Catalog | | /catalog/ |
+| The Studio, a small glass-walled building with a VIP door | Christian's back room: where Notes are written and published | | /studio/ |
+
+### The Studio: VIP only (Christian, Oct 19)
+
+A small Studio on the grounds, so anyone with a login gets to /studio/ straight from the site.
+
+- **The VIP door.** Signed in (the Studio's own sign-in, kept 30 days): the door's lamp is lit and it opens straight
+  into the Studio. Not signed in: the door asks for the sign-in; visitors never see anything private, only the door.
+  The check is a yes or no from the Studio, nothing more (no names, no keys in the page).
+- **The light show, for everyone.** Through the big window anyone can watch the coloured liquid flow through the
+  Studio's glass pipes and heart, using the Studio's own river pictures and clips (studio/table/a, blue, green and
+  orange, by day and by night), easing from one colour to the next.
+- **The colour follows the time of day,** the way Christian sets his: blue in the morning, green in the daytime,
+  orange at night. In the homestead it simply follows the visitor's clock.
+- **In the Studio itself (optional):** a "follow the clock" choice beside the blue, green and orange lamps, so the
+  Studio changes on its own (Christian's hours: blue mornings, green days, orange nights), and a lamp picked by hand
+  still wins.
 
 ### The Automaton Labs, on stilts by the water
 
@@ -105,7 +122,7 @@ Found in things, never preached on signs.
 
 ## Building it, in rings
 
-1. **The first map** (a separate draft): the main buildings, the labs on the dock with the lighthouse, the bike park,
+1. **The first map** (a separate draft): the main buildings and the Studio with its VIP door and light show, the labs on the dock with the lighthouse, the bike park,
    the trailhead and the climbing wall, each linking to what exists now or filtering Notes. The tabs stay as they are.
 2. **The crew moves in:** Starlee's dock, the broadcast tower, the janitor.
 3. **The moving parts:** the tubes, the water wheel, the lighthouse beam, the water tower filling on go-live.
