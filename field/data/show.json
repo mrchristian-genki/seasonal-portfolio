@@ -35,7 +35,7 @@
   }
  ],
  "siteUrl": "https://www.christiangehrke.com/play/",
- "listed": false,
+ "listed": true,
  "_listed": "false = the Notes pages ask search engines not to index them (live but unlisted). Set true when ready to share.",
  "about": "Rides, hikes and foraging walks in the high desert and the Sierra, written up by Christian Gehrke and told as short episodes by a narrator who came along.",
  "narrationNote": "Episodes are narrated by GlazyArray, an AI voice, reading a script written from Christian's own notes, track and photos.",

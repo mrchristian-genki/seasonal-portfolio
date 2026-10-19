@@ -184,6 +184,11 @@ const LOGO = (() => {
 // the lake (js/lake.js remembers the choice, so the homepage opens with it shown or hidden).
 const lakeBand = (words) => `<nav class="lake-band" aria-label="The lake scene"><a href="/?${esc(words)}+ylake" data-lake="1">Show the lake <span aria-hidden="true">▾</span></a></nav>`;
 const robots = show.listed ? '' : '<meta name="robots" content="noindex">\n';
+// What a page is, for search engines (schema.org JSON-LD; Christian, Oct 19: "Let's do it!" on SEO): a Note is an article
+// by Christian, with its pictures, its day and its episode; "<" written as \u003c so nothing in it can close the script.
+const ldScript = (o) => `<script type="application/ld+json">${JSON.stringify(o).replace(/</g, '\\u003c')}</script>`;
+const ROOT_URL = show.siteUrl.replace(/play\/?$/, '');
+const PERSON = { '@type': 'Person', name: 'Christian Gehrke', url: ROOT_URL, sameAs: ['https://www.youtube.com/@ChristianGehrke', 'https://www.linkedin.com/in/christiangehrke/'] };
 // Every page carries the main site's tabs (each opens that tab on the homepage) and Play's own bar.
 const PLAYBAR = [['field-notes', 'Field Notes', '#field-notes'], ['daily-dose', 'Daily Dose', '#daily-dose'], ['above', 'From Above', 'above/'], ['daydreams', 'Daydreams', 'daydreams/']];
 const head = (title, desc, url, image, rel, sub = '', meta = {}) => `<!doctype html>
@@ -194,7 +199,7 @@ const head = (title, desc, url, image, rel, sub = '', meta = {}) => `<!doctype h
 ${robots}<title>${esc(title)}</title>
 <meta name="description" content="${esc(desc)}">
 <link rel="canonical" href="${esc(url)}">
-${shareMeta(title, desc, url, image, meta)}
+${shareMeta(title, desc, url, image, meta)}${meta.ld ? '\n' + ldScript(meta.ld) : ''}
 <link rel="alternate" type="application/rss+xml" title="${esc(show.showTitle)}" href="${rel}feed.xml">
 ${ICONS}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
@@ -396,7 +401,13 @@ ${F.issue ? `<span class="mag-issue">${esc(F.issue)}</span>` : ''}${(F.coverLine
   // its share card: the Note's cover picture (a loop's poster frame), the picture it opens with
   const share = cover && { abs: cover.abs, w: cover.w, h: cover.h, alt: cover.caption || `${e.post && e.post.title || e.title}: the cover picture` };
   const html = head(title, desc, url, share && share.abs, '../', 'field-notes', { type: 'article', lake: 'notes+' + e.id, published: e.date,
-    w: share && share.w, h: share && share.h, alt: share && share.alt, audio: audio && audio.abs }) + `<main class="article${F ? ' feature' : ''}${theme ? ' mag-' + theme : ''}"${t ? ` data-route="../data/${esc(e.id)}.json"` : ''}>
+    w: share && share.w, h: share && share.h, alt: share && share.alt, audio: audio && audio.abs,
+    ld: { '@context': 'https://schema.org', '@type': 'BlogPosting', headline: e.post && e.post.title || e.title, description: desc, datePublished: e.date, url,
+      mainEntityOfPage: url, author: PERSON, publisher: PERSON, inLanguage: 'en',
+      image: photos.filter((p) => !p.strip).slice(0, 6).map((p) => p.abs).filter(Boolean),
+      ...(e.place ? { contentLocation: { '@type': 'Place', name: e.place } } : {}),
+      ...(audio ? { audio: { '@type': 'AudioObject', contentUrl: audio.abs, encodingFormat: 'audio/mpeg', ...(audio.sec ? { duration: `PT${Math.round(audio.sec)}S` } : {}) } } : {}),
+      isPartOf: { '@type': 'Blog', name: show.showTitle, url: show.siteUrl } } }) + `<main class="article${F ? ' feature' : ''}${theme ? ' mag-' + theme : ''}"${t ? ` data-route="../data/${esc(e.id)}.json"` : ''}>
 ${theme && THEME_FONTS[theme] ? `<link rel="stylesheet" href="https://fonts.googleapis.com/css2?${THEME_FONTS[theme]}&display=swap">\n` : ''}${magCover}${F ? `<header class="mag-head"><p class="mag-label">${esc(F.label || 'Feature')}</p>
 <h1>${esc(e.post && e.post.title || e.title)}</h1>
 ${e.summary ? `<p class="mag-deck">${esc(e.summary)}</p>` : ''}
@@ -627,4 +638,22 @@ fs.writeFileSync(path.join(OUT, 'feed.xml'), rss);
 // The Workshop tab's project features (assets/workshop/projects.json) are made from the Published Notes that have a
 // "workshop" object (field/tools/wsprojects.py), so a feature changes with its Note
 execFileSync('python3', [path.join(here, 'wsprojects.py')], { stdio: 'inherit' });
+// The sitemap (christiangehrke.com/sitemap.xml, named in robots.txt): every public page the site has: the homepage,
+// About, the Parts Catalog, Play and each page built under play/ and magazine/ (a Note with its day). Only once Play
+// is listed (show.listed), so an unlisted Play is never handed to search engines.
+if (show.listed) {
+  const urls = [[ROOT_URL], [ROOT_URL + 'about/'], [ROOT_URL + 'catalog/']];
+  const walk = (dir, rel) => { for (const d of fs.readdirSync(dir, { withFileTypes: true })) {
+    if (!d.isDirectory() || d.name.startsWith('_') || ['media', 'data', 'gallery'].includes(d.name)) continue;
+    const sub = path.join(dir, d.name);
+    if (fs.existsSync(path.join(sub, 'index.html')) && !/name="robots" content="noindex/.test(fs.readFileSync(path.join(sub, 'index.html'), 'utf8'))) {
+      const m = /^(\d{4}-\d{2}-\d{2})-/.exec(d.name); urls.push([`${ROOT_URL}${rel}${d.name}/`, m && m[1]]);
+    }
+    walk(sub, `${rel}${d.name}/`);
+  } };
+  urls.push([ROOT_URL + 'play/', pages[0] && pages[0].e.date]); walk(OUT, 'play/');
+  if (fs.existsSync(path.join(SITE, 'magazine/index.html'))) { urls.push([ROOT_URL + 'magazine/', pages[0] && pages[0].e.date]); walk(path.join(SITE, 'magazine'), 'magazine/'); }
+  fs.writeFileSync(path.join(SITE, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map(([u, d]) => `<url><loc>${esc(u)}</loc>${d ? `<lastmod>${d}</lastmod>` : ''}</url>`).join('\n')}\n</urlset>\n`);
+  console.log(`sitemap.xml: ${urls.length} pages`);
+}
 console.log(`play/: ${pages.length} published (${pages.map((p) => p.e.id).join(', ') || 'none'})${show.listed ? '' : ', unlisted (noindex)'}`);

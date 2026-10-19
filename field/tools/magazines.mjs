@@ -38,8 +38,9 @@ export function buildMagazines(ctx) {
   const page = (title, desc, url, image, body, fontIds, meta) => `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(title)}</title><meta name="description" content="${esc(desc)}">
+<link rel="canonical" href="${esc(url)}">
 ${ICONS}
-${shareMeta(title, desc, url, image, meta || {})}
+${shareMeta(title, desc, url, image, meta || {})}${meta && meta.ld ? `\n<script type="application/ld+json">${JSON.stringify(meta.ld).replace(/</g, '\\u003c')}</script>` : ''}
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&display=swap">
 ${fonts(fontIds)}
@@ -67,6 +68,9 @@ ${body}
   const ROOT = show.siteUrl.replace(/play\/?$/, '');
   const CARDS = path.join(OUT, '_cards'); fs.mkdirSync(CARDS, { recursive: true });
   const cardJobs = [];
+  // a magazine's name for a browser tab or a search result: "ROLLING TERRAIN" -> "Rolling Terrain", "<SOURCE ORDER />" -> "Source Order"
+  const nice = (t) => String(t.masthead || t.id).replace(/[<>\/]/g, ' ').trim().split(/\s+/).map((w, i) => w === '&' ? '&' : i && /^(of|and|the|a|an|in|on|to)$/i.test(w) ? w.toLowerCase() : w.charAt(0) + w.slice(1).toLowerCase()).join(' ');
+  const PERSON = { '@type': 'Person', name: 'Christian Gehrke', url: ROOT };
   const stamp = (s) => { let h = 0; for (const c of s) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h.toString(36); };
   const fallbackCard = (t, to) => {   // the cover story's picture, copied, as the card until the drawn one replaces it
     const lead = byMag[t.id][0], src = lead.cover ? still(lead.cover).replace(/\?.*$/, '') : '';
@@ -135,9 +139,12 @@ ${spread.length ? `<section class="mag-book zn-logbook"><h2 class="sub">From the
 <p class="mc-foot"><b>${ps.length} ${ps.length === 1 ? 'story' : 'stories'}</b> from the Field Notes · christiangehrke.com</p></div></div>`);
     cardJobs.push({ page: `/magazine/_cards/${slug}.html`, out: `magazine/${slug}/card.jpg` });
     const desc = `${t.category}: ${ps.length} ${ps.length === 1 ? 'story' : 'stories'} from Christian Gehrke's Field Notes, in ${t.masthead}, a made-up magazine.`;
-    const html = page(`${t.masthead} · ${t.tagline || t.category}`, desc, url, `${url}card.jpg?v=${stamp(lead.e.id + ps.length + t.masthead + (t.tagline || ''))}`,
+    const html = page(`${nice(t)}: ${t.category.toLowerCase()} stories · Christian Gehrke`, desc, url, `${url}card.jpg?v=${stamp(lead.e.id + ps.length + t.masthead + (t.tagline || ''))}`,
       body.replace('<a href="/">christiangehrke.com</a></nav>', `<button type="button" class="zn-share" data-share-url="${esc(url)}" data-share-title="${esc(t.masthead)}" data-share-text="${esc(t.tagline || desc)}">Share</button><a href="/">christiangehrke.com</a></nav>`),
-      [t.id, ...others.map((o) => o.id)], { w: 1200, h: 630, alt: `${t.masthead}, a made-up magazine of Christian Gehrke's Field Notes: its cover` });
+      [t.id, ...others.map((o) => o.id)], { w: 1200, h: 630, alt: `${t.masthead}, a made-up magazine of Christian Gehrke's Field Notes: its cover`,
+        ld: { '@context': 'https://schema.org', '@type': 'CollectionPage', name: nice(t), description: desc, url, author: PERSON, inLanguage: 'en',
+          isPartOf: { '@type': 'CollectionPage', name: 'The newsstand', url: `${ROOT}magazine/` },
+          hasPart: ps.map((p) => ({ '@type': 'BlogPosting', headline: p.e.post && p.e.post.title || p.e.title, url: `${ROOT}play/${p.e.id}/`, datePublished: p.e.date })) } });
     fs.writeFileSync(path.join(dir, 'index.html'), html);
   }
 
@@ -159,7 +166,9 @@ ${spread.length ? `<section class="mag-book zn-logbook"><h2 class="sub">From the
   cardJobs.push({ page: '/magazine/_cards/newsstand.html', out: 'magazine/card.jpg' });
   fs.writeFileSync(path.join(CARDS, 'jobs.json'), JSON.stringify(cardJobs, null, 1));
   fs.writeFileSync(path.join(OUT, 'index.html'), page('The newsstand · Christian Gehrke', `Made-up magazines, real stories: ${total} Field Notes in ${live.length} magazines.`, ROOT + 'magazine/',
-    `${ROOT}magazine/card.jpg?v=${stamp(rack4.map((t) => t.id + byMag[t.id][0].e.id).join() + total)}`, stand, live.map((t) => t.id), { w: 1200, h: 630, alt: 'The newsstand: four made-up magazines on a rack' }));
+    `${ROOT}magazine/card.jpg?v=${stamp(rack4.map((t) => t.id + byMag[t.id][0].e.id).join() + total)}`, stand, live.map((t) => t.id), { w: 1200, h: 630, alt: 'The newsstand: four made-up magazines on a rack',
+      ld: { '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'The newsstand', description: 'Made-up magazines, real stories', url: `${ROOT}magazine/`, author: PERSON,
+        hasPart: live.map((t) => ({ '@type': 'CollectionPage', name: nice(t), url: `${ROOT}magazine/${magSlug(t)}/` })) } }));
   const out = live.map((t) => ({ id: t.id, slug: magSlug(t), masthead: t.masthead, count: byMag[t.id].length }));
   // Play's own rack (Christian, Oct 19: "a two by two rack of actual magazines"): the four with the most stories,
   // newest cover story first among equals, as the stand shows them, on two shelves

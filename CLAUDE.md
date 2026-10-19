@@ -21,7 +21,8 @@ Christian's rule, a lesson learned on the Tumble: every change on screen eases. 
 ## Standing rules
 
 - Facts on the site come only from Christian's Notes or his own words.
-- People stay anonymous unless they've agreed to be named. Never publish the home location.
+- People stay anonymous unless they've agreed to be named. Never publish the home location. Helena, Christian's wife, is named by her
+  choice (she'd rather be named than called "wife"; Christian, Oct 19, 2026).
 - The narrator is "GlazyArray" unless a Note or its category chooses A.L.T.A. or Starlee (Christian, Oct 11 and
   12, 2026; the Studio sets it, assets/narrator/resolve.js decides). A.L.T.A.'s and Starlee's own Notes they tell
   themselves. Starlee is the robot Marley (she was "Robot Marley" until Christian renamed her, Oct 19, 2026; her
