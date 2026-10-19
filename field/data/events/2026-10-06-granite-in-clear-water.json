@@ -106,7 +106,7 @@
  "fieldNotes": "This was a test of the auto HDR process that merges 3 images loaded into Google Drive and merges them and then only uses the new image for the Note. It's a case study of this process itself. The images are just the test. The note is about what happened.\n\nFacts for the write-up (Oct 6, 2026): 12 drone shots from the morning of Sep 12, 2026 (10:03 to 11:16), four auto-exposure brackets of three at -0.7, 0 and +0.7 EV, taken a second or two apart. Brought in from the Drive folder \"October 6 2026\" through the Studio, which grouped them by capture time, merged each in the browser (alignment by median threshold bitmaps, then exposure fusion) and kept only the four merges plus a strip of each bracket; the originals were not kept. All four merges came out at the full 1600 x 900, so no shot needed shifting (the merge crops only what a shift leaves empty). Clipping, from the strips and the merges: photo 05 (sun on the water) 4.2% pure white in the 0 EV shot, 6.6% in +0.7, 0.9% in the merge; photo 07 3.2% / 5.6% / 1.0%. Earlier the same day it was tested on made-up brackets (two Tahoe photos darkened, brightened and nudged a few pixels apart): it found the drift exactly and refused a burst and three different views. The test found two Studio problems, fixed the same day: the folder matched another note by date, so it couldn't be processed (now 'Process as a new note'); and the new strips were cropped like photos and looked like originals (now shown whole under their HDR photo). Location left unnamed on purpose.",
  "post": {
   "title": "Three exposures, one photo",
-  "body": "My drone can take three pictures of the same view a second or two apart: one a little dark, one normal, one a little bright. None of them is right on its own. The dark one keeps the white granite and the sun on the water; the bright one opens up the shadows under the pines. Putting them together used to mean a desktop app. Now the Studio does it as the photos come in, and this Note is the test.\n\nHere's how it works. I drop the shots into a Drive folder and the Studio brings them into my browser. It reads the time each one was taken, and shots within three seconds of each other become a candidate bracket. Before it merges anything, it checks that they really are one view at different brightness. A burst at a single exposure, or three different views, stay separate photos.\n\nThen it lines them up, because a drone drifts, by comparing simple black and white maps of each shot, coarse to fine. Then it blends them: every pixel takes most from whichever shot exposed it best, where it's sharp and colourful, mixed at several scales so there are no seams or halos. A gentle contrast curve, a touch more colour, and it's done in a few seconds, in the browser. Only the merged photo is kept, with its location data stripped. The three originals never leave the folder.\n\nThe real test was twelve shots from the morning of September 12: four brackets of three, at −0.7, 0 and +0.7. Four photos came out. The drone held so still that every bracket lined up to the pixel, so nothing had to be cropped. The clearest result is the third one, with the sun on the water. In the normal shot 4.2% of the picture is pure white, and 6.6% in the bright one. In the merge it's under 1%.\n\nBefore trusting it with real shots, I tested it on made-up ones: two of my Tahoe photos darkened, brightened and nudged a few pixels apart. It found the drift exactly, and it refused the burst and the three different views I slipped in.\n\nThe real folder found two problems the made-up one couldn't. It was dated the same day as another Note, so the Studio only offered to open that one; now a folder that only matches by date can start a Note of its own. And the new strips, the three exposures side by side, were cropped like photos and looked like the originals, so now they show whole, under the photo they made.\n\nWhat I learned: test with the real thing. The made-up bracket proved the maths. The real folder found the two places where the Studio got in my way."
+  "body": "My drone can take three pictures of the same view a second or two apart: one a little dark, one normal, one a little bright. None of them is right on its own. The dark one keeps the white granite and the sun on the water; the bright one opens up the shadows under the pines. Putting them together used to mean a desktop app. Now the Studio does it as the photos come in, and this Note is the test.\n\n> None of them is right on its own.\n\n## How it works\n\nHere's how it works. I drop the shots into a Drive folder and the Studio brings them into my browser. It reads the time each one was taken, and shots within three seconds of each other become a candidate bracket. Before it merges anything, it checks that they really are one view at different brightness. A burst at a single exposure, or three different views, stay separate photos.\n\nThen it lines them up, because a drone drifts, by comparing simple black and white maps of each shot, coarse to fine. Then it blends them: every pixel takes most from whichever shot exposed it best, where it's sharp and colourful, mixed at several scales so there are no seams or halos. A gentle contrast curve, a touch more colour, and it's done in a few seconds, in the browser. Only the merged photo is kept, with its location data stripped. The three originals never leave the folder.\n\n## The real test\n\nThe real test was twelve shots from the morning of September 12: four brackets of three, at −0.7, 0 and +0.7. Four photos came out. The drone held so still that every bracket lined up to the pixel, so nothing had to be cropped. The clearest result is the third one, with the sun on the water. In the normal shot 4.2% of the picture is pure white, and 6.6% in the bright one. In the merge it's under 1%.\n\nBefore trusting it with real shots, I tested it on made-up ones: two of my Tahoe photos darkened, brightened and nudged a few pixels apart. It found the drift exactly, and it refused the burst and the three different views I slipped in.\n\n## What the real folder found\n\nThe real folder found two problems the made-up one couldn't. It was dated the same day as another Note, so the Studio only offered to open that one; now a folder that only matches by date can start a Note of its own. And the new strips, the three exposures side by side, were cropped like photos and looked like the originals, so now they show whole, under the photo they made.\n\nWhat I learned: test with the real thing. The made-up bracket proved the maths. The real folder found the two places where the Studio got in my way."
  },
  "episode": {
   "title": "Three exposures, one photo",
@@ -133,5 +133,113 @@
  "palette": [
   "#2cbaaa",
   "#56a0d7"
- ]
+ ],
+ "feature": {
+  "theme": "heatsink",
+  "masthead": "HEAT SINK",
+  "tagline": "Tested hot. Reviewed cool.",
+  "issue": "The Long-Term Test Issue",
+  "label": "Review",
+  "byline": "By GlazyArray, Gadgets Editor",
+  "blocks": [
+   {
+    "type": "specs",
+    "title": "Specs",
+    "before": "How it works",
+    "rows": [
+     [
+      "Input",
+      "12 drone shots, Sep 12, 2026, 10:03 to 11:16"
+     ],
+     [
+      "Brackets",
+      "Four of three, a second or two apart"
+     ],
+     [
+      "Exposures",
+      "−0.7, 0 and +0.7 EV"
+     ],
+     [
+      "Source",
+      "A Google Drive folder, brought in through the Studio"
+     ],
+     [
+      "Grouping",
+      "By capture time: shots within three seconds"
+     ],
+     [
+      "Check",
+      "One view at different brightness, or kept separate"
+     ],
+     [
+      "Alignment",
+      "Median threshold bitmaps, coarse to fine"
+     ],
+     [
+      "Blend",
+      "Exposure fusion, mixed at several scales"
+     ],
+     [
+      "Output",
+      "Four merges, all at the full 1600 x 900"
+     ],
+     [
+      "Kept",
+      "The merges plus a strip of each bracket; location data stripped; originals not kept"
+     ]
+    ],
+    "note": "Tested Oct 6, 2026, in the Studio, in the browser."
+   },
+   {
+    "type": "box",
+    "title": "Made-up brackets / Real folder",
+    "before": "The real test",
+    "kicker": "Same day, two tests",
+    "text": "Made-up brackets: two Tahoe photos darkened, brightened and nudged a few pixels apart. The Studio found the drift exactly, and refused a burst and three different views slipped in.\n\nReal folder: twelve drone shots in four brackets. Every bracket lined up to the pixel, so nothing was cropped. And it found two Studio problems the made-up folder couldn't, both fixed the same day."
+   },
+   {
+    "type": "goodbad",
+    "title": "Good / Bad",
+    "before": "What the real folder found",
+    "good": [
+     "All four brackets lined up to the pixel; every merge came out at the full 1600 x 900",
+     "Photo 05, sun on the water: 4.2% pure white at 0 EV, 6.6% at +0.7, 0.9% in the merge",
+     "Photo 07: 3.2% / 5.6% / 1.0%",
+     "On made-up brackets it found the drift exactly",
+     "It refused a burst and three different views",
+     "Done in a few seconds, in the browser; only the merge is kept, location data stripped"
+    ],
+    "bad": [
+     "The folder matched another Note by date, so it couldn't be processed (fixed: 'Process as a new note')",
+     "The new strips were cropped like photos and looked like originals (fixed: now shown whole under their HDR photo)"
+    ]
+   },
+   {
+    "type": "verdict",
+    "title": "Verdict",
+    "seal": "Tested with the real thing",
+    "text": "Twelve shots went in and four photos came out, with the white granite, the sun on the water and the shadows under the pines all kept. The drone held so still that nothing had to be cropped, and the hardest frame went from 6.6% pure white to under 1%.\n\nThe made-up bracket proved the maths. The real folder found the two places where the Studio got in the way, and both were fixed the same day. Christian's own lesson is the one to keep: test with the real thing."
+   }
+  ],
+  "coverLines": [
+   "Three exposures, one photo: the Studio's HDR merge on twelve real drone shots",
+   "Sun on the water: 6.6% pure white in the bright shot, under 1% in the merge",
+   "Four brackets, lined up to the pixel, nothing cropped",
+   "It refused the burst: the made-up test that proved the maths",
+   "Two Studio problems the real folder found, fixed the same day"
+  ],
+  "renders": [
+   {
+    "for": "the fifth picture, a review hero shot",
+    "prompt": "Clean gadget-review style photograph from high above: a small plain grey quadcopter drone hovering over a clear-water cove, pale granite boulders visible beneath the turquoise and deep blue water, morning sun glinting on the water at one corner, dark green pine shadow along the shore. Crisp, high dynamic range look with detail in both the bright rocks and the shadows, punchy contrast, a hint of acid-green accent light on the drone's edges. No people, no brands, no logos, no text, letters or numbers."
+   }
+  ],
+  "questions": [
+   "The verdict has no score: the Note doesn't give a rating. Do you want one (and sub-scores), and if so what? You should check any figures before they run.",
+   "Should the specs name the drone model? The Note doesn't say which drone it was.",
+   "Are the four photos real (not AI)? Their realOrAI is 'not said'; I've treated them as real merges.",
+   "The box adapts the template's 'Day 1 / Day 30' to 'Made-up brackets / Real folder', since both tests were the same day. OK?",
+   "The post says 'under 1%' for the photo 05 merge, the notes say 0.9%; I used 0.9% in Good / Bad. Fine?"
+  ]
+ }
 }
