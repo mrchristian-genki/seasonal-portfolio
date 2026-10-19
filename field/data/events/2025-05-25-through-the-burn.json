@@ -1804,7 +1804,7 @@
  "fieldNotes": "Where did the ride start and end? If it started or ended at home, it can't be used the usual way. Tell me the trailhead or public-land name if it didn't.\nAnyting over 7 miles is extra and nit needed.\n\nWhere was this, and is the water Lake Tahoe? Which fire burned this forest? I left the place and the fire unnamed.\nCorral Trail Loop up to the first lookout.\n\nIs the dog Marley? If so, I'll use the name and it becomes a Marley episode.\nYes\n\nThe entry date is May 25, 2025, but all the photos are from May 24. Which day was the ride?\nPhoto is correct.\n\nThere are no track figures. Can you send distance, climbing and time, or should the story stay without numbers?\nGPX file no good?\n\nPrivacy first: you said anything over 7 miles is extra. Is that extra part riding from or to home? If the ride started or ended at home, the trail name, map and numbers must come out (home-ride rule). Where did it start, the Corral trailhead?\nYes the corral trailhead.\n\nIs the water Lake Tahoe? And which fire burned this forest? Both still unnamed; I won't guess.\nYes.\n\nWhich stop was the first lookout? The 9:32 view of the water, or somewhere else?\nThe point i turned around.\n\nNumbers: the figures are still empty. The GPX needs to go through field/track.js (trimmed to the ride you want told) so track.stats exists; I don't work out distances myself. Until then the story stays without numbers.\nNot sure what else to do here.\n\nPlease change the entry date from May 25 to May 24, 2025, to match the photos.\nOk sure. Go for it.\n\nWas Marley with you the whole ride? The summary says 'most of the way', which is a guess.\nYes.\n\nPrivacy: you said anything over seven miles is extra. Was that extra part ridden to or from home? If so, the track must be trimmed to start at the Corral trailhead before any map or numbers are used.\nI forgot to turn off the bike tracker app.\n\nWhich fire burned this forest? Your \"Yes\" confirmed Lake Tahoe but not the fire's name, so it stays unnamed for now.\nNot sure it was near Meyers a few years ago.\n\nWhich photo, if any, was taken at the first lookout where you turned around: the 9:32 lake view, the 9:52 boulder, or a spot with no photo?\nyes the lake view.\n\nNumbers: the GPX is fine. It just needs to run through field/track.js, trimmed to the ride from the Corral trailhead, so track.stats exists. Or paste distance, climbing and time for just that part into the entry's figures. Until then the story stays without numbers.\nJust end it after 7 miles.\n\nI can't edit the entry date from here. Please set it to 2025-05-24 in the entry.\nWill do.\n\nThe episode calls Marley \"he\". Is that right?\nShe.",
  "post": {
   "title": "Through the burn",
-  "body": "May 24, 2025: the Corral Trail Loop from the Corral trailhead, up as far as the first lookout, where I turned around. Marley came along the whole way.\n\nA little before nine I leaned the bike against a pine and took a picture. Green forest, granite boulders scattered between the trunks, low sun coming through.\n\nTwenty minutes later the trees had changed. Behind me in a selfie the forest is burned: grey snags, black trunks, a pile of cut wood, and snow still on the peaks across the valley.\n\nAround half past nine I reached the first lookout, where the burn opens up. Through the dead trees there's Lake Tahoe, a long stretch of blue water with mountains behind it, a little snow on top. Along the dirt road, logs had been cut and stacked, with fresh stumps everywhere. Marley climbed onto one of them and stood looking out, harness on, very pleased with the view. This was where I turned around.\n\nOn the way back, twenty minutes on, there was a granite boulder bigger than anything around it, sitting among the burned trunks. Marley got up on a small rock right at its foot, which is the only way to show how big that boulder is.\n\nJust before eleven we were down at a creek. Clear water over rocks, green grass, a log fence along the bank. Helmet off, Marley sitting next to me, both of us looking at the camera.\n\nAnd yes, I forgot to turn off the tracker app again, so the recording runs on well past the end of the ride."
+  "body": "May 24, 2025: the Corral Trail Loop from the Corral trailhead, up as far as the first lookout, where I turned around. Marley came along the whole way.\n\nA little before nine I leaned the bike against a pine and took a picture. Green forest, granite boulders scattered between the trunks, low sun coming through.\n\n## Into the burn\n\nTwenty minutes later the trees had changed. Behind me in a selfie the forest is burned: grey snags, black trunks, a pile of cut wood, and snow still on the peaks across the valley.\n\n## The first lookout\n\nAround half past nine I reached the first lookout, where the burn opens up. Through the dead trees there's Lake Tahoe, a long stretch of blue water with mountains behind it, a little snow on top. Along the dirt road, logs had been cut and stacked, with fresh stumps everywhere. Marley climbed onto one of them and stood looking out, harness on, very pleased with the view. This was where I turned around.\n\n> Marley climbed onto one of them and stood looking out, harness on, very pleased with the view.\n\n## The way back\n\nOn the way back, twenty minutes on, there was a granite boulder bigger than anything around it, sitting among the burned trunks. Marley got up on a small rock right at its foot, which is the only way to show how big that boulder is.\n\n## Down at the creek\n\nJust before eleven we were down at a creek. Clear water over rocks, green grass, a log fence along the bank. Helmet off, Marley sitting next to me, both of us looking at the camera.\n\nAnd yes, I forgot to turn off the tracker app again, so the recording runs on well past the end of the ride."
  },
  "episode": {
   "title": "Marley on the rock",
@@ -1839,5 +1839,70 @@
   "fit": "category",
   "from": "ride",
   "scene": ""
+ },
+ "feature": {
+  "theme": "colcobble",
+  "masthead": "ROLLING TERRAIN",
+  "tagline": "I'm not here to break records. I just don't want to break anything.",
+  "issue": "The Cruising Issue",
+  "label": "Ride Report",
+  "byline": "By GlazyArray, Cycling Desk",
+  "blocks": [
+   {
+    "type": "stats",
+    "title": "The numbers",
+    "before": "Into the burn",
+    "items": [
+     [
+      "5.1 mi",
+      "Distance"
+     ],
+     [
+      "7,037 ft",
+      "High point"
+     ],
+     [
+      "45 min",
+      "Moving time"
+     ]
+    ],
+    "note": "From the Corral trailhead to the first lookout and back. The tracker, as usual, ran on after the ride."
+   },
+   {
+    "type": "box",
+    "title": "The first lookout",
+    "before": "The way back",
+    "kicker": "The stop",
+    "text": "Around half past nine, Christian reached the first lookout, a wide spot along a dirt road where the burn opens up. Through the dead trees lay Lake Tahoe: a long stretch of blue water, mountains behind it, a little snow on top.\n\nAll around, logs had been cut and stacked, with fresh stumps everywhere. Marley climbed onto one and stood looking out, harness on, taking in the same view. He knew a good place to stop when he saw one. This was where he turned around."
+   },
+   {
+    "type": "goodbad",
+    "title": "Smooth / Rough",
+    "good": [
+     "Green pine forest and granite boulders in the low morning sun",
+     "Lake Tahoe through the trees at the first lookout",
+     "Marley along for the whole ride",
+     "A clear creek and a log fence at the end"
+    ],
+    "bad": [
+     "Grey snags and black trunks where the forest burned",
+     "The tracker app left running again, well past the end of the ride"
+    ]
+   }
+  ],
+  "coverLines": [
+   "Through the burn to a first look at Lake Tahoe",
+   "Green pines, grey snags: the Corral Trail Loop",
+   "Marley on the rock: the boulder only she could measure",
+   "Down at the creek, helmet off",
+   "The tracker that kept on counting"
+  ],
+  "questions": [
+   "The Note now has figures (5.1 miles, 7,037 ft high point, 45 min moving time). Are these trimmed to just the ride from the Corral trailhead, and are they right to print? The photos run from 8:48 to 10:58, so 45 minutes of moving time is worth a second look.",
+   "Is \"High point\" the right label for 7,037 ft, or would you rather show climbing if you have it?",
+   "Smooth / Rough lists only things from the post; the burn and the forgotten tracker are under Rough. Is that how you'd like them framed?",
+   "Was the tracker Cyclemeter, as usual? I left it as \"the tracker app\" for now."
+  ],
+  "coverLabel": "real"
  }
 }
