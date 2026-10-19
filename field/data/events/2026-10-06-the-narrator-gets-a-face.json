@@ -115,7 +115,7 @@
  "fieldNotes": "Case study of the narrator robot (Oct 6, 2026). Facts from this session: Helena didn't like the earlier narrator voice, so the voice became a warm woman narrator (promoter, fan, publicist; a nostalgic voice-over). Christian asked for a little robot narrator in the Listen bar: a head with a mouth that moves with the audio, and a torso whose hands gesture while talking and tap the desk when idle. Claude wrote the prompts; Christian rendered the torso clips (green screen, storyteller, counting, drawing a shape, idle tapping) and the head stills. The counting clip was dropped. Built: green screen keyed onto the bar's teal with a key that keeps the cyan tubes; head cut into base, jaw and eyelid layers; jaw driven by loudness via Web Audio; blinks. Fixes: head seated on the collar; a colour line from untagged video fixed; the torso blinked between clips, so all moves became one file with backwards copies; desk extended across the bar; robot visible from load. Christian's idea: idle hints to press play (point, boop-boop and thumbs up, wave), rendered from a shared rest-pose frame; head turns, winks, bulb glows. Christian: the robot looked male but the voice is female, so a new head. Look kit: template, mask, contact sheet; Workshop tool; Catalog Characters card. Christian made fourteen looks (six hair styles, eight holidays). Rules from Christian: every reload a different look, never the one just shown; only the next holiday's look joins the pool; click her head to change it smoothly. Her name (Christian): GlazyArray, always one word, never 'Glazy'; the audio opens with 'Narrated by GlazyArray.'; the hair switcher is her Style Array.",
  "post": {
   "title": "The narrator gets a face",
-  "body": "The Field Notes have a narrator: a warm, nostalgic voice that tells each episode. On October 6 she got a body, and then a name: GlazyArray. I wanted the play button to stop being just a play button: a little robot rising out of the Listen bar, her head above it, her hands on a desk inside it, talking when the episode talks.\n\nClaude wrote the prompts and I rendered the parts: a torso at a desk on a green screen, with four loops of the hands, and a head as still images. The torso is video, keyed onto the bar's own teal. The first key took the glowing cyan tubes out with the green, so it got a narrower key that keeps them. The head is layers: the head itself, the jaw, and the closed eyelids. The jaw slides open with how loud the voice is at that moment, measured from the episode as it plays, and she blinks every few seconds.\n\nThe first version had a flaw I could see straight away: each move was its own video file, and switching files blanked the torso for a moment. Now all of it is one file in eight parts, and every part starts and ends in the same rest pose. She only ever jumps inside that one file, which keeps the picture on screen. Each gesture has a backwards copy, so she can stop part way through one and come back. When the voice stops, she heads for whichever rest pose is closer.\n\nThen she got cheeky. Before anyone presses play, she taps her fingers, and every round or two she drops a hint toward the Play button: a \"psst, over there\", a \"boop, boop\" and a thumbs up, a little wave. Her head turns toward the button, she winks, and the bulb on her antenna glows.\n\nThe first head was a boy's, and the voice is a woman's, so I asked for hers: rose-gold brass, finger waves into curls, lashes on her eyelids, a clip with a cyan gem, and a flower bud for a bulb. Her talking and blinking carried straight over.\n\nThen I wanted her to have fun with her hair. Claude made a template, a mask and a contact sheet that show what can change and what has to stay, and I made fourteen looks: six hair styles, an 80s perm among them, and eight holidays. Her eyes, jaw and neck always come from the original, so she still talks and blinks under a witch hat. She wears whichever holiday is coming up next. Click her head and she changes on the spot, with a little shake, and the pick stays in the link.\n\nThen her eyes. The glowing cyan lenses felt cold, so I asked for warmer ones: Lake Tahoe blue, with small pupils and two catchlights, under her brass lids and lashes. They glance toward the Play button when she hints.\n\nHer name came last: GlazyArray, for the glaze of the glowing glass tubes in her chest, her glossy brass and her glassy blue eyes, and the array of looks she swaps at a click. Her hair switcher is her Style Array, and the Listen bars now say \"Narrated by GlazyArray\". New looks are made in the Workshop, and she has her own card in the Parts Catalog.\n\nWhat I learned: a character is mostly the little things done carefully: the rest pose that lets the clips meet, the wink at the right second. And she should look like the voice she's speaking with."
+  "body": "The Field Notes have a narrator: a warm, nostalgic voice that tells each episode. On October 6 she got a body, and then a name: GlazyArray. I wanted the play button to stop being just a play button: a little robot rising out of the Listen bar, her head above it, her hands on a desk inside it, talking when the episode talks.\n\n## Parts and layers\n\nClaude wrote the prompts and I rendered the parts: a torso at a desk on a green screen, with four loops of the hands, and a head as still images. The torso is video, keyed onto the bar's own teal. The first key took the glowing cyan tubes out with the green, so it got a narrower key that keeps them. The head is layers: the head itself, the jaw, and the closed eyelids. The jaw slides open with how loud the voice is at that moment, measured from the episode as it plays, and she blinks every few seconds.\n\n## One file, no gaps\n\nThe first version had a flaw I could see straight away: each move was its own video file, and switching files blanked the torso for a moment. Now all of it is one file in eight parts, and every part starts and ends in the same rest pose. She only ever jumps inside that one file, which keeps the picture on screen. Each gesture has a backwards copy, so she can stop part way through one and come back. When the voice stops, she heads for whichever rest pose is closer.\n\n## Cheeky by design\n\nThen she got cheeky. Before anyone presses play, she taps her fingers, and every round or two she drops a hint toward the Play button: a \"psst, over there\", a \"boop, boop\" and a thumbs up, a little wave. Her head turns toward the button, she winks, and the bulb on her antenna glows.\n\n## Her face, her looks\n\nThe first head was a boy's, and the voice is a woman's, so I asked for hers: rose-gold brass, finger waves into curls, lashes on her eyelids, a clip with a cyan gem, and a flower bud for a bulb. Her talking and blinking carried straight over.\n\nThen I wanted her to have fun with her hair. Claude made a template, a mask and a contact sheet that show what can change and what has to stay, and I made fourteen looks: six hair styles, an 80s perm among them, and eight holidays. Her eyes, jaw and neck always come from the original, so she still talks and blinks under a witch hat. She wears whichever holiday is coming up next. Click her head and she changes on the spot, with a little shake, and the pick stays in the link.\n\n> Her eyes, jaw and neck always come from the original, so she still talks and blinks under a witch hat.\n\nThen her eyes. The glowing cyan lenses felt cold, so I asked for warmer ones: Lake Tahoe blue, with small pupils and two catchlights, under her brass lids and lashes. They glance toward the Play button when she hints.\n\n## A name\n\nHer name came last: GlazyArray, for the glaze of the glowing glass tubes in her chest, her glossy brass and her glassy blue eyes, and the array of looks she swaps at a click. Her hair switcher is her Style Array, and the Listen bars now say \"Narrated by GlazyArray\". New looks are made in the Workshop, and she has her own card in the Parts Catalog.\n\nWhat I learned: a character is mostly the little things done carefully: the rest pose that lets the clips meet, the wink at the right second. And she should look like the voice she's speaking with."
  },
  "episode": {
   "title": "The narrator gets a face",
@@ -202,6 +202,110 @@
    {
     "photo": "catalog-card.jpg"
    }
+  ]
+ },
+ "feature": {
+  "theme": "sourceorder",
+  "masthead": "SOURCE ORDER",
+  "tagline": "Build it right, then build it beautiful",
+  "issue": "Issue 404: Not Found (Yet)",
+  "label": "Build Notes",
+  "byline": "By GlazyArray, Web Desk",
+  "blocks": [
+   {
+    "type": "box",
+    "title": "TL;DR",
+    "before": "Parts and layers",
+    "kicker": "The short version",
+    "text": "Christian wanted the play button to stop being just a play button. Claude wrote the prompts, he rendered the parts, and the narrator became a little brass robot in every Listen bar: a torso keyed onto the bar's teal, a head in layers whose jaw follows the loudness of the voice, and blinks every few seconds.\n\nThe fix that mattered: every move went into one video in eight parts, each starting and ending in the same rest pose, so the torso never blanks out. Then came cheeky hints to press play, her own head to match her voice, fourteen looks, warmer Lake Tahoe blue eyes, and a name: GlazyArray."
+   },
+   {
+    "type": "steps",
+    "title": "How it's built",
+    "items": [
+     {
+      "title": "Render the parts",
+      "text": "Claude wrote the prompts; Christian rendered a torso at a desk on a green screen, with loops of the hands, and the head as still images."
+     },
+     {
+      "title": "Key the green",
+      "text": "The torso video is keyed onto the bar's own teal. The first key took the glowing cyan tubes out too, so a narrower key keeps them."
+     },
+     {
+      "title": "Layer the head",
+      "text": "Three layers: the head itself, the jaw and the closed eyelids. The jaw opens with the loudness of the voice, measured from the episode as it plays via Web Audio, and she blinks every few seconds."
+     },
+     {
+      "title": "One file, eight parts",
+      "text": "Separate clips blanked the torso when switching, so every move became one file. Each part starts and ends in the same rest pose, each gesture has a backwards copy, and when the voice stops she heads for the closer rest pose."
+     },
+     {
+      "title": "Hints to press play",
+      "text": "Before play, she taps her fingers and drops a hint toward the Play button: psst, over there; boop, boop and a thumbs up; a little wave. Her head turns, she winks, the bulb glows."
+     },
+     {
+      "title": "Her own head",
+      "text": "The first head was a boy's and the voice is a woman's, so she got hers: rose-gold brass, finger waves into curls, lashes, a clip with a cyan gem and a flower bud for a bulb."
+     },
+     {
+      "title": "The look kit",
+      "text": "A template, a mask and a contact sheet set what can change and what has to stay. Her eyes, jaw and neck always come from the original, so she talks and blinks in every look. Click her head and she changes with a little shake."
+     },
+     {
+      "title": "Warmer eyes",
+      "text": "The cyan lenses felt cold, so they became Lake Tahoe blue with small pupils and two catchlights, glancing toward Play when she hints."
+     }
+    ]
+   },
+   {
+    "type": "timeline",
+    "title": "Build log",
+    "items": [
+     [
+      "Oct 6",
+      "A warm woman narrator replaces the earlier voice, which Helena didn't like"
+     ],
+     [
+      "Then",
+      "Torso clips and head stills rendered from Claude's prompts; the counting clip is dropped"
+     ],
+     [
+      "Then",
+      "Green screen keyed onto the teal, keeping the cyan tubes; head cut into base, jaw and eyelid layers; jaw driven by loudness; blinks"
+     ],
+     [
+      "Then",
+      "Fixes: head seated on the collar, a colour line from untagged video, all moves in one file with backwards copies, desk across the bar, robot visible from load"
+     ],
+     [
+      "Then",
+      "Christian's idle hints to press play: point, boop-boop and thumbs up, wave; head turns, winks, bulb glows"
+     ],
+     [
+      "Then",
+      "A new head, because the robot looked male and the voice is female"
+     ],
+     [
+      "Then",
+      "Look kit, Workshop tool and Catalog Characters card; fourteen looks: six hair styles, eight holidays"
+     ],
+     [
+      "Last",
+      "Her name: GlazyArray, with a Style Array for her hair"
+     ]
+    ]
+   }
+  ],
+  "coverLines": [
+   "One video, eight parts: how the torso stopped blinking out",
+   "A jaw that keeps time with the voice, measured as it plays",
+   "Psst, over there: a robot that hints at Play",
+   "Fourteen looks, from an 80s perm to a witch hat"
+  ],
+  "questions": [
+   "The code block is left out: the Note has no code or prompt text as written. Could you paste a short snippet (for example the Web Audio loudness-to-jaw code, or one of the render prompts) exactly as you want it shown, with its file name?",
+   "The Build log only knows everything happened on Oct 6, in this order. Do you want times or other dates for any entries, or is 'Then' fine?",
+   "The timeline says the counting clip was dropped and lists the fixes from your notes; is it fine to show those in the Build log even though the post doesn't mention them?"
   ]
  }
 }
