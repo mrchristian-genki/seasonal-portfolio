@@ -53,7 +53,7 @@
     doghouse: "Marley's own house, and the Notes she's in.",
     library: 'An independent imprint of adult coloring books, from Color in a Cup to hikes, kitchens, wine and the American West.',
     newsstand: 'The Field Notes as made-up magazines: real stories, each dressed as a feature.',
-    barn: 'Videos, photos and Daydreams: rides and hikes, foraging, and the light jars made from what comes home.',
+    barn: 'Videos, photos and the Daydreams.',
     depot: 'The Parts Catalog: every part kept because it is going to become something.',
     kinetic: 'Sculptures that turn in the wind: the digital art.',
     starlee: "Starlee's charging dock, where she rests between walks.",
@@ -119,52 +119,147 @@
   win.firstChild.appendChild(stage);
   root.appendChild(win);
 
-  // ── zooming in: a click on a place eases the view in on it, like a map, with a card about it: go there, or show its
-  // part of this page below; either, or Back, a click on the ground or Esc, eases the village back out ──
-  var view = win.firstChild, card = document.createElement('div'), zoomed = null, lastFocus = null;
-  card.className = 'hs-card'; card.setAttribute('role', 'dialog'); card.setAttribute('aria-modal', 'false'); card.hidden = true;
-  win.appendChild(card);
-  function zoom(p, el) {
+  // ── zooming in, like a map (Christian, Oct 19: "less is more; let the user explore the zoomed in scene"): a click on a
+  // place eases the view in on it, and a small bubble by it says what it is, with one way in. Zoomed in, the village can
+  // be dragged to look around, the places nearby wear small labels, and some have things to find: the real magazines on
+  // the newsstand's rack, what's showing at the barn. A click on the ground, the bubble's ×, or Esc eases back out.
+  // Under the frame, a legend: hover a name and its place glows; click it and the view flies there. ──
+  var view = win.firstChild, bubble = document.createElement('div'), zoomed = null, lastFocus = null;
+  var Z = { x: 0, y: 0, s: 1 };
+  bubble.className = 'hs-bubble'; bubble.setAttribute('role', 'dialog'); bubble.hidden = true;
+  win.appendChild(bubble);
+  function setZ(x, y, sc) {
     var vw = view.clientWidth, vh = view.clientHeight, W = stage.offsetWidth, Hh = stage.offsetHeight;
-    var r = el.getBoundingClientRect(), sr = stage.getBoundingClientRect(), k = stage.offsetWidth / sr.width;   // undo any zoom in force
-    var cx = (r.left - sr.left + r.width / 2) * k, cy = (r.top - sr.top + r.height / 2) * k;
-    var s = Math.min(3, Math.max(1.6, Math.min(vw / (r.width * k) * .42, vh / (r.height * k) * .5)));
-    var tx = -s * (cx - W / 2), ty = -s * (cy - Hh / 2);                                  // the place to the middle of the view,
-    var mx = Math.max(0, (s * W - vw) / 2), my = Math.max(0, (s * Hh - vh) / 2);          // as far as the painting's edges allow
-    tx = Math.max(-mx, Math.min(mx, tx)); ty = Math.max(-my, Math.min(my, ty));
-    // the card goes where the place isn't: above it when the place ends up low in the view, below it otherwise
-    var py = (stage.offsetTop - Hh / 2 + Hh / 2) + ty + s * (cy - Hh / 2);                 // the place's middle, from the view's middle
-    card.classList.toggle('top', py > 0);
-    stage.style.setProperty('--zx', tx.toFixed(1) + 'px'); stage.style.setProperty('--zy', ty.toFixed(1) + 'px'); stage.style.setProperty('--zs', s.toFixed(3));
-    win.classList.add('zoomed'); places.forEach(function (pl) { if (pl.el) pl.el.classList.toggle('picked', pl.p === p); });
+    var mx = Math.max(0, (sc * W - vw) / 2), my = Math.max(0, (sc * Hh - vh) / 2);          // never past the painting's edges
+    Z.x = Math.max(-mx, Math.min(mx, x)); Z.y = Math.max(-my, Math.min(my, y)); Z.s = sc;
+    stage.style.setProperty('--zx', Z.x.toFixed(1) + 'px'); stage.style.setProperty('--zy', Z.y.toFixed(1) + 'px'); stage.style.setProperty('--zs', sc.toFixed(3));
+  }
+  function box(el) {   // a place's box in the stage's own (unzoomed) pixels
+    var W = stage.offsetWidth, k = W / stage.getBoundingClientRect().width, r = el.getBoundingClientRect(), sr = stage.getBoundingClientRect();
+    return { x: (r.left - sr.left) * k, y: (r.top - sr.top) * k, w: r.width * k, h: r.height * k };
+  }
+  function zoom(p, el) {
+    var vw = view.clientWidth, vh = view.clientHeight, W = stage.offsetWidth, Hh = stage.offsetHeight, b = box(el);
+    var sc = Math.min(3.4, Math.max(2.2, Math.min(vw / b.w * .5, vh / b.h * .62)));
+    setZ(-sc * (b.x + b.w / 2 - W / 2), -sc * (b.y + b.h / 2 - Hh / 2) + vh * .14, sc);   // a little low, so the bubble fits above
+    win.classList.add('zoomed'); win.setAttribute('data-z', p.id);
+    places.forEach(function (pl) { if (pl.el) pl.el.classList.toggle('picked', pl.p === p); });
     if (!zoomed) lastFocus = el;
-    zoomed = p; fill(p);
+    zoomed = p; say(p, el);
   }
   function unzoom(back) {
     if (!zoomed) return;
-    zoomed = null; win.classList.remove('zoomed'); card.classList.remove('in');
-    stage.style.setProperty('--zx', '0px'); stage.style.setProperty('--zy', '0px'); stage.style.setProperty('--zs', '1');
+    zoomed = null; win.classList.remove('zoomed'); win.removeAttribute('data-z'); hush();
+    setZ(0, 0, 1);
     places.forEach(function (pl) { if (pl.el) pl.el.classList.remove('picked'); });
-    setTimeout(function () { if (!zoomed) card.hidden = true; }, 700);
     if (back !== false && lastFocus) lastFocus.focus({ preventScroll: true });
   }
-  function fill(p) {
-    var here = !p.go.href, n = '';
-    card.innerHTML = '<p class="hs-card-kick">Lake Home</p><h3>' + p.name + '</h3><p>' + (ABOUT[p.id] || p.line) + '</p><p class="hs-card-n"></p>' +
-      '<div class="hs-card-go"><button type="button" class="hs-go">' + (here ? 'Show it below' : 'Go there') + '</button>' +
-      '<button type="button" class="hs-back">Back to the village</button></div>';
-    card.setAttribute('aria-label', p.name);
-    card.hidden = false; requestAnimationFrame(function () { card.classList.add('in'); });
-    card.querySelector('.hs-go').addEventListener('click', function () { var q = zoomed; unzoom(false); if (q) setTimeout(function () { open(q); }, calm ? 0 : 450); });
-    card.querySelector('.hs-back').addEventListener('click', function () { unzoom(); });
+  function hush() { bubble.classList.remove('in'); setTimeout(function () { if (!bubble.classList.contains('in')) bubble.hidden = true; }, 600); }
+  // the bubble: just above the place once the view has flown there (below it when there's no room above)
+  function say(p, el) {
+    var here = !p.go.href;
+    bubble.innerHTML = '<button type="button" class="hs-x" aria-label="Back to the whole village">×</button><b>' + p.name + '</b><span>' + (ABOUT[p.id] || p.line) + '</span>' +
+      '<span class="hs-n"></span>' + (p.id === 'barn' ? showing() : '') + '<button type="button" class="hs-go">' + (here ? 'Show it below ↓' : 'Go in →') + '</button>';
+    bubble.setAttribute('aria-label', p.name); bubble.classList.remove('in');
+    bubble.querySelector('.hs-go').addEventListener('click', function () { var q = zoomed; unzoom(false); if (q) setTimeout(function () { open(q); }, calm ? 0 : 450); });
+    bubble.querySelector('.hs-x').addEventListener('click', function () { unzoom(); });
     if (p.go.tags) counts().then(function (c) {
       var t = p.go.tags.filter(function (x) { return c[x]; }).sort(function (a, b) { return c[b] - c[a]; })[0];
-      if (t && zoomed === p) card.querySelector('.hs-card-n').textContent = c[t] + (c[t] === 1 ? ' Note' : ' Notes');
+      if (t && zoomed === p) bubble.querySelector('.hs-n').textContent = c[t] + (c[t] === 1 ? ' Note' : ' Notes');
     });
-    setTimeout(function () { var b = card.querySelector('.hs-go'); if (b && zoomed === p) b.focus({ preventScroll: true }); }, calm ? 0 : 900);
+    setTimeout(function () { if (zoomed === p) pin(el); }, calm ? 0 : 1650);
   }
-  stage.addEventListener('click', function (ev) { if (zoomed && !ev.target.closest('.hs-place')) unzoom(); });
+  function pin(el) {   // (not 'place': the firefly has one)
+    var vr = view.getBoundingClientRect(), wr = win.getBoundingClientRect(), r = el.getBoundingClientRect();
+    bubble.hidden = false;
+    // above the place if there's room; otherwise beside it, on the side with more room (never over it)
+    var bw = bubble.offsetWidth, bh = bubble.offsetHeight, L = vr.left - wr.left, T = vr.top - wr.top, R = vr.right - wr.left, B = vr.bottom - wr.top;
+    var px = r.left - wr.left, py = r.top - wr.top, pw = r.width, ph = r.height, side = 'top', x, y;
+    if (py - bh - 14 >= T + 6) { x = px + pw / 2; y = py - bh - 12; }
+    else {
+      side = (px - L) > (R - px - pw) ? 'left' : 'right';
+      x = side === 'left' ? px - 14 - bw / 2 : px + pw + 14 + bw / 2;
+      y = Math.max(T + 6, Math.min(B - bh - 6, py + ph * .35 - bh / 2));
+    }
+    x = Math.max(L + bw / 2 + 8, Math.min(R - bw / 2 - 8, x));
+    bubble.style.left = x + 'px'; bubble.style.top = Math.max(T + 6, y) + 'px';
+    bubble.setAttribute('data-side', side);
+    requestAnimationFrame(function () { bubble.classList.add('in'); });
+  }
+  // looking around: drag the zoomed village (mouse, pen or a finger); a drag never counts as a click
+  var drag = null, dragged = false;
+  view.addEventListener('pointerdown', function (ev) {
+    if (!zoomed || ev.button || ev.target.closest('.hs-spot, .hs-show')) return;
+    drag = { x: ev.clientX, y: ev.clientY, zx: Z.x, zy: Z.y, id: ev.pointerId }; dragged = false;
+  });
+  view.addEventListener('pointermove', function (ev) {
+    if (!drag || ev.pointerId !== drag.id) return;
+    var dx = ev.clientX - drag.x, dy = ev.clientY - drag.y;
+    if (!dragged && Math.abs(dx) + Math.abs(dy) < 6) return;
+    if (!dragged) { dragged = true; win.classList.add('dragging'); hush(); try { view.setPointerCapture(ev.pointerId); } catch (e) {} }
+    setZ(drag.zx + dx, drag.zy + dy, Z.s);
+  });
+  function endDrag() { if (!drag) return; drag = null; win.classList.remove('dragging'); setTimeout(function () { dragged = false; }, 0); }
+  view.addEventListener('pointerup', endDrag); view.addEventListener('pointercancel', endDrag);
+  view.addEventListener('click', function (ev) { if (dragged) { ev.preventDefault(); ev.stopPropagation(); } }, true);
+  stage.addEventListener('click', function (ev) { if (zoomed && !ev.target.closest('.hs-place, .hs-spot, .hs-show')) unzoom(); });
   document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape' && zoomed) unzoom(); });
+
+  // ── things to find, zoomed in (positions are shares of the place's own picture) ──
+  // The newsstand's rack: its four blank covers carry the four real magazines (Play's own rack, play/hub.json), each
+  // opening its magazine. The barn: its round window lights up, "Now showing", and lists the Daydreams.
+  var SPOTS = {
+    newsstand: { w: 570, h: 716, at: [[296, 474, 62, 72], [366, 472, 62, 70], [298, 556, 62, 74], [370, 556, 64, 72]] },
+    barn: { w: 920, h: 625, show: [557, 95, 160, 160] }
+  };
+  var DAY = [];
+  function showing() {   // what's on at the barn: the Daydreams, a marquee in its bubble
+    return DAY.length ? '<span class="hs-marquee"><i>Now showing</i>' + DAY.map(function (x) { return '<a href="' + x.url + '">' + x.title + '</a>'; }).join('') + '</span>' : '';
+  }
+  function spots() {
+    var hubP = fetch('play/hub.json').then(function (r) { return r.json(); }).catch(function () { return {}; });
+    places.forEach(function (pl) {
+      var d = SPOTS[pl.p.id]; if (!d) return;
+      var layer = document.createElement('div');
+      layer.className = 'hs-spots hs-spots-' + pl.p.id; layer.style.cssText = vars(pl.p) + 'aspect-ratio:' + d.w + '/' + d.h + ';z-index:3000';
+      stage.appendChild(layer);
+      function pos(a) { return 'left:' + (a[0] / d.w * 100) + '%;top:' + (a[1] / d.h * 100) + '%;width:' + (a[2] / d.w * 100) + '%;height:' + (a[3] / d.h * 100) + '%'; }
+      if (d.at) hubP.then(function (h) {
+        var tmp = document.createElement('div'); tmp.innerHTML = (h.magazines && h.magazines.rack) || '';
+        [].slice.call(tmp.querySelectorAll('a.zn-stand-item')).slice(0, d.at.length).forEach(function (m, i) {
+          var img = m.querySelector('.mag-img img'), mast = m.querySelector('.mag-mast');
+          var a = document.createElement('a'); a.className = 'hs-spot hs-cover'; a.href = m.getAttribute('href'); a.style.cssText = pos(d.at[i]);
+          a.setAttribute('aria-label', (mast ? mast.textContent.replace(/\s+/g, ' ').trim() : 'A magazine') + ', on the newsstand');
+          a.innerHTML = img ? '<img src="' + img.getAttribute('src') + '" alt="" loading="lazy">' : '';
+          a.title = mast ? mast.textContent.replace(/\s+/g, ' ').trim() : '';
+          layer.appendChild(a);
+        });
+      });
+      if (d.show) hubP.then(function (h) {
+        DAY = ((h.daydreams && h.daydreams.series) || []).slice(0, 5);
+        var a = document.createElement('a'); a.className = 'hs-spot hs-show-btn'; a.href = '?lab+daydreams'; a.style.cssText = pos(d.show);
+        a.setAttribute('aria-label', 'Now showing at the barn: the Daydreams'); a.innerHTML = '<span>Now showing</span>';
+        layer.appendChild(a);
+      });
+    });
+  }
+  spots();
+
+  // ── the legend, under the frame: every place by name; hover or focus a name and its place glows, click it to fly there ──
+  var legend = document.createElement('nav'); legend.className = 'hs-legend'; legend.setAttribute('aria-label', 'Places in the village');
+  legend.innerHTML = PLACES.map(function (p) { return '<button type="button" data-place="' + p.id + '">' + p.name.replace(/^The /, '') + '</button>'; }).join('');
+  root.appendChild(legend);
+  function plOf(id) { for (var i = 0; i < places.length; i++) if (places[i].p.id === id) return places[i]; }
+  legend.addEventListener('mouseover', function (ev) { var b = ev.target.closest('[data-place]'); glow(b && b.getAttribute('data-place')); });
+  legend.addEventListener('mouseleave', function () { glow(null); });
+  legend.addEventListener('focusin', function (ev) { var b = ev.target.closest('[data-place]'); glow(b && b.getAttribute('data-place')); });
+  legend.addEventListener('focusout', function () { glow(null); });
+  legend.addEventListener('click', function (ev) {
+    var b = ev.target.closest('[data-place]'); if (!b) return; var pl = plOf(b.getAttribute('data-place')); if (!pl) return;
+    var r = win.getBoundingClientRect();
+    if ((r.top < 0 || r.bottom > innerHeight) && window.easeScroll) easeScroll.to(win, function () { zoom(pl.p, pl.el); }); else zoom(pl.p, pl.el);
+  });
+  function glow(id) { places.forEach(function (pl) { if (pl.el) pl.el.classList.toggle('lit', pl.p.id === id); }); }
 
   function vars(p) {
     return '--x:' + p.x + ';--y:' + p.y + ';--w:' + p.w + ';--mx:' + p.mx + ';--my:' + p.my + ';--mw:' + p.mw + ';z-index:' + Math.round(p.z || p.y) + ';--mz:' + Math.round(p.mz || p.z || p.y) + ';';
