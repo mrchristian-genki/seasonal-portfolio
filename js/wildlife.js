@@ -60,7 +60,7 @@
 
   // ── scene state (read from the page, no coupling to scene.js internals) ──
   const SEASONS = { 0: 'winter', 1: 'spring', 2: 'summer', 3: 'fall' };
-  const season = () => { const t = document.querySelector('.tab[aria-selected="true"]'); return SEASONS[t ? t.dataset.season : 1] || 'spring'; };
+  const season = () => SEASONS[window.__currentSeason ?? 1] || 'spring';   // the lake's season (scene.js), not the tab's
   const night = () => { const b = $('modeBtn'); return !!b && b.getAttribute('aria-pressed') === 'true'; };
   const traveling = () => { const h = $('hero'); return !!h && h.classList.contains('hiding'); };
   let sceneVisible = true;

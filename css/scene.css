@@ -160,6 +160,16 @@ html,body{margin:0;background:#0b1020;font-family:system-ui,-apple-system,sans-s
 .clock #modeBtn{background:#243b46}
 .clock button:focus-visible{outline:3px solid rgb(var(--accent));outline-offset:2px}
 .clock button[disabled]{opacity:.5;cursor:default}
+/* the season picker (scene.js [data-pick]): four quiet pills, the lake's season filled; each change eases */
+.clock .seasons{display:inline-flex;gap:2px;padding:2px;border-radius:99px;background:rgba(36,59,70,.08)}
+.clock .seasons button{background:transparent;color:#3c5561;padding:6px 11px;transition:background-color .8s ease-in-out,color .8s ease-in-out}
+.clock .seasons button:hover{filter:none;background:rgba(255,255,255,.7)}
+.clock .seasons button[aria-pressed="true"]{background:#fff;color:#16323c;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+html.night-page .clock .seasons{background:rgba(255,255,255,.08)}
+html.night-page .clock .seasons button{color:var(--night-soft)}
+html.night-page .clock .seasons button[aria-pressed="true"]{background:#f2d27b;color:#1b2733}
+@media (max-width:560px){.clock{flex-wrap:wrap;justify-content:center;border-radius:22px;padding:6px;gap:8px}.clock .seasons button{padding:6px 9px}}
+@media (prefers-reduced-motion:reduce){.clock .seasons button{transition:none}}
 /* These two blocks came over from the original site inside media queries;
    the wrappers were lost in the port, so until Sept 23 they applied at every
    width (no spring motion, small tabs, one-column works list on desktop). */

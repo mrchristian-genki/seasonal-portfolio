@@ -15,4 +15,22 @@ html.night-page .lake-band a,html.night-page .lake-band button,html.night-page .
 .lake-hide{position:absolute;right:clamp(12px,3vw,40px);top:clamp(14px,2.5vw,26px);z-index:6;opacity:.9}
 @media (max-width:640px){.lake-hide{top:auto;bottom:96px;right:12px;font-size:13px;padding:7px 12px}}
 html.lake-off #hero{position:absolute;left:-300vw;top:0;width:100vw;visibility:hidden;pointer-events:none}
-@media print{.lake-band,.lake-hide{display:none}}
+/* The season picker inside the lake (index.html .lake-seasons, js/scene.js): four small glass buttons, bottom left, the
+   lake's season lit; each change eases (CLAUDE.md), and the season itself turns over seven seconds in the scene */
+.lake-seasons{position:absolute;left:clamp(12px,3vw,40px);bottom:clamp(40px,6.5vw,90px);z-index:6;display:flex;gap:2px;padding:3px;border-radius:99px;
+  background:rgba(255,255,255,.72);box-shadow:0 2px 10px rgba(0,0,0,.12);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.lake-seasons button{appearance:none;border:0;cursor:pointer;display:grid;place-items:center;width:34px;height:34px;padding:0;border-radius:50%;background:transparent;
+  color:#47626d;transition:background-color .8s ease-in-out,color .8s ease-in-out,transform .5s ease-in-out}
+.lake-seasons button svg{width:18px;height:18px}
+.lake-seasons button:hover{background:rgba(255,255,255,.9);transform:translateY(-1px)}
+.lake-seasons button[aria-pressed="true"]{background:#fff;color:#0f4d47;box-shadow:0 1px 4px rgba(0,0,0,.18)}
+.lake-seasons button[data-pick="1"][aria-pressed="true"]{color:#d8618f}.lake-seasons button[data-pick="2"][aria-pressed="true"]{color:#e0a020}
+.lake-seasons button[data-pick="3"][aria-pressed="true"]{color:#c8611f}.lake-seasons button[data-pick="0"][aria-pressed="true"]{color:#4f8fd0}
+.lake-seasons button:focus-visible{outline:3px solid #0f4d47;outline-offset:1px}
+html.night-page .lake-seasons{background:rgba(20,30,60,.72)}
+html.night-page .lake-seasons button{color:#c9d3e8}
+html.night-page .lake-seasons button[aria-pressed="true"]{background:#f2d27b;color:#1b2733}
+html.lake-off .lake-seasons{display:none}
+@media (max-width:640px){.lake-seasons{left:12px;bottom:96px}.lake-seasons button{width:32px;height:32px}}
+@media (prefers-reduced-motion:reduce){.lake-seasons button{transition:none}.lake-seasons button:hover{transform:none}}
+@media print{.lake-band,.lake-hide,.lake-seasons{display:none}}

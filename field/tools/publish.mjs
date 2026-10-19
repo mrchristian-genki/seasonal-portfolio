@@ -207,7 +207,7 @@ ${ICONS}
 <link rel="stylesheet" href="${rel}play.css?v=${V}">
 <link rel="stylesheet" href="${rel}../css/feature.css?v=${V}">
 <link rel="stylesheet" href="${rel}../css/logo.css?v=11">
-<link rel="stylesheet" href="${rel}../css/lake.css?v=2">
+<link rel="stylesheet" href="${rel}../css/lake.css?v=4">
 <link rel="stylesheet" href="${rel}../css/narrator.css?v=33">
 <link rel="stylesheet" href="${rel}../css/alta.css?v=12">
 <link rel="stylesheet" href="${rel}../css/marley.css?v=10">

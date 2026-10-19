@@ -5,10 +5,10 @@
   // [label, note, words]; a string on its own starts a group.
   const ROWS = [
     'Seasons and time of day',
-    ['Summer, day', 'Books tab (the default)', 'summer+day'], ['Summer, night', '', 'summer+night'],
-    ['Fall, day', 'Web tab', 'fall+day'], ['Fall, night', '', 'fall+night'],
-    ['Winter, day', 'Workshop tab', 'winter+day'], ['Winter, night', '', 'winter+night'],
-    ['Spring, day', 'Play tab', 'spring+day'], ['Spring, night', '', 'spring+night'],
+    ['Summer, day', '', 'summer+day'], ['Summer, night', '', 'summer+night'],
+    ['Fall, day', '', 'fall+day'], ['Fall, night', '', 'fall+night'],
+    ['Winter, day', '', 'winter+day'], ['Winter, night', '', 'winter+night'],
+    ['Spring, day', '', 'spring+day'], ['Spring, night', '', 'spring+night'],
     'Shows',
     ['Play the whole year', '', 'play'], ['Play the whole year at night', '', 'play+night'],
     ['Dark mode', 'night scene, dark page', 'darkmode'],

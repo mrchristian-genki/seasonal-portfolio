@@ -54,7 +54,7 @@
   };
   function writeURL(push) {
     var keep = words().filter(function (w) { return SECTIONS.indexOf(w) < 0 && !isItem(w) && !isNoteWord(w); });
-    if (!keep.some(function (w) { return /^(spring|lab)$/.test(w); })) keep.unshift('spring');
+    if (!keep.some(function (w) { return /^(spring|lab)$/.test(w); })) keep.unshift('lab');   // the Play tab's word (seasons are separate now)
     var q = keep.concat(window.__playWords()).join('+');
     try { history[push ? 'pushState' : 'replaceState']({ play: true }, '', location.pathname + (q ? '?' + q : '') + location.hash); } catch (e) {}
   }
