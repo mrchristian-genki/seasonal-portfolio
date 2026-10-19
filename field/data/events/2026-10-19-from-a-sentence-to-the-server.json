@@ -24,6 +24,22 @@
  "track": null,
  "photos": [
   {
+   "src": "data/photos/2026-10-19-from-a-sentence-to-the-server/clip-2.mp4",
+   "poster": "data/photos/2026-10-19-from-a-sentence-to-the-server/clip-2.jpg",
+   "video": true,
+   "caption": "The robot janitor walks steadily forward with all keys hooked to it's belt.",
+   "takenAt": "2026:10:19 07:07:09",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "Robot_janitor_walking_in_corridor_20261019070647.mp4",
+   "range": [
+    0,
+    8
+   ]
+  },
+  {
    "src": "data/photos/2026-10-19-from-a-sentence-to-the-server/heart.mp4",
    "poster": "data/photos/2026-10-19-from-a-sentence-to-the-server/heart.jpg",
    "video": true,
@@ -105,6 +121,28 @@
    "use": "post",
    "cover": false,
    "from": "Screenshot 2026-10-19 at 6.18.15 AM.png"
+  },
+  {
+   "src": "data/photos/2026-10-19-from-a-sentence-to-the-server/04.jpg",
+   "caption": "A brass robot hand unclipping a second, smaller key ring from the janitor's belt and holding it out toward the camera.",
+   "takenAt": null,
+   "w": 1376,
+   "h": 768,
+   "use": "post",
+   "cover": false,
+   "from": "Robot_hand_holding_key_ring_20261019070036.jpg",
+   "ai": true
+  },
+  {
+   "src": "data/photos/2026-10-19-from-a-sentence-to-the-server/05.jpg",
+   "caption": "An extreme close-up of one high-tech key hanging from the janitor's brass ring.",
+   "takenAt": null,
+   "w": 1376,
+   "h": 768,
+   "use": "post",
+   "cover": false,
+   "from": "Robot_janitor_keys_on_belt_20261019070028.jpg",
+   "ai": true
   }
  ],
  "fieldNotes": "Drafted by Claude for Christian (Oct 19, 2026) at his request: a Hidden Layer Note about \"the process we used together... using rsync to connect GitHub directly to my server, and then allowing whatever permissions or tools were needed, the API keys, and exactly what keys were needed\" for Claude to edit the code, check it into GitHub, make it live, and rsync it to the server, written so it could be spun out for a client or a freelance gig. Facts from the repo itself: .github/workflows/deploy.yml (the build steps, the rsync flags and excludes, no --delete, the dry run, the four repository secrets DH_HOST, DH_USER, DH_PATH and DH_SSH_KEY), studio/README.md and studio/tools/setup.php (the private config outside the web folder with the password hash, the Anthropic API key and the fine-grained GitHub token, Contents read/write, one repo, expiry up to a year; rclone with a read-only Google Drive login), studio/lib/github.php (saves as commits to main), the stale-save check and editors' saves waiting for review, and how we work in Claude Code sessions (a branch, a draft PR with screenshots, \"go live\" merges it). No host, user, folder, key or token value appears anywhere in the Note, on purpose.\n\nPictures: four from other Notes are in (the Studio's heart, the Studio, the cutaway, GlazyArray at her desk). Still to come from you: the four screenshots in field/drafts/hidden-layer-pictures.md.\nAdded more please take a look now.\n\n02.jpg shows your GitHub username and the titles of your recent pull requests. Fine to show, or crop to the list of titles only?\ncrop them please.\n\nclip-1.mp4 I can't see: does \"The pipe to the server.\" still describe it, and is it the fourth of the screenshots from field/drafts/hidden-layer-pictures.md, or is one still to come?\nA brass automaton's glass heart on a workbench at night, a glowing teal liquid pumping out of it through a long copper pipe that runs across the room, through the wall and out across a dark valley to a small lit stone tower on a hill, where the liquid fills a row of glass jars. Warm workshop lamps, rivets, steam, cinematic, shallow depth of field. the liquid pulsing along the pipe in slow beats, each jar filling in turn, the camera holding still. 6 to 8 seconds, seamless.\n\nThe episode script is still empty. Shall I write it next?\nyes please.",
