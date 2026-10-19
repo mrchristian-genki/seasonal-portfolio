@@ -37,8 +37,7 @@
    "range": [
     0,
     8
-   ],
-   "at": "The keys"
+   ]
   },
   {
    "src": "data/photos/2026-10-19-from-a-sentence-to-the-server/clip-4.mp4",
@@ -71,6 +70,24 @@
     0,
     9.9
    ]
+  },
+  {
+   "src": "data/photos/2026-10-19-from-a-sentence-to-the-server/clip-5.mp4",
+   "poster": "data/photos/2026-10-19-from-a-sentence-to-the-server/clip-5.jpg",
+   "video": true,
+   "caption": "A wide overhead three-quarter view of an old wooden workbench in a quiet workshop. Laid out in a neat row across the middle of the bench, evenly spaced with clear space around each one, are eight objects: seven high-tech key fobs and one empty brass key ring.",
+   "takenAt": "2026:10:19 07:41:06",
+   "w": 960,
+   "h": 528,
+   "use": "post",
+   "cover": false,
+   "from": "Keys-on-table.mp4",
+   "range": [
+    0,
+    9.55
+   ],
+   "ai": true,
+   "at": "The keys"
   },
   {
    "src": "data/photos/2026-10-19-from-a-sentence-to-the-server/heart.mp4",
@@ -156,16 +173,13 @@
    "from": "Screenshot 2026-10-19 at 6.18.15 AM.png"
   }
  ],
- "fieldNotes": "Drafted by Claude for Christian (Oct 19, 2026) at his request: a Hidden Layer Note about \"the process we used together... using rsync to connect GitHub directly to my server, and then allowing whatever permissions or tools were needed, the API keys, and exactly what keys were needed\" for Claude to edit the code, check it into GitHub, make it live, and rsync it to the server, written so it could be spun out for a client or a freelance gig. Facts from the repo itself: .github/workflows/deploy.yml (the build steps, the rsync flags and excludes, no --delete, the dry run, the four repository secrets DH_HOST, DH_USER, DH_PATH and DH_SSH_KEY), studio/README.md and studio/tools/setup.php (the private config outside the web folder with the password hash, the Anthropic API key and the fine-grained GitHub token, Contents read/write, one repo, expiry up to a year; rclone with a read-only Google Drive login), studio/lib/github.php (saves as commits to main), the stale-save check and editors' saves waiting for review, and how we work in Claude Code sessions (a branch, a draft PR with screenshots, \"go live\" merges it). No host, user, folder, key or token value appears anywhere in the Note, on purpose.\n\nPictures: four from other Notes are in (the Studio's heart, the Studio, the cutaway, GlazyArray at her desk). Still to come from you: the four screenshots in field/drafts/hidden-layer-pictures.md.\nAdded more please take a look now.\n\n02.jpg shows your GitHub username and the titles of your recent pull requests. Fine to show, or crop to the list of titles only?\ncrop them please.\n\nclip-1.mp4 I can't see: does \"The pipe to the server.\" still describe it, and is it the fourth of the screenshots from field/drafts/hidden-layer-pictures.md, or is one still to come?\nA brass automaton's glass heart on a workbench at night, a glowing teal liquid pumping out of it through a long copper pipe that runs across the room, through the wall and out across a dark valley to a small lit stone tower on a hill, where the liquid fills a row of glass jars. Warm workshop lamps, rivets, steam, cinematic, shallow depth of field. the liquid pulsing along the pipe in slow beats, each jar filling in turn, the camera holding still. 6 to 8 seconds, seamless.\n\nThe episode script is still empty. Shall I write it next?\nyes please.",
+ "fieldNotes": "Drafted by Claude for Christian (Oct 19, 2026) at his request: a Hidden Layer Note about \"the process we used together... using rsync to connect GitHub directly to my server, and then allowing whatever permissions or tools were needed, the API keys, and exactly what keys were needed\" for Claude to edit the code, check it into GitHub, make it live, and rsync it to the server, written so it could be spun out for a client or a freelance gig. Facts from the repo itself: .github/workflows/deploy.yml (the build steps, the rsync flags and excludes, no --delete, the dry run, the four repository secrets DH_HOST, DH_USER, DH_PATH and DH_SSH_KEY), studio/README.md and studio/tools/setup.php (the private config outside the web folder with the password hash, the Anthropic API key and the fine-grained GitHub token, Contents read/write, one repo, expiry up to a year; rclone with a read-only Google Drive login), studio/lib/github.php (saves as commits to main), the stale-save check and editors' saves waiting for review, and how we work in Claude Code sessions (a branch, a draft PR with screenshots, \"go live\" merges it). No host, user, folder, key or token value appears anywhere in the Note, on purpose.\n\nPictures: four from other Notes are in (the Studio's heart, the Studio, the cutaway, GlazyArray at her desk). Still to come from you: the four screenshots in field/drafts/hidden-layer-pictures.md.\nAdded more please take a look now.\n\n02.jpg shows your GitHub username and the titles of your recent pull requests. Fine to show, or crop to the list of titles only?\ncrop them please.\n\nclip-1.mp4 I can't see: does \"The pipe to the server.\" still describe it, and is it the fourth of the screenshots from field/drafts/hidden-layer-pictures.md, or is one still to come?\nA brass automaton's glass heart on a workbench at night, a glowing teal liquid pumping out of it through a long copper pipe that runs across the room, through the wall and out across a dark valley to a small lit stone tower on a hill, where the liquid fills a row of glass jars. Warm workshop lamps, rivets, steam, cinematic, shallow depth of field. the liquid pulsing along the pipe in slow beats, each jar filling in turn, the camera holding still. 6 to 8 seconds, seamless.\n\nThe episode script is still empty. Shall I write it next?\nyes please.\n\nclip-1.mp4 is rendered with AI: is the Animated/Rendered with AI label on it, as on heart.mp4?\nyes\n\n02.jpg isn't in the photo list: is the cropped version (pull request titles only) still coming, or is it left out?\nleft out",
  "post": {
   "title": "Go Live Please",
   "body": "When I want something changed on this site, I say it, often from my phone. A few minutes later it's live. No FTP, no zip files, no logging in to a control panel. This is how that works, and why I think it could work for someone else's site too.\n\nThere are three pieces: GitHub, where the site's code lives; my web host, an ordinary shared hosting account, where the public site lives; and two ways of changing things, Claude Code and my own Studio. Everything meets at one place: the main branch on GitHub. Whatever lands there goes live on its own.\n\n## Path one: I talk, Claude codes\n\nClaude Code works on a copy of the site in the cloud, connected to my GitHub through GitHub's own app, and only to the repositories I've allowed. I describe what I want. It reads the code, makes the change, tests it, and puts it on a branch as a draft pull request, with screenshots when there's something to see. Nothing is live yet. When I'm happy, I say three words: go live, please. It merges the pull request into main.\n\n## Path two: I publish from the Studio\n\nThe Studio is my private back room for Field Notes. When I press Save, the Studio writes the Note straight into GitHub as a commit. It uses a fine-grained token that can only touch this one repository, and only its contents. The token lives on the server in a private settings file outside the web folder, next to the Anthropic key that lets the Studio ask Claude for a draft. Neither is ever in the code.\n\n## The last mile: rsync\n\nEvery push to main wakes up a GitHub Actions workflow. It builds what needs building: the share cards, the Field Notes pages, the magazines and their covers, and the Studio's parts. Then it connects to my server over SSH with a deploy key and sends the site across with rsync.\n\nrsync is old and plain, and that's the point. It only sends files that changed, comparing them by checksum. It sets sensible permissions on the way. And it never deletes anything on the server, so files that only live there are safe. My private Field Notes folder is never uploaded. There's a dry-run switch that lists what would change without touching anything. The whole thing takes a few minutes.\n\n> That process in and of itself is going to be quite potentially powerful.\n\n## The keys\n\nIt took a handful of keys, each with one job and nothing more:\n\nA deploy key: a pair, the private half stored as a GitHub secret, the public half on the server. Three more secrets say where to go: the host, the user and the folder. A fine-grained GitHub token for the Studio, limited to one repository's contents, with an expiry date. An Anthropic API key for drafting. A read-only Google Drive login, so the Studio can bring in photos and videos from my phone. And the GitHub app that lets Claude Code open pull requests. None of them is written down anywhere public, including here.\n\n## Why it matters\n\nIt's powerful, and that's why the guard rails matter more than the speed. Only main goes live. Only I say go live. The Studio refuses a save if the Note changed since I opened it. Editors' saves wait for me. The server never loses a file.\n\nSet up once, it means a site owner can change their site by describing the change. That's how I run mine now. With the same pieces, a client could run theirs the same way: talk, look at the preview, say go live. Nothing in it needs a special server; plain shared hosting with SSH is enough.\n\nIf you'd like a site that works like this, get in touch."
  },
  "questions": [
-  "02.jpg: has it been cropped to the list of pull request titles only, with the username gone, before it goes up?",
-  "02.jpg caption says merged \"within a few minutes\"; the screenshot shows #400 to #402 about twelve minutes apart. Keep, or say \"within a quarter of an hour\"?",
-  "clip-1.mp4 is rendered with AI: is the Animated/Rendered with AI label on it, as on heart.mp4?",
-  "Is the post's quote (\"quite potentially powerful\") fine to read aloud in the episode as your words?"
+  "With 02.jpg left out, are all the pictures from field/drafts/hidden-layer-pictures.md now in, or is another screenshot still to come?"
  ],
  "consent": "No people pictured. No secrets: names of keys only, never their values.",
  "feature": {
