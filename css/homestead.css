@@ -6,7 +6,10 @@
 /* The window: Christian's frame (1376 x 768; on a phone 768 x 1376) with the village showing through its opening, the
    village cropped a little to the opening's shape. The section around it is the page's own colour, so the lake's rolling
    edge meets it as it meets the words. */
-.homestead{position:relative;padding:0 0 clamp(20px,3vw,44px);margin-top:clamp(-40px,-2.5vw,-8px);background:#fff;transition:background-color 2.4s ease}
+.homestead{position:relative;padding:0 0 clamp(20px,3vw,44px);background:#fff;transition:background-color 2.4s ease}
+/* tucked a little under the lake's rolling edge; with the lake hidden it starts below the "Show the lake" bar instead */
+html:not(.lake-off) .homestead{margin-top:clamp(-40px,-2.5vw,-8px)}
+html.lake-off .homestead{padding-top:clamp(12px,2vw,28px)}
 html.night-page .homestead{background:var(--night-bg,#0e1823)}
 .hs-window{position:relative;width:min(calc(100% - 24px),1500px);margin:0 auto;aspect-ratio:1376/768;container-type:inline-size}
 .hs-view{position:absolute;left:calc(168 / 1376 * 100%);top:calc(115 / 768 * 100%);width:calc(1040 / 1376 * 100%);height:calc(548 / 768 * 100%);overflow:hidden;border-radius:2.5cqw}
