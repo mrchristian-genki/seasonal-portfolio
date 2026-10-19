@@ -221,7 +221,42 @@
     "text": "GitHub: where the site's code lives, with every change ever made.\n\nmain: the branch that is the live site. Whatever lands there goes up.\n\nPull request: a proposed change, with a preview, waiting for a yes.\n\nGitHub Actions: GitHub's robots, which run the build and the upload on every change.\n\nrsync: a decades-old tool that copies only what changed from one computer to another.\n\nSSH and a deploy key: a locked door to the server and the one key that opens it for uploads.\n\nFine-grained token: a GitHub key cut to fit one job on one repository, with an expiry date."
    }
   ],
-  "questions": []
+  "questions": [],
+  "lookbook": {
+   "title": "The Keys",
+   "dek": "",
+   "before": "Why it matters",
+   "items": [
+    {
+     "name": "",
+     "when": "The robot janitor walks steadily forward with all keys hooked to it's belt.",
+     "alt": "The robot janitor walks steadily forward with all keys hooked to it's belt.",
+     "src": "data/photos/2026-10-19-from-a-sentence-to-the-server/clip-2.mp4",
+     "w": 960,
+     "h": 540,
+     "video": true,
+     "poster": "data/photos/2026-10-19-from-a-sentence-to-the-server/clip-2.jpg"
+    },
+    {
+     "name": "",
+     "when": "An extreme close-up of one high-tech key hanging from the janitor's brass ring.",
+     "alt": "An extreme close-up of one high-tech key hanging from the janitor's brass ring.",
+     "src": "data/photos/2026-10-19-from-a-sentence-to-the-server/05.jpg",
+     "w": 1376,
+     "h": 768
+    },
+    {
+     "name": "",
+     "when": "A brass robot hand unclipping a second, smaller key ring from the janitor's belt and holding it out toward the camera.",
+     "alt": "A brass robot hand unclipping a second, smaller key ring from the janitor's belt and holding it out toward the camera.",
+     "src": "data/photos/2026-10-19-from-a-sentence-to-the-server/04.jpg",
+     "w": 1376,
+     "h": 768
+    }
+   ],
+   "layout": "hero2",
+   "label": "ai"
+  }
  },
  "episode": {
   "title": "Go Live Please",
