@@ -194,8 +194,9 @@ layout, so the hill reads as a single painting: grass, the path, the stream from
 fences and stones, with the plots where the places stand.
 
 **The guides** (field/drafts/homestead-guides): the layout with every place in its exact spot, over the code's plain
-ground. `desktop-day.jpg` and `desktop-night.jpg` (2520 × 2365) for wide screens; `phone-day-1.jpg` to `-4.jpg`
-(1080 × 1863 each, top to bottom) for phones.
+ground. `desktop-day.jpg` (2520 × 2365) was the first; the wide painting is done (`ground-*.jpg`, every season by day
+and night). For phones: `phone-section-1.jpg` to `-4.jpg`, top to bottom, each exactly 1080 × 1920 (9:16), each
+break falling in open grass between rows.
 
 1. **Paint the whole scene from a guide** (image to image, keeping the composition):
 
@@ -216,7 +217,27 @@ ground. `desktop-day.jpg` and `desktop-night.jpg` (2520 × 2365) for wide screen
 
 3. **Its versions:** night, day snow and night snow as edits of the step 2 ground, the same way as the places.
 
-The phone sections are painted one by one; keep the path and stream meeting at the top and bottom edges, so they join.
+### The phone sections (Oct 19)
+
+Four tall pictures, top to bottom, the same steps as the wide one (paint the scene from the guide, then take the
+buildings away, then the versions). Paste for each section:
+
+> [The look, but "one tall section of a small homestead on a gentle hillside" for "a single building".] Repaint this
+> picture as one finished storybook illustration, keeping every building exactly where and how it is: a gentle grassy
+> hillside in the Sierra Nevada, a winding sandy footpath, soft hummocks of grass, wildflowers, small stones, a few
+> shrubs and low fences between the places, soft contact shadows, light from the upper left, in the same painted style
+> as the wide homestead painting. The footpath enters at the middle of the top edge and leaves at the middle of the
+> bottom edge, so this section joins the ones above and below; keep the top and bottom edges plain grass and path.
+> Keep the edges and the buildings' positions exactly. [Guard line.]
+
+- **Section 1 (the top)** also has the stream: *"A stream enters at the top left edge, tumbles down a small waterfall
+  and fills a pond under the wooden dock."* Its top edge meets the lake's bank: grass only, no lake, no horizon.
+- **Section 4 (the bottom)** ends the hill: *"The path runs off the bottom edge."*
+- **Tip:** paint them in order, giving each the one above it as a second reference, so the grass, light and path match
+  across the joins.
+
+Then, as before: the buildings taken away (step 2), and the versions (night, each season by day and night, snow).
+
 
 ## Ring 2 and 3 (later)
 
