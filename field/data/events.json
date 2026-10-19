@@ -15,6 +15,20 @@
    "cover": null
   },
   {
+   "id": "2026-10-19-from-a-sentence-to-the-server",
+   "title": "From a sentence to the server",
+   "date": "2026-10-19",
+   "kind": "make",
+   "place": "The workshop",
+   "status": "draft",
+   "summary": "How a change Christian asks for becomes a live page: Claude Code or the Studio commits to GitHub, a GitHub Actions workflow builds the site and rsync sends it to his server over SSH, with a handful of single-purpose keys and the guard rails that keep it safe. A setup he could hand to a client.",
+   "sample": false,
+   "stats": null,
+   "thumb": [],
+   "photos": 0,
+   "cover": null
+  },
+  {
    "id": "2026-10-18-a-dog-on-a-boulder-and-three-stones-on-a-post",
    "title": "A dog on a boulder and three stones on a post",
    "date": "2026-10-18",
