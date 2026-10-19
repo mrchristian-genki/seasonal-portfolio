@@ -88,17 +88,14 @@
     '<span class="hs-bubbles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>' +
     '<span class="hs-butterfly" aria-hidden="true"><b></b></span>' +
     '<button type="button" class="hs-firefly" aria-label="A firefly"></button>');
-  root.appendChild(stage);
-
-  // On a wide screen the painting rises under the lake's bank by the height of the lake's rolling edge, and its top is cut
-  // in the same wave (css/homestead.css): --hs-lift is that height, --hs-wave the share of the painting it covers.
-  var hero = document.getElementById('hero');
-  function lift() {
-    if (!hero) return;
-    var h = parseFloat(getComputedStyle(hero, '::after').height) || 0, sh = stage.offsetHeight || 1;
-    H.style.setProperty('--hs-lift', h + 'px'); H.style.setProperty('--hs-wave', (h / sh * 100).toFixed(2) + '%');
-  }
-  lift(); addEventListener('resize', lift); addEventListener('load', lift);
+  // The village sits in a window (Christian's frames, Oct 19: assets/homestead/frame-wide and frame-phone): the frame on
+  // top, the village in its opening, cropped a little to fit; the name on the frame's brass plaque.
+  var win = document.createElement('div'); win.className = 'hs-window';
+  win.innerHTML = '<div class="hs-view"></div><picture class="hs-frame" aria-hidden="true">' +
+    '<source media="(max-width: 719px)" srcset="' + A + 'frame-phone.webp' + VER + '"><img src="' + A + 'frame-wide.webp' + VER + '" alt=""></picture>' +
+    '<span class="hs-plaque" aria-hidden="true">The Lake Home</span>';
+  win.firstChild.appendChild(stage);
+  root.appendChild(win);
 
   function vars(p) {
     return '--x:' + p.x + ';--y:' + p.y + ';--w:' + p.w + ';--mx:' + p.mx + ';--my:' + p.my + ';--mw:' + p.mw + ';z-index:' + Math.round(p.z || p.y) + ';--mz:' + Math.round(p.mz || p.z || p.y) + ';';

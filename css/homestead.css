@@ -2,29 +2,30 @@
    Christian's painted hill, a wide painting (2000 x 1116) and a tall one for phones (1116 x 2000), and each place sits
    where he painted it, by its top left corner and width (--x/--y/--w; on a phone --mx/--my/--mw). Everything follows the
    season and the night, and every change eases (CLAUDE.md "Motion"). */
-html{--hs-top:#6f8a4e}
 
-/* Where the lake meets the hill: the lake's rolling bottom edge steps aside (kept, invisible, for its size:
-   js/homestead.js reads it into --hs-lift) and the painting rises under the lake's bank by that much, its top cut in the
-   same wave, so the bank meets the painted grass. With the lake hidden, the painting simply starts the page. */
-html:has(#homestead):not(.lake-off) .hero::after{opacity:0}
-html:has(#homestead):not(.lake-off) .homestead{margin-top:calc(var(--hs-lift,0px) * -1);z-index:7;background:transparent}
-@media (min-width:641px){html:has(#homestead) .lake-seasons{bottom:calc(var(--hs-lift,0px) + 14px)}}
-html:has(#homestead):not(.lake-off) .hs-paint{-webkit-mask-image:var(--hs-wave-img),linear-gradient(#000,#000);mask-image:var(--hs-wave-img),linear-gradient(#000,#000);
-  -webkit-mask-size:50% var(--hs-wave,0%),100% calc(100% - var(--hs-wave,0%) + 1px);mask-size:50% var(--hs-wave,0%),100% calc(100% - var(--hs-wave,0%) + 1px);
-  -webkit-mask-position:0 0,0 100%;mask-position:0 0,0 100%;-webkit-mask-repeat:repeat-x,no-repeat;mask-repeat:repeat-x,no-repeat}
-html{--hs-wave-img:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,60 C200,100 400,0 600,60 C800,120 1000,20 1200,60 L1200,120 L0,120 Z' fill='%23fff'/%3E%3C/svg%3E")}
-
-.homestead{position:relative;background:#6f8a4e;overflow:hidden}
+/* The window: Christian's frame (1376 x 768; on a phone 768 x 1376) with the village showing through its opening, the
+   village cropped a little to the opening's shape. The section around it is the page's own colour, so the lake's rolling
+   edge meets it as it meets the words. */
+.homestead{position:relative;padding:0 0 clamp(20px,3vw,44px);margin-top:clamp(-40px,-2.5vw,-8px);background:#fff;transition:background-color 2.4s ease}
+html.night-page .homestead{background:var(--night-bg,#0e1823)}
+.hs-window{position:relative;width:min(calc(100% - 24px),1500px);margin:0 auto;aspect-ratio:1376/768;container-type:inline-size}
+.hs-view{position:absolute;left:calc(168 / 1376 * 100%);top:calc(115 / 768 * 100%);width:calc(1040 / 1376 * 100%);height:calc(548 / 768 * 100%);overflow:hidden;border-radius:2.5cqw}
+.hs-frame{position:absolute;inset:0;pointer-events:none;z-index:2}
+.hs-frame img{width:100%;height:100%;display:block;transition:filter 2.4s ease-in-out}
+html.night-page .hs-frame img{filter:brightness(.72) saturate(.9)}
+/* the name, engraved on the brass plaque under the control panel */
+.hs-plaque{position:absolute;left:50%;top:calc(738 / 768 * 100%);transform:translate(-50%,-50%);z-index:3;pointer-events:none;white-space:nowrap;
+  font:700 1.25cqw/1 Georgia,"Times New Roman",serif;letter-spacing:.14em;text-transform:uppercase;color:#4a3214;
+  text-shadow:0 1px 0 rgba(255,236,190,.55),0 -1px 0 rgba(40,24,6,.35);transition:opacity 2.4s ease-in-out}
+html.night-page .hs-plaque{opacity:.75}
 .homestead .hs-title{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
-.hs-stage{position:relative;width:min(100%,2000px);margin:0 auto;aspect-ratio:2000/1116}
+.hs-stage{position:absolute;left:50%;top:50%;width:100%;aspect-ratio:2000/1116;transform:translate(-50%,-50%)}
 /* the painted ground: four versions stacked, one showing, like a place's art */
 .hs-paint{position:absolute;inset:0;display:grid}
 .hs-paint img{grid-area:1 / 1;width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity 2s ease-in-out}
 .hs-paint img.on{opacity:1}
 .hs-paint img.now{transition:none}
 
-html.night-page .homestead{background:#2b3f4c}
 
 /* a place: its art (four versions stacked, one showing), a soft shadow under it, and its name plate */
 .hs-place{position:absolute;display:block;text-decoration:none;color:inherit;-webkit-tap-highlight-color:transparent;
@@ -87,7 +88,10 @@ html.night-page .hs-butterfly b{background-image:url(../assets/homestead/butterf
 
 /* a phone: Christian's tall painting (1116 x 2000), each place where he painted it */
 @media (max-width:719px){
-  .hs-stage{aspect-ratio:1116/2000}
+  .hs-window{width:calc(100% - 12px);aspect-ratio:768/1376}
+  .hs-view{left:calc(110 / 768 * 100%);top:calc(168 / 1376 * 100%);width:calc(548 / 768 * 100%);height:calc(1022 / 1376 * 100%);border-radius:3cqw}
+  .hs-plaque{left:calc(498 / 768 * 100%);top:calc(1242 / 1376 * 100%);font-size:2.5cqw;color:#3d3a33;text-shadow:0 1px 0 rgba(255,255,255,.45)}
+  .hs-stage{width:auto;height:100%;aspect-ratio:1116/2000}
   .hs-place{left:calc(var(--mx) / 1116 * 100%);top:calc(var(--my) / 2000 * 100%);width:calc(var(--mw) / 1116 * 100%);z-index:var(--mz)!important}
   .hs-rotor{left:calc((var(--mx) - var(--mw) / 2) / 1116 * 100%);top:calc((var(--my) - var(--mw) / 2) / 2000 * 100%);width:calc(var(--mw) / 1116 * 100%)}
   /* the village is one screen tall here, so names stay hidden (they would crowd it) and show while a place is touched:
