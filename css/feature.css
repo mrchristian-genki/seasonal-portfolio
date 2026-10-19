@@ -184,18 +184,16 @@ html.night-page .feature .mag-specs,html.night-page .feature .mag-box{background
 html.night-page .feature .mv-bars i{background:linear-gradient(90deg,var(--mg-red) calc(var(--v) * 100%),rgba(255,255,255,.12) 0)}
 
 /* POPULAR PARADOX (theme "paradox"): a made-up 1970s–80s popular-science monthly. Cream newsprint, mustard, burnt
-   orange and avocado, a chunky slab masthead over rainbow stripes, a round "tested" seal, slab body type. */
+   orange and avocado, a chunky slab masthead over rainbow stripes, a mustard issue band, slab body type. */
 .feature.mag-paradox{--mg-ink:#2a1e14;--mg-ink2:#5a4632;--mg-ink3:#8b7457;--mg-red:#d4521c;--mg-gold:#ffd166;--mg-rule:#2a1e14;--pp-mustard:#e3a12b;--pp-avocado:#6e7b2b;--pp-paper:#f6ecd2;
   --mg-serif:"Alfa Slab One","Rockwell","Roboto Slab",Georgia,serif;--mg-text:"Roboto Slab","Rockwell",Georgia,serif;--mg-sans:"Roboto Condensed","Arial Narrow","Helvetica Neue",Arial,sans-serif}
 .feature.mag-paradox .mag-cover{background:#1b120b;border-radius:6px}
 .feature.mag-paradox .mag-cover::after{background:linear-gradient(90deg,rgba(20,12,6,.72) 0,rgba(20,12,6,.15) 46%,rgba(20,12,6,0) 62%),linear-gradient(180deg,rgba(20,12,6,.55) 0,rgba(20,12,6,0) 36%)}
 .feature.mag-paradox .mag-mast{font:400 clamp(30px,8.4vw,80px)/.88 var(--mg-serif);letter-spacing:.01em;color:var(--pp-paper);text-shadow:3px 3px 0 var(--mg-red),6px 6px 0 rgba(0,0,0,.35)}
-.feature.mag-paradox .mag-top{right:max(19%,84px)}   /* the masthead wraps before it reaches the round seal */
 .feature.mag-paradox .mag-top::after{content:"";display:block;width:min(46%,420px);height:12px;margin:8px 0 4px;
   background:linear-gradient(180deg,var(--pp-mustard) 0 33%,var(--mg-red) 33% 66%,var(--pp-avocado) 66%)}
 .feature.mag-paradox .mag-tag{font:700 clamp(10px,1.4vw,14px)/1.3 var(--mg-sans);letter-spacing:.14em;text-transform:uppercase;color:var(--mg-gold);font-style:normal;padding:0}
-.feature.mag-paradox .mag-issue{left:auto;right:4%;top:4%;bottom:auto;width:clamp(64px,11vw,110px);height:clamp(64px,11vw,110px);padding:8px;border-radius:50%;display:grid;place-items:center;text-align:center;
-  background:var(--pp-mustard);color:var(--mg-ink);rotate:10deg;box-shadow:0 4px 14px rgba(0,0,0,.4);font:800 clamp(9px,1.3vw,13px)/1.1 var(--mg-sans)}
+.feature.mag-paradox .mag-issue{left:auto;right:4%;background:var(--pp-mustard);color:var(--mg-ink)}   /* a band like the others' (the round seal crowded the masthead; Christian, Oct 19) */
 .feature.mag-paradox .mag-lines{left:4%;right:auto;top:auto;bottom:7%;width:40%;text-align:left}
 .feature.mag-paradox .mag-lines li{font:700 clamp(11px,1.6vw,17px)/1.25 var(--mg-sans);letter-spacing:.02em;text-transform:uppercase}
 .feature.mag-paradox .mag-lines li:first-child{font:400 clamp(14px,2.3vw,25px)/1.1 var(--mg-serif);text-transform:none;color:var(--mg-gold)}
