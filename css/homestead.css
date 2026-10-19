@@ -195,3 +195,7 @@ html.night-page .hs-legend button:hover,html.night-page .hs-legend button:focus-
   .hs-legend{flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;scrollbar-width:none;padding:2px 12px 4px}.hs-legend::-webkit-scrollbar{display:none}
   .hs-legend button{flex:none}.hs-bubble{max-width:78%}}
 @media (prefers-reduced-motion:reduce){.hs-bubble,.hs-spot,.hs-legend button{transition:none}.hs-show-btn{animation:none}}
+
+/* a place being pointed at (or lit from the legend, or picked) comes in front of its neighbours, so its name plate is
+   never hidden behind the building below it */
+.hs-place:hover,.hs-place:focus-visible,.hs-place.lit,.hs-place.picked{z-index:2600!important}

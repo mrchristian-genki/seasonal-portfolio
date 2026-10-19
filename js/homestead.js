@@ -114,7 +114,7 @@
   // top, the village in its opening, cropped a little to fit; the name on the frame's brass plaque.
   var win = document.createElement('div'); win.className = 'hs-window';
   win.innerHTML = '<div class="hs-view"></div><picture class="hs-frame" aria-hidden="true">' +
-    '<source media="(max-width: 719px)" srcset="' + A + 'frame-phone.webp' + VER + '"><img src="' + A + 'frame-wide.webp' + VER + '" alt=""></picture>' +
+    '<source media="(max-width: 719px)" srcset="' + A + 'frame-phone.webp?v=2"><img src="' + A + 'frame-wide.webp?v=2" alt=""></picture>' +
     '<span class="hs-plaque" aria-hidden="true">Lake Home</span>';
   win.firstChild.appendChild(stage);
   root.appendChild(win);
