@@ -1,6 +1,6 @@
 /* STUDIO SWITCH: the LIGHTS toggle on the STUDIO panel. Turning it flips the whole
-   Studio (header table, footer, lamps, the dial beside it) and remembers the choice on this device; with
-   no choice the Studio follows the clock (night from 7 pm to 6 am). */
+   Studio (header table, footer, lamps, the dial beside it) and remembers the choice on this device; until
+   it's thrown, or once HOME TIME hands it back (clock.js), the Studio follows the clock (night from 7 pm to 6 am). */
 (function () {
   'use strict';
   var sw = document.getElementById('dayNight');
@@ -61,8 +61,10 @@
   }
   var first = parse();
   view = first.view;
-  if (first.mode && (first.mode === 'night') !== isNight()) set(first.mode === 'night');
-  if (first.colour && river && first.colour !== river.liquid()) river.colour(first.colour);
+  // while the clock is in charge (clock.js) it wins over the look an address was left on; set by hand, the address does
+  var byClock = window.StudioClock && StudioClock.following();
+  if (!byClock && first.mode && (first.mode === 'night') !== isNight()) set(first.mode === 'night');
+  if (!byClock && first.colour && river && first.colour !== river.liquid()) river.colour(first.colour);
   sw.addEventListener('click', function () { write(false); });
   var fl = document.getElementById('flow');
   if (fl) fl.addEventListener('click', function () { write(false); });

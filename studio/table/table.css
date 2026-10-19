@@ -361,6 +361,12 @@
 .tg-bar span{display:block;height:100%;width:calc(var(--p) * 100%);background:linear-gradient(90deg,rgba(var(--cf),.9),rgba(var(--ct),.9));opacity:0;transition:opacity .4s ease}
 .tgl.turning .tg-bar span{opacity:1}
 .tg-lbl{white-space:nowrap;text-shadow:0 1px 0 rgba(255,255,255,.35)}
+/* HOME TIME (clock.js): a third plate with one warm lamp, lit while the Studio follows the clock (blue mornings, green days,
+   orange nights) and easing out once a switch is thrown by hand; pressing it hands the Studio back to the clock */
+.tgl.tg-home .lamp{--c:255,214,140;--lit:0}
+.tgl.tg-home[aria-pressed="true"] .lamp{--lit:1}
+.tgl.tg-home .lamp::after,.tgl.tg-home .lamp::before{transition:opacity .9s ease-in-out}
+.tgl.tg-home .tg-bar span{display:none}
 .st-hero:has(.table.night) .tgl{background-color:#888}
 .st-hero:has(.table.night) .tgl .tg-lbl{opacity:.85}
 @media (max-width:640px){.st-ctl{gap:6px}.tgl{padding:5px 8px 4px;font-size:6.5px;letter-spacing:.05em}.tg-row{gap:7px}}
