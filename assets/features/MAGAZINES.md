@@ -224,7 +224,7 @@ Reference for building the "Feature" magazine wrappers on christiangehrke.com Fi
 
 | Masthead | Tagline | Example issue | Format | Signature sections | Palette / type |
 |---|---|---|---|---|---|
-| **COL & COBBLE** | "Road riding, slowly told" | "The Climbing Issue" | Ride story plus climb profile | Hero action photo · climb profile with gradient bands · "The Numbers" · café stop sidebar · pull quote | Cream #F3EEE3, oxblood #6D1F2B, road grey #50555B · *Playfair Display*, *Libre Baskerville*, *Josefin Sans* labels |
+| **ROLLING TERRAIN** (was COL & COBBLE; Christian, Oct 19) | "I'm not here to break records. I just don't want to break anything." | "The Cruising Issue" | Ride story plus climb profile | Hero action photo · climb profile with gradient bands · "The Numbers" · café stop sidebar · pull quote | Cream #F3EEE3, oxblood #6D1F2B, road grey #50555B · *Playfair Display*, *Libre Baskerville*, *Josefin Sans* labels |
 | **BERM BURNER** | "Dirt in the teeth since day one" | "The Loam Issue" | Bike Check plus field test | Annotated bike photo with callouts · geometry table · rating sliders · "Rowdy Rating" score · Good/Bad | Mud #3D2B1F, dust #D9C3A0, toxic lime #A4E000 · *Big Shoulders Display*, *Rubik*, *Space Mono* |
 | **DROPOUT** | "Gravel, bikepacking and getting lost on purpose" | "Overnighter No. 2" | Bikepacking route guide | Stats bar · route map · elevation profile · "Resupply / Water" table · packing list | Chalk #EDE6DA, rust #B5562B, sage #8A9A5B · *Fjalla One*, *Lora*, *Courier Prime* |
 
@@ -694,12 +694,12 @@ Build these once as themeable components. Each takes CSS custom properties: `--m
 ## Recommended Build Order (first 5)
 
 1. **HEAT SINK (Tech review).** Exercises the most reusable blocks: spec box, Good/Bad, scorecard, verdict, gallery. It is also the closest sibling to POPULAR PARADOX, so the two share and harden the review kit.
-2. **CONTOUR LINES (Hiking).** Adds stats bar, map and elevation profile, which CONTOUR LINES, DROPOUT/COL & COBBLE, UNTETHERED and LAYOVER then reuse.
+2. **CONTOUR LINES (Hiking).** Adds stats bar, map and elevation profile, which CONTOUR LINES, DROPOUT/ROLLING TERRAIN, UNTETHERED and LAYOVER then reuse.
 3. **SOURCE ORDER or 200 OK (Web dev).** Adds code blocks, step list, timeline and before/after. Christian's own builds (the Tumble, the parts catalog) are natural first case studies.
 4. **STUDIO FLOOR (Showcase profile).** Adds Q&A, annotated image and the low-density gallery, and the RIVETING TONE profile lessons carry over directly.
 5. **HIDDEN LAYER or PROMPT & CIRCUMSTANCE (AI).** Adds prompt/response blocks and glossary sidebars. After this, nearly every remaining template is a theme plus a section order, with no new components.
 
-After the first five, the cheapest wins are COL & COBBLE / BERM BURNER (reusing the hiking blocks), LINE OF SIGHT (spec plus before/after plus a HUD overlay) and BLINKING CURSOR (code block plus scorecard in retro dress).
+After the first five, the cheapest wins are ROLLING TERRAIN / BERM BURNER (reusing the hiking blocks), LINE OF SIGHT (spec plus before/after plus a HUD overlay) and BLINKING CURSOR (code block plus scorecard in retro dress).
 
 ---
 

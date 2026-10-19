@@ -31,7 +31,7 @@
       "format": "A route card and trip report: the numbers, the trail notes, know before you go",
       "wants": ["stats", "timeline", "box"], "pictures": 6, "layouts": ["hero3", "grid3"],
       "titles": { "stats": "The route", "timeline": "Trail notes", "box": "Know before you go" } },
-    { "id": "colcobble", "masthead": "COL & COBBLE", "category": "Biking", "tagline": "Riding, slowly told", "issue": "The Climbing Issue", "label": "Ride Report", "byline": "By GlazyArray, Cycling Desk",
+    { "id": "colcobble", "masthead": "ROLLING TERRAIN", "category": "Biking", "tagline": "I'm not here to break records. I just don't want to break anything.", "issue": "The Cruising Issue", "label": "Ride Report", "byline": "By GlazyArray, Cycling Desk",
       "swatches": ["#6d1f2b", "#50555b", "#f3eee3"], "fonts": "family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Libre+Baskerville:ital@0;1&family=Josefin+Sans:wght@600;700",
       "format": "A ride story: the numbers, the good and the bad, a stop along the way",
       "wants": ["stats", "goodbad", "box"], "pictures": 6, "layouts": ["hero2", "strip"],
