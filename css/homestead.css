@@ -11,8 +11,10 @@
 html:not(.lake-off) .homestead{margin-top:clamp(-40px,-2.5vw,-8px)}
 html.lake-off .homestead{padding-top:clamp(12px,2vw,28px)}
 html.night-page .homestead{background:var(--night-bg,#0e1823)}
-.hs-window{position:relative;width:min(calc(100% - 24px),1500px);margin:0 auto;aspect-ratio:1376/768;container-type:inline-size}
-.hs-view{position:absolute;left:calc(168 / 1376 * 100%);top:calc(115 / 768 * 100%);width:calc(1040 / 1376 * 100%);height:calc(548 / 768 * 100%);overflow:hidden;border-radius:2.5cqw}
+.hs-window{position:relative;width:min(calc(100% - 24px),1500px);margin:0 auto;aspect-ratio:1376/818;container-type:inline-size}
+/* The frame is stretched a touch taller than drawn (818 for 768; on a phone 800 wide for 768) so its opening is exactly the
+   painting's shape and none of the village is cut off; all positions are shares of the frame, so they stretch with it. */
+.hs-view{position:absolute;z-index:1;left:calc(169 / 1376 * 100%);top:calc(116 / 768 * 100%);width:calc(1038 / 1376 * 100%);height:calc(546 / 768 * 100%);overflow:hidden;border-radius:2.5cqw;isolation:isolate}
 .hs-frame{position:absolute;inset:0;pointer-events:none;z-index:2}
 .hs-frame img{width:100%;height:100%;display:block;transition:filter 2.4s ease-in-out}
 html.night-page .hs-frame img{filter:brightness(.72) saturate(.9)}
@@ -91,8 +93,8 @@ html.night-page .hs-butterfly b{background-image:url(../assets/homestead/butterf
 
 /* a phone: Christian's tall painting (1116 x 2000), each place where he painted it */
 @media (max-width:719px){
-  .hs-window{width:calc(100% - 12px);aspect-ratio:768/1376}
-  .hs-view{left:calc(110 / 768 * 100%);top:calc(168 / 1376 * 100%);width:calc(548 / 768 * 100%);height:calc(1022 / 1376 * 100%);border-radius:3cqw}
+  .hs-window{width:calc(100% - 12px);aspect-ratio:800/1376}
+  .hs-view{left:calc(111 / 768 * 100%);top:calc(169 / 1376 * 100%);width:calc(547 / 768 * 100%);height:calc(1020 / 1376 * 100%);border-radius:3cqw}
   .hs-plaque{left:calc(498 / 768 * 100%);top:calc(1242 / 1376 * 100%);font-size:2.5cqw;color:#3d3a33;text-shadow:0 1px 0 rgba(255,255,255,.45)}
   .hs-stage{width:auto;height:100%;aspect-ratio:1116/2000}
   .hs-place{left:calc(var(--mx) / 1116 * 100%);top:calc(var(--my) / 2000 * 100%);width:calc(var(--mw) / 1116 * 100%);z-index:var(--mz)!important}
@@ -112,3 +114,21 @@ html.night-page .hs-butterfly b{background-image:url(../assets/homestead/butterf
   .hs-art img,.hs-rotor-art img,.hs-art{transition:none}
 }
 @media print{.homestead{display:none}}
+
+/* THE LAKE HOME welcome under the village (index.html .view[data-view="home"], js/home-latest.js): the three latest Notes */
+.home-latest{margin:26px auto 6px;max-width:1040px;text-align:left;opacity:0;transform:translateY(10px);transition:opacity .9s ease-in-out,transform .9s ease-in-out}
+.home-latest.in{opacity:1;transform:none}
+.home-latest h3{font:800 20px var(--font-display,system-ui);margin:0 0 12px;text-align:center}
+.hl-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.hl-card{display:flex;flex-direction:column;gap:4px;padding:0 0 14px;border-radius:14px;overflow:hidden;background:#fff;border:1px solid #dde7e8;
+  text-decoration:none;color:inherit;transition:transform .6s ease-in-out,box-shadow .6s ease-in-out}
+.hl-card:hover,.hl-card:focus-visible{transform:translateY(-3px);box-shadow:0 10px 24px -14px rgba(15,77,71,.5)}
+.hl-img{display:block;aspect-ratio:1200/630;overflow:hidden;background:#e8eeef}
+.hl-img img{width:100%;height:100%;object-fit:cover;display:block}
+.hl-kick{padding:8px 14px 0;font-size:12.5px;color:#71878f}
+.hl-card b{padding:0 14px;font:800 17px/1.3 var(--font-display,system-ui);color:#0f4d47}
+.hl-sum{padding:0 14px;font-size:14.5px;line-height:1.45;color:#3f5a64;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.home-more{margin-top:22px}
+html.night-page .hl-card{background:var(--night-card,#16232f);border-color:var(--night-line,#27384a)}
+html.night-page .hl-card b{color:var(--night-text,#dde8e6)}html.night-page .hl-sum{color:var(--night-soft,#a6b8bf)}
+@media (prefers-reduced-motion:reduce){.home-latest,.hl-card{transition:none}.home-latest{opacity:1;transform:none}}

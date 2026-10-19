@@ -2258,13 +2258,13 @@ function _bootInner() {
   // asks, and the tabs only swap the page's words, with a short fade, no season change. Before that each tab was
   // a season (Books summer, Web fall, Workshop winter, Play spring); SEASON_VIEW keeps that pairing so an old
   // link with a season word and no section word still opens the section it used to.
-  const SEASON_VIEW = { 2:'studio', 3:'signal', 0:'workshop', 1:'lab' };
+  const SEASON_VIEW = { 2:'home', 3:'signal', 0:'workshop', 1:'lab' };   // Books (summer) is a page now: summer opens the welcome
   // The season by the calendar: Dec-Feb winter, Mar-May spring, Jun-Aug summer, Sep-Nov fall (as the logo's).
   const CAL_SEASON = [0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 0][new Date().getMonth()];
   const BOOT_SEASON = CAL_SEASON;
   // Section (view) <-> its word in the address. The Play tab's view is still called 'lab' inside.
-  const VIEW_WORD = { studio:'books', signal:'web', workshop:'workshop', lab:'lab' };
-  let VIEW = 'studio';           // the section showing
+  const VIEW_WORD = { home:'', signal:'web', workshop:'workshop', lab:'lab' };
+  let VIEW = 'home';             // the section showing: the Lake Home welcome unless a tab or a link asks
   let SEASON_CHOSEN = false;     // a season was picked (or asked for by the address), so links carry it
   // tod target per season (currently all 0.50, midday).
   const SEASON_TOD  = { 0:0.50, 1:0.50, 2:0.50, 3:0.50 };
@@ -2279,7 +2279,7 @@ function _bootInner() {
       v.classList.toggle('on', v.getAttribute('data-view') === view));
   }
   function markTabs(view) {
-    document.querySelectorAll('.tab').forEach(t => t.setAttribute('aria-selected', String(t.dataset.view === view)));
+    document.querySelectorAll('.tab[data-view]').forEach(t => t.setAttribute('aria-selected', String(t.dataset.view === view)));
   }
   // A tab: the words sink and fade (.hiding, scene.css), the new section's rise and fade in; the lake stays as it is.
   let _viewT = 0;
@@ -2843,7 +2843,7 @@ function _bootInner() {
   const LINK_SEASON = { spring: 1, summer: 2, fall: 3, autumn: 3, winter: 0 };
   // Sections: books web workshop lab (Play), and Play's own sections open the Play tab on that section:
   // ?daydreams, ?above, ?notes, ?newsstand.
-  const LINK_VIEW = { books: 'studio', web: 'signal', workshop: 'workshop', lab: 'lab',
+  const LINK_VIEW = { web: 'signal', workshop: 'workshop', lab: 'lab',
     notes: 'lab', dose: 'lab', above: 'lab', daydreams: 'lab', newsstand: 'lab' };
   // Weather levels: each word sets how hard it rains (or snows, in winter). Light, medium, full.
   // Rain: drizzle, shower, tempest. Snow: flurries, snow, blizzard. (Older words kept as aliases.)
@@ -2863,7 +2863,7 @@ function _bootInner() {
   });
   // An old link with a season and no section still opens the section that season used to be (?winter: Workshop).
   if (!linkView && linkSeason != null) linkView = SEASON_VIEW[linkSeason];
-  VIEW = linkView || 'studio';
+  VIEW = linkView || 'home';
   markTabs(VIEW);
   if (linkSeason == null) linkSeason = BOOT_SEASON; else SEASON_CHOSEN = true;
   if (linkSeason != null) {  // always runs: the scene is built on spring, so even ?spring must be set
@@ -2891,7 +2891,7 @@ function _bootInner() {
   }
   function writeLink() {
     // the section, then the season only when one was picked (otherwise each visitor gets their own), day or night
-    const words = [VIEW_WORD[VIEW]].concat(SEASON_CHOSEN ? [seasonNames[SEASON]] : [], NIGHT_MODE ? ['night'] : [])
+    const words = [VIEW_WORD[VIEW]].filter(Boolean).concat(SEASON_CHOSEN ? [seasonNames[SEASON]] : [], NIGHT_MODE ? ['night'] : [])
       .concat(linkWords.filter(w => LINK_KEEP.includes(w)))
       .concat(window.__lakeWord ? window.__lakeWord() : [])   // the lake shown or closed (lake.js), as it is now
       .concat(VIEW === 'workshop' && window.__wsWord ? window.__wsWord() : [])   // a Workshop project's window that's open (ws-cards.js)

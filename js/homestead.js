@@ -28,7 +28,7 @@
     { id: 'studio', name: 'The Studio', line: 'Members only: the back room', x: 828, y: 319, w: 220, z: 502, mx: 414, my: 622, mw: 232, mz: 815, go: { href: 'studio/' } },
     { id: 'house', name: 'The House', line: 'Websites since 1997', x: 1155, y: 351, w: 276, z: 544, mx: 616, my: 721, mw: 304, mz: 934, go: { view: 'signal' } },
     { id: 'doghouse', name: "Marley's house", line: 'Knock first', x: 1398, y: 483, w: 84, z: 561, mx: 879, my: 870, mw: 94, mz: 957, go: { tags: ['with-marley'] } },
-    { id: 'library', name: 'The Library', line: 'The coloring books', x: 1512, y: 295, w: 159, z: 549, mx: 924, my: 614, mw: 178, mz: 898, go: { view: 'studio' } },
+    { id: 'library', name: 'The Library', line: 'The coloring books', x: 1512, y: 295, w: 159, z: 549, mx: 924, my: 614, mw: 178, mz: 898, go: { href: 'coloring-books/' } },
     { id: 'newsstand', name: 'The Newsstand', line: 'The magazines', x: 262, y: 520, w: 156, z: 715, mx: 73, my: 741, mw: 178, mz: 964, go: { href: 'magazine/' } },
     { id: 'barn', name: 'The Screening Barn', line: 'Videos, photos, Daydreams', x: 522, y: 569, w: 300, z: 772, mx: 152, my: 1054, mw: 310, mz: 1264, go: { view: 'lab' } },
     { id: 'depot', name: 'The Parts Depot', line: 'The parts catalog', x: 1060, y: 594, w: 260, z: 771, mx: 595, my: 1150, mw: 280, mz: 1341, go: { href: 'catalog/' } },
