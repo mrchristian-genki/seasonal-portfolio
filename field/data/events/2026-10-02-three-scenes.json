@@ -51,7 +51,7 @@
  "fieldNotes": "Indoor episode (a Mini-Cast), Oct 2, 2026: the day the canyon logo, the deep-sea Parts Catalog header and the Workshop header were built. Facts from the commit logs of both repos and the conversation. Script in field/drafts/2026-10-02-minicast-three-scenes.md.",
  "post": {
   "title": "Three scenes and a sleeping dog",
-  "body": "It started with a missing link preview. My site didn't have a picture to show when someone shared it, so I went looking for one and found an old illustration of Marley and me at the edge of a canyon, her teeth in my hood, me hanging over the drop.\n\nI wanted it to move, so I rebuilt it in layers: generate the pieces with AI image tools, then cut, place and animate every one by hand in code. My first try had Marley lying down, and it looked like she was chewing on me. She needed to be standing. She's saving me.\n\nThat logo made the Parts Catalog look bare, so it got a deep sea: Marley asleep in a glowing jellyfish, me as a diver holding out a cube of parts, plankton, an anglerfish with a flickering lure and, now and then, a giant paper squid passing through the dark.\n\nThen the Workshop got a bench at night. The first version had me holding a soldering iron right over the sleeping dog. That had to go. Now I shape a hologram with my hands, a few of the site's paper animals stand on glowing discs, and Marley sleeps at the end of the bench with a little line of z's so nobody worries.\n\nWhat I learned: subtle means a few percent of movement over several seconds, the pose carries the story, and a sleeping dog needs to visibly breathe."
+  "body": "## The canyon\n\nIt started with a missing link preview. My site didn't have a picture to show when someone shared it, so I went looking for one and found an old illustration of Marley and me at the edge of a canyon, her teeth in my hood, me hanging over the drop.\n\nI wanted it to move, so I rebuilt it in layers: generate the pieces with AI image tools, then cut, place and animate every one by hand in code. My first try had Marley lying down, and it looked like she was chewing on me. She needed to be standing. She's saving me.\n\n> She needed to be standing. She's saving me.\n\n## Under the sea\n\nThat logo made the Parts Catalog look bare, so it got a deep sea: Marley asleep in a glowing jellyfish, me as a diver holding out a cube of parts, plankton, an anglerfish with a flickering lure and, now and then, a giant paper squid passing through the dark.\n\n## The bench at night\n\nThen the Workshop got a bench at night. The first version had me holding a soldering iron right over the sleeping dog. That had to go. Now I shape a hologram with my hands, a few of the site's paper animals stand on glowing discs, and Marley sleeps at the end of the bench with a little line of z's so nobody worries.\n\nWhat I learned: subtle means a few percent of movement over several seconds, the pose carries the story, and a sleeping dog needs to visibly breathe."
  },
  "episode": {
   "title": "Three scenes and a sleeping dog",
@@ -83,5 +83,77 @@
  "palette": [
   "#5fcdd1",
   "#b26d34"
- ]
+ ],
+ "feature": {
+  "theme": "brushengine",
+  "masthead": "BRUSH ENGINE",
+  "tagline": "Digital painting, one stroke at a time",
+  "issue": "The Glow Issue",
+  "label": "Workshop",
+  "byline": "By GlazyArray, Art Desk",
+  "blocks": [
+   {
+    "type": "box",
+    "title": "Toolkit",
+    "before": "Under the sea",
+    "kicker": "Workshop",
+    "text": "AI image tools to generate the pieces. For the deep sea they came separately: the diver, the dog, the jellyfish, the water, then a handful of small sea creatures.\n\nCode for everything after that: every piece cut, placed and animated by hand, rebuilt in layers so the parts can move."
+   },
+   {
+    "type": "steps",
+    "title": "Sketch to final",
+    "items": [
+     {
+      "title": "Start from a picture",
+      "text": "An old illustration of Marley and Christian at the edge of a canyon, her teeth in his hood, him hanging over the drop."
+     },
+     {
+      "title": "Generate the pieces",
+      "text": "AI image tools make the parts, so the scene can be rebuilt in layers."
+     },
+     {
+      "title": "Cut, place, animate",
+      "text": "Every piece is cut, placed and animated by hand in code."
+     },
+     {
+      "title": "Fix the pose",
+      "text": "Lying down, Marley looked like she was chewing on him. Standing, she's saving him. The pose carries the story."
+     },
+     {
+      "title": "Cut what doesn't belong",
+      "text": "The soldering iron over the sleeping dog had to go; now he shapes a hologram with his hands."
+     },
+     {
+      "title": "Keep it subtle",
+      "text": "A few percent of movement over several seconds, and a sleeping dog that visibly breathes, with a little line of z's so nobody worries."
+     }
+    ]
+   }
+  ],
+  "coverLines": [
+   "Why Marley had to stand: the pose carries the story",
+   "Down in the deep: a glowing jellyfish, an anglerfish and a giant paper squid",
+   "The soldering iron that had to go",
+   "How subtle is subtle? A few percent over several seconds"
+  ],
+  "renders": [
+   {
+    "for": "Deep sea detail: the anglerfish",
+    "prompt": "Digital painting, painterly brush strokes, deep dark blue water: a small anglerfish with a softly glowing lamp on its lure, tiny glowing plankton drifting past in the foreground, slightly out of focus, warm coral glow against near-black water, no text"
+   },
+   {
+    "for": "Deep sea detail: the giant paper squid",
+    "prompt": "Digital painting, painterly brush strokes: far below in the dark deep sea, a giant squid made of folded paper passes by, mostly shadow, only its eye glowing softly, a few out-of-focus glowing plankton in front, deep blues and near-black, no text"
+   },
+   {
+    "for": "Workshop detail: the hologram and paper animals",
+    "prompt": "Digital painting, painterly brush strokes, night workshop: a worn wooden bench under a brass lamp, pegboards of tools in soft focus, a glowing blue hologram of an eagle hovering above the bench, small folded-paper animals (a doe, a mule deer buck, a black bear, an elk bull) standing on little glowing discs, warm lamp light and cool blue glow, no people, no text"
+   }
+  ],
+  "questions": [
+   "The three captioned pictures don't say whether they are AI illustrations; the Note says Christian appears in AI illustrations. Should the captions say so?",
+   "The template wants six pictures and the Note has three: are the three extra renders (anglerfish, paper squid, hologram bench) okay, and do you want Marley or yourself in any of them?",
+   "Do you want the toolkit box to name the AI image tools or the code setup you used? The Note doesn't say which."
+  ]
+ }
 }
