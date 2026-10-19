@@ -239,6 +239,28 @@ buildings away, then the versions). Paste for each section:
 Then, as before: the buildings taken away (step 2), and the versions (night, each season by day and night, snow).
 
 
+## The frame: the village in a window (Christian's idea, Oct 19)
+
+The homestead tucked into an ornate steampunk window (his first sketch: field/drafts/homestead-guides/frame-idea-v1.jpg).
+The frame is its own picture; the live village (its places, lights and seasons) shows through the opening.
+
+> [The look, but "an ornate frame" for "a single building".] An ornate retro-futuristic window frame seen straight on:
+> carved dark wood with brass filigree and rivets, glowing jewel crystals in turquoise and teal at the corners, an
+> orrery of small brass planets and gears at the top centre, glass tubes of glowing turquoise liquid down both sides,
+> and along the bottom a control panel with two brass sliders, three round lamps and a large crystal at the centre,
+> above a small blank brass plaque. The opening in the middle is empty flat magenta (#FF00FF), exactly 16:9 and
+> perfectly rectangular with softly rounded corners, the frame's inner edge clean and sharp. The whole frame on flat
+> magenta. Perfectly symmetrical. [Guard line.]
+
+- **The opening is everything:** exactly 16:9, straight edges, flat magenta inside, nothing of the frame reaching into
+  it. Claude puts the village there.
+- **The plaque stays blank.** The name goes on it in code (no text in renders).
+- **Lit and unlit:** a second version with the crystals, lamps and tubes glowing, made as an edit of the first ("Same
+  image exactly; the crystals, lamps and tube liquid glow brightly; change nothing else"). They fade on at night or on
+  hover, and the bottom lamps can become real buttons: day and night, the seasons.
+- **For phones:** the same frame in three pieces, so it can stretch down the tall phone hill: the top (orrery and
+  corners), the bottom (control panel and plaque), and a short piece of the two sides that repeats seamlessly.
+
 ## Ring 2 and 3 (later)
 
 The same look and rules. One line each, to grow into prompts when the time comes:
