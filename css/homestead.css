@@ -1,29 +1,21 @@
-/* THE HOMESTEAD (js/homestead.js): the hillside below the lake, every part of the site a place on it. On a wide screen
-   the ground is Christian's painted hill (2000 x 1116) and each place sits where he painted it, set by its top left
-   corner and width (--x/--y/--w); a phone gets a narrow drawn hill (400 x 2844), each place set by the middle of its
-   base and its width (--mx/--my/--mw). Everything follows the season and the night, and every change eases
-   (CLAUDE.md "Motion"). */
-html{--hs-g1:#a9d46f;--hs-g2:#6f9e45;--hs-hill:rgba(255,255,255,.07);--hs-path:#e6d3a2;--hs-water:#4fc8cf;--hs-top:#a9d46f}
-html[data-season="summer"]{--hs-g1:#9ccc5c;--hs-g2:#5c8c36;--hs-top:#9ccc5c}
-html[data-season="fall"]{--hs-g1:#c9c058;--hs-g2:#8e893a;--hs-path:#e9d39c;--hs-top:#c9c058}
-html[data-season="winter"]{--hs-g1:#f3f7fa;--hs-g2:#d2dee8;--hs-hill:rgba(140,170,200,.08);--hs-path:#fbfdff;--hs-water:#9fd2e0;--hs-top:#f3f7fa}
+/* THE HOMESTEAD (js/homestead.js): the hillside below the lake, every part of the site a place on it. The ground is
+   Christian's painted hill, a wide painting (2000 x 1116) and a tall one for phones (1116 x 2000), and each place sits
+   where he painted it, by its top left corner and width (--x/--y/--w; on a phone --mx/--my/--mw). Everything follows the
+   season and the night, and every change eases (CLAUDE.md "Motion"). */
+html{--hs-top:#6f8a4e}
 
-/* Where the lake meets the hill. On a phone the lake's rolling bottom edge takes the drawn grass's colour. On a wide
-   screen the edge itself steps aside (kept, invisible, for its size: js/homestead.js reads it into --hs-lift) and the
-   painting rises under the lake's bank by that much, its top cut in the same wave, so the bank meets the painted grass. */
-html:has(#homestead) .hero::after{background:var(--hs-top);transition:background-color 3s ease-in-out}
-html.night-page:has(#homestead) .hero::after{background:color-mix(in srgb,var(--hs-top) 42%,#0b1426)}
-@media (min-width:720px){
-  html:has(#homestead):not(.lake-off) .hero::after{opacity:0}
-  html:has(#homestead):not(.lake-off) .homestead{margin-top:calc(var(--hs-lift,0px) * -1);z-index:7;background:transparent}
-  html:has(#homestead) .lake-seasons{bottom:calc(var(--hs-lift,0px) + 14px)}
-  .hs-paint{-webkit-mask-image:var(--hs-wave-img),linear-gradient(#000,#000);mask-image:var(--hs-wave-img),linear-gradient(#000,#000);
-    -webkit-mask-size:50% var(--hs-wave,0%),100% calc(100% - var(--hs-wave,0%) + 1px);mask-size:50% var(--hs-wave,0%),100% calc(100% - var(--hs-wave,0%) + 1px);
-    -webkit-mask-position:0 0,0 100%;mask-position:0 0,0 100%;-webkit-mask-repeat:repeat-x,no-repeat;mask-repeat:repeat-x,no-repeat}
-}
+/* Where the lake meets the hill: the lake's rolling bottom edge steps aside (kept, invisible, for its size:
+   js/homestead.js reads it into --hs-lift) and the painting rises under the lake's bank by that much, its top cut in the
+   same wave, so the bank meets the painted grass. With the lake hidden, the painting simply starts the page. */
+html:has(#homestead):not(.lake-off) .hero::after{opacity:0}
+html:has(#homestead):not(.lake-off) .homestead{margin-top:calc(var(--hs-lift,0px) * -1);z-index:7;background:transparent}
+@media (min-width:641px){html:has(#homestead) .lake-seasons{bottom:calc(var(--hs-lift,0px) + 14px)}}
+html:has(#homestead):not(.lake-off) .hs-paint{-webkit-mask-image:var(--hs-wave-img),linear-gradient(#000,#000);mask-image:var(--hs-wave-img),linear-gradient(#000,#000);
+  -webkit-mask-size:50% var(--hs-wave,0%),100% calc(100% - var(--hs-wave,0%) + 1px);mask-size:50% var(--hs-wave,0%),100% calc(100% - var(--hs-wave,0%) + 1px);
+  -webkit-mask-position:0 0,0 100%;mask-position:0 0,0 100%;-webkit-mask-repeat:repeat-x,no-repeat;mask-repeat:repeat-x,no-repeat}
 html{--hs-wave-img:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,60 C200,100 400,0 600,60 C800,120 1000,20 1200,60 L1200,120 L0,120 Z' fill='%23fff'/%3E%3C/svg%3E")}
 
-.homestead{position:relative;background:var(--hs-g2);overflow:hidden;transition:background-color 3s ease-in-out}
+.homestead{position:relative;background:#6f8a4e;overflow:hidden}
 .homestead .hs-title{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 .hs-stage{position:relative;width:min(100%,2000px);margin:0 auto;aspect-ratio:2000/1116}
 /* the painted ground: four versions stacked, one showing, like a place's art */
@@ -32,18 +24,7 @@ html{--hs-wave-img:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/
 .hs-paint img.on{opacity:1}
 .hs-paint img.now{transition:none}
 
-.hs-ground{position:absolute;inset:0;width:100%;height:100%;display:block;transition:filter 2.4s ease-in-out}
-.hs-ground .g1{stop-color:var(--hs-g1);transition:stop-color 3s ease-in-out}
-.hs-ground .g2{stop-color:var(--hs-g2);transition:stop-color 3s ease-in-out}
-.hs-ground .hill{fill:var(--hs-hill)}
-.hs-ground .path{fill:none;stroke:var(--hs-path);stroke-width:34;stroke-linecap:round;opacity:.85;transition:stroke 3s ease-in-out}
-.hs-narrow .path{stroke-width:22}
-.hs-ground .stream{fill:none;stroke:var(--hs-water);stroke-width:26;stroke-linecap:round;transition:stroke 3s ease-in-out}
-.hs-ground .pond{fill:var(--hs-water);transition:fill 3s ease-in-out}
-.hs-ground .pond.shine{fill:rgba(255,255,255,.28)}
-.hs-narrow{display:none}
-html.night-page .hs-ground{filter:brightness(.42) saturate(.8)}
-html.night-page .homestead{background:color-mix(in srgb,var(--hs-g2) 42%,#0b1426)}
+html.night-page .homestead{background:#2b3f4c}
 
 /* a place: its art (four versions stacked, one showing), a soft shadow under it, and its name plate */
 .hs-place{position:absolute;display:block;text-decoration:none;color:inherit;-webkit-tap-highlight-color:transparent;
@@ -104,19 +85,19 @@ html.night-page .hs-butterfly b{background-image:url(../assets/homestead/butterf
 .hs-firefly:focus-visible{outline:2px solid #fff6a8;border-radius:50%}
 @keyframes hsGlow{0%,100%{opacity:.25}50%{opacity:1}}
 
-/* a phone: the narrow hill, places one or two to a row down the path */
+/* a phone: Christian's tall painting (1116 x 2000), each place where he painted it */
 @media (max-width:719px){
-  .hs-stage{aspect-ratio:400/2844}
-  .hs-paint{display:none}.hs-narrow{display:block}
-  .hs-place{top:auto;left:calc((var(--mx) - var(--mw) / 2) / 400 * 100%);bottom:calc((2844 - var(--my)) / 2844 * 100%);width:calc(var(--mw) / 400 * 100%)}
-  .hs-rotor{left:calc((var(--mx) - var(--mw) / 2) / 400 * 100%);top:calc((var(--my) - var(--mw) / 2) / 2844 * 100%);width:calc(var(--mw) / 400 * 100%)}
-  .hs-name{font-size:11.5px;padding:3px 8px;opacity:1;transform:translate(-50%,6px)}
-  .hs-name small{font-size:10.5px;max-height:16px;opacity:1}
-  .hs-tubes .hs-name{left:0;transform:translate(-6px,6px)}
-  .hs-bubbles{left:calc(24 / 400 * 100%);top:calc(70 / 2844 * 100%);width:calc(62 / 400 * 100%);height:calc(100 / 2844 * 100%)}
+  .hs-stage{aspect-ratio:1116/2000}
+  .hs-place{left:calc(var(--mx) / 1116 * 100%);top:calc(var(--my) / 2000 * 100%);width:calc(var(--mw) / 1116 * 100%);z-index:var(--mz)!important}
+  .hs-rotor{left:calc((var(--mx) - var(--mw) / 2) / 1116 * 100%);top:calc((var(--my) - var(--mw) / 2) / 2000 * 100%);width:calc(var(--mw) / 1116 * 100%)}
+  /* the village is one screen tall here, so names stay hidden (they would crowd it) and show while a place is touched:
+     its door still opens on the tap */
+  .hs-name{font-size:11px;padding:3px 8px}
+  .hs-name small{display:none}
+  .hs-place:active .hs-name{opacity:1}
+  .hs-bubbles{left:calc(40 / 1116 * 100%);top:calc(150 / 2000 * 100%);width:calc(95 / 1116 * 100%);height:calc(150 / 2000 * 100%)}
   .hs-butterfly{width:9vw}
-  .hs-firefly{left:calc(var(--fx) / 2000 * 100%);top:calc(var(--fy) / 1116 * 100%)}
-  @keyframes hsDrift{0%{transform:translate(10vw,40vw)}25%{transform:translate(70vw,120vw)}50%{transform:translate(20vw,260vw)}75%{transform:translate(65vw,380vw)}100%{transform:translate(10vw,40vw)}}
+  @keyframes hsDrift{0%{transform:translate(10vw,40vw)}25%{transform:translate(70vw,90vw)}50%{transform:translate(20vw,160vw)}75%{transform:translate(65vw,120vw)}100%{transform:translate(10vw,40vw)}}
 }
 @media (prefers-reduced-motion:reduce){
   .hs-rotor-art,.hs-bubbles i,.hs-butterfly,.hs-butterfly b,.hs-firefly::after{animation:none}
