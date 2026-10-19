@@ -16,7 +16,7 @@
 
   // ── State: which view, and which item's modal is open. Mirrored in the address bar the same way as
   //    the rest of the site: ?spring+daydreams, ?spring+daydreams+fake-tahoe, ?notes, ?above…
-  var SECTIONS = ['notes', 'dose', 'above', 'daydreams'];
+  var SECTIONS = ['newsstand', 'notes', 'dose', 'above', 'daydreams'];
   var LIMIT = { notes: 3, dose: 4, above: 8, daydreams: 8 };
   var H = null, state = { view: 'all', item: null, layout: 'grid', tags: [], order: 'new', page: 1 };
   var PER = 9;   // Field Notes on their own, a page at a time (?spring+notes+list+p2)
@@ -104,12 +104,18 @@
         function (a) { return a.length ? a.map(episode).join('') : '<p class="pi-sub">Nothing has all of those tags. <button type="button" class="pi-clear" data-pi-tag="">Clear the tags</button></p>'; },
         shown, 'pi-eps ' + (state.layout === 'grid' ? 'pi-eps-grid' : 'pi-eps-list'), pager(state.page, pages));
     }
+    // the newsstand: four magazine covers on a wire rack, as on Play's own page (hub.json "magazines", built by publish.mjs)
+    if (id === 'newsstand' && h.magazines) {
+      if (h.magazines.fonts && !document.getElementById('piMagFonts')) { var fl = document.createElement('link'); fl.id = 'piMagFonts'; fl.rel = 'stylesheet'; fl.href = 'https://fonts.googleapis.com/css2?' + h.magazines.fonts + '&display=swap'; document.head.appendChild(fl); }
+      return '<section class="pi-sec" data-sec="newsstand"><h3>The newsstand</h3><p class="pi-sub">The Field Notes as made-up magazines: real stories, each dressed as a feature.</p>' +
+        '<div class="np-shelves">' + h.magazines.rack + '</div><p class="pi-more"><a href="' + esc(h.magazines.url) + '">All ' + h.magazines.count + ' magazines →</a></p></section>';
+    }
     if (id === 'dose' && h.daily) return section('dose', h.daily.title, '', esc(h.daily.about) + ' <a href="' + esc(h.daily.channel) + '" target="_blank" rel="noopener">On YouTube</a>', function (a) { return a.map(video).join(''); }, h.daily.videos, 'pi-yt');
     if (id === 'above' && h.above) return section('above', h.above.title, ' ' + REAL, esc(h.above.about), function (a) { return a.map(tile).join(''); }, h.above.items, 'pi-grid');
     if (id === 'daydreams' && h.daydreams) return section('daydreams', 'Daydreams', ' ' + AI, 'Ideas that only exist as pictures, so far. ' + esc(h.daydreams.tools), function (a) { return a.map(serie).join(''); }, h.daydreams.series, 'pi-series');
     return '';
   }
-  var LABEL = { notes: 'Field Notes', dose: 'Daily Dose of Paradise', above: 'From Above', daydreams: 'Daydreams' };
+  var LABEL = { newsstand: 'Newsstand', notes: 'Field Notes', dose: 'Daily Dose of Paradise', above: 'From Above', daydreams: 'Daydreams' };
   var TAG_NAMES = { 'lake-tahoe': 'Lake Tahoe', 'mini-cast': 'Mini-Cast', 'with-marley': 'With Marley', 'with-helena': 'With Helena' };
   function tagName(t) { return TAG_NAMES[t] || (/^\d{4}$/.test(t) ? t : t.replace(/^with-/, 'with ').replace(/-/g, ' ').replace(/^./, function (c) { return c.toUpperCase(); })); }
   // the Field Notes toolbar: grid or list, newest or oldest, and the tags with how many notes carry each

@@ -27,5 +27,7 @@ Christian's rule, a lesson learned on the Tumble: every change on screen eases. 
   12, 2026; the Studio sets it, assets/narrator/resolve.js decides). A.L.T.A.'s and Starlee's own Notes they tell
   themselves. Starlee is the robot Marley (she was "Robot Marley" until Christian renamed her, Oct 19, 2026; her
   code and files still say marley). Starlee and Marley are "she".
-- No brands, logos or text inside AI renders; real browser logos only where credited.
+- No brands, logos or text inside AI renders; real browser logos only where credited. The key ring in "Go Live Please" may carry
+  the real logos of the services it names, placed on blank badges after rendering (never drawn by the AI) and credited
+  (Christian, Oct 19, 2026: "We are promoting them").
 - Never commit secrets.
