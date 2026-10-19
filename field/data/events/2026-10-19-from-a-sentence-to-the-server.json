@@ -41,6 +41,38 @@
    "at": "The keys"
   },
   {
+   "src": "data/photos/2026-10-19-from-a-sentence-to-the-server/clip-4.mp4",
+   "poster": "data/photos/2026-10-19-from-a-sentence-to-the-server/clip-4.jpg",
+   "video": true,
+   "caption": "The robot dangles the keys out as to the camera.",
+   "takenAt": "2026:10:19 07:23:08",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "keys-handed-off.mp4",
+   "range": [
+    0,
+    9.95
+   ]
+  },
+  {
+   "src": "data/photos/2026-10-19-from-a-sentence-to-the-server/clip-3.mp4",
+   "poster": "data/photos/2026-10-19-from-a-sentence-to-the-server/clip-3.jpg",
+   "video": true,
+   "caption": "The key slowly moves from wind and the glow pulses.",
+   "takenAt": "2026:10:19 07:23:11",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "glowing-macro-key.mp4",
+   "range": [
+    0,
+    9.9
+   ]
+  },
+  {
    "src": "data/photos/2026-10-19-from-a-sentence-to-the-server/heart.mp4",
    "poster": "data/photos/2026-10-19-from-a-sentence-to-the-server/heart.jpg",
    "video": true,
@@ -224,9 +256,19 @@
   "questions": [],
   "lookbook": {
    "title": "The Keys",
-   "dek": "",
+   "dek": "It took a handful of keys, each with one job and nothing more.",
    "before": "Why it matters",
    "items": [
+    {
+     "name": "",
+     "when": "An extreme close-up of one high-tech key hanging from the janitor's brass ring.",
+     "alt": "An extreme close-up of one high-tech key hanging from the janitor's brass ring.",
+     "src": "data/photos/2026-10-19-from-a-sentence-to-the-server/clip-3.mp4",
+     "w": 960,
+     "h": 540,
+     "video": true,
+     "poster": "data/photos/2026-10-19-from-a-sentence-to-the-server/clip-3.jpg"
+    },
     {
      "name": "",
      "when": "The robot janitor walks steadily forward with all keys hooked to it's belt.",
@@ -239,19 +281,13 @@
     },
     {
      "name": "",
-     "when": "An extreme close-up of one high-tech key hanging from the janitor's brass ring.",
-     "alt": "An extreme close-up of one high-tech key hanging from the janitor's brass ring.",
-     "src": "data/photos/2026-10-19-from-a-sentence-to-the-server/05.jpg",
-     "w": 1376,
-     "h": 768
-    },
-    {
-     "name": "",
      "when": "A brass robot hand unclipping a second, smaller key ring from the janitor's belt and holding it out toward the camera.",
      "alt": "A brass robot hand unclipping a second, smaller key ring from the janitor's belt and holding it out toward the camera.",
-     "src": "data/photos/2026-10-19-from-a-sentence-to-the-server/04.jpg",
-     "w": 1376,
-     "h": 768
+     "src": "data/photos/2026-10-19-from-a-sentence-to-the-server/clip-4.mp4",
+     "w": 960,
+     "h": 540,
+     "video": true,
+     "poster": "data/photos/2026-10-19-from-a-sentence-to-the-server/clip-4.jpg"
     }
    ],
    "layout": "hero2",
