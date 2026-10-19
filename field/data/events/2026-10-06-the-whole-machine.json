@@ -98,7 +98,7 @@
  "fieldNotes": "Capstone of the case-study series (Oct 6, 2026). The parable is Christian's: a brass automaton built on the same bench as the Studio's heart, each tool one part of it: ProPre = the prism eye (Christian: a coloring book is beauty broken down to lines and built back up), the main site V2 = the face, the Parts Catalog = the memory (head of drawers), the Workshop = the hands, the Studio = the heart (the liquid as the site's blood, Christian's metaphor). All loops are Christian's AI renders from the prompts. Facts from the other case studies: ProPre started May 2026 and brought him back to web development; the main site's tabs open the other parts (Books: Browse the catalog -> the Coloring Book Catalog; Workshop: Open the workshop; Play: the Field Notes the Studio publishes); Catalog parts run on the same code as the lake; the Workshop traces new parts into the Catalog's format; Marley appears in all of them (asleep on the Workshop bench, in a jellyfish in the Catalog header, visiting the lake, along the Studio's river).",
  "post": {
   "title": "The whole machine",
-  "body": "Over the past few weeks I've written up each of the tools behind this site on its own. This one is about how they fit together. I kept picturing them as parts of one machine on a workbench, so I had them rendered that way: a brass automaton, built a piece at a time.\n\nThe eye came first. ProPre, the press for my coloring books, is the project that brought me back to web development in May. It's a prism: a beautiful picture goes in and comes out as clean black and white lines, ready for someone to fill with colour.\n\nThe face is the lake on the front of the site. Every tab is a season, and every tab opens another part of the machine. Books leads to the catalog of everything ProPre has made. Workshop leads to the bench. Play is where the Field Notes live.\n\nThe memory is the Parts Catalog: a drawer for every piece the lake is built from, each one running on its own with the same code the lake uses, so I can open one drawer without disturbing the rest.\n\nThe hands are the Workshop. Give them a picture and they shape a new part in the Catalog's own format, ready to join the others on the lake.\n\nThe heart is the Studio. A day out comes in as a track and a pile of photos, and goes out as a Field Note, with its post, its episode and its share card. The liquid in its pipes is the same idea as blood: the content is what keeps the whole thing alive, and the Studio is what moves it around.\n\nIn the render, the heart beats once, the light runs out through the glass veins, the hands shape a bird, and the bird flies into the lake. That's the whole machine. A day comes in, it's shaped, it's kept, and it ends up somewhere you can see it.\n\nWhat I learned: none of these parts is the portfolio on its own. Each one is good alone, but it's the pipes between them that make it feel alive."
+  "body": "Over the past few weeks I've written up each of the tools behind this site on its own. This one is about how they fit together. I kept picturing them as parts of one machine on a workbench, so I had them rendered that way: a brass automaton, built a piece at a time.\n\n## The eye and the face\n\nThe eye came first. ProPre, the press for my coloring books, is the project that brought me back to web development in May. It's a prism: a beautiful picture goes in and comes out as clean black and white lines, ready for someone to fill with colour.\n\nThe face is the lake on the front of the site. Every tab is a season, and every tab opens another part of the machine. Books leads to the catalog of everything ProPre has made. Workshop leads to the bench. Play is where the Field Notes live.\n\n## Memory and hands\n\nThe memory is the Parts Catalog: a drawer for every piece the lake is built from, each one running on its own with the same code the lake uses, so I can open one drawer without disturbing the rest.\n\nThe hands are the Workshop. Give them a picture and they shape a new part in the Catalog's own format, ready to join the others on the lake.\n\n## The heart\n\nThe heart is the Studio. A day out comes in as a track and a pile of photos, and goes out as a Field Note, with its post, its episode and its share card. The liquid in its pipes is the same idea as blood: the content is what keeps the whole thing alive, and the Studio is what moves it around.\n\n## It wakes up\n\nIn the render, the heart beats once, the light runs out through the glass veins, the hands shape a bird, and the bird flies into the lake. That's the whole machine. A day comes in, it's shaped, it's kept, and it ends up somewhere you can see it.\n\n> Each one is good alone, but it's the pipes between them that make it feel alive.\n\nWhat I learned: none of these parts is the portfolio on its own. Each one is good alone, but it's the pipes between them that make it feel alive."
  },
  "episode": {
   "title": "The whole machine",
@@ -168,6 +168,74 @@
    {
     "photo": "at-rest.jpg"
    }
+  ]
+ },
+ "feature": {
+  "theme": "sourceorder",
+  "masthead": "SOURCE ORDER",
+  "tagline": "Build it right, then build it beautiful",
+  "issue": "Issue 404: Not Found (Yet)",
+  "label": "Build Notes",
+  "byline": "By GlazyArray, Web Desk",
+  "blocks": [
+   {
+    "type": "box",
+    "title": "TL;DR",
+    "before": "The eye and the face",
+    "kicker": "The capstone",
+    "text": "Five tools, one machine. ProPre is the eye, the lake on the front of the site is the face, the Parts Catalog is the memory, the Workshop is the hands and the Studio is the heart.\n\nA day comes in, it's shaped, it's kept, and it ends up somewhere you can see it. Every loop in the story is Christian's own AI render of the brass automaton."
+   },
+   {
+    "type": "steps",
+    "title": "How it's built",
+    "before": "It wakes up",
+    "items": [
+     {
+      "title": "The eye: ProPre",
+      "text": "The press for his coloring books and the project that brought him back to web development in May. A prism: a beautiful picture goes in and comes out as clean black and white lines, ready to be coloured."
+     },
+     {
+      "title": "The face: the lake",
+      "text": "The front of the site. Every tab is a season and opens another part of the machine: Books leads to the catalog, Workshop to the bench, Play to the Field Notes."
+     },
+     {
+      "title": "The memory: the Parts Catalog",
+      "text": "A drawer for every piece the lake is built from, each running on its own with the same code the lake uses, so one drawer opens without disturbing the rest."
+     },
+     {
+      "title": "The hands: the Workshop",
+      "text": "Give it a picture and it shapes a new part in the Catalog's own format, ready to join the others on the lake."
+     },
+     {
+      "title": "The heart: the Studio",
+      "text": "A day out comes in as a track and a pile of photos and goes out as a Field Note, with its post, its episode and its share card. The content is the blood; the Studio moves it around."
+     }
+    ]
+   },
+   {
+    "type": "timeline",
+    "title": "Build log",
+    "items": [
+     [
+      "May 2026",
+      "ProPre, the coloring book press, brings Christian back to web development."
+     ],
+     [
+      "Oct 6, 2026",
+      "The capstone: the whole machine, told as a brass automaton coming to life."
+     ]
+    ]
+   }
+  ],
+  "coverLines": [
+   "The whole machine: five tools built into one brass automaton",
+   "ProPre, the prism that brought him back to web development",
+   "The Studio is the heart, and the content is the blood",
+   "Marley turns up in every part"
+  ],
+  "questions": [
+   "The code block was left out: the Note contains no code or prompt. Would you like to share one (for example the render prompt for alive.mp4, or a snippet from the shared lake code) to quote as written?",
+   "The build log only has two dates from the Note (ProPre in May 2026, the capstone on Oct 6, 2026). Could you give the dates the lake, the Parts Catalog, the Workshop and the Studio were built or written up, so the timeline can be filled out?"
   ]
  }
 }
