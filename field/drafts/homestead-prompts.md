@@ -261,6 +261,33 @@ The frame is its own picture; the live village (its places, lights and seasons) 
 - **For phones:** the same frame in three pieces, so it can stretch down the tall phone hill: the top (orrery and
   corners), the bottom (control panel and plaque), and a short piece of the two sides that repeats seamlessly.
 
+### The slim frame (Oct 19): more village, less frame
+
+Version 2 (frame-v2.jpg) is lovely but thick: its opening is only 63% of the frame's width, which would shrink the
+village by about 40%. Give it to the generator as the reference image, with:
+
+> Redraw this exact frame, same style, same materials and same details, but much slimmer, so the window takes up most
+> of the picture. The opening in the middle is exactly 16:9, about 1600 × 900 in a 2000 × 1116 picture: it fills 80% of
+> the width and 80% of the height. The wooden border is thin and even, about a tenth of the opening's width at the
+> sides. Keep the four corner crystals, but smaller, sitting on the corners rather than out beside them. Keep the
+> orrery at the top centre, smaller, rising above the top edge instead of pushing the opening down. Keep the glass tubes
+> of turquoise liquid, slimmer, set into the sides. Keep the control panel at the bottom centre, shorter, with its
+> sliders, two lamps and the crystal, and the small blank brass plaque below it, overlapping the bottom edge. The
+> opening is flat magenta (#FF00FF), straight-edged with softly rounded corners, nothing of the frame reaching into it.
+> Flat magenta all around the outside. Perfectly symmetrical. No text, letters, numbers, words or logos anywhere; the
+> plaque stays blank.
+
+**For phones**, the same frame standing tall:
+
+> Redraw this exact frame as a tall portrait frame, same style and details: a 1116 × 2000 picture with an opening of
+> exactly 9:16, about 950 × 1690 (85% of the width and height). Thin even sides; a corner crystal at each corner; the
+> orrery small at the top centre, above the top edge; one slim tube of turquoise liquid down each side; a small control
+> panel and blank plaque at the bottom centre, overlapping the bottom edge. Flat magenta (#FF00FF) inside the opening
+> and all around. Perfectly symmetrical. No text, letters, numbers, words or logos anywhere.
+
+Then the lit version of each, as an edit: *"Same image exactly; the crystals, lamps and tube liquid glow brightly;
+change nothing else."*
+
 ## Ring 2 and 3 (later)
 
 The same look and rules. One line each, to grow into prompts when the time comes:
