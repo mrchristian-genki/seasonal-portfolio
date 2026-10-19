@@ -1,0 +1,151 @@
+{
+ "id": "2026-10-19-from-a-sentence-to-the-server",
+ "title": "From a sentence to the server",
+ "date": "2026-10-19",
+ "kind": "make",
+ "place": "The workshop",
+ "tags": [
+  "case-study",
+  "ai"
+ ],
+ "status": "draft",
+ "summary": "How a change Christian asks for becomes a live page: Claude Code or the Studio commits to GitHub, a GitHub Actions workflow builds the site and rsync sends it to his server over SSH, with a handful of single-purpose keys and the guard rails that keep it safe. A setup he could hand to a client.",
+ "trailhead": null,
+ "links": [
+  {
+   "label": "The main site",
+   "url": "https://www.christiangehrke.com/"
+  },
+  {
+   "label": "Get in touch on LinkedIn",
+   "url": "https://www.linkedin.com/in/christiangehrke/"
+  }
+ ],
+ "track": null,
+ "photos": [
+  {
+   "src": "data/photos/2026-10-19-from-a-sentence-to-the-server/heart.mp4",
+   "poster": "data/photos/2026-10-19-from-a-sentence-to-the-server/heart.jpg",
+   "video": true,
+   "ai": true,
+   "caption": "The heart: the Studio, pumping each day through to a Field Note. Rendered with AI for The whole machine.",
+   "w": 1600,
+   "h": 448,
+   "use": "post",
+   "cover": true,
+   "from": "2026-10-06-the-whole-machine/heart.mp4"
+  },
+  {
+   "src": "data/photos/2026-10-19-from-a-sentence-to-the-server/studio.mp4",
+   "poster": "data/photos/2026-10-19-from-a-sentence-to-the-server/studio.jpg",
+   "video": true,
+   "ai": false,
+   "caption": "The Studio, my private back room, where a Note is saved straight into GitHub.",
+   "w": 992,
+   "h": 288,
+   "use": "post",
+   "cover": false,
+   "from": "2026-10-05-the-studio-river/title-filling.mp4"
+  },
+  {
+   "src": "data/photos/2026-10-19-from-a-sentence-to-the-server/cutaway.jpg",
+   "ai": true,
+   "caption": "An artist's impression of the works. The real machine runs on code, not clockwork.",
+   "w": 1376,
+   "h": 768,
+   "use": "post",
+   "cover": false,
+   "from": "2026-10-09-popular-paradox/pp-cutaway.jpg"
+  },
+  {
+   "src": "data/photos/2026-10-19-from-a-sentence-to-the-server/glazyarray.mp4",
+   "poster": "data/photos/2026-10-19-from-a-sentence-to-the-server/glazyarray.jpg",
+   "video": true,
+   "ai": true,
+   "caption": "GlazyArray at her desk after hours. She narrates this one.",
+   "w": 1280,
+   "h": 720,
+   "use": "post",
+   "cover": false,
+   "from": "2026-10-08-glazyarray-will-see-you-now/desk.mp4"
+  }
+ ],
+ "fieldNotes": "Drafted by Claude for Christian (Oct 19, 2026) at his request: a Hidden Layer Note about \"the process we used together... using rsync to connect GitHub directly to my server, and then allowing whatever permissions or tools were needed, the API keys, and exactly what keys were needed\" for Claude to edit the code, check it into GitHub, make it live, and rsync it to the server, written so it could be spun out for a client or a freelance gig. Facts from the repo itself: .github/workflows/deploy.yml (the build steps, the rsync flags and excludes, no --delete, the dry run, the four repository secrets DH_HOST, DH_USER, DH_PATH and DH_SSH_KEY), studio/README.md and studio/tools/setup.php (the private config outside the web folder with the password hash, the Anthropic API key and the fine-grained GitHub token, Contents read/write, one repo, expiry up to a year; rclone with a read-only Google Drive login), studio/lib/github.php (saves as commits to main), the stale-save check and editors' saves waiting for review, and how we work in Claude Code sessions (a branch, a draft PR with screenshots, \"go live\" merges it). No host, user, folder, key or token value appears anywhere in the Note, on purpose.",
+ "post": {
+  "title": "From a sentence to the server",
+  "body": "When I want something changed on this site, I say it, often from my phone. A few minutes later it's live. No FTP, no zip files, no logging in to a control panel. This is how that works, and why I think it could work for someone else's site too.\n\nThere are three pieces: GitHub, where the site's code lives; my web host, an ordinary shared hosting account, where the public site lives; and two ways of changing things, Claude Code and my own Studio. Everything meets at one place: the main branch on GitHub. Whatever lands there goes live on its own.\n\n## Path one: I talk, Claude codes\n\nClaude Code works on a copy of the site in the cloud, connected to my GitHub through GitHub's own app, and only to the repositories I've allowed. I describe what I want. It reads the code, makes the change, tests it, and puts it on a branch as a draft pull request, with screenshots when there's something to see. Nothing is live yet. When I'm happy, I say two words: go live. It merges the pull request into main.\n\n## Path two: I publish from the Studio\n\nThe Studio is my private back room for Field Notes. When I press Save, the Studio writes the Note straight into GitHub as a commit. It uses a fine-grained token that can only touch this one repository, and only its contents. The token lives on the server in a private settings file outside the web folder, next to the Anthropic key that lets the Studio ask Claude for a draft. Neither is ever in the code.\n\n## The last mile: rsync\n\nEvery push to main wakes up a GitHub Actions workflow. It builds what needs building: the share cards, the Field Notes pages, the magazines and their covers, and the Studio's parts. Then it connects to my server over SSH with a deploy key and sends the site across with rsync.\n\nrsync is old and plain, and that's the point. It only sends files that changed, comparing them by checksum. It sets sensible permissions on the way. And it never deletes anything on the server, so files that only live there are safe. My private Field Notes folder is never uploaded. There's a dry-run switch that lists what would change without touching anything. The whole thing takes a few minutes.\n\n> That process in and of itself is going to be quite potentially powerful.\n\n## The keys\n\nIt took a handful of keys, each with one job and nothing more:\n\nA deploy key: a pair, the private half stored as a GitHub secret, the public half on the server. Three more secrets say where to go: the host, the user and the folder. A fine-grained GitHub token for the Studio, limited to one repository's contents, with an expiry date. An Anthropic API key for drafting. A read-only Google Drive login, so the Studio can bring in photos and videos from my phone. And the GitHub app that lets Claude Code open pull requests. None of them is written down anywhere public, including here.\n\n## Why it matters\n\nIt's powerful, and that's why the guard rails matter more than the speed. Only main goes live. Only I say go live. The Studio refuses a save if the Note changed since I opened it. Editors' saves wait for me. The server never loses a file.\n\nSet up once, it means a site owner can change their site by describing the change. That's how I run mine now. With the same pieces, a client could run theirs the same way: talk, look at the preview, say go live. Nothing in it needs a special server; plain shared hosting with SSH is enough.\n\nIf you'd like a site that works like this, get in touch."
+ },
+ "questions": [
+  "Title: 'From a sentence to the server' for now ('Go live' is close). Something else as it gets closer?",
+  "Pictures: four from other Notes are in (the Studio's heart, the Studio, the cutaway, GlazyArray at her desk). Still to come from you: the four screenshots in field/drafts/hidden-layer-pictures.md."
+ ],
+ "consent": "No people pictured. No secrets: names of keys only, never their values.",
+ "feature": {
+  "theme": "hiddenlayer",
+  "masthead": "HIDDEN LAYER",
+  "tagline": "How the thinking machines actually think",
+  "issue": "The Attention Issue",
+  "label": "Explainer",
+  "byline": "By GlazyArray, AI Correspondent",
+  "coverLines": [
+   "From a sentence to the server in a few minutes",
+   "rsync: old, plain and never deletes a thing",
+   "Six keys, one job each",
+   "Built so a client could run their site the same way"
+  ],
+  "blocks": [
+   {
+    "type": "steps",
+    "title": "Step by step: setting it up for a new site",
+    "before": "Why it matters",
+    "items": [
+     {
+      "title": "Put the site in a GitHub repository",
+      "text": "One repository, one main branch. Whatever is on main is what's live."
+     },
+     {
+      "title": "Make a deploy key",
+      "text": "Generate a key pair. The public half goes on the server's list of allowed keys; the private half becomes a GitHub repository secret."
+     },
+     {
+      "title": "Tell GitHub where to go",
+      "text": "Three more secrets: the server's host name, the SSH user and the folder to deploy into."
+     },
+     {
+      "title": "Add the workflow",
+      "text": "A GitHub Actions file that runs on every push to main: build, then rsync over SSH, with a dry-run switch to try it safely first."
+     },
+     {
+      "title": "Connect Claude Code",
+      "text": "Install GitHub's app for Claude on just that repository, so changes arrive as pull requests to review."
+     },
+     {
+      "title": "Optional: a back room",
+      "text": "A private admin like the Studio, saving through a fine-grained token limited to one repository's contents, with its keys kept on the server outside the web folder."
+     }
+    ]
+   },
+   {
+    "type": "code",
+    "title": "The prompt",
+    "before": "The keys",
+    "file": "What to ask for, if I were setting it up again",
+    "code": "I keep my website's code in a GitHub repository and host it on\nshared hosting that allows SSH.\n\nSet it up so that:\n- Whatever is on the main branch goes live by itself.\n- Changes reach main only as pull requests I approve.\n- A GitHub Actions workflow builds the site and uploads it\n  with rsync over SSH, using a deploy key kept as a secret.\n- The upload only adds and updates files, never deletes,\n  and has a dry-run switch.\n- Private folders and drafts are never uploaded.\n- Every key has one job, and none is written in the code.\n\nTell me which secrets to create and where, step by step.",
+    "note": "Not the exact words we used, but the shape of the ask. Give it to an AI that can work in your repository, then follow along and say yes or no at each step."
+   },
+   {
+    "type": "box",
+    "title": "Glossary",
+    "kicker": "Words used here",
+    "before": null,
+    "text": "GitHub: where the site's code lives, with every change ever made.\n\nmain: the branch that is the live site. Whatever lands there goes up.\n\nPull request: a proposed change, with a preview, waiting for a yes.\n\nGitHub Actions: GitHub's robots, which run the build and the upload on every change.\n\nrsync: a decades-old tool that copies only what changed from one computer to another.\n\nSSH and a deploy key: a locked door to the server and the one key that opens it for uploads.\n\nFine-grained token: a GitHub key cut to fit one job on one repository, with an expiry date."
+   }
+  ],
+  "questions": []
+ },
+ "episode": {
+  "title": "From a sentence to the server",
+  "narrator": "glazyarray",
+  "script": ""
+ }
+}

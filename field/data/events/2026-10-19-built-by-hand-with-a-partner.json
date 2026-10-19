@@ -22,18 +22,102 @@
   }
  ],
  "track": null,
- "photos": [],
+ "photos": [
+  {
+   "src": "data/photos/2026-10-19-built-by-hand-with-a-partner/machine.mp4",
+   "poster": "data/photos/2026-10-19-built-by-hand-with-a-partner/machine.jpg",
+   "video": true,
+   "ai": true,
+   "caption": "The whole machine: a brass automaton whose parts are the site's tools, the eye, the face, the memory, the hands and the heart. My parable, rendered with AI.",
+   "w": 1280,
+   "h": 720,
+   "use": "post",
+   "cover": true,
+   "from": "2026-10-06-the-whole-machine/alive.mp4"
+  },
+  {
+   "src": "data/photos/2026-10-19-built-by-hand-with-a-partner/propre-prompts.mp4",
+   "poster": "data/photos/2026-10-19-built-by-hand-with-a-partner/propre-prompts.jpg",
+   "video": true,
+   "ai": false,
+   "caption": "ProPre's Prompt Generator: an object, a lens and an edition become the brief for a 40-page prompt catalog. The tool I built to write the coloring book prompts.",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "2026-10-06-the-propre-engine/pp-prompts.mp4"
+  },
+  {
+   "src": "data/photos/2026-10-19-built-by-hand-with-a-partner/jar-lines.jpg",
+   "ai": true,
+   "caption": "A page from Color in a Jar: the deep sea, in black and white lines. Made with AI from months of refined prompts.",
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "2026-10-16-color-in-a-jar-volume-one/57.jpg"
+  },
+  {
+   "src": "data/photos/2026-10-19-built-by-hand-with-a-partner/jar-color.jpg",
+   "ai": true,
+   "caption": "The same jar, colored in by AI to show how it might look. The coloring is up to whoever has the book.",
+   "w": 1024,
+   "h": 1024,
+   "use": "post",
+   "cover": false,
+   "from": "2026-10-16-color-in-a-jar-volume-one/56.jpg"
+  },
+  {
+   "src": "data/photos/2026-10-19-built-by-hand-with-a-partner/two-heads.jpg",
+   "ai": true,
+   "caption": "GlazyArray's first head, and hers. The voice changed because Helena didn't like the first one, so the robot changed too.",
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "2026-10-06-the-narrator-gets-a-face/his-head-her-head.jpg"
+  },
+  {
+   "src": "data/photos/2026-10-19-built-by-hand-with-a-partner/eyes.jpg",
+   "ai": true,
+   "caption": "Her eyes, take four: no whites, then alarming whites, then calm. Each round was a person looking and saying not yet.",
+   "w": 1376,
+   "h": 768,
+   "use": "post",
+   "cover": false,
+   "from": "2026-10-08-glazyarray-will-see-you-now/portrait.jpg"
+  },
+  {
+   "src": "data/photos/2026-10-19-built-by-hand-with-a-partner/characters.jpg",
+   "ai": true,
+   "caption": "Starlee meets A.L.T.A.: two ideas of mine, drawn with AI.",
+   "w": 1600,
+   "h": 893,
+   "use": "post",
+   "cover": false,
+   "from": "2026-10-12-robot-marley/meets-alta.jpg"
+  },
+  {
+   "src": "data/photos/2026-10-19-built-by-hand-with-a-partner/real-fort.jpg",
+   "ai": false,
+   "caption": "A ring fort in Ireland from straight above, from my drone. A real photograph, labeled as one.",
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "2018-07-10-above-ireland/06.jpg"
+  }
+ ],
  "fieldNotes": "Drafted by Claude for Christian (Oct 19, 2026) at his request: \"a note about the role of AI and how I've used it to build everything at my name domain, in a way that still has a handmade feel but partnering strategically with AI to build a better website and not just an AI built website... You were here the whole time with me. Even with ProPre and the coloring book prompts.\" Every fact is from his published Notes (the case studies, ProPre, the coloring books, GlazyArray, A.L.T.A., Starlee, the hammock and Two lakes Notes) and his own words in the Studio and in our sessions (the house rules in CLAUDE.md, real vs AI labels, the motion rule from the Tumble, Starlee's name, ROLLING TERRAIN and his motto, the night the clips were rescued, Oct 18-19). Nothing in it is invented; where a fact isn't his, the draft leaves it out.",
  "post": {
   "title": "Built by hand, with a partner",
   "body": "Everything at christiangehrke.com was built with AI. None of it was built by AI. That difference is the whole story, and it's why the site still feels like mine.\n\nI've built websites since 1997. In May 2026 a side project brought me back: ProPre, a tool in the browser that takes a coloring book from its first prompt to a print-ready cover. Eight single-page prototypes came out of one day with Gemini. Within two days there was a first working version, and by June it was talking to Claude. Since then everything on this site has been built the same way: the lake, the Parts Catalog, the Workshop, the Studio, the Field Notes and the made-up magazines on the newsstand.\n\n## Who decides\n\nHere's how the work splits. The AI writes most of the code, drafts the words and writes prompts for pictures. I decide what the site is. The ideas are mine: A.L.T.A. came to me on October 9, the brass automaton that ties the tools together is my parable, and Starlee got her name after someone told me I could do better than Robot Marley. The taste is mine too. The rides, the drone flights and the coloring books are real, and so is every call about what stays and what goes.\n\nGlazyArray, the narrator, is a good example. Claude wrote the prompts for her and I rendered the clips. Helena didn't like the first voice, so it changed. Her eyes took three tries: no whites, then alarming whites, then calm. None of that came from a machine having taste. It came from us looking at it and saying no, not yet.\n\n## The house rules\n\nWhat makes it a partnership and not an \"AI built\" site is a short list of rules every AI that works here has to follow. They're written down in the code itself, and they started as things I said out loud:\n\nFacts on the site come only from my Notes or my own words. When a draft doesn't know something, it asks me rather than guessing. Did this ride start or end at home? Who's in the hammock? How were these pages made? People stay anonymous unless they've agreed to be named, and home is never on the map. No brands or text inside AI pictures.\n\nEvery picture says whether it's real or made with AI, and real gets labeled just as clearly as AI. I fly a drone under an FAA Part 107 certificate and have since 2018. Those photographs are real, and I want people to know which ones they are.\n\n> We need to try and be clear about what is real as much or more than what is AI.\n\nAnd nothing on the page snaps. Every light fades, every scroll eases. That one is a lesson from the Tumble, and it's the kind of thing a person notices that a model never would.\n\n## The coloring books\n\nThe coloring books are where the partnership is most obvious and most handmade at the same time. The pages are made with AI, but the prompts behind them took months to refine, tailored to each subject, and I built my own tool to help write them. A coffee book you color while drinking coffee. Salads that pair the ingredients with the finished dish, so the book works as a cookbook. Small worlds inside jars. The catalog has 101 titles in it, and 8 are published so far.\n\n## Why it still feels handmade\n\nBecause it's slow in the right places. Things get tried, looked at and thrown out. A magazine called COL & COBBLE became ROLLING TERRAIN because I only own a mountain bike and I like to cruise. The tagline is my own motto: I'm not here to break records, I just don't want to break anything. That's how I build the site too.\n\nThe partner is there on a Sunday afternoon when a Note full of video clips won't save, and it finds the bug, fixes the server and builds a way to get the clips back. But the Note is still mine. So is the site."
  },
  "questions": [
+  "Pictures: eight from other Notes are in (the machine, ProPre, a jar page in lines and in color, GlazyArray's two heads and her eyes, Starlee meets A.L.T.A., a real drone photo). Two more would help; see field/drafts/hidden-layer-pictures.md.",
   "Title: 'Built by hand, with a partner'. Other options: 'The hand in the machine', 'Made with AI, not by it', 'My partner doesn't have taste (that's my job)'. Keep, pick another, or your own?",
-  "Pictures (Hidden Layer wants about four): a screenshot of the Studio asking you a question while it drafts, ProPre on screen, a GlazyArray render beside its prompt, and one real drone photo with its 'Real photo' label. Which can you add?",
   "Which tools should it name? It names Claude and Gemini (from your ProPre Note). Your Daydreams page names the image and video tools; add those here too, or keep it to these two?",
   "Is the clip rescue (Sunday, Oct 18) OK to tell? It's yours and true, and it shows the partnership well, but it can come out.",
-  "Who narrates: GlazyArray as usual, or one of the others? (A.L.T.A. and Starlee were both drawn with AI, so either could have a line about it.)",
   "The pull quote is your own line from Oct 18 (\"We need to try and be clear about what is real as much or more than what is AI\"). Keep it, or pick another line of yours?"
  ],
  "consent": "No people pictured yet. Helena is named by her choice (Christian, Oct 19).",
@@ -95,5 +179,10 @@
    }
   ],
   "questions": []
+ },
+ "episode": {
+  "title": "Built by hand, with a partner",
+  "narrator": "glazyarray",
+  "script": ""
  }
 }
