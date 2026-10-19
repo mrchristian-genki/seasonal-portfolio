@@ -101,5 +101,11 @@ ${spread.length ? `<section class="mag-book zn-logbook"><h2 class="sub">From the
 <footer class="zn-foot"><p>Every picture says whether it's a real photo or made with AI.</p></footer>
 </main>`;
   fs.writeFileSync(path.join(OUT, 'index.html'), page('The newsstand · Christian Gehrke', `Made-up magazines, real stories: ${total} Field Notes in ${live.length} magazines.`, show.siteUrl.replace(/play\/?$/, '') + 'magazine/', null, stand, live.map((t) => t.id)));
-  return live.map((t) => ({ id: t.id, slug: magSlug(t), masthead: t.masthead, count: byMag[t.id].length }));
+  const out = live.map((t) => ({ id: t.id, slug: magSlug(t), masthead: t.masthead, count: byMag[t.id].length }));
+  // Play's own rack (Christian, Oct 19: "a two by two rack of actual magazines"): the four with the most stories,
+  // newest cover story first among equals, as the stand shows them, on two shelves
+  const four = live.slice().sort((a, b) => byMag[b.id].length - byMag[a.id].length || (byMag[b.id][0].e.date > byMag[a.id][0].e.date ? 1 : -1)).slice(0, 4);
+  out.rackIds = four.map((t) => t.id);
+  out.rack = [four.slice(0, 2), four.slice(2, 4)].filter((r) => r.length).map((r) => `<div class="np-row">${r.map((t) => standCover(t, '/magazine/')).join('')}</div>`).join('\n');
+  return out;
 }
