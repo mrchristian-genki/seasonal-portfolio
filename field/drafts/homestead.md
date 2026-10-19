@@ -45,9 +45,9 @@ A small Studio on the grounds, so anyone with a login gets to /studio/ straight 
   orange, by day and by night), easing from one colour to the next.
 - **The colour follows the time of day,** the way Christian sets his: blue in the morning, green in the daytime,
   orange at night. In the homestead it simply follows the visitor's clock.
-- **In the Studio itself (optional):** a "follow the clock" choice beside the blue, green and orange lamps, so the
-  Studio changes on its own (Christian's hours: blue mornings, green days, orange nights), and a lamp picked by hand
-  still wins.
+- **In the Studio itself (built, Oct 19):** the Studio follows the clock too (studio/table/clock.js): blue mornings
+  (6 am to noon), green days (noon to 7 pm), orange nights (7 pm to 6 am). Throwing either switch takes over by hand,
+  to test and see; the HOME TIME plate beside them, its lamp lit while the clock is in charge, hands it back.
 
 ### The Automaton Labs, on stilts by the water
 

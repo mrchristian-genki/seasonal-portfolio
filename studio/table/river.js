@@ -1,8 +1,9 @@
 /* STUDIO RIVER: the header's table is a short looping video of the glowing river, by day or by night, and
    blue, green or orange. Flipping the day/night switch plays the dusk (or dawn) clip once, then hands over
    to the matching loop; the liquid switch beside it does the same with the clip of the river changing to
-   the next liquid, always the same way round (blue, green, orange, blue). The liquid is remembered on this
-   device (blue unless chosen).
+   the next liquid, always the same way round (blue, green, orange, blue). The liquid follows the clock
+   (clock.js: blue mornings, green days, orange nights) until the switch is thrown; then it's remembered on this
+   device.
    Two video layers take turns so the hand-over never flashes; the day and night stills sit underneath,
    so the header is never empty while a video loads, and they stand in for it when video can't play or
    motion is reduced. */
@@ -59,7 +60,8 @@
     green: function (t) { return 'river-' + t + '-green-to-orange'; },
     orange: function (t) { return 'river-' + t + '-orange-to-blue'; } };
   var liq = 'blue';
-  try { var kept = localStorage.getItem('st-flow'); if (LIQ.indexOf(kept) >= 0) liq = kept; } catch (e) {}
+  if (window.StudioClock && StudioClock.following()) liq = StudioClock.look().liquid;   // clock.js: the hour's colour
+  else try { var kept = localStorage.getItem('st-flow'); if (LIQ.indexOf(kept) >= 0) liq = kept; } catch (e) {}
   function stills(n) { R.classList.toggle('is-night', n); LIQ.forEach(function (l) { R.classList.toggle('is-' + l, liq === l); }); }
   function loopName(n) { return PRE[liq] + (n ? 'night' : 'day'); }
   function loopFor(n) { var v = other(); load(v, loopName(n), true); return show(v); }
