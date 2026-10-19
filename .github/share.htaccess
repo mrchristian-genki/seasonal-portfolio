@@ -7,4 +7,17 @@ RewriteEngine On
 RewriteCond %{QUERY_STRING} (^|[+&])(\d{4}-\d\d-\d\d-[a-z0-9-]+|daydreams|above|workshop|web)([+&=]|$) [NC]
 RewriteRule ^(index\.html)?$ /share.php [L]
 </IfModule>
+
+# The site's own pages for an address with nothing there, or that isn't open (Christian, Oct 19)
+ErrorDocument 404 /404.html
+ErrorDocument 403 /forbidden.html
+# Old addresses from the site before this one (a WordPress blog: /blog/, /news/, /feed/, /tag/..., /category/...,
+# /2013/06/...) still get asked for; they go to Play, its feed, and From Above for the surf photos, for good (301)
+<IfModule mod_alias.c>
+RedirectMatch 301 ^/tag/surf-photos/?$ /play/above/
+RedirectMatch 301 ^/(blog|news)(/.*)?$ /play/
+RedirectMatch 301 ^/feed/?$ /play/feed.xml
+RedirectMatch 301 ^/(tag|category|author)/.*$ /play/
+RedirectMatch 301 ^/(19|20)[0-9][0-9]/([01][0-9]/)?.*$ /play/
+</IfModule>
 # END note-share

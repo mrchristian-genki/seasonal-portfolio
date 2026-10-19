@@ -453,7 +453,7 @@
     html += '<h3>Field Notes</h3>' + (ids.length ? '<div class="stx-tw"><table class="stx-t"><thead><tr><th>Note</th><th class="n">Opened</th><th class="n">Listens</th></tr></thead><tbody>' + ids.slice(0, 25).map(function (k) {
       return '<tr><td><button type="button" class="link" data-note="' + esc(k) + '">' + esc(noteName(k)) + '</button><i class="stx-mini" data-w="' + ((notes[k] || 0) / top * 100).toFixed(1) + '"></i></td><td class="n">' + N(notes[k]) + '</td><td class="n">' + N(listens[k]) + '</td></tr>';
     }).join('') + '</tbody></table></div>' + (ids.length > 25 ? '<p class="muted stx-more">And ' + (ids.length - 25) + ' more.</p>' : '') : '<p class="muted">No Notes opened in this span.</p>');
-    html += troubleHtml(days, j.logins || {});
+    html += troubleHtml(days, j.logins || {}, j.studioErrors || {});
     html += '<h3>Visitor log</h3><p class="muted">The last week\'s page views, newest first. A visitor\'s tag is new every day, so one visit\'s pages read together but no one can be followed from day to day; no addresses are kept.</p><div id="stxLog"></div><div class="pager" id="stxPg" hidden></div>';
     html += srcNote(j, false);
     box.innerHTML = html;
@@ -490,7 +490,7 @@
     };
   }
   // trouble in the logs over the span: missing pages people asked for, the server's own errors, probes and failed logins
-  function troubleHtml(days, logins) {
+  function troubleHtml(days, logins, sterr) {
     var missing = {}, errors = {}, probes = 0, add = function (into, obj) { Object.keys(obj || {}).forEach(function (k) { into[k] = (into[k] || 0) + obj[k]; }); };
     days.forEach(function (d) { add(missing, d.missing); add(errors, d.errors); probes += d.probes || 0; });
     var errN = Object.keys(errors).reduce(function (a, k) { return a + errors[k]; }, 0);
@@ -502,7 +502,11 @@
         '<p class="muted">None in this span.</p>') + '</div><div><ul class="stx-tl">' +
       line(errN, 'server errors', errN ? top(errors, 3).map(esc).join(', ') : 'none: nothing broke') +
       line(probes, 'probes', 'bots trying weak spots of other kinds of site (WordPress, .env files); normal noise, a sudden rush is worth knowing') +
-      line(fails, 'failed Studio logins', locks ? locks + ' locked an address out for 15 minutes' : 'none locked an address out') + '</ul></div></div>';
+      line(fails, 'failed Studio logins', locks ? locks + ' locked an address out for 15 minutes' : 'none locked an address out') + '</ul>' +
+      // what the Studio's errors were (api.php records each one since Oct 19: the request and its message)
+      (Object.keys(sterr).length ? '<h4 class="stx-h4">What went wrong in the Studio</h4><ul class="stx-err">' + top(sterr, 8).map(function (k) {
+        var i = k.indexOf(': '); return '<li><b>' + sterr[k].toLocaleString() + '×</b> <span><code>' + esc(k.slice(0, i)) + '</code> ' + esc(k.slice(i + 2)) + '</span></li>'; }).join('') + '</ul>' +
+        '<p class="muted stx-more">Recorded since Oct 19; earlier errors only show as a count above.</p>' : '') + '</div></div>';
   }
   function spanClicks(box) {
     $$('[data-span]', box).forEach(function (b) { b.onclick = function () { var n = +b.getAttribute('data-span'); if (n === SV.span) return; SV.span = n; saveSV(); box.classList.remove('stx-in'); $$('[data-span]', box).forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); }); renderStats(); }; });
