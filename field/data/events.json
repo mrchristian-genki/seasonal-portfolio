@@ -1,6 +1,804 @@
 {
  "events": [
   {
+   "id": "2026-10-19-built-by-hand-with-a-partner",
+   "title": "Built by hand, with a partner",
+   "date": "2026-10-19",
+   "kind": "make",
+   "place": "The workshop",
+   "status": "draft",
+   "summary": "How Christian built everything at christiangehrke.com with AI as a partner rather than a replacement: ProPre and the coloring book prompts, the lake, the Studio and the narrators, the house rules that keep every fact his own and every picture labeled real or AI, and why it still feels handmade.",
+   "sample": false,
+   "stats": null,
+   "thumb": [],
+   "photos": 0,
+   "cover": null
+  },
+  {
+   "id": "2026-10-18-a-dog-on-a-boulder-and-three-stones-on-a-post",
+   "title": "A dog on a boulder and three stones on a post",
+   "date": "2026-10-18",
+   "kind": "hike",
+   "place": "East Lake Tahoe",
+   "status": "published",
+   "summary": "Christian, Helena and Marley spend a bright Sunday morning at Whale Beach on the east shore of Lake Tahoe: a view through the pines, magnetic sand in a ring on a phone wallet, carnelians left where they lay, one very dense stone that isn't a carnelian at all, Marley chasing her ball and posing on a granite boulder, and Helena making a leaning boulder look easy on the way back.",
+   "sample": false,
+   "stats": null,
+   "thumb": [],
+   "photos": 23,
+   "cover": "data/photos/2026-10-18-a-dog-on-a-boulder-and-three-stones-on-a-post/clip-3.mp4"
+  },
+  {
+   "id": "2026-10-17-two-lakes-and-a-corral",
+   "title": "Two lakes and a corral",
+   "date": "2026-10-17",
+   "kind": "ride",
+   "place": "",
+   "status": "published",
+   "summary": "Christian, Helena and Marley spent October 17 at the Highland Lakes above Bear Valley: about nine miles of riding with roughly twelve hundred feet of climbing, a pass through a horse corral on the way in, drone views over both Upper and Lower Highland Lake, and a day by the water with the hammock up.",
+   "sample": false,
+   "stats": {
+    "distanceKm": 13.96,
+    "movingSec": 3980,
+    "elapsedSec": 13011,
+    "gainM": 364,
+    "lossM": 358,
+    "minEleM": 2403,
+    "maxEleM": 2643,
+    "avgKmh": 12.6,
+    "maxKmh": 31.1,
+    "start": "2026-10-17T17:54:39.000Z"
+   },
+   "thumb": [
+    [
+     38.52468,
+     -119.81207
+    ],
+    [
+     38.52286,
+     -119.80931
+    ],
+    [
+     38.52234,
+     -119.80606
+    ],
+    [
+     38.52015,
+     -119.80478
+    ],
+    [
+     38.51458,
+     -119.80229
+    ],
+    [
+     38.51336,
+     -119.80282
+    ],
+    [
+     38.51254,
+     -119.80258
+    ],
+    [
+     38.51089,
+     -119.80407
+    ],
+    [
+     38.50991,
+     -119.80177
+    ],
+    [
+     38.5081,
+     -119.80063
+    ],
+    [
+     38.50694,
+     -119.80106
+    ],
+    [
+     38.50585,
+     -119.80278
+    ],
+    [
+     38.50462,
+     -119.80373
+    ],
+    [
+     38.50372,
+     -119.80238
+    ],
+    [
+     38.50322,
+     -119.80072
+    ],
+    [
+     38.50216,
+     -119.79958
+    ],
+    [
+     38.5006,
+     -119.79899
+    ],
+    [
+     38.49791,
+     -119.79913
+    ],
+    [
+     38.49734,
+     -119.79801
+    ],
+    [
+     38.49647,
+     -119.79757
+    ],
+    [
+     38.49554,
+     -119.79847
+    ],
+    [
+     38.49458,
+     -119.7978
+    ],
+    [
+     38.4957,
+     -119.79885
+    ],
+    [
+     38.49523,
+     -119.80098
+    ],
+    [
+     38.49408,
+     -119.80338
+    ],
+    [
+     38.4902,
+     -119.80641
+    ],
+    [
+     38.48862,
+     -119.80695
+    ],
+    [
+     38.48856,
+     -119.80756
+    ],
+    [
+     38.48704,
+     -119.80813
+    ],
+    [
+     38.48527,
+     -119.80974
+    ],
+    [
+     38.48487,
+     -119.80994
+    ],
+    [
+     38.4847,
+     -119.80895
+    ],
+    [
+     38.48527,
+     -119.80728
+    ],
+    [
+     38.48638,
+     -119.80627
+    ],
+    [
+     38.4872,
+     -119.80618
+    ],
+    [
+     38.48848,
+     -119.80727
+    ],
+    [
+     38.4883,
+     -119.80772
+    ],
+    [
+     38.48608,
+     -119.80867
+    ],
+    [
+     38.48634,
+     -119.80872
+    ],
+    [
+     38.49377,
+     -119.80362
+    ],
+    [
+     38.49522,
+     -119.80098
+    ],
+    [
+     38.49569,
+     -119.79842
+    ],
+    [
+     38.49635,
+     -119.79755
+    ],
+    [
+     38.49734,
+     -119.79807
+    ],
+    [
+     38.49776,
+     -119.79906
+    ],
+    [
+     38.50163,
+     -119.7991
+    ],
+    [
+     38.50326,
+     -119.80062
+    ],
+    [
+     38.50363,
+     -119.80207
+    ],
+    [
+     38.50472,
+     -119.80372
+    ],
+    [
+     38.50598,
+     -119.80263
+    ],
+    [
+     38.50694,
+     -119.80104
+    ],
+    [
+     38.5082,
+     -119.80061
+    ],
+    [
+     38.50997,
+     -119.80183
+    ],
+    [
+     38.51073,
+     -119.8042
+    ],
+    [
+     38.51162,
+     -119.80384
+    ],
+    [
+     38.51177,
+     -119.80304
+    ],
+    [
+     38.5125,
+     -119.80259
+    ],
+    [
+     38.51337,
+     -119.80284
+    ],
+    [
+     38.51444,
+     -119.80227
+    ],
+    [
+     38.52018,
+     -119.80483
+    ],
+    [
+     38.52172,
+     -119.80599
+    ],
+    [
+     38.5223,
+     -119.80598
+    ],
+    [
+     38.52246,
+     -119.80829
+    ],
+    [
+     38.52293,
+     -119.80952
+    ],
+    [
+     38.52473,
+     -119.81221
+    ]
+   ],
+   "photos": 10,
+   "cover": "data/photos/2026-10-17-two-lakes-and-a-corral/clip-7.mp4"
+  },
+  {
+   "id": "2026-10-16-color-in-a-jar-volume-one",
+   "title": "Color in a Jar - Volume One",
+   "date": "2026-10-16",
+   "kind": "showcase",
+   "place": "",
+   "status": "published",
+   "summary": "Color in a Jar: The West is the first volume of Christian's AI-made coloring book, where every page holds a small world inside a jar. This Note walks through ten of those worlds, from an oasis and a peach orchard to the deep sea and the polar jar, each shown in color, in black and white, and in a companion scene with GlazyArray, Starlee and A.L.T.A. The book is on Amazon in print and digital, with Volume Two on the way.",
+   "sample": false,
+   "stats": null,
+   "thumb": [],
+   "photos": 31,
+   "cover": "data/photos/2026-10-16-color-in-a-jar-volume-one/clip-6.mp4"
+  },
+  {
+   "id": "2026-10-15-color-in-coffee",
+   "title": "COLOR IN - COFFEE",
+   "date": "2026-10-15",
+   "kind": "showcase",
+   "place": "",
+   "status": "published",
+   "summary": "Christian's AI-generated coffee coloring book, Color In Coffee: Vol. 1, published May 13, 2026 and on Amazon: cafés, whole cities inside cups, a train platform, drying beds and wild Arabica beans. Black-and-white pages are shown beside AI-colored versions, with AI clips of GlazyArray, A.L.T.A. and Starlee coloring along, one in an Incline Village café by the lake.",
+   "sample": false,
+   "stats": null,
+   "thumb": [],
+   "photos": 41,
+   "cover": "data/photos/2026-10-15-color-in-coffee/clip-4.mp4"
+  },
+  {
+   "id": "2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom",
+   "title": "Echoes of McKinney: sending A.L.T.A. to the bottom of the lake",
+   "date": "2026-10-15",
+   "kind": "adventure",
+   "place": "",
+   "status": "published",
+   "summary": "Christian and an AI built a side quest for A.L.T.A., the Ancient Lake Tahoe Automaton: a mission log that dives to the debris field of the McKinney Bay landslide, a real lake-wide collapse tens of thousands of years ago. It is told with AI-made charts, looping video and a look at the wave reaching Sand Harbor, and A.L.T.A. narrates it herself.",
+   "sample": false,
+   "stats": null,
+   "thumb": [],
+   "photos": 14,
+   "cover": "data/photos/2026-10-15-echoes-of-mckinney-sending-a-l-t-a-to-the-bottom/clip-13.mp4"
+  },
+  {
+   "id": "2026-10-12-long-haired-owl-visitor-trying-to-take-a-nap",
+   "title": "Long-haired Owl Visitor Trying to Take a Nap",
+   "date": "2026-10-12",
+   "kind": "hike",
+   "place": "",
+   "status": "published",
+   "summary": "A Long-eared Owl tried to sleep through an October day while jays kept mobbing it. Christian shooed them off twice, took a few photos and clips, and left the owl to its nap.",
+   "sample": false,
+   "stats": null,
+   "thumb": [],
+   "photos": 7,
+   "cover": "data/photos/2026-10-12-long-haired-owl-visitor-trying-to-take-a-nap/03.jpg"
+  },
+  {
+   "id": "2026-10-12-robot-marley",
+   "title": "Starlee",
+   "date": "2026-10-12",
+   "kind": "make",
+   "place": "The Workshop, after hours",
+   "status": "published",
+   "summary": "She talks now. RIVETING TONE sits down with Starlee, the robot companion dog built after the real Marley, who's about to start her own podcast to get real dogs adopted: each guest is a robot version of a real dog looking for a home.",
+   "sample": false,
+   "stats": null,
+   "thumb": [],
+   "photos": 7,
+   "cover": "data/photos/2026-10-12-robot-marley/clip-1.mp4"
+  },
+  {
+   "id": "2026-10-10-gold-on-the-doubletrack",
+   "title": "Gold on the doubletrack",
+   "date": "2026-10-10",
+   "kind": "ride",
+   "place": "Lake Tahoe Nevada State Park",
+   "status": "published",
+   "summary": "A late-morning return to the Marlette Lake trail from Spooner Lake Trailhead, now that it's open again: Christian rode with Marley, Helena walked with Sofi, and the aspens were at full gold. About seven miles, with more time stopped for the trees than riding.",
+   "sample": false,
+   "stats": {
+    "distanceKm": 11.51,
+    "movingSec": 3283,
+    "elapsedSec": 6732,
+    "gainM": 283,
+    "lossM": 285,
+    "minEleM": 2117,
+    "maxEleM": 2343,
+    "avgKmh": 12.6,
+    "maxKmh": 35.2,
+    "start": "2026-10-10T17:13:26.000Z"
+   },
+   "thumb": [
+    [
+     39.10733,
+     -119.91663
+    ],
+    [
+     39.10751,
+     -119.91636
+    ],
+    [
+     39.10714,
+     -119.91617
+    ],
+    [
+     39.10661,
+     -119.91641
+    ],
+    [
+     39.10739,
+     -119.91616
+    ],
+    [
+     39.10736,
+     -119.91511
+    ],
+    [
+     39.10777,
+     -119.91456
+    ],
+    [
+     39.10726,
+     -119.91366
+    ],
+    [
+     39.10735,
+     -119.9112
+    ],
+    [
+     39.10694,
+     -119.91247
+    ],
+    [
+     39.10762,
+     -119.91455
+    ],
+    [
+     39.10881,
+     -119.91402
+    ],
+    [
+     39.11194,
+     -119.91482
+    ],
+    [
+     39.1141,
+     -119.91437
+    ],
+    [
+     39.1151,
+     -119.91372
+    ],
+    [
+     39.11565,
+     -119.91437
+    ],
+    [
+     39.11747,
+     -119.91439
+    ],
+    [
+     39.11846,
+     -119.91512
+    ],
+    [
+     39.1203,
+     -119.91541
+    ],
+    [
+     39.12152,
+     -119.91505
+    ],
+    [
+     39.12468,
+     -119.91108
+    ],
+    [
+     39.12562,
+     -119.90911
+    ],
+    [
+     39.12995,
+     -119.90774
+    ],
+    [
+     39.13068,
+     -119.90625
+    ],
+    [
+     39.13234,
+     -119.90559
+    ],
+    [
+     39.13281,
+     -119.90364
+    ],
+    [
+     39.13418,
+     -119.90358
+    ],
+    [
+     39.13611,
+     -119.90241
+    ],
+    [
+     39.13748,
+     -119.90239
+    ],
+    [
+     39.13914,
+     -119.9003
+    ],
+    [
+     39.14211,
+     -119.89874
+    ],
+    [
+     39.14409,
+     -119.89689
+    ],
+    [
+     39.14359,
+     -119.8969
+    ],
+    [
+     39.14202,
+     -119.8988
+    ],
+    [
+     39.13916,
+     -119.90033
+    ],
+    [
+     39.13748,
+     -119.90239
+    ],
+    [
+     39.13576,
+     -119.90257
+    ],
+    [
+     39.13395,
+     -119.90369
+    ],
+    [
+     39.13292,
+     -119.90358
+    ],
+    [
+     39.13237,
+     -119.90562
+    ],
+    [
+     39.13064,
+     -119.90628
+    ],
+    [
+     39.13035,
+     -119.90733
+    ],
+    [
+     39.12903,
+     -119.90843
+    ],
+    [
+     39.12569,
+     -119.90905
+    ],
+    [
+     39.1248,
+     -119.91097
+    ],
+    [
+     39.12141,
+     -119.91511
+    ],
+    [
+     39.12029,
+     -119.91545
+    ],
+    [
+     39.11838,
+     -119.9152
+    ],
+    [
+     39.11729,
+     -119.91433
+    ],
+    [
+     39.11586,
+     -119.91445
+    ],
+    [
+     39.11501,
+     -119.91372
+    ],
+    [
+     39.11198,
+     -119.91485
+    ],
+    [
+     39.10887,
+     -119.91406
+    ],
+    [
+     39.1075,
+     -119.91475
+    ],
+    [
+     39.10736,
+     -119.9167
+    ]
+   ],
+   "photos": 16,
+   "cover": "data/photos/2026-10-10-gold-on-the-doubletrack/clip-4.mp4"
+  },
+  {
+   "id": "2026-10-09-a-l-t-a",
+   "title": "A.L.T.A",
+   "date": "2026-10-09",
+   "kind": "make",
+   "place": "",
+   "status": "published",
+   "summary": "On October 9 Christian came up with A.L.T.A., the Ancient Lake Tahoe Automaton: a copper-and-bronze mechanical mermaid built to help protect our waters and teach kids water safety. She's a potential new narrator for the show and will help local pools with water-safety lessons. He made a character description, a turnaround, a mouth chart, a still at the glass and a set of short clips of her moving.",
+   "sample": false,
+   "stats": null,
+   "thumb": [],
+   "photos": 11,
+   "cover": "data/photos/2026-10-09-a-l-t-a/clip-7.mp4"
+  },
+  {
+   "id": "2026-10-09-popular-paradox",
+   "title": "We Took the Tumble Time Machine for a Spin",
+   "date": "2026-10-09",
+   "kind": "make",
+   "place": "The Web tab",
+   "status": "published",
+   "summary": "A brass cockpit, nine browsers under glass, a porthole full of bubbles and a dial that goes to 88. Our test pilot took Christian Gehrke's web time machine for a spin, and came back with different hair.",
+   "sample": false,
+   "stats": null,
+   "thumb": [],
+   "photos": 17,
+   "cover": "data/photos/2026-10-09-popular-paradox/pp-cover.mp4"
+  },
+  {
+   "id": "2026-10-08-glazyarray-will-see-you-now",
+   "title": "GlazyArray Will See You Now",
+   "date": "2026-10-08",
+   "kind": "make",
+   "place": "The Workshop, after hours",
+   "status": "published",
+   "summary": "She narrates every Field Note, wears a different hat for every holiday, and has never once been late to a rest pose. RIVETING TONE spends an evening at the Workshop with the brass voice of the Field Notes.",
+   "sample": false,
+   "stats": null,
+   "thumb": [],
+   "photos": 7,
+   "cover": "data/photos/2026-10-08-glazyarray-will-see-you-now/cover.mp4"
+  },
+  {
+   "id": "2026-10-06-granite-in-clear-water",
+   "title": "Three exposures, one photo",
+   "date": "2026-10-06",
+   "kind": "make",
+   "place": "The workshop",
+   "status": "published",
+   "summary": "A case study of the Studio's HDR merge, tested on twelve real drone shots: four brackets of three exposures become four photos, with the sky and the shadows both kept.",
+   "sample": false,
+   "stats": null,
+   "thumb": [],
+   "photos": 8,
+   "cover": "data/photos/2026-10-06-granite-in-clear-water/07.jpg"
+  },
+  {
+   "id": "2026-10-06-the-lake-v2",
+   "title": "One lake, four seasons",
+   "date": "2026-10-06",
+   "kind": "make",
+   "place": "The workshop",
+   "status": "published",
+   "summary": "A case study of the main site, V2: one hand-built lake where every tab is a season, with night, weather, wildlife, a hidden beach and links that remember it all.",
+   "sample": false,
+   "stats": null,
+   "thumb": [],
+   "photos": 6,
+   "cover": "data/photos/2026-10-06-the-lake-v2/automaton-face.mp4"
+  },
+  {
+   "id": "2026-10-06-the-narrator-gets-a-face",
+   "title": "The narrator gets a face",
+   "date": "2026-10-06",
+   "kind": "make",
+   "place": "The workshop",
+   "status": "published",
+   "summary": "A case study of GlazyArray, the Field Notes narrator, becoming a little brass robot in every Listen bar: a talking head, hands from one video, cheeky hints to press play, and fourteen looks.",
+   "sample": false,
+   "stats": null,
+   "thumb": [],
+   "photos": 9,
+   "cover": "data/photos/2026-10-06-the-narrator-gets-a-face/his-head-her-head.jpg"
+  },
+  {
+   "id": "2026-10-06-the-parts-catalog",
+   "title": "A drawer for every part",
+   "date": "2026-10-06",
+   "kind": "make",
+   "place": "The workshop",
+   "status": "published",
+   "summary": "A case study of the Parts Catalog: 60 pieces of the lake scene, each running live on its own card, with 15 rigged origami creatures and a deep-sea header.",
+   "sample": false,
+   "stats": null,
+   "thumb": [],
+   "photos": 8,
+   "cover": "data/photos/2026-10-06-the-parts-catalog/automaton-memory.mp4"
+  },
+  {
+   "id": "2026-10-06-the-propre-engine",
+   "title": "The press in the browser",
+   "date": "2026-10-06",
+   "kind": "make",
+   "place": "The workshop",
+   "status": "published",
+   "summary": "A case study of ProPre Engine, the browser tool that takes a coloring book from first prompt to print-ready cover, and the project that brought me back to web development.",
+   "sample": false,
+   "stats": null,
+   "thumb": [],
+   "photos": 7,
+   "cover": "data/photos/2026-10-06-the-propre-engine/automaton-prism.mp4"
+  },
+  {
+   "id": "2026-10-06-the-whole-machine",
+   "title": "The whole machine",
+   "date": "2026-10-06",
+   "kind": "make",
+   "place": "The workshop",
+   "status": "published",
+   "summary": "The capstone: how the lake, the Parts Catalog, the Workshop, the Studio and ProPre fit together as one machine, told as a brass automaton coming to life.",
+   "sample": false,
+   "stats": null,
+   "thumb": [],
+   "photos": 7,
+   "cover": "data/photos/2026-10-06-the-whole-machine/alive.mp4"
+  },
+  {
+   "id": "2026-10-06-the-workshop",
+   "title": "Teaching the bench new parts",
+   "date": "2026-10-06",
+   "kind": "make",
+   "place": "The workshop",
+   "status": "published",
+   "summary": "A case study of the Workshop: a prompt builder for new parts and a tracer that turns a picture into the scene's origami format in under a second.",
+   "sample": false,
+   "stats": null,
+   "thumb": [],
+   "photos": 7,
+   "cover": "data/photos/2026-10-06-the-workshop/automaton-hands.mp4"
+  },
+  {
+   "id": "2026-10-05-the-studio-river",
+   "title": "A river through the Studio",
+   "date": "2026-10-05",
+   "kind": "make",
+   "place": "The workshop",
+   "status": "published",
+   "summary": "A case study of the Studio's header: a glowing river with three liquids, day and night, two small toggles, 36 clips that hand off cleanly, and a liquid that now runs through the whole page.",
+   "sample": false,
+   "stats": null,
+   "thumb": [],
+   "photos": 9,
+   "cover": "data/photos/2026-10-05-the-studio-river/clip-1.mp4"
+  },
+  {
+   "id": "2026-10-04-arms-wide-on-the-rim-trail",
+   "title": "Arms wide on the Rim Trail",
+   "date": "2026-10-04",
+   "kind": "hike",
+   "place": "",
+   "status": "published",
+   "summary": "An early October evening hike on the Tahoe Rim Trail at Tahoe Meadows, near Chickadee Ridge, with Helena and Marley: a lake view through old snags, arms wide on a granite rock, a chickadee taking seed from Helena's hand, the Ophir Creek sign, a boardwalk at golden hour, and an orange sunset over Lake Tahoe from the car on the drive down.",
+   "sample": false,
+   "stats": null,
+   "thumb": [],
+   "photos": 6,
+   "cover": "data/photos/2026-10-04-arms-wide-on-the-rim-trail/clip-2.mp4"
+  },
+  {
    "id": "2026-10-02-friday-dinner-ride",
    "title": "Friday night dinner ride",
    "date": "2026-10-02",
@@ -12,7 +810,7 @@
    "stats": null,
    "thumb": [],
    "photos": 3,
-   "cover": "data/photos/2026-10-02-friday-dinner-ride/01.jpg"
+   "cover": "data/photos/2026-10-02-friday-dinner-ride/03.jpg"
   },
   {
    "id": "2026-10-02-three-scenes",
@@ -861,13 +1659,27 @@
    "cover": "data/photos/2026-09-12-evening-ride/03.jpg"
   },
   {
+   "id": "2026-05-13-color-in-a-salad-2",
+   "title": "Romaine Between the Lines",
+   "date": "2026-05-13",
+   "kind": "showcase",
+   "place": "",
+   "status": "published",
+   "summary": "Color in a Salad: Vol. 1 is Christian's coloring book, published on Amazon on May 13, 2026 and made with his ProPre engine. Every salad comes as a pair, its ingredients on one page and the finished dish on the other, so once it's colored in it works as a cookbook.",
+   "sample": false,
+   "stats": null,
+   "thumb": [],
+   "photos": 18,
+   "cover": "data/photos/2026-05-13-color-in-a-salad-2/clip-4.mp4"
+  },
+  {
    "id": "2026-03-28-whale-beach",
    "title": "Whale Beach at sunset",
    "date": "2026-03-28",
    "kind": "ride",
    "place": "Whale Beach, Lake Tahoe's east shore",
    "status": "published",
-   "summary": "A sunset ride down to Whale Beach on Lake Tahoe's east shore, with his wife and Marley walking down. An hour on the beach, polished carnelian in the sand, and Marley swimming the whole time.",
+   "summary": "A sunset ride down to Whale Beach on Lake Tahoe's east shore while Helena walked down with Marley. They spent an hour on the beach, flew the drone over the whale-shaped rocks, and Marley swam the whole time.",
    "sample": false,
    "stats": {
     "distanceKm": 6.8,
@@ -1007,8 +1819,344 @@
      -119.93033
     ]
    ],
-   "photos": 3,
+   "photos": 14,
    "cover": "data/photos/2026-03-28-whale-beach/01.jpg"
+  },
+  {
+   "id": "2026-03-14-clear-water-in-march",
+   "title": "Clear water in March",
+   "date": "2026-03-14",
+   "kind": "ride",
+   "place": "Skunk Harbor",
+   "status": "published",
+   "summary": "A short March morning on the Skunk Harbor trail at Lake Tahoe: Christian rode down to the shore and back up with Marley along, and spent most of two hours flying a drone over clear water, snowy granite and the posts of an old dock while Marley went swimming.",
+   "sample": false,
+   "stats": {
+    "distanceKm": 5.14,
+    "movingSec": 1293,
+    "elapsedSec": 7492,
+    "gainM": 174,
+    "lossM": 172,
+    "minEleM": 1904,
+    "maxEleM": 2081,
+    "avgKmh": 14.3,
+    "maxKmh": 42.5,
+    "start": "2026-03-14T15:56:35.000Z"
+   },
+   "thumb": [
+    [
+     39.13076,
+     -119.93174
+    ],
+    [
+     39.13047,
+     -119.93415
+    ],
+    [
+     39.1293,
+     -119.93593
+    ],
+    [
+     39.12964,
+     -119.93793
+    ],
+    [
+     39.12933,
+     -119.93714
+    ],
+    [
+     39.12867,
+     -119.93819
+    ],
+    [
+     39.12745,
+     -119.93748
+    ],
+    [
+     39.12722,
+     -119.93852
+    ],
+    [
+     39.1321,
+     -119.94069
+    ],
+    [
+     39.12802,
+     -119.94189
+    ],
+    [
+     39.1283,
+     -119.94244
+    ],
+    [
+     39.12924,
+     -119.94258
+    ],
+    [
+     39.12801,
+     -119.94292
+    ],
+    [
+     39.12872,
+     -119.9441
+    ],
+    [
+     39.13085,
+     -119.9412
+    ],
+    [
+     39.13208,
+     -119.94082
+    ],
+    [
+     39.12727,
+     -119.93862
+    ],
+    [
+     39.12748,
+     -119.93748
+    ],
+    [
+     39.12804,
+     -119.9381
+    ],
+    [
+     39.12886,
+     -119.93808
+    ],
+    [
+     39.12931,
+     -119.93707
+    ],
+    [
+     39.12932,
+     -119.93588
+    ],
+    [
+     39.13044,
+     -119.93421
+    ],
+    [
+     39.13075,
+     -119.93251
+    ]
+   ],
+   "photos": 11,
+   "cover": "data/photos/2026-03-14-clear-water-in-march/clip-1.mp4"
+  },
+  {
+   "id": "2025-05-25-through-the-burn",
+   "title": "Through the burn",
+   "date": "2025-05-25",
+   "kind": "ride",
+   "place": "",
+   "status": "published",
+   "summary": "Christian rides the Corral Trail Loop from the Corral trailhead on May 24, 2025, up to the first lookout above Lake Tahoe, where he turns around. He goes from green pine forest into a burned area and ends at a creek. Marley is with him the whole way.",
+   "sample": false,
+   "stats": {
+    "distanceKm": 8.23,
+    "movingSec": 2715,
+    "elapsedSec": 6459,
+    "gainM": 244,
+    "lossM": 237,
+    "minEleM": 1928,
+    "maxEleM": 2145,
+    "avgKmh": 10.9,
+    "maxKmh": 52.3,
+    "start": "2025-05-24T15:22:31.000Z"
+   },
+   "thumb": [
+    [
+     38.87243,
+     -119.98061
+    ],
+    [
+     38.87192,
+     -119.97737
+    ],
+    [
+     38.87006,
+     -119.97607
+    ],
+    [
+     38.87077,
+     -119.97717
+    ],
+    [
+     38.87196,
+     -119.97717
+    ],
+    [
+     38.87208,
+     -119.97201
+    ],
+    [
+     38.871,
+     -119.97086
+    ],
+    [
+     38.86948,
+     -119.97009
+    ],
+    [
+     38.86775,
+     -119.96818
+    ],
+    [
+     38.8676,
+     -119.96762
+    ],
+    [
+     38.86783,
+     -119.96712
+    ],
+    [
+     38.86813,
+     -119.96729
+    ],
+    [
+     38.86768,
+     -119.96715
+    ],
+    [
+     38.86801,
+     -119.96487
+    ],
+    [
+     38.86654,
+     -119.96349
+    ],
+    [
+     38.86562,
+     -119.96338
+    ],
+    [
+     38.86488,
+     -119.96418
+    ],
+    [
+     38.86446,
+     -119.96397
+    ],
+    [
+     38.86449,
+     -119.96085
+    ],
+    [
+     38.86296,
+     -119.95843
+    ],
+    [
+     38.86306,
+     -119.9579
+    ],
+    [
+     38.86602,
+     -119.9565
+    ],
+    [
+     38.86671,
+     -119.95647
+    ],
+    [
+     38.86695,
+     -119.95743
+    ],
+    [
+     38.86686,
+     -119.9563
+    ],
+    [
+     38.86752,
+     -119.95604
+    ],
+    [
+     38.86579,
+     -119.95646
+    ],
+    [
+     38.86397,
+     -119.9578
+    ],
+    [
+     38.86304,
+     -119.95797
+    ],
+    [
+     38.86294,
+     -119.95841
+    ],
+    [
+     38.8644,
+     -119.96071
+    ],
+    [
+     38.86441,
+     -119.96405
+    ],
+    [
+     38.86492,
+     -119.96417
+    ],
+    [
+     38.86528,
+     -119.96341
+    ],
+    [
+     38.86604,
+     -119.96337
+    ],
+    [
+     38.86797,
+     -119.96477
+    ],
+    [
+     38.86828,
+     -119.96538
+    ],
+    [
+     38.86775,
+     -119.96647
+    ],
+    [
+     38.86773,
+     -119.96814
+    ],
+    [
+     38.8697,
+     -119.97021
+    ],
+    [
+     38.87136,
+     -119.97118
+    ],
+    [
+     38.87166,
+     -119.97084
+    ],
+    [
+     38.87147,
+     -119.9713
+    ],
+    [
+     38.87206,
+     -119.97166
+    ],
+    [
+     38.87229,
+     -119.97438
+    ],
+    [
+     38.87193,
+     -119.97789
+    ],
+    [
+     38.87243,
+     -119.98003
+    ]
+   ],
+   "photos": 10,
+   "cover": "data/photos/2025-05-25-through-the-burn/01.jpg"
   },
   {
    "id": "2024-09-05-marlette",
@@ -1263,6 +2411,446 @@
    ],
    "photos": 7,
    "cover": "data/photos/2024-09-05-marlette/04.jpg"
+  },
+  {
+   "id": "2024-08-31-a-hammock-above-the-lake",
+   "title": "A hammock above the lake",
+   "date": "2024-08-31",
+   "kind": "ride",
+   "place": "",
+   "status": "published",
+   "summary": "A late-August 2024 ride on the Flume Trail near Incline Village with his wife and Marley, and a stop in the pines above Lake Tahoe: a blue hammock between two trees, granite boulders, and the lake through the forest.",
+   "sample": false,
+   "stats": {
+    "distanceKm": 12.48,
+    "movingSec": 3735,
+    "elapsedSec": 11527,
+    "gainM": 69,
+    "lossM": 37,
+    "minEleM": 2322,
+    "maxEleM": 2389,
+    "avgKmh": 12,
+    "maxKmh": 29.6,
+    "start": "2024-08-31T16:28:32.000Z"
+   },
+   "thumb": [
+    [
+     39.26877,
+     -119.92689
+    ],
+    [
+     39.27096,
+     -119.92421
+    ],
+    [
+     39.2735,
+     -119.92325
+    ],
+    [
+     39.27445,
+     -119.92134
+    ],
+    [
+     39.27521,
+     -119.92237
+    ],
+    [
+     39.27569,
+     -119.92227
+    ],
+    [
+     39.27592,
+     -119.92094
+    ],
+    [
+     39.2773,
+     -119.91998
+    ],
+    [
+     39.27645,
+     -119.91957
+    ],
+    [
+     39.27629,
+     -119.91845
+    ],
+    [
+     39.27468,
+     -119.91868
+    ],
+    [
+     39.27393,
+     -119.91746
+    ],
+    [
+     39.2743,
+     -119.91573
+    ],
+    [
+     39.2726,
+     -119.91591
+    ],
+    [
+     39.272,
+     -119.91388
+    ],
+    [
+     39.27063,
+     -119.91427
+    ],
+    [
+     39.26916,
+     -119.91392
+    ],
+    [
+     39.26895,
+     -119.9128
+    ],
+    [
+     39.26963,
+     -119.91126
+    ],
+    [
+     39.26913,
+     -119.90985
+    ],
+    [
+     39.26749,
+     -119.91048
+    ],
+    [
+     39.26639,
+     -119.90965
+    ],
+    [
+     39.26511,
+     -119.91087
+    ],
+    [
+     39.26471,
+     -119.90985
+    ],
+    [
+     39.2632,
+     -119.91076
+    ],
+    [
+     39.26273,
+     -119.91037
+    ],
+    [
+     39.26204,
+     -119.91074
+    ],
+    [
+     39.26175,
+     -119.91271
+    ],
+    [
+     39.26027,
+     -119.91193
+    ],
+    [
+     39.26044,
+     -119.91075
+    ],
+    [
+     39.25947,
+     -119.91006
+    ],
+    [
+     39.25871,
+     -119.91042
+    ],
+    [
+     39.25781,
+     -119.90998
+    ],
+    [
+     39.25609,
+     -119.91166
+    ],
+    [
+     39.25434,
+     -119.9125
+    ],
+    [
+     39.25232,
+     -119.91231
+    ],
+    [
+     39.25193,
+     -119.91192
+    ],
+    [
+     39.25141,
+     -119.9122
+    ],
+    [
+     39.25195,
+     -119.91187
+    ],
+    [
+     39.25425,
+     -119.9125
+    ],
+    [
+     39.25599,
+     -119.91167
+    ],
+    [
+     39.25776,
+     -119.90993
+    ],
+    [
+     39.25866,
+     -119.91041
+    ],
+    [
+     39.2599,
+     -119.91003
+    ],
+    [
+     39.26048,
+     -119.91084
+    ],
+    [
+     39.26027,
+     -119.91189
+    ],
+    [
+     39.26176,
+     -119.9127
+    ],
+    [
+     39.26196,
+     -119.91063
+    ],
+    [
+     39.26271,
+     -119.91027
+    ],
+    [
+     39.26309,
+     -119.91076
+    ],
+    [
+     39.26474,
+     -119.90977
+    ],
+    [
+     39.2649,
+     -119.9107
+    ],
+    [
+     39.26532,
+     -119.91085
+    ],
+    [
+     39.26642,
+     -119.90957
+    ],
+    [
+     39.26741,
+     -119.9104
+    ],
+    [
+     39.26914,
+     -119.90987
+    ],
+    [
+     39.26965,
+     -119.91133
+    ],
+    [
+     39.26903,
+     -119.91254
+    ],
+    [
+     39.26915,
+     -119.91387
+    ],
+    [
+     39.27083,
+     -119.91424
+    ],
+    [
+     39.27211,
+     -119.91391
+    ],
+    [
+     39.27205,
+     -119.91467
+    ],
+    [
+     39.2727,
+     -119.91597
+    ],
+    [
+     39.27431,
+     -119.91563
+    ],
+    [
+     39.27397,
+     -119.91765
+    ],
+    [
+     39.27454,
+     -119.91854
+    ],
+    [
+     39.2763,
+     -119.91842
+    ],
+    [
+     39.27637,
+     -119.91944
+    ],
+    [
+     39.27732,
+     -119.9201
+    ],
+    [
+     39.27607,
+     -119.92079
+    ],
+    [
+     39.27569,
+     -119.92231
+    ],
+    [
+     39.27532,
+     -119.92251
+    ],
+    [
+     39.27442,
+     -119.92138
+    ],
+    [
+     39.27349,
+     -119.9233
+    ],
+    [
+     39.27117,
+     -119.9241
+    ],
+    [
+     39.26871,
+     -119.92701
+    ]
+   ],
+   "photos": 6,
+   "cover": "data/photos/2024-08-31-a-hammock-above-the-lake/clip-4.mp4"
+  },
+  {
+   "id": "2024-06-16-two-miles-a-beetle-and-a-swim",
+   "title": "Two miles, a beetle and a swim",
+   "date": "2024-06-16",
+   "kind": "ride",
+   "place": "",
+   "status": "published",
+   "summary": "A short, fast June ride of about two miles down to Chimney Beach on Lake Tahoe's east shore, then an afternoon on the sand with Helena and Marley: a black beetle on a thumb, Marley on the beach, and a low shot of her swimming with a stick in very clear water.",
+   "sample": false,
+   "stats": {
+    "distanceKm": 3.03,
+    "movingSec": 566,
+    "elapsedSec": 3249,
+    "gainM": 37,
+    "lossM": 151,
+    "minEleM": 1895,
+    "maxEleM": 2010,
+    "avgKmh": 19.3,
+    "maxKmh": 46.6,
+    "start": "2024-06-16T19:07:30.000Z"
+   },
+   "thumb": [
+    [
+     39.15837,
+     -119.93051
+    ],
+    [
+     39.16133,
+     -119.92978
+    ],
+    [
+     39.16377,
+     -119.93044
+    ],
+    [
+     39.16091,
+     -119.93014
+    ],
+    [
+     39.15756,
+     -119.93142
+    ],
+    [
+     39.15755,
+     -119.93218
+    ],
+    [
+     39.15679,
+     -119.93262
+    ],
+    [
+     39.15593,
+     -119.93268
+    ],
+    [
+     39.15537,
+     -119.93145
+    ],
+    [
+     39.15329,
+     -119.93182
+    ],
+    [
+     39.1523,
+     -119.93138
+    ],
+    [
+     39.15109,
+     -119.932
+    ],
+    [
+     39.15127,
+     -119.93131
+    ],
+    [
+     39.15222,
+     -119.93173
+    ]
+   ],
+   "photos": 9,
+   "cover": "data/photos/2024-06-16-two-miles-a-beetle-and-a-swim/04.jpg"
+  },
+  {
+   "id": "2019-03-09-oahu-aerial",
+   "title": "Oahu Aerial",
+   "date": "2019-03-09",
+   "kind": "aerial",
+   "place": "Oahu, Hawaii",
+   "status": "published",
+   "summary": "A feature rather than a usual Note: a collage of Christian's favorite drone footage from his years living on Oahu, from the Mokes and Lanikai on the east side to manta rays off the North Shore, with a little about the island.",
+   "sample": false,
+   "stats": null,
+   "thumb": [],
+   "photos": 17,
+   "cover": "data/photos/2019-03-09-oahu-aerial/01.jpg"
+  },
+  {
+   "id": "2018-07-10-above-ireland",
+   "title": "Above Ireland",
+   "date": "2018-07-10",
+   "kind": "aerial",
+   "place": "",
+   "status": "published",
+   "summary": "A montage of footage gathered over the years in Ireland, where Christian lived for nine years: drone flights over the turquoise coast near Ards Friary, the hills and cliffs of Donegal, Grianán of Aileach and Kerry, plus iPhone clips of the puffins on Skellig Michael and of the fort on a recent trip back, after drones were banned there.",
+   "sample": false,
+   "stats": null,
+   "thumb": [],
+   "photos": 24,
+   "cover": "data/photos/2018-07-10-above-ireland/12.jpg"
   }
  ]
 }
