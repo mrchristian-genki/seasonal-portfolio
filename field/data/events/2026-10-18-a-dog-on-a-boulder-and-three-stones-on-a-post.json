@@ -179,7 +179,7 @@
    "w": 1600,
    "h": 900,
    "use": "post",
-   "cover": true,
+   "cover": false,
    "from": "IMG_8142.JPG",
    "ai": false
   },
@@ -237,7 +237,7 @@
    "w": 960,
    "h": 540,
    "use": "post",
-   "cover": false,
+   "cover": true,
    "from": "IMG_8092.MOV",
    "range": [
     0,
