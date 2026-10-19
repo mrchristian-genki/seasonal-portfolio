@@ -13,11 +13,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $act = $_POST['act'] ?? '';
     if ($act === 'login') {
         if (studio_locked_out()) $error = 'Too many tries. Wait 15 minutes and try again.';
-        elseif (studio_login((string) ($_POST['username'] ?? ''), (string) ($_POST['password'] ?? ''))) { header('Location: ' . (($_GET['then'] ?? '') === 'propre' ? 'propre.php' : './')); exit; }
+        elseif (studio_login((string) ($_POST['username'] ?? ''), (string) ($_POST['password'] ?? ''), !empty($_POST['keep']))) { header('Location: ' . (($_GET['then'] ?? '') === 'propre' ? 'propre.php' : './')); exit; }
         else $error = 'That username and password don\'t match.';
     } elseif ($act === 'logout' && hash_equals(studio_csrf(), (string) ($_POST['csrf'] ?? ''))) {
         $_SESSION = [];
         session_destroy();
+        studio_keep_cookie(0);
         header('Location: ./');
         exit;
     }
@@ -59,7 +60,7 @@ $alt = 'The Studio by ' . $tod . ': a brass STUDIO panel with its day/night dial
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&family=Special+Elite&display=swap">
 <link rel="stylesheet" href="../css/route-dash.css?v=<?= STUDIO_VERSION ?>-3">
-<link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>-74">
+<link rel="stylesheet" href="assets/studio.css?v=<?= STUDIO_VERSION ?>-75">
 <link rel="stylesheet" href="table/table.css?v=86">
 </head>
 <?php if (!$in): ?>
@@ -122,6 +123,7 @@ $alt = 'The Studio by ' . $tod . ': a brass STUDIO panel with its day/night dial
   <input type="hidden" name="act" value="login">
   <label><span>Username</span> <input type="text" name="username" placeholder="Username" autocomplete="username" autocapitalize="none" spellcheck="false" required autofocus></label>
   <label><span>Password</span> <input type="password" name="password" placeholder="Password" autocomplete="current-password" required></label>
+  <label class="keep"><input type="checkbox" name="keep" value="1" checked> <span>Keep me signed in on this device (30 days)</span></label>
   <button type="submit">Log in</button>
   <?php if ($error): ?><p class="err"><?= h($error) ?></p><?php endif; ?>
 </form>

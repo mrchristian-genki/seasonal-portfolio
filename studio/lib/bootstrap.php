@@ -27,20 +27,36 @@ function studio_config(): array {
     return $cfg;
 }
 
+// "Keep me signed in on this device" (Christian, Oct 18: a phone that reloads the tab shouldn't mean logging in again):
+// such a session lasts 30 days from its last use, 90 at most; any other ends after 12 hours, or 2 idle.
+const STUDIO_KEEP_IDLE = 30 * 86400, STUDIO_KEEP_MAX = 90 * 86400;
 function studio_session(): void {
     if (session_status() === PHP_SESSION_ACTIVE) return;
     session_name('studio');
+    // the sessions live in the private folder and are kept as long as the longest may last: the host's shared
+    // session folder clears anything idle for 24 minutes, which logged a phone out between visits
+    $dir = studio_private_dir() . '/sessions';
+    if (!is_dir($dir)) @mkdir($dir, 0700, true);
+    if (is_dir($dir) && is_writable($dir)) session_save_path($dir);
+    ini_set('session.gc_maxlifetime', (string) STUDIO_KEEP_IDLE);
     session_set_cookie_params([
         'lifetime' => 0, 'path' => '/studio/', 'secure' => true, 'httponly' => true, 'samesite' => 'Strict',
     ]);
     session_start();
-    // Sessions end after 12 hours, or after 2 hours idle.
     $now = time();
-    if (isset($_SESSION['born']) && ($now - $_SESSION['born'] > 43200 || $now - ($_SESSION['seen'] ?? 0) > 7200)) {
+    $keep = !empty($_SESSION['keep']);
+    if (isset($_SESSION['born']) && ($now - $_SESSION['born'] > ($keep ? STUDIO_KEEP_MAX : 43200) || $now - ($_SESSION['seen'] ?? 0) > ($keep ? STUDIO_KEEP_IDLE : 7200))) {
         $_SESSION = [];
         session_regenerate_id(true);
+        $keep = false;
     }
     $_SESSION['seen'] = $now;
+    if ($keep) studio_keep_cookie();
+}
+// a kept session's cookie outlives the browser closing, and is renewed with each use
+function studio_keep_cookie(int $for = STUDIO_KEEP_IDLE): void {
+    if (headers_sent()) return;
+    setcookie(session_name(), $for > 0 ? session_id() : '', ['expires' => $for > 0 ? time() + $for : 1, 'path' => '/studio/', 'secure' => true, 'httponly' => true, 'samesite' => 'Strict']);
 }
 
 function studio_logged_in(): bool {
@@ -125,7 +141,7 @@ function studio_owner_users(array $cfg): array {
     return isset($cfg['owner_user']) ? [strtolower((string) $cfg['owner_user'])] : ['christian', 'owner'];
 }
 
-function studio_login(string $username, string $password): bool {
+function studio_login(string $username, string $password, bool $keep = false): bool {
     if (studio_locked_out()) return false;
     $cfg = studio_config();
     $who = null; $user = strtolower(trim($username));
@@ -139,7 +155,8 @@ function studio_login(string $username, string $password): bool {
     studio_clear_failures();
     studio_session();
     session_regenerate_id(true);
-    $_SESSION = ['ok' => true, 'born' => time(), 'seen' => time(), 'name' => $who['name'], 'role' => $who['role']];
+    $_SESSION = ['ok' => true, 'born' => time(), 'seen' => time(), 'name' => $who['name'], 'role' => $who['role'], 'keep' => $keep];
+    if ($keep) studio_keep_cookie();
     return true;
 }
 function studio_logged_in_still(): bool {
