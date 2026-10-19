@@ -14,7 +14,7 @@
    (episode.narrator), its categories (looks.json "categoryNarrators"), the site default ("defaults.narrator"), else
    GlazyArray. A.L.T.A.'s tank backdrop (the scene behind her glass) follows it too: the Note's own (altaBackdrop),
    its categories' (looks.json "categoryTanks"), the default ("defaults.tank"), else none (the hall). Her scenes are
-   looks.json "tankBackdrops", files in assets/alta/backdrops/. NARRATORS are the ones with a player: GlazyArray (js/narrator.js), A.L.T.A. (js/alta.js) and Robot Marley (js/marley.js).
+   looks.json "tankBackdrops", files in assets/alta/backdrops/. NARRATORS are the ones with a player: GlazyArray (js/narrator.js), A.L.T.A. (js/alta.js) and Starlee (js/marley.js).
 
    So there is never nothing unless there is nothing at all. pick() also says where each came from, for the Studio.
    A category can offer more than one backdrop or tank scene (looks.json "categoryBackdropChoices", "categoryTankChoices"),
@@ -169,7 +169,7 @@
     });
     return out.sort(function (a, b) { return b.s - a.s; });
   }
-  var NARRATORS = { glazyarray: 'GlazyArray', alta: 'A.L.T.A.', marley: 'Robot Marley' };
+  var NARRATORS = { glazyarray: 'GlazyArray', alta: 'A.L.T.A.', marley: 'Starlee' };
   var api = { pick: pick, fit: fit, catFit: catFit, wordsOf: wordsOf, cdist: cdist, mmdd: mmdd, NARRATORS: NARRATORS };
   if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.GAResolve = api;
 })(this);

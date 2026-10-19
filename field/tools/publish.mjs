@@ -88,14 +88,14 @@ const narratorOf = (e) => pickFor(e).narrator.name;
 // a feature's photo spreads: e.feature.lookbook is one, or a list of them
 const books = (e) => { const L = e.feature && e.feature.lookbook; return (Array.isArray(L) ? L : L ? [L] : []).filter((b) => b && typeof b === 'object'); };
 // the scene behind A.L.T.A.'s tank on this Note (KIT.md Round 8), when it has one and its file is there
-// Only her own scenes: she no longer borrows the Note's backdrop (GlazyArray's and Robot Marley's); without a scene
+// Only her own scenes: she no longer borrows the Note's backdrop (GlazyArray's and Starlee's); without a scene
 // of hers she stays in her hall (Christian, Oct 14).
 const bdAttr = (e) => {
   const t = pickFor(e).tank;
   if (t && /^[\w.-]+\.(webp|jpg|png)$/.test(t.file || '') && fs.existsSync(path.join(SITE, 'assets/alta/backdrops', t.file))) return ` data-bd="/assets/alta/backdrops/${t.file}${t.v ? '?v=' + t.v : ''}"`;
   return '';
 };
-// the scene behind Robot Marley on this Note (js/marley.js): its backdrop as the site picks it (its own, its
+// the scene behind Starlee on this Note (js/marley.js): its backdrop as the site picks it (its own, its
 // categories', a holiday's, the default; the same backdrops as GlazyArray's), when its file is there
 // the Note's backdrop as the site picks it: { attr: ' data-bd="..."', from: 'note' | 'category' | 'holiday' | 'default' }, or null
 const noteBd = (e) => {
@@ -117,7 +117,7 @@ const mlyBdAttr = (e) => {
   const hol = lk && (lk.from === 'note' || lk.from === 'category') && mlyHas(lk.name) ? ` data-look="${lk.name}"` : '';
   return bd + hol + (e.ignoreHolidays ? ' data-noholiday' : '');
 };
-// the looks Robot Marley has (looks.json "marley": her own built in, js/marley.js HOL, or brought in from the Studio)
+// the looks Starlee has (looks.json "marley": her own built in, js/marley.js HOL, or brought in from the Studio)
 const mlyHas = (name) => !!RES && (RES.J.looks || []).some((l) => l.name === name && l.marley);   // (RES is loaded by noteBd, which runs first)
 // moments in an episode her player acts on (js/alta.js): [{at: seconds, eyes: 'amber' | 'cyan' | ''}], from the Note
 const cueAttr = (e) => {
@@ -222,10 +222,10 @@ const foot = (rel) => `<footer class="foot"><p>${esc(show.narrationNote)}</p>
 <script src="${rel}../js/motion.js?v=2" defer></script>
 <script src="${rel}play.js?v=${V}" defer></script>
 <script src="${rel}../js/lake.js?v=4" defer></script>
-<script src="${rel}../assets/narrator/resolve.js?v=7" defer></script>
+<script src="${rel}../assets/narrator/resolve.js?v=8" defer></script>
 <script src="${rel}../js/narrator.js?v=45" defer></script>
 <script src="${rel}../js/alta.js?v=18" defer></script>
-<script src="${rel}../js/marley.js?v=16" defer></script>
+<script src="${rel}../js/marley.js?v=17" defer></script>
 </body>
 </html>
 `;
@@ -272,7 +272,7 @@ for (const e of events) {
   // a Note A.L.T.A. narrates (its own choice, or its category's): her tank is its Listen bar (js/alta.js); on a Note
   // that chose her itself, there even before her episode is recorded
   const alta = narratorOf(e) === 'alta' && (!!audio || (e.episode && e.episode.narrator === 'alta'));
-  // a Note Robot Marley narrates, once its episode is recorded: she sits in its Listen bar and talks along (js/marley.js)
+  // a Note Starlee narrates, once its episode is recorded: she sits in its Listen bar and talks along (js/marley.js)
   const marley = narratorOf(e) === 'marley' && !!audio;
   const t = e.track || null, s = t && t.stats;
   if (t) fs.writeFileSync(path.join(OUT, 'data', e.id + '.json'), JSON.stringify({ kind: e.kind, stats: s, line: t.line, profile: t.profile, shownKm: t.trim && t.trim.shownKm, show: e.dashboard || null }) + '\n');
@@ -346,7 +346,7 @@ for (const e of events) {
     if (b.type === 'steps') return `<section class="mag-steps">${b.title ? `<h3>${esc(b.title)}</h3>` : ''}<ol>${(b.items || []).map((x) => { const ph = x.photo && byFile(x.photo); return `<li>${x.title ? `<b>${esc(x.title)}</b>` : ''}${paras(x.text).map((t) => `<p>${esc(t)}</p>`).join('')}${ph ? fig(ph) : ''}</li>`; }).join('')}</ol></section>\n`;
     if (b.type === 'timeline') return `<section class="mag-time">${b.title ? `<h3>${esc(b.title)}</h3>` : ''}<ol>${(b.items || []).map(([w, t]) => `<li><time>${esc(w)}</time><p>${esc(t)}</p></li>`).join('')}</ol></section>\n`;
     if (b.type === 'code') return `<figure class="mag-code">${b.file ? `<figcaption class="mc-file">${esc(b.file)}</figcaption>` : ''}<pre><code>${esc(b.code || '')}</code></pre>${b.note ? `<figcaption>${esc(b.note)}</figcaption>` : ''}</figure>\n`;
-    // Robot Marley, live ("marley": js/marley.js builds her in the figure, with her buttons; an optional charm and
+    // Starlee, live ("marley": js/marley.js builds her in the figure, with her buttons; an optional charm and
     // two colours, else her own)
     if (b.type === 'marley') { const pal = (b.palette || []).filter((c) => /^#[0-9a-f]{6}$/i.test(c)); return `<figure class="mag-marley"><div class="marley" data-controls${mlyBdAttr(e)}${/^[a-z]{2,12}$/.test(b.charm || '') ? ` data-charm="${b.charm}"` : ''}${pal.length === 2 ? ` data-palette="${pal.join(' ')}"` : ''}></div>${b.title || b.text ? `<figcaption>${b.title ? `<b>${esc(b.title)}</b> ` : ''}${esc(b.text || '')}</figcaption>` : ''}</figure>\n`; }
     if (b.type === 'callouts') { const ph = b.photo && byFile(b.photo); if (!ph) return ''; return `<figure class="mag-callouts"><div class="mc-pic"><img src="${esc(ph.src)}" alt="${esc(ph.caption)}" width="${ph.w}" height="${ph.h}" loading="lazy">${(b.items || []).map((x, k) => `<span class="mc-dot${Number(x.x) > 62 ? ' flip' : ''}" style="--x:${Number(x.x)}%;--y:${Number(x.y)}%"><i>${k + 1}</i><b>${esc(x.label)}</b></span>`).join('')}</div><figcaption>${b.title ? `<b>${esc(b.title)}</b> ` : ''}${ph.ai ? '<span class="ai-badge">Made with AI</span> ' : ''}${esc(ph.caption)}</figcaption></figure>\n`; }
@@ -406,7 +406,7 @@ ${e.summary ? `<p class="mag-deck">${esc(e.summary)}</p>` : ''}
 ${e.summary ? `<p class="lede">${esc(e.summary)}</p>` : ''}${mediaNote}`}
 ${alta ? `<section class="listen alta" data-narrator="alta"${palAttr(e)}${cueAttr(e)}${bdAttr(e)} aria-label="${audio ? 'Listen to the episode' : 'A.L.T.A. in her tank'}"><div><span class="listen-label">${audio ? `Listen · ${mmss(audio.sec)}` : 'Coming soon'}</span><b>${esc(e.episode.title || e.title)}</b></div>
 ${audio ? `<audio controls preload="metadata" src="${esc(audio.src)}"></audio>` : ''}</section>` : marley ? `<section class="listen mly-bar" data-narrator="marley" aria-label="Listen to the episode"><div><span class="listen-label">Listen · ${mmss(audio.sec)}</span><b>${esc(e.episode.title || e.title)}</b></div>
-<div class="marley"${mlyBdAttr(e)}${palAttr(e)} aria-label="Robot Marley, telling the episode"></div>
+<div class="marley"${mlyBdAttr(e)}${palAttr(e)} aria-label="Starlee, telling the episode"></div>
 <audio controls preload="metadata" src="${esc(audio.src)}"></audio></section>` : audio ? `<section class="listen" aria-label="Listen to the episode"${lookAttr(e)}><div><span class="listen-label">Listen · ${mmss(audio.sec)}</span><b>${esc(e.episode.title || e.title)}</b></div>
 <audio controls preload="metadata" src="${esc(audio.src)}"></audio></section>` : ''}
 ${cover && !F ? fig(cover, 'cover') : ''}${coverStrip ? '\n' + fig(coverStrip, 'photo strip') : ''}

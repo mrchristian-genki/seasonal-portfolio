@@ -1,4 +1,4 @@
-/* Robot Marley's player (js/marley.js; her parts and kit in assets/marley/). Her stage is 600 x 738 of her 1376 x 768
+/* Starlee's player (js/marley.js; her parts and kit in assets/marley/). Her stage is 600 x 738 of her 1376 x 768
    template (from 400, 30): her parts sit in it at 440, 40 (560 x 728), her moves fill all of it, drawn with their own
    masks so whatever is behind her shows. Every change eases, per the motion rule; reduced motion stills her. */
 .mly{position:relative;margin:0 auto;max-width:420px}

@@ -127,7 +127,7 @@ html.night-page .feature .mag-spot{border-color:#3a5157}
 .feature .mv-bars b{font:800 15px/1 var(--mg-sans);color:var(--mg-ink);text-align:right}
 .feature .mag-verdict>p{font:17px/1.6 var(--mg-text);color:var(--mg-ink);margin:0 0 10px}
 .feature .mag-callouts{margin:1.6em 0}
-/* Robot Marley, live (a "marley" block; js/marley.js, css/marley.css): her stage on a warm card, her buttons below */
+/* Starlee, live (a "marley" block; js/marley.js, css/marley.css): her stage on a warm card, her buttons below */
 .feature .mag-marley{margin:1.8em 0;padding:16px;border:2px solid var(--mg-ink);border-radius:4px;background:rgba(255,255,255,.35)}
 .feature .mag-marley .marley{max-width:400px}
 .feature .mag-marley .mly-ctl{max-width:560px;margin-left:auto;margin-right:auto}

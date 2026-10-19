@@ -215,7 +215,7 @@ function apply_looks(GitHub $gh, array &$files, array $body): void
                 $bcats[$cat] = $b;
             }
         }
-        $fixed = fn(array $l) => isset($l['to']) || !empty($l['rotate']) || !empty($l['marley']);   // marley: a look Robot Marley wears too (her parts: js/marley.js HOL)
+        $fixed = fn(array $l) => isset($l['to']) || !empty($l['rotate']) || !empty($l['marley']);   // marley: a look Starlee wears too (her parts: js/marley.js HOL)
         // a look's flair masks go with it (and a replaced look's old ones, unless the new one brings its own)
         $unflair = function (array $l) use (&$files) {
             $stem = preg_replace('/\.(webp|png)$/', '', (string) ($l['file'] ?? ''));
@@ -240,14 +240,14 @@ function apply_looks(GitHub $gh, array &$files, array $body): void
             foreach ($list as $k => $l) {
                 if (($l['name'] ?? '') !== $name) continue;
                 if ($fixed($l) && !(!empty($l['marley']) && empty($l['file']))) json_fail("\"$name\" is one of her holiday looks or hair styles. Pick another name for this one.");
-                $was = $l;   // a look only Robot Marley had (marley, no file) getting GlazyArray's image: it stays Marley's too
+                $was = $l;   // a look only Starlee had (marley, no file) getting GlazyArray's image: it stays Marley's too
                 if (($l['file'] ?? '') !== "$name.$ext" && preg_match('/^[a-z0-9-]{1,40}\.(webp|png)$/', (string) ($l['file'] ?? ''))) $files['assets/narrator/looks/' . $l['file']] = null;   // the old file, if it changes type
                 $unflair($l);
                 unset($list[$k]);
             }
             // v: changes with every version, so a replaced image isn't served from a cache
             $look = ['name' => $name, 'file' => "$name.$ext", 'about' => mb_substr(trim((string) ($nl['about'] ?? '')), 0, 120), 'v' => base_convert((string) time(), 10, 36)];
-            // Robot Marley's side of the look stays as it was: her built-in one (true) or her brought-in hat and charm
+            // Starlee's side of the look stays as it was: her built-in one (true) or her brought-in hat and charm
             // (an object; Oct 14: this was set to true, and her seven new caps lost their hats when GlazyArray's came in)
             if (!empty($was['marley'])) { $look['marley'] = $was['marley']; if ($look['about'] === '') $look['about'] = (string) ($was['about'] ?? ''); }
             if (($nl['bulb'] ?? true) === false) $look['bulb'] = false;
@@ -344,7 +344,7 @@ function apply_looks(GitHub $gh, array &$files, array $body): void
         }
         // images added to the pools of several categories at once (Christian, Oct 14): { names: [...], cats: [...] }, from a
         // category's pool (Characters) or a Note's new image (into all its categories); each only for its own character:
-        // backdrops (GlazyArray, Robot Marley) or A.L.T.A.'s tank scenes. A category's own pick is already in its pool.
+        // backdrops (GlazyArray, Starlee) or A.L.T.A.'s tank scenes. A category's own pick is already in its pool.
         foreach ([['offerBackdrop', &$bchoice, $bcats, array_map(fn($b) => (string) ($b['name'] ?? ''), $bds)], ['offerTank', &$tchoice, $ctanks, $tankNames]] as $of) {
             $in = $body[$of[0]] ?? null; if (!is_array($in)) continue;
             $names = array_values(array_unique(array_map('strval', (array) ($in['names'] ?? []))));
@@ -356,7 +356,7 @@ function apply_looks(GitHub $gh, array &$files, array $body): void
                 if ($l) { $of[1][$cat] = $l; $touch($cat); }
             }
         }
-        // a look brought in for Robot Marley (Studio, Characters, "Bring in a look"; studio/assets/marleycut.js): her hat
+        // a look brought in for Starlee (Studio, Characters, "Bring in a look"; studio/assets/marleycut.js): her hat
         // and her charm, each three files (own, -dye, -mask) in assets/marley/parts/web, and the look's "marley" naming
         // them with their boxes in her frame (js/marley.js reads it). A look she had is replaced; a new one is added
         $ml = $body['marleyLook'] ?? null;

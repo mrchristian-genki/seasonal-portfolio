@@ -221,7 +221,7 @@
 
   function build(bar) {
     var audio = bar.querySelector('audio');
-    if (!audio || bar.querySelector('.nb') || bar.classList.contains('alta') || bar.classList.contains('mly-bar')) return;   // A.L.T.A.'s bars are hers (js/alta.js), Robot Marley's hers (js/marley.js)
+    if (!audio || bar.querySelector('.nb') || bar.classList.contains('alta') || bar.classList.contains('mly-bar')) return;   // A.L.T.A.'s bars are hers (js/alta.js), Starlee's hers (js/marley.js)
     bar.classList.add('has-nb');
     var nb = document.createElement('div'); nb.className = 'nb'; nb.setAttribute('aria-hidden', 'true');
     nb.innerHTML = '<div class="nb-rise"><div class="nb-head"><img class="nb-base" src="' + A + 'head-base.webp' + V + '" alt=""><i class="nb-flair" data-k="a" hidden></i><i class="nb-flair" data-k="b" hidden></i><span class="nb-eyes"><img class="nb-iris" src="' + A + 'head-iris.webp' + V + '" alt=""></span><img class="nb-shine" src="' + A + 'head-shine.webp' + V + '" alt=""><img class="nb-jaw-s" src="' + A + 'head-jaw-sides.webp' + V + '" alt=""><img class="nb-jaw" src="' + A + 'head-jaw.webp' + V + '" alt="">' +

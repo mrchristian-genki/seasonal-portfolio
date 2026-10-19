@@ -1,6 +1,6 @@
-# Robot Marley's kit: the prompts that make her parts
+# Starlee's kit: the prompts that make her parts
 
-Robot Marley is the third character (Christian, Oct 12, 2026): a robot companion dog built after the real Marley, a
+Starlee is the third character (Christian, Oct 12, 2026): a robot companion dog built after the real Marley, a
 mixed-breed hound. She gets her own section for the local dog scene: news, dogs looking for homes, new gear and toys
 tried out, and maybe a podcast with other dogs as guests. She's built the way GlazyArray and A.L.T.A. are: separate
 layers the site moves on its own, so she can blink, tilt her head, prick her ears, wag and talk without a video
@@ -57,7 +57,7 @@ need her whole body (the play-bow, lying down) are video clips that start and en
 
 **Her description (paste this first):**
 
-> Robot Marley, a friendly robot companion dog built after a real mixed-breed hound. Warm-toned matte panels with
+> Starlee, a friendly robot companion dog built after a real mixed-breed hound. Warm-toned matte panels with
 > visible seams, small rivets and mechanical joins that follow a real dog's markings: rich golden-brown and caramel
 > panels on her back, sides, ears and the top of her head; matte white panels on her muzzle, chest, belly and paws.
 > Floppy ears of articulated golden-brown panels; a smooth, segmented golden-brown tail. Bronze gaskets and dark
@@ -185,7 +185,7 @@ dog park, a trailhead, a Lake Tahoe beach at dusk, a cosy studio with two microp
 
 ## 9. Magic around Tahoe (stills, then image to video)
 
-Robot Marley out in the world, doing what a real dog can't. Each is a still first; any of them can then become a slow
+Starlee out in the world, doing what a real dog can't. Each is a still first; any of them can then become a slow
 6 to 8 s clip (first frame the still, "slow, eased, dreamlike motion, locked or very slow camera"). For every one:
 paste her description first, use the lake-shore and backyard renders as references (never the model sheet), and add
 the line below at the end. Public places only, never the home.
@@ -233,7 +233,7 @@ forwards then backwards (a "boomerang"); Claude can do either when it's built in
 
 ### 9c. Side by side with the real Marley (image to video)
 
-Christian's four renders of Oct 12: Robot Marley beside the real Marley, twice in the yard by the fence and twice on
+Christian's four renders of Oct 12: Starlee beside the real Marley, twice in the yard by the fence and twice on
 the patio couch. Each still is the **first and the last frame** (give the same image as the end frame where the tool
 has one), so every clip loops. Paste this before each one's own line:
 
@@ -317,7 +317,7 @@ lei, an own-colour render and a cyan one, cut the same way (`hat-hawaii` and `ch
 `-mask`). The glasses are worn as her hat and tilt with her head; the lei is her charm, the one that doesn't swing.
 The lei's leaves were kept where they're clearly leaves (over her body, and the darker ones against the green); the
 render tinted her chest green under the lei, which stays out of the cut. A Note or category picks it as the look
-`hawaii` in `looks.json`, Robot Marley's alone for now (`"marley": true`, no file: GlazyArray keeps her curls until
+`hawaii` in `looks.json`, Starlee's alone for now (`"marley": true`, no file: GlazyArray keeps her curls until
 she has one).
 
 **Tahoe winter (Oct 13, Christian's renders):** a chunky knit beanie with a pom-pom and a pinecone charm in a brass
@@ -339,7 +339,7 @@ the cyan surrounds (a maple leaf on a beanie) comes with the piece and keeps its
 **Narrators in step (Oct 13):** the Studio's Categories tab lists every look more than one narrator wears (the
 holidays, and the looks marked `"marley": true`, the ones she has parts for) and who has her piece. A missing one is
 a click from its prompts: GlazyArray's two (from the look's `gaLook`, `gaA` and `gaB`, else its `about`) fill in Add a
-look, and her render lands on the same look, which stays Robot Marley's too; Robot Marley's two (a hat and a charm,
+look, and her render lands on the same look, which stays Starlee's too; Starlee's two (a hat and a charm,
 then both cyan) are rendered from her seated template and brought to Claude to cut, then added to `js/marley.js`
 `HOL`, `publish.mjs` `MLY_HOL`, and `"marley": true` on the look.
 

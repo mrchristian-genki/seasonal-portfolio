@@ -1,4 +1,4 @@
-/* STUDIO: Robot Marley's looks, cut in the browser from two renders of her template (Christian, Oct 13, 2026), the
+/* STUDIO: Starlee's looks, cut in the browser from two renders of her template (Christian, Oct 13, 2026), the
    way Claude cut her holiday looks by hand (assets/marley/KIT.md): one render in the look's own colours, one with the
    hat and the charm painted flat cyan. The cyan shapes say where each piece is: above her collar it's the hat, below
    it the charm. Each piece comes out three ways, cropped to its box in her 560 x 728 frame:
