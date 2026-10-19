@@ -4,8 +4,9 @@
      lights ease on and off, nothing snaps). Only the picture a place needs now is loaded; the others when they're needed.
    - Each place is a door: a section of this page (its tab), Play's Notes of that kind, or a page of its own. Hover or
      focus lifts it a little and warms its glow; its name sits on a small plate under it.
-   - The grounds are drawn here: grass that follows the season, the path, the stream down from the lake and the pond the
-     labs stand in. On a phone the places come down the hill one or two at a time.
+   - The ground on a wide screen is Christian's painted hill, its four versions cross-fading like the places (spring and
+     fall are tinted from summer in css/homestead.css). On a phone, a narrow hill is drawn here, the places coming
+     down it one or two at a time, until the painted phone sections arrive.
    - Small things move: the Kinetic Garden's rotors turn, a butterfly drifts across, bubbles rise in A.L.T.A.'s tubes,
      and somewhere a firefly glows (a new spot each season). With reduced motion they hold still. */
 (function () {
@@ -15,34 +16,35 @@
   var A = 'assets/homestead/', VER = '?v=1';
   var calm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // x, y: where its base sits (the middle of its bottom edge) on the hill, 1600 x 1500 on a wide screen and
-  // 400 x 2760 on a phone (mx, my); w, mw: how wide it is there. go: where its door leads (see open()).
+  // x, y, w: its top left corner and width on Christian's painted hill (2000 x 1116, his map of the homestead,
+  // assets/homestead/ground-*), on a wide screen; mx, my, mw: the middle of its base and its width on a phone's narrow
+  // drawn hill (400 x 2760). go: where its door leads (see open()).
   var PLACES = [
-    { id: 'tubes', name: "A.L.T.A.'s tubes", line: 'Her way in and out of the lake', x: 135, y: 400, w: 150, mx: 70, my: 230, mw: 95, go: { href: 'play/' } },
-    { id: 'labs', name: 'The Automaton Labs', line: 'Science, tech and AI', x: 450, y: 430, w: 440, mx: 255, my: 230, mw: 270, go: { tags: ['science', 'tech', 'ai'] } },
-    { id: 'alta', name: "A.L.T.A.'s station", line: 'The lake guardian\'s booth', x: 780, y: 400, w: 170, mx: 95, my: 450, mw: 140, go: { href: 'play/' } },
-    { id: 'tower', name: "GlazyArray's tower", line: 'Mini-Cast, on the air', x: 1130, y: 330, w: 170, mx: 305, my: 450, mw: 130, go: { tags: ['mini-cast'] } },
-    { id: 'observatory', name: 'The Observatory', line: 'The Tumble: back to 1990', x: 1420, y: 370, w: 230, mx: 140, my: 708, mw: 190, go: { href: 'web/' } },
-    { id: 'workshop', name: 'The Workshop', line: 'Builds, light jars, projects', x: 330, y: 700, w: 340, mx: 200, my: 945, mw: 300, go: { view: 'workshop' } },
-    { id: 'studio', name: 'The Studio', line: 'Members only: the back room', x: 700, y: 690, w: 270, mx: 105, my: 1141, mw: 180, go: { href: 'studio/' } },
-    { id: 'house', name: 'The House', line: 'Websites since 1997', x: 1030, y: 700, w: 320, mx: 300, my: 1141, mw: 190, go: { view: 'signal' } },
-    { id: 'doghouse', name: "Marley's house", line: 'Knock first', x: 1225, y: 735, w: 95, mx: 320, my: 708, mw: 90, go: { tags: ['with-marley'] } },
-    { id: 'library', name: 'The Library', line: 'The coloring books', x: 1390, y: 720, w: 175, mx: 95, my: 1366, mw: 110, go: { view: 'studio' } },
-    { id: 'newsstand', name: 'The Newsstand', line: 'The magazines', x: 170, y: 1000, w: 175, mx: 290, my: 1366, mw: 130, go: { href: 'magazine/' } },
-    { id: 'barn', name: 'The Screening Barn', line: 'Videos, photos, Daydreams', x: 470, y: 1010, w: 330, mx: 200, my: 1606, mw: 300, go: { view: 'lab' } },
-    { id: 'depot', name: 'The Parts Depot', line: 'The parts catalog', x: 860, y: 1000, w: 300, mx: 200, my: 1848, mw: 290, go: { href: 'catalog/' } },
-    { id: 'kinetic', name: 'The Kinetic Garden', line: 'Digital art', x: 1210, y: 1010, w: 240, mx: 125, my: 2043, mw: 200, go: { tags: ['digital-art'] } },
-    { id: 'starlee', name: "Starlee's dock", line: 'Where she charges', x: 1470, y: 1020, w: 200, mx: 320, my: 2043, mw: 150, go: { href: 'play/' } },
-    { id: 'bikepark', name: 'The Bike Park', line: 'Rides', x: 330, y: 1320, w: 420, mx: 200, my: 2272, mw: 340, go: { tags: ['ride'] } },
-    { id: 'trailhead', name: 'The Trailhead', line: 'Hikes and foraging walks', x: 800, y: 1310, w: 400, mx: 200, my: 2512, mw: 330, go: { tags: ['hike'] } },
-    { id: 'climbing', name: 'The Climbing Wall', line: 'Adventures', x: 1180, y: 1320, w: 300, mx: 115, my: 2696, mw: 210, go: { tags: ['adventure'] } },
-    { id: 'tree', name: 'The Useless Tree', line: 'A bench in the shade', x: 1470, y: 1330, w: 250, mx: 315, my: 2696, mw: 170, go: { view: 'lab' } }
+    { id: 'tubes', name: "A.L.T.A.'s tubes", line: 'Her way in and out of the lake', x: 50, y: 51, w: 140, z: 313, mx: 70, my: 230, mw: 95, go: { href: 'play/' } },
+    { id: 'labs', name: 'The Automaton Labs', line: 'Science, tech and AI', x: 296, y: 159, w: 418, z: 368, mx: 255, my: 230, mw: 270, go: { tags: ['science', 'tech', 'ai'] } },
+    { id: 'alta', name: "A.L.T.A.'s station", line: 'The lake guardian\'s booth', x: 746, y: 82, w: 156, z: 272, mx: 95, my: 450, mw: 140, go: { href: 'play/' } },
+    { id: 'tower', name: "GlazyArray's tower", line: 'Mini-Cast, on the air', x: 1263, y: 62, w: 161, z: 239, mx: 305, my: 450, mw: 130, go: { tags: ['mini-cast'] } },
+    { id: 'observatory', name: 'The Observatory', line: 'The Tumble: back to 1990', x: 1615, y: 24, w: 220, z: 259, mx: 140, my: 708, mw: 190, go: { href: 'web/' } },
+    { id: 'workshop', name: 'The Workshop', line: 'Builds, light jars, projects', x: 382, y: 366, w: 292, z: 553, mx: 200, my: 945, mw: 300, go: { view: 'workshop' } },
+    { id: 'studio', name: 'The Studio', line: 'Members only: the back room', x: 828, y: 319, w: 220, z: 502, mx: 105, my: 1141, mw: 180, go: { href: 'studio/' } },
+    { id: 'house', name: 'The House', line: 'Websites since 1997', x: 1155, y: 351, w: 276, z: 544, mx: 300, my: 1141, mw: 190, go: { view: 'signal' } },
+    { id: 'doghouse', name: "Marley's house", line: 'Knock first', x: 1398, y: 483, w: 84, z: 561, mx: 320, my: 708, mw: 90, go: { tags: ['with-marley'] } },
+    { id: 'library', name: 'The Library', line: 'The coloring books', x: 1512, y: 295, w: 159, z: 549, mx: 95, my: 1366, mw: 110, go: { view: 'studio' } },
+    { id: 'newsstand', name: 'The Newsstand', line: 'The magazines', x: 262, y: 520, w: 156, z: 715, mx: 290, my: 1366, mw: 130, go: { href: 'magazine/' } },
+    { id: 'barn', name: 'The Screening Barn', line: 'Videos, photos, Daydreams', x: 522, y: 569, w: 300, z: 772, mx: 200, my: 1606, mw: 300, go: { view: 'lab' } },
+    { id: 'depot', name: 'The Parts Depot', line: 'The parts catalog', x: 1060, y: 594, w: 260, z: 771, mx: 200, my: 1848, mw: 290, go: { href: 'catalog/' } },
+    { id: 'kinetic', name: 'The Kinetic Garden', line: 'Digital art', x: 1402, y: 603, w: 220, z: 781, mx: 125, my: 2043, mw: 200, go: { tags: ['digital-art'] } },
+    { id: 'starlee', name: "Starlee's dock", line: 'Where she charges', x: 1783, y: 631, w: 214, z: 758, mx: 320, my: 2043, mw: 150, go: { href: 'play/' } },
+    { id: 'bikepark', name: 'The Bike Park', line: 'Rides', x: 298, y: 820, w: 411, z: 1033, mx: 200, my: 2272, mw: 340, go: { tags: ['ride'] } },
+    { id: 'trailhead', name: 'The Trailhead', line: 'Hikes and foraging walks', x: 885, y: 792, w: 348, z: 997, mx: 200, my: 2512, mw: 330, go: { tags: ['hike'] } },
+    { id: 'climbing', name: 'The Climbing Wall', line: 'Adventures', x: 1273, y: 824, w: 292, z: 1016, mx: 115, my: 2696, mw: 210, go: { tags: ['adventure'] } },
+    { id: 'tree', name: 'The Useless Tree', line: 'A bench in the shade', x: 1593, y: 804, w: 407, z: 1031, mx: 315, my: 2696, mw: 170, go: { view: 'lab' } }
   ];
   // the Kinetic Garden's rotors, each turning on its own stem beside it (x, y: its middle)
   var ROTORS = [
-    { i: 0, x: 1370, y: 880, w: 46, mx: 250, my: 1880, mw: 34, s: 34 },
-    { i: 1, x: 1055, y: 905, w: 42, mx: 28, my: 1905, mw: 30, s: -46 },
-    { i: 0, x: 1335, y: 955, w: 30, mx: 375, my: 1900, mw: 24, s: 52 }
+    { i: 0, x: 1652, y: 640, w: 52, mx: 250, my: 1880, mw: 34, s: 34 },
+    { i: 1, x: 1388, y: 660, w: 46, mx: 28, my: 1905, mw: 30, s: -46 },
+    { i: 0, x: 1668, y: 712, w: 34, mx: 375, my: 1900, mw: 24, s: 52 }
   ];
 
   // ── the state the pictures follow: winter brings the snow versions, night mode the lit ones ──
@@ -54,7 +56,9 @@
 
   // ── build ──
   var stage = document.createElement('div'); stage.className = 'hs-stage';
-  stage.innerHTML = ground();
+  stage.innerHTML = '<div class="hs-paint" aria-hidden="true"></div>' + ground();
+  var wideMQ = window.matchMedia ? matchMedia('(min-width: 720px)') : { matches: true };
+  var paint = { p: { id: 'ground' }, art: stage.firstChild, imgs: {}, want: null, cur: null };
   var places = PLACES.map(function (p) {
     var a = document.createElement('a');
     a.className = 'hs-place hs-' + p.id;
@@ -80,8 +84,18 @@
     '<button type="button" class="hs-firefly" aria-label="A firefly"></button>');
   root.appendChild(stage);
 
+  // On a wide screen the painting rises under the lake's bank by the height of the lake's rolling edge, and its top is cut
+  // in the same wave (css/homestead.css): --hs-lift is that height, --hs-wave the share of the painting it covers.
+  var hero = document.getElementById('hero');
+  function lift() {
+    if (!hero) return;
+    var h = parseFloat(getComputedStyle(hero, '::after').height) || 0, sh = stage.offsetHeight || 1;
+    H.style.setProperty('--hs-lift', h + 'px'); H.style.setProperty('--hs-wave', (h / sh * 100).toFixed(2) + '%');
+  }
+  lift(); addEventListener('resize', lift); addEventListener('load', lift);
+
   function vars(p) {
-    return '--x:' + p.x + ';--y:' + p.y + ';--w:' + p.w + ';--mx:' + p.mx + ';--my:' + p.my + ';--mw:' + p.mw + ';z-index:' + Math.round(p.y) + ';';
+    return '--x:' + p.x + ';--y:' + p.y + ';--w:' + p.w + ';--mx:' + p.mx + ';--my:' + p.my + ';--mw:' + p.mw + ';z-index:' + Math.round(p.z || p.y) + ';';
   }
 
   // ── the pictures: bring in the one wanted, fade it in over the one showing, then let the old one go ──
@@ -108,7 +122,8 @@
   }
   var lazy = 'IntersectionObserver' in window;
   var seen = !lazy;
-  function update() { if (!seen) return; var v = want(); places.forEach(function (pl) { show(pl, v); }); }
+  function update() { if (!seen) return; var v = want(); places.forEach(function (pl) { show(pl, v); }); if (wideMQ.matches) show(paint, v); }
+  if (wideMQ.addEventListener) wideMQ.addEventListener('change', update);
   if (lazy) new IntersectionObserver(function (e) { if (e[0].isIntersecting && !seen) { seen = true; update(); } }, { rootMargin: '600px 0px' }).observe(root);
   new MutationObserver(update).observe(H, { attributes: true, attributeFilter: ['class', 'data-season'] });
   update();
@@ -146,7 +161,7 @@
   }
 
   // ── the firefly: one glowing pixel, somewhere new each season; tap it and it drifts off to another spot ──
-  var SPOTS = [[300, 560], [905, 820], [1290, 1180], [620, 1180], [1530, 560], [90, 1150]];
+  var SPOTS = [[230, 470], [1010, 600], [1650, 880], [790, 880], [1960, 520], [150, 1060]];
   var ff = stage.querySelector('.hs-firefly'), hop = 0;
   function place() {
     var s = { winter: 0, spring: 1, summer: 2, fall: 3 }[H.dataset.season] || 0, k = SPOTS[(s + hop) % SPOTS.length];
@@ -158,16 +173,6 @@
 
   // ── the grounds ──
   function ground() {
-    var wide = '<svg class="hs-ground hs-wide" viewBox="0 0 1600 1500" preserveAspectRatio="none" aria-hidden="true">' +
-      '<defs><linearGradient id="hsG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="g1"/><stop offset="1" class="g2"/></linearGradient></defs>' +
-      '<rect width="1600" height="1500" fill="url(#hsG)"/>' +
-      '<path class="hill" d="M0 560 C300 500 520 610 820 560 S1350 470 1600 540 L1600 1500 L0 1500Z"/>' +
-      '<path class="hill h2" d="M0 880 C260 840 600 930 900 880 S1380 820 1600 870 L1600 1500 L0 1500Z"/>' +
-      '<path class="hill h3" d="M0 1190 C340 1150 640 1230 980 1190 S1420 1140 1600 1180 L1600 1500 L0 1500Z"/>' +
-      '<path class="stream" d="M160 -10 C150 90 230 150 260 230 S300 330 330 370"/>' +
-      '<ellipse class="pond" cx="450" cy="420" rx="300" ry="62"/><ellipse class="pond shine" cx="420" cy="408" rx="180" ry="18"/>' +
-      '<path class="path" d="M800 0 C820 120 760 200 800 300 S1020 420 1000 560 S640 640 640 760 S900 860 860 960 S420 1040 480 1140 S880 1220 800 1330 S760 1440 820 1500"/>' +
-      '</svg>';
     var narrow = '<svg class="hs-ground hs-narrow" viewBox="0 0 400 2760" preserveAspectRatio="none" aria-hidden="true">' +
       '<defs><linearGradient id="hsGm" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="g1"/><stop offset="1" class="g2"/></linearGradient></defs>' +
       '<rect width="400" height="2760" fill="url(#hsGm)"/>' +
@@ -178,6 +183,6 @@
       '<ellipse class="pond" cx="255" cy="250" rx="185" ry="34"/>' +
       '<path class="path" d="M200 0 C220 120 150 300 200 480 S330 640 240 760 S60 900 200 1020 S330 1180 200 1260 S60 1420 190 1500 S340 1720 210 1900 S80 2100 200 2160 S330 2400 200 2560 S120 2700 200 2760"/>' +
       '</svg>';
-    return wide + narrow;
+    return narrow;
   }
 })();
