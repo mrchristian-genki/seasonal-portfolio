@@ -24,6 +24,39 @@
  "track": null,
  "photos": [
   {
+   "src": "data/photos/2026-10-19-built-by-hand-with-a-partner/clip-1.mp4",
+   "poster": "data/photos/2026-10-19-built-by-hand-with-a-partner/clip-1.jpg",
+   "video": true,
+   "caption": "A human hand holding a pencil and a small brass robot hand holding a fine brush work on the same large sheet together.",
+   "takenAt": "2026:10:19 06:04:31",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": true,
+   "from": "Hands_working_and_dog_twitching_20261019060408.mp4",
+   "range": [
+    0,
+    8
+   ],
+   "ai": true
+  },
+  {
+   "src": "data/photos/2026-10-19-built-by-hand-with-a-partner/clip-2.mp4",
+   "poster": "data/photos/2026-10-19-built-by-hand-with-a-partner/clip-2.jpg",
+   "video": true,
+   "caption": "A brass automaton's glass heart on a workbench at night, a glowing teal liquid pumping out of it through a long copper pipe.",
+   "takenAt": "2026:10:19 06:05:07",
+   "w": 960,
+   "h": 528,
+   "use": "post",
+   "cover": false,
+   "from": "Liquid_pulsing_through_pipe_20261019060211.mp4",
+   "range": [
+    0,
+    8
+   ]
+  },
+  {
    "src": "data/photos/2026-10-19-built-by-hand-with-a-partner/machine.mp4",
    "poster": "data/photos/2026-10-19-built-by-hand-with-a-partner/machine.jpg",
    "video": true,
@@ -32,7 +65,7 @@
    "w": 1280,
    "h": 720,
    "use": "post",
-   "cover": true,
+   "cover": false,
    "from": "2026-10-06-the-whole-machine/alive.mp4"
   },
   {
@@ -106,6 +139,17 @@
    "use": "post",
    "cover": false,
    "from": "2018-07-10-above-ireland/06.jpg"
+  },
+  {
+   "src": "data/photos/2026-10-19-built-by-hand-with-a-partner/01.jpg",
+   "caption": "A chat with Claude asking to \"Go Live Please\".",
+   "takenAt": null,
+   "w": 958,
+   "h": 886,
+   "use": "post",
+   "cover": false,
+   "from": "Screenshot 2026-10-19 at 6.03.56 AM.png",
+   "ai": false
   }
  ],
  "fieldNotes": "Drafted by Claude for Christian (Oct 19, 2026) at his request: \"a note about the role of AI and how I've used it to build everything at my name domain, in a way that still has a handmade feel but partnering strategically with AI to build a better website and not just an AI built website... You were here the whole time with me. Even with ProPre and the coloring book prompts.\" Every fact is from his published Notes (the case studies, ProPre, the coloring books, GlazyArray, A.L.T.A., Starlee, the hammock and Two lakes Notes) and his own words in the Studio and in our sessions (the house rules in CLAUDE.md, real vs AI labels, the motion rule from the Tumble, Starlee's name, ROLLING TERRAIN and his motto, the night the clips were rescued, Oct 18-19). Nothing in it is invented; where a fact isn't his, the draft leaves it out.",
@@ -184,5 +228,9 @@
   "title": "Built by hand, with a partner",
   "narrator": "glazyarray",
   "script": ""
- }
+ },
+ "palette": [
+  "#b27034",
+  "#ced05d"
+ ]
 }
