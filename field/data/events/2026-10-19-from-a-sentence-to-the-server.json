@@ -8,7 +8,7 @@
   "case-study",
   "ai"
  ],
- "status": "draft",
+ "status": "published",
  "summary": "How a change Christian asks for becomes a live page: Claude Code or the Studio commits to GitHub, a GitHub Actions workflow builds the site and rsync sends it to his server over SSH, with a handful of single-purpose keys and the guard rails that keep it safe. A setup he could hand to a client.",
  "trailhead": null,
  "links": [
@@ -198,5 +198,6 @@
  "palette": [
   "#3478b2",
   "#b26d34"
- ]
+ ],
+ "publishedAt": "2026-10-19T13:32:40Z"
 }
