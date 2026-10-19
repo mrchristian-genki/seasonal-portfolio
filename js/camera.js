@@ -24,7 +24,7 @@
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // Where the glass points on load, by the opening season, as the world-x fraction at the centre
-  // of the view. data-season: 2 Books/summer, 3 Web/fall, 0 Workshop/winter, 1 Play/spring.
+  // of the view, by season: 2 summer, 3 fall, 0 winter, 1 spring.
   const SHOTS = { 1: 0.30, 2: 0.62, 3: 0.78, 0: 0.47 };
   // How far each plate slides when the camera pans (1 = with the ground). Sky has no features.
   const PARALLAX = { plateCelestial: 0.45, plateAurora: 0.3, plateClouds: 0.7 };
@@ -35,7 +35,7 @@
   let lens = null, track = null, win = null;
 
   const clampX = (x) => Math.max(0, Math.min(coreW - viewW, x));
-  const selectedSeason = () => { const t = document.querySelector('.tab[aria-selected="true"]'); return t ? +t.dataset.season : 2; };
+  const selectedSeason = () => window.__currentSeason ?? 2;   // the lake's season (scene.js); tabs no longer change it
   const xForFrac = (f) => clampX(f * coreW - viewW / 2);
 
   // Placement at rest is plain layout (`left`), so a resting camera adds no composited layers:
@@ -224,9 +224,8 @@
   const TAP_WINDOW = 2500;   // an actor this soon after a plain tap came from that tap
   const calm = () => !hero.classList.contains('hiding') && performance.now() > settleUntil;
   const settleFor = (ms) => { settleUntil = Math.max(settleUntil, performance.now() + ms); };
-  const tabs = document.querySelector('.tabs');
-  if (tabs) new MutationObserver(() => settleFor(9000))
-    .observe(tabs, { attributes: true, subtree: true, attributeFilter: ['aria-selected'] });
+  // a season change (the picker, or the year playing) sets html[data-season]: hold for travel()'s 7 s and a bit
+  new MutationObserver(() => settleFor(9000)).observe(document.documentElement, { attributes: true, attributeFilter: ['data-season'] });
   const modeBtn = $('modeBtn');
   if (modeBtn) new MutationObserver(() => settleFor(5000))
     .observe(modeBtn, { attributes: true, attributeFilter: ['aria-pressed'] });

@@ -54,7 +54,7 @@
       requestAnimationFrame(f);
     });
   }
-  const clickTab = s => { const t = document.querySelector(`.tab[data-season="${s}"]`); if (t) t.click(); };
+  const clickTab = s => { if (window.__setSeason) window.__setSeason(s); };   // a scene's season (tabs no longer change it)
   const nightBtn = () => document.getElementById('modeBtn');
   const isNight = () => nightBtn() && nightBtn().getAttribute('aria-pressed') === 'true';
 

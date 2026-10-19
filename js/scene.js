@@ -2023,13 +2023,10 @@ function _bootInner() {
 
   const seasonNames = { 0:'winter', 1:'spring', 2:'summer', 3:'fall' };
 
-  // Keeps #clockLabel (static "Spring" in the markup) in sync with the active season.
+  // Keeps the season picker in the lake (.clock [data-pick]) showing the season the lake is in.
   // Called from setSeason() and the "play the whole year" loop.
   function updateClockLabel(season) {
-    const clockLabel = $('clockLabel');
-    if (!clockLabel) return;
-    const sName = seasonNames[season] || 'spring';
-    clockLabel.textContent = sName.charAt(0).toUpperCase() + sName.slice(1);
+    document.querySelectorAll('[data-pick]').forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.pick === season)));
   }
 
   // ── 8. GENERATED TREES ───────────────────────────────────────────────────────
@@ -2255,10 +2252,20 @@ function _bootInner() {
     // without redesigning its placement.
   })();
 
-  // ── 9. SEASON TABS + TRAVEL() ─────────────────────────────────────────────
-  // The tabs run through the year from summer: Books summer, Web fall, Workshop winter, Play spring (its view is still called 'lab' inside).
+  // ── 9. SEASONS, SECTIONS + TRAVEL() ───────────────────────────────────────
+  // Seasons and sections are separate (Christian, Oct 19, 2026): the lake opens in the visitor's own season (by
+  // their calendar), changes when the season picker in the lake (.clock), "Play the whole year" or an address word
+  // asks, and the tabs only swap the page's words, with a short fade, no season change. Before that each tab was
+  // a season (Books summer, Web fall, Workshop winter, Play spring); SEASON_VIEW keeps that pairing so an old
+  // link with a season word and no section word still opens the section it used to.
   const SEASON_VIEW = { 2:'studio', 3:'signal', 0:'workshop', 1:'lab' };
-  const BOOT_SEASON = 2; // the page opens on summer (Books)
+  // The season by the calendar: Dec-Feb winter, Mar-May spring, Jun-Aug summer, Sep-Nov fall (as the logo's).
+  const CAL_SEASON = [0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 0][new Date().getMonth()];
+  const BOOT_SEASON = CAL_SEASON;
+  // Section (view) <-> its word in the address. The Play tab's view is still called 'lab' inside.
+  const VIEW_WORD = { studio:'books', signal:'web', workshop:'workshop', lab:'lab' };
+  let VIEW = 'studio';           // the section showing
+  let SEASON_CHOSEN = false;     // a season was picked (or asked for by the address), so links carry it
   // tod target per season (currently all 0.50, midday).
   const SEASON_TOD  = { 0:0.50, 1:0.50, 2:0.50, 3:0.50 };
   // kf(s, [winter, spring, summer, fall]): 0=winter 1=spring 2=summer 3=fall
@@ -2267,10 +2274,24 @@ function _bootInner() {
   let NIGHT_MODE = false;
   let _travelRaf = null;
 
-  function showViews(season) {
-    const view = SEASON_VIEW[season];
+  function showViews(view) {
     document.querySelectorAll('.hero-copy .view, .about .view').forEach(v =>
       v.classList.toggle('on', v.getAttribute('data-view') === view));
+  }
+  function markTabs(view) {
+    document.querySelectorAll('.tab').forEach(t => t.setAttribute('aria-selected', String(t.dataset.view === view)));
+  }
+  // A tab: the words sink and fade (.hiding, scene.css), the new section's rise and fade in; the lake stays as it is.
+  let _viewT = 0;
+  function setView(view) {
+    if (!view || view === VIEW) return;
+    VIEW = view;
+    markTabs(view);
+    const parts = [$('hero'), $('about')].filter(Boolean);
+    clearTimeout(_viewT);
+    if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) { showViews(view); return; }
+    parts.forEach(el => el.classList.add('hiding'));
+    _viewT = setTimeout(() => { showViews(view); parts.forEach(el => el.classList.remove('hiding')); }, 500);
   }
 
   // travel(fromS, toS): animated season crossfade (DURATION ms, phases below).
@@ -2352,10 +2373,9 @@ function _bootInner() {
       window.__moonDip = moonDip;
       LIGHT.dim = NIGHT_MODE ? (1 - moonDip) : 0;
 
-      // Swap content as colours finish swapping (end of phase B).
+      // The words come back up as the colours finish swapping (end of phase B); the section doesn't change.
       if (p >= PHASE_B_END && !contentSwapped) {
         contentSwapped = true;
-        showViews(SEASON);
         if (hero) hero.classList.remove('hiding');
       }
 
@@ -2380,9 +2400,6 @@ function _bootInner() {
     SEASON = season;
     window.__currentSeason = season;
     document.documentElement.dataset.season = seasonNames[season] || 'spring';   // CSS: winter plant bases
-
-    document.querySelectorAll('.tab').forEach(t =>
-      t.setAttribute('aria-selected', String(+t.dataset.season === season)));
 
     const sName = seasonNames[season] || 'spring';
     updateClockLabel(season);
@@ -2413,14 +2430,22 @@ function _bootInner() {
     const toS   = SEASON_S[season];
     if (window.__windShow) window.__windShow.calm();
     travel(fromS, toS, () => {
-      showViews(season);
       if (window.__windShow) window.__windShow.settle();
     });
   }
+  window.__setSeason = (n) => { if (n !== SEASON) setSeason(n); };   // bench.js
 
   document.querySelectorAll('.tab').forEach(t => {
-    t.addEventListener('click', () => setSeason(+t.dataset.season));
+    t.addEventListener('click', () => setView(t.dataset.view));
   });
+  // The season picker in the lake (.clock): one button per season; picking one stops "Play the whole year".
+  document.querySelectorAll('[data-pick]').forEach(b => b.addEventListener('click', () => {
+    stopPlayYear();
+    SEASON_CHOSEN = true;
+    const n = +b.dataset.pick;
+    if (n !== SEASON) setSeason(n);
+    setTimeout(writeLink, 0);
+  }));
 
   // Night mode: manual toggle independent of season. Only tod and moon visibility change, so a
   // simple smoothstep is enough (the asymmetric pacing is for hiding a season swap).
@@ -2498,15 +2523,11 @@ function _bootInner() {
   const playBtn = $('playYear');
   if (playBtn) playBtn.addEventListener('click', togglePlayYear);
 
-  // A manual tab click stops the loop so it can't fight the pending _yearTimer.
-  document.querySelectorAll('.tab').forEach(t => {
-    t.addEventListener('click', stopPlayYear);
-  });
 
   // The scene is built on spring; the link jump below moves it to BOOT_SEASON (summer) before
   // the first frame unless the address asks for another season.
   s = 1;
-  showViews(1);
+  showViews(VIEW);
   // Flowers are built with summer colours; give them spring's on first load too.
   if (window.__updateFlowers) window.__updateFlowers('spring');
   LIGHT.tod = SEASON_TOD[1];
@@ -2819,9 +2840,11 @@ function _bootInner() {
   // The page opens straight on that look (no crossfade), and the address bar follows every
   // season/night change after that, so the current view can always be copied and shared.
   // Other flags (?bench ?fps ?wildlife ?diag) are left as they are.
-  const LINK_SEASON = { spring: 1, summer: 2, fall: 3, autumn: 3, winter: 0, books: 2, web: 3, workshop: 0, lab: 1,
-    // Play's sections open the Play (spring) tab on that section: ?daydreams, ?spring+above, ?notes.
-    notes: 1, dose: 1, above: 1, daydreams: 1 };
+  const LINK_SEASON = { spring: 1, summer: 2, fall: 3, autumn: 3, winter: 0 };
+  // Sections: books web workshop lab (Play), and Play's own sections open the Play tab on that section:
+  // ?daydreams, ?above, ?notes, ?newsstand.
+  const LINK_VIEW = { books: 'studio', web: 'signal', workshop: 'workshop', lab: 'lab',
+    notes: 'lab', dose: 'lab', above: 'lab', daydreams: 'lab', newsstand: 'lab' };
   // Weather levels: each word sets how hard it rains (or snows, in winter). Light, medium, full.
   // Rain: drizzle, shower, tempest. Snow: flurries, snow, blizzard. (Older words kept as aliases.)
   const STORM_LEVELS = { drizzle: 0.4, shower: 0.7, tempest: 1, flurries: 0.4, snow: 0.7, blizzard: 1,
@@ -2830,22 +2853,26 @@ function _bootInner() {
   const linkWords = decodeURIComponent(location.search.slice(1)).toLowerCase()
     .split(/[+&,;\s]+/).map(w => w.split('=')[0]).filter(Boolean);
   window.__linkWords = linkWords;
-  let linkSeason = null, linkNight = null;
+  let linkSeason = null, linkNight = null, linkView = null;
   linkWords.forEach(w => {
     if (w in LINK_SEASON) linkSeason = LINK_SEASON[w];
+    if (w in LINK_VIEW) linkView = LINK_VIEW[w];
     if (w === 'night' || w === 'nightmode' || w === 'darkmode' || w === 'dark') linkNight = true;
     if (w === 'day' || w === 'daymode' || w === 'lightmode' || w === 'light') linkNight = false;
     if (w in STORM_LEVELS) setTimeout(() => window.__storm.set(true, STORM_LEVELS[w]), 1200);
   });
-  if (linkSeason == null) linkSeason = BOOT_SEASON;
-  if (linkSeason != null) {  // always runs: the HTML's selected tab is Books (summer), so even ?spring must set the tabs
+  // An old link with a season and no section still opens the section that season used to be (?winter: Workshop).
+  if (!linkView && linkSeason != null) linkView = SEASON_VIEW[linkSeason];
+  VIEW = linkView || 'studio';
+  markTabs(VIEW);
+  if (linkSeason == null) linkSeason = BOOT_SEASON; else SEASON_CHOSEN = true;
+  if (linkSeason != null) {  // always runs: the scene is built on spring, so even ?spring must be set
     // Jump straight there: everything travel()/setSeason() would set, without the animation.
     SEASON = linkSeason; s = SEASON_S[linkSeason]; window.__currentSeason = linkSeason;
     const sName = seasonNames[linkSeason];
     document.documentElement.dataset.season = sName;
-    document.querySelectorAll('.tab').forEach(t => t.setAttribute('aria-selected', String(+t.dataset.season === linkSeason)));
     updateClockLabel(linkSeason);
-    showViews(linkSeason);
+    showViews(VIEW);
     document.querySelectorAll('.deciduous').forEach(el => {
       el.classList.remove('winter', 'spring', 'summer', 'fall'); el.classList.add(sName);
       if (typeof el.setDecidSeason === 'function') el.setDecidSeason(sName);
@@ -2863,12 +2890,13 @@ function _bootInner() {
     if (modeBtn) { modeBtn.setAttribute('aria-pressed', 'true'); modeBtn.textContent = 'Day mode'; }
   }
   function writeLink() {
-    const words = [seasonNames[SEASON], NIGHT_MODE ? 'night' : 'day']
+    // the section, then the season only when one was picked (otherwise each visitor gets their own), day or night
+    const words = [VIEW_WORD[VIEW]].concat(SEASON_CHOSEN ? [seasonNames[SEASON]] : [], NIGHT_MODE ? ['night'] : [])
       .concat(linkWords.filter(w => LINK_KEEP.includes(w)))
       .concat(window.__lakeWord ? window.__lakeWord() : [])   // the lake shown or closed (lake.js), as it is now
-      .concat(SEASON === 0 && window.__wsWord ? window.__wsWord() : [])   // a Workshop project's window that's open (ws-cards.js)
+      .concat(VIEW === 'workshop' && window.__wsWord ? window.__wsWord() : [])   // a Workshop project's window that's open (ws-cards.js)
       // On the Play tab, keep its section/series words (play-inline.js owns them).
-      .concat(SEASON === 1 && window.__playWords ? window.__playWords() : []);
+      .concat(VIEW === 'lab' && window.__playWords ? window.__playWords() : []);
     try { history.replaceState(null, '', location.pathname + '?' + words.join('+') + location.hash); } catch (e) { /* file:// */ }
   }
   // Only rewrite the address once someone changes the view (a plain visit keeps a clean URL).
