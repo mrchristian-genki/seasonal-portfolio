@@ -41,16 +41,6 @@
    "from": "IMG_8082.JPG"
   },
   {
-   "src": "data/photos/2026-10-18-a-dog-on-a-boulder-and-three-stones-on-a-post/04.jpg",
-   "caption": "Marley on the sand below the granite boulders.",
-   "takenAt": "2026:10:18 10:36:30",
-   "w": 1600,
-   "h": 900,
-   "use": "post",
-   "cover": false,
-   "from": "IMG_8087.JPG"
-  },
-  {
    "src": "data/photos/2026-10-18-a-dog-on-a-boulder-and-three-stones-on-a-post/05.jpg",
    "caption": "At the water's edge, with round boulders standing in the clear shallows.",
    "takenAt": "2026:10:18 10:42:58",
@@ -59,16 +49,6 @@
    "use": "post",
    "cover": false,
    "from": "IMG_8091.JPG"
-  },
-  {
-   "src": "data/photos/2026-10-18-a-dog-on-a-boulder-and-three-stones-on-a-post/06.jpg",
-   "caption": "A pale yellow pebble, held up to the light.",
-   "takenAt": "2026:10:18 10:57:32",
-   "w": 900,
-   "h": 1600,
-   "use": "post",
-   "cover": false,
-   "from": "IMG_8099.JPG"
   },
   {
    "src": "data/photos/2026-10-18-a-dog-on-a-boulder-and-three-stones-on-a-post/07.jpg",
@@ -81,6 +61,16 @@
    "from": "IMG_8110.JPG"
   },
   {
+   "src": "data/photos/2026-10-18-a-dog-on-a-boulder-and-three-stones-on-a-post/09.jpg",
+   "caption": "Marley on her rock, against a clear blue sky.",
+   "takenAt": "2026:10:18 11:33:06",
+   "w": 900,
+   "h": 1600,
+   "use": "post",
+   "cover": false,
+   "from": "IMG_8115.JPG"
+  },
+  {
    "src": "data/photos/2026-10-18-a-dog-on-a-boulder-and-three-stones-on-a-post/08.jpg",
    "caption": "Then sitting, looking out over the water.",
    "takenAt": "2026:10:18 11:32:55",
@@ -91,14 +81,24 @@
    "from": "IMG_8112.JPG"
   },
   {
-   "src": "data/photos/2026-10-18-a-dog-on-a-boulder-and-three-stones-on-a-post/09.jpg",
-   "caption": "Marley on her rock, against a clear blue sky.",
-   "takenAt": "2026:10:18 11:33:06",
+   "src": "data/photos/2026-10-18-a-dog-on-a-boulder-and-three-stones-on-a-post/04.jpg",
+   "caption": "Marley on the sand below the granite boulders.",
+   "takenAt": "2026:10:18 10:36:30",
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "IMG_8087.JPG"
+  },
+  {
+   "src": "data/photos/2026-10-18-a-dog-on-a-boulder-and-three-stones-on-a-post/06.jpg",
+   "caption": "A pale yellow pebble, held up to the light.",
+   "takenAt": "2026:10:18 10:57:32",
    "w": 900,
    "h": 1600,
    "use": "post",
    "cover": false,
-   "from": "IMG_8115.JPG"
+   "from": "IMG_8099.JPG"
   },
   {
    "src": "data/photos/2026-10-18-a-dog-on-a-boulder-and-three-stones-on-a-post/19.jpg",
