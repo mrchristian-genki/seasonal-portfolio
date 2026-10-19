@@ -68,9 +68,19 @@ Formats: 16:9 for the Note's cover; 3:4 for a magazine cover crop (keep the keys
 
 ## 2. The loop (cover video)
 
-> [The look.] The same belt and key ring. The robot takes two slow steps and stops; the keys swing and jingle, settle,
-> and their glowing cores pulse once in turn from left to right, the heart keyhole last and brightest. Locked-off
-> camera, 6 to 8 seconds, seamless loop, the last frame matching the first. [Guard line.]
+Christian's direction (Oct 19): the robot walking, the keys dangling about in super slow motion.
+
+> [The look.] Super slow motion, as if filmed at a very high frame rate. The robot janitor walks steadily forward and
+> the camera travels with it at hip height, so the belt and key ring stay in the same place in the frame while the
+> workshop corridor drifts slowly past behind, softly out of focus. With each heavy, unhurried step the keys lift,
+> swing and turn on the ring, drifting apart and back together like they're underwater, glints of turquoise light
+> sliding along their glass edges and the badges catching the light as they turn. Dust motes hang in the air. No sudden
+> moves; every motion eases in and out. 8 to 10 seconds, seamless loop: the keys end exactly where they started, mid-
+> stride on the same foot. [Guard line.]
+
+Tips: if the generator won't hold the belt still in frame, ask for a "tracking shot alongside the robot, matching its
+pace". If the keys spin too much, add "the keys sway, they don't spin". Keep the loop's blank badges facing the camera
+at the start and end frames, so the logos can be placed on those frames (or the logos can go on the still hero shot only).
 
 ## 3. Close-ups (one per key, for the steps and the glossary)
 
