@@ -1,0 +1,259 @@
+{
+  "id": "2026-10-19-a-village-below-the-lake",
+  "title": "A Village Below the Lake",
+  "date": "2026-10-19",
+  "kind": "showcase",
+  "place": "The workshop",
+  "tags": [
+    "case-study",
+    "ai"
+  ],
+  "status": "draft",
+  "summary": "How the home page became a village: a brainstorm about sections turned into a homestead below the lake, every part of the site a place on the hill, painted in more than 130 pictures by day, by night and in snow.",
+  "trailhead": null,
+  "links": [
+    {
+      "label": "The main site",
+      "url": "https://www.christiangehrke.com/"
+    }
+  ],
+  "track": null,
+  "photos": [
+    {
+      "src": "data/photos/2026-10-19-a-village-below-the-lake/newsstand-four-ways.jpg",
+      "caption": "The Newsstand, four ways: by day, at night, and both again in snow. Every place on the hill came like this, all four lined up so the site can fade from one to the next.",
+      "w": 1376,
+      "h": 768,
+      "use": "post",
+      "cover": true,
+      "ai": true
+    },
+    {
+      "src": "data/photos/2026-10-19-a-village-below-the-lake/lake-season-picker.jpg",
+      "caption": "Step one, live first: the lake opens in your own season, with a little picker in the corner of the lake.",
+      "w": 1280,
+      "h": 800,
+      "use": "post",
+      "cover": false,
+      "ai": false
+    },
+    {
+      "src": "data/photos/2026-10-19-a-village-below-the-lake/lake-season-picker-phone.jpg",
+      "caption": "The same picker on a phone, across from Hide the lake.",
+      "w": 390,
+      "h": 800,
+      "use": "post",
+      "cover": false,
+      "ai": false
+    },
+    {
+      "src": "data/photos/2026-10-19-a-village-below-the-lake/sheet-day.jpg",
+      "caption": "All thirty places by day, straight from the renders.",
+      "w": 1808,
+      "h": 848,
+      "use": "post",
+      "cover": false,
+      "ai": true
+    },
+    {
+      "src": "data/photos/2026-10-19-a-village-below-the-lake/sheet-night.jpg",
+      "caption": "The same places at night: windows lit, lamps glowing turquoise.",
+      "w": 1808,
+      "h": 848,
+      "use": "post",
+      "cover": false,
+      "ai": true
+    },
+    {
+      "src": "data/photos/2026-10-19-a-village-below-the-lake/sheet-day-snow.jpg",
+      "caption": "Winter by day.",
+      "w": 1808,
+      "h": 848,
+      "use": "post",
+      "cover": false,
+      "ai": true
+    },
+    {
+      "src": "data/photos/2026-10-19-a-village-below-the-lake/sheet-night-snow.jpg",
+      "caption": "Winter at night.",
+      "w": 1808,
+      "h": 848,
+      "use": "post",
+      "cover": false,
+      "ai": true
+    },
+    {
+      "src": "data/photos/2026-10-19-a-village-below-the-lake/altas-tubes.jpg",
+      "caption": "A.L.T.A.'s glass tubes, her way in and out of the lake without the lake itself being touched.",
+      "w": 1376,
+      "h": 768,
+      "use": "post",
+      "cover": false,
+      "ai": true
+    },
+    {
+      "src": "data/photos/2026-10-19-a-village-below-the-lake/studio-at-night.jpg",
+      "caption": "The Studio on the hill: glass walls and the heart inside, with a door only a login opens.",
+      "w": 1376,
+      "h": 768,
+      "use": "post",
+      "cover": false,
+      "ai": true
+    },
+    {
+      "src": "data/photos/2026-10-19-a-village-below-the-lake/studio-home-time.jpg",
+      "caption": "The Studio itself now follows the clock: blue in the morning, orange at night. HOME TIME hands it back after I take over.",
+      "w": 1280,
+      "h": 440,
+      "use": "post",
+      "cover": false,
+      "ai": false
+    },
+    {
+      "src": "data/photos/2026-10-19-a-village-below-the-lake/water-wheels.jpg",
+      "caption": "Two water wheels, one open with a lantern and one under a little roof.",
+      "w": 1376,
+      "h": 768,
+      "use": "post",
+      "cover": false,
+      "ai": true
+    },
+    {
+      "src": "data/photos/2026-10-19-a-village-below-the-lake/trailhead.jpg",
+      "caption": "The trailhead: the shelter, the signpost, the bench, the register box and the first mile markers, every sign left blank.",
+      "w": 1376,
+      "h": 768,
+      "use": "post",
+      "cover": false,
+      "ai": true
+    },
+    {
+      "src": "data/photos/2026-10-19-a-village-below-the-lake/doghouse-four-ways.jpg",
+      "caption": "Marley's house, four ways.",
+      "w": 1376,
+      "h": 768,
+      "use": "post",
+      "cover": false,
+      "ai": true
+    },
+    {
+      "src": "data/photos/2026-10-19-a-village-below-the-lake/the-cut.jpg",
+      "caption": "As it came, on magenta, and cut out onto the grass.",
+      "w": 1376,
+      "h": 384,
+      "use": "post",
+      "cover": false,
+      "ai": true
+    }
+  ],
+  "fieldNotes": "Drafted by Claude for Christian (Oct 19, 2026) at his request: \"put those into a draft note and discuss the process of the brainstorming and the idea of the village and then the building of the 132 images, all of different states and so forth... while you still have access to your images.\" Every fact is from his messages in that conversation; the plan is field/drafts/homestead.md and the prompts field/drafts/homestead-prompts.md. The contact sheets and comparisons were made by Claude from his renders.",
+  "post": {
+    "title": "A Village Below the Lake",
+    "body": "For a while now the home page has been doing too many jobs. So I asked: is it time to give Books its own section and make home more of an overall collection of sections and main content? This is what came out of one long conversation on October 19 with Claude, and one long afternoon of making pictures.\n\n## First, the seasons\n\nThe first step went live the same day. The lake now opens in whatever season it is where you are, and a small picker inside the lake lets you choose another one. The tabs no longer change the season. They only change the words, which makes them quicker too.\n\n## Then, a village\n\nHere's how I put it: \"We got a workshop, place to go, build things, have fun in there, like almost like a shed, big workshop. Then we also have a newsstand. We've got our magazines... and then learning area, library.\" The home page would be the lake, and below the lake would be the workshop and the farm, the home, if you will.\n\nFrom there it grew fast. We have a time machine, the Tumble, so it gets an observatory (\"Observatory is perfect rather than university\"). Bike ramps, hiking trails and climbing walls to practice on. Labs near the water. And every place can filter the Notes, so the bike park shows the rides and the trailhead shows the hikes.\n\n## Made with care\n\nTwo of the first ideas, a salvage yard and a garden of scrap robots, felt a little negative to me: trash, unwanted things. So the salvage yard became the Parts Depot, where every part is kept because it's going to become something, and the scrap became the Kinetic Garden, polished sculptures that turn in the wind.\n\nThen the Dao came in, quietly. A water wheel that turns because the stream flows. An uncarved block on the workbench. A footbridge for the joy of the fish. The useless tree that nobody cut down. I wanted it made with care and attention to details and filled with tiny little hidden easter eggs. Enjoying the journey through the world one little pixel at a time.\n\n## A door for the Studio\n\nThe Studio is where Notes get made, and it should be easy to reach if you have a login. So it gets a small glass building with a VIP door. Everyone else can still watch the light show from the coloured liquid flowing through it.\n\nI'd been changing the Studio's colours by the time of day anyway: blue mornings, green daytime, orange nights. Now it does that on its own, with a manual override always there to test and see, and a reset to home time.\n\n## Tubes for A.L.T.A.\n\nA.L.T.A. lives in the lake. I wanted big glass tubes coming up from the grass below the lake, so she can get in and out of it visually without having to touch the lake itself.\n\n## More than 130 pictures\n\nClaude wrote a catalog of prompts: one shared look pasted at the start of every prompt, so the buildings match. Each place stands alone on flat magenta, not green, because the grass, the green liquid and A.L.T.A.'s sea glass would all vanish with a green key. There's no ground and no shadow under them; those are drawn by the site, so the places sit right in any season.\n\nI made four versions of each: day, night, day with snow and night with snow. Thirty places at first, then sixteen more pictures for the water wheels, Starlee's shed, Marley's house and the trailhead.\n\nClaude checked that the four versions of each place line up, and they do, almost to the pixel, so one can fade into the next. Then each was cut out of the magenta, all four to the same frame, with the glow of the lamps kept and the magenta taken back out of it.\n\n## What comes next\n\nThe places go on the hill under the lake, along a path. They follow the lake: snow in winter, and their windows lighting up one by one when night comes. Then the crew moves in."
+  },
+  "questions": [
+    "Title: \"A Village Below the Lake\", or would you rather \"The Lake Home\"? You called it both the Lake Home and the village.",
+    "Which tools made the homestead pictures? The Toolbox box only says what the prompts asked for, not which tools rendered them.",
+    "You said 132 pictures; by my count it came to 134 (30 places in four versions, less three nights, plus the 16 extras, the trailhead by day and Marley's house at night, one water wheel sent twice). The Note says \"more than 130\". OK?",
+    "STUDIO FLOOR (showcase) for the magazine, or HIDDEN LAYER like the last two?",
+    "Once the homestead is on the site, a screenshot of it should go in \"What comes next\". Shall I add it then?"
+  ],
+  "consent": "No people pictured. No secrets.",
+  "feature": {
+    "theme": "studiofloor",
+    "masthead": "STUDIO FLOOR",
+    "tagline": "Makers, in their own words",
+    "issue": "The Ten-Year Issue",
+    "label": "Showcase",
+    "byline": "By GlazyArray, Senior Editor",
+    "coverLines": [
+      "A village below the lake",
+      "Every place by day, by night and in snow",
+      "From salvage yard to Parts Depot",
+      "One little pixel at a time"
+    ],
+    "blocks": [
+      {
+        "type": "timeline",
+        "title": "How the village came together",
+        "items": [
+          [
+            "The question",
+            "Is it time to give Books its own section, and make home a collection of sections?"
+          ],
+          [
+            "The seasons",
+            "The lake opens in your own season, with a picker inside it. Live the same day."
+          ],
+          [
+            "The village",
+            "A workshop, a newsstand, a library and a media barn below the lake, then an observatory, a bike park, a trailhead, a climbing wall and labs by the water."
+          ],
+          [
+            "Made with care",
+            "The salvage yard became the Parts Depot, the scrap garden the Kinetic Garden, and the Dao came in quietly."
+          ],
+          [
+            "The Studio and A.L.T.A.",
+            "A VIP door and a light show; glass tubes from the grass to the lake."
+          ],
+          [
+            "The pictures",
+            "A catalog of prompts, then more than 130 renders: every place by day, at night and in snow."
+          ]
+        ]
+      },
+      {
+        "type": "box",
+        "title": "Toolbox",
+        "before": "More than 130 pictures",
+        "kicker": "The rules for every picture",
+        "text": "One shared look pasted at the start of every prompt, so the buildings match.\n\nFlat magenta behind each place, not green: the grass, the green liquid and A.L.T.A.'s sea glass would vanish with a green key.\n\nNo ground and no shadow under them; the site draws those.\n\nFour versions of each, made as edits of one picture so they line up: day, night, day with snow, night with snow.\n\nNo text, letters or logos in any render. Signs and covers stay blank; the names go on the page."
+      }
+    ],
+    "qa": {
+      "title": "In conversation",
+      "items": [
+        {
+          "q": "What did you picture below the lake?",
+          "a": "\"The home page would be the lake and then below the lake would be the workshop and the farm or, you know, the home, if you will.\""
+        },
+        {
+          "q": "Why turn the salvage yard around?",
+          "a": "\"Sculpture garden of scrap robots and Salvage yard feel a little negative. Trash or unwanted goods. Can we make this a positive?\""
+        },
+        {
+          "q": "What should it feel like?",
+          "a": "\"Made with care and attention to details and filled with tiny little hidden easter eggs. Enjoying the journey through the world one little pixel at a time.\""
+        }
+      ]
+    },
+    "spotted": [
+      {
+        "label": "On the rooftops",
+        "text": "Small birds perch on the Newsstand, Marley's house, the water wheel and the trailhead shelter."
+      },
+      {
+        "label": "On the rack",
+        "text": "The Newsstand's four magazine covers are blank, waiting for the real covers."
+      },
+      {
+        "label": "Under the tree",
+        "text": "The useless tree has a little door in its trunk."
+      },
+      {
+        "label": "By the door",
+        "text": "Marley's house has a bowl by the door."
+      }
+    ]
+  },
+  "episode": {
+    "title": "A Village Below the Lake",
+    "narrator": "glazyarray",
+    "script": "Narrated by GlazyArray.\n\nIt started with a question. Is it time for home to be more than one page?\n\nBy the end of the day there was a village. A workshop with its doors open. A newsstand. A library. An observatory for the time machine. A bike park, a trailhead and a climbing wall. Labs on a dock by the water, and glass tubes so A.L.T.A. can come and go.\n\nTwo ideas got turned around on the way. The salvage yard became the Parts Depot. The scrap garden became the Kinetic Garden. Made with care, Christian said, and full of tiny hidden things.\n\nThen came the pictures. More than a hundred and thirty of them. Every place by day, by night, and again in snow, all lined up so one can fade into the next.\n\nNext, they go on the hill. One little pixel at a time."
+  },
+  "palette": [
+    "#3f8f6b",
+    "#c98a3a"
+  ]
+}

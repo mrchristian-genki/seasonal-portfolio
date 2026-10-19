@@ -1,18 +1,32 @@
 {
  "events": [
   {
+   "id": "2026-10-19-a-village-below-the-lake",
+   "title": "A Village Below the Lake",
+   "date": "2026-10-19",
+   "kind": "showcase",
+   "place": "The workshop",
+   "status": "draft",
+   "summary": "How the home page became a village: a brainstorm about sections turned into a homestead below the lake, every part of the site a place on the hill, painted in more than 130 pictures by day, by night and in snow.",
+   "sample": false,
+   "stats": null,
+   "thumb": [],
+   "photos": 14,
+   "cover": "data/photos/2026-10-19-a-village-below-the-lake/newsstand-four-ways.jpg"
+  },
+  {
    "id": "2026-10-19-built-by-hand-with-a-partner",
    "title": "Built by hand, with a partner",
    "date": "2026-10-19",
    "kind": "make",
    "place": "The workshop",
-   "status": "draft",
+   "status": "published",
    "summary": "How Christian built everything at christiangehrke.com with AI as a partner rather than a replacement: ProPre and the coloring book prompts, the lake, the Studio and the narrators, the house rules that keep every fact his own and every picture labeled real or AI, and why it still feels handmade.",
    "sample": false,
    "stats": null,
    "thumb": [],
-   "photos": 8,
-   "cover": "data/photos/2026-10-19-built-by-hand-with-a-partner/machine.mp4"
+   "photos": 11,
+   "cover": "data/photos/2026-10-19-built-by-hand-with-a-partner/clip-1.mp4"
   },
   {
    "id": "2026-10-19-from-a-sentence-to-the-server",
@@ -20,13 +34,13 @@
    "date": "2026-10-19",
    "kind": "make",
    "place": "The workshop",
-   "status": "draft",
+   "status": "published",
    "summary": "How a change Christian asks for becomes a live page: Claude Code or the Studio commits to GitHub, a GitHub Actions workflow builds the site and rsync sends it to his server over SSH, with a handful of single-purpose keys and the guard rails that keep it safe. A setup he could hand to a client.",
    "sample": false,
    "stats": null,
    "thumb": [],
-   "photos": 4,
-   "cover": "data/photos/2026-10-19-from-a-sentence-to-the-server/heart.mp4"
+   "photos": 11,
+   "cover": "data/photos/2026-10-19-from-a-sentence-to-the-server/clip-1.mp4"
   },
   {
    "id": "2026-10-18-a-dog-on-a-boulder-and-three-stones-on-a-post",
