@@ -4278,7 +4278,7 @@
  "fieldNotes": "From the track: start 5:36 PM at Spooner Summit, 7,127 ft; high point 7,280 ft about a mile in; long descent to 4,814 ft at James Lee Park. 18.2 miles, 2 h 34 m total, 1 h 52 m moving, 518 ft of climbing, top speed 18.8 mph. Finished 8:11 PM.\n\nFrom Christian (Oct 1): Clear Creek Trail from Spooner to James Lee. His wife drove them up and dropped them off. Riding with his brother and nephew, visiting from Buffalo, NY for the first time; they hadn't ridden bikes in years and did a great job, the most fun they'd had in a long time. Christian had done it a few times and loved doing it with them for their first. The 6:11 stop was both a breather and the view. They needed lights for the last part: he was worried they wouldn't get out of the alpine section into the easier desert riding below before dark. Lights on for the last stretch down to the James Lee part of the trail and over to James Lee Park. Brought home: a few bumps, sore muscles, and a great story.",
  "post": {
   "title": "Clear Creek after dark",
-  "body": "My brother and my nephew came out from Buffalo, New York, for their first visit, and I wanted them to ride Clear Creek. I've ridden it a few times: you start high at Spooner Summit and spend most of the evening going down, from the pines into the desert. Neither of them had been on a bike in years.\n\nMy wife drove the three of us up and dropped us at the trailhead at 5:36. The first mile is the only real climb, about 150 feet up to 7,280 feet, and then the trail turns downhill and mostly stays that way.\n\nWe stopped under the big pines at 6:11, half for a breather and half for the view. By 6:22 we were up on a pile of granite with the forest falling away behind us, grinning at the camera.\n\nThe part I worried about was the light. The top of Clear Creek is the alpine section, and it's the part you want to be out of before dark; below it the trail eases into desert riding. The lights came on for the last stretch down to the James Lee end of the trail and over to James Lee Park. We rolled in at 8:11.\n\nBy the numbers: 18.2 miles, about 2,300 feet lower than where we started, two and a half hours start to finish.\n\nThey came home with a few bumps, sore muscles and a great story, and they said it was the most fun they'd had in a long time. I've ridden this trail a few times, and I loved doing it with them for their first.\n\nWhat I learned: start an evening ride earlier than you think, and bring lights anyway. And a trail you know is a different trail when you're showing it to someone."
+  "body": "My brother and my nephew came out from Buffalo, New York, for their first visit, and I wanted them to ride Clear Creek. I've ridden it a few times: you start high at Spooner Summit and spend most of the evening going down, from the pines into the desert. Neither of them had been on a bike in years.\n\nMy wife drove the three of us up and dropped us at the trailhead at 5:36. The first mile is the only real climb, about 150 feet up to 7,280 feet, and then the trail turns downhill and mostly stays that way.\n\n## Under the big pines\n\nWe stopped under the big pines at 6:11, half for a breather and half for the view. By 6:22 we were up on a pile of granite with the forest falling away behind us, grinning at the camera.\n\n## Racing the light\n\nThe part I worried about was the light. The top of Clear Creek is the alpine section, and it's the part you want to be out of before dark; below it the trail eases into desert riding. The lights came on for the last stretch down to the James Lee end of the trail and over to James Lee Park. We rolled in at 8:11.\n\nBy the numbers: 18.2 miles, about 2,300 feet lower than where we started, two and a half hours start to finish.\n\n## A great story\n\nThey came home with a few bumps, sore muscles and a great story, and they said it was the most fun they'd had in a long time. I've ridden this trail a few times, and I loved doing it with them for their first.\n\n> And a trail you know is a different trail when you're showing it to someone.\n\nWhat I learned: start an evening ride earlier than you think, and bring lights anyway. And a trail you know is a different trail when you're showing it to someone."
  },
  "episode": {
   "title": "Clear Creek after dark",
@@ -4314,5 +4314,91 @@
   "backdrop": "biking-forest",
   "fit": "new",
   "scene": "a Lake Tahoe shoreline with clear turquoise water, smooth granite boulders and pines at golden hour"
+ },
+ "feature": {
+  "theme": "colcobble",
+  "masthead": "ROLLING TERRAIN",
+  "tagline": "I'm not here to break records. I just don't want to break anything.",
+  "issue": "The Cruising Issue",
+  "label": "Ride Report",
+  "byline": "By GlazyArray, Cycling Desk",
+  "blocks": [
+   {
+    "type": "box",
+    "title": "The stop",
+    "before": "Racing the light",
+    "kicker": "6:11 PM, Clear Creek",
+    "text": "At 6:11 they stopped under the big pines, half for a breather and half for the view.\n\nBy 6:22 the three of them were up on a pile of granite, the forest falling away behind them, grinning at the camera. Then it was back on the bikes, with the light to think about."
+   },
+   {
+    "type": "stats",
+    "title": "The numbers",
+    "before": "A great story",
+    "items": [
+     [
+      "18.2 mi",
+      "Spooner Summit to James Lee Park"
+     ],
+     [
+      "518 ft",
+      "of climbing, most of it in the first mile"
+     ],
+     [
+      "7,280 ft to 4,814 ft",
+      "high point to the finish"
+     ],
+     [
+      "1 h 52 m",
+      "moving, 2 h 34 m start to finish"
+     ],
+     [
+      "18.8 mph",
+      "top speed"
+     ]
+    ],
+    "note": "From the track: Spooner Summit, 5:36 PM, to James Lee Park, 8:11 PM."
+   },
+   {
+    "type": "goodbad",
+    "title": "Smooth / Rough",
+    "good": [
+     "The first mile is the only real climb; after that the trail turns downhill and mostly stays that way",
+     "A shuttle drop at the trailhead, so the whole evening ran one way: from the pines into the desert",
+     "A stop under the big pines at 6:11, half breather, half view",
+     "Two riders back on bikes after years off, and the most fun they'd had in a long time"
+    ],
+    "bad": [
+     "The light: the alpine section is the part you want to be out of before dark",
+     "Lights on for the last stretch down to James Lee Park",
+     "A few bumps and sore muscles to take home"
+    ]
+   }
+  ],
+  "coverLines": [
+   "Clear Creek after dark: 18.2 miles from Spooner Summit to James Lee Park",
+   "Visiting from Buffalo: two riders, their first ride in years",
+   "Racing the light out of the alpine section",
+   "The 6:11 stop: a breather under the big pines"
+  ],
+  "renders": [
+   {
+    "for": "the hero2 second picture: alpine section",
+    "prompt": "Magazine ride-report photograph, golden early-evening light on a narrow singletrack mountain bike trail winding downhill through tall Sierra pines and granite boulders, long shadows across the dirt, distant ridgelines fading in haze, no people, rich warm tones with deep burgundy and slate grey accents, crisp editorial detail, no text, no logos"
+   },
+   {
+    "for": "the strip: pines into desert",
+    "prompt": "Wide editorial landscape photograph at dusk, a dirt trail descending from the last pines into open high-desert hills of sagebrush and rock, a valley spreading out below under a fading sky, soft warm light at the horizon, no people, quiet cinematic mood, no text, no logos"
+   },
+   {
+    "for": "the strip: lights for the last stretch",
+    "prompt": "Moody editorial photograph just after sunset on a high-desert singletrack trail, the beam of a mountain bike headlight lighting the dusty path and sagebrush ahead, deep blue twilight sky with a last glow on the ridges, rider not visible, motion and calm together, no text, no logos, no brands"
+   }
+  ],
+  "questions": [
+   "The guide names Helena, but this Note's whoAppears says the wife is not named and the post says \"my wife\". Should the magazine parts name her as Helena or keep \"his wife\"? (I left her out of the blocks for now.)",
+   "Are photos 01 to 03 real photos? realOrAI says \"not said\".",
+   "The template wants six pictures and the Note has three; are the three AI renders fine, or do you have more real photos from the ride (trail, the desert part, the lights)?",
+   "Please check the stats block figures and that \"most of it in the first mile\" for the 518 ft of climbing reads right to you (the post says the first mile is the only real climb, about 150 feet)."
+  ]
  }
 }
