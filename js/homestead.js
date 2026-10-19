@@ -93,7 +93,7 @@
   var win = document.createElement('div'); win.className = 'hs-window';
   win.innerHTML = '<div class="hs-view"></div><picture class="hs-frame" aria-hidden="true">' +
     '<source media="(max-width: 719px)" srcset="' + A + 'frame-phone.webp' + VER + '"><img src="' + A + 'frame-wide.webp' + VER + '" alt=""></picture>' +
-    '<span class="hs-plaque" aria-hidden="true">The Lake Home</span>';
+    '<span class="hs-plaque" aria-hidden="true">Lake Home</span>';
   win.firstChild.appendChild(stage);
   root.appendChild(win);
 
