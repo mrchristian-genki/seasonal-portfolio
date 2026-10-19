@@ -190,7 +190,8 @@ const ldScript = (o) => `<script type="application/ld+json">${JSON.stringify(o).
 const ROOT_URL = show.siteUrl.replace(/play\/?$/, '');
 const PERSON = { '@type': 'Person', name: 'Christian Gehrke', url: ROOT_URL, sameAs: ['https://www.youtube.com/@ChristianGehrke', 'https://www.linkedin.com/in/christiangehrke/'] };
 // Every page carries the main site's tabs (each opens that tab on the homepage) and Play's own bar.
-const PLAYBAR = [['field-notes', 'Field Notes', '#field-notes'], ['daily-dose', 'Daily Dose', '#daily-dose'], ['above', 'From Above', 'above/'], ['daydreams', 'Daydreams', 'daydreams/']];
+// (the newsstand lives at the site root, /magazine/: an address from the root is used as it is; Christian, Oct 19)
+const PLAYBAR = [['field-notes', 'Field Notes', '#field-notes'], ['daily-dose', 'Daily Dose', '#daily-dose'], ['above', 'From Above', 'above/'], ['daydreams', 'Daydreams', 'daydreams/'], ['newsstand', 'Newsstand', '/magazine/']];
 const head = (title, desc, url, image, rel, sub = '', meta = {}) => `<!doctype html>
 <html lang="en">
 <head>
@@ -216,7 +217,7 @@ ${ICONS}
 <body>
 <header class="bar"><a class="brand" href="${rel}../">${LOGO}Christian Gehrke</a>
 <nav class="site" aria-label="Site"><a href="${rel}../?books">Books</a><a href="${rel}../?web">Web</a><a href="${rel}../?workshop">Workshop</a><a class="on" href="${rel}" aria-current="page">Play</a></nav></header>
-<nav class="playbar" aria-label="Play">${PLAYBAR.map(([id, label, href]) => `<a href="${rel}${href}"${id === sub ? ' class="on" aria-current="page"' : ''}>${label}</a>`).join('')}<button type="button" class="chip" id="units" hidden>mi · ft</button></nav>
+<nav class="playbar" aria-label="Play">${PLAYBAR.map(([id, label, href]) => `<a href="${href.startsWith('/') ? href : rel + href}"${id === sub ? ' class="on" aria-current="page"' : ''}>${label}</a>`).join('')}<button type="button" class="chip" id="units" hidden>mi · ft</button></nav>
 ${lakeBand(meta.lake || 'notes')}
 `;
 const foot = (rel) => `<footer class="foot"><p>${esc(show.narrationNote)}</p>
@@ -581,6 +582,8 @@ fs.writeFileSync(path.join(OUT, 'hub.json'), JSON.stringify({
   daily: yt.length ? { title: G.youtube.title, about: G.youtube.about, channel: `https://www.youtube.com/${G.youtube.handle}/videos`,
     videos: yt.map((v) => ({ id: v.id, title: v.title.replace(/^Daily Dose of Paradise\s*[:\-–]\s*/i, ''), date: v.date ? day(v.date, true) : '', desc: v.desc.slice(0, 600) })) } : null,
   above: MAN ? { title: G.above.title, about: G.above.about, url: R('above/'), items: MAN.above.map((g) => gItem(g)) } : null,
+  // the newsstand's rack for the Play tab (Christian, Oct 19): the same four covers as Play's own, and their fonts
+  magazines: MAGS.rack ? { count: MAGS.length, url: '/magazine/', fonts: (MAGS.rackIds || []).map((id) => THEME_FONTS[id]).filter(Boolean).join('&'), rack: MAGS.rack } : null,
   daydreams: series.length ? { tools: G.tools, series: series.map(({ s, m, cover }) => ({ key: s.key, title: s.title, about: s.about, url: R(`daydreams/${s.key}/`),
     cover: gItem(cover), count: m.picks.length + (m.real ? m.real.length : 0),
     groups: m.real ? [{ label: 'Real', real: true, items: m.real.map((g) => gItem(g)) }, { label: 'Imagined', ai: true, items: m.picks.map((g) => gItem(g)) }]
