@@ -4,7 +4,7 @@ Christian's idea (Oct 19, 2026): the home page is the lake, and below the lake i
 every part of the site is a place. Made with care and attention to detail, full of tiny hidden easter eggs: "enjoying
 the journey through the world one little pixel at a time."
 
-Nothing here is built yet. This is the plan to mark up; the first map is built from it.
+Nothing here is built yet. This is the plan to mark up; the first map is built from it. The art: field/drafts/homestead-prompts.md.
 
 ## How it works
 
@@ -58,6 +58,13 @@ Glass-and-brass sheds on a dock. Notes: science, tech, AI (Popular Paradox, HEAT
 - The water wheel: turned by the stream, it lights the labs.
 - The lighthouse at the end of the dock: gear-driven, a slow beam at night that points at the latest Note.
 - The test pool: a little diving robot or a toy boat being tried out.
+
+### A.L.T.A.'s tubes (Christian, Oct 19)
+
+Big glass tubes rising out of the green grass just below the lake, banded in brass, full of lake water, curving over
+toward the lake at the top. A.L.T.A. is seen coming and going through them: now and then she rises up a tube, pauses at
+a porthole, and is gone over the top toward the lake, or comes back down. The lake scene itself isn't touched. Her
+own cut-out clips (assets/alta/parts: rise, dive, glide) play inside, shrunk to fit.
 
 ### Grounds
 
@@ -123,7 +130,7 @@ Found in things, never preached on signs.
 ## Building it, in rings
 
 1. **The first map** (a separate draft): the main buildings and the Studio with its VIP door and light show, the labs on the dock with the lighthouse, the bike park,
-   the trailhead and the climbing wall, each linking to what exists now or filtering Notes. The tabs stay as they are.
+   the trailhead, the climbing wall and A.L.T.A.'s tubes, each linking to what exists now or filtering Notes. The tabs stay as they are.
 2. **The crew moves in:** Starlee's dock, the broadcast tower, the janitor.
 3. **The moving parts:** the tubes, the water wheel, the lighthouse beam, the water tower filling on go-live.
 4. **The homestead becomes the way around the site;** Books becomes its own section (the Library), with a page per
