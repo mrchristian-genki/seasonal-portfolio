@@ -616,7 +616,7 @@
       var opts = '<option value="">No look</option><option value="curls">curls</option>' + list.map(function (l) { return '<option value="' + esc(l.name) + '">' + esc(l.name + (l.about ? ' · ' + l.about : '')) + '</option>'; }).join('');
       var src = function (n) { var l = list.filter(function (x) { return x.name === n; })[0]; return n === 'curls' ? '/assets/narrator/head-base.webp' : l ? lookSrc(l) : ''; };
       var cnar = J.categoryNarrators || {}, nv = function (c) { return c in CATNP ? CATNP[c] : (cnar[c] || ''); };
-      var NOPTS = '<option value="">The default</option><option value="glazyarray">GlazyArray</option><option value="alta">A.L.T.A.</option><option value="marley">Robot Marley</option>';
+      var NOPTS = '<option value="">The default</option><option value="glazyarray">GlazyArray</option><option value="alta">A.L.T.A.</option><option value="marley">Starlee</option>';
       // A.L.T.A.'s tank backdrops (looks.json tankBackdrops, files in assets/alta/backdrops): a column once there are any
       var tanks = J.tankBackdrops || [], ctank = J.categoryTanks || {}, tv = function (c) { return c in CATTP ? CATTP[c] : (ctank[c] || ''); };
       var TOPTS = '<option value="">The default</option>' + tanks.map(function (b) { return '<option value="' + esc(b.name) + '">' + esc(b.name + (b.about ? ' · ' + b.about : '')) + '</option>'; }).join('');
@@ -634,12 +634,12 @@
             '<span class="catc catr"><small>Priority</small><input type="number" min="0" max="9" step="1" data-catr="' + esc(c) + '" value="' + rk(c) + '" title="0 to 9: when a Note\'s categories disagree, the higher wins"></span>' +
             (FINDCAT === c ? findNotes(c, J) : '') + '</li>';
         }).join('') + '</ul>' +
-        '<div class="row"><label class="f catnd"><span>Who narrates when nothing else says</span><select id="defNar"><option value="">GlazyArray</option><option value="alta">A.L.T.A.</option><option value="marley">Robot Marley</option></select></label>' +
+        '<div class="row"><label class="f catnd"><span>Who narrates when nothing else says</span><select id="defNar"><option value="">GlazyArray</option><option value="alta">A.L.T.A.</option><option value="marley">Starlee</option></select></label>' +
           (tanks.length ? '<label class="f catnd"><span>Behind her tank when nothing else says</span><select id="defTank"><option value="">The hall (her own)</option>' + TOPTS.replace('<option value="">The default</option>', '') + '</select></label>' : '') +
           '<span class="muted">A Note can choose its own narrator in its Episode script panel; otherwise its categories\' narrator tells it (the highest priority wins), else this one.</span></div>' +
         '<div class="row"><input id="newCat" placeholder="A new category, e.g. Night ride" maxlength="40"><button type="button" id="newCatAdd">Add the category</button><span class="muted">Then give it a look, a backdrop and a priority above, save, and add it to Notes in their style panel.</span></div>' +
         '<div class="row"><button type="button" class="primary" id="catSave"' + (pending ? '' : ' disabled') + '>Save the categories' + (pending ? ' (' + pending + ')' : '') + '</button><span class="muted">Live in about a minute.</span></div>' +
-        '<h3>Image pools</h3><div class="chips ppick" role="tablist"><button type="button" class="chip' + (POOLV.who !== 'tank' ? ' on' : '') + '" data-pk="bd">GlazyArray and Robot Marley\'s backdrops</button><button type="button" class="chip' + (POOLV.who === 'tank' ? ' on' : '') + '" data-pk="tank">A.L.T.A.\'s tank scenes</button></div><div class="cpool" id="catPool"></div>' +
+        '<h3>Image pools</h3><div class="chips ppick" role="tablist"><button type="button" class="chip' + (POOLV.who !== 'tank' ? ' on' : '') + '" data-pk="bd">GlazyArray and Starlee\'s backdrops</button><button type="button" class="chip' + (POOLV.who === 'tank' ? ' on' : '') + '" data-pk="tank">A.L.T.A.\'s tank scenes</button></div><div class="cpool" id="catPool"></div>' +
         '<h3>Holidays</h3><p class="muted">On its dates a holiday dresses every Note, except the ones that ignore holidays. Give one a backdrop and that shows too.</p><ul class="catl">' + hols.map(function (h) {
           var b = hb(h), bim = b && bsrc(b);
           return '<li><span class="catn"><b>' + esc(h.name.replace(/-/g, ' ')) + '</b><small>' + esc(h.from + ' to ' + h.to) + '</small></span>' +
@@ -910,7 +910,7 @@
       var head = '<tr><th></th>' + chars.map(function (c) { return '<th><img alt="" src="' + esc(c.avatar) + '">' + esc(c.name) + '</th>'; }).join('') + '</tr>';
       var gapBtn = function (c, kind, n, place, label) { return '<button type="button" class="chg" data-c="' + esc(c.id) + '" data-k="' + kind + '" data-n="' + esc(n || '') + '" data-p="' + esc(place || '') + '">' + (label || 'Missing: the prompt') + '</button>'; };
       // each character's tab: who you're working on (a profile), what they wear now, what's missing, and their own box
-      var thumbOf = function (c, l) {   // a look's picture for a character: GlazyArray's head in it, Robot Marley's hat
+      var thumbOf = function (c, l) {   // a look's picture for a character: GlazyArray's head in it, Starlee's hat
         if (c.id !== 'marley') return lookSrc(l);
         return hatSrc(l) || c.avatar;
       };
@@ -942,7 +942,7 @@
       // can only be matched by its name. Each has its prompt; the colour map shows where each character's images sit
       // against the Notes' colours. ----------
       var lookGaps = chars.reduce(function (t, c) { return t + missing(c).length; }, 0);
-      var KINDS = [{ k: 'bd', who: 'GlazyArray and Robot Marley', unit: 'backdrop', lib: bds, first: J.categoryBackdrops || {}, more: J.categoryBackdropChoices || {}, ch: chars.filter(function (c) { return c.id === 'glazyarray'; })[0] },
+      var KINDS = [{ k: 'bd', who: 'GlazyArray and Starlee', unit: 'backdrop', lib: bds, first: J.categoryBackdrops || {}, more: J.categoryBackdropChoices || {}, ch: chars.filter(function (c) { return c.id === 'glazyarray'; })[0] },
         { k: 'tank', who: 'A.L.T.A.', unit: 'tank scene', lib: tks, first: J.categoryTanks || {}, more: J.categoryTankChoices || {}, ch: chars.filter(function (c) { return c.id === 'alta'; })[0] }];
       var hex2hsl = function (h) { var n = parseInt(String(h).slice(1), 16), r = (n >> 16 & 255) / 255, g = (n >> 8 & 255) / 255, b = (n & 255) / 255, mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2, d = mx - mn, sat = d ? d / (1 - Math.abs(2 * l - 1)) : 0, hu = 0;
         if (d) hu = mx === r ? 60 * (((g - b) / d) % 6) : mx === g ? 60 * ((b - r) / d + 2) : 60 * ((r - g) / d + 4); return [(hu + 360) % 360, sat, l]; };
@@ -1024,7 +1024,7 @@
           '<div class="ncards">' + chars.map(card).join('') + '</div>' +
           (NEED.length ? '<ol class="needs">' + shown.map(needRow).join('') + '</ol>' + (NEED.length > 10 ? '<button type="button" class="link" id="ndAll">' + (CHV.allNeeds ? 'Show the top ten' : 'Show all ' + NEED.length) + '</button>' : '') : '<p>Nothing needed: every category with Notes offers each character a choice, and every colour has something close.</p>') +
           '<h3>Where they sit in colour</h3><p class="muted">Each dot is a colour from an image (across: the hue, greys at the far right; dark at the top, light at the bottom); each ring is a colour from a Note. Rings far from any dot are colours their images don\'t have yet.</p>' +
-          '<div class="nspecs"><figure><figcaption>Backdrops: GlazyArray and Robot Marley</figcaption><canvas class="nspec" width="720" height="150" data-k="bd"></canvas></figure><figure><figcaption>Tank scenes: A.L.T.A.</figcaption><canvas class="nspec" width="720" height="150" data-k="tank"></canvas></figure></div>';
+          '<div class="nspecs"><figure><figcaption>Backdrops: GlazyArray and Starlee</figcaption><canvas class="nspec" width="720" height="150" data-k="bd"></canvas></figure><figure><figcaption>Tank scenes: A.L.T.A.</figcaption><canvas class="nspec" width="720" height="150" data-k="tank"></canvas></figure></div>';
       };
       var ctTabs = '<div class="chips ct-tabs" role="tablist"><button type="button" class="chip" data-ct="overview">Overview</button>' + chars.map(function (c) { return '<button type="button" class="chip" data-ct="' + esc(c.id) + '"><img alt="" src="' + esc(c.avatar) + '">' + esc(c.name) + '</button>'; }).join('') + '</div>';
       box.innerHTML = '<h2>Characters</h2>' + ctTabs + '<div class="ct" data-ct="overview">' + needsHtml() + '<p class="muted">Who wears what. A category sets a base, a Note can change it, and a holiday on its dates comes first (unless the Note ignores holidays). Each character\'s pieces, template and prompts are in <code>assets/narrator/characters.json</code>; a new character is an entry there plus its player and kit.</p>' +
@@ -1125,7 +1125,7 @@
           };
         });
       };
-      // Bring in a look for Robot Marley: both renders in, cut here (studio/assets/marleycut.js), seen on her, added
+      // Bring in a look for Starlee: both renders in, cut here (studio/assets/marleycut.js), seen on her, added
       var ML = { own: null, cy: null, cut: null }, mlLook = $('#mlLook');
       var mlShow = function () { $('#mlNewF').hidden = mlLook.value !== '__new'; };
       mlLook.onchange = mlShow; if (PREFILL_ML && [].some.call(mlLook.options, function (o) { return o.value === PREFILL_ML; })) mlLook.value = PREFILL_ML; PREFILL_ML = null; mlShow();
@@ -1148,7 +1148,7 @@
       $('#mlSave').onclick = function () {
         var name = mlLook.value === '__new' ? slug($('#mlName').value).slice(0, 40) : mlLook.value, b = this, res = ML.cut;
         if (!name) { toast(mlLook.value === '__new' ? 'Give the look a name.' : 'Pick which look this is.', true); return; }
-        if (byName[name] && byName[name].marley && !confirm('Robot Marley already has her ' + name.replace(/-/g, ' ') + ' look. Replace it with this one?')) return;
+        if (byName[name] && byName[name].marley && !confirm('Starlee already has her ' + name.replace(/-/g, ' ') + ' look. Replace it with this one?')) return;
         // her pieces' file names: the look's letters, kept clear of the hats and charms she already has (js/marley.js)
         var key = name.replace(/[^a-z0-9]/g, '').slice(0, 20) || 'look', TAKEN = ['halloween', 'winter', 'stpatricks', 'hawaii', 'beanie', 'bone', 'heart', 'paw', 'star', 'pinecone', 'ball', 'bike', 'leaf', 'broom', 'snowglobe', 'clover', 'lei', 'wintercone'];
         var mine = (byName[name] && typeof byName[name].marley === 'object') ? byName[name].marley : null;
@@ -1158,7 +1158,7 @@
         Promise.all([up(res.hat), up(res.charm)]).then(function (pp) {
           pp[0].key = hk; pp[1].key = ck; b.textContent = 'Saving…';
           return api('looks', { marleyLook: { name: name, hat: pp[0], charm: pp[1] } });
-        }).then(function () { LOOKS = null; toast('Robot Marley\'s ' + name.replace(/-/g, ' ') + ' is added. The site updates in about a minute.'); renderChars(); })
+        }).then(function () { LOOKS = null; toast('Starlee\'s ' + name.replace(/-/g, ' ') + ' is added. The site updates in about a minute.'); renderChars(); })
           .catch(function (err) { toast(err.message, true); b.disabled = false; b.textContent = 'Add it to her looks'; });
       };
       // Bring in a piece: who it's for (the chips), each character's box
@@ -1166,7 +1166,7 @@
         CHV.ct = who;
         $$('.ct-tabs [data-ct]', box).forEach(function (b) { b.classList.toggle('on', b.getAttribute('data-ct') === who); b.setAttribute('aria-selected', b.getAttribute('data-ct') === who); });
         $$('.ct[data-ct]', box).forEach(function (d) { d.hidden = d.getAttribute('data-ct') !== who; });
-        var pd = $('.ct[data-ct="' + who + '"] .cpool', box); if (pd) renderPool(pd, pd.getAttribute('data-k'));   // GlazyArray and Robot Marley share one pool
+        var pd = $('.ct[data-ct="' + who + '"] .cpool', box); if (pd) renderPool(pd, pd.getAttribute('data-k'));   // GlazyArray and Starlee share one pool
       };
       $$('.ct-tabs [data-ct]', box).forEach(function (b) { b.onclick = function () { ctShow(b.getAttribute('data-ct')); }; });
       ctShow(CHV.ct || 'overview');
@@ -1722,7 +1722,7 @@
       fold('episode', 'Episode script', E.episode.title || '', !isLive, field('Title', '<input id="epTitle" value="' + esc(E.episode.title) + '">') +
         field('Narrator', '<select id="epNarrator"><option value="">From its categories</option><option value="glazyarray"' + (E.episode.narrator === 'glazyarray' ? ' selected' : '') + '>GlazyArray</option>' +
           '<option value="alta"' + (E.episode.narrator === 'alta' ? ' selected' : '') + '>A.L.T.A.</option>' +
-          '<option value="marley"' + (E.episode.narrator === 'marley' ? ' selected' : '') + '>Robot Marley</option></select>', '<span id="epWho"></span>') +
+          '<option value="marley"' + (E.episode.narrator === 'marley' ? ' selected' : '') + '>Starlee</option></select>', '<span id="epWho"></span>') +
         '<div id="epTankBox"></div><div id="epSync"></div>' + field('Script', '<textarea id="epScript" rows="16">' + esc(E.episode.script) + '</textarea>', '<span id="epCount"></span>')) +
       fold('look', 'Narrator style', lookHint(), false,
         '<div id="styleBox"></div><details class="ga-own" id="gaOwn"' + (gaOwnOpen() ? ' open' : '') + '><summary>Or give this Note its own cap or backdrop</summary>' +
@@ -1778,7 +1778,7 @@
       return renderLookData().then(function (r) { var p = window.GAResolve && GAResolve.pick(r[3], { narrator: E.episode.narrator, cats: noteCats() }); return p ? p.narrator : { name: E.episode.narrator || 'glazyarray', why: '' }; });
     };
     var whoNow = NARNOW = E.episode.narrator || 'glazyarray';
-    var showWho = function () { who().then(function (n) { var was = NARNOW; whoNow = NARNOW = n.name; if (was !== n.name) { renderLook(); renderStyle(); }   // her caps when Robot Marley tells it
+    var showWho = function () { who().then(function (n) { var was = NARNOW; whoNow = NARNOW = n.name; if (was !== n.name) { renderLook(); renderStyle(); }   // her caps when Starlee tells it
       var w = $('#epWho'); var lh = document.querySelector('#f-look > summary small'); if (lh) lh.textContent = lookHint(n.name); if (w) w.textContent = (NAR_NAME[n.name] || 'GlazyArray') + ' tells it' + (n.why ? ' (' + n.why + ')' : '') + '. The audio prompt is in their voice.'; }); };
     $('#epNarrator').onchange = function () { collect(); markDirty(); showWho(); };
     // the scene behind A.L.T.A.'s tank, when she tells it and there are scenes to pick from (looks.json tankBackdrops)
@@ -1853,14 +1853,14 @@
   var LOOKPICK = false, LOOKREPL = false;   // LOOKREPL: Replace pressed, so the prompt and the drop zone show   // two category looks on this Note and none picked yet (for the next steps)
   var LOOKS = null, LOOKCATS = null, CATNEW = {}, LOOKNEW = null, LOOKSAVED = {}, LOOKDEL = null;   // CATNEW: category -> look ('' for none), waiting for Save   // LOOKNEW: { name, blob, ext, url } waiting for Save;
   // LOOKSAVED: name -> this session's image, shown until the site has it; LOOKDEL: a look to take off the site on Save
-  // Robot Marley's hat for a look (Christian, Oct 14: she has caps now): her brought-in hat (looks.json "marley" is an
+  // Starlee's hat for a look (Christian, Oct 14: she has caps now): her brought-in hat (looks.json "marley" is an
   // object: hat, its file's ext and version) or one of her built-in looks' (js/marley.js HOL); '' when she has none
   var HAT_BUILTIN = { halloween: 'halloween', 'winter-holidays': 'winter', 'st-patricks': 'stpatricks', hawaii: 'hawaii', 'tahoe-winter': 'beanie' };
   function hatSrc(l) {
     var m = l && l.marley, h = m && typeof m === 'object' ? m.hat : m ? HAT_BUILTIN[l.name] : '';
     return h ? '/assets/marley/parts/web/hat-' + h + '.' + (m && m.ext === 'png' ? 'png' : 'webp') + (m && m.v ? '?v=' + m.v : '') : '';
   }
-  function lookSrc(l) { return LOOKSAVED[l.name] || (l.file ? '/assets/narrator/looks/' + esc(l.file) + (l.v ? '?r=' + esc(l.v) : '') : '/assets/marley/marley-avatar.jpg'); }   // a look with no file is Robot Marley's alone (hawaii)
+  function lookSrc(l) { return LOOKSAVED[l.name] || (l.file ? '/assets/narrator/looks/' + esc(l.file) + (l.v ? '?r=' + esc(l.v) : '') : '/assets/marley/marley-avatar.jpg'); }   // a look with no file is Starlee's alone (hawaii)
   // this Note's categories (Play's filter tags, as field/tools/publish.mjs makes them): its own tags, then its kind
   function noteCats() {
     var slug = function (t) { return String(t || '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); };
@@ -1985,8 +1985,8 @@
         var l = lk(cats[c]), b = bd(bcats[c]), on = chosen === c || implied === c;
         return '<label class="ga-sty' + (on ? ' on' : '') + '"><input type="checkbox" data-c="' + esc(c) + '"' + (on ? ' checked' : '') + (implied === c ? ' disabled' : '') + '>' +
           '<span class="ga-sty-n">' + esc(catName(c)) + (implied === c ? '<small>its only category with a style</small>' : '') + '</span>' +
-          // the cap of whoever tells it: Robot Marley's hat when she does (hers, or her own look when she has none for it)
-          (NARNOW === 'alta' ? '' : '<span class="ga-sty-t' + (mly ? ' hat' : '') + '">' + (l ? (mly ? (hatSrc(l) ? '<img alt="" title="' + esc(l.name) + ' (Robot Marley\'s)" src="' + hatSrc(l) + '">' : '<i>her own</i>') : '<img alt="" title="' + esc(l.name) + '" src="' + lookSrc(l) + '">') : '<i>no cap</i>') + '</span>') +
+          // the cap of whoever tells it: Starlee's hat when she does (hers, or her own look when she has none for it)
+          (NARNOW === 'alta' ? '' : '<span class="ga-sty-t' + (mly ? ' hat' : '') + '">' + (l ? (mly ? (hatSrc(l) ? '<img alt="" title="' + esc(l.name) + ' (Starlee\'s)" src="' + hatSrc(l) + '">' : '<i>her own</i>') : '<img alt="" title="' + esc(l.name) + '" src="' + lookSrc(l) + '">') : '<i>no cap</i>') + '</span>') +
           '<span class="ga-sty-t bd">' + (b ? '<img alt="" title="' + esc(b.name) + '" src="' + bdSrc(b) + '">' : '<i>no backdrop</i>') + '</span></label>';
       };
       if (box.getAttribute('data-for') !== (E.id || 'new')) { box.setAttribute('data-for', E.id || 'new'); var ow = $('#gaOwn'); if (ow) ow.open = gaOwnOpen(); }
@@ -1997,7 +1997,7 @@
           '<input id="gaTagIn" list="gaCatList" placeholder="Add a category" maxlength="40"><datalist id="gaCatList">' + allCats(r[3]).filter(function (c) { return nc.indexOf(c) < 0; }).map(function (c) { return '<option value="' + esc(catName(c)) + '">'; }).join('') + '</datalist></span>' +
           (function () { var sg = catSuggest(r[3]); return sg.length ? '<span class="ga-sugg"><small>Suggested from what it says:</small> ' + sg.map(function (x) { return '<button type="button" class="chip sugg" data-sugg="' + esc(x.c) + '" title="' + esc('Its words: ' + x.why.join(', ')) + '">+ ' + esc(catName(x.c)) + '</button>'; }).join('') + '</span>' : ''; })() + '</div>' +
         '<div class="ga-stys"><span class="ga-cats-h">Her style from a category</span>' +
-        (nc.length ? '<small>The cap and backdrop each of this Note\'s categories gives ' + (mly ? 'Robot Marley (her caps)' : 'her') + '. Tick the one this Note takes. Categories get their styles in the Categories tab.</small>' + nc.map(row).join('') : '<small>This Note has no categories yet.</small>') +
+        (nc.length ? '<small>The cap and backdrop each of this Note\'s categories gives ' + (mly ? 'Starlee (her caps)' : 'her') + '. Tick the one this Note takes. Categories get their styles in the Categories tab.</small>' + nc.map(row).join('') : '<small>This Note has no categories yet.</small>') +
         (now ? '<p class="ga-now"><b>Wearing now:</b> ' + esc(now.look.name.replace(/-/g, ' ')) + ' <small>(' + esc(now.look.why) + ')</small> · ' +
           (now.backdrop ? esc(now.backdrop.name.replace(/-/g, ' ')) + ' <small>(' + esc(now.backdrop.why) + ')</small>' : 'no backdrop') + '</p>' : '') +
         '<label class="ga-check"><input type="checkbox" id="gaNoHol"' + (E.ignoreHolidays ? ' checked' : '') + '> Ignore holidays <small>(holiday looks and backdrops dress every Note on their dates, except this one)</small></label>' +
@@ -2034,7 +2034,7 @@
   }
   // what she wears on this Note, by the site's one rule (/assets/narrator/resolve.js): a holiday on its dates unless the
   // Note ignores holidays, the Note's own, its categories (the ticked one, then priority, then the latest changed), the default
-  var NAR_NAME = { glazyarray: 'GlazyArray', alta: 'A.L.T.A.', marley: 'Robot Marley' };   // the narrators' names (assets/narrator/resolve.js NARRATORS)
+  var NAR_NAME = { glazyarray: 'GlazyArray', alta: 'A.L.T.A.', marley: 'Starlee' };   // the narrators' names (assets/narrator/resolve.js NARRATORS)
   var LOOKJ = null, NARNOW = 'glazyarray';   // who tells the open Note, as the site decides it (render's showWho)
   // what the Note says about itself, for picking among a category's choices (resolve.js fit(); publish.mjs noteWords)
   function noteFit(e) {
@@ -2178,7 +2178,7 @@
   }
   function wireTpl(root) { $$('.bdTplCopy', root).forEach(function (b) { b.onclick = function () { GALook.copyImage(GALook.BD_TEMPLATE).then(function () { toast('The backdrop template is on the clipboard.'); }, function (e) { toast(e.message, true); }); }; }); }
   // ---------- Category pools (Christian, Oct 14): each category holds a pool of images for each character (backdrops
-  // for GlazyArray and Robot Marley, who share them; A.L.T.A.'s own tank scenes), and a Note chooses from all its
+  // for GlazyArray and Starlee, who share them; A.L.T.A.'s own tank scenes), and a Note chooses from all its
   // categories' pools the one that fits its words and colours best (resolve.js). Drop several in at once and tick every
   // category they belong in; open any image to tick its categories; copy a similar category's pool into a new one. A
   // category's first pick (its column above) is in its pool already. Shown in Categories and in each character's tab. ----------
@@ -2202,7 +2202,7 @@
       var npend = Object.keys(pend).length, nok = news.filter(function (x) { return x.ok; }).length;
       var ticks = function (attr, on, fixed) { return '<div class="chips">' + catList.map(function (c) { var f = fixed && fixed(c); return '<label class="chip"><input type="checkbox" ' + attr + '="' + esc(c) + '"' + (on(c) ? ' checked' : '') + (f ? ' disabled title="its first pick: change it in its column"' : '') + '>' + esc(catName(c)) + '</label>'; }).join('') + '</div>'; };
       var openN = POOLV.open && has(POOLV.open) ? POOLV.open : '';
-      d.innerHTML = '<h4>Category pools · ' + (tank ? 'A.L.T.A.\'s tank scenes' : 'backdrops for GlazyArray and Robot Marley') + '</h4><p class="muted">The images each category offers. A Note chooses from the pools of all its categories the one that fits its words and colours best; with only one, that one. An image can be in any number of pools, and one added on a Note joins the pools of all its categories.</p>' +
+      d.innerHTML = '<h4>Category pools · ' + (tank ? 'A.L.T.A.\'s tank scenes' : 'backdrops for GlazyArray and Starlee') + '</h4><p class="muted">The images each category offers. A Note chooses from the pools of all its categories the one that fits its words and colours best; with only one, that one. An image can be in any number of pools, and one added on a Note joins the pools of all its categories.</p>' +
         '<div class="row"><label class="f"><span>Category</span><select class="pcat">' + catList.map(function (c) { return '<option value="' + esc(c) + '"' + (c === cat ? ' selected' : '') + '>' + esc(catName(c)) + ' (' + ccount[c] + ' Note' + (ccount[c] === 1 ? '' : 's') + ', ' + poolOf(c).length + ' in its pool)</option>'; }).join('') + '</select></label>' +
           '</div>' +
         (pool.length ? '<div class="lookg bdg' + (tank ? ' tkg' : '') + ' ppool">' + pool.map(function (n) { var b = has(n), al = inCats(n).filter(function (c) { return c !== cat; }).map(catName);
@@ -2217,7 +2217,7 @@
             '<button type="button" class="pall">Select all</button><button type="button" class="primary paddsel" disabled>Add the selected</button></div>' +
           '<div class="npool' + (tank ? ' tk' : '') + ' ppickg">' + rest.filter(function (b) { return !POOLV.from || poolOf(POOLV.from).indexOf(b.name) >= 0; }).map(function (b) {
             return '<button type="button" data-psel="' + esc(b.name) + '" aria-pressed="false"><img alt="" src="' + src(b) + '"><span>' + esc(b.name) + '<small>' + esc(inCats(b.name).map(catName).slice(0, 3).join(', ') || 'in no pool yet') + '</small></span></button>'; }).join('') + '</div></details>' : '') +
-        '<label class="drop ga-drop pdrop"><input type="file" class="pfile" accept="image/png,image/jpeg,image/webp" multiple hidden><b>Drop new ' + (tank ? 'scenes for A.L.T.A.' : 'backdrops for GlazyArray and Robot Marley') + ' here</b> <span class="muted">several at once' + (tank ? ' (made on her tank template)' : ' (21:9, made on the backdrop template)') + '</span></label>' +
+        '<label class="drop ga-drop pdrop"><input type="file" class="pfile" accept="image/png,image/jpeg,image/webp" multiple hidden><b>Drop new ' + (tank ? 'scenes for A.L.T.A.' : 'backdrops for GlazyArray and Starlee') + ' here</b> <span class="muted">several at once' + (tank ? ' (made on her tank template)' : ' (21:9, made on the backdrop template)') + '</span></label>' +
         (news.length ? '<div class="pnew">' + news.map(function (x, i) { return '<div class="pn" data-i="' + i + '"></div>'; }).join('') + '</div><p><b>Add ' + (nok === 1 ? 'it' : 'them') + ' to these categories\' pools:</b></p>' + ticks('data-pto', function (c) { return to.indexOf(c) >= 0; }) : '') +
         '<div class="row"><button type="button" class="primary psave"' + (npend || nok ? '' : ' disabled') + '>Save the pools' + (nok ? ' (' + nok + ' new)' : '') + '</button>' + (npend ? '<span class="muted">' + (npend > 1 ? npend + ' categories\' pools' : '1 category\'s pool') + ' changed, not saved yet</span>' : '') + '</div>';
       news.forEach(function (x, i) {
@@ -2301,7 +2301,7 @@
     });
   }
   // everything a Note's categories offer one character (their pools: a category's first pick and its choices), in the
-  // order resolve.js weighs them (Christian, Oct 14): kind 'bd' (GlazyArray's and Robot Marley's backdrops) or 'tank'
+  // order resolve.js weighs them (Christian, Oct 14): kind 'bd' (GlazyArray's and Starlee's backdrops) or 'tank'
   function notePool(J, kind) {
     var first = kind === 'tank' ? J.categoryTanks || {} : J.categoryBackdrops || {}, more = kind === 'tank' ? J.categoryTankChoices || {} : J.categoryBackdropChoices || {};
     var lib = kind === 'tank' ? J.tankBackdrops || [] : J.backdrops || [], out = [];
@@ -2401,15 +2401,15 @@
       var entry = L && list.filter(function (l) { return l.name === L.look; })[0];
       var made = L && (L.look === 'curls' || !!entry), own = !!entry && !entry.to && !entry.rotate && !entry.marley;   // own: a Note look (not a holiday or hair style)
       var waiting = LOOKNEW && L && LOOKNEW.name === L.look;
-      // only the caps of whoever tells it (Christian, Oct 15): Robot Marley's hats when she does, A.L.T.A. none
+      // only the caps of whoever tells it (Christian, Oct 15): Starlee's hats when she does, A.L.T.A. none
       var mly = NARNOW === 'marley';
-      if (NARNOW === 'alta') { box.innerHTML = '<p class="muted">A.L.T.A. tells this Note, and she wears no cap. Pick GlazyArray or Robot Marley as its narrator to give it one.</p>'; renderStyle(); return; }
+      if (NARNOW === 'alta') { box.innerHTML = '<p class="muted">A.L.T.A. tells this Note, and she wears no cap. Pick GlazyArray or Starlee as its narrator to give it one.</p>'; renderStyle(); return; }
       if (mly) {
         var mine = list.filter(function (l) { return hatSrc(l) && l.name !== LOOKDEL; }), on = mine.filter(function (l) { return L && l.name === L.look; })[0];
-        box.innerHTML = '<p class="muted">A cap just for this Note, in place of its category\'s: Robot Marley\'s caps. New ones for her come in from the Characters tab (Bring in a look for Robot Marley).</p>' +
+        box.innerHTML = '<p class="muted">A cap just for this Note, in place of its category\'s: Starlee\'s caps. New ones for her come in from the Characters tab (Bring in a look for Starlee).</p>' +
           field('This Note\'s own cap', '<select id="lookPick"><option value="">None: her category or holiday look</option>' + mine.map(function (l) { return '<option value="' + esc(l.name) + '">' + esc(l.name + (l.about ? ' · ' + l.about : '')) + '</option>'; }).join('') +
-            (L && !on ? '<option value="' + esc(L.look) + '">' + esc(L.look) + ' (GlazyArray\'s only: Robot Marley wears her own)</option>' : '') + '</select>', L && L.why ? esc(L.why) : '') +
-          (on ? '<img class="ga-made hat" alt="" title="' + esc(on.name) + ' (Robot Marley\'s)" src="' + hatSrc(on) + '">' : '');
+            (L && !on ? '<option value="' + esc(L.look) + '">' + esc(L.look) + ' (GlazyArray\'s only: Starlee wears her own)</option>' : '') + '</select>', L && L.why ? esc(L.why) : '') +
+          (on ? '<img class="ga-made hat" alt="" title="' + esc(on.name) + ' (Starlee\'s)" src="' + hatSrc(on) + '">' : '');
         $('#lookPick').value = L ? L.look : ''; renderStyle();
         $('#lookPick').onchange = function () {
           var v = this.value, l = mine.filter(function (x) { return x.name === v; })[0];

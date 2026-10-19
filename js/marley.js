@@ -1,4 +1,4 @@
-/* Robot Marley's player: builds on any .mly element (css/marley.css; her parts and kit in assets/marley/).
+/* Starlee's player: builds on any .mly element (css/marley.css; her parts and kit in assets/marley/).
    Her parts are layered the way A.L.T.A.'s are: her body breathing, her tail wagging in slow arcs, her head on her
    neck (a curious tilt now and then), each ear on its own pivot, her lids, her mouth shapes, the gold glow on her
    lenses, and her collar and charm over the seam. Now and then she does one of her moves (assets/marley/moves/: a
@@ -110,7 +110,7 @@
     if (el.marley) return;
     el.classList.add('mly');
     el.setAttribute('role', 'img');
-    if (!el.getAttribute('aria-label')) el.setAttribute('aria-label', 'Robot Marley, a robot hound, sitting and wagging her tail');
+    if (!el.getAttribute('aria-label')) el.setAttribute('aria-label', 'Starlee, a robot hound, sitting and wagging her tail');
     var st = document.createElement('div'); st.className = 'mly-st';
     // her stump (css/marley.css .mly-seat): its own colours, or with a Note's its carvings, key and bands dyed with the
     // first (its dyed face, seat-stump-dye, cross-fades in; the colour fills seat-stump-mask, multiplied onto it)

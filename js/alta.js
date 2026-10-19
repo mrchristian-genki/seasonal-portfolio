@@ -35,7 +35,7 @@
     if (!gl) return null;
     var sh = function (t, src) { var o = gl.createShader(t); gl.shaderSource(o, src); gl.compileShader(o); return o; }, pr = gl.createProgram();
     gl.attachShader(pr, sh(gl.VERTEX_SHADER, 'attribute vec2 p;varying vec2 u;void main(){u=vec2(p.x*.5+.5,.5-p.y*.5);gl_Position=vec4(p,0.,1.);}'));
-    // premultiplied, with the mask's faint floor (video black is never quite 0) cut away, as Robot Marley's: drawn
+    // premultiplied, with the mask's faint floor (video black is never quite 0) cut away, as Starlee's: drawn
     // straight (not premultiplied), Safari on a phone let the hall's lights glow through where the mask is black, a pale
     // box over the scene while she gestured (Christian, Oct 14)
     gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, 'precision mediump float;varying vec2 u;uniform sampler2D t;void main(){vec3 c=texture2D(t,vec2(u.x,u.y*.5)).rgb;float a=clamp((texture2D(t,vec2(u.x,.5+u.y*.5)).r-.1)/.82,0.,1.);gl_FragColor=vec4(c*a,a);}'));
@@ -78,7 +78,7 @@
     // a backdrop behind her tank (data-bd: the scene for this Note, as the site picks it; assets/alta/KIT.md Round 8):
     // her still without the hall (rest-cut), and her gesture, dive and rise with their masks (*-cut.mp4), over the scene
     // Only a scene of her own (assets/alta/backdrops, made on her tank template); she no longer borrows GlazyArray's
-    // and Robot Marley's backdrops, and without one of hers she stays in her hall (Christian, Oct 14)
+    // and Starlee's backdrops, and without one of hers she stays in her hall (Christian, Oct 14)
     var bd = bar.getAttribute('data-bd'), CUT = {};
     if (bd && /^\/assets\/alta\/backdrops\/[\w.-]+\.(webp|jpg|png)(\?[\w.=-]*)?$/.test(bd) && !!document.createElement('canvas').getContext('webgl')) {
       st.classList.add('al-has-bd'); st.style.setProperty('--al-bd', 'url(' + bd + ')');

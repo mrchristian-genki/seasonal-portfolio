@@ -22,11 +22,11 @@ like her looks). The entry says which ("narrator"). A.L.T.A. tells her own Note 
 tells Christian's story the way GlazyArray would, in the third person and in this guide's tone, in her own voice: warm,
 calm, a lake guardian who notices the water; it opens with "Narrated by A.L.T.A." instead of GlazyArray's tag line.
 
-Robot Marley (Christian, Oct 12, 2026) is the third narrator, chosen the same way. She tells her own Note in the first
+Starlee (Christian, Oct 12, 2026) is the third narrator, chosen the same way. She tells her own Note in the first
 person (js/marley.js; her voice is show.json audioPrompts.marley), opening with her own hello: a happy, curious robot
 companion dog built after the real Marley, measured and deliberate, warm and a little playful. On any other Note she
 narrates, she tells Christian's story in the third person and in this guide's tone, in her own voice, opening with
-"Narrated by Robot Marley." Marley is "she".
+"Narrated by Starlee." Marley is "she".
 
 Tone (Christian, Oct 6, 2026): a warm woman narrator who is Christian's biggest fan and his publicist,
 telling it the way a grown-up looks back on a good season. Think of a nostalgic coming-of-age voice-over:

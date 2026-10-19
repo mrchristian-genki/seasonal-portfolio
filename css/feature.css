@@ -127,7 +127,7 @@ html.night-page .feature .mag-spot{border-color:#3a5157}
 .feature .mv-bars b{font:800 15px/1 var(--mg-sans);color:var(--mg-ink);text-align:right}
 .feature .mag-verdict>p{font:17px/1.6 var(--mg-text);color:var(--mg-ink);margin:0 0 10px}
 .feature .mag-callouts{margin:1.6em 0}
-/* Robot Marley, live (a "marley" block; js/marley.js, css/marley.css): her stage on a warm card, her buttons below */
+/* Starlee, live (a "marley" block; js/marley.js, css/marley.css): her stage on a warm card, her buttons below */
 .feature .mag-marley{margin:1.8em 0;padding:16px;border:2px solid var(--mg-ink);border-radius:4px;background:rgba(255,255,255,.35)}
 .feature .mag-marley .marley{max-width:400px}
 .feature .mag-marley .mly-ctl{max-width:560px;margin-left:auto;margin-right:auto}
@@ -307,7 +307,7 @@ html.night-page .feature.mag-heatsink .mag-label{background:var(--hs-volt);color
 html.night-page .feature.mag-contour{--mg-red:#d9a64a;--ct-moss:#9cc09f}
 html.night-page .feature.mag-contour .mag-box{background:#1f2a22}
 
-/* COL & COBBLE (biking): cream, oxblood and road grey, an elegant serif with spaced capitals */
+/* ROLLING TERRAIN (biking; its id is still colcobble, from when it was COL & COBBLE): cream, oxblood and road grey, an elegant serif with spaced capitals */
 .feature.mag-colcobble{--mg-ink:#2a2324;--mg-ink2:#50555b;--mg-ink3:#7c8086;--mg-red:#6d1f2b;--mg-gold:#f3eee3;--mg-rule:#6d1f2b;
   --mg-serif:"Playfair Display",Didot,Georgia,serif;--mg-text:"Libre Baskerville",Baskerville,Georgia,serif;--mg-sans:"Josefin Sans","Futura","Helvetica Neue",Arial,sans-serif}
 .feature.mag-colcobble .mag-mast{font:italic 700 clamp(30px,8.4vw,80px)/.92 var(--mg-serif);text-transform:none;letter-spacing:0}

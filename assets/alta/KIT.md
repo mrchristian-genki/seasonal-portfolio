@@ -579,7 +579,7 @@ new, copy the prompt and the template, and drop the render back: the previews sh
 Episode panel or for a whole category in its column.
 
 **No borrowing** (Christian, Oct 14): she uses only her own scenes. Without one that fits the Note, she stays in her
-hall; GlazyArray's and Robot Marley's backdrops are theirs alone (a wide picture doesn't fit her frame).
+hall; GlazyArray's and Starlee's backdrops are theirs alone (a wide picture doesn't fit her frame).
 
 **Starter places** (for [THE PLACE]; public places only, never the home):
 
