@@ -1,0 +1,9 @@
+# christiangehrke.com: everything public may be read; the Studio and the build's own folders may not.
+User-agent: *
+Disallow: /studio/
+Disallow: /field/
+Disallow: /magazine/_cards/
+Disallow: /assets/alta/preview.html
+Disallow: /assets/marley/preview.html
+
+Sitemap: https://www.christiangehrke.com/sitemap.xml

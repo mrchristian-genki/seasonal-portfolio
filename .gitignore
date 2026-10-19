@@ -9,3 +9,6 @@ __pycache__/
 
 # the magazines, built by field/tools/magazines.mjs on each deploy
 /magazine/
+
+# the sitemap, built by field/tools/publish.mjs on each deploy
+/sitemap.xml
