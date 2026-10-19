@@ -47,6 +47,18 @@ jobs:
       - name: Build Play
         run: node field/tools/publish.mjs
 
+      # The magazines' share cards (field/tools/magcards.mjs): each magazine's real cover beside its name, drawn in a
+      # browser at 1200 x 630. If this step fails the deploy goes on, and each card stays the cover story's picture.
+      - name: Draw the magazines' share cards
+        continue-on-error: true
+        run: |
+          npm install --prefix /tmp/pw --no-save --silent playwright@1.56.1
+          /tmp/pw/node_modules/.bin/playwright install --with-deps chromium
+          NODE_PATH=/tmp/pw/node_modules node field/tools/magcards.mjs
+      # whatever happened above, the card pages never go up
+      - name: Tidy the card pages
+        run: rm -rf magazine/_cards
+
       # The Studio: its copy of the track engine, and the Anthropic PHP SDK (composer.lock pins it).
       - name: Prepare the Studio
         run: |

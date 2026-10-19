@@ -60,6 +60,46 @@ ${body}
 <span class="zn-stand-meta"><b>${esc(t.category)}</b> ${ps.length} ${ps.length === 1 ? 'story' : 'stories'}</span></a>`;
   };
 
+  // ---- share cards (Christian, Oct 19: "share magazines and get social media and meta cards") ----
+  // Each magazine, and the newsstand, gets a 1200 x 630 card at its own address (card.jpg): its real cover in its own
+  // look, drawn by field/tools/magcards.mjs from a small page here (magazine/_cards/, removed once it's drawn). Until
+  // it's drawn (or if it can't be) the card is the cover story's picture, so a share always has an image.
+  const ROOT = show.siteUrl.replace(/play\/?$/, '');
+  const CARDS = path.join(OUT, '_cards'); fs.mkdirSync(CARDS, { recursive: true });
+  const cardJobs = [];
+  const stamp = (s) => { let h = 0; for (const c of s) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h.toString(36); };
+  const fallbackCard = (t, to) => {   // the cover story's picture, copied, as the card until the drawn one replaces it
+    const lead = byMag[t.id][0], src = lead.cover ? still(lead.cover).replace(/\?.*$/, '') : '';
+    if (src && fs.existsSync(path.join(SITE, src))) fs.copyFileSync(path.join(SITE, src), to);
+  };
+  const cardPage = (name, ids, inner) => { fs.writeFileSync(path.join(CARDS, name + '.html'), `<!doctype html><html lang="en"><head><meta charset="utf-8">
+${fonts(ids)}<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&display=swap">
+<link rel="stylesheet" href="/css/feature.css?v=${V}"><link rel="stylesheet" href="/css/magazine.css?v=${V}">
+<style>
+html,body{margin:0;width:1200px;height:630px;overflow:hidden}
+.mc{position:relative;width:1200px;height:630px;overflow:hidden;background:#1c1714;color:#fff;font-family:"Nunito",sans-serif;display:flex;align-items:center;gap:56px;padding:0 70px;box-sizing:border-box}
+.mc-bg{position:absolute;inset:-40px;background-size:cover;background-position:center;filter:blur(26px) saturate(1.1) brightness(.42)}
+.mc>*:not(.mc-bg){position:relative}
+.mc .zn-stand-item{display:block;width:330px;flex:none;text-decoration:none;color:inherit;transform:rotate(-2.5deg)}
+.mc .zn-stand-cover.mag-cover{display:block;aspect-ratio:3/4;margin:0;border-radius:6px;box-shadow:0 30px 50px -18px rgba(0,0,0,.85),0 0 0 1px rgba(255,255,255,.08)}
+.mc .zn-stand-item{container-type:inline-size}
+.mc .zn-stand-item .mag-mast{font-size:clamp(14px,13.5cqw,48px);letter-spacing:0}
+.mc .zn-stand-item .mag-tag{display:none}.mc .mag-issue{font-size:12px;padding:5px 11px}
+.mc .zn-stand-meta{display:none}
+.mc-text{flex:1;min-width:0}
+.mc-kicker{margin:0 0 14px;font:800 17px/1.2 "Nunito",sans-serif;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.72)}
+.mc-text .mag-mast{display:block;margin:0;color:#fff;font-size:76px;line-height:.95;text-shadow:0 3px 18px rgba(0,0,0,.5)}
+.mc-tag{margin:18px 0 0;font:600 26px/1.3 Georgia,serif;font-style:italic;color:rgba(255,255,255,.9)}
+.mc-foot{margin:30px 0 0;font:700 20px/1.3 "Nunito",sans-serif;color:rgba(255,255,255,.75)}
+.mc-foot b{color:#fff}
+.mc-rack{flex:none;display:grid;grid-template-columns:1fr 1fr;gap:26px 22px;width:430px}
+.mc-rack .zn-stand-item{width:auto;transform:none}
+.mc-rack .zn-stand-item .mag-mast{font-size:clamp(12px,13.5cqw,30px)}
+.mc-rack .mag-tag,.mc-rack .mag-issue{display:none}
+.mc-paper{background:#f2ede2;color:#1c2b2a}
+.mc-paper .mc-kicker{color:#7a6a55}.mc-paper .mc-title{margin:0;font:800 64px/1 Georgia,serif;color:#1c2b2a}.mc-paper .mc-tag{color:#3f4f52}.mc-paper .mc-foot{color:#4c5f63}.mc-paper .mc-foot b{color:#1c2b2a}
+</style></head><body>${inner}</body></html>`); };
+
   // ---- each magazine ----
   for (const t of live) {
     const ps = byMag[t.id], lead = ps[0], F = lead.e.feature, slug = magSlug(t), url = `${show.siteUrl.replace(/play\/?$/, '')}magazine/${slug}/`;
@@ -88,19 +128,38 @@ ${spread.length ? `<section class="mag-book zn-logbook"><h2 class="sub">From the
 <div class="zine zn-after">${others.length ? `<nav class="zn-stand zn-more" aria-label="More from the newsstand"><h2>More from the newsstand</h2><div class="zn-stand-row">${others.map((o) => standCover(o, '../')).join('')}</div></nav>` : ''}
 <footer class="zn-foot"><p>${esc(t.masthead)} is one of the made-up magazines on <a href="/">christiangehrke.com</a>. The stories are real Field Notes; each picture says whether it's a real photo or made with AI.</p></footer></div>`;
     const dir = path.join(OUT, slug); fs.mkdirSync(dir, { recursive: true });
-    fs.writeFileSync(path.join(dir, 'index.html'), page(`${t.masthead} · ${t.tagline || t.category}`, `${t.category}: ${ps.length} ${ps.length === 1 ? 'story' : 'stories'} from Christian Gehrke's Field Notes, in ${t.masthead}, a made-up magazine.`, url, lead.cover ? show.siteUrl.replace(/play\/?$/, '') + still(lead.cover).slice(1) : null, body, [t.id, ...others.map((o) => o.id)], lead.cover ? { w: lead.cover.w, h: lead.cover.h, alt: lead.cover.caption } : {}));
+    fallbackCard(t, path.join(dir, 'card.jpg'));
+    const bg = m && !m.video ? m.src : lead.cover ? still(lead.cover) : '';
+    cardPage(slug, [t.id], `<div class="mc feature mag-${esc(t.id)}">${bg ? `<div class="mc-bg" style="background-image:url('${esc(bg)}')"></div>` : ''}${standCover(t, '/magazine/')}
+<div class="mc-text"><p class="mc-kicker">A made-up magazine</p><b class="mag-mast">${esc(t.masthead)}</b>${t.tagline ? `<p class="mc-tag">${esc(t.tagline)}</p>` : ''}
+<p class="mc-foot"><b>${ps.length} ${ps.length === 1 ? 'story' : 'stories'}</b> from the Field Notes · christiangehrke.com</p></div></div>`);
+    cardJobs.push({ page: `/magazine/_cards/${slug}.html`, out: `magazine/${slug}/card.jpg` });
+    const desc = `${t.category}: ${ps.length} ${ps.length === 1 ? 'story' : 'stories'} from Christian Gehrke's Field Notes, in ${t.masthead}, a made-up magazine.`;
+    const html = page(`${t.masthead} · ${t.tagline || t.category}`, desc, url, `${url}card.jpg?v=${stamp(lead.e.id + ps.length + t.masthead + (t.tagline || ''))}`,
+      body.replace('<a href="/">christiangehrke.com</a></nav>', `<button type="button" class="zn-share" data-share-url="${esc(url)}" data-share-title="${esc(t.masthead)}" data-share-text="${esc(t.tagline || desc)}">Share</button><a href="/">christiangehrke.com</a></nav>`),
+      [t.id, ...others.map((o) => o.id)], { w: 1200, h: 630, alt: `${t.masthead}, a made-up magazine of Christian Gehrke's Field Notes: its cover` });
+    fs.writeFileSync(path.join(dir, 'index.html'), html);
   }
 
   // ---- the newsstand ----
   const total = live.reduce((a, t) => a + byMag[t.id].length, 0);
   const stand = `<main class="zine zn-newsstand">
-<nav class="zn-top" aria-label="The site"><a href="/play/">← Play</a><a href="/">christiangehrke.com</a></nav>
+<nav class="zn-top" aria-label="The site"><a href="/play/">← Play</a><button type="button" class="zn-share" data-share-url="${esc(ROOT)}magazine/" data-share-title="The newsstand" data-share-text="Made-up magazines, real stories">Share</button></nav>
 <header class="zn-stand-head"><p class="zn-kicker">The newsstand</p><h1>Made-up magazines, real stories</h1>
 <p class="zn-lede">${live.length} magazines, ${total} stories. Each one is a Field Note dressed as a feature in a magazine that doesn't exist: biking, hiking, drones, the workshop and more. A magazine turns up here as soon as it has a story.</p></header>
 <div class="zn-rack">${live.map((t) => standCover(t, '')).join('\n')}</div>
 <footer class="zn-foot"><p>Every picture says whether it's a real photo or made with AI.</p></footer>
 </main>`;
-  fs.writeFileSync(path.join(OUT, 'index.html'), page('The newsstand · Christian Gehrke', `Made-up magazines, real stories: ${total} Field Notes in ${live.length} magazines.`, show.siteUrl.replace(/play\/?$/, '') + 'magazine/', null, stand, live.map((t) => t.id)));
+  // the newsstand's card: four covers on the rack, the way Play shows them
+  const rack4 = live.slice().sort((a, b) => byMag[b.id].length - byMag[a.id].length || (byMag[b.id][0].e.date > byMag[a.id][0].e.date ? 1 : -1)).slice(0, 4);
+  fallbackCard(rack4[0], path.join(OUT, 'card.jpg'));
+  cardPage('newsstand', rack4.map((t) => t.id), `<div class="mc mc-paper"><div class="mc-text"><p class="mc-kicker">The newsstand</p><h1 class="mc-title">Made-up magazines, real stories</h1>
+<p class="mc-foot"><b>${live.length} magazines, ${total} stories</b> from the Field Notes · christiangehrke.com</p></div>
+<div class="mc-rack">${rack4.map((t) => standCover(t, '/magazine/')).join('')}</div></div>`);
+  cardJobs.push({ page: '/magazine/_cards/newsstand.html', out: 'magazine/card.jpg' });
+  fs.writeFileSync(path.join(CARDS, 'jobs.json'), JSON.stringify(cardJobs, null, 1));
+  fs.writeFileSync(path.join(OUT, 'index.html'), page('The newsstand · Christian Gehrke', `Made-up magazines, real stories: ${total} Field Notes in ${live.length} magazines.`, ROOT + 'magazine/',
+    `${ROOT}magazine/card.jpg?v=${stamp(rack4.map((t) => t.id + byMag[t.id][0].e.id).join() + total)}`, stand, live.map((t) => t.id), { w: 1200, h: 630, alt: 'The newsstand: four made-up magazines on a rack' }));
   const out = live.map((t) => ({ id: t.id, slug: magSlug(t), masthead: t.masthead, count: byMag[t.id].length }));
   // Play's own rack (Christian, Oct 19: "a two by two rack of actual magazines"): the four with the most stories,
   // newest cover story first among equals, as the stand shows them, on two shelves
