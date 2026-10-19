@@ -4,9 +4,14 @@ Christian's idea (Oct 19, 2026): every digital key the site runs on, made real. 
 turquoise, hung on the belt of an old-school robot janitor. We only ever see the belt and the key holder, never the
 whole robot.
 
-**One house rule shapes these:** no brands, logos or text inside an AI render (CLAUDE.md), and generators garble
-words anyway. So each key carries a **symbol** for what it opens instead of a name or a logo. The names go on the page
-beside the picture (captions, or a small legend like the one at the bottom), where they stay sharp and can be changed.
+**Logos (Christian, Oct 19: "I do not think the logo owners will mind in this case. We are promoting them"):** the
+keys for real services may carry those services' real logos, the same way the Tumble carries real browser logos,
+credited. But the AI never draws a logo: generators warp them into lookalikes. Render each logo key with a **blank
+glowing badge** in its bow, then place the official logo file on the badge afterwards (from each company's own
+brand or press page, used as their guidelines allow). Under the picture: *Logos belong to their owners.*
+
+Keys without a logo of their own keep a **symbol**. The web host stays unnamed (Christian, Oct 19), so its tag
+gets a symbol too. Names go on the page beside the picture (captions, or the legend at the bottom).
 
 Every prompt ends with the same guard line; keep it.
 
@@ -23,22 +28,28 @@ Every prompt ends with the same guard line; keep it.
 > fine dust in the air.
 
 **Guard line (end of every prompt):**
-> No text, letters, numbers, words, logos or brand marks anywhere in the image; symbols only.
+> No text, letters, numbers, words, logos or brand marks anywhere in the image; symbols and blank badges only.
+
+(The real logos go on the blank badges afterwards, in an editor, not in the prompt.)
 
 ---
 
 ## The keys (one symbol each)
 
-| Key | What it opens (the caption on the page) | Symbol in its bow | Glow |
+| Key | What it opens (the caption on the page) | In its bow | Glow |
 |---|---|---|---|
-| 1. The deploy key | The locked door to the server, for uploads only | A small door with a padlock | Bright turquoise |
-| 2. Where to go (a tag of three) | The server, the user and the folder | Three small tags on one split ring: a tower, a figure, a folder | Pale aqua |
-| 3. The Studio's GitHub key | One repository's contents, with an expiry date | A branching tree, with a tiny hourglass charm | Deep teal |
-| 4. The drafting key | Lets the Studio ask Claude for a draft | A speech bubble with a spark inside | Turquoise, warmer |
-| 5. The Drive key | Read-only: bring photos and video in from the phone | A cloud with a downward arrow and a small eye | Pale aqua |
-| 6. The pull-request key | Lets Claude Code propose changes, never publish | A hand offering a folded page | Bright turquoise |
+| 1. The deploy key | The locked door to the server, for uploads only | Symbol: a small door with a padlock | Bright turquoise |
+| 2. Where to go (a tag of three) | The server, the user and the folder | Symbols: three small tags on one split ring, a tower, a figure, a folder (the host stays unnamed) | Pale aqua |
+| 3. The Studio's GitHub key | One repository's contents, with an expiry date | **Blank badge → the GitHub logo**, with a tiny hourglass charm | Deep teal |
+| 4. The drafting key | Lets the Studio ask Claude for a draft | **Blank badge → the Claude logo** | Turquoise, warmer |
+| 5. The Drive key | Read-only: bring photos and video in from the phone | **Blank badge → the Google Drive logo**, with a small eye charm | Pale aqua |
+| 6. The pull-request key | Lets Claude Code propose changes, never publish | **Blank badge → the Claude logo** (or GitHub's: it's GitHub's app for Claude) | Bright turquoise |
 | 7. The Studio's own key | The back room's door (the password) | A keyhole shaped like a heart | Deep teal, pulsing |
 | (The master) | None: there isn't one. Every key has one job | An empty brass hook on the ring | None |
+
+A blank badge, in a prompt: *"a small smooth round glass badge set in the key's bow, glowing evenly, completely
+blank, facing the camera, flat enough to place a logo on later."* Ask for the badges to face the camera: a logo is
+far easier to place on a flat, front-on disc.
 
 The empty hook is the point of the picture: there's no master key.
 
@@ -48,9 +59,9 @@ The empty hook is the point of the picture: there's no master key.
 
 > [The look.] A close, low three-quarter view of the robot janitor's hip: the belt fills the frame from edge to edge,
 > the key ring hangs from a brass clip at the center, and seven high-tech keys fan out and catch the light, each with
-> its own glowing symbol: a door with a padlock, three small tags, a branching tree with a tiny hourglass charm, a
-> speech bubble with a spark, a cloud with a downward arrow and an eye, a hand offering a folded page, and a heart-
-> shaped keyhole. One empty brass hook hangs beside them. Behind, out of focus: a workshop corridor, a mop bucket, a
+> its own glowing bow: a door with a padlock, three small tags, then four keys with small smooth round glass badges
+> glowing evenly and completely blank, facing the camera (one with a tiny hourglass charm, one with a small eye charm),
+> and a heart-shaped keyhole. One empty brass hook hangs beside them. Behind, out of focus: a workshop corridor, a mop bucket, a
 > row of server cabinets with small turquoise status lights. [Guard line.]
 
 Formats: 16:9 for the Note's cover; 3:4 for a magazine cover crop (keep the keys in the middle two-thirds).
@@ -66,8 +77,9 @@ Formats: 16:9 for the Note's cover; 3:4 for a magazine cover crop (keep the keys
 Use one for each key; swap in its symbol and glow from the table.
 
 > [The look.] An extreme close-up of one high-tech key hanging from the janitor's brass ring, the belt leather soft
-> in the background. The key is translucent glass over brushed steel, its core glowing [glow], and in its bow one
-> simple symbol etched in light: [symbol]. Fingerprints and fine scratches on the steel, a drop of light on the glass
+> in the background. The key is translucent glass over brushed steel, its core glowing [glow], and in its bow
+> [one simple symbol etched in light: (symbol) | a small smooth round glass badge, glowing evenly, completely blank,
+> facing the camera]. Fingerprints and fine scratches on the steel, a drop of light on the glass
 > edge. [Guard line.]
 
 Suggested order on the page: 1 deploy key, 2 the three tags, 3 GitHub key, 6 pull-request key, 7 Studio key,
@@ -102,4 +114,5 @@ If the hero shot runs big, a small legend under it names the keys:
 7. The Studio's own key: the back room's door
 8. The empty hook: there's no master key
 
-Pictures from these are **Made with AI**. Label them that way in the Note.
+Pictures from these are **Made with AI**, with the logos added afterwards. Label them that way in the Note, with
+the credit line: *Logos belong to their owners.*
