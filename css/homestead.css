@@ -24,7 +24,8 @@ html.night-page .hs-frame img{filter:brightness(.72) saturate(.9)}
   text-shadow:0 1px 0 rgba(255,236,190,.55),0 -1px 0 rgba(40,24,6,.35);transition:opacity 2.4s ease-in-out}
 html.night-page .hs-plaque{opacity:.75}
 .homestead .hs-title{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
-.hs-stage{position:absolute;left:50%;top:50%;width:100%;aspect-ratio:2000/1116;transform:translate(-50%,-50%)}
+.hs-stage{position:absolute;left:50%;top:50%;width:100%;aspect-ratio:2000/1116;
+  transform:translate(-50%,-50%) translate(var(--zx,0px),var(--zy,0px)) scale(var(--zs,1));transition:transform 1.6s cubic-bezier(.45,0,.25,1)}
 /* the painted ground: four versions stacked, one showing, like a place's art */
 .hs-paint{position:absolute;inset:0;display:grid}
 .hs-paint img{grid-area:1 / 1;width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity 2s ease-in-out}
@@ -132,3 +133,31 @@ html.night-page .hs-butterfly b{background-image:url(../assets/homestead/butterf
 html.night-page .hl-card{background:var(--night-card,#16232f);border-color:var(--night-line,#27384a)}
 html.night-page .hl-card b{color:var(--night-text,#dde8e6)}html.night-page .hl-sum{color:var(--night-soft,#a6b8bf)}
 @media (prefers-reduced-motion:reduce){.home-latest,.hl-card{transition:none}.home-latest{opacity:1;transform:none}}
+
+/* ZOOMING IN (js/homestead.js zoom()): a click on a place eases the view in on it, like a map, slowly (CLAUDE.md
+   "Motion"); the others dim a little, its name plate steps aside for the card, and the card rises in the window */
+.hs-window.zoomed .hs-place:not(.picked) .hs-art{filter:saturate(.7) brightness(.82);transition:filter 1.2s ease-in-out,transform .7s ease-in-out}
+.hs-window.zoomed .hs-name{opacity:0!important}
+.hs-window.zoomed .hs-place.picked .hs-art{filter:drop-shadow(0 0 14px rgba(255,236,170,.7))}
+html.night-page .hs-window.zoomed .hs-place.picked .hs-art{filter:drop-shadow(0 0 16px rgba(127,245,232,.6))}
+.hs-card{position:absolute;z-index:4;left:50%;bottom:calc(150 / 818 * 100%);width:min(440px,calc(100% - 40px));transform:translate(-50%,14px);opacity:0;
+  padding:16px 20px 16px;border-radius:16px;background:rgba(255,253,246,.96);box-shadow:0 14px 36px -12px rgba(30,20,6,.55),0 0 0 1px rgba(122,90,42,.25);
+  color:#2c3a28;text-align:left;transition:opacity .8s ease-in-out,transform .8s ease-in-out}
+.hs-card.in{opacity:1;transform:translate(-50%,0)}
+.hs-card.top{bottom:auto;top:calc(150 / 818 * 100%)}
+.hs-card-kick{margin:0;font:800 11px var(--font-display,system-ui);letter-spacing:.1em;text-transform:uppercase;color:#a2742c}
+.hs-card h3{margin:2px 0 6px;font:800 21px/1.2 var(--font-display,system-ui);color:#0f4d47}
+.hs-card p{margin:0;font-size:15px;line-height:1.5;color:#3f5a64}
+.hs-card .hs-card-n{margin-top:6px;font-weight:700;font-size:13.5px;color:#a2742c}
+.hs-card .hs-card-n:empty{display:none}
+.hs-card-go{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.hs-card-go button{appearance:none;cursor:pointer;border-radius:999px;padding:8px 16px;font:800 14px var(--font-display,system-ui);
+  border:2px solid #0f4d47;background:transparent;color:#0f4d47;transition:background-color .6s ease-in-out,color .6s ease-in-out,transform .5s ease-in-out}
+.hs-card-go .hs-go{background:#0f4d47;color:#fff}
+.hs-card-go button:hover{transform:translateY(-1px)}
+.hs-card-go button:focus-visible{outline:3px solid #d8618f;outline-offset:2px}
+html.night-page .hs-card{background:rgba(18,30,46,.95);color:#e6edf6;box-shadow:0 14px 36px -12px rgba(0,0,0,.7),0 0 0 1px rgba(127,245,232,.25)}
+html.night-page .hs-card h3{color:#dde8e6}html.night-page .hs-card p{color:#a9b8c8}
+html.night-page .hs-card-go button{border-color:#7ff5e8;color:#7ff5e8}html.night-page .hs-card-go .hs-go{background:#7ff5e8;color:#0e1823}
+@media (max-width:719px){.hs-card{bottom:calc(150 / 1376 * 100%);padding:13px 15px}.hs-card.top{top:calc(190 / 1376 * 100%)}.hs-card h3{font-size:18px}.hs-card p{font-size:14px}}
+@media (prefers-reduced-motion:reduce){.hs-stage,.hs-card,.hs-card-go button{transition:none}}

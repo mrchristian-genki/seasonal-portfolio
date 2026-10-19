@@ -40,6 +40,28 @@
     { id: 'tree', name: 'The Useless Tree', line: 'A bench in the shade', x: 1593, y: 804, w: 407, z: 1031, mx: 727, my: 1651, mw: 373, mz: 1859, go: { view: 'lab' } }
   ];
   // the Kinetic Garden's rotors, each turning on its own stem beside it (x, y: its middle)
+  // A few words about each place for its card when the village zooms in on it (the site's own copy, nothing new)
+  var ABOUT = {
+    tubes: "A.L.T.A.'s way in and out of the lake: glass tubes rising out of the grass.",
+    labs: 'Glass-and-brass sheds on the dock, with a lighthouse at the end: the Notes on science, tech and AI.',
+    alta: "The lake guardian's booth by the water, where her own Notes live.",
+    tower: "GlazyArray's radio mast: the Mini-Cast episodes, and her narration.",
+    observatory: 'The Tumble: a fall from today back to the first browser in 1990.',
+    workshop: 'The ProPre Engine runs the whole publishing pipeline, from prompt to print-ready cover. This page is a workshop project too.',
+    studio: 'The back room where Notes are written and published. Members only; the light show is for everyone.',
+    house: 'Websites since 1997, professionally since 1999: front-end developer, digital director, head of experience design.',
+    doghouse: "Marley's own house, and the Notes she's in.",
+    library: 'An independent imprint of adult coloring books, from Color in a Cup to hikes, kitchens, wine and the American West.',
+    newsstand: 'The Field Notes as made-up magazines: real stories, each dressed as a feature.',
+    barn: 'Videos, photos and Daydreams: rides and hikes, foraging, and the light jars made from what comes home.',
+    depot: 'The Parts Catalog: every part kept because it is going to become something.',
+    kinetic: 'Sculptures that turn in the wind: the digital art.',
+    starlee: "Starlee's charging dock, where she rests between walks.",
+    bikepark: 'Not here to break records. Just not to break anything: the rides.',
+    trailhead: 'Where the walks start: the hikes and the foraging walks.',
+    climbing: 'The wall to practise on: the adventures.',
+    tree: 'The useless tree nobody cut down, grown huge, with a bench in its shade.'
+  };
   var ROTORS = [
     { i: 0, x: 1652, y: 640, w: 52, mx: 1080, my: 1010, mw: 44, s: 34 },
     { i: 1, x: 1388, y: 660, w: 46, mx: 860, my: 1035, mw: 38, s: -46 },
@@ -72,7 +94,7 @@
     a.style.cssText = vars(p);
     a.setAttribute('aria-label', p.name + ': ' + p.line);
     a.innerHTML = '<span class="hs-art" aria-hidden="true"></span><span class="hs-name">' + p.name + '<small>' + p.line + '</small></span>';
-    a.addEventListener('click', function (ev) { if (open(p, ev)) ev.preventDefault(); });
+    a.addEventListener('click', function (ev) { if (ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.button) return; ev.preventDefault(); zoom(p, a); });
     stage.appendChild(a);
     return { p: p, el: a, art: a.firstChild, imgs: {}, want: null, cur: null };
   });
@@ -96,6 +118,53 @@
     '<span class="hs-plaque" aria-hidden="true">Lake Home</span>';
   win.firstChild.appendChild(stage);
   root.appendChild(win);
+
+  // ── zooming in: a click on a place eases the view in on it, like a map, with a card about it: go there, or show its
+  // part of this page below; either, or Back, a click on the ground or Esc, eases the village back out ──
+  var view = win.firstChild, card = document.createElement('div'), zoomed = null, lastFocus = null;
+  card.className = 'hs-card'; card.setAttribute('role', 'dialog'); card.setAttribute('aria-modal', 'false'); card.hidden = true;
+  win.appendChild(card);
+  function zoom(p, el) {
+    var vw = view.clientWidth, vh = view.clientHeight, W = stage.offsetWidth, Hh = stage.offsetHeight;
+    var r = el.getBoundingClientRect(), sr = stage.getBoundingClientRect(), k = stage.offsetWidth / sr.width;   // undo any zoom in force
+    var cx = (r.left - sr.left + r.width / 2) * k, cy = (r.top - sr.top + r.height / 2) * k;
+    var s = Math.min(3, Math.max(1.6, Math.min(vw / (r.width * k) * .42, vh / (r.height * k) * .5)));
+    var tx = -s * (cx - W / 2), ty = -s * (cy - Hh / 2);                                  // the place to the middle of the view,
+    var mx = Math.max(0, (s * W - vw) / 2), my = Math.max(0, (s * Hh - vh) / 2);          // as far as the painting's edges allow
+    tx = Math.max(-mx, Math.min(mx, tx)); ty = Math.max(-my, Math.min(my, ty));
+    // the card goes where the place isn't: above it when the place ends up low in the view, below it otherwise
+    var py = (stage.offsetTop - Hh / 2 + Hh / 2) + ty + s * (cy - Hh / 2);                 // the place's middle, from the view's middle
+    card.classList.toggle('top', py > 0);
+    stage.style.setProperty('--zx', tx.toFixed(1) + 'px'); stage.style.setProperty('--zy', ty.toFixed(1) + 'px'); stage.style.setProperty('--zs', s.toFixed(3));
+    win.classList.add('zoomed'); places.forEach(function (pl) { if (pl.el) pl.el.classList.toggle('picked', pl.p === p); });
+    if (!zoomed) lastFocus = el;
+    zoomed = p; fill(p);
+  }
+  function unzoom(back) {
+    if (!zoomed) return;
+    zoomed = null; win.classList.remove('zoomed'); card.classList.remove('in');
+    stage.style.setProperty('--zx', '0px'); stage.style.setProperty('--zy', '0px'); stage.style.setProperty('--zs', '1');
+    places.forEach(function (pl) { if (pl.el) pl.el.classList.remove('picked'); });
+    setTimeout(function () { if (!zoomed) card.hidden = true; }, 700);
+    if (back !== false && lastFocus) lastFocus.focus({ preventScroll: true });
+  }
+  function fill(p) {
+    var here = !p.go.href, n = '';
+    card.innerHTML = '<p class="hs-card-kick">Lake Home</p><h3>' + p.name + '</h3><p>' + (ABOUT[p.id] || p.line) + '</p><p class="hs-card-n"></p>' +
+      '<div class="hs-card-go"><button type="button" class="hs-go">' + (here ? 'Show it below' : 'Go there') + '</button>' +
+      '<button type="button" class="hs-back">Back to the village</button></div>';
+    card.setAttribute('aria-label', p.name);
+    card.hidden = false; requestAnimationFrame(function () { card.classList.add('in'); });
+    card.querySelector('.hs-go').addEventListener('click', function () { var q = zoomed; unzoom(false); if (q) setTimeout(function () { open(q); }, calm ? 0 : 450); });
+    card.querySelector('.hs-back').addEventListener('click', function () { unzoom(); });
+    if (p.go.tags) counts().then(function (c) {
+      var t = p.go.tags.filter(function (x) { return c[x]; }).sort(function (a, b) { return c[b] - c[a]; })[0];
+      if (t && zoomed === p) card.querySelector('.hs-card-n').textContent = c[t] + (c[t] === 1 ? ' Note' : ' Notes');
+    });
+    setTimeout(function () { var b = card.querySelector('.hs-go'); if (b && zoomed === p) b.focus({ preventScroll: true }); }, calm ? 0 : 900);
+  }
+  stage.addEventListener('click', function (ev) { if (zoomed && !ev.target.closest('.hs-place')) unzoom(); });
+  document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape' && zoomed) unzoom(); });
 
   function vars(p) {
     return '--x:' + p.x + ';--y:' + p.y + ';--w:' + p.w + ';--mx:' + p.mx + ';--my:' + p.my + ';--mw:' + p.mw + ';z-index:' + Math.round(p.z || p.y) + ';--mz:' + Math.round(p.mz || p.z || p.y) + ';';
@@ -132,9 +201,8 @@
   update();
 
   // ── doors: a section of this page eases into view; Play's Notes open filtered to the place's kinds ──
-  function open(p, ev) {
-    if (ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.button) return false;
-    if (p.go.href) return false;
+  function open(p) {
+    if (p.go.href) { location.href = p.go.href; return true; }
     var view = p.go.view || 'lab', tab = document.querySelector('.tab[data-view="' + view + '"]');
     if (!tab) return false;
     if (tab.getAttribute('aria-selected') !== 'true') tab.click();
