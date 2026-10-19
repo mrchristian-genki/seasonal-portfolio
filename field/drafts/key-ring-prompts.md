@@ -111,6 +111,75 @@ This is the "a client could run their site the same way" picture: a set of keys 
 
 ---
 
+## 6. The keys laid out on a table: one wide picture, unlit and lit (Christian, Oct 19)
+
+The key design from Christian's first render: **rectangular fobs**, a worn brass-and-steel cap with a square loop at
+the top and brass corner guards at the bottom, the body a slab of thick translucent glass with one glowing turquoise
+symbol inside it. Two versions of the same picture, identical in every way except the glow, so the site can fade the
+lit one over the unlit one key by key (see "Animating it" below).
+
+### Shared scene (paste first in both)
+
+> A wide overhead three-quarter view of an old wooden workbench in a quiet workshop. Laid out in a neat row across the
+> middle of the bench, evenly spaced with clear space around each one, are eight objects: seven high-tech key fobs and
+> one empty brass key ring. Each fob is a rectangular slab of thick translucent glass held in a worn brass-and-steel
+> cap with a square loop at the top and small brass corner guards at the bottom, scuffed and well used. Inside the
+> glass of each fob is one simple symbol, set like a circuit inlay: (1) a small door with a padlock, (2) three tiny
+> tags, a tower, a figure and a folder, (3) a smooth blank round badge with a tiny hourglass charm hanging from the
+> loop, (4) a smooth blank round badge, (5) a smooth blank round badge with a tiny eye charm, (6) a smooth blank round
+> badge, (7) a keyhole shaped like a heart. The eighth object, on the far right, is an empty brass key ring with
+> nothing on it. All the fobs lie flat and face the camera squarely, their badges and symbols flat and front-on. Soft
+> warm workshop light from the upper left, a faint olive-green enamel robot arm resting out of focus at the edge of
+> the bench, wood grain, a few brass shavings, shallow depth of field kept sharp across the whole row. Wide 21:9
+> composition with the row of keys filling the middle third.
+
+### Version A: unlit
+
+> [Shared scene.] **The keys are switched off:** the glass is clear and slightly smoky, the symbols and badges are dark
+> etched lines with no light in them, and nothing glows; the only light is the warm workshop light. No text, letters,
+> numbers, words, logos or brand marks anywhere in the image; symbols and blank badges only.
+
+### Version B: lit
+
+> [Shared scene.] **Every key is switched on:** each glass body glows from inside with the site's turquoise, the symbols
+> and badges blazing bright aqua (#7ff5e8) at their centers falling off to turquoise (#25c0ad) and deep teal (#00b3a4)
+> at the glass edges, a soft turquoise pool of light spilling onto the wood under each key. The empty ring stays
+> unlit. Everything else in the picture is identical to the unlit version. No text, letters, numbers, words, logos or
+> brand marks anywhere in the image; symbols and blank badges only.
+
+### Getting the two to match
+
+The fade only works if the two pictures line up exactly, key for key and grain for grain. Two ways to get there:
+
+1. **Make A, then edit it into B** (best): render the unlit version, then use the generator's edit, inpaint or
+   image-to-image mode on that same image with: *"Make each key's glass glow from inside with turquoise light, its
+   symbol bright aqua, a soft turquoise pool of light on the wood under each key. Change nothing else."*
+2. **Same seed:** if the tool has a seed setting, render both prompts with the same seed and size, and check them
+   by flicking between the two.
+
+Then place the real GitHub, Claude and Google Drive logos on the blank badges in **both** versions, in the same
+spots
+(dark and flat in A, glowing in B, or the same logo file with a soft glow in B).
+
+### Animating it: the keys lighting up in order
+
+This doesn't need a video. The site can do it from the two stills, which also keeps it sharp and tiny:
+
+- The lit picture sits exactly over the unlit one, hidden.
+- Each key's lit area fades in on its own, left to right, about a second each so every fade finishes (the Tumble's
+  jewels rule: lights ease on and off, never jump), with the heart keyhole last and longest.
+- All the keys hold lit for a moment, then fade back down together, and it starts again. The empty ring never lights.
+- With reduced motion turned on, it simply shows the lit picture.
+- A caption under it names each key as it lights (the legend below), so the names are text on the page, not in the
+  picture.
+
+If a video is wanted instead (for a share card or the cover loop):
+
+> [Lit version as the start image.] Locked-off camera. The keys begin dark, then light up one at a time from left to
+> right, each glow easing up over about a second, the heart keyhole last and brightest; all hold lit together for a
+> beat, then ease back down together to dark. The empty ring stays dark throughout. Nothing else moves except a little
+> dust in the light. 10 to 12 seconds, seamless loop. No text, letters, numbers, words, logos or brand marks anywhere.
+
 ## The legend (on the page, not in the picture)
 
 If the hero shot runs big, a small legend under it names the keys:
