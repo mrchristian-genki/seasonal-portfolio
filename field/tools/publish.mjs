@@ -435,6 +435,8 @@ pages.forEach((p, i) => {
 });
 
 // The magazines (field/tools/magazines.mjs): the newsstand at /magazine/ and a page for every magazine a published Note wears
+// a set of the magazines' fonts in one stylesheet link (THEME_FONTS by magazine id)
+const fontsFor = (ids) => { const q = (ids || []).map((id) => THEME_FONTS[id]).filter(Boolean).join('&'); return q ? `<link rel="stylesheet" href="https://fonts.googleapis.com/css2?${q}&display=swap">\n` : ''; };
 const MAGS = buildMagazines({ SITE, FIELD, pages, esc, day, V, ICONS, shareMeta, show, THEME_FONTS });
 console.log(`magazine/: ${MAGS.length} magazines (${MAGS.map((m) => `${m.slug} ${m.count}`).join(', ')})`);
 
@@ -541,7 +543,9 @@ const aboveHTML = MAN && MAN.above.length ? `<section id="above" class="block"><
 const ddHTML = series.length ? `<section id="daydreams" class="block"><h2 class="sec">Daydreams ${AI}</h2><p class="sub">Ideas that only exist as pictures, so far. ${esc(G.tools)}</p>
 <div class="series">${series.map((q) => serieCard(q, '')).join('')}</div><p class="more"><a href="daydreams/">All ${series.length} series →</a></p></section>` : '';
 fs.writeFileSync(path.join(OUT, 'index.html'), head('Play · Christian Gehrke', show.about, show.siteUrl, pages[0] && pages[0].cover && pages[0].cover.abs, '') +
-  `<main class="index"><p class="season-line">Spring, when everything is starting</p><h1>Play</h1><p class="lede">The fun part. Rides, hikes and foraging, a decade of flying, and the things I make, real and imagined.</p>${MAGS.length ? `<p class="zn-link"><a href="/magazine/">The newsstand: the Notes as ${MAGS.length} made-up magazines →</a></p>` : ''}
+  `<main class="index"><p class="season-line">Spring, when everything is starting</p><h1>Play</h1><p class="lede">The fun part. Rides, hikes and foraging, a decade of flying, and the things I make, real and imagined.</p>${MAGS.rack ? `${fontsFor(MAGS.rackIds)}<section class="np-rack" aria-labelledby="npH"><div class="np-head"><h2 class="sec" id="npH">The newsstand</h2><a href="/magazine/">All ${MAGS.length} magazines →</a></div>
+<p class="sub">The Field Notes as made-up magazines: real stories, each dressed as a feature.</p>
+<div class="np-shelves">${MAGS.rack}</div></section>` : ''}
 <section id="field-notes" class="block"><h2 class="sec">${esc(show.showTitle)}</h2><p class="sub">${esc(show.about)}</p>
 ${pages.length ? `<div class="cards">${cards}</div>` : '<p class="empty">The first one is on its way.</p>'}</section>
 ${ytHTML}
