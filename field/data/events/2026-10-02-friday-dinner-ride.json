@@ -42,7 +42,7 @@
  "fieldNotes": "From Christian's voice memo (Oct 2): took the bikes through the neighbourhood, crossed the main road, took a bumpy back road with helmets on, realised they had no lights, ordered food to go and came home on well-lit roads; enjoying the meal. Christian (Oct 3): a Friday night ride for dinner; the track does not matter, the views do.\nPrivacy: the ride starts and ends at home, so by Christian's decision (Oct 3) it is used with NO track, map, route, distances, restaurant, shopping centre or street names. Photos: only sky and distant views; the intersection photos are cropped to sky and ridge (the sign, lights and streets removed), the selfie at the intersection and the photo with nearby houses are left out; EXIF stripped. Videos (IMG_7370/7372/7377) not used yet: too large for the Drive connector.\nFrom the photos: iridescent cloud at 6:14 PM; sunset over the sagebrush at 6:51 to 6:54 PM.",
  "post": {
   "title": "Friday night dinner ride",
-  "body": "Friday night, my wife and I decided dinner was worth riding to. Helmets on, across the main road and up a back way that's more dirt than road, a bit bumpy and a lot more fun than driving.\n\nA few minutes in I stopped for the sky. Over the ridge there was a cloud with a rainbow running through it, pink, green and violet like oil on water.\n\nOrdering went fine. Then we realized neither of us had brought a bike light, and the sun was already heading behind the Sierra. Dinner to go, and home the long way on the best-lit roads we know.\n\nThe sky made up for it on the way back: a long pink streak over the mountains and the sagebrush going dark below it.\n\nWhat I learned: pack the lights, even for a ride to dinner."
+  "body": "Friday night, my wife and I decided dinner was worth riding to. Helmets on, across the main road and up a back way that's more dirt than road, a bit bumpy and a lot more fun than driving.\n\n## The stop for the sky\n\nA few minutes in I stopped for the sky. Over the ridge there was a cloud with a rainbow running through it, pink, green and violet like oil on water.\n\n> Over the ridge there was a cloud with a rainbow running through it, pink, green and violet like oil on water.\n\n## No lights\n\nOrdering went fine. Then we realized neither of us had brought a bike light, and the sun was already heading behind the Sierra. Dinner to go, and home the long way on the best-lit roads we know.\n\n## The long way home\n\nThe sky made up for it on the way back: a long pink streak over the mountains and the sagebrush going dark below it.\n\nWhat I learned: pack the lights, even for a ride to dinner."
  },
  "episode": {
   "title": "Pack the lights",
@@ -70,5 +70,84 @@
  "palette": [
   "#3468b2",
   "#d3bd69"
- ]
+ ],
+ "feature": {
+  "theme": "colcobble",
+  "masthead": "COL & COBBLE",
+  "tagline": "Riding, slowly told",
+  "issue": "The Climbing Issue",
+  "label": "Ride Report",
+  "byline": "By GlazyArray, Cycling Desk",
+  "blocks": [
+   {
+    "type": "stats",
+    "title": "The numbers",
+    "before": "The stop for the sky",
+    "items": [
+     [
+      "0",
+      "bike lights between the two riders"
+     ],
+     [
+      "3",
+      "colours in one cloud: pink, green and violet"
+     ],
+     [
+      "2",
+      "shows in the sky, one on the way out and one on the way home"
+     ]
+    ],
+    "note": "No distance, climbing or route on this one: a ride from home stays off the map, and the views are the point."
+   },
+   {
+    "type": "box",
+    "title": "A rainbow in a cloud",
+    "before": "No lights",
+    "kicker": "The stop",
+    "text": "A few minutes into the ride, Christian stopped for the sky. Over the ridge sat a cloud with a rainbow running through it, pink, green and violet, like oil on water.\n\nHe has an eye for the moment worth stopping for, and this was one: the light was already on its way down behind the Sierra."
+   },
+   {
+    "type": "goodbad",
+    "title": "Smooth / Rough",
+    "good": [
+     "A back way that's more dirt than road, and a lot more fun than driving",
+     "A rainbow running through a cloud over the ridge",
+     "Ordering went fine",
+     "A long pink streak over the mountains on the way home"
+    ],
+    "bad": [
+     "Neither rider brought a bike light",
+     "The sun already heading behind the Sierra by dinner",
+     "Home the long way, on the best-lit roads instead of the bumpy one"
+    ]
+   }
+  ],
+  "coverLines": [
+   "A rainbow folded into a cloud over the ridge",
+   "Dinner by bike, and not one light between them",
+   "Pack the lights: the lesson, noted again",
+   "Sunset over the sagebrush on the long way home"
+  ],
+  "renders": [
+   {
+    "for": "the strip: the dirt back road",
+    "prompt": "Documentary-style magazine ride photograph at dusk in the high desert: a narrow, bumpy dirt road climbing gently through grey-green sagebrush toward a distant dark mountain ridge, warm low light, two mountain bikes with helmets hung on the handlebars resting at the roadside, no people, no houses, no signs, no streets, soft film grain, muted burgundy and slate tones."
+   },
+   {
+    "for": "the stop box: the iridescent cloud",
+    "prompt": "Close magazine photograph of an iridescent cloud above a dark mountain ridge just after sunset hour begins: pale gold edges with a soft band of pink, green and violet running through the middle like oil on water, clear evening sky around it, the ridge as a silhouette, no buildings, no people, no text, quiet editorial landscape style."
+   },
+   {
+    "for": "the strip: the ride home at last light",
+    "prompt": "Wide editorial landscape photograph of the high desert at the end of sunset: one long streak of pink and cream light glowing behind a dark Sierra ridge, sagebrush in the foreground fading into darkness, a lone mountain bike silhouette leaning in the brush, no people, no houses, no roads or signs, calm and nostalgic, fine film grain."
+   }
+  ],
+  "questions": [
+   "The numbers box leaves out distance, climbing and time on purpose (ride from home). Are the three figures used (no lights, three colours in the cloud, two sunset shows) OK, or would you rather drop the stats block for this Note?",
+   "The Note says your wife is not named (Oct 1), but the show guide (Oct 5) says Helena may be named. The magazine parts avoid naming her; should the feature name Helena?",
+   "The three photos are marked realOrAI \"not said\". Are they all real photos from the ride?",
+   "The template wants 6 pictures and the Note has 3; the 3 renders above would be AI images. Should they be labeled Animated/Made with AI, or would you rather wait for stills from the videos (IMG_7370/7372/7377)?",
+   "The issue is \"The Climbing Issue\" but this ride has no climbing figures. Keep it, or change the issue line for this feature?"
+  ]
+ }
 }
