@@ -4,7 +4,7 @@
  "date": "2026-10-18",
  "kind": "hike",
  "place": "East Lake Tahoe",
- "status": "draft",
+ "status": "published",
  "summary": "Christian, Helena and Marley spend a bright Sunday morning at Whale Beach on the east shore of Lake Tahoe: a view through the pines, magnetic sand in a ring on a phone wallet, carnelians left where they lay, one very dense stone that isn't a carnelian at all, Marley chasing her ball and posing on a granite boulder, and Helena making a leaning boulder look easy on the way back.",
  "trailhead": null,
  "links": [],
@@ -305,7 +305,7 @@
  "episode": {
   "title": "Marley on the rock",
   "script": "Narrated by Robot Marley.\n\nIt was a clear Sunday morning in October on the east shore of Lake Tahoe, the kind with nothing in the sky at all but blue.\n\nA little before ten, Christian and Ha-Leen-Ah stopped among the pines for their first look at the water, on the trail down to Whale Beach. A wooded point reached out into the lake, and pale peaks sat along the far shore. They took a selfie right there. Ha-Leen-Ah wore a knit beanie with a pom-pom on top, and behind them a few of the trees had turned a deep rust orange.\n\nMarley came along too.\n\n***\n\nBy half past ten they were down at the water. And the first thing Christian chose to photograph was not the lake. It was the back of his phone wallet, where a pinch of dark beach sand had gathered itself into a neat little ring, with a tiny dash beside it, like a punctuation mark. The sand on that shore carries magnetic particles, and the magnet in the wallet had drawn them into its own shape. Most people would have brushed it off. Christian took its picture. That is the whole difference between someone who walks past things and someone who sees them.\n\nMarley trotted along the sand beneath the granite, and then she got down to business, in and out of the water after her ball, again and again. Christian took a selfie with the boulders standing in the shallows behind him, the water so clear you could count the stones on the bottom.\n\nA little before eleven he held up a pale yellow pebble between two fingertips, a small, smooth carnelian, and let the light come through it. Then he left it right where it was.\n\nNot every stone he photographed that morning was a carnelian. One of them definitely was not. It was heavy, far heavier than the rocks around it, heavier even than the granite. Super dense, as Christian puts it. His best guess is a lot of iron. He laid his hand on it for one picture, and then he left it on the beach, too. What it really is, the beach is keeping to itself.\n\n***\n\nThen, around half past eleven, came the best part of the morning.\n\nMarley got up on top of one of the big granite boulders at the edge of the lake. She stood there first, looking out. Then she sat down, the way a dog sits when she has decided this is her rock now. Christian got down low with the camera, so that there was nothing in the frame but Marley, the stone and the sky. He took three pictures in about a minute. I'll just say the third one could hang on a wall.\n\nGetting low, keeping the frame empty, letting the subject be the only thing there. That is a photographer's choice, and he made it without fuss.\n\n***\n\nA little later he came across an old driftwood post with three orange carnelians already balanced on top of it. The biggest on the bottom, the smallest on top, each one resting on the curve of the one below.\n\nHe photographed it twice. Once looking down at the sand. And once with the whole lake behind it. Then he left it exactly the way he found it, for whoever came along next.\n\n***\n\nOn the way back up the trail, a few minutes before noon, they stopped for one more selfie, the blue water showing through the trees behind them. Somewhere along the way Ha-Leen-Ah had traded the beanie for a cap with her own name on it, from the Montana city that shares it, a gift from friends.\n\nA little higher, Ha-Leen-Ah and Marley posed beside a tree growing straight out of a granite boulder, and there were a few more selfies, with the lake far off now.\n\nThen Ha-Leen-Ah found a big granite boulder leaning at an angle, set her whole body against it, and for one picture she was the one holding it up.\n\nThe morning had warmed up. The pom-pom had done its job.\n\nSome mornings are just a walk to the water and back. This one ended with a dog on a rock, three carnelians left on their post, a fourth left on its beach, one heavy mystery left right beside it, and a ring of sand that nobody else would have noticed.",
-  "audio": null,
+  "audio": "data/audio/2026-10-18-a-dog-on-a-boulder-and-three-stones-on-a-post.mp3",
   "sections": [
    "On the way down",
    "Carnelians",
@@ -424,11 +424,36 @@
       "h": 540,
       "video": true,
       "poster": "data/photos/2026-10-18-a-dog-on-a-boulder-and-three-stones-on-a-post/clip-2.jpg"
+     },
+     {
+      "name": "",
+      "when": "11:32. Marley standing on top of a granite boulder by the lake.",
+      "alt": "11:32. Marley standing on top of a granite boulder by the lake.",
+      "src": "data/photos/2026-10-18-a-dog-on-a-boulder-and-three-stones-on-a-post/07.jpg",
+      "w": 1600,
+      "h": 900
+     },
+     {
+      "name": "",
+      "when": "Marley on her rock, against a clear blue sky.",
+      "alt": "Marley on her rock, against a clear blue sky.",
+      "src": "data/photos/2026-10-18-a-dog-on-a-boulder-and-three-stones-on-a-post/09.jpg",
+      "w": 900,
+      "h": 1600
+     },
+     {
+      "name": "",
+      "when": "Then sitting, looking out over the water.",
+      "alt": "Then sitting, looking out over the water.",
+      "src": "data/photos/2026-10-18-a-dog-on-a-boulder-and-three-stones-on-a-post/08.jpg",
+      "w": 900,
+      "h": 1600
      }
     ],
     "label": "real",
     "layout": "hero3"
    }
   ]
- }
+ },
+ "publishedAt": "2026-10-19T00:50:48Z"
 }
