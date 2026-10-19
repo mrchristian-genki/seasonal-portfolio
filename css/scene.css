@@ -96,6 +96,7 @@ html,body{margin:0;background:#0b1020;font-family:system-ui,-apple-system,sans-s
   }
 .tab::after{content:"";position:absolute;left:14px;right:14px;bottom:6px;height:3px;border-radius:3px;background:rgb(var(--accent));transform:scaleX(0);transform-origin:0 50%;transition:transform .45s ease-in-out,background .8s}
 .tab:hover{background:rgba(15,77,71,.06)}
+.tab-link{display:inline-block;text-decoration:none;line-height:normal}   /* Books: a link to its own page, dressed as a tab */
 .tab:hover::after,.tab:focus-visible::after{transform:scaleX(1)}
 .tab:active{transform:scale(.96);transition-duration:.2s}
 .tab[aria-selected="true"]{color:rgb(var(--accent))}

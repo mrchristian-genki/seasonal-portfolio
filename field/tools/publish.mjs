@@ -216,7 +216,7 @@ ${ICONS}
 </head>
 <body>
 <header class="bar"><a class="brand" href="${rel}../">${LOGO}Christian Gehrke</a>
-<nav class="site" aria-label="Site"><a href="${rel}../?books">Books</a><a href="${rel}../?web">Web</a><a href="${rel}../?workshop">Workshop</a><a class="on" href="${rel}" aria-current="page">Play</a></nav></header>
+<nav class="site" aria-label="Site"><a href="${rel}../coloring-books/">Books</a><a href="${rel}../?web">Web</a><a href="${rel}../?workshop">Workshop</a><a class="on" href="${rel}" aria-current="page">Play</a></nav></header>
 <nav class="playbar" aria-label="Play">${PLAYBAR.map(([id, label, href]) => `<a href="${href.startsWith('/') ? href : rel + href}"${id === sub ? ' class="on" aria-current="page"' : ''}>${label}</a>`).join('')}<button type="button" class="chip" id="units" hidden>mi · ft</button></nav>
 ${lakeBand(meta.lake || 'notes')}
 `;

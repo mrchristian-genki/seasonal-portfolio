@@ -6,7 +6,7 @@
   'use strict';
   var box = document.querySelector('[data-shelf]'); if (!box) return;
   var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var A = 'assets/shelf/', started = false, books = [];
+  var A = (box.getAttribute('data-shelf-base') || '') + 'assets/shelf/', started = false, books = [];   // the Books page sits a folder down (data-shelf-base="../")
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   function card(b, i, dup) {
     var a = document.createElement('a'); a.className = 'bk';
