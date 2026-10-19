@@ -61,6 +61,18 @@
     page = fromURL(); show();
   })();
 
+  // Share (a magazine, the newsstand): the phone's own share sheet, else the link copied, the button saying so a while
+  document.addEventListener('click', function (ev) {
+    var b = ev.target.closest && ev.target.closest('[data-share-url]');
+    if (!b) return;
+    var url = b.getAttribute('data-share-url'), t = b.getAttribute('data-share-title'), x = b.getAttribute('data-share-text');
+    if (navigator.share) { navigator.share({ title: t, text: x, url: url }).catch(function () {}); return; }
+    var said = function (w) { var o = b.getAttribute('data-was') || b.textContent; b.setAttribute('data-was', o); b.textContent = w; b.classList.add('ok');
+      clearTimeout(b._t); b._t = setTimeout(function () { b.textContent = o; b.classList.remove('ok'); }, 2400); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(function () { said('Link copied'); }, function () { prompt('Copy this link:', url); });
+    else prompt('Copy this link:', url);
+  });
+
   // Lightbox for any photo (or clip) link: swipe (or ← →) to the next or previous one on the page, each change a
   // short cross-fade (../js/motion.js swipeNav and lbList); no arrows on it (Christian, Oct 19: they covered the pictures)
   var box = null, list = [], at = -1;
