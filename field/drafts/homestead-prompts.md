@@ -187,6 +187,37 @@ Versions: A, C.
 
 ---
 
+## The painted ground (Christian's idea, Oct 19): one scene, then the buildings taken away
+
+The places stay separate pictures (sharp, lit and moving on their own). Under them goes **one painted ground** per
+layout, so the hill reads as a single painting: grass, the path, the stream from the lake, the labs' pond, flowers,
+fences and stones, with the plots where the places stand.
+
+**The guides** (field/drafts/homestead-guides): the layout with every place in its exact spot, over the code's plain
+ground. `desktop-day.jpg` and `desktop-night.jpg` (2520 × 2365) for wide screens; `phone-day-1.jpg` to `-4.jpg`
+(1080 × 1863 each, top to bottom) for phones.
+
+1. **Paint the whole scene from a guide** (image to image, keeping the composition):
+
+   > [The look, but "a whole small homestead on a gentle hillside" for "a single building".] Repaint this picture as one
+   > finished storybook illustration, keeping every building exactly where and how it is: a gentle grassy hillside in
+   > the Sierra Nevada below a lake, a winding sandy footpath, a stream running down from the top left into a small pond
+   > under the wooden dock, soft hummocks of grass, wildflowers, small stones, a few low fences and shrubs between the
+   > places, soft contact shadows, light from the upper left. Keep the picture's edges and the buildings' positions
+   > exactly. [Guard line.]
+
+2. **Take the buildings away** (an edit of the scene from step 1):
+
+   > Same image exactly, with every building, structure, dock, tube, sign, bench and tree removed, and the ground
+   > painted in where they stood: plain grass and earth plots, the path, the stream and the pond carrying on underneath.
+   > Change nothing else. [Guard line.]
+
+   Step 2's picture is the ground; step 1's shows how the whole should look. Send both.
+
+3. **Its versions:** night, day snow and night snow as edits of the step 2 ground, the same way as the places.
+
+The phone sections are painted one by one; keep the path and stream meeting at the top and bottom edges, so they join.
+
 ## Ring 2 and 3 (later)
 
 The same look and rules. One line each, to grow into prompts when the time comes:

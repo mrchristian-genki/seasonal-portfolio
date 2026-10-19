@@ -31,3 +31,6 @@ Christian's rule, a lesson learned on the Tumble: every change on screen eases. 
   the real logos of the services it names, placed on blank badges after rendering (never drawn by the AI) and credited
   (Christian, Oct 19, 2026: "We are promoting them").
 - Never commit secrets.
+- Keep the behind-the-scenes. When art, animation or a feature is built from Christian's renders, save the working
+  pictures that show how it was made (contact sheets, before and after, cut-outs, layouts) while they still exist,
+  for future Notes and a behind-the-scenes item (Christian, Oct 19, 2026). A session's own files don't last.

@@ -144,19 +144,73 @@
       "use": "post",
       "cover": false,
       "ai": true
+    },
+    {
+      "src": "data/photos/2026-10-19-a-village-below-the-lake/cut-outs-day-and-night.jpg",
+      "caption": "Ten of the places cut out, by day over grass and by night over dark ground, lamp halos and all.",
+      "w": 1600,
+      "h": 278,
+      "use": "post",
+      "cover": false,
+      "ai": true
+    },
+    {
+      "src": "data/photos/2026-10-19-a-village-below-the-lake/layout-guide.jpg",
+      "caption": "The layout: every place in its spot on the hill, along the path, the stream and the labs' pond.",
+      "w": 1600,
+      "h": 1502,
+      "use": "post",
+      "cover": false,
+      "ai": true
+    },
+    {
+      "src": "data/photos/2026-10-19-a-village-below-the-lake/homestead-winter.jpg",
+      "caption": "The homestead below the lake in winter: every place in its snow version.",
+      "w": 1280,
+      "h": 1400,
+      "use": "post",
+      "cover": false,
+      "ai": true
+    },
+    {
+      "src": "data/photos/2026-10-19-a-village-below-the-lake/homestead-winter-night.jpg",
+      "caption": "Winter at night: the windows lit, and the House glowing under the pointer.",
+      "w": 1280,
+      "h": 900,
+      "use": "post",
+      "cover": false,
+      "ai": true
+    },
+    {
+      "src": "data/photos/2026-10-19-a-village-below-the-lake/homestead-fall-night.jpg",
+      "caption": "A fall night on the hill.",
+      "w": 1280,
+      "h": 1200,
+      "use": "post",
+      "cover": false,
+      "ai": true
+    },
+    {
+      "src": "data/photos/2026-10-19-a-village-below-the-lake/homestead-phone.jpg",
+      "caption": "On a phone, the places come down the hill one or two at a time.",
+      "w": 390,
+      "h": 3000,
+      "use": "post",
+      "cover": false,
+      "ai": true
     }
   ],
   "fieldNotes": "Drafted by Claude for Christian (Oct 19, 2026) at his request: \"put those into a draft note and discuss the process of the brainstorming and the idea of the village and then the building of the 132 images, all of different states and so forth... while you still have access to your images.\" Every fact is from his messages in that conversation; the plan is field/drafts/homestead.md and the prompts field/drafts/homestead-prompts.md. The contact sheets and comparisons were made by Claude from his renders.",
   "post": {
     "title": "A Village Below the Lake",
-    "body": "For a while now the home page has been doing too many jobs. So I asked: is it time to give Books its own section and make home more of an overall collection of sections and main content? This is what came out of one long conversation on October 19 with Claude, and one long afternoon of making pictures.\n\n## First, the seasons\n\nThe first step went live the same day. The lake now opens in whatever season it is where you are, and a small picker inside the lake lets you choose another one. The tabs no longer change the season. They only change the words, which makes them quicker too.\n\n## Then, a village\n\nHere's how I put it: \"We got a workshop, place to go, build things, have fun in there, like almost like a shed, big workshop. Then we also have a newsstand. We've got our magazines... and then learning area, library.\" The home page would be the lake, and below the lake would be the workshop and the farm, the home, if you will.\n\nFrom there it grew fast. We have a time machine, the Tumble, so it gets an observatory (\"Observatory is perfect rather than university\"). Bike ramps, hiking trails and climbing walls to practice on. Labs near the water. And every place can filter the Notes, so the bike park shows the rides and the trailhead shows the hikes.\n\n## Made with care\n\nTwo of the first ideas, a salvage yard and a garden of scrap robots, felt a little negative to me: trash, unwanted things. So the salvage yard became the Parts Depot, where every part is kept because it's going to become something, and the scrap became the Kinetic Garden, polished sculptures that turn in the wind.\n\nThen the Dao came in, quietly. A water wheel that turns because the stream flows. An uncarved block on the workbench. A footbridge for the joy of the fish. The useless tree that nobody cut down. I wanted it made with care and attention to details and filled with tiny little hidden easter eggs. Enjoying the journey through the world one little pixel at a time.\n\n## A door for the Studio\n\nThe Studio is where Notes get made, and it should be easy to reach if you have a login. So it gets a small glass building with a VIP door. Everyone else can still watch the light show from the coloured liquid flowing through it.\n\nI'd been changing the Studio's colours by the time of day anyway: blue mornings, green daytime, orange nights. Now it does that on its own, with a manual override always there to test and see, and a reset to home time.\n\n## Tubes for A.L.T.A.\n\nA.L.T.A. lives in the lake. I wanted big glass tubes coming up from the grass below the lake, so she can get in and out of it visually without having to touch the lake itself.\n\n## More than 130 pictures\n\nClaude wrote a catalog of prompts: one shared look pasted at the start of every prompt, so the buildings match. Each place stands alone on flat magenta, not green, because the grass, the green liquid and A.L.T.A.'s sea glass would all vanish with a green key. There's no ground and no shadow under them; those are drawn by the site, so the places sit right in any season.\n\nI made four versions of each: day, night, day with snow and night with snow. Thirty places at first, then sixteen more pictures for the water wheels, Starlee's shed, Marley's house and the trailhead.\n\nClaude checked that the four versions of each place line up, and they do, almost to the pixel, so one can fade into the next. Then each was cut out of the magenta, all four to the same frame, with the glow of the lamps kept and the magenta taken back out of it.\n\n## What comes next\n\nThe places go on the hill under the lake, along a path. They follow the lake: snow in winter, and their windows lighting up one by one when night comes. Then the crew moves in."
+    "body": "For a while now the home page has been doing too many jobs. So I asked: is it time to give Books its own section and make home more of an overall collection of sections and main content? This is what came out of one long conversation on October 19 with Claude, and one long afternoon of making pictures.\n\n## First, the seasons\n\nThe first step went live the same day. The lake now opens in whatever season it is where you are, and a small picker inside the lake lets you choose another one. The tabs no longer change the season. They only change the words, which makes them quicker too.\n\n## Then, a village\n\nHere's how I put it: \"We got a workshop, place to go, build things, have fun in there, like almost like a shed, big workshop. Then we also have a newsstand. We've got our magazines... and then learning area, library.\" The home page would be the lake, and below the lake would be the workshop and the farm, the home, if you will.\n\nFrom there it grew fast. We have a time machine, the Tumble, so it gets an observatory (\"Observatory is perfect rather than university\"). Bike ramps, hiking trails and climbing walls to practice on. Labs near the water. And every place can filter the Notes, so the bike park shows the rides and the trailhead shows the hikes.\n\n## Made with care\n\nTwo of the first ideas, a salvage yard and a garden of scrap robots, felt a little negative to me: trash, unwanted things. So the salvage yard became the Parts Depot, where every part is kept because it's going to become something, and the scrap became the Kinetic Garden, polished sculptures that turn in the wind.\n\nThen the Dao came in, quietly. A water wheel that turns because the stream flows. An uncarved block on the workbench. A footbridge for the joy of the fish. The useless tree that nobody cut down. I wanted it made with care and attention to details and filled with tiny little hidden easter eggs. Enjoying the journey through the world one little pixel at a time.\n\n## A door for the Studio\n\nThe Studio is where Notes get made, and it should be easy to reach if you have a login. So it gets a small glass building with a VIP door. Everyone else can still watch the light show from the coloured liquid flowing through it.\n\nI'd been changing the Studio's colours by the time of day anyway: blue mornings, green daytime, orange nights. Now it does that on its own, with a manual override always there to test and see, and a reset to home time.\n\n## Tubes for A.L.T.A.\n\nA.L.T.A. lives in the lake. I wanted big glass tubes coming up from the grass below the lake, so she can get in and out of it visually without having to touch the lake itself.\n\n## More than 130 pictures\n\nClaude wrote a catalog of prompts: one shared look pasted at the start of every prompt, so the buildings match. Each place stands alone on flat magenta, not green, because the grass, the green liquid and A.L.T.A.'s sea glass would all vanish with a green key. There's no ground and no shadow under them; those are drawn by the site, so the places sit right in any season.\n\nI made four versions of each: day, night, day with snow and night with snow. Thirty places at first, then sixteen more pictures for the water wheels, Starlee's shed, Marley's house and the trailhead.\n\nClaude checked that the four versions of each place line up, and they do, almost to the pixel, so one can fade into the next. Then each was cut out of the magenta, all four to the same frame, with the glow of the lamps kept and the magenta taken back out of it.\n\n## On the hill\n\nThe places now stand on the hill under the lake, along a path, with the stream coming down from the lake to the labs' pond. They follow the lake: snow in winter, and their windows lighting up when night comes, each change a slow fade. Hover over one and it lifts a little and glows; click it and it opens its part of the site, or Play's Notes of its kind: the Bike Park opens the rides.\n\n## What comes next\n\nOne painted ground under it all, so the hill reads as one picture. Then the crew moves in."
   },
   "questions": [
     "Title: \"A Village Below the Lake\", or would you rather \"The Lake Home\"? You called it both the Lake Home and the village.",
     "Which tools made the homestead pictures? The Toolbox box only says what the prompts asked for, not which tools rendered them.",
     "You said 132 pictures; by my count it came to 134 (30 places in four versions, less three nights, plus the 16 extras, the trailhead by day and Marley's house at night, one water wheel sent twice). The Note says \"more than 130\". OK?",
     "STUDIO FLOOR (showcase) for the magazine, or HIDDEN LAYER like the last two?",
-    "Once the homestead is on the site, a screenshot of it should go in \"What comes next\". Shall I add it then?"
+    "The homestead screenshots are from the draft before it went live. Shall I retake them from the live site once it is?"
   ],
   "consent": "No people pictured. No secrets.",
   "feature": {
