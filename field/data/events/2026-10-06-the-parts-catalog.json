@@ -110,7 +110,7 @@
  "fieldNotes": "Case study of the Parts Catalog (repo parts-catalog, about 50 commits, Sep 25 to Oct 3, 2026). Facts from the commit history: 60 parts in 9 categories (40 live, 17 reference, 3 in progress); 15 rigged origami creatures with about 17 behaviours and 9 story sequences; one shared animation loop that sleeps for cards off screen; seasons and night recolour the coats; weather puts beads of rain and sticking snow on the animals; the silhouette toggle was removed so only the origami style remains; deep-sea header built Oct 2: Marley in a jellyfish, a diver, 24 creatures lifted out of the painting, an anglerfish lure; a whale was tried and replaced by a giant paper squid; share card. Clips are screen recordings of the live page. In the automaton parable the Catalog is the memory, a head of drawers; that render goes at the top when it arrives.",
  "post": {
   "title": "A drawer for every part",
-  "body": "The lake on the front of this site is built from parts: pines, boulders, clouds, a moon, a fisherman in a paper boat, and a cast of animals that wander in. The Parts Catalog is where every one of those pieces lives on its own, running live with the same code the scene uses, so I can find it, check it and change it without opening the whole lake.\n\nThere are 60 parts in 9 groups. 40 run live, 17 are reference pictures of older versions, and 3 are still in progress. A search box narrows them as you type, and every part has its own link.\n\nThe animals are the heart of it. 15 origami creatures are rigged at the joints, so a deer can lower its head to graze, look up when something moves, or walk off the card. Between them there are about 17 behaviours and 9 short stories that chain them together. Each card has the controls the scene has: season, day or night, behaviour, and weather. Pick winter and the coats change; pick a blizzard and snow sticks to their backs. Rain beads on them too.\n\nForty live cards could easily melt a phone. They all share one animation loop, and any card that isn't on screen sleeps until it scrolls back.\n\nI cut something here too. There used to be a toggle between flat silhouettes and origami. The origami won, so the silhouettes went.\n\nThe header came last: a deep-sea scene with Marley floating in a jellyfish, a diver beside her, and two dozen creatures I lifted out of the painting so they could move on their own, down to an anglerfish with a glowing lure. A whale was the first idea and a dead end. A giant paper squid took its place.\n\nWhat I learned: build the parts where you can see them alone. A deer that looks right on its own card looks right on the lake, and when something breaks, there's exactly one drawer to open."
+  "body": "The lake on the front of this site is built from parts: pines, boulders, clouds, a moon, a fisherman in a paper boat, and a cast of animals that wander in. The Parts Catalog is where every one of those pieces lives on its own, running live with the same code the scene uses, so I can find it, check it and change it without opening the whole lake.\n\nThere are 60 parts in 9 groups. 40 run live, 17 are reference pictures of older versions, and 3 are still in progress. A search box narrows them as you type, and every part has its own link.\n\n## The animals\n\nThe animals are the heart of it. 15 origami creatures are rigged at the joints, so a deer can lower its head to graze, look up when something moves, or walk off the card. Between them there are about 17 behaviours and 9 short stories that chain them together. Each card has the controls the scene has: season, day or night, behaviour, and weather. Pick winter and the coats change; pick a blizzard and snow sticks to their backs. Rain beads on them too.\n\n## One loop for forty cards\n\nForty live cards could easily melt a phone. They all share one animation loop, and any card that isn't on screen sleeps until it scrolls back.\n\n## What I cut\n\nI cut something here too. There used to be a toggle between flat silhouettes and origami. The origami won, so the silhouettes went.\n\n> The origami won, so the silhouettes went.\n\n## The deep-sea header\n\nThe header came last: a deep-sea scene with Marley floating in a jellyfish, a diver beside her, and two dozen creatures I lifted out of the painting so they could move on their own, down to an anglerfish with a glowing lure. A whale was the first idea and a dead end. A giant paper squid took its place.\n\nWhat I learned: build the parts where you can see them alone. A deer that looks right on its own card looks right on the lake, and when something breaks, there's exactly one drawer to open."
  },
  "episode": {
   "title": "A drawer for every part",
@@ -192,6 +192,80 @@
     "photo": "buck-seasons.mp4",
     "after": 3
    }
+  ]
+ },
+ "feature": {
+  "theme": "sourceorder",
+  "masthead": "SOURCE ORDER",
+  "tagline": "Build it right, then build it beautiful",
+  "issue": "Issue 404: Not Found (Yet)",
+  "label": "Build Notes",
+  "byline": "By GlazyArray, Web Desk",
+  "blocks": [
+   {
+    "type": "box",
+    "title": "TL;DR",
+    "before": "The animals",
+    "kicker": "Build Notes",
+    "text": "The Parts Catalog holds every piece of the lake scene on its own card, running live with the same code the scene uses: 60 parts in 9 groups (40 live, 17 reference, 3 in progress), with search and a link for every part.\n\n15 rigged origami creatures, about 17 behaviours and 9 story sequences; seasons, night and weather recolour and dress them. One shared animation loop sleeps every card that is off screen. The silhouette toggle was cut, and a deep-sea header with Marley in a jellyfish came last."
+   },
+   {
+    "type": "steps",
+    "title": "How it's built",
+    "before": "The deep-sea header",
+    "items": [
+     {
+      "title": "Give every part its own card",
+      "text": "Each piece of the lake (pines, boulders, clouds, the moon, the fisherman in his paper boat, the animals) runs alone on a card with the same code the scene uses. A search box narrows the 60 parts as you type, and every part has its own link."
+     },
+     {
+      "title": "Rig the origami creatures",
+      "text": "15 creatures are rigged at the joints, so a deer can lower its head to graze, look up when something moves, or walk off the card. About 17 behaviours, chained into 9 short stories."
+     },
+     {
+      "title": "Wire in the scene's controls",
+      "text": "Every card gets season, day or night, behaviour and weather. Winter changes the coats; a blizzard sticks snow to their backs; rain beads on them."
+     },
+     {
+      "title": "Share one animation loop",
+      "text": "All the live cards run on a single loop, and any card that isn't on screen sleeps until it scrolls back."
+     },
+     {
+      "title": "Cut the silhouettes",
+      "text": "The toggle between flat silhouettes and origami was removed, so only the origami style remains."
+     }
+    ]
+   },
+   {
+    "type": "timeline",
+    "title": "Build log",
+    "items": [
+     [
+      "Sep 25, 2026",
+      "The commit history of the parts-catalog repo begins."
+     ],
+     [
+      "Oct 2, 2026",
+      "The deep-sea header is built: Marley in a jellyfish, a diver, 24 creatures lifted out of the painting, an anglerfish lure. A whale is tried and replaced by a giant paper squid."
+     ],
+     [
+      "Oct 3, 2026",
+      "The last commit in the run: about 50 commits in all."
+     ]
+    ]
+   }
+  ],
+  "coverLines": [
+   "60 parts, 9 groups, every one live in its own drawer",
+   "15 rigged origami creatures that graze, look up and walk off the card",
+   "Why 40 live cards don't melt a phone",
+   "The whale that became a giant paper squid",
+   "Marley in a jellyfish: building the deep-sea header"
+  ],
+  "questions": [
+   "The template wants a code block, but the Note has no code or prompt in it. Can you send a short snippet to quote word for word (for example the shared animation loop that sleeps off-screen cards, or the rig for one creature), with its file name?",
+   "The Build log only has three dates from the Note (Sep 25 start, Oct 2 header, Oct 3 end). Do you have dates for other milestones, like when the origami rigs, the weather, the shared loop, the share card or the silhouette cut landed?",
+   "Is it right to call Sep 25 the first commit and Oct 3 the last, or are those just the range you looked at?"
   ]
  }
 }
