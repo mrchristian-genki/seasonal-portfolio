@@ -346,10 +346,11 @@
     return '<svg viewBox="0 0 140 140" class="rose" role="img" aria-label="Mostly headed ' + names[top] + '"><circle cx="70" cy="70" r="60" class="rr"/><circle cx="70" cy="70" r="34" class="rr"/>' + out +
       '<text x="70" y="12" class="rl">N</text><text x="133" y="74" class="rl">E</text><text x="70" y="137" class="rl">S</text><text x="7" y="74" class="rl">W</text></svg><p class="rose-c">Mostly <b>' + names[top] + '</b></p>';
   }
-  // Which parts a post shows. A note can pick its own (the Studio has a switch on each); without a pick,
-  // the speed, the climbing and the hidden numbers show and the rest wait to be switched on.
+  // Which parts a post shows. A note can pick its own (the Studio has a switch on each); without a pick, none
+  // of them: the post keeps the route's own map, stat tiles and profile, and every part here waits to be switched
+  // on (Christian, Oct 20).
   var PARTS = { speed: 'Speed', updown: 'Up and down', elev: 'Elevation', grade: 'How steep', time: 'Where the time went', splits: 'Mile by mile', dir: 'Which way', facts: 'Hidden in the numbers' };
-  var SHOWN = { speed: true, updown: true, elev: true, facts: true };
+  var SHOWN = {};
   function shown(show, k) { return show && show[k] != null ? !!show[k] : !!SHOWN[k]; }
   // opts.show: the note's pick; opts.edit(key, on): draw every part with an On Play switch (the Studio)
   function dashboard(el, d, opts) {
