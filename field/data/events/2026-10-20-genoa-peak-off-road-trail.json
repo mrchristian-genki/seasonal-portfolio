@@ -2319,9 +2319,10 @@
   "#9f98e1"
  ],
  "dashboard": {
-  "elev": false,
+  "elev": true,
   "updown": false,
-  "facts": false
+  "facts": false,
+  "speed": false
  },
  "narratorLook": {
   "look": "trail-cap",
