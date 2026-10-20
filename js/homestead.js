@@ -124,7 +124,7 @@
   // niche's top left corner on the wide cabinet (2320 x 1116); on the phone's (1116 x 2200) the first six are the row
   // above the opening, the rest the row below. Each niche's object (Christian's renders, cut out: assets/homestead/
   // niche-<its first place>) stands on its shelf; OBJ lists those that have arrived. ──
-  var OBJ = ['tubes', 'labs', 'tower', 'observatory', 'workshop'];
+  var OBJ = ['tubes', 'labs', 'tower', 'observatory', 'workshop', 'doghouse', 'house', 'library', 'newsstand', 'barn'];
   var NICHES = [
     { nx: 95, ny: 160, name: "A.L.T.A.", ids: ['tubes', 'alta'] },
     { nx: 292, ny: 160, name: 'Labs', ids: ['labs'] },
