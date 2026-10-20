@@ -123,8 +123,7 @@
   // ── the cabinet's niches: each holds a few places, its lamp lit while one of them is pointed at or picked. nx, ny: the
   // niche's top left corner on the wide cabinet (2320 x 1116); on the phone's (1116 x 2200) the first six are the row
   // above the opening, the rest the row below. Each niche's object (Christian's renders, cut out: assets/homestead/
-  // niche-<its first place>) stands on its shelf; OBJ lists those that have arrived. ──
-  var OBJ = ['tubes', 'labs', 'tower', 'observatory', 'workshop', 'doghouse', 'house', 'library', 'newsstand', 'barn'];
+  // niche-<its first place>) stands on its shelf. ──
   var NICHES = [
     { nx: 95, ny: 160, name: "A.L.T.A.", ids: ['tubes', 'alta'] },
     { nx: 292, ny: 160, name: 'Labs', ids: ['labs'] },
@@ -157,9 +156,7 @@
     var b = document.createElement('button'); b.type = 'button'; b.className = 'hs-niche';
     b.style.cssText = '--nx:' + n.nx + ';--ny:' + n.ny + ';--px:' + ROW[i % 6] + ';--py:' + (i < 6 ? 178 : 1858);
     b.setAttribute('aria-label', n.ids.map(function (id) { return byId(id).name; }).join(', ') + ': show in the village');
-    var obj = OBJ.indexOf(n.ids[0]) > -1;
-    if (obj) b.classList.add('has');
-    b.innerHTML = (obj ? '<img class="hs-obj" src="' + A + 'niche-' + n.ids[0] + '.webp?v=1" alt="" loading="lazy" decoding="async">' : '') +
+    b.innerHTML = '<img class="hs-obj" src="' + A + 'niche-' + n.ids[0] + '.webp?v=1" alt="" loading="lazy" decoding="async">' +
       '<span aria-hidden="true">' + n.name + '</span>';
     b.addEventListener('mouseenter', function () { point(n); });
     b.addEventListener('mouseleave', function () { unpoint(); });
@@ -224,8 +221,7 @@
   // ── zooming in, like a map (Christian, Oct 19: "less is more; let the user explore the zoomed in scene"): a click on a
   // place eases the view in on it, and a small bubble by it says what it is, with one way in. Zoomed in, the village can
   // be dragged to look around, the places nearby wear small labels, and some have things to find: the real magazines on
-  // the newsstand's rack, what's showing at the barn. A click on the ground, the bubble's ×, or Esc eases back out.
-  // Under the frame, a legend: hover a name and its place glows; click it and the view flies there. ──
+  // the newsstand's rack, what's showing at the barn. A click on the ground, the bubble's ×, or Esc eases back out. ──
   var view = win.firstChild, bubble = document.createElement('div'), zoomed = null, lastFocus = null;
   var Z = { x: 0, y: 0, s: 1 };
   bubble.className = 'hs-bubble'; bubble.setAttribute('role', 'dialog'); bubble.hidden = true;
@@ -352,20 +348,9 @@
   }
   spots();
 
-  // ── the legend, under the frame: every place by name; hover or focus a name and its place glows, click it to fly there ──
-  var legend = document.createElement('nav'); legend.className = 'hs-legend'; legend.setAttribute('aria-label', 'Places in the village');
-  legend.innerHTML = PLACES.map(function (p) { return '<button type="button" data-place="' + p.id + '">' + p.name.replace(/^The /, '') + '</button>'; }).join('');
-  root.appendChild(legend);
+  // ── finding a place: the niches (above) light it and fly to it; the legend that did this under the frame went once
+  // every niche had its object (Christian, Oct 20) ──
   function plOf(id) { for (var i = 0; i < places.length; i++) if (places[i].p.id === id) return places[i]; }
-  legend.addEventListener('mouseover', function (ev) { var b = ev.target.closest('[data-place]'); glow(b && b.getAttribute('data-place')); });
-  legend.addEventListener('mouseleave', function () { glow(null); });
-  legend.addEventListener('focusin', function (ev) { var b = ev.target.closest('[data-place]'); glow(b && b.getAttribute('data-place')); });
-  legend.addEventListener('focusout', function () { glow(null); });
-  legend.addEventListener('click', function (ev) {
-    var b = ev.target.closest('[data-place]'); if (!b) return; var pl = plOf(b.getAttribute('data-place')); if (!pl) return;
-    var r = win.getBoundingClientRect();
-    if ((r.top < 0 || r.bottom > innerHeight) && window.easeScroll) easeScroll.to(win, function () { zoom(pl.p, pl.el); }); else zoom(pl.p, pl.el);
-  });
   function glow(ids) { if (typeof ids === 'string') ids = [ids]; places.forEach(function (pl) { if (pl.el) pl.el.classList.toggle('lit', !!ids && ids.indexOf(pl.p.id) > -1); }); lamps(ids); }
 
   // ── following the butterfly (Christian, Oct 20): while nobody is using the village and it's on screen, the view drifts

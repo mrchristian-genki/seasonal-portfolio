@@ -52,14 +52,14 @@ html.night-page .hs-plaque small{color:#bdeee8}
   transition:color .9s ease-in-out,background-color .9s ease-in-out}
 .hs-niche.on span,.hs-niche:hover span,.hs-niche:focus-visible span{color:#2c1a06;background:rgba(255,226,150,.92)}
 .hs-niche:focus-visible{outline:2px solid #7ff5e8;outline-offset:2px}
-/* its object, standing on the shelf: dim while the niche is dark, warming as its lamp fades on. With an object there,
-   the name tag shows only while the niche is pointed at or lit. */
+/* its object, standing on the shelf: dim while the niche is dark, warming as its lamp fades on. The name tag shows
+   only while the niche is pointed at or lit. */
 .hs-obj{position:absolute;left:50%;bottom:var(--shelf,9%);transform:translateX(-50%);max-width:84%;max-height:64%;pointer-events:none;
   filter:brightness(.6) saturate(.85);transition:filter .9s ease-in-out,transform .7s ease-in-out}
 .hs-niche.on .hs-obj,.hs-niche:hover .hs-obj,.hs-niche:focus-visible .hs-obj{filter:none}
 .hs-niche:hover .hs-obj,.hs-niche:focus-visible .hs-obj{transform:translateX(-50%) translateY(-2%)}
-.hs-niche.has span{bottom:-1%;opacity:0;transition:opacity .9s ease-in-out,color .9s ease-in-out,background-color .9s ease-in-out}
-.hs-niche.has.on span,.hs-niche.has:hover span,.hs-niche.has:focus-visible span{opacity:1}
+.hs-niche span{bottom:-1%;opacity:0;transition:opacity .9s ease-in-out,color .9s ease-in-out,background-color .9s ease-in-out}
+.hs-niche.on span,.hs-niche:hover span,.hs-niche:focus-visible span{opacity:1}
 html.night-page .hs-niche span{color:#cfe9e5}
 /* the tubes and the readout's glass glow while the village is in use (a place or niche pointed at, or a place picked);
    each cabinet has its own (.hs-for-wide, .hs-for-phone) */
@@ -208,7 +208,7 @@ html.night-page .hl-card b{color:var(--night-text,#dde8e6)}html.night-page .hl-s
 .hs-window.zoomed .hs-place.picked .hs-name{opacity:0}
 .hs-window.zoomed .hs-place.picked .hs-art{filter:drop-shadow(0 0 12px rgba(255,236,170,.6))}
 html.night-page .hs-window.zoomed .hs-place.picked .hs-art{filter:drop-shadow(0 0 14px rgba(127,245,232,.55))}
-/* a place glows while its name is hovered in the legend */
+/* a place glows while its niche is pointed at */
 .hs-place.lit .hs-art{transform:translateY(-4px);filter:drop-shadow(0 0 12px rgba(255,236,170,.85)) drop-shadow(0 0 3px rgba(255,255,255,.9))}
 html.night-page .hs-place.lit .hs-art{filter:drop-shadow(0 0 14px rgba(127,245,232,.8))}
 .hs-place.lit .hs-name{opacity:1}
@@ -247,21 +247,11 @@ html.night-page .hs-bubble b{color:#dde8e6}html.night-page .hs-bubble .hs-go{bac
 .hs-bubble .hs-marquee i{font:800 10px var(--font-display,system-ui);font-style:normal;letter-spacing:.12em;text-transform:uppercase;color:#ffd98a}
 .hs-bubble .hs-marquee a{color:#ffe9b8;text-decoration:none;font-size:12.5px}.hs-bubble .hs-marquee a:hover{color:#7ff5e8}
 
-/* the legend, under the frame on a phone: small names; hover one and its place glows, click it to fly there. On a wide
-   screen the cabinet's niches do this, so the legend goes (Christian, Oct 20). */
-@media (min-width:720px){.homestead .hs-legend{display:none}}
-.hs-legend{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 8px;max-width:1100px;margin:14px auto 0;padding:0 16px}
-.hs-legend button{appearance:none;cursor:pointer;border:1px solid #d6dfe1;border-radius:999px;background:#fff;padding:4px 11px;
-  font:700 12.5px var(--font-display,system-ui);color:#3f5a64;transition:background-color .6s ease-in-out,color .6s ease-in-out,border-color .6s ease-in-out,transform .5s ease-in-out}
-.hs-legend button:hover,.hs-legend button:focus-visible{background:#0f4d47;border-color:#0f4d47;color:#fff;transform:translateY(-1px);outline:none}
-html.night-page .hs-legend button{background:var(--night-card,#16232f);border-color:var(--night-line,#27384a);color:var(--night-soft,#a6b8bf)}
-html.night-page .hs-legend button:hover,html.night-page .hs-legend button:focus-visible{background:#7ff5e8;border-color:#7ff5e8;color:#0e1823}
 @media (max-width:719px){.hs-spots{left:calc(var(--mx) / 1116 * 100%);top:calc(var(--my) / 2000 * 100%);width:calc(var(--mw) / 1116 * 100%)}
-  .hs-legend{flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;scrollbar-width:none;padding:2px 12px 4px}.hs-legend::-webkit-scrollbar{display:none}
-  .hs-legend button{flex:none}.hs-bubble{max-width:78%}}
-@media (prefers-reduced-motion:reduce){.hs-bubble,.hs-spot,.hs-legend button{transition:none}.hs-show-btn{animation:none}}
+  .hs-bubble{max-width:78%}}
+@media (prefers-reduced-motion:reduce){.hs-bubble,.hs-spot{transition:none}.hs-show-btn{animation:none}}
 
-/* a place being pointed at (or lit from the legend, or picked) comes in front of its neighbours, so its name plate is
+/* a place being pointed at (or lit from its niche, or picked) comes in front of its neighbours, so its name plate is
    never hidden behind the building below it */
 .hs-place:hover,.hs-place:focus-visible,.hs-place.lit,.hs-place.picked{z-index:2600!important}
 
