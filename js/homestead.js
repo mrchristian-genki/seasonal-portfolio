@@ -136,6 +136,14 @@
     { nx: 2085, ny: 628, name: 'Parts & Garden', ids: ['depot', 'kinetic'] },
     { nx: 2085, ny: 850, name: 'Outdoors', ids: ['bikepark', 'trailhead', 'climbing', 'tree'] }
   ];
+  // the lit parts that wake while the village is in use (nx, ny: top left on the cabinet; w, h), and the tubes' glass
+  // for the bubbles (h: how tall the glass is)
+  [[476, 222, 96, 306], [476, 636, 96, 314], [1756, 222, 96, 306], [1756, 636, 96, 314], [950, 990, 442, 78]].forEach(function (g) {
+    win.insertAdjacentHTML('beforeend', '<span class="hs-glow" aria-hidden="true" style="--nx:' + g[0] + ';--ny:' + g[1] + ';--w:' + g[2] + ';--h:' + g[3] + '"></span>');
+  });
+  [[504, 285, 225], [504, 690, 245], [1784, 285, 225], [1784, 690, 245]].forEach(function (t) {
+    win.insertAdjacentHTML('beforeend', '<span class="hs-tube" aria-hidden="true" style="--nx:' + t[0] + ';--ny:' + t[1] + ';--h:' + t[2] + ';--rise:' + (t[2] / 23.2).toFixed(1) + 'cqw"><i></i><i></i><i></i><i></i></span>');
+  });
   var plaque = win.querySelector('.hs-plaque'), said = '';
   NICHES.forEach(function (n) {
     var b = document.createElement('button'); b.type = 'button'; b.className = 'hs-niche';
@@ -155,7 +163,10 @@
   });
   function byId(id) { for (var i = 0; i < PLACES.length; i++) if (PLACES[i].id === id) return PLACES[i]; }
   function nicheOf(id) { for (var i = 0; i < NICHES.length; i++) if (NICHES[i].ids.indexOf(id) > -1) return NICHES[i]; }
-  function lamps(ids) { NICHES.forEach(function (n) { n.el.classList.toggle('on', !!ids && ids.some(function (id) { return n.ids.indexOf(id) > -1; })); }); }
+  function lamps(ids) {
+    NICHES.forEach(function (n) { n.el.classList.toggle('on', !!ids && ids.some(function (id) { return n.ids.indexOf(id) > -1; })); });
+    win.classList.toggle('live', !!(ids && ids.length) || !!zoomed);
+  }
   // the readout: "Lake Home", or a place and its line; a new name fades out, then in
   function readout(p, n) {
     var many = n && n.ids.length > 1;   // a niche of several places: its name, and theirs underneath

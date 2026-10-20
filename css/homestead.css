@@ -33,22 +33,34 @@ html.night-page .hs-frame img{filter:brightness(.72) saturate(.9)}
 html.night-page .hs-plaque{color:#7ff5e8;text-shadow:0 0 .5cqw rgba(127,245,232,.6)}
 html.night-page .hs-plaque small{color:#bdeee8}
 
-/* the niches: each holds a few of the village's places. Point at a place and its niche's lamp fades on under the bell;
-   point at a niche and its places glow; click it and the view eases over to them. */
-.hs-niche{position:absolute;z-index:3;left:calc(var(--nx) / 2320 * 100%);top:calc(var(--ny) / 1116 * 100%);width:calc(145 / 2320 * 100%);height:calc(195 / 1116 * 100%);
+/* the niches: each holds a few of the village's places. Point at a place and its niche lights, Christian's lit cabinet
+   (assets/homestead/cabinet-lit: his lit render, widened the same way, kept only where it glows) fading in over the
+   unlit one; point at a niche and its places glow; click it and the view eases over to them. Positions are in the
+   cabinet's pixels (2320 wide), 100cqw being the cabinet's width. */
+.hs-niche,.hs-glow{position:absolute;z-index:3;left:calc(var(--nx) / 2320 * 100%);top:calc(var(--ny) / 1116 * 100%)}
+.hs-niche{width:calc(145 / 2320 * 100%);height:calc(195 / 1116 * 100%);
   appearance:none;padding:0;border:0;background:none;cursor:pointer;border-radius:46% 46% 4px 4px / 32% 32% 4px 4px;-webkit-tap-highlight-color:transparent}
-.hs-niche::before{content:"";position:absolute;inset:6% 7% 9%;border-radius:inherit;pointer-events:none;opacity:0;
-  background:radial-gradient(ellipse 60% 48% at 50% 14%,rgba(255,214,130,.85),rgba(255,180,80,.35) 45%,rgba(255,170,60,0) 100%);
-  mix-blend-mode:screen;transition:opacity .9s ease-in-out}
-.hs-niche::after{content:"";position:absolute;left:50%;top:9%;width:12%;aspect-ratio:1;margin-left:-6%;border-radius:50%;pointer-events:none;opacity:0;
-  background:#fff3c4;box-shadow:0 0 .5cqw .2cqw rgba(255,220,130,.95),0 0 1.6cqw .6cqw rgba(255,190,80,.5);transition:opacity .9s ease-in-out}
-.hs-niche.on::before,.hs-niche.on::after,.hs-niche:hover::before,.hs-niche:hover::after,.hs-niche:focus-visible::before,.hs-niche:focus-visible::after{opacity:1}
+.hs-niche::before,.hs-glow{background:url(../assets/homestead/cabinet-lit.webp?v=1) no-repeat;background-size:100cqw auto;pointer-events:none}
+.hs-niche::before{content:"";position:absolute;left:-6%;top:-6%;width:112%;height:110%;opacity:0;
+  background-position:calc((var(--nx) - 9) * -100cqw / 2320) calc((var(--ny) - 12) * -100cqw / 2320);transition:opacity .9s ease-in-out}
+.hs-niche.on::before,.hs-niche:hover::before,.hs-niche:focus-visible::before{opacity:1}
 .hs-niche span{position:absolute;left:50%;bottom:14%;transform:translateX(-50%);max-width:92%;padding:.18cqw .45cqw;border-radius:.3cqw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
   font:700 .62cqw/1.2 Georgia,"Times New Roman",serif;letter-spacing:.04em;color:#f6e3b4;background:rgba(40,24,8,.72);box-shadow:0 0 0 1px rgba(214,170,90,.55);
   transition:color .9s ease-in-out,background-color .9s ease-in-out}
 .hs-niche.on span,.hs-niche:hover span,.hs-niche:focus-visible span{color:#2c1a06;background:rgba(255,226,150,.92)}
 .hs-niche:focus-visible{outline:2px solid #7ff5e8;outline-offset:2px}
 html.night-page .hs-niche span{color:#cfe9e5}
+/* the tubes and the readout's glass glow while the village is in use (a place or niche pointed at, or a place picked) */
+.hs-glow{width:calc(var(--w) / 2320 * 100%);height:calc(var(--h) / 1116 * 100%);z-index:2;opacity:0;
+  background-position:calc(var(--nx) * -100cqw / 2320) calc(var(--ny) * -100cqw / 2320);transition:opacity 1s ease-in-out}
+.hs-window.live .hs-glow{opacity:1}
+/* bubbles rising in the four tubes, slowly */
+.hs-tube{position:absolute;z-index:2;left:calc(var(--nx) / 2320 * 100%);top:calc(var(--ny) / 1116 * 100%);width:calc(40 / 2320 * 100%);height:calc(var(--h) / 1116 * 100%);overflow:hidden;pointer-events:none}
+.hs-tube i{position:absolute;bottom:-.4cqw;width:.3cqw;height:.3cqw;border-radius:50%;background:rgba(225,255,250,.8);box-shadow:0 0 .25cqw rgba(190,255,248,.9);opacity:0;animation:hsTube 9s ease-in-out infinite}
+.hs-tube i:nth-child(1){left:22%}.hs-tube i:nth-child(2){left:58%;animation-delay:2.2s;animation-duration:11s;width:.22cqw;height:.22cqw}
+.hs-tube i:nth-child(3){left:38%;animation-delay:4.6s;animation-duration:10s}.hs-tube i:nth-child(4){left:70%;animation-delay:6.8s;width:.2cqw;height:.2cqw}
+@keyframes hsTube{0%{transform:translateY(0);opacity:0}12%{opacity:.85}88%{opacity:.7}100%{transform:translateY(calc(-1 * var(--rise,18cqw)));opacity:0}}
+@media (prefers-reduced-motion:reduce){.hs-tube{display:none}}
 .homestead .hs-title{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 .hs-stage{position:absolute;left:50%;top:50%;height:100%;aspect-ratio:2000/1116;
   transform:translate(-50%,-50%) translate(var(--zx,0px),var(--zy,0px)) scale(var(--zs,1));transition:transform 1.6s cubic-bezier(.45,0,.25,1)}
@@ -124,7 +136,7 @@ html.night-page .hs-butterfly b{background-image:url(../assets/homestead/butterf
   .hs-view{left:calc(111 / 768 * 100%);top:calc(169 / 1376 * 100%);width:calc(547 / 768 * 100%);height:calc(1020 / 1376 * 100%);border-radius:3cqw}
   .hs-view::after{display:none}
   .hs-plaque{left:calc(498 / 768 * 100%);top:calc(1242 / 1376 * 100%);width:auto;height:auto;transform:translate(-50%,-50%);font-size:2.5cqw;color:#3d3a33;text-shadow:0 1px 0 rgba(255,255,255,.45)}
-  .hs-plaque small,.hs-niche{display:none}
+  .hs-plaque small,.hs-niche,.hs-glow,.hs-tube{display:none}
   .hs-stage{aspect-ratio:1116/2000}
   .hs-place{left:calc(var(--mx) / 1116 * 100%);top:calc(var(--my) / 2000 * 100%);width:calc(var(--mw) / 1116 * 100%);z-index:var(--mz)!important}
   .hs-rotor{left:calc((var(--mx) - var(--mw) / 2) / 1116 * 100%);top:calc((var(--my) - var(--mw) / 2) / 2000 * 100%);width:calc(var(--mw) / 1116 * 100%)}
