@@ -2319,7 +2319,7 @@
   "#9f98e1"
  ],
  "dashboard": {
-  "elev": true,
+  "elev": false,
   "updown": false,
   "facts": false,
   "speed": false
