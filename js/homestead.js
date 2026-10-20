@@ -110,18 +110,19 @@
     '<span class="hs-bubbles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>' +
     '<span class="hs-butterfly" aria-hidden="true"><b></b></span>' +
     '<button type="button" class="hs-firefly" aria-label="A firefly"></button>');
-  // The village sits in a window: on a wide screen Christian's curio cabinet (Oct 20: assets/homestead/cabinet-wide, his
-  // render with its middle widened), the village sliding underneath its opening; on a phone his frame (Oct 19,
-  // frame-phone), the village in its opening. The name is on the cabinet's readout (the frame's brass plaque on a phone).
+  // The village sits in Christian's curio cabinet (Oct 20: assets/homestead/cabinet-wide, and cabinet-phone with its
+  // niches above and below; his renders, their middles stretched), sliding underneath its opening. The name is on the
+  // cabinet's readout.
   var win = document.createElement('div'); win.className = 'hs-window';
   win.innerHTML = '<div class="hs-view"></div><picture class="hs-frame" aria-hidden="true">' +
-    '<source media="(max-width: 719px)" srcset="' + A + 'frame-phone.webp?v=2"><img src="' + A + 'cabinet-wide.webp?v=2" alt=""></picture>' +
+    '<source media="(max-width: 719px)" srcset="' + A + 'cabinet-phone.webp?v=1"><img src="' + A + 'cabinet-wide.webp?v=2" alt=""></picture>' +
     '<span class="hs-plaque" aria-hidden="true">Lake Home<small></small></span>';
   win.firstChild.appendChild(stage);
   root.appendChild(win);
 
-  // ── the cabinet's niches (wide screens): each holds a few places, its lamp lit while one of them is pointed at or
-  // picked. nx, ny: the niche's top left corner on the cabinet (2320 x 1116). Objects for the shelves are to come. ──
+  // ── the cabinet's niches: each holds a few places, its lamp lit while one of them is pointed at or picked. nx, ny: the
+  // niche's top left corner on the wide cabinet (2320 x 1116); on the phone's (1116 x 2200) the first six are the row
+  // above the opening, the rest the row below. Objects for the shelves are to come. ──
   var NICHES = [
     { nx: 95, ny: 160, name: "A.L.T.A.", ids: ['tubes', 'alta'] },
     { nx: 292, ny: 160, name: 'Labs', ids: ['labs'] },
@@ -136,18 +137,23 @@
     { nx: 2085, ny: 628, name: 'Parts & Garden', ids: ['depot', 'kinetic'] },
     { nx: 2085, ny: 850, name: 'Outdoors', ids: ['bikepark', 'trailhead', 'climbing', 'tree'] }
   ];
-  // the lit parts that wake while the village is in use (nx, ny: top left on the cabinet; w, h), and the tubes' glass
-  // for the bubbles (h: how tall the glass is)
-  [[476, 222, 96, 306], [476, 636, 96, 314], [1756, 222, 96, 306], [1756, 636, 96, 314], [950, 990, 442, 78]].forEach(function (g) {
-    win.insertAdjacentHTML('beforeend', '<span class="hs-glow" aria-hidden="true" style="--nx:' + g[0] + ';--ny:' + g[1] + ';--w:' + g[2] + ';--h:' + g[3] + '"></span>');
+  // each cabinet's lit parts that wake while the village is in use (x, y, w, h on that cabinet), and its tubes' glass
+  // for the bubbles
+  var PARTS = {
+    wide: { glow: [[476, 222, 96, 306], [476, 636, 96, 314], [1756, 222, 96, 306], [1756, 636, 96, 314], [950, 990, 442, 78]],
+      tube: [[504, 285, 40, 225], [504, 690, 40, 245], [1784, 285, 40, 225], [1784, 690, 40, 245]] },
+    phone: { glow: [[64, 684, 100, 228], [64, 1288, 100, 258], [954, 684, 100, 228], [954, 1288, 100, 258], [380, 1652, 390, 74]],
+      tube: [[93, 700, 44, 195], [93, 1304, 44, 226], [983, 700, 44, 195], [983, 1304, 44, 226]] }
+  };
+  Object.keys(PARTS).forEach(function (k) {
+    function at(g) { return ' hs-for-' + k + '" aria-hidden="true" style="--x:' + g[0] + ';--y:' + g[1] + ';--w:' + g[2] + ';--h:' + g[3] + '">'; }
+    PARTS[k].glow.forEach(function (g) { win.insertAdjacentHTML('beforeend', '<span class="hs-glow' + at(g) + '</span>'); });
+    PARTS[k].tube.forEach(function (g) { win.insertAdjacentHTML('beforeend', '<span class="hs-tube' + at(g) + '<i></i><i></i><i></i><i></i></span>'); });
   });
-  [[504, 285, 225], [504, 690, 245], [1784, 285, 225], [1784, 690, 245]].forEach(function (t) {
-    win.insertAdjacentHTML('beforeend', '<span class="hs-tube" aria-hidden="true" style="--nx:' + t[0] + ';--ny:' + t[1] + ';--h:' + t[2] + ';--rise:' + (t[2] / 23.2).toFixed(1) + 'cqw"><i></i><i></i><i></i><i></i></span>');
-  });
-  var plaque = win.querySelector('.hs-plaque'), said = '';
-  NICHES.forEach(function (n) {
+  var plaque = win.querySelector('.hs-plaque'), said = '', ROW = [85, 250, 413, 578, 743, 900];
+  NICHES.forEach(function (n, i) {
     var b = document.createElement('button'); b.type = 'button'; b.className = 'hs-niche';
-    b.style.cssText = '--nx:' + n.nx + ';--ny:' + n.ny;
+    b.style.cssText = '--nx:' + n.nx + ';--ny:' + n.ny + ';--px:' + ROW[i % 6] + ';--py:' + (i < 6 ? 178 : 1858);
     b.setAttribute('aria-label', n.ids.map(function (id) { return byId(id).name; }).join(', ') + ': show in the village');
     b.innerHTML = '<span aria-hidden="true">' + n.name + '</span>';
     b.addEventListener('mouseenter', function () { point(n); });
@@ -173,14 +179,15 @@
     if (zoomed || drag) return;
     var pl = plOf(n.ids[0]); if (!pl || !pl.el) return;
     var vr = view.getBoundingClientRect(), r = pl.el.getBoundingClientRect();
-    if (r.left >= vr.left && r.right <= vr.right) return;                       // already in sight
+    if (r.left >= vr.left && r.right <= vr.right && r.top >= vr.top && r.bottom <= vr.bottom) return;   // already in sight
     stopFollow();
-    var W = stage.offsetWidth, b = box(pl.el);
-    setZ(-(b.x + b.w / 2 - W / 2), 0, 1);
+    var W = stage.offsetWidth, Hh = stage.offsetHeight, b = box(pl.el);
+    setZ(-(b.x + b.w / 2 - W / 2), -(b.y + b.h / 2 - Hh / 2), 1);
   }
   function byId(id) { for (var i = 0; i < PLACES.length; i++) if (PLACES[i].id === id) return PLACES[i]; }
   function nicheOf(id) { for (var i = 0; i < NICHES.length; i++) if (NICHES[i].ids.indexOf(id) > -1) return NICHES[i]; }
   function lamps(ids) {
+    if (!(ids && ids.length) && zoomed) ids = [zoomed.id];               // nothing pointed at: the picked place keeps its lamp
     NICHES.forEach(function (n) { n.el.classList.toggle('on', !!ids && ids.some(function (id) { return n.ids.indexOf(id) > -1; })); });
     win.classList.toggle('live', !!(ids && ids.length) || !!zoomed);
   }
@@ -281,7 +288,7 @@
   var drag = null, dragged = false;
   view.addEventListener('pointerdown', function (ev) {
     if (ev.button || ev.target.closest('.hs-spot, .hs-show')) return;
-    if (!zoomed && stage.offsetWidth <= view.clientWidth + 2) return;              // nothing to slide to
+    if (!zoomed && (ev.pointerType === 'touch' || (stage.offsetWidth <= view.clientWidth + 2 && stage.offsetHeight <= view.clientHeight + 2))) return;   // a finger scrolls the page; or nothing to slide to
     stopFollow();
     drag = { x: ev.clientX, y: ev.clientY, zx: Z.x, zy: Z.y, id: ev.pointerId }; dragged = false;
   });
@@ -359,21 +366,21 @@
   // ── following the butterfly (Christian, Oct 20): while nobody is using the village and it's on screen, the view drifts
   // slowly after her as she wanders the hill, a few seconds behind and only partway, like a camera keeping an eye on
   // her. Pointing at the village, dragging it or picking a place stops it at once; ten quiet seconds later it eases
-  // back in. Wide screens only (on a phone the whole hill shows); with reduced motion the view holds still. ──
+  // back in. On a phone the view follows her up and down; with reduced motion it holds still. ──
   var fly = stage.querySelector('.hs-butterfly'), followT = 0, quietT = 0, onScreen = false;
   function follow() {
-    if (calm || !wideMQ.matches || zoomed || drag || !onScreen || document.hidden) return;
-    var W = stage.offsetWidth, k = W / stage.getBoundingClientRect().width, sr = stage.getBoundingClientRect(), r = fly.getBoundingClientRect();
-    var bx = (r.left + r.width / 2 - sr.left) * k;
+    if (calm || zoomed || drag || !onScreen || document.hidden) return;
+    var W = stage.offsetWidth, Hh = stage.offsetHeight, k = W / stage.getBoundingClientRect().width, sr = stage.getBoundingClientRect(), r = fly.getBoundingClientRect();
+    var bx = (r.left + r.width / 2 - sr.left) * k, by = (r.top + r.height / 2 - sr.top) * k;
     win.classList.add('drift');
-    setZ(-(bx - W / 2) * .8, 0, 1);
+    setZ(-(bx - W / 2) * .8, -(by - Hh / 2) * .8, 1);
   }
   function stopFollow() {
     clearInterval(followT); followT = 0; clearTimeout(quietT);
     if (win.classList.contains('drift')) {   // hold the view where it is now, mid-drift
       var m = getComputedStyle(stage).transform, sr = stage.getBoundingClientRect(), vr = view.getBoundingClientRect();
       win.classList.remove('drift');
-      if (!zoomed && m && m !== 'none') setZ((sr.left + sr.width / 2) - (vr.left + vr.width / 2), 0, 1);
+      if (!zoomed && m && m !== 'none') setZ((sr.left + sr.width / 2) - (vr.left + vr.width / 2), (sr.top + sr.height / 2) - (vr.top + vr.height / 2), 1);
     }
     if (!calm) quietT = setTimeout(startFollow, 10000);
   }
