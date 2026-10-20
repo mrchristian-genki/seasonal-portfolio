@@ -1,0 +1,2340 @@
+{
+ "id": "2026-10-20-genoa-peak-off-road-trail",
+ "title": "Genoa Peak Off Road Trail",
+ "date": "2026-10-20",
+ "kind": "hike",
+ "place": "Genoa Peak Trail",
+ "status": "published",
+ "summary": "Christian drove the dirt road from the Kingsbury trailhead up to Genoa Peak with Marley scouting ahead, then down toward Spooner Lake. After an earlier trip where he couldn't make the last stretch on foot, this time he walked all the way to the top.",
+ "trailhead": null,
+ "links": [],
+ "track": {
+  "stats": {
+   "distanceKm": 16.75,
+   "movingSec": 5229,
+   "elapsedSec": 8891,
+   "gainM": 752,
+   "lossM": 906,
+   "minEleM": 2136,
+   "maxEleM": 2791,
+   "avgKmh": 11.5,
+   "maxKmh": 43.5,
+   "start": "2026-10-20T14:35:04.000Z"
+  },
+  "line": [
+   [
+    39.00251,
+    -119.89595,
+    2430,
+    0
+   ],
+   [
+    39.00285,
+    -119.89605,
+    2435,
+    17
+   ],
+   [
+    39.00352,
+    -119.89572,
+    2437,
+    46
+   ],
+   [
+    39.0043,
+    -119.89496,
+    2450,
+    92
+   ],
+   [
+    39.00441,
+    -119.89454,
+    2453,
+    108
+   ],
+   [
+    39.0054,
+    -119.89305,
+    2471,
+    203
+   ],
+   [
+    39.0072,
+    -119.89129,
+    2510,
+    379
+   ],
+   [
+    39.00762,
+    -119.89121,
+    2517,
+    395
+   ],
+   [
+    39.00858,
+    -119.89047,
+    2517,
+    429
+   ],
+   [
+    39.00936,
+    -119.89085,
+    2508,
+    459
+   ],
+   [
+    39.01054,
+    -119.89187,
+    2500,
+    507
+   ],
+   [
+    39.01179,
+    -119.89261,
+    2507,
+    558
+   ],
+   [
+    39.01203,
+    -119.8929,
+    2506,
+    568
+   ],
+   [
+    39.01246,
+    -119.89288,
+    2499,
+    583
+   ],
+   [
+    39.01294,
+    -119.89259,
+    2495,
+    602
+   ],
+   [
+    39.01364,
+    -119.89308,
+    2489,
+    640
+   ],
+   [
+    39.01513,
+    -119.89267,
+    2503,
+    726
+   ],
+   [
+    39.01538,
+    -119.89237,
+    2509,
+    738
+   ],
+   [
+    39.01626,
+    -119.89178,
+    2521,
+    771
+   ],
+   [
+    39.01672,
+    -119.89215,
+    2526,
+    789
+   ],
+   [
+    39.01759,
+    -119.89246,
+    2522,
+    1026
+   ],
+   [
+    39.01821,
+    -119.89322,
+    2515,
+    1064
+   ],
+   [
+    39.01924,
+    -119.89285,
+    2513,
+    1120
+   ],
+   [
+    39.01945,
+    -119.89325,
+    2510,
+    1134
+   ],
+   [
+    39.01915,
+    -119.89558,
+    2493,
+    1478
+   ],
+   [
+    39.01926,
+    -119.89584,
+    2491,
+    1485
+   ],
+   [
+    39.01944,
+    -119.89583,
+    2490,
+    1489
+   ],
+   [
+    39.01983,
+    -119.89507,
+    2489,
+    1508
+   ],
+   [
+    39.02001,
+    -119.89491,
+    2489,
+    1516
+   ],
+   [
+    39.02016,
+    -119.89506,
+    2489,
+    1521
+   ],
+   [
+    39.01997,
+    -119.8957,
+    2482,
+    1535
+   ],
+   [
+    39.02044,
+    -119.89648,
+    2476,
+    1568
+   ],
+   [
+    39.02081,
+    -119.89671,
+    2477,
+    1584
+   ],
+   [
+    39.02085,
+    -119.89693,
+    2478,
+    1590
+   ],
+   [
+    39.02102,
+    -119.89709,
+    2474,
+    1598
+   ],
+   [
+    39.02209,
+    -119.89757,
+    2476,
+    1634
+   ],
+   [
+    39.02277,
+    -119.89745,
+    2470,
+    1658
+   ],
+   [
+    39.02329,
+    -119.89772,
+    2467,
+    1678
+   ],
+   [
+    39.02388,
+    -119.89757,
+    2465,
+    1701
+   ],
+   [
+    39.02461,
+    -119.89837,
+    2473,
+    1738
+   ],
+   [
+    39.02489,
+    -119.89824,
+    2473,
+    1750
+   ],
+   [
+    39.02584,
+    -119.89815,
+    2480,
+    1810
+   ],
+   [
+    39.03055,
+    -119.89171,
+    2575,
+    2454
+   ],
+   [
+    39.0313,
+    -119.89102,
+    2583,
+    2488
+   ],
+   [
+    39.03285,
+    -119.88986,
+    2603,
+    2596
+   ],
+   [
+    39.03459,
+    -119.89003,
+    2585,
+    2735
+   ],
+   [
+    39.03638,
+    -119.88966,
+    2565,
+    2800
+   ],
+   [
+    39.03664,
+    -119.8891,
+    2564,
+    2813
+   ],
+   [
+    39.03672,
+    -119.88835,
+    2565,
+    2829
+   ],
+   [
+    39.03665,
+    -119.88826,
+    2565,
+    2832
+   ],
+   [
+    39.0369,
+    -119.8877,
+    2563,
+    3341
+   ],
+   [
+    39.03675,
+    -119.88775,
+    2563,
+    3346
+   ],
+   [
+    39.03677,
+    -119.88797,
+    2563,
+    3347
+   ],
+   [
+    39.03665,
+    -119.88823,
+    2564,
+    3353
+   ],
+   [
+    39.03675,
+    -119.88856,
+    2565,
+    3362
+   ],
+   [
+    39.03666,
+    -119.88916,
+    2565,
+    3375
+   ],
+   [
+    39.03673,
+    -119.88971,
+    2567,
+    3388
+   ],
+   [
+    39.03771,
+    -119.88965,
+    2572,
+    3410
+   ],
+   [
+    39.03871,
+    -119.88987,
+    2580,
+    3453
+   ],
+   [
+    39.03969,
+    -119.89039,
+    2589,
+    3504
+   ],
+   [
+    39.04037,
+    -119.89058,
+    2595,
+    3532
+   ],
+   [
+    39.04524,
+    -119.89081,
+    2614,
+    3771
+   ],
+   [
+    39.04819,
+    -119.88972,
+    2627,
+    3884
+   ],
+   [
+    39.048,
+    -119.88904,
+    2629,
+    3902
+   ],
+   [
+    39.04741,
+    -119.88834,
+    2635,
+    4071
+   ],
+   [
+    39.04705,
+    -119.88762,
+    2642,
+    4104
+   ],
+   [
+    39.04578,
+    -119.88731,
+    2659,
+    4171
+   ],
+   [
+    39.04523,
+    -119.88728,
+    2661,
+    4194
+   ],
+   [
+    39.04452,
+    -119.88679,
+    2673,
+    4227
+   ],
+   [
+    39.04341,
+    -119.88383,
+    2726,
+    5960
+   ],
+   [
+    39.04485,
+    -119.8869,
+    2668,
+    6124
+   ],
+   [
+    39.04508,
+    -119.88711,
+    2665,
+    6132
+   ],
+   [
+    39.04567,
+    -119.88732,
+    2657,
+    6155
+   ],
+   [
+    39.04585,
+    -119.88728,
+    2656,
+    6161
+   ],
+   [
+    39.04714,
+    -119.88763,
+    2642,
+    6206
+   ],
+   [
+    39.04781,
+    -119.88881,
+    2631,
+    6326
+   ],
+   [
+    39.04811,
+    -119.88916,
+    2630,
+    6341
+   ],
+   [
+    39.04811,
+    -119.88952,
+    2630,
+    6351
+   ],
+   [
+    39.04953,
+    -119.88819,
+    2632,
+    6434
+   ],
+   [
+    39.04988,
+    -119.88796,
+    2631,
+    6448
+   ],
+   [
+    39.0505,
+    -119.88783,
+    2636,
+    6471
+   ],
+   [
+    39.05125,
+    -119.88744,
+    2632,
+    6498
+   ],
+   [
+    39.05207,
+    -119.88725,
+    2634,
+    6525
+   ],
+   [
+    39.05332,
+    -119.88671,
+    2639,
+    6570
+   ],
+   [
+    39.05419,
+    -119.8865,
+    2644,
+    6601
+   ],
+   [
+    39.05552,
+    -119.88585,
+    2655,
+    6652
+   ],
+   [
+    39.05674,
+    -119.88501,
+    2645,
+    6733
+   ],
+   [
+    39.05729,
+    -119.88478,
+    2637,
+    6755
+   ],
+   [
+    39.05765,
+    -119.884,
+    2620,
+    6801
+   ],
+   [
+    39.05721,
+    -119.88328,
+    2607,
+    6825
+   ],
+   [
+    39.0583,
+    -119.88231,
+    2581,
+    6874
+   ],
+   [
+    39.05913,
+    -119.88206,
+    2571,
+    6898
+   ],
+   [
+    39.05947,
+    -119.88168,
+    2564,
+    6914
+   ],
+   [
+    39.06037,
+    -119.88018,
+    2543,
+    6980
+   ],
+   [
+    39.06086,
+    -119.8796,
+    2534,
+    7001
+   ],
+   [
+    39.06137,
+    -119.87906,
+    2528,
+    7019
+   ],
+   [
+    39.06147,
+    -119.87913,
+    2528,
+    7020
+   ],
+   [
+    39.06182,
+    -119.87885,
+    2525,
+    7033
+   ],
+   [
+    39.06232,
+    -119.87827,
+    2518,
+    7054
+   ],
+   [
+    39.06265,
+    -119.87819,
+    2515,
+    7066
+   ],
+   [
+    39.06317,
+    -119.87851,
+    2507,
+    7085
+   ],
+   [
+    39.06339,
+    -119.87933,
+    2502,
+    7107
+   ],
+   [
+    39.06445,
+    -119.88096,
+    2490,
+    7796
+   ],
+   [
+    39.065,
+    -119.88153,
+    2485,
+    7814
+   ],
+   [
+    39.06533,
+    -119.88232,
+    2481,
+    7831
+   ],
+   [
+    39.06577,
+    -119.88301,
+    2479,
+    7852
+   ],
+   [
+    39.0664,
+    -119.88336,
+    2473,
+    7869
+   ],
+   [
+    39.0671,
+    -119.88339,
+    2464,
+    7891
+   ],
+   [
+    39.06785,
+    -119.88393,
+    2460,
+    7916
+   ],
+   [
+    39.06863,
+    -119.88543,
+    2456,
+    7957
+   ],
+   [
+    39.06879,
+    -119.88628,
+    2452,
+    7974
+   ],
+   [
+    39.06894,
+    -119.88657,
+    2452,
+    7980
+   ],
+   [
+    39.07024,
+    -119.88801,
+    2444,
+    8053
+   ],
+   [
+    39.0706,
+    -119.8888,
+    2443,
+    8073
+   ],
+   [
+    39.07118,
+    -119.88925,
+    2442,
+    8093
+   ],
+   [
+    39.07311,
+    -119.89028,
+    2444,
+    8147
+   ],
+   [
+    39.07372,
+    -119.89024,
+    2444,
+    8155
+   ],
+   [
+    39.07526,
+    -119.89056,
+    2434,
+    8179
+   ],
+   [
+    39.07571,
+    -119.89,
+    2433,
+    8189
+   ],
+   [
+    39.07622,
+    -119.88968,
+    2428,
+    8198
+   ],
+   [
+    39.07693,
+    -119.88877,
+    2419,
+    8215
+   ],
+   [
+    39.07814,
+    -119.88784,
+    2407,
+    8237
+   ],
+   [
+    39.0787,
+    -119.88753,
+    2404,
+    8247
+   ],
+   [
+    39.07943,
+    -119.88749,
+    2400,
+    8259
+   ],
+   [
+    39.08034,
+    -119.88784,
+    2392,
+    8276
+   ],
+   [
+    39.0814,
+    -119.88754,
+    2379,
+    8295
+   ],
+   [
+    39.082,
+    -119.88811,
+    2368,
+    8308
+   ],
+   [
+    39.08229,
+    -119.8882,
+    2365,
+    8312
+   ],
+   [
+    39.08273,
+    -119.88815,
+    2363,
+    8318
+   ],
+   [
+    39.08365,
+    -119.88767,
+    2364,
+    8334
+   ],
+   [
+    39.0838,
+    -119.88772,
+    2363,
+    8336
+   ],
+   [
+    39.08425,
+    -119.88839,
+    2358,
+    8346
+   ],
+   [
+    39.08436,
+    -119.88925,
+    2355,
+    8355
+   ],
+   [
+    39.08423,
+    -119.88999,
+    2353,
+    8363
+   ],
+   [
+    39.08441,
+    -119.8923,
+    2355,
+    8387
+   ],
+   [
+    39.08482,
+    -119.89322,
+    2358,
+    8400
+   ],
+   [
+    39.08527,
+    -119.89356,
+    2358,
+    8407
+   ],
+   [
+    39.08607,
+    -119.8939,
+    2355,
+    8415
+   ],
+   [
+    39.08664,
+    -119.89399,
+    2355,
+    8423
+   ],
+   [
+    39.08674,
+    -119.89412,
+    2353,
+    8425
+   ],
+   [
+    39.08696,
+    -119.895,
+    2342,
+    8437
+   ],
+   [
+    39.08771,
+    -119.89616,
+    2321,
+    8455
+   ],
+   [
+    39.08776,
+    -119.89698,
+    2312,
+    8467
+   ],
+   [
+    39.08806,
+    -119.89753,
+    2305,
+    8476
+   ],
+   [
+    39.08855,
+    -119.89716,
+    2299,
+    8489
+   ],
+   [
+    39.08887,
+    -119.89718,
+    2294,
+    8494
+   ],
+   [
+    39.08916,
+    -119.89765,
+    2284,
+    8501
+   ],
+   [
+    39.0893,
+    -119.89866,
+    2268,
+    8515
+   ],
+   [
+    39.08945,
+    -119.89886,
+    2262,
+    8520
+   ],
+   [
+    39.0902,
+    -119.89876,
+    2252,
+    8533
+   ],
+   [
+    39.09059,
+    -119.89896,
+    2249,
+    8539
+   ],
+   [
+    39.09071,
+    -119.89969,
+    2240,
+    8549
+   ],
+   [
+    39.09069,
+    -119.90044,
+    2234,
+    8556
+   ],
+   [
+    39.09047,
+    -119.90085,
+    2226,
+    8561
+   ],
+   [
+    39.09028,
+    -119.90232,
+    2203,
+    8574
+   ],
+   [
+    39.09041,
+    -119.9027,
+    2199,
+    8577
+   ],
+   [
+    39.09058,
+    -119.90509,
+    2193,
+    8602
+   ],
+   [
+    39.09065,
+    -119.90521,
+    2193,
+    8604
+   ],
+   [
+    39.09123,
+    -119.90535,
+    2188,
+    8612
+   ],
+   [
+    39.09215,
+    -119.9062,
+    2176,
+    8627
+   ],
+   [
+    39.09214,
+    -119.90698,
+    2171,
+    8636
+   ],
+   [
+    39.09254,
+    -119.90709,
+    2169,
+    8641
+   ],
+   [
+    39.09332,
+    -119.90772,
+    2161,
+    8654
+   ],
+   [
+    39.09429,
+    -119.90828,
+    2151,
+    8670
+   ],
+   [
+    39.09455,
+    -119.90855,
+    2150,
+    8674
+   ],
+   [
+    39.09473,
+    -119.9088,
+    2150,
+    8678
+   ],
+   [
+    39.09479,
+    -119.90911,
+    2150,
+    8681
+   ],
+   [
+    39.09475,
+    -119.90969,
+    2150,
+    8687
+   ],
+   [
+    39.09489,
+    -119.91009,
+    2147,
+    8692
+   ],
+   [
+    39.09544,
+    -119.91024,
+    2139,
+    8699
+   ],
+   [
+    39.09592,
+    -119.9098,
+    2137,
+    8709
+   ],
+   [
+    39.09621,
+    -119.90986,
+    2136,
+    8713
+   ]
+  ],
+  "profile": [
+   [
+    0,
+    2430
+   ],
+   [
+    0.067,
+    2437
+   ],
+   [
+    0.135,
+    2439
+   ],
+   [
+    0.202,
+    2446
+   ],
+   [
+    0.27,
+    2453
+   ],
+   [
+    0.337,
+    2460
+   ],
+   [
+    0.405,
+    2467
+   ],
+   [
+    0.472,
+    2479
+   ],
+   [
+    0.54,
+    2489
+   ],
+   [
+    0.607,
+    2492
+   ],
+   [
+    0.675,
+    2507
+   ],
+   [
+    0.742,
+    2518
+   ],
+   [
+    0.81,
+    2523
+   ],
+   [
+    0.877,
+    2515
+   ],
+   [
+    0.945,
+    2509
+   ],
+   [
+    1.012,
+    2505
+   ],
+   [
+    1.08,
+    2502
+   ],
+   [
+    1.147,
+    2500
+   ],
+   [
+    1.215,
+    2501
+   ],
+   [
+    1.282,
+    2508
+   ],
+   [
+    1.349,
+    2499
+   ],
+   [
+    1.417,
+    2495
+   ],
+   [
+    1.484,
+    2491
+   ],
+   [
+    1.552,
+    2489
+   ],
+   [
+    1.619,
+    2493
+   ],
+   [
+    1.687,
+    2507
+   ],
+   [
+    1.754,
+    2515
+   ],
+   [
+    1.822,
+    2521
+   ],
+   [
+    1.889,
+    2528
+   ],
+   [
+    1.957,
+    2524
+   ],
+   [
+    2.024,
+    2519
+   ],
+   [
+    2.092,
+    2514
+   ],
+   [
+    2.159,
+    2513
+   ],
+   [
+    2.227,
+    2511
+   ],
+   [
+    2.294,
+    2502
+   ],
+   [
+    2.362,
+    2504
+   ],
+   [
+    2.429,
+    2501
+   ],
+   [
+    2.496,
+    2489
+   ],
+   [
+    2.564,
+    2489
+   ],
+   [
+    2.631,
+    2487
+   ],
+   [
+    2.699,
+    2480
+   ],
+   [
+    2.766,
+    2476
+   ],
+   [
+    2.834,
+    2477
+   ],
+   [
+    2.901,
+    2474
+   ],
+   [
+    2.969,
+    2477
+   ],
+   [
+    3.036,
+    2472
+   ],
+   [
+    3.104,
+    2467
+   ],
+   [
+    3.171,
+    2465
+   ],
+   [
+    3.239,
+    2469
+   ],
+   [
+    3.306,
+    2473
+   ],
+   [
+    3.374,
+    2476
+   ],
+   [
+    3.441,
+    2480
+   ],
+   [
+    3.509,
+    2487
+   ],
+   [
+    3.576,
+    2496
+   ],
+   [
+    3.644,
+    2512
+   ],
+   [
+    3.711,
+    2522
+   ],
+   [
+    3.778,
+    2531
+   ],
+   [
+    3.846,
+    2540
+   ],
+   [
+    3.913,
+    2545
+   ],
+   [
+    3.981,
+    2549
+   ],
+   [
+    4.048,
+    2559
+   ],
+   [
+    4.116,
+    2567
+   ],
+   [
+    4.183,
+    2572
+   ],
+   [
+    4.251,
+    2579
+   ],
+   [
+    4.318,
+    2586
+   ],
+   [
+    4.386,
+    2600
+   ],
+   [
+    4.453,
+    2603
+   ],
+   [
+    4.521,
+    2603
+   ],
+   [
+    4.588,
+    2597
+   ],
+   [
+    4.656,
+    2591
+   ],
+   [
+    4.723,
+    2582
+   ],
+   [
+    4.791,
+    2576
+   ],
+   [
+    4.858,
+    2568
+   ],
+   [
+    4.925,
+    2565
+   ],
+   [
+    4.993,
+    2564
+   ],
+   [
+    5.06,
+    2611
+   ],
+   [
+    5.128,
+    2563
+   ],
+   [
+    5.195,
+    2565
+   ],
+   [
+    5.263,
+    2566
+   ],
+   [
+    5.33,
+    2569
+   ],
+   [
+    5.398,
+    2572
+   ],
+   [
+    5.465,
+    2573
+   ],
+   [
+    5.533,
+    2583
+   ],
+   [
+    5.6,
+    2586
+   ],
+   [
+    5.668,
+    2591
+   ],
+   [
+    5.735,
+    2595
+   ],
+   [
+    5.803,
+    2596
+   ],
+   [
+    5.87,
+    2602
+   ],
+   [
+    5.938,
+    2602
+   ],
+   [
+    6.005,
+    2610
+   ],
+   [
+    6.073,
+    2613
+   ],
+   [
+    6.14,
+    2615
+   ],
+   [
+    6.207,
+    2613
+   ],
+   [
+    6.275,
+    2614
+   ],
+   [
+    6.342,
+    2612
+   ],
+   [
+    6.41,
+    2616
+   ],
+   [
+    6.477,
+    2620
+   ],
+   [
+    6.545,
+    2623
+   ],
+   [
+    6.612,
+    2627
+   ],
+   [
+    6.68,
+    2631
+   ],
+   [
+    6.747,
+    2633
+   ],
+   [
+    6.815,
+    2641
+   ],
+   [
+    6.882,
+    2648
+   ],
+   [
+    6.95,
+    2657
+   ],
+   [
+    7.017,
+    2659
+   ],
+   [
+    7.085,
+    2668
+   ],
+   [
+    7.152,
+    2713
+   ],
+   [
+    7.22,
+    2757
+   ],
+   [
+    7.287,
+    2789
+   ],
+   [
+    7.354,
+    2776
+   ],
+   [
+    7.422,
+    2724
+   ],
+   [
+    7.489,
+    2712
+   ],
+   [
+    7.557,
+    2704
+   ],
+   [
+    7.624,
+    2691
+   ],
+   [
+    7.692,
+    2675
+   ],
+   [
+    7.759,
+    2664
+   ],
+   [
+    7.827,
+    2656
+   ],
+   [
+    7.894,
+    2651
+   ],
+   [
+    7.962,
+    2644
+   ],
+   [
+    8.029,
+    2636
+   ],
+   [
+    8.097,
+    2635
+   ],
+   [
+    8.164,
+    2630
+   ],
+   [
+    8.232,
+    2629
+   ],
+   [
+    8.299,
+    2632
+   ],
+   [
+    8.367,
+    2631
+   ],
+   [
+    8.434,
+    2631
+   ],
+   [
+    8.502,
+    2637
+   ],
+   [
+    8.569,
+    2633
+   ],
+   [
+    8.636,
+    2632
+   ],
+   [
+    8.704,
+    2633
+   ],
+   [
+    8.771,
+    2635
+   ],
+   [
+    8.839,
+    2640
+   ],
+   [
+    8.906,
+    2644
+   ],
+   [
+    8.974,
+    2648
+   ],
+   [
+    9.041,
+    2652
+   ],
+   [
+    9.109,
+    2657
+   ],
+   [
+    9.176,
+    2648
+   ],
+   [
+    9.244,
+    2645
+   ],
+   [
+    9.311,
+    2636
+   ],
+   [
+    9.379,
+    2623
+   ],
+   [
+    9.446,
+    2609
+   ],
+   [
+    9.514,
+    2596
+   ],
+   [
+    9.581,
+    2586
+   ],
+   [
+    9.649,
+    2577
+   ],
+   [
+    9.716,
+    2571
+   ],
+   [
+    9.783,
+    2561
+   ],
+   [
+    9.851,
+    2551
+   ],
+   [
+    9.918,
+    2544
+   ],
+   [
+    9.986,
+    2536
+   ],
+   [
+    10.053,
+    2529
+   ],
+   [
+    10.121,
+    2526
+   ],
+   [
+    10.188,
+    2520
+   ],
+   [
+    10.256,
+    2513
+   ],
+   [
+    10.323,
+    2506
+   ],
+   [
+    10.391,
+    2497
+   ],
+   [
+    10.458,
+    2498
+   ],
+   [
+    10.526,
+    2496
+   ],
+   [
+    10.593,
+    2487
+   ],
+   [
+    10.661,
+    2484
+   ],
+   [
+    10.728,
+    2481
+   ],
+   [
+    10.796,
+    2479
+   ],
+   [
+    10.863,
+    2474
+   ],
+   [
+    10.931,
+    2466
+   ],
+   [
+    10.998,
+    2462
+   ],
+   [
+    11.065,
+    2460
+   ],
+   [
+    11.133,
+    2458
+   ],
+   [
+    11.2,
+    2456
+   ],
+   [
+    11.268,
+    2453
+   ],
+   [
+    11.335,
+    2452
+   ],
+   [
+    11.403,
+    2448
+   ],
+   [
+    11.47,
+    2446
+   ],
+   [
+    11.538,
+    2444
+   ],
+   [
+    11.605,
+    2442
+   ],
+   [
+    11.673,
+    2442
+   ],
+   [
+    11.74,
+    2442
+   ],
+   [
+    11.808,
+    2443
+   ],
+   [
+    11.875,
+    2444
+   ],
+   [
+    11.943,
+    2444
+   ],
+   [
+    12.01,
+    2443
+   ],
+   [
+    12.078,
+    2439
+   ],
+   [
+    12.145,
+    2434
+   ],
+   [
+    12.212,
+    2433
+   ],
+   [
+    12.28,
+    2427
+   ],
+   [
+    12.347,
+    2423
+   ],
+   [
+    12.415,
+    2418
+   ],
+   [
+    12.482,
+    2412
+   ],
+   [
+    12.55,
+    2407
+   ],
+   [
+    12.617,
+    2404
+   ],
+   [
+    12.685,
+    2401
+   ],
+   [
+    12.752,
+    2395
+   ],
+   [
+    12.82,
+    2389
+   ],
+   [
+    12.887,
+    2382
+   ],
+   [
+    12.955,
+    2375
+   ],
+   [
+    13.022,
+    2365
+   ],
+   [
+    13.09,
+    2363
+   ],
+   [
+    13.157,
+    2365
+   ],
+   [
+    13.225,
+    2361
+   ],
+   [
+    13.292,
+    2358
+   ],
+   [
+    13.36,
+    2355
+   ],
+   [
+    13.427,
+    2353
+   ],
+   [
+    13.494,
+    2353
+   ],
+   [
+    13.562,
+    2354
+   ],
+   [
+    13.629,
+    2355
+   ],
+   [
+    13.697,
+    2357
+   ],
+   [
+    13.764,
+    2359
+   ],
+   [
+    13.832,
+    2355
+   ],
+   [
+    13.899,
+    2355
+   ],
+   [
+    13.967,
+    2350
+   ],
+   [
+    14.034,
+    2341
+   ],
+   [
+    14.102,
+    2329
+   ],
+   [
+    14.169,
+    2320
+   ],
+   [
+    14.237,
+    2312
+   ],
+   [
+    14.304,
+    2305
+   ],
+   [
+    14.372,
+    2297
+   ],
+   [
+    14.439,
+    2286
+   ],
+   [
+    14.507,
+    2274
+   ],
+   [
+    14.574,
+    2260
+   ],
+   [
+    14.641,
+    2252
+   ],
+   [
+    14.709,
+    2248
+   ],
+   [
+    14.776,
+    2237
+   ],
+   [
+    14.844,
+    2229
+   ],
+   [
+    14.911,
+    2219
+   ],
+   [
+    14.979,
+    2205
+   ],
+   [
+    15.046,
+    2196
+   ],
+   [
+    15.114,
+    2192
+   ],
+   [
+    15.181,
+    2193
+   ],
+   [
+    15.249,
+    2193
+   ],
+   [
+    15.316,
+    2188
+   ],
+   [
+    15.384,
+    2182
+   ],
+   [
+    15.451,
+    2175
+   ],
+   [
+    15.519,
+    2171
+   ],
+   [
+    15.586,
+    2167
+   ],
+   [
+    15.654,
+    2161
+   ],
+   [
+    15.721,
+    2155
+   ],
+   [
+    15.789,
+    2151
+   ],
+   [
+    15.856,
+    2150
+   ],
+   [
+    15.923,
+    2150
+   ],
+   [
+    15.991,
+    2143
+   ],
+   [
+    16.058,
+    2138
+   ],
+   [
+    16.126,
+    2136
+   ]
+  ],
+  "trim": {
+   "notes": [
+    "Cut 2.8 mi at the end that looks like driving (10:03).",
+    "No trailhead near the start: trimmed the first 984 ft.",
+    "No trailhead near the end: trimmed the last 984 ft."
+   ],
+   "rawPoints": 1400,
+   "shownKm": 16.13,
+   "keptFrom": 19,
+   "keptTo": 1293,
+   "startTrailhead": null,
+   "endTrailhead": null
+  }
+ },
+ "photos": [
+  {
+   "src": "data/photos/2026-10-20-genoa-peak-off-road-trail/clip-3.mp4",
+   "poster": "data/photos/2026-10-20-genoa-peak-off-road-trail/clip-3.jpg",
+   "video": true,
+   "caption": "The dirt trail up to Genoa Peak.",
+   "takenAt": "2026:10:20 10:38:27",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "Genoa Peak - October 2026.mp4",
+   "range": [
+    0,
+    16.2
+   ]
+  },
+  {
+   "src": "data/photos/2026-10-20-genoa-peak-off-road-trail/clip-2.mp4",
+   "poster": "data/photos/2026-10-20-genoa-peak-off-road-trail/clip-2.jpg",
+   "video": true,
+   "caption": "The view from the top of Genoa Peak is amazing.",
+   "takenAt": "2026:10:20 10:38:56",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": true,
+   "from": "Genoa Peak - October 2026.mp4",
+   "range": [
+    29.55,
+    35.35
+   ]
+  },
+  {
+   "src": "data/photos/2026-10-20-genoa-peak-off-road-trail/clip-4.mp4",
+   "poster": "data/photos/2026-10-20-genoa-peak-off-road-trail/clip-4.jpg",
+   "video": true,
+   "caption": "Marley running ahead of the truck scouting out the area.",
+   "takenAt": "2026:10:20 11:16:05",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "My Movie 28.mp4",
+   "range": [
+    10.1,
+    21.3
+   ]
+  },
+  {
+   "src": "data/photos/2026-10-20-genoa-peak-off-road-trail/01.jpg",
+   "caption": "Taking a break with the Tacoma on the trail up to Genoa Peak.",
+   "takenAt": null,
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "IMG_8166 (1).jpg"
+  },
+  {
+   "src": "data/photos/2026-10-20-genoa-peak-off-road-trail/03.jpg",
+   "caption": "Taking a break with the Tacoma on the trail up to Genoa Peak.",
+   "takenAt": null,
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "IMG_8163 (1).jpg"
+  },
+  {
+   "src": "data/photos/2026-10-20-genoa-peak-off-road-trail/04.jpg",
+   "caption": "Looking down to Genoa from the trail up to Genoa peak.",
+   "takenAt": null,
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "IMG_8170 (1).jpg"
+  },
+  {
+   "src": "data/photos/2026-10-20-genoa-peak-off-road-trail/05.jpg",
+   "caption": "Looking down to Genoa from the trail up to Genoa peak.",
+   "takenAt": null,
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "IMG_8171 (1).jpg"
+  },
+  {
+   "src": "data/photos/2026-10-20-genoa-peak-off-road-trail/06.jpg",
+   "caption": "The view from the top of Genoa with Lake Tahoe on the right and Carson Valley on the left.",
+   "takenAt": null,
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "IMG_8184 (1).jpg"
+  },
+  {
+   "src": "data/photos/2026-10-20-genoa-peak-off-road-trail/07.jpg",
+   "caption": "The view from the top of Genoa Peak.",
+   "takenAt": null,
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "IMG_8172 (1).jpg"
+  }
+ ],
+ "fieldNotes": "Went off roading from Kingsbury Zinger trail head up to Genoa Peak and then down to near Spooner lake and the highway 50. The tracker was left on a bit and some of the highway is at the end. Not a big deal. Marley was with me and she ran along for a bit. She love to scout ahead of the truck. The trail was nice and dry, a bit dusty but very pretty. I had been up in the truck before but could not walk the last few hundreds of feet up to the very top due to medical issues. Those issues were resolved and today was the first time I actually made it all the way to the top.\n\nAre you comfortable mentioning the earlier health issues, even this vaguely, in both the post and the episode?\nSure. It has been addressed. Back pain and knee pain.\n\nThe videos are stamped 10:38, but the track starts at 7:35 and the driving cut begins at 10:03. Is the camera clock off, or were the clips shot later? I left times out for now.\nThe driving clips are later but not that late so perhaps off by two hours. Weird.\n\nIs there a photo or clip of Marley running ahead of the truck? It would be a nice addition.\nI can find one.\n\nThis was a truck drive, not a bike ride. If it lands in the ride category it will wear the bike helmet and the forest biking backdrop by default; want a different category, or keep the trail cap and trailhead set here?\nCorrect. No bike. Truck to hike. Maybe switch to adventure or hike?\n\nIs it fine to name the truck (Tacoma) in the post? I used it once and kept 'the truck' elsewhere.\nthe truck is fine.\n\nWhen you find the photo or clip of Marley running ahead of the truck, send it and I'll place it after the Marley paragraph with a caption.\nFound it. has been added.\n\nPlease switch the Note's category to hike in the Studio (I can't change it here). Hike wears the trail cap, which matches; I kept this Note's own trailhead backdrop so the hike category's Yosemite backdrop doesn't take over. OK?\nDone\n\nI read \"the truck is fine\" as: say \"the truck\", not \"Tacoma\". I changed the post and the captions; the Truck Break spread lines still say Tacoma. Change those too?\nYes\n\nVideo times stay out of the captions since the camera clock looks about two hours off. Fine to leave it that way?\nYes",
+ "post": {
+  "title": "All the way to the top of Genoa Peak",
+  "body": "I started early, a little after seven thirty, at the Kingsbury trailhead and pointed the truck up the dirt road toward Genoa Peak. The plan was simple: up to the peak, then down the other side toward Spooner Lake and Highway 50.\n\nMarley came along. She ran next to the truck for part of the way, and she loves to scout ahead, trotting out in front like she's checking the road for me.\n\nThe road was dry, a bit dusty, and very pretty. It winds through tall pines, and every so often the trees open up and you look straight down onto Carson Valley and Genoa, a long way below. I stopped a few times just to take that in, and to take a couple of selfies with the truck, because a break doesn't count unless you document it.\n\nI've been up this road in the truck before. That time I couldn't walk the last few hundred feet to the very top because of back pain and knee pain. That's been taken care of now, and today I parked, got out and walked it. All the way up.\n\nThe top is a pile of broken rock with a view in every direction. Carson Valley spreads out on one side, Lake Tahoe sits on the other, and the ridges roll off between them. I stood there for a while.\n\nFrom the peak I took the road down toward Spooner Lake. By the numbers it was about ten miles, around 2,500 feet of climbing and closer to 3,000 feet down, with the high point just over 9,100 feet. Moving time was about an hour and a half; the whole outing took about two and a half hours.\n\nAnd yes, I left the tracker running again. Some of the highway ended up on the end of the track before I noticed. Not a big deal; it's trimmed off.\n\nWhat I learned: a place you've already been can still have a first time left in it. The view from the truck was nice. The view after walking those last few hundred feet was something else."
+ },
+ "episode": {
+  "title": "The last few hundred feet",
+  "script": "Narrated by GlazyArray.\n\nIt was a little after seven thirty in the morning at the Kingsbury trailhead, and the light was still coming up over the pines.\n\nChristian wasn't on a bike this time. He was in his truck, pointed up a dry dirt road toward Genoa Peak. And he wasn't alone. Marley was with him.\n\nMarley has a job on these drives, and she takes it seriously. She ran alongside for a while, and then she did what she loves best. She scouted ahead of the truck, out in front, checking the road as if he'd hired her for it.\n\n***\n\nThe road was dusty, but it was beautiful. Tall pines, soft dirt, and every so often a gap in the trees where the whole of Carson Valley lay down below, pale and wide in the morning haze. Christian stopped to look. He has a good eye for those gaps, the ones where the branches frame the valley just right, and he didn't rush past them.\n\nHere's the part that matters. Christian had been up this road before. That time, he couldn't walk the last few hundred feet to the very top. His back and his knees wouldn't let him.\n\nThat had been taken care of. So this time, he parked, got out, and walked it.\n\nAll the way to the top.\n\n***\n\nThe summit of Genoa Peak is a jumble of broken rock, just over nine thousand feet up. On one side, Carson Valley. On the other, Lake Tahoe, blue and quiet. Ridges rolling off in between. He took a picture of himself up there, sunglasses on, the whole view at his back. It's a modest little selfie. It's also a first.\n\nThen it was back to the truck and down the other side, toward Spooner Lake and the highway. About ten miles in all, roughly twenty-five hundred feet up and three thousand down, in about two and a half hours.\n\nAnd the tracker? Of course it was still running when he hit the highway. I'll say no more than that.\n\n***\n\nSome places you visit once. Some you have to visit twice, because the first time, the top was waiting for you to be ready. This was the second time.",
+  "audio": "data/audio/2026-10-20-genoa-peak-off-road-trail.mp3",
+  "sections": []
+ },
+ "questions": [
+  "I can't edit the magazine here: please change the three Truck Break spread lines from \"the Tacoma\" to \"the truck\" in the Studio (they can match the new captions for 01, 02 and 03). The Trail notes timeline's \"Breaks\" line also still says \"the Tacoma\"; change that to \"the truck\" too?",
+  "The Marley clip (clip-4) is captioned and sits right after the Marley paragraph in photo order. Want it pulled into a placement or spread as well, or is that enough?"
+ ],
+ "consent": "Christian Marley",
+ "media": "real",
+ "feature": {
+  "theme": "contour",
+  "masthead": "CONTOUR LINES",
+  "tagline": "Every hike, measured and remembered",
+  "issue": "The Ridge Issue",
+  "label": "Trail Report",
+  "byline": "By GlazyArray, Trail Correspondent",
+  "blocks": [
+   {
+    "type": "stats",
+    "title": "The route",
+    "before": "Up from Kingsbury",
+    "items": [
+     [
+      "10.4 mi",
+      "Distance"
+     ],
+     [
+      "9,157 ft",
+      "High point"
+     ],
+     [
+      "1 h 27 m",
+      "Moving time"
+     ],
+     [
+      "About 2,500 ft",
+      "Climbing"
+     ],
+     [
+      "About 3,000 ft",
+      "Descent"
+     ],
+     [
+      "About 2.5 h",
+      "Whole outing"
+     ]
+    ],
+    "note": "Kingsbury trailhead to near Spooner Lake and Highway 50, by truck, with the last few hundred feet to the summit on foot. Climbing, descent and total time are as told in the post; the highway stretch at the end of the track is trimmed off."
+   },
+   {
+    "type": "timeline",
+    "title": "Trail notes",
+    "before": "Down toward Spooner",
+    "items": [
+     [
+      "A little after 7:30",
+      "Start at the Kingsbury trailhead, truck pointed up the dirt road toward Genoa Peak."
+     ],
+     [
+      "On the way up",
+      "Marley runs alongside the truck for a while, then scouts ahead, out in front."
+     ],
+     [
+      "Breaks",
+      "Stops to look down onto Carson Valley and Genoa through gaps in the pines, and a few selfies with the Tacoma."
+     ],
+     [
+      "The last stretch",
+      "Parked and walked the last few hundred feet to the very top, the first time all the way up."
+     ],
+     [
+      "The summit",
+      "A pile of broken rock: Carson Valley on one side, Lake Tahoe on the other, ridges between."
+     ],
+     [
+      "The descent",
+      "Down the other side toward Spooner Lake and Highway 50."
+     ],
+     [
+      "The finish",
+      "The tracker kept running onto the highway; that bit is trimmed off."
+     ]
+    ]
+   },
+   {
+    "type": "box",
+    "title": "Know before you go",
+    "kicker": "Route card",
+    "text": "This is a point-to-point drive: up from the Kingsbury trailhead to Genoa Peak, then down the other side toward Spooner Lake and Highway 50.\n\nOn this October morning the road was dry and a bit dusty, winding through tall pines with openings that look straight down onto Carson Valley and Genoa.\n\nThe very top is the last few hundred feet on foot from where the truck parks, and the summit itself is a pile of broken rock.\n\nStop the tracker before you hit the highway."
+   }
+  ],
+  "coverLabel": "real",
+  "lookbook": [
+   {
+    "title": "Truck Break",
+    "dek": "",
+    "before": "",
+    "items": [
+     {
+      "name": "",
+      "when": "Taking a break by the truck on the trail up to Genoa Peak.",
+      "alt": "Taking a break by the truck on the trail up to Genoa Peak.",
+      "src": "data/photos/2026-10-20-genoa-peak-off-road-trail/03.jpg",
+      "w": 1600,
+      "h": 900
+     },
+     {
+      "name": "",
+      "when": "Taking a break by the truck on the trail up to Genoa Peak.",
+      "alt": "Taking a break by the truck on the trail up to Genoa Peak.",
+      "src": "data/photos/2026-10-20-genoa-peak-off-road-trail/01.jpg",
+      "w": 1600,
+      "h": 900
+     }
+    ],
+    "layout": "grid2",
+    "label": "real"
+   },
+   {
+    "title": "At the Top",
+    "dek": "",
+    "before": "",
+    "items": [
+     {
+      "name": "",
+      "when": "Looking down to Genoa from the trail up to Genoa peak.",
+      "alt": "Looking down to Genoa from the trail up to Genoa peak.",
+      "src": "data/photos/2026-10-20-genoa-peak-off-road-trail/05.jpg",
+      "w": 1600,
+      "h": 900
+     },
+     {
+      "name": "",
+      "when": "The view from the top of Genoa with Lake Tahoe on the right and Carson Valley on the left.",
+      "alt": "The view from the top of Genoa with Lake Tahoe on the right and Carson Valley on the left.",
+      "src": "data/photos/2026-10-20-genoa-peak-off-road-trail/06.jpg",
+      "w": 1600,
+      "h": 900
+     },
+     {
+      "name": "",
+      "when": "Looking down to Genoa from the trail up to Genoa peak.",
+      "alt": "Looking down to Genoa from the trail up to Genoa peak.",
+      "src": "data/photos/2026-10-20-genoa-peak-off-road-trail/04.jpg",
+      "w": 1600,
+      "h": 900
+     }
+    ],
+    "layout": "side"
+   }
+  ],
+  "coverLines": [
+   "All the way to the top of Genoa Peak, at last",
+   "The last few hundred feet, finally walked",
+   "Marley, chief road scout",
+   "Kingsbury to Spooner: 10.4 miles, high point 9,157 feet",
+   "The tracker that kept running onto Highway 50"
+  ],
+  "questions": [
+   "The climbing (about 2,500 ft), descent (about 3,000 ft) and whole-outing time (about 2.5 h) in The route come from the post, not the track figures. Can you confirm them from track.stats?",
+   "Does the 10.4 miles include the highway stretch that was trimmed off, or is it the trimmed track?",
+   "Know before you go only uses what the Note says. Do you want to add anything about the road itself (high clearance or 4WD needed, seasonal closures, rules for dogs off leash)? I left it out rather than guess.",
+   "The timeline uses stages instead of clock times, apart from the 7:30 start, since the clip timestamps are uncertain. Are there times you'd like on the summit and the descent?"
+  ]
+ },
+ "palette": [
+  "#6999d3",
+  "#9f98e1"
+ ],
+ "dashboard": {
+  "elev": false,
+  "updown": false,
+  "facts": false
+ },
+ "narratorLook": {
+  "look": "trail-cap",
+  "fit": "existing",
+  "about": "a trucker cap with a GA leather patch",
+  "why": "Christian wore a cap all morning, and a trail cap suits a dirt-road drive better than a bike helmet.",
+  "prompt": "",
+  "bulb": false
+ },
+ "narratorBackdrop": {
+  "backdrop": "trailhead",
+  "fit": "existing",
+  "scene": ""
+ },
+ "publishedAt": "2026-10-20T18:28:36Z"
+}
