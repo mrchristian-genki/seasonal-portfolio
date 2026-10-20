@@ -295,7 +295,7 @@
       need('link', { rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css' }),
       need('link', { rel: 'stylesheet', href: 'css/route-dash.css?v=1794800000' }),
       window.L ? 0 : need('script', { src: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js' })
-    ]).then(function () { return window.RouteView ? 0 : need('script', { src: 'js/route-view.js?v=1794800000' }); }));
+    ]).then(function () { return window.RouteView ? 0 : need('script', { src: 'js/route-view.js?v=1795900000' }); }));
   }
   function story(url) {
     if (!sdlg) {
