@@ -7,8 +7,9 @@
    village cropped a little to the opening's shape. The section around it is the page's own colour, so the lake's rolling
    edge meets it as it meets the words. */
 .homestead{position:relative;padding:0 0 clamp(20px,3vw,44px);background:#fff;transition:background-color 2.4s ease}
-/* tucked a little under the lake's rolling edge; with the lake hidden it starts below the "Show the lake" bar instead */
-html:not(.lake-off) .homestead{margin-top:clamp(-40px,-2.5vw,-8px)}
+/* clear of the lake's rolling edge (tucked under it, the edge painted over the frame's orrery); with the lake hidden it
+   starts below the "Show the lake" bar instead */
+html:not(.lake-off) .homestead{padding-top:clamp(6px,1vw,16px)}
 html.lake-off .homestead{padding-top:clamp(12px,2vw,28px)}
 html.night-page .homestead{background:var(--night-bg,#0e1823)}
 .hs-window{position:relative;width:min(calc(100% - 24px),1500px,calc((100vh - 110px) * 1376 / 818));margin:0 auto;aspect-ratio:1376/818;container-type:inline-size}
