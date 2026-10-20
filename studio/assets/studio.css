@@ -761,6 +761,20 @@ dialog.pfp::backdrop{background:rgba(20,12,6,.7)}
 .stx-hh h3{margin:0} .stx-hh small{font-size:13px} .stx-hh button{margin-left:auto}
 .stx-hsum{font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;border-radius:999px;padding:2px 9px}
 .stx-hsum[data-state=good]{background:var(--ok-bg);color:var(--ok)} .stx-hsum[data-state=warn]{background:var(--chk-bg);color:var(--chk)} .stx-hsum[data-state=bad]{background:var(--fix-bg);color:var(--fix)}
+.stx-hlights{all:unset;box-sizing:border-box;display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;width:100%;cursor:pointer;padding:6px 0;font-size:13px;color:var(--ink2)}
+.stx-hlights>span{display:inline-flex;align-items:center;gap:5px;padding:2px 9px 2px 3px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.45);transition:background .6s ease-in-out}
+.stx-hlights i{width:16px;height:16px;border-radius:50%;display:grid;place-items:center;font:900 10px/1 Arial,sans-serif;font-style:normal;color:#fff;background:var(--chk)}
+.stx-hlights>span[data-state=good] i{background:var(--ok)} .stx-hlights>span[data-state=bad] i{background:var(--fix)}
+.stx-hlights>span[data-state=warn]{border-color:#e7c98a} .stx-hlights>span[data-state=bad]{border-color:#e9aaa5}
+.stx-hlights em{font-style:normal;font-weight:700;color:var(--ink);margin-left:auto;white-space:nowrap}
+.stx-hlights em::after{content:'';display:inline-block;width:6px;height:6px;margin-left:7px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:translateY(-2px) rotate(45deg);transition:transform .8s ease-in-out}
+.stx-health.open .stx-hlights em::after{transform:translateY(1px) rotate(-135deg)}
+.stx-hlights:hover>span{background:rgba(255,255,255,.8)} .stx-hlights:focus-visible{outline:2px solid var(--ink);outline-offset:2px;border-radius:6px}
+.stx-hfold{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows .9s ease-in-out,opacity .9s ease-in-out,margin .9s ease-in-out}
+.stx-hfold>ul{overflow:hidden;min-height:0}
+.stx-hlights .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.stx-health.open .stx-hfold{grid-template-rows:1fr;opacity:1;margin-top:6px}
+@media (prefers-reduced-motion:reduce){.stx-hfold,.stx-hlights em::after{transition:none}}
 .stx-hc{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:8px}
 .stx-hc li{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:8px;border:1px solid var(--line);background:rgba(255,255,255,.45);font-size:14px;line-height:1.4}
 .stx-hc li>div{display:flex;flex-direction:column;gap:3px;min-width:0}

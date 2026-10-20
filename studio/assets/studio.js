@@ -472,16 +472,28 @@
     if (!cs.length) return h.error ? '<p class="err">Site health: ' + esc(h.error) + '</p>' : '';
     var word = { good: 'OK', warn: 'Check', bad: 'Fix' }, icon = { good: '✓', warn: '!', bad: '✕' };
     var worst = cs.some(function (c) { return c.state === 'bad'; }) ? 'bad' : cs.some(function (c) { return c.state === 'warn'; }) ? 'warn' : 'good';
-    return '<div class="stx-health"><div class="stx-hh"><h3>Site health</h3><span class="stx-hsum" data-state="' + worst + '">' +
+    // Folded by default (Christian, Oct 20, 2026): most days all is green, so a row of small lights is enough; the
+    // details open by hand, or by themselves when something needs a look
+    var open = SV.healthOpen != null ? SV.healthOpen : worst !== 'good';
+    return '<div class="stx-health' + (open ? ' open' : '') + '"><div class="stx-hh"><h3>Site health</h3><span class="stx-hsum" data-state="' + worst + '">' +
       (worst === 'good' ? 'All good' : cs.filter(function (c) { return c.state !== 'good'; }).length + ' to look at') + '</span>' +
       '<small class="muted">Checked ' + esc(when(h.at)) + '</small><button type="button" class="small" id="stxHealthGo">Check again</button></div>' +
-      '<ul class="stx-hc">' + cs.map(function (c) {
+      '<button type="button" class="stx-hlights" id="stxHealthMore" aria-expanded="' + open + '" aria-controls="stxHealthList">' + cs.map(function (c) {
+        var st = word[c.state] ? c.state : 'warn';
+        return '<span data-state="' + st + '"><i aria-hidden="true">' + icon[st] + '</i>' + esc(c.label) + '<span class="vh"> ' + word[st] + '</span></span>';
+      }).join('') + '<em>Details</em></button>' +
+      '<div class="stx-hfold"><ul class="stx-hc" id="stxHealthList">' + cs.map(function (c) {
         var st = word[c.state] ? c.state : 'warn';
         return '<li data-state="' + st + '"><span class="stx-hi" aria-hidden="true">' + icon[st] + '</span><div><b>' + esc(c.label) + ' <em>' + word[st] + '</em></b>' +
           '<span>' + esc(c.say || '') + '</span>' + (c.todo ? '<span class="stx-todo">' + esc(c.todo) + '</span>' : '') + '</div></li>';
-      }).join('') + '</ul></div>';
+      }).join('') + '</ul></div></div>';
   }
   function healthClicks(box) {
+    var m = $('#stxHealthMore', box);
+    if (m) m.onclick = function () {
+      var wrap = m.parentNode, open = !wrap.classList.contains('open');
+      wrap.classList.toggle('open', open); m.setAttribute('aria-expanded', open); SV.healthOpen = open;
+    };
     var b = $('#stxHealthGo', box); if (!b) return;
     b.onclick = function () {
       b.disabled = true; b.textContent = 'Checking…';
