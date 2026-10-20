@@ -212,6 +212,7 @@ ${ICONS}
 <link rel="stylesheet" href="${rel}../css/alta.css?v=12">
 <link rel="stylesheet" href="${rel}../css/marley.css?v=10">
 <script>/* Logo season from the calendar, as on About. */document.documentElement.dataset.season=["winter","winter","spring","spring","spring","summer","summer","summer","fall","fall","fall","winter"][new Date().getMonth()];</script>
+<script src="${rel}../js/carry.js?v=2"></script>
 <link rel="stylesheet" href="${rel}../css/route-dash.css?v=${V}">
 </head>
 <body>

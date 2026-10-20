@@ -2263,7 +2263,7 @@ function _bootInner() {
   const CAL_SEASON = [0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 0][new Date().getMonth()];
   const BOOT_SEASON = CAL_SEASON;
   // Section (view) <-> its word in the address. The Play tab's view is still called 'lab' inside.
-  const VIEW_WORD = { home:'', signal:'web', workshop:'workshop', lab:'lab' };
+  const VIEW_WORD = { home:'home', signal:'web', workshop:'workshop', lab:'lab' };   // Home names itself too (Christian, Oct 20)
   let VIEW = 'home';             // the section showing: the Lake Home welcome unless a tab or a link asks
   let SEASON_CHOSEN = false;     // a season was picked (or asked for by the address), so links carry it
   // tod target per season (currently all 0.50, midday).
@@ -2837,15 +2837,15 @@ function _bootInner() {
   // ── SHAREABLE LINKS ──────────────────────────────────────────────────────
   // The address can set the scene: ?summer+night, ?winter, ?fall+day, ?night. Words combine with
   // + (or & , or spaces) in any order. Seasons: spring summer fall/autumn winter, or the tab
-  // names books web workshop lab (summer, fall, winter, spring; the Play tab is lab, since play already means the whole year). With no season the page opens on BOOT_SEASON. Also: day, night (or nightmode, darkmode, dark: the page around the scene goes dark too), play (plays the whole year). Animal names
+  // names home web workshop lab (the Play tab is lab, since play already means the whole year). With no season the page opens on BOOT_SEASON. Also: day, night (or nightmode, darkmode, dark: the page around the scene goes dark too), play (plays the whole year). Animal names
   // (?fox, ?summer+night+owl) bring that animal in once the wildlife loads (wildlife.js).
   // The page opens straight on that look (no crossfade), and the address bar follows every
   // season/night change after that, so the current view can always be copied and shared.
   // Other flags (?bench ?fps ?wildlife ?diag) are left as they are.
   const LINK_SEASON = { spring: 1, summer: 2, fall: 3, autumn: 3, winter: 0 };
-  // Sections: books web workshop lab (Play), and Play's own sections open the Play tab on that section:
+  // Sections: home web workshop lab (Play), and Play's own sections open the Play tab on that section:
   // ?daydreams, ?above, ?notes, ?newsstand.
-  const LINK_VIEW = { web: 'signal', workshop: 'workshop', lab: 'lab',
+  const LINK_VIEW = { home: 'home', web: 'signal', workshop: 'workshop', lab: 'lab',
     notes: 'lab', dose: 'lab', above: 'lab', daydreams: 'lab', newsstand: 'lab' };
   // Weather levels: each word sets how hard it rains (or snows, in winter). Light, medium, full.
   // Rain: drizzle, shower, tempest. Snow: flurries, snow, blizzard. (Older words kept as aliases.)
@@ -2902,6 +2902,11 @@ function _bootInner() {
       .concat(VIEW === 'lab' && window.__playWords ? window.__playWords() : []);
     try { history.replaceState(null, '', location.pathname + '?' + words.join('+') + location.hash); } catch (e) { /* file:// */ }
   }
+  // Arriving with only a look (?fall+night+nlake, from another page: js/carry.js), the address names the section too,
+  // once the lake and the rest have loaded, so it reads ?home+fall+night+nlake like every other tab.
+  const LOOK_WORD = w => w in LINK_SEASON || /^(night|nightmode|darkmode|dark|day|daymode|lightmode|light|ylake|nlake)$/.test(w) || w in STORM_LEVELS;
+  if (linkWords.length && !linkWords.some(w => w in LINK_VIEW) && linkWords.every(LOOK_WORD))
+    addEventListener('load', () => setTimeout(writeLink, 0));
   // Only rewrite the address once someone changes the view (a plain visit keeps a clean URL).
   document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => setTimeout(writeLink, 0)));
   if (modeBtn) modeBtn.addEventListener('click', () => setTimeout(writeLink, 0));

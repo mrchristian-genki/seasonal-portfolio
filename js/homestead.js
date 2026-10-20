@@ -436,7 +436,9 @@
         if (!window.__playWords || !document.querySelector('#about .pi-in')) {
           if (n < 60) setTimeout(function () { wait(n + 1); }, 250); return;
         }
-        try { history.replaceState(null, '', location.pathname + '?' + ['lab', 'notes'].concat(use).join('+') + location.hash); } catch (e) { return; }
+        // the season, night, lake and weather stay (js/carry.js)
+        var look = window.__look ? window.__look() : [];
+        try { history.replaceState(null, '', location.pathname + '?' + ['lab', 'notes'].concat(use, look).join('+') + location.hash); } catch (e) { return; }
         dispatchEvent(new PopStateEvent('popstate'));
       })(0);
     });
