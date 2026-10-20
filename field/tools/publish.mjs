@@ -542,7 +542,7 @@ else { try { yt = JSON.parse(fs.readFileSync(ytFile, 'utf8')); console.warn('You
 // Index
 const cards = pages.map(({ e, cover, audio }) => {
   const s = e.track && e.track.stats;
-  return `<a class="card" href="${e.id}/">${cover ? `<img src="${esc(still(cover))}" alt="" width="${cover.w}" height="${cover.h}" loading="lazy">` : '<div class="noimg"></div>'}
+  return `<a class="card" href="${e.id}/" data-tags="${esc(tagsOf(e).join(' '))}">${cover ? `<img src="${esc(still(cover))}" alt="" width="${cover.w}" height="${cover.h}" loading="lazy">` : '<div class="noimg"></div>'}
 <div class="card-body"><p class="kicker"><span class="kind ${esc(e.kind)}">${KIND[e.kind] || esc(e.kind)}</span> · ${day(e.date)}</p>
 <h2>${esc(e.post && e.post.title || e.title)}</h2>${e.summary ? `<p>${esc(e.summary)}</p>` : ''}
 <p class="meta">${s ? `${mi(s.distanceKm)} · ↑ ${ft(s.gainM)}` : ''}${audio ? ` · <span class="pill">▶ ${mmss(audio.sec)}</span>` : ''}</p></div></a>`;

@@ -24,41 +24,84 @@
     clips.forEach(function (v) { io.observe(v); });
   }
 
-  // Field Notes, 9 to a page, like the homepage's Play tab (Christian, Oct 19: all of them ran down the page). Previous,
-  // the page numbers and Next; the page is in the address (?p2), the old page fades out and the new one in, and when the
-  // top of the notes is out of sight the page glides back up to it. Without script every note is there, as before.
+  // Field Notes, 9 to a page, like the homepage's Play tab, with its toolbar (Christian, Oct 20: the filters and the grid
+  // were missing here): grid or list, newest or oldest, and the tags with how many notes carry each (a note shows when it
+  // has every tag picked). The page, the layout, the order and the tags are in the address (?grid+ride+p2), each change
+  // fades the notes out and in, and when the top of the notes is out of sight the page glides back up to it. Without
+  // script every note is there, as before.
   var PER = 9, cardBox = document.querySelector('#field-notes .cards');
-  if (cardBox && cardBox.children.length > PER) (function () {
-    var cards = [].slice.call(cardBox.children), pages = Math.ceil(cards.length / PER), page = 1, sec = document.getElementById('field-notes');
+  if (cardBox && cardBox.children.length) (function () {
+    var all = [].slice.call(cardBox.children), sec = document.getElementById('field-notes');
+    var NAMES = { 'lake-tahoe': 'Lake Tahoe', 'mini-cast': 'Mini-Cast', 'with-marley': 'With Marley', 'with-helena': 'With Helena', 'ai': 'AI' };
+    var name = function (t) { return NAMES[t] || (/^\d{4}$/.test(t) ? t : t.replace(/^with-/, 'with ').replace(/-/g, ' ').replace(/^./, function (c) { return c.toUpperCase(); })); };
+    var tagsOf = function (c) { return (c.getAttribute('data-tags') || '').split(' ').filter(Boolean); };
+    var count = {}; all.forEach(function (c) { tagsOf(c).forEach(function (t) { count[t] = (count[t] || 0) + 1; }); });
+    var tagList = Object.keys(count).sort(function (a, b) { var ya = /^\d{4}$/.test(a), yb = /^\d{4}$/.test(b); if (ya !== yb) return ya ? 1 : -1; if (ya) return b.localeCompare(a); return count[b] - count[a] || a.localeCompare(b); });
+    var st = { page: 1, layout: 'list', order: 'new', tags: [] };
+    var tools = document.createElement('div'); tools.className = 'ntools';
     var nav = document.createElement('nav'); nav.className = 'npager'; nav.setAttribute('aria-label', 'Pages of Field Notes');
-    cardBox.after(nav);
-    var fromURL = function () { var m = /(?:^\?|[?&+])p(\d+)\b/.exec(location.search); return m ? Math.min(pages, Math.max(1, +m[1])) : 1; };
-    var drawNav = function () {
-      var b = function (p, label, cls) { return '<button type="button" data-page="' + p + '"' + (cls ? ' class="' + cls + '"' : '') + (p === page && !cls ? ' aria-current="page"' : '') + '>' + label + '</button>'; };
+    cardBox.before(tools); cardBox.after(nav);
+    var words = function () { return decodeURIComponent(location.search.slice(1)).toLowerCase().split(/[+&,;\s]+/).filter(Boolean); };
+    var read = function () {
+      var w = words(), m;
+      st.layout = w.indexOf('grid') >= 0 ? 'grid' : 'list'; st.order = w.indexOf('oldest') >= 0 ? 'old' : 'new';
+      st.tags = w.filter(function (x) { return count[x]; });
+      m = w.filter(function (x) { return /^p\d+$/.test(x); })[0]; st.page = m ? +m.slice(1) : 1;
+    };
+    var write = function (push) {
+      var w = [].concat(st.layout === 'grid' ? ['grid'] : [], st.order === 'old' ? ['oldest'] : [], st.tags, st.page > 1 ? ['p' + st.page] : []);
+      try { history[push ? 'pushState' : 'replaceState'](null, '', location.pathname + (w.length ? '?' + w.join('+') : '') + location.hash); } catch (e) {}
+    };
+    var list = function () {
+      var l = all.filter(function (c) { var t = tagsOf(c); return st.tags.every(function (x) { return t.indexOf(x) >= 0; }); });
+      return st.order === 'old' ? l.reverse() : l;
+    };
+    var seg = function (k, v, label) { return '<button type="button" data-' + k + '="' + v + '" aria-pressed="' + (st[k] === v) + '">' + label + '</button>'; };
+    var draw = function () {
+      var l = list(), pages = Math.max(1, Math.ceil(l.length / PER)); st.page = Math.min(st.page, pages);
+      var from = (st.page - 1) * PER, shown = l.slice(from, from + PER);
+      all.forEach(function (c) { c.hidden = shown.indexOf(c) < 0; });
+      shown.forEach(function (c) { cardBox.appendChild(c); });                       // in the order asked for
+      cardBox.classList.toggle('grid', st.layout === 'grid');
+      tools.innerHTML = '<div class="nt-row"><span class="nt-seg" role="group" aria-label="Layout">' + seg('layout', 'grid', 'Grid') + seg('layout', 'list', 'List') + '</span>' +
+        '<span class="nt-seg" role="group" aria-label="Order">' + seg('order', 'new', 'Newest') + seg('order', 'old', 'Oldest') + '</span>' +
+        '<span class="nt-count">' + (l.length > PER ? (from + 1) + '–' + (from + shown.length) + ' of ' + l.length : l.length) + (l.length < all.length ? ' (' + all.length + ' in all)' : ' notes') + '</span></div>' +
+        '<div class="nt-tags" role="group" aria-label="Tags">' + (st.tags.length ? '<button type="button" class="nt-clear" data-tag="">All</button>' : '') +
+        tagList.map(function (t) { var on = st.tags.indexOf(t) >= 0; return '<button type="button" data-tag="' + t + '" aria-pressed="' + on + '"' + (on ? ' class="on"' : '') + '>' + name(t) + ' <i>' + count[t] + '</i></button>'; }).join('') + '</div>' +
+        (l.length ? '' : '<p class="nt-none">Nothing has all of those tags. <button type="button" class="nt-clear" data-tag="">Clear the tags</button></p>');
+      var b = function (p, label, cls) { return '<button type="button" data-page="' + p + '"' + (cls ? ' class="' + cls + '"' : '') + (p === st.page && !cls ? ' aria-current="page"' : '') + '>' + label + '</button>'; };
       var out = [], last = 0;
       for (var p = 1; p <= pages; p++) {
-        if (p !== 1 && p !== pages && Math.abs(p - page) > 1) continue;
+        if (p !== 1 && p !== pages && Math.abs(p - st.page) > 1) continue;
         if (last && p - last > 1) out.push('<span class="gap">…</span>');
         out.push(b(p, p)); last = p;
       }
-      nav.innerHTML = (page > 1 ? b(page - 1, '← Previous', 'step') : '<span class="step"></span>') + '<span class="pages">' + out.join('') + '</span>' +
-        (page < pages ? b(page + 1, 'Next →', 'step') : '<span class="step"></span>');
+      nav.hidden = pages < 2;
+      nav.innerHTML = (st.page > 1 ? b(st.page - 1, '← Previous', 'step') : '<span class="step"></span>') + '<span class="pages">' + out.join('') + '</span>' +
+        (st.page < pages ? b(st.page + 1, 'Next →', 'step') : '<span class="step"></span>');
     };
-    var show = function () { cards.forEach(function (c, i) { c.hidden = i < (page - 1) * PER || i >= page * PER; }); drawNav(); };
-    var go = function (p, push) {
-      if (p === page) return;
-      page = p;
-      try { history[push ? 'pushState' : 'replaceState']({ p: p }, '', location.pathname + (p > 1 ? '?p' + p : '') + location.hash); } catch (e) {}
-      if (reduce) { show(); if (sec.getBoundingClientRect().top < 0) sec.scrollIntoView(); return; }
+    var change = function (fn, glide) {
+      fn(); write(true);
+      if (reduce) { draw(); return; }
       cardBox.classList.add('fading');
       setTimeout(function () {
-        show(); cardBox.classList.remove('fading');
-        if (sec.getBoundingClientRect().top < 0 && window.easeScroll) easeScroll.to(sec);
+        draw(); cardBox.classList.remove('fading');
+        if (glide && sec.getBoundingClientRect().top < 0 && window.easeScroll) easeScroll.to(sec);
       }, 500);
     };
-    nav.addEventListener('click', function (e) { var t = e.target.closest('[data-page]'); if (t) go(+t.getAttribute('data-page'), true); });
-    addEventListener('popstate', function () { go(fromURL(), false); });
-    page = fromURL(); show();
+    nav.addEventListener('click', function (e) { var t = e.target.closest('[data-page]'); if (t) change(function () { st.page = +t.getAttribute('data-page'); }, true); });
+    tools.addEventListener('click', function (e) {
+      var t = e.target.closest('button'); if (!t) return;
+      if (t.hasAttribute('data-layout')) change(function () { st.layout = t.getAttribute('data-layout'); });
+      else if (t.hasAttribute('data-order')) change(function () { st.order = t.getAttribute('data-order'); st.page = 1; });
+      else if (t.hasAttribute('data-tag')) change(function () {
+        var g = t.getAttribute('data-tag'), at = st.tags.indexOf(g);
+        if (!g) st.tags = []; else if (at >= 0) st.tags.splice(at, 1); else st.tags.push(g);
+        st.page = 1;
+      });
+    });
+    addEventListener('popstate', function () { read(); draw(); });
+    read(); draw();
   })();
 
   // Share (a magazine, the newsstand): the phone's own share sheet, else the link copied, the button saying so a while
