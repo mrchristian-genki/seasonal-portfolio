@@ -122,7 +122,9 @@
 
   // ── the cabinet's niches: each holds a few places, its lamp lit while one of them is pointed at or picked. nx, ny: the
   // niche's top left corner on the wide cabinet (2320 x 1116); on the phone's (1116 x 2200) the first six are the row
-  // above the opening, the rest the row below. Objects for the shelves are to come. ──
+  // above the opening, the rest the row below. Each niche's object (Christian's renders, cut out: assets/homestead/
+  // niche-<its first place>) stands on its shelf; OBJ lists those that have arrived. ──
+  var OBJ = ['tubes', 'labs', 'tower', 'observatory', 'workshop'];
   var NICHES = [
     { nx: 95, ny: 160, name: "A.L.T.A.", ids: ['tubes', 'alta'] },
     { nx: 292, ny: 160, name: 'Labs', ids: ['labs'] },
@@ -155,7 +157,10 @@
     var b = document.createElement('button'); b.type = 'button'; b.className = 'hs-niche';
     b.style.cssText = '--nx:' + n.nx + ';--ny:' + n.ny + ';--px:' + ROW[i % 6] + ';--py:' + (i < 6 ? 178 : 1858);
     b.setAttribute('aria-label', n.ids.map(function (id) { return byId(id).name; }).join(', ') + ': show in the village');
-    b.innerHTML = '<span aria-hidden="true">' + n.name + '</span>';
+    var obj = OBJ.indexOf(n.ids[0]) > -1;
+    if (obj) b.classList.add('has');
+    b.innerHTML = (obj ? '<img class="hs-obj" src="' + A + 'niche-' + n.ids[0] + '.webp?v=1" alt="" loading="lazy" decoding="async">' : '') +
+      '<span aria-hidden="true">' + n.name + '</span>';
     b.addEventListener('mouseenter', function () { point(n); });
     b.addEventListener('mouseleave', function () { unpoint(); });
     b.addEventListener('focus', function () { point(n); });
