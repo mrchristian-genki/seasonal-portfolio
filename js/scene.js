@@ -2277,6 +2277,8 @@ function _bootInner() {
   function showViews(view) {
     document.querySelectorAll('.hero-copy .view, .about .view').forEach(v =>
       v.classList.toggle('on', v.getAttribute('data-view') === view));
+    // the village below the lake belongs to Home alone (Christian, Oct 20): css/homestead.css hides it on the others
+    document.documentElement.dataset.view = view;
   }
   function markTabs(view) {
     document.querySelectorAll('.tab[data-view]').forEach(t => t.setAttribute('aria-selected', String(t.dataset.view === view)));
@@ -2287,7 +2289,7 @@ function _bootInner() {
     if (!view || view === VIEW) return;
     VIEW = view;
     markTabs(view);
-    const parts = [$('hero'), $('about')].filter(Boolean);
+    const parts = [$('hero'), $('homestead'), $('about')].filter(Boolean);
     clearTimeout(_viewT);
     if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) { showViews(view); return; }
     parts.forEach(el => el.classList.add('hiding'));
@@ -2865,6 +2867,7 @@ function _bootInner() {
   if (!linkView && linkSeason != null) linkView = SEASON_VIEW[linkSeason];
   VIEW = linkView || 'home';
   markTabs(VIEW);
+  document.documentElement.dataset.view = VIEW;
   if (linkSeason == null) linkSeason = BOOT_SEASON; else SEASON_CHOSEN = true;
   if (linkSeason != null) {  // always runs: the scene is built on spring, so even ?spring must be set
     // Jump straight there: everything travel()/setSeason() would set, without the animation.

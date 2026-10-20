@@ -199,3 +199,10 @@ html.night-page .hs-legend button:hover,html.night-page .hs-legend button:focus-
 /* a place being pointed at (or lit from the legend, or picked) comes in front of its neighbours, so its name plate is
    never hidden behind the building below it */
 .hs-place:hover,.hs-place:focus-visible,.hs-place.lit,.hs-place.picked{z-index:2600!important}
+
+/* the village is Home's alone (Christian, Oct 20): on Web, Workshop and Play the lake leads straight into their words.
+   Switching tabs, it sinks and fades with the words (.hiding, js/scene.js setView) before it goes. */
+html[data-view]:not([data-view="home"]) .homestead{display:none}
+.homestead{transition:opacity .5s ease-in-out}
+.homestead.hiding{opacity:0}
+@media (prefers-reduced-motion:reduce){.homestead{transition:none}}
