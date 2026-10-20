@@ -150,10 +150,10 @@
     b.style.cssText = '--nx:' + n.nx + ';--ny:' + n.ny;
     b.setAttribute('aria-label', n.ids.map(function (id) { return byId(id).name; }).join(', ') + ': show in the village');
     b.innerHTML = '<span aria-hidden="true">' + n.name + '</span>';
-    b.addEventListener('mouseenter', function () { glow(n.ids); readout(byId(n.ids[0]), n); });
-    b.addEventListener('mouseleave', function () { glow(null); readout(zoomed); });
-    b.addEventListener('focus', function () { glow(n.ids); readout(byId(n.ids[0]), n); });
-    b.addEventListener('blur', function () { glow(null); readout(zoomed); });
+    b.addEventListener('mouseenter', function () { point(n); });
+    b.addEventListener('mouseleave', function () { unpoint(); });
+    b.addEventListener('focus', function () { point(n); });
+    b.addEventListener('blur', function () { unpoint(); });
     // a click flies to its place; again, to the next of its places
     b.addEventListener('click', function () {
       var i = zoomed ? n.ids.indexOf(zoomed.id) : -1, pl = plOf(n.ids[(i + 1) % n.ids.length]);
@@ -161,6 +161,23 @@
     });
     n.el = b; win.appendChild(b);
   });
+  // pointing at a niche: its places glow and the readout names them; held a moment, the view eases over to its place
+  // if it's out of sight (Christian, Oct 20). It stays there when the pointer leaves.
+  var peekT = 0;
+  function point(n) {
+    glow(n.ids); readout(byId(n.ids[0]), n);
+    clearTimeout(peekT); peekT = setTimeout(function () { peek(n); }, 600);
+  }
+  function unpoint() { clearTimeout(peekT); glow(null); readout(zoomed); }
+  function peek(n) {
+    if (zoomed || drag) return;
+    var pl = plOf(n.ids[0]); if (!pl || !pl.el) return;
+    var vr = view.getBoundingClientRect(), r = pl.el.getBoundingClientRect();
+    if (r.left >= vr.left && r.right <= vr.right) return;                       // already in sight
+    stopFollow();
+    var W = stage.offsetWidth, b = box(pl.el);
+    setZ(-(b.x + b.w / 2 - W / 2), 0, 1);
+  }
   function byId(id) { for (var i = 0; i < PLACES.length; i++) if (PLACES[i].id === id) return PLACES[i]; }
   function nicheOf(id) { for (var i = 0; i < NICHES.length; i++) if (NICHES[i].ids.indexOf(id) > -1) return NICHES[i]; }
   function lamps(ids) {

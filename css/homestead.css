@@ -228,7 +228,9 @@ html.night-page .hs-bubble b{color:#dde8e6}html.night-page .hs-bubble .hs-go{bac
 .hs-bubble .hs-marquee i{font:800 10px var(--font-display,system-ui);font-style:normal;letter-spacing:.12em;text-transform:uppercase;color:#ffd98a}
 .hs-bubble .hs-marquee a{color:#ffe9b8;text-decoration:none;font-size:12.5px}.hs-bubble .hs-marquee a:hover{color:#7ff5e8}
 
-/* the legend, under the frame: small names; hover one and its place glows, click it to fly there */
+/* the legend, under the frame on a phone: small names; hover one and its place glows, click it to fly there. On a wide
+   screen the cabinet's niches do this, so the legend goes (Christian, Oct 20). */
+@media (min-width:720px){.homestead .hs-legend{display:none}}
 .hs-legend{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 8px;max-width:1100px;margin:14px auto 0;padding:0 16px}
 .hs-legend button{appearance:none;cursor:pointer;border:1px solid #d6dfe1;border-radius:999px;background:#fff;padding:4px 11px;
   font:700 12.5px var(--font-display,system-ui);color:#3f5a64;transition:background-color .6s ease-in-out,color .6s ease-in-out,border-color .6s ease-in-out,transform .5s ease-in-out}
