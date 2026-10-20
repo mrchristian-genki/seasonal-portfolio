@@ -3,29 +3,54 @@
    where he painted it, by its top left corner and width (--x/--y/--w; on a phone --mx/--my/--mw). Everything follows the
    season and the night, and every change eases (CLAUDE.md "Motion"). */
 
-/* The window: Christian's frame (1376 x 768; on a phone 768 x 1376) with the village showing through its opening, the
-   village cropped a little to the opening's shape. The section around it is the page's own colour, so the lake's rolling
-   edge meets it as it meets the words. */
+/* The window: on a wide screen, Christian's curio cabinet (2320 x 1116: his render, its middle widened so the opening is
+   landscape) with the village sliding underneath its opening; on a phone, his frame (768 x 1376) with the village in its
+   opening. The section around it is the page's own colour, so the lake's rolling edge meets it as it meets the words. */
 .homestead{position:relative;padding:0 0 clamp(20px,3vw,44px);background:#fff;transition:background-color 2.4s ease}
 /* clear of the lake's rolling edge (tucked under it, the edge painted over the frame's orrery); with the lake hidden it
    starts below the "Show the lake" bar instead */
 html:not(.lake-off) .homestead{padding-top:clamp(6px,1vw,16px)}
 html.lake-off .homestead{padding-top:clamp(12px,2vw,28px)}
 html.night-page .homestead{background:var(--night-bg,#0e1823)}
-.hs-window{position:relative;width:min(calc(100% - 24px),1500px,calc((100vh - 110px) * 1376 / 818));margin:0 auto;aspect-ratio:1376/818;container-type:inline-size}
-/* The frame is stretched a touch taller than drawn (818 for 768; on a phone 800 wide for 768) so its opening is exactly the
-   painting's shape and none of the village is cut off; all positions are shares of the frame, so they stretch with it. */
-.hs-view{position:absolute;z-index:1;left:calc(169 / 1376 * 100%);top:calc(116 / 768 * 100%);width:calc(1038 / 1376 * 100%);height:calc(546 / 768 * 100%);overflow:hidden;border-radius:2.5cqw;isolation:isolate}
+.hs-window{position:relative;width:min(calc(100% - 24px),2100px,calc((100vh - 70px) * 2320 / 1116));margin:0 auto;aspect-ratio:2320/1116;container-type:inline-size}
+/* the cabinet's opening; the village fills its height and is wider than it, so it can slide from side to side. All
+   positions are shares of the cabinet, so they scale with it. */
+.hs-view{position:absolute;z-index:1;left:calc(622 / 2320 * 100%);top:calc(192 / 1116 * 100%);width:calc(1076 / 2320 * 100%);height:calc(741 / 1116 * 100%);overflow:hidden;border-radius:.3cqw;isolation:isolate;
+  box-shadow:inset 0 0 1.4cqw rgba(20,10,2,.55)}
+.hs-view::after{content:"";position:absolute;inset:0;z-index:5000;pointer-events:none;box-shadow:inset 0 0 1.4cqw rgba(20,10,2,.55)}
 .hs-frame{position:absolute;inset:0;pointer-events:none;z-index:2}
 .hs-frame img{width:100%;height:100%;display:block;transition:filter 2.4s ease-in-out}
 html.night-page .hs-frame img{filter:brightness(.72) saturate(.9)}
-/* the name, engraved on the brass plaque under the control panel */
-.hs-plaque{position:absolute;left:50%;top:calc(738 / 768 * 100%);transform:translate(-50%,-50%);z-index:3;pointer-events:none;white-space:nowrap;
-  font:700 1.25cqw/1 Georgia,"Times New Roman",serif;letter-spacing:.14em;text-transform:uppercase;color:#4a3214;
-  text-shadow:0 1px 0 rgba(255,236,190,.55),0 -1px 0 rgba(40,24,6,.35);transition:opacity 2.4s ease-in-out}
-html.night-page .hs-plaque{opacity:.75}
+/* the readout, in the glass under the opening: "Lake Home", or the place being pointed at, with its line. A new name
+   fades out and in (js/homestead.js readout()). */
+.hs-plaque{position:absolute;left:calc(975 / 2320 * 100%);top:calc(1001 / 1116 * 100%);width:calc(385 / 2320 * 100%);height:calc(58 / 1116 * 100%);z-index:3;pointer-events:none;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.15cqw;overflow:hidden;white-space:nowrap;text-align:center;
+  font:700 1.05cqw/1 Georgia,"Times New Roman",serif;letter-spacing:.14em;text-transform:uppercase;color:#1f3b37;
+  text-shadow:0 1px 0 rgba(255,255,255,.45);transition:opacity .6s ease-in-out,color 2.4s ease-in-out,text-shadow 2.4s ease-in-out}
+.hs-plaque small{max-width:94%;overflow:hidden;text-overflow:ellipsis;font:italic 400 .72cqw/1 Georgia,"Times New Roman",serif;letter-spacing:.02em;text-transform:none;color:#3c5a55}
+.hs-plaque small:empty{display:none}
+.hs-plaque.out{opacity:0}
+html.night-page .hs-plaque{color:#7ff5e8;text-shadow:0 0 .5cqw rgba(127,245,232,.6)}
+html.night-page .hs-plaque small{color:#bdeee8}
+
+/* the niches: each holds a few of the village's places. Point at a place and its niche's lamp fades on under the bell;
+   point at a niche and its places glow; click it and the view eases over to them. */
+.hs-niche{position:absolute;z-index:3;left:calc(var(--nx) / 2320 * 100%);top:calc(var(--ny) / 1116 * 100%);width:calc(145 / 2320 * 100%);height:calc(195 / 1116 * 100%);
+  appearance:none;padding:0;border:0;background:none;cursor:pointer;border-radius:46% 46% 4px 4px / 32% 32% 4px 4px;-webkit-tap-highlight-color:transparent}
+.hs-niche::before{content:"";position:absolute;inset:6% 7% 9%;border-radius:inherit;pointer-events:none;opacity:0;
+  background:radial-gradient(ellipse 60% 48% at 50% 14%,rgba(255,214,130,.85),rgba(255,180,80,.35) 45%,rgba(255,170,60,0) 100%);
+  mix-blend-mode:screen;transition:opacity .9s ease-in-out}
+.hs-niche::after{content:"";position:absolute;left:50%;top:9%;width:12%;aspect-ratio:1;margin-left:-6%;border-radius:50%;pointer-events:none;opacity:0;
+  background:#fff3c4;box-shadow:0 0 .5cqw .2cqw rgba(255,220,130,.95),0 0 1.6cqw .6cqw rgba(255,190,80,.5);transition:opacity .9s ease-in-out}
+.hs-niche.on::before,.hs-niche.on::after,.hs-niche:hover::before,.hs-niche:hover::after,.hs-niche:focus-visible::before,.hs-niche:focus-visible::after{opacity:1}
+.hs-niche span{position:absolute;left:50%;bottom:14%;transform:translateX(-50%);max-width:92%;padding:.18cqw .45cqw;border-radius:.3cqw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  font:700 .62cqw/1.2 Georgia,"Times New Roman",serif;letter-spacing:.04em;color:#f6e3b4;background:rgba(40,24,8,.72);box-shadow:0 0 0 1px rgba(214,170,90,.55);
+  transition:color .9s ease-in-out,background-color .9s ease-in-out}
+.hs-niche.on span,.hs-niche:hover span,.hs-niche:focus-visible span{color:#2c1a06;background:rgba(255,226,150,.92)}
+.hs-niche:focus-visible{outline:2px solid #7ff5e8;outline-offset:2px}
+html.night-page .hs-niche span{color:#cfe9e5}
 .homestead .hs-title{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
-.hs-stage{position:absolute;left:50%;top:50%;width:100%;aspect-ratio:2000/1116;
+.hs-stage{position:absolute;left:50%;top:50%;height:100%;aspect-ratio:2000/1116;
   transform:translate(-50%,-50%) translate(var(--zx,0px),var(--zy,0px)) scale(var(--zs,1));transition:transform 1.6s cubic-bezier(.45,0,.25,1)}
 /* the painted ground: four versions stacked, one showing, like a place's art */
 .hs-paint{position:absolute;inset:0;display:grid}
@@ -81,8 +106,8 @@ html.night-page .hs-name small{color:#a9b8c8}
 html.night-page .hs-butterfly b{background-image:url(../assets/homestead/butterfly-night.webp?v=1)}
 @keyframes hsFlap{from{transform:scaleX(1)}to{transform:scaleX(.55)}}
 @keyframes hsDrift{
-  0%{transform:translate(8vw,24vw) rotate(-6deg)}20%{transform:translate(30vw,14vw) rotate(4deg)}40%{transform:translate(55vw,30vw) rotate(-3deg)}
-  60%{transform:translate(78vw,20vw) rotate(6deg)}80%{transform:translate(48vw,40vw) rotate(-4deg)}100%{transform:translate(8vw,24vw) rotate(-6deg)}}
+  0%{left:8%;top:43%;transform:rotate(-6deg)}20%{left:30%;top:25%;transform:rotate(4deg)}40%{left:55%;top:54%;transform:rotate(-3deg)}
+  60%{left:78%;top:36%;transform:rotate(6deg)}80%{left:48%;top:72%;transform:rotate(-4deg)}100%{left:8%;top:43%;transform:rotate(-6deg)}}
 
 /* the firefly: one glowing pixel; tap it and it fades and drifts somewhere else */
 .hs-firefly{position:absolute;left:calc(var(--fx) / 2000 * 100%);top:calc(var(--fy) / 1116 * 100%);width:26px;height:26px;margin:-13px 0 0 -13px;
@@ -97,8 +122,10 @@ html.night-page .hs-butterfly b{background-image:url(../assets/homestead/butterf
 @media (max-width:719px){
   .hs-window{width:calc(100% - 12px);aspect-ratio:800/1376}
   .hs-view{left:calc(111 / 768 * 100%);top:calc(169 / 1376 * 100%);width:calc(547 / 768 * 100%);height:calc(1020 / 1376 * 100%);border-radius:3cqw}
-  .hs-plaque{left:calc(498 / 768 * 100%);top:calc(1242 / 1376 * 100%);font-size:2.5cqw;color:#3d3a33;text-shadow:0 1px 0 rgba(255,255,255,.45)}
-  .hs-stage{width:auto;height:100%;aspect-ratio:1116/2000}
+  .hs-view::after{display:none}
+  .hs-plaque{left:calc(498 / 768 * 100%);top:calc(1242 / 1376 * 100%);width:auto;height:auto;transform:translate(-50%,-50%);font-size:2.5cqw;color:#3d3a33;text-shadow:0 1px 0 rgba(255,255,255,.45)}
+  .hs-plaque small,.hs-niche{display:none}
+  .hs-stage{aspect-ratio:1116/2000}
   .hs-place{left:calc(var(--mx) / 1116 * 100%);top:calc(var(--my) / 2000 * 100%);width:calc(var(--mw) / 1116 * 100%);z-index:var(--mz)!important}
   .hs-rotor{left:calc((var(--mx) - var(--mw) / 2) / 1116 * 100%);top:calc((var(--my) - var(--mw) / 2) / 2000 * 100%);width:calc(var(--mw) / 1116 * 100%)}
   /* the village is one screen tall here, so names stay hidden (they would crowd it) and show while a place is touched:
@@ -135,6 +162,10 @@ html.night-page .hl-card{background:var(--night-card,#16232f);border-color:var(-
 html.night-page .hl-card b{color:var(--night-text,#dde8e6)}html.night-page .hl-sum{color:var(--night-soft,#a6b8bf)}
 @media (prefers-reduced-motion:reduce){.home-latest,.hl-card{transition:none}.home-latest{opacity:1;transform:none}}
 
+
+/* following the butterfly (js/homestead.js follow()): while nobody is using the village, the view drifts slowly after her */
+.hs-window.drift .hs-stage{transition:transform 7s cubic-bezier(.45,0,.55,1)}
+@media (min-width:720px){.hs-window .hs-view{cursor:grab}}
 
 /* ZOOMING IN (js/homestead.js zoom()): the view eases in on a place like a map, slowly (CLAUDE.md "Motion"). Zoomed in,
    the places nearby wear small labels, the village can be dragged, and a small bubble by the place says what it is */
