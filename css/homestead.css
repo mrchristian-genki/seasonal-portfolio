@@ -50,7 +50,9 @@ html.night-page .hs-plaque small{color:#bdeee8}
 .hs-niche span{position:absolute;left:50%;bottom:14%;transform:translateX(-50%);max-width:92%;padding:.18cqw .45cqw;border-radius:.3cqw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
   font:700 .62cqw/1.2 Georgia,"Times New Roman",serif;letter-spacing:.04em;color:#f6e3b4;background:rgba(40,24,8,.72);box-shadow:0 0 0 1px rgba(214,170,90,.55);
   transition:color .9s ease-in-out,background-color .9s ease-in-out}
-.hs-niche.on span,.hs-niche:hover span,.hs-niche:focus-visible span{color:#2c1a06;background:rgba(255,226,150,.92)}
+/* the name tag, shown only while its niche is lit: a dark brass plate with warm gold letters, readable over the lamp's
+   glow by day and by night */
+.hs-niche.on span,.hs-niche:hover span,.hs-niche:focus-visible span{color:#ffe3a3;background:rgba(34,20,6,.9);box-shadow:0 0 0 1px rgba(232,186,96,.85),0 0 .6cqw rgba(255,190,80,.45)}
 .hs-niche:focus-visible{outline:2px solid #7ff5e8;outline-offset:2px}
 /* its object, standing on the shelf: dim while the niche is dark, warming as its lamp fades on. The name tag shows
    only while the niche is pointed at or lit. */
@@ -60,7 +62,6 @@ html.night-page .hs-plaque small{color:#bdeee8}
 .hs-niche:hover .hs-obj,.hs-niche:focus-visible .hs-obj{transform:translateX(-50%) translateY(-2%)}
 .hs-niche span{bottom:-1%;opacity:0;transition:opacity .9s ease-in-out,color .9s ease-in-out,background-color .9s ease-in-out}
 .hs-niche.on span,.hs-niche:hover span,.hs-niche:focus-visible span{opacity:1}
-html.night-page .hs-niche span{color:#cfe9e5}
 /* the tubes and the readout's glass glow while the village is in use (a place or niche pointed at, or a place picked);
    each cabinet has its own (.hs-for-wide, .hs-for-phone) */
 .hs-glow{z-index:2;opacity:0;background-position:calc(var(--x) * -100cqw / var(--cw)) calc(var(--y) * -100cqw / var(--cw));transition:opacity 1s ease-in-out}
