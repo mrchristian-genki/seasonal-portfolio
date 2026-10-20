@@ -110,20 +110,118 @@
     '<span class="hs-bubbles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>' +
     '<span class="hs-butterfly" aria-hidden="true"><b></b></span>' +
     '<button type="button" class="hs-firefly" aria-label="A firefly"></button>');
-  // The village sits in a window (Christian's frames, Oct 19: assets/homestead/frame-wide and frame-phone): the frame on
-  // top, the village in its opening, cropped a little to fit; the name on the frame's brass plaque.
+  // The village sits in Christian's curio cabinet (Oct 20: assets/homestead/cabinet-wide, and cabinet-phone with its
+  // niches above and below; his renders, their middles stretched), sliding underneath its opening. The name is on the
+  // cabinet's readout.
   var win = document.createElement('div'); win.className = 'hs-window';
   win.innerHTML = '<div class="hs-view"></div><picture class="hs-frame" aria-hidden="true">' +
-    '<source media="(max-width: 719px)" srcset="' + A + 'frame-phone.webp?v=2"><img src="' + A + 'frame-wide.webp?v=2" alt=""></picture>' +
-    '<span class="hs-plaque" aria-hidden="true">Lake Home</span>';
+    '<source media="(max-width: 719px)" srcset="' + A + 'cabinet-phone.webp?v=1"><img src="' + A + 'cabinet-wide.webp?v=2" alt=""></picture>' +
+    '<span class="hs-plaque" aria-hidden="true">Lake Home<small></small></span>';
   win.firstChild.appendChild(stage);
   root.appendChild(win);
+
+  // ── the cabinet's niches: each holds a few places, its lamp lit while one of them is pointed at or picked. nx, ny: the
+  // niche's top left corner on the wide cabinet (2320 x 1116); on the phone's (1116 x 2200) the first six are the row
+  // above the opening, the rest the row below. Each niche's object (Christian's renders, cut out: assets/homestead/
+  // niche-<its first place>) stands on its shelf. ──
+  var NICHES = [
+    { nx: 95, ny: 160, name: "A.L.T.A.", ids: ['tubes', 'alta'] },
+    { nx: 292, ny: 160, name: 'Labs', ids: ['labs'] },
+    { nx: 95, ny: 395, name: 'Tower', ids: ['tower'] },
+    { nx: 95, ny: 628, name: 'Observatory', ids: ['observatory'] },
+    { nx: 292, ny: 628, name: 'Workshop', ids: ['workshop', 'studio'] },
+    { nx: 95, ny: 850, name: 'Marley', ids: ['doghouse', 'starlee'] },
+    { nx: 1885, ny: 160, name: 'House', ids: ['house'] },
+    { nx: 2085, ny: 160, name: 'Library', ids: ['library'] },
+    { nx: 2085, ny: 395, name: 'Newsstand', ids: ['newsstand'] },
+    { nx: 1885, ny: 628, name: 'Barn', ids: ['barn'] },
+    { nx: 2085, ny: 628, name: 'Parts & Garden', ids: ['depot', 'kinetic'] },
+    { nx: 2085, ny: 850, name: 'Outdoors', ids: ['bikepark', 'trailhead', 'climbing', 'tree'] }
+  ];
+  // each cabinet's lit parts that wake while the village is in use (x, y, w, h on that cabinet), and its tubes' glass
+  // for the bubbles
+  var PARTS = {
+    wide: { glow: [[476, 222, 96, 306], [476, 636, 96, 314], [1756, 222, 96, 306], [1756, 636, 96, 314], [950, 990, 442, 78]],
+      tube: [[504, 285, 40, 225], [504, 690, 40, 245], [1784, 285, 40, 225], [1784, 690, 40, 245]] },
+    phone: { glow: [[64, 684, 100, 228], [64, 1288, 100, 258], [954, 684, 100, 228], [954, 1288, 100, 258], [380, 1652, 390, 74]],
+      tube: [[93, 700, 44, 195], [93, 1304, 44, 226], [983, 700, 44, 195], [983, 1304, 44, 226]] }
+  };
+  Object.keys(PARTS).forEach(function (k) {
+    function at(g) { return ' hs-for-' + k + '" aria-hidden="true" style="--x:' + g[0] + ';--y:' + g[1] + ';--w:' + g[2] + ';--h:' + g[3] + '">'; }
+    PARTS[k].glow.forEach(function (g) { win.insertAdjacentHTML('beforeend', '<span class="hs-glow' + at(g) + '</span>'); });
+    PARTS[k].tube.forEach(function (g) { win.insertAdjacentHTML('beforeend', '<span class="hs-tube' + at(g) + '<i></i><i></i><i></i><i></i></span>'); });
+  });
+  var plaque = win.querySelector('.hs-plaque'), said = '', ROW = [85, 250, 413, 578, 743, 900];
+  NICHES.forEach(function (n, i) {
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'hs-niche';
+    b.style.cssText = '--nx:' + n.nx + ';--ny:' + n.ny + ';--px:' + ROW[i % 6] + ';--py:' + (i < 6 ? 178 : 1858);
+    b.setAttribute('aria-label', n.ids.map(function (id) { return byId(id).name; }).join(', ') + ': show in the village');
+    b.innerHTML = '<img class="hs-obj" src="' + A + 'niche-' + n.ids[0] + '.webp?v=1" alt="" loading="lazy" decoding="async">' +
+      '<span aria-hidden="true">' + n.name + '</span>';
+    b.addEventListener('mouseenter', function () { point(n); });
+    b.addEventListener('mouseleave', function () { unpoint(); });
+    b.addEventListener('focus', function () { point(n); });
+    b.addEventListener('blur', function () { unpoint(); });
+    // a click flies to its place; again, to the next of its places
+    b.addEventListener('click', function () {
+      var i = zoomed ? n.ids.indexOf(zoomed.id) : -1, pl = plOf(n.ids[(i + 1) % n.ids.length]);
+      if (pl) zoom(pl.p, pl.el);
+    });
+    n.el = b; win.appendChild(b);
+  });
+  // pointing at a niche: its places glow and the readout names them; held a moment, the view eases over to its place
+  // if it's out of sight (Christian, Oct 20). It stays there when the pointer leaves.
+  var peekT = 0;
+  function point(n) {
+    glow(n.ids); readout(byId(n.ids[0]), n);
+    clearTimeout(peekT); peekT = setTimeout(function () { peek(n); }, 600);
+  }
+  function unpoint() { clearTimeout(peekT); glow(null); readout(zoomed); }
+  function peek(n) {
+    if (zoomed || drag) return;
+    var pl = plOf(n.ids[0]); if (!pl || !pl.el) return;
+    var vr = view.getBoundingClientRect(), r = pl.el.getBoundingClientRect();
+    if (r.left >= vr.left && r.right <= vr.right && r.top >= vr.top && r.bottom <= vr.bottom) return;   // already in sight
+    stopFollow();
+    var W = stage.offsetWidth, Hh = stage.offsetHeight, b = box(pl.el);
+    setZ(-(b.x + b.w / 2 - W / 2), -(b.y + b.h / 2 - Hh / 2), 1);
+  }
+  function byId(id) { for (var i = 0; i < PLACES.length; i++) if (PLACES[i].id === id) return PLACES[i]; }
+  function nicheOf(id) { for (var i = 0; i < NICHES.length; i++) if (NICHES[i].ids.indexOf(id) > -1) return NICHES[i]; }
+  function lamps(ids) {
+    if (!(ids && ids.length) && zoomed) ids = [zoomed.id];               // nothing pointed at: the picked place keeps its lamp
+    NICHES.forEach(function (n) { n.el.classList.toggle('on', !!ids && ids.some(function (id) { return n.ids.indexOf(id) > -1; })); });
+    win.classList.toggle('live', !!(ids && ids.length) || !!zoomed);
+  }
+  // the readout: "Lake Home", or a place and its line; a new name fades out, then in
+  function readout(p, n) {
+    var many = n && n.ids.length > 1;   // a niche of several places: its name, and theirs underneath
+    var t = p ? (many ? n.name : p.name) : 'Lake Home';
+    var sub = p ? (many ? n.ids.map(function (id) { return byId(id).name.replace(/^The /, ''); }).join(' · ') : p.line) : '';
+    if (t + sub === said) return;
+    said = t + sub;
+    plaque.classList.add('out');
+    setTimeout(function () {
+      if (said !== t + sub) return;
+      plaque.firstChild.nodeValue = t; plaque.lastChild.textContent = sub;
+      plaque.classList.remove('out');
+    }, calm ? 0 : 600);
+  }
+  // pointing at a place lights its niche and names it on the readout
+  stage.addEventListener('mouseover', function (ev) {
+    var a = ev.target.closest('.hs-place'); if (!a) return;
+    var pl = places.filter(function (q) { return q.el === a; })[0]; if (!pl) return;
+    lamps(zoomed ? [zoomed.id, pl.p.id] : [pl.p.id]); readout(pl.p);
+  });
+  stage.addEventListener('mouseout', function (ev) {
+    var a = ev.target.closest('.hs-place'); if (!a || a.contains(ev.relatedTarget)) return;
+    lamps(zoomed ? [zoomed.id] : null); readout(zoomed);
+  });
 
   // ── zooming in, like a map (Christian, Oct 19: "less is more; let the user explore the zoomed in scene"): a click on a
   // place eases the view in on it, and a small bubble by it says what it is, with one way in. Zoomed in, the village can
   // be dragged to look around, the places nearby wear small labels, and some have things to find: the real magazines on
-  // the newsstand's rack, what's showing at the barn. A click on the ground, the bubble's ×, or Esc eases back out.
-  // Under the frame, a legend: hover a name and its place glows; click it and the view flies there. ──
+  // the newsstand's rack, what's showing at the barn. A click on the ground, the bubble's ×, or Esc eases back out. ──
   var view = win.firstChild, bubble = document.createElement('div'), zoomed = null, lastFocus = null;
   var Z = { x: 0, y: 0, s: 1 };
   bubble.className = 'hs-bubble'; bubble.setAttribute('role', 'dialog'); bubble.hidden = true;
@@ -145,13 +243,14 @@
     win.classList.add('zoomed'); win.setAttribute('data-z', p.id);
     places.forEach(function (pl) { if (pl.el) pl.el.classList.toggle('picked', pl.p === p); });
     if (!zoomed) lastFocus = el;
-    zoomed = p; say(p, el);
+    zoomed = p; say(p, el); lamps([p.id]); readout(p); stopFollow();
   }
   function unzoom(back) {
     if (!zoomed) return;
     zoomed = null; win.classList.remove('zoomed'); win.removeAttribute('data-z'); hush();
     setZ(0, 0, 1);
     places.forEach(function (pl) { if (pl.el) pl.el.classList.remove('picked'); });
+    lamps(null); readout(null); stopFollow();
     if (back !== false && lastFocus) lastFocus.focus({ preventScroll: true });
   }
   function hush() { bubble.classList.remove('in'); setTimeout(function () { if (!bubble.classList.contains('in')) bubble.hidden = true; }, 600); }
@@ -189,7 +288,9 @@
   // looking around: drag the zoomed village (mouse, pen or a finger); a drag never counts as a click
   var drag = null, dragged = false;
   view.addEventListener('pointerdown', function (ev) {
-    if (!zoomed || ev.button || ev.target.closest('.hs-spot, .hs-show')) return;
+    if (ev.button || ev.target.closest('.hs-spot, .hs-show')) return;
+    if (!zoomed && (ev.pointerType === 'touch' || (stage.offsetWidth <= view.clientWidth + 2 && stage.offsetHeight <= view.clientHeight + 2))) return;   // a finger scrolls the page; or nothing to slide to
+    stopFollow();
     drag = { x: ev.clientX, y: ev.clientY, zx: Z.x, zy: Z.y, id: ev.pointerId }; dragged = false;
   });
   view.addEventListener('pointermove', function (ev) {
@@ -201,6 +302,8 @@
   });
   function endDrag() { if (!drag) return; drag = null; win.classList.remove('dragging'); setTimeout(function () { dragged = false; }, 0); }
   view.addEventListener('pointerup', endDrag); view.addEventListener('pointercancel', endDrag);
+  view.addEventListener('pointerenter', function () { stopFollow(); });
+  view.addEventListener('pointermove', function () { stopFollow(); });
   view.addEventListener('click', function (ev) { if (dragged) { ev.preventDefault(); ev.stopPropagation(); } }, true);
   stage.addEventListener('click', function (ev) { if (zoomed && !ev.target.closest('.hs-place, .hs-spot, .hs-show')) unzoom(); });
   document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape' && zoomed) unzoom(); });
@@ -245,21 +348,34 @@
   }
   spots();
 
-  // ── the legend, under the frame: every place by name; hover or focus a name and its place glows, click it to fly there ──
-  var legend = document.createElement('nav'); legend.className = 'hs-legend'; legend.setAttribute('aria-label', 'Places in the village');
-  legend.innerHTML = PLACES.map(function (p) { return '<button type="button" data-place="' + p.id + '">' + p.name.replace(/^The /, '') + '</button>'; }).join('');
-  root.appendChild(legend);
+  // ── finding a place: the niches (above) light it and fly to it; the legend that did this under the frame went once
+  // every niche had its object (Christian, Oct 20) ──
   function plOf(id) { for (var i = 0; i < places.length; i++) if (places[i].p.id === id) return places[i]; }
-  legend.addEventListener('mouseover', function (ev) { var b = ev.target.closest('[data-place]'); glow(b && b.getAttribute('data-place')); });
-  legend.addEventListener('mouseleave', function () { glow(null); });
-  legend.addEventListener('focusin', function (ev) { var b = ev.target.closest('[data-place]'); glow(b && b.getAttribute('data-place')); });
-  legend.addEventListener('focusout', function () { glow(null); });
-  legend.addEventListener('click', function (ev) {
-    var b = ev.target.closest('[data-place]'); if (!b) return; var pl = plOf(b.getAttribute('data-place')); if (!pl) return;
-    var r = win.getBoundingClientRect();
-    if ((r.top < 0 || r.bottom > innerHeight) && window.easeScroll) easeScroll.to(win, function () { zoom(pl.p, pl.el); }); else zoom(pl.p, pl.el);
-  });
-  function glow(id) { places.forEach(function (pl) { if (pl.el) pl.el.classList.toggle('lit', pl.p.id === id); }); }
+  function glow(ids) { if (typeof ids === 'string') ids = [ids]; places.forEach(function (pl) { if (pl.el) pl.el.classList.toggle('lit', !!ids && ids.indexOf(pl.p.id) > -1); }); lamps(ids); }
+
+  // ── following the butterfly (Christian, Oct 20): while nobody is using the village and it's on screen, the view drifts
+  // slowly after her as she wanders the hill, a few seconds behind and only partway, like a camera keeping an eye on
+  // her. Pointing at the village, dragging it or picking a place stops it at once; ten quiet seconds later it eases
+  // back in. On a phone the view follows her up and down; with reduced motion it holds still. ──
+  var fly = stage.querySelector('.hs-butterfly'), followT = 0, quietT = 0, onScreen = false;
+  function follow() {
+    if (calm || zoomed || drag || !onScreen || document.hidden) return;
+    var W = stage.offsetWidth, Hh = stage.offsetHeight, k = W / stage.getBoundingClientRect().width, sr = stage.getBoundingClientRect(), r = fly.getBoundingClientRect();
+    var bx = (r.left + r.width / 2 - sr.left) * k, by = (r.top + r.height / 2 - sr.top) * k;
+    win.classList.add('drift');
+    setZ(-(bx - W / 2) * .8, -(by - Hh / 2) * .8, 1);
+  }
+  function stopFollow() {
+    clearInterval(followT); followT = 0; clearTimeout(quietT);
+    if (win.classList.contains('drift')) {   // hold the view where it is now, mid-drift
+      var m = getComputedStyle(stage).transform, sr = stage.getBoundingClientRect(), vr = view.getBoundingClientRect();
+      win.classList.remove('drift');
+      if (!zoomed && m && m !== 'none') setZ((sr.left + sr.width / 2) - (vr.left + vr.width / 2), (sr.top + sr.height / 2) - (vr.top + vr.height / 2), 1);
+    }
+    if (!calm) quietT = setTimeout(startFollow, 10000);
+  }
+  function startFollow() { if (followT || calm) return; follow(); followT = setInterval(follow, 4000); }
+  if ('IntersectionObserver' in window) new IntersectionObserver(function (e) { onScreen = e[0].isIntersecting; if (onScreen) startFollow(); }, { threshold: .4 }).observe(view);
 
   function vars(p) {
     return '--x:' + p.x + ';--y:' + p.y + ';--w:' + p.w + ';--mx:' + p.mx + ';--my:' + p.my + ';--mw:' + p.mw + ';z-index:' + Math.round(p.z || p.y) + ';--mz:' + Math.round(p.mz || p.z || p.y) + ';';
