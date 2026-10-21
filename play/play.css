@@ -307,3 +307,16 @@ figure video{display:block;width:100%;border-radius:12px;background:#000}
 .np-row .mag-issue{font-size:9.5px;padding:3px 8px;bottom:22px}
 .np-row .zn-stand-meta{display:none}
 @media (prefers-reduced-motion:reduce){.np-row .zn-stand-item{transition:none}.np-row .zn-stand-item:hover{transform:none}}
+
+/* NIGHT (html.night-page: the lake's Night mode, carried here in the address by js/carry.js): the page goes dark with
+   the lake's own night colours (css/scene.css), so the features' night type (css/feature.css) sits on a dark page */
+html.night-page{--ink:#dde8e6;--ink-2:#a6b8bf;--ink-3:#7d909a;--line:#27384a;--bg:#0e1823;--card:#16232f;--accent:#f06d93;--accent-soft:#3a2230;--hike:#4fc29a}
+html.night-page,html.night-page body{transition:background-color 1s ease-in-out,color 1s ease-in-out}
+html.night-page .bar,html.night-page .playbar{background:rgba(14,24,35,.92)}
+html.night-page .chip,html.night-page .jump a,html.night-page .playbar a{background:var(--card);color:var(--ink)}
+html.night-page .playbar a.on{background:#7ff5e8;border-color:#7ff5e8;color:#0e1823}
+html.night-page .listen,html.night-page .profile .tip{background:#1f3a44;color:#eef6f4}
+html.night-page .post{color:#d4e0de}
+html.night-page .map,html.night-page .card img,html.night-page .card .noimg,html.night-page .tile a{background:#1d2c38}
+html.night-page .ai-badge{background:#2c2440;color:#c9b6f5}
+html.night-page .real-badge{background:#173328;color:#7fd8b0}
