@@ -68,13 +68,7 @@
      "prompt": "A drone photograph from about 100 meters over sea cliffs and white surf in clear morning light, green headland above, deep blue water with lighter reef patches below. Square, natural colour. No people, no boats, no text, no letters, no logos."
     }
    ],
-   "art": {
-    "opener": {
-     "file": "opener.jpg",
-     "source": "real",
-     "v": "tn6cyz"
-    }
-   }
+   "art": {}
   }
  }
 }
