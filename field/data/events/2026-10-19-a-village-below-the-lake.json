@@ -331,51 +331,6 @@
    "ai": true
   },
   {
-   "src": "data/photos/2026-10-19-a-village-below-the-lake/layout-guide.jpg",
-   "caption": "The layout: every place in its spot on the hill, along the path, the stream and the labs' pond.",
-   "w": 1600,
-   "h": 1502,
-   "use": "post",
-   "cover": false,
-   "ai": true
-  },
-  {
-   "src": "data/photos/2026-10-19-a-village-below-the-lake/homestead-winter.jpg",
-   "caption": "The homestead below the lake in winter: every place in its snow version.",
-   "w": 1280,
-   "h": 1400,
-   "use": "post",
-   "cover": false,
-   "ai": true
-  },
-  {
-   "src": "data/photos/2026-10-19-a-village-below-the-lake/homestead-winter-night.jpg",
-   "caption": "Winter at night: the windows lit, and the House glowing under the pointer.",
-   "w": 1280,
-   "h": 900,
-   "use": "post",
-   "cover": false,
-   "ai": true
-  },
-  {
-   "src": "data/photos/2026-10-19-a-village-below-the-lake/homestead-fall-night.jpg",
-   "caption": "A fall night on the hill.",
-   "w": 1280,
-   "h": 1200,
-   "use": "post",
-   "cover": false,
-   "ai": true
-  },
-  {
-   "src": "data/photos/2026-10-19-a-village-below-the-lake/homestead-phone.jpg",
-   "caption": "On a phone, the places come down the hill one or two at a time.",
-   "w": 390,
-   "h": 3000,
-   "use": "post",
-   "cover": false,
-   "ai": true
-  },
-  {
    "src": "data/photos/2026-10-19-a-village-below-the-lake/painted-ground.jpg",
    "caption": "The same painting with every building taken away: the ground the places now stand on.",
    "w": 2000,
@@ -403,15 +358,6 @@
    "ai": true
   },
   {
-   "src": "data/photos/2026-10-19-a-village-below-the-lake/on-the-painted-hill-winter-night.jpg",
-   "caption": "The painted ground at night in winter, its own snow version, the windows lit.",
-   "w": 1440,
-   "h": 900,
-   "use": "post",
-   "cover": false,
-   "ai": true
-  },
-  {
    "src": "data/photos/2026-10-19-a-village-below-the-lake/painted-scene-phone.jpg",
    "caption": "The tall painting for phones: the same village, rearranged down a narrower hill.",
    "w": 1116,
@@ -430,24 +376,6 @@
    "ai": true
   },
   {
-   "src": "data/photos/2026-10-19-a-village-below-the-lake/in-the-window.jpg",
-   "caption": "The village tucked into its window: a slim wooden frame with corner crystals, an orrery and glass tubes of turquoise liquid.",
-   "w": 1440,
-   "h": 900,
-   "use": "post",
-   "cover": false,
-   "ai": true
-  },
-  {
-   "src": "data/photos/2026-10-19-a-village-below-the-lake/in-the-window-fall-night.jpg",
-   "caption": "A fall night through the window.",
-   "w": 1440,
-   "h": 900,
-   "use": "post",
-   "cover": false,
-   "ai": true
-  },
-  {
    "src": "data/photos/2026-10-19-a-village-below-the-lake/in-the-window-phone.jpg",
    "caption": "On a phone, a tall frame of stone and roots, the name on its plaque.",
    "w": 390,
@@ -455,26 +383,65 @@
    "use": "post",
    "cover": false,
    "ai": true
+  },
+  {
+   "src": "data/photos/2026-10-19-a-village-below-the-lake/01.jpg",
+   "caption": "The village at winter time.",
+   "takenAt": null,
+   "w": 1600,
+   "h": 771,
+   "use": "post",
+   "cover": false,
+   "from": "Screenshot 2026-10-21 at 2.06.21 PM.png"
+  },
+  {
+   "src": "data/photos/2026-10-19-a-village-below-the-lake/02.jpg",
+   "caption": "The village at fall or autumn time.",
+   "takenAt": null,
+   "w": 1600,
+   "h": 770,
+   "use": "post",
+   "cover": false,
+   "from": "Screenshot 2026-10-21 at 2.06.05 PM.png"
+  },
+  {
+   "src": "data/photos/2026-10-19-a-village-below-the-lake/03.jpg",
+   "caption": "The village in the summer time.",
+   "takenAt": null,
+   "w": 1600,
+   "h": 771,
+   "use": "post",
+   "cover": false,
+   "from": "Screenshot 2026-10-21 at 2.05.46 PM.png"
+  },
+  {
+   "src": "data/photos/2026-10-19-a-village-below-the-lake/04.jpg",
+   "caption": "The village at spring time.",
+   "takenAt": null,
+   "w": 1600,
+   "h": 742,
+   "use": "post",
+   "cover": false,
+   "from": "Screenshot 2026-10-21 at 2.05.32 PM.png"
   }
  ],
- "fieldNotes": "Drafted by Claude for Christian (Oct 19, 2026) at his request: \"put those into a draft note and discuss the process of the brainstorming and the idea of the village and then the building of the 132 images, all of different states and so forth... while you still have access to your images.\" Every fact is from his messages in that conversation; the plan is field/drafts/homestead.md and the prompts field/drafts/homestead-prompts.md. The contact sheets and comparisons were made by Claude from his renders.\n\nTitle: \"A Village Below the Lake\", or would you rather \"The Lake Home\"? You called it both the Lake Home and the village.\nTitle is good.\n\nWhich tools made the homestead pictures? The Toolbox box only says what the prompts asked for, not which tools rendered them.\nGoogle Flow\n\nYou said 132 pictures; by my count it came to 134 (30 places in four versions, less three nights, plus the 16 extras, the trailhead by day and Marley's house at night, one water wheel sent twice). The Note says \"more than 130\". OK?\nYou are better at counting than I am. go with your number.\n\nSTUDIO FLOOR (showcase) for the magazine, or HIDDEN LAYER like the last two?\nHidden Layer feels better.\n\nThe homestead screenshots are from the draft before it went live. Shall I retake them from the live site once it is?\nYes.",
+ "fieldNotes": "Drafted by Claude for Christian (Oct 19, 2026) at his request: \"put those into a draft note and discuss the process of the brainstorming and the idea of the village and then the building of the 132 images, all of different states and so forth... while you still have access to your images.\" Every fact is from his messages in that conversation; the plan is field/drafts/homestead.md and the prompts field/drafts/homestead-prompts.md. The contact sheets and comparisons were made by Claude from his renders.\n\nTitle: \"A Village Below the Lake\", or would you rather \"The Lake Home\"? You called it both the Lake Home and the village.\nTitle is good.\n\nWhich tools made the homestead pictures? The Toolbox box only says what the prompts asked for, not which tools rendered them.\nGoogle Flow\n\nYou said 132 pictures; by my count it came to 134 (30 places in four versions, less three nights, plus the 16 extras, the trailhead by day and Marley's house at night, one water wheel sent twice). The Note says \"more than 130\". OK?\nYou are better at counting than I am. go with your number.\n\nSTUDIO FLOOR (showcase) for the magazine, or HIDDEN LAYER like the last two?\nHidden Layer feels better.\n\nThe homestead screenshots are from the draft before it went live. Shall I retake them from the live site once it is?\nYes.\n\nMagazine (not part of this draft, set in its panel): switch the masthead from STUDIO FLOOR to HIDDEN LAYER, add Google Flow to the Toolbox, and change \"more than 130\" to 134 in the timeline. OK to do?\nI added a bunch of new clips to show all the different transitions from day to night and all the seasons. Can you add them into their own photo spreads and group them together?\n\nI kept the subhead \"More than 130 pictures\" because the Toolbox sits under it by name; the body now says 134. Rename the subhead to \"134 pictures\" (and move the Toolbox with it)?\nYes. Adjust it all now. New media was added.\n\nReminder: retake the homestead screenshots (homestead-*, on-the-painted-hill*, in-the-window*, painted-scene-phone) from the live site once it is live, before publishing.\nAdded new media.\n\nPhoto spreads are set in the magazine panel, not this draft. Suggested grouping: \"Getting around the village\" (clip-1 to clip-5) and \"Day, night and the seasons\" (clip-6 to clip-11, then 01 to 04 as stills). OK to set them up that way?\nYes\n\nThe subhead is now \"134 pictures\"; the magazine's Toolbox still points to \"More than 130 pictures\" and needs its \"before\" changed to match. OK to change it in the magazine panel?\nYes\n\nStill open from before: switch the masthead to HIDDEN LAYER, add Google Flow to the Toolbox, and change \"more than 130\" to 134 in the timeline?\nok\n\nWere on-the-painted-hill, on-the-painted-hill-phone, in-the-window-phone and painted-scene-phone retaken from the live site, or are they still the pre-launch screenshots?\nthey work.\n\nThe clips show the Village Map, the Screening Barn, the Parts Catalog and the Tumble, none of which the post mentions. Want a line about them, or let the clips speak for themselves?\nYes\n\nThe new line names the Parts Catalog; the post elsewhere calls the place the Parts Depot. Does the Parts Depot open the Parts Catalog, or should the line say Parts Depot?\nSame thing. Parts Catalog and Workshop on the site. in the map they have other names. Part Depot takes to the Parts Catalog.\n\nIs the Screening Barn the same place the magazine timeline calls the \"media barn\"? If so, should the timeline say Screening Barn?\nAll good. They should be the same but pick one. Whatever looks best.",
  "post": {
   "title": "A Village Below the Lake",
-  "body": "For a while now the home page has been doing too many jobs. So I asked: is it time to give Books its own section and make home more of an overall collection of sections and main content? This is what came out of one long conversation on October 19 with Claude, and one long afternoon of making pictures.\n\n## First, the seasons\n\nThe first step went live the same day. The lake now opens in whatever season it is where you are, and a small picker inside the lake lets you choose another one. The tabs no longer change the season. They only change the words, which makes them quicker too.\n\n## Then, a village\n\nHere's how I put it: \"We got a workshop, place to go, build things, have fun in there, like almost like a shed, big workshop. Then we also have a newsstand. We've got our magazines... and then learning area, library.\" The home page would be the lake, and below the lake would be the workshop and the farm, the home, if you will.\n\nFrom there it grew fast. We have a time machine, the Tumble, so it gets an observatory (\"Observatory is perfect rather than university\"). Bike ramps, hiking trails and climbing walls to practice on. Labs near the water. And every place can filter the Notes, so the bike park shows the rides and the trailhead shows the hikes.\n\n## Made with care\n\nTwo of the first ideas, a salvage yard and a garden of scrap robots, felt a little negative to me: trash, unwanted things. So the salvage yard became the Parts Depot, where every part is kept because it's going to become something, and the scrap became the Kinetic Garden, polished sculptures that turn in the wind.\n\nThen the Dao came in, quietly. A water wheel that turns because the stream flows. An uncarved block on the workbench. A footbridge for the joy of the fish. The useless tree that nobody cut down. I wanted it made with care and attention to details and filled with tiny little hidden easter eggs. Enjoying the journey through the world one little pixel at a time.\n\n## A door for the Studio\n\nThe Studio is where Notes get made, and it should be easy to reach if you have a login. So it gets a small glass building with a VIP door. Everyone else can still watch the light show from the coloured liquid flowing through it.\n\nI'd been changing the Studio's colours by the time of day anyway: blue mornings, green daytime, orange nights. Now it does that on its own, with a manual override always there to test and see, and a reset to home time.\n\n## Tubes for A.L.T.A.\n\nA.L.T.A. lives in the lake. I wanted big glass tubes coming up from the grass below the lake, so she can get in and out of it visually without having to touch the lake itself.\n\n## More than 130 pictures\n\nClaude wrote a catalog of prompts: one shared look pasted at the start of every prompt, so the buildings match. Each place stands alone on flat magenta, not green, because the grass, the green liquid and A.L.T.A.'s sea glass would all vanish with a green key. There's no ground and no shadow under them; those are drawn by the site, so the places sit right in any season.\n\nI made the pictures in Google Flow, four versions of each: day, night, day with snow and night with snow. Thirty places at first, then sixteen more pictures for the water wheels, Starlee's shed, Marley's house and the trailhead. All told, it came to 134 pictures.\n\nClaude checked that the four versions of each place line up, and they do, almost to the pixel, so one can fade into the next. Then each was cut out of the magenta, all four to the same frame, with the glow of the lamps kept and the magenta taken back out of it.\n\n## On the hill\n\nThe places now stand on the hill under the lake, along a path, with the stream coming down from the lake to the labs' pond. They follow the lake: snow in winter, and their windows lighting up when night comes, each change a slow fade. Hover over one and it lifts a little and glows; click it and it opens its part of the site, or Play's Notes of its kind: the Bike Park opens the rides.\n\n> Enjoying the journey through the world one little pixel at a time.\n\n## One painted ground\n\nThen I had an idea: paint the whole village as one scene, then take the buildings away. Claude made a guide with every building in its spot; I repainted it as one picture, then had the buildings removed, leaving the hill with its path, stream, waterfall and plots. I made it by day, at night and in snow, like the places. Claude found where each building stood in my painting and set the cut-outs back on their plots, so the separate pictures read as one, and every building can still light up and lift.\n\nThen the seasons: spring meadow flowers, fall leaves and winter snow, each by day and by night. And a second, tall painting of the same village for phones, in all eight versions too.\n\n## A window\n\nOne more idea: the village should be tucked into its own area, like a window. My first frame was too heavy and squeezed the village, so I asked for one much slimmer, with the orrery and the plaque sitting outside the edges instead of eating into the view. Now the village sits in a wooden frame with crystals at the corners, and on phones in a tall frame of stone and roots.\n\n## What comes next\n\nThe crew moves in."
+  "body": "For a while now the home page has been doing too many jobs. So I asked: is it time to give Books its own section and make home more of an overall collection of sections and main content? This is what came out of one long conversation on October 19 with Claude, and one long afternoon of making pictures.\n\n## First, the seasons\n\nThe first step went live the same day. The lake now opens in whatever season it is where you are, and a small picker inside the lake lets you choose another one. The tabs no longer change the season. They only change the words, which makes them quicker too.\n\n## Then, a village\n\nHere's how I put it: \"We got a workshop, place to go, build things, have fun in there, like almost like a shed, big workshop. Then we also have a newsstand. We've got our magazines... and then learning area, library.\" The home page would be the lake, and below the lake would be the workshop and the farm, the home, if you will.\n\nFrom there it grew fast. We have a time machine, the Tumble, so it gets an observatory (\"Observatory is perfect rather than university\"). Bike ramps, hiking trails and climbing walls to practice on. Labs near the water. And every place can filter the Notes, so the bike park shows the rides and the trailhead shows the hikes.\n\n## Made with care\n\nTwo of the first ideas, a salvage yard and a garden of scrap robots, felt a little negative to me: trash, unwanted things. So the salvage yard became the Parts Depot, where every part is kept because it's going to become something, and the scrap became the Kinetic Garden, polished sculptures that turn in the wind.\n\nThen the Dao came in, quietly. A water wheel that turns because the stream flows. An uncarved block on the workbench. A footbridge for the joy of the fish. The useless tree that nobody cut down. I wanted it made with care and attention to details and filled with tiny little hidden easter eggs. Enjoying the journey through the world one little pixel at a time.\n\n## A door for the Studio\n\nThe Studio is where Notes get made, and it should be easy to reach if you have a login. So it gets a small glass building with a VIP door. Everyone else can still watch the light show from the coloured liquid flowing through it.\n\nI'd been changing the Studio's colours by the time of day anyway: blue mornings, green daytime, orange nights. Now it does that on its own, with a manual override always there to test and see, and a reset to home time.\n\n## Tubes for A.L.T.A.\n\nA.L.T.A. lives in the lake. I wanted big glass tubes coming up from the grass below the lake, so she can get in and out of it visually without having to touch the lake itself.\n\n## 134 pictures\n\nClaude wrote a catalog of prompts: one shared look pasted at the start of every prompt, so the buildings match. Each place stands alone on flat magenta, not green, because the grass, the green liquid and A.L.T.A.'s sea glass would all vanish with a green key. There's no ground and no shadow under them; those are drawn by the site, so the places sit right in any season.\n\nI made the pictures in Google Flow, four versions of each: day, night, day with snow and night with snow. Thirty places at first, then sixteen more pictures for the water wheels, Starlee's shed, Marley's house and the trailhead. All told, it came to 134 pictures.\n\nClaude checked that the four versions of each place line up, and they do, almost to the pixel, so one can fade into the next. Then each was cut out of the magenta, all four to the same frame, with the glow of the lamps kept and the magenta taken back out of it.\n\n## On the hill\n\nThe places now stand on the hill under the lake, along a path, with the stream coming down from the lake to the labs' pond. They follow the lake: snow in winter, and their windows lighting up when night comes, each change a slow fade. Hover over one and it lifts a little and glows; click it and it opens its part of the site, or Play's Notes of its kind: the Bike Park opens the rides.\n\nThere's a Village Map too, for getting around: zoom in, pick a place and go. From the map you can choose a magazine, a showing in the Screening Barn, or the Parts Depot, which takes you to the Parts Catalog, or head to the Observatory and on into the Tumble, the time machine.\n\n> Enjoying the journey through the world one little pixel at a time.\n\n## One painted ground\n\nThen I had an idea: paint the whole village as one scene, then take the buildings away. Claude made a guide with every building in its spot; I repainted it as one picture, then had the buildings removed, leaving the hill with its path, stream, waterfall and plots. I made it by day, at night and in snow, like the places. Claude found where each building stood in my painting and set the cut-outs back on their plots, so the separate pictures read as one, and every building can still light up and lift.\n\nThen the seasons: spring meadow flowers, fall leaves and winter snow, each by day and by night. And a second, tall painting of the same village for phones, in all eight versions too.\n\n## A window\n\nOne more idea: the village should be tucked into its own area, like a window. My first frame was too heavy and squeezed the village, so I asked for one much slimmer, with the orrery and the plaque sitting outside the edges instead of eating into the view. Now the village sits in a wooden frame with crystals at the corners, and on phones in a tall frame of stone and roots.\n\n## What comes next\n\nThe crew moves in."
  },
  "questions": [
-  "Magazine (not part of this draft, set in its panel): switch the masthead from STUDIO FLOOR to HIDDEN LAYER, add Google Flow to the Toolbox, and change \"more than 130\" to 134 in the timeline. OK to do?",
-  "I kept the subhead \"More than 130 pictures\" because the Toolbox sits under it by name; the body now says 134. Rename the subhead to \"134 pictures\" (and move the Toolbox with it)?",
-  "Reminder: retake the homestead screenshots (homestead-*, on-the-painted-hill*, in-the-window*, painted-scene-phone) from the live site once it is live, before publishing."
+  "I picked Screening Barn (it's what the map and clips use). The magazine timeline still says \"media barn\"; OK to change it to Screening Barn in the magazine panel?",
+  "The magazine timeline still says \"more than 130\" and the Toolbox still sits under \"More than 130 pictures\"; both need updating in the magazine panel to 134 and \"134 pictures\"."
  ],
  "consent": "No people pictured. No secrets.",
  "feature": {
-  "theme": "studiofloor",
-  "masthead": "STUDIO FLOOR",
-  "tagline": "Makers, in their own words",
-  "issue": "The Ten-Year Issue",
-  "label": "Showcase",
-  "byline": "By GlazyArray, Senior Editor",
+  "theme": "hiddenlayer",
+  "masthead": "HIDDEN LAYER",
+  "tagline": "How the thinking machines actually think",
+  "issue": "The Attention Issue",
+  "label": "Explainer",
+  "byline": "By GlazyArray, AI Correspondent",
   "coverLines": [
    "A village below the lake",
    "Every place by day, by night and in snow",
@@ -518,6 +485,45 @@
     "before": "More than 130 pictures",
     "kicker": "The rules for every picture",
     "text": "One shared look pasted at the start of every prompt, so the buildings match.\n\nFlat magenta behind each place, not green: the grass, the green liquid and A.L.T.A.'s sea glass would vanish with a green key.\n\nNo ground and no shadow under them; the site draws those.\n\nFour versions of each, made as edits of one picture so they line up: day, night, day with snow, night with snow.\n\nNo text, letters or logos in any render. Signs and covers stay blank; the names go on the page."
+   },
+   {
+    "type": "steps",
+    "title": "Step by step",
+    "before": "What comes next",
+    "items": [
+     {
+      "title": "Write one shared look",
+      "text": "Claude wrote a catalog of prompts, with one shared look pasted at the start of every prompt so the buildings match."
+     },
+     {
+      "title": "Stand each place on magenta",
+      "text": "Each place stands alone on flat magenta, not green, because the grass, the green liquid and A.L.T.A.'s sea glass would all vanish with a green key. No ground and no shadow: the site draws those, so the places sit right in any season."
+     },
+     {
+      "title": "Render four versions",
+      "text": "Christian made the pictures in Google Flow, four versions of each: day, night, day with snow and night with snow. Thirty places, then sixteen more pictures, 134 in all."
+     },
+     {
+      "title": "Check that they line up",
+      "text": "Claude checked that the four versions of each place line up, almost to the pixel, so one can fade into the next."
+     },
+     {
+      "title": "Cut them out",
+      "text": "Each was cut out of the magenta, all four to the same frame, with the glow of the lamps kept and the magenta taken back out of it."
+     },
+     {
+      "title": "Paint one ground",
+      "text": "Claude made a guide with every building in its spot; Christian repainted it as one picture, then had the buildings removed, leaving the hill with its path, stream, waterfall and plots."
+     },
+     {
+      "title": "Set them back on their plots",
+      "text": "Claude found where each building stood in the painting and set the cut-outs back, so the separate pictures read as one and every building can still light up and lift."
+     },
+     {
+      "title": "Frame the window",
+      "text": "The village sits in a slim wooden frame with crystals at the corners, and on phones in a tall frame of stone and roots."
+     }
+    ]
    }
   ],
   "qa": {
@@ -556,7 +562,244 @@
    }
   ],
   "coverLabel": "ai",
-  "questions": []
+  "questions": [
+   "The Note doesn't include the text of any prompt (it lives in field/drafts/homestead-prompts.md), so the code block, \"The prompt\", is left out. Can you paste the shared look, or one place's prompt, word for word into the Note so it can be shown?",
+   "The steps block is placed before \"What comes next\" so it sits after the whole making-of. Would you rather it sit right under \"134 pictures\" with the Toolbox?"
+  ],
+  "lookbook": [
+   {
+    "title": "The Village Tour",
+    "dek": "",
+    "before": "Then, a village",
+    "items": [
+     {
+      "name": "",
+      "when": "Zooming in on the village map.",
+      "alt": "Zooming in on the village map.",
+      "src": "data/photos/2026-10-19-a-village-below-the-lake/clip-1.mp4",
+      "w": 960,
+      "h": 540,
+      "video": true,
+      "poster": "data/photos/2026-10-19-a-village-below-the-lake/clip-1.jpg"
+     },
+     {
+      "name": "",
+      "when": "Selecting a magazine using the map.",
+      "alt": "Selecting a magazine using the map.",
+      "src": "data/photos/2026-10-19-a-village-below-the-lake/clip-2.mp4",
+      "w": 960,
+      "h": 540,
+      "video": true,
+      "poster": "data/photos/2026-10-19-a-village-below-the-lake/clip-2.jpg"
+     },
+     {
+      "name": "",
+      "when": "Selecting a showing in the Screening Barn.",
+      "alt": "Selecting a showing in the Screening Barn.",
+      "src": "data/photos/2026-10-19-a-village-below-the-lake/clip-3.mp4",
+      "w": 960,
+      "h": 540,
+      "video": true,
+      "poster": "data/photos/2026-10-19-a-village-below-the-lake/clip-3.jpg"
+     },
+     {
+      "name": "",
+      "when": "Selecting the Parts Catalog using the Village Map.",
+      "alt": "Selecting the Parts Catalog using the Village Map.",
+      "src": "data/photos/2026-10-19-a-village-below-the-lake/clip-4.mp4",
+      "w": 960,
+      "h": 540,
+      "video": true,
+      "poster": "data/photos/2026-10-19-a-village-below-the-lake/clip-4.jpg"
+     },
+     {
+      "name": "",
+      "when": "Selecting the Observatory and going to The Tumble time machine.",
+      "alt": "Selecting the Observatory and going to The Tumble time machine.",
+      "src": "data/photos/2026-10-19-a-village-below-the-lake/clip-5.mp4",
+      "w": 960,
+      "h": 540,
+      "video": true,
+      "poster": "data/photos/2026-10-19-a-village-below-the-lake/clip-5.jpg"
+     }
+    ],
+    "layout": "grid2"
+   },
+   {
+    "title": "The Seasons",
+    "dek": "",
+    "before": "First, the seasons",
+    "items": [
+     {
+      "name": "",
+      "when": "Changing from night mode to day mode.",
+      "alt": "Changing from night mode to day mode.",
+      "src": "data/photos/2026-10-19-a-village-below-the-lake/clip-6.mp4",
+      "w": 960,
+      "h": 540,
+      "video": true,
+      "poster": "data/photos/2026-10-19-a-village-below-the-lake/clip-6.jpg"
+     },
+     {
+      "name": "",
+      "when": "Changing from Fall to Winter.",
+      "alt": "Changing from Fall to Winter.",
+      "src": "data/photos/2026-10-19-a-village-below-the-lake/clip-7.mp4",
+      "w": 960,
+      "h": 540,
+      "video": true,
+      "poster": "data/photos/2026-10-19-a-village-below-the-lake/clip-7.jpg"
+     },
+     {
+      "name": "",
+      "when": "The village changing from Spring to Winter at night time.",
+      "alt": "The village changing from Spring to Winter at night time.",
+      "src": "data/photos/2026-10-19-a-village-below-the-lake/clip-8.mp4",
+      "w": 960,
+      "h": 540,
+      "video": true,
+      "poster": "data/photos/2026-10-19-a-village-below-the-lake/clip-8.jpg"
+     },
+     {
+      "name": "",
+      "when": "The village changing from Winter to Fall in the day time.",
+      "alt": "The village changing from Winter to Fall in the day time.",
+      "src": "data/photos/2026-10-19-a-village-below-the-lake/clip-9.mp4",
+      "w": 960,
+      "h": 540,
+      "video": true,
+      "poster": "data/photos/2026-10-19-a-village-below-the-lake/clip-9.jpg"
+     },
+     {
+      "name": "",
+      "when": "The village changing from Fall to Summer in the Day time.",
+      "alt": "The village changing from Fall to Summer in the Day time.",
+      "src": "data/photos/2026-10-19-a-village-below-the-lake/clip-10.mp4",
+      "w": 960,
+      "h": 540,
+      "video": true,
+      "poster": "data/photos/2026-10-19-a-village-below-the-lake/clip-10.jpg"
+     },
+     {
+      "name": "",
+      "when": "The village changing from Summer to Spring in the day time.",
+      "alt": "The village changing from Summer to Spring in the day time.",
+      "src": "data/photos/2026-10-19-a-village-below-the-lake/clip-11.mp4",
+      "w": 960,
+      "h": 540,
+      "video": true,
+      "poster": "data/photos/2026-10-19-a-village-below-the-lake/clip-11.jpg"
+     }
+    ],
+    "label": "ai",
+    "layout": "grid2"
+   },
+   {
+    "title": "More than 130 Images",
+    "dek": "",
+    "before": "134 pictures",
+    "items": [
+     {
+      "name": "",
+      "when": "All thirty places by day, straight from the renders.",
+      "alt": "All thirty places by day, straight from the renders.",
+      "src": "data/photos/2026-10-19-a-village-below-the-lake/sheet-day.jpg",
+      "w": 1808,
+      "h": 848
+     },
+     {
+      "name": "",
+      "when": "The Newsstand, four ways: by day, at night, and both again in snow. Every place on the hill came like this, all four lined up so the site can fade from one to the next.",
+      "alt": "The Newsstand, four ways: by day, at night, and both again in snow. Every place on the hill came like this, all four lined up so the site can fade from one to the next.",
+      "src": "data/photos/2026-10-19-a-village-below-the-lake/newsstand-four-ways.jpg",
+      "w": 1376,
+      "h": 768
+     },
+     {
+      "name": "",
+      "when": "Winter by day.",
+      "alt": "Winter by day.",
+      "src": "data/photos/2026-10-19-a-village-below-the-lake/sheet-day-snow.jpg",
+      "w": 1808,
+      "h": 848
+     },
+     {
+      "name": "",
+      "when": "The same places at night: windows lit, lamps glowing turquoise.",
+      "alt": "The same places at night: windows lit, lamps glowing turquoise.",
+      "src": "data/photos/2026-10-19-a-village-below-the-lake/sheet-night.jpg",
+      "w": 1808,
+      "h": 848
+     },
+     {
+      "name": "",
+      "when": "Winter at night.",
+      "alt": "Winter at night.",
+      "src": "data/photos/2026-10-19-a-village-below-the-lake/sheet-night-snow.jpg",
+      "w": 1808,
+      "h": 848
+     },
+     {
+      "name": "",
+      "when": "Two water wheels, one open with a lantern and one under a little roof.",
+      "alt": "Two water wheels, one open with a lantern and one under a little roof.",
+      "src": "data/photos/2026-10-19-a-village-below-the-lake/water-wheels.jpg",
+      "w": 1376,
+      "h": 768
+     },
+     {
+      "name": "",
+      "when": "The trailhead: the shelter, the signpost, the bench, the register box and the first mile markers, every sign left blank.",
+      "alt": "The trailhead: the shelter, the signpost, the bench, the register box and the first mile markers, every sign left blank.",
+      "src": "data/photos/2026-10-19-a-village-below-the-lake/trailhead.jpg",
+      "w": 1376,
+      "h": 768
+     },
+     {
+      "name": "",
+      "when": "Marley's house, four ways.",
+      "alt": "Marley's house, four ways.",
+      "src": "data/photos/2026-10-19-a-village-below-the-lake/doghouse-four-ways.jpg",
+      "w": 1376,
+      "h": 768
+     },
+     {
+      "name": "",
+      "when": "A.L.T.A.'s glass tubes, her way in and out of the lake without the lake itself being touched.",
+      "alt": "A.L.T.A.'s glass tubes, her way in and out of the lake without the lake itself being touched.",
+      "src": "data/photos/2026-10-19-a-village-below-the-lake/altas-tubes.jpg",
+      "w": 1376,
+      "h": 768
+     },
+     {
+      "name": "",
+      "when": "The Studio on the hill: glass walls and the heart inside, with a door only a login opens.",
+      "alt": "The Studio on the hill: glass walls and the heart inside, with a door only a login opens.",
+      "src": "data/photos/2026-10-19-a-village-below-the-lake/studio-at-night.jpg",
+      "w": 1376,
+      "h": 768
+     },
+     {
+      "name": "",
+      "when": "As it came, on magenta, and cut out onto the grass.",
+      "alt": "As it came, on magenta, and cut out onto the grass.",
+      "src": "data/photos/2026-10-19-a-village-below-the-lake/the-cut.jpg",
+      "w": 1376,
+      "h": 384
+     },
+     {
+      "name": "",
+      "when": "Ten of the places cut out, by day over grass and by night over dark ground, lamp halos and all.",
+      "alt": "Ten of the places cut out, by day over grass and by night over dark ground, lamp halos and all.",
+      "src": "data/photos/2026-10-19-a-village-below-the-lake/cut-outs-day-and-night.jpg",
+      "w": 1600,
+      "h": 278
+     }
+    ],
+    "layout": "grid3",
+    "label": "ai"
+   }
+  ]
  },
  "episode": {
   "title": "A Village Below the Lake",
@@ -568,7 +811,7 @@
    "Made with care",
    "A door for the Studio",
    "Tubes for A.L.T.A.",
-   "More than 130 pictures",
+   "134 pictures",
    "On the hill",
    "One painted ground",
    "A window",
