@@ -211,14 +211,6 @@
     "items": [
      {
       "name": "",
-      "when": "Hoofprints along the waterline, with yellowing brush and the hills behind.",
-      "alt": "Hoofprints along the waterline, with yellowing brush and the hills behind.",
-      "src": "data/photos/2026-10-21-washoe-lake-morning/02.jpg",
-      "w": 1600,
-      "h": 900
-     },
-     {
-      "name": "",
       "when": "A quick flight down the beach.",
       "alt": "A quick flight down the beach.",
       "src": "data/photos/2026-10-21-washoe-lake-morning/clip-2.mp4",
@@ -229,6 +221,14 @@
      },
      {
       "name": "",
+      "when": "Hoofprints along the waterline, with yellowing brush and the hills behind.",
+      "alt": "Hoofprints along the waterline, with yellowing brush and the hills behind.",
+      "src": "data/photos/2026-10-21-washoe-lake-morning/02.jpg",
+      "w": 1600,
+      "h": 900
+     },
+     {
+      "name": "",
       "when": "Washoe Lake from above: still water, low cloud and a wide muddy shoreline crossed by tire tracks.",
       "alt": "Washoe Lake from above: still water, low cloud and a wide muddy shoreline crossed by tire tracks.",
       "src": "data/photos/2026-10-21-washoe-lake-morning/01.jpg",
@@ -236,7 +236,7 @@
       "h": 900
      }
     ],
-    "layout": "strip",
+    "layout": "hero2",
     "label": "real"
    },
    {
