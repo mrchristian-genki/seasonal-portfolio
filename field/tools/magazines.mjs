@@ -46,6 +46,8 @@ ${shareMeta(title, desc, url, image, meta || {})}${meta && meta.ld ? `\n<script 
 ${fonts(fontIds)}
 <link rel="stylesheet" href="/css/feature.css?v=${V}">
 <link rel="stylesheet" href="/css/magazine.css?v=${V}">
+<script src="/js/carry.js?v=3"></script>
+<script src="/js/daynight.js?v=${V}"></script>
 </head><body class="zine-body">
 ${body}
 <script src="/js/motion.js?v=2" defer></script>
@@ -117,7 +119,7 @@ html,body{margin:0;width:1200px;height:630px;overflow:hidden}
 <span class="zn-by">${G.byline ? esc(G.byline) + ' · ' : ''}<time datetime="${esc(p.e.date)}">${day(p.e.date, true)}</time></span><span class="zn-read">Read the story →</span></span></a>${coverBadge(p) ? `<p class="zn-label">${coverBadge(p)}</p>` : ''}</article>`; };
     const others = live.filter((x) => x !== t);
     const body = `<main class="feature mag-${esc(t.id)} zine"${tex ? ` style="--zn-tex:url('${esc(tex.src)}')"` : ''}>
-<nav class="zn-top" aria-label="The newsstand"><a href="/magazine/">← The newsstand</a><a href="/">christiangehrke.com</a></nav>
+<nav class="zn-top" aria-label="The newsstand"><a href="/magazine/">← The newsstand</a><span class="zn-top-r"><button type="button" class="zn-share zn-dn" data-daynight aria-pressed="false">Night</button><a href="/">christiangehrke.com</a></span></nav>
 <header class="mag-cover zn-cover"><div class="mag-img">${coverImg}</div>
 <div class="mag-top"><h1 class="mag-mast">${mast(t)}</h1>${t.tagline ? `<span class="mag-tag">${esc(t.tagline)}</span>` : ''}</div>
 <span class="mag-issue">${esc(F.issue || t.issue || '')}</span>${(F.coverLines || []).length ? `<ul class="mag-lines">${F.coverLines.slice(0, 4).map((l) => `<li>${esc(l)}</li>`).join('')}</ul>` : ''}</header>
@@ -140,7 +142,7 @@ ${spread.length ? `<section class="mag-book zn-logbook"><h2 class="sub">From the
     cardJobs.push({ page: `/magazine/_cards/${slug}.html`, out: `magazine/${slug}/card.jpg` });
     const desc = `${t.category}: ${ps.length} ${ps.length === 1 ? 'story' : 'stories'} from Christian Gehrke's Field Notes, in ${t.masthead}, a made-up magazine.`;
     const html = page(`${nice(t)}: ${t.category.toLowerCase()} stories · Christian Gehrke`, desc, url, `${url}card.jpg?v=${stamp(lead.e.id + ps.length + t.masthead + (t.tagline || ''))}`,
-      body.replace('<a href="/">christiangehrke.com</a></nav>', `<button type="button" class="zn-share" data-share-url="${esc(url)}" data-share-title="${esc(t.masthead)}" data-share-text="${esc(t.tagline || desc)}">Share</button><a href="/">christiangehrke.com</a></nav>`),
+      body.replace('<a href="/">christiangehrke.com</a></span></nav>', `<button type="button" class="zn-share" data-share-url="${esc(url)}" data-share-title="${esc(t.masthead)}" data-share-text="${esc(t.tagline || desc)}">Share</button><a href="/">christiangehrke.com</a></span></nav>`),
       [t.id, ...others.map((o) => o.id)], { w: 1200, h: 630, alt: `${t.masthead}, a made-up magazine of Christian Gehrke's Field Notes: its cover`,
         ld: { '@context': 'https://schema.org', '@type': 'CollectionPage', name: nice(t), description: desc, url, author: PERSON, inLanguage: 'en',
           isPartOf: { '@type': 'CollectionPage', name: 'The newsstand', url: `${ROOT}magazine/` },
@@ -151,7 +153,7 @@ ${spread.length ? `<section class="mag-book zn-logbook"><h2 class="sub">From the
   // ---- the newsstand ----
   const total = live.reduce((a, t) => a + byMag[t.id].length, 0);
   const stand = `<main class="zine zn-newsstand">
-<nav class="zn-top" aria-label="The site"><a href="/play/">← Play</a><button type="button" class="zn-share" data-share-url="${esc(ROOT)}magazine/" data-share-title="The newsstand" data-share-text="Made-up magazines, real stories">Share</button></nav>
+<nav class="zn-top" aria-label="The site"><a href="/play/">← Play</a><span class="zn-top-r"><button type="button" class="zn-share zn-dn" data-daynight aria-pressed="false">Night</button><button type="button" class="zn-share" data-share-url="${esc(ROOT)}magazine/" data-share-title="The newsstand" data-share-text="Made-up magazines, real stories">Share</button></span></nav>
 <header class="zn-stand-head"><p class="zn-kicker">The newsstand</p><h1>Made-up magazines, real stories</h1>
 <p class="zn-lede">${live.length} magazines, ${total} stories. Each one is a Field Note dressed as a feature in a magazine that doesn't exist: biking, hiking, drones, the workshop and more. A magazine turns up here as soon as it has a story.</p></header>
 <div class="zn-rack">${live.map((t) => standCover(t, '')).join('\n')}</div>
