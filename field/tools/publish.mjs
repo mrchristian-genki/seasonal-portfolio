@@ -337,6 +337,29 @@ for (const e of events) {
     return `<figure class="mag-look${wide}"><a href="../media/${e.id}/${f}" data-lightbox><img src="../media/${e.id}/${f}" alt="${alt}" width="${x.w}" height="${x.h}" loading="lazy"></a>${cap}</figure>`;
   }).join('')}</div>${lab === 'real' ? `<p class="mag-book-ai">${REALB('Real photographs')}</p>` : lab === 'ai' ? `<p class="mag-book-ai">${AIB}</p>` : ''}</section>\n`; };
   const lbDone = new Set();
+  // A spread that names no subhead (or one the story doesn't have) goes beside the paragraph it's about (Christian,
+  // Oct 21: all of a Note's pictures had piled up after its story): the paragraph whose words share the most with the
+  // spread's title and captions, rare words counting for more than ones every paragraph has (the lake's own name);
+  // with nothing clearly shared, the spreads are spaced through the story instead. One spread to a paragraph.
+  const lbAt = {};
+  {
+    const STOP = new Set('about above after again also because been before being below between both came come could down each even every from have here into just like little made make more most much near never only other over really same should some still such than that their them then there these they this those through very want wanted were what when where which while with would your'.split(' '));
+    const toks = (t) => String(t || '').toLowerCase().replace(/[\u2019']/g, '').split(/[^a-z]+/).filter((w) => w.length > 3 && !STOP.has(w)).map((w) => w.replace(/(ies)$/, 'y').replace(/s$/, ''));
+    const spots = ps.map((p, i) => /^(## |> |What I learned:)/i.test(p) ? null : { i, w: new Set(toks(p)) }).filter(Boolean);
+    const df = {}; spots.forEach((x) => x.w.forEach((w) => { df[w] = (df[w] || 0) + 1; }));
+    const named = new Set(ps.filter((p) => /^## /.test(p)).map((p) => p.slice(3)));
+    const same = (a, b) => String(a || '').replace(/[\u2019]/g, "'") === String(b || '').replace(/[\u2019]/g, "'");
+    const free = LBS.map((b, n) => n).filter((n) => !LBS[n].before || ![...named].some((h) => same(LBS[n].before, h)));
+    const taken = new Set(), rest = [];
+    free.forEach((n) => {
+      const b = LBS[n], w = new Set(toks([b.title, b.dek].concat((b.items || []).map((x) => [x.when, x.alt, x.name].join(' '))).join(' ')));
+      let best = null, top = 0;
+      spots.forEach((x) => { if (taken.has(x.i)) return; let sc = 0; w.forEach((t) => { if (x.w.has(t)) sc += Math.log(1 + spots.length / df[t]); }); if (sc > top) { top = sc; best = x.i; } });
+      if (best != null && top >= 1.5) { lbAt[n] = best; taken.add(best); } else rest.push(n);
+    });
+    const open = spots.filter((x) => !taken.has(x.i));
+    rest.forEach((n, k) => { const x = open[Math.min(open.length - 1, Math.round((k + 1) * open.length / (rest.length + 1)))]; if (x) { lbAt[n] = x.i; taken.add(x.i); } });
+  }
   // A feature's blocks (e.feature.blocks), the furniture any magazine template can use, each set just before the
   // subhead it names ("before"; at the end of the story if none): a spec box ("specs": rows of [label, value]), a
   // sidebar ("box": a kicker, a title, text and an optional picture of the Note's), a verdict ("verdict": a score,
@@ -372,8 +395,9 @@ for (const e of events) {
     else body += m ? `<p class="learned"><b>What I learned:</b> ${esc(p.slice(m[0].length))}</p>\n` : `<p>${esc(p)}</p>\n`;
     inline.forEach((u, k) => { if (slots[k] === i) body += (u.stack ? u.map((ph) => fig(ph, ph.strip ? 'photo strip' : '')).join('\n') : u.length > 1 ? `<div class="duo">${u.map((ph) => fig(ph)).join('')}</div>` : fig(u[0], tall(u[0]) ? 'photo tall' : '')) + '\n'; });
     if (i === tableSlot) body += tableFig() + '\n';
+    LBS.forEach((b, n) => { if (!lbDone.has(n) && lbAt[n] === i) { body += bookHtml(b, n); lbDone.add(n); } });
   });
-  LBS.forEach((b, n) => { if (!lbDone.has(n)) body += bookHtml(b, n); });   // its subhead wasn't found: at the end of the story
+  LBS.forEach((b, n) => { if (!lbDone.has(n)) body += bookHtml(b, n); });   // a story with no paragraphs to set it by: at the end
   FB.forEach((b, k) => { if (!placed.has(k)) body += blockHtml(b); });   // blocks whose subhead wasn't found, or that name none: at the end
 
   // A FEATURE (a profile, written like a magazine cover story: e.feature): the cover becomes a magazine cover with its
