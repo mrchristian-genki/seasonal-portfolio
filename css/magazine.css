@@ -95,3 +95,25 @@
 .lightbox .lb-in.lb-swap{opacity:0;transform:translateX(var(--dx,0))}
 .lightbox [hidden]{display:none}
 @media (prefers-reduced-motion:reduce){.lightbox .lb-in{transition:none}}
+
+/* the top bar's buttons sit together on the right: Day/Night (js/daynight.js) and Share */
+.zn-top-r{display:flex;align-items:center;gap:12px}
+.zn-dn{min-width:4.6em}
+
+/* NIGHT (html.night-page: night or day in the address, the look carried from another page, else the reader's own
+   setting; js/daynight.js). The page goes dark with the lake's night colours; each magazine keeps its own night accent
+   and type (css/feature.css html.night-page .feature.mag-<id>); its paper texture dims under the dark. Every change
+   eases (CLAUDE.md "Motion"). */
+.zine-body{transition:background-color 1s ease-in-out,color 1s ease-in-out}
+html.night-page .zine-body{background:#0e1823;color:#dde8e6}
+html.night-page .zine.feature{background-color:#0e1823;background-blend-mode:multiply}
+html.night-page .zine.feature,html.night-page .zn-newsstand{--mg-paper:#16232f}
+html.night-page .zine .zn-cap a{color:var(--mg-ink)}
+html.night-page .zn-stand-meta{color:#a6b8bf}html.night-page .zn-stand-meta b{color:#dde8e6}
+html.night-page .zn-lede{color:#a6b8bf}html.night-page .zn-newsstand .zn-kicker{color:#f06d93}
+html.night-page .zn-foot{border-top-color:rgba(255,255,255,.12);color:#8fa2a7}
+html.night-page .zn-more h2{color:#a6b8bf}
+html.night-page .zn-newsstand{--mg-ink:#dde8e6;--mg-ink2:#a6b8bf;--mg-rule:#27384a}
+html.night-page .ai-badge{background:#2c2440;color:#c9b6f5}
+html.night-page .real-badge{background:#173328;color:#7fd8b0}
+@media (prefers-reduced-motion:reduce){.zine-body{transition:none}}
