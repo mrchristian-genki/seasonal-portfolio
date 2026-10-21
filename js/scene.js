@@ -2258,12 +2258,12 @@ function _bootInner() {
   // asks, and the tabs only swap the page's words, with a short fade, no season change. Before that each tab was
   // a season (Books summer, Web fall, Workshop winter, Play spring); SEASON_VIEW keeps that pairing so an old
   // link with a season word and no section word still opens the section it used to.
-  const SEASON_VIEW = { 2:'home', 3:'signal', 0:'workshop', 1:'lab' };   // Books (summer) is a page now: summer opens the welcome
+  const SEASON_VIEW = { 2:'home', 3:'signal', 0:'workshop', 1:'lab' };   // summer (Books until Oct 19) opens the welcome
   // The season by the calendar: Dec-Feb winter, Mar-May spring, Jun-Aug summer, Sep-Nov fall (as the logo's).
   const CAL_SEASON = [0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 0][new Date().getMonth()];
   const BOOT_SEASON = CAL_SEASON;
   // Section (view) <-> its word in the address. The Play tab's view is still called 'lab' inside.
-  const VIEW_WORD = { home:'home', signal:'web', workshop:'workshop', lab:'lab' };   // Home names itself too (Christian, Oct 20)
+  const VIEW_WORD = { home:'home', books:'books', signal:'web', workshop:'workshop', lab:'lab' };   // Home names itself too (Christian, Oct 20)
   let VIEW = 'home';             // the section showing: the Lake Home welcome unless a tab or a link asks
   let SEASON_CHOSEN = false;     // a season was picked (or asked for by the address), so links carry it
   // tod target per season (currently all 0.50, midday).
@@ -2837,15 +2837,15 @@ function _bootInner() {
   // ── SHAREABLE LINKS ──────────────────────────────────────────────────────
   // The address can set the scene: ?summer+night, ?winter, ?fall+day, ?night. Words combine with
   // + (or & , or spaces) in any order. Seasons: spring summer fall/autumn winter, or the tab
-  // names home web workshop lab (the Play tab is lab, since play already means the whole year). With no season the page opens on BOOT_SEASON. Also: day, night (or nightmode, darkmode, dark: the page around the scene goes dark too), play (plays the whole year). Animal names
+  // names home books web workshop lab (the Play tab is lab, since play already means the whole year). With no season the page opens on BOOT_SEASON. Also: day, night (or nightmode, darkmode, dark: the page around the scene goes dark too), play (plays the whole year). Animal names
   // (?fox, ?summer+night+owl) bring that animal in once the wildlife loads (wildlife.js).
   // The page opens straight on that look (no crossfade), and the address bar follows every
   // season/night change after that, so the current view can always be copied and shared.
   // Other flags (?bench ?fps ?wildlife ?diag) are left as they are.
   const LINK_SEASON = { spring: 1, summer: 2, fall: 3, autumn: 3, winter: 0 };
-  // Sections: home web workshop lab (Play), and Play's own sections open the Play tab on that section:
+  // Sections: home books web workshop lab (Play), and Play's own sections open the Play tab on that section:
   // ?daydreams, ?above, ?notes, ?newsstand.
-  const LINK_VIEW = { home: 'home', web: 'signal', workshop: 'workshop', lab: 'lab',
+  const LINK_VIEW = { home: 'home', books: 'books', web: 'signal', workshop: 'workshop', lab: 'lab',
     notes: 'lab', dose: 'lab', above: 'lab', daydreams: 'lab', newsstand: 'lab' };
   // Weather levels: each word sets how hard it rains (or snows, in winter). Light, medium, full.
   // Rain: drizzle, shower, tempest. Snow: flurries, snow, blizzard. (Older words kept as aliases.)

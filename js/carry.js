@@ -18,7 +18,7 @@
   var NIGHT = /^(night|nightmode|darkmode|dark)$/, DAY = /^(day|daymode|lightmode|light)$/, LAKE = /^(ylake|nlake)$/;
   // the weather words scene.js knows (STORM_LEVELS)
   var WEATHER = /^(drizzle|shower|tempest|flurries|snow|blizzard|rain|downpour|snowfall|snowstorm|storm|thunder|heavyrain)$/;
-  var SECTION = /^(home|web|workshop|lab|notes|dose|above|daydreams|newsstand)$/i;   // the lake page's sections (scene.js LINK_VIEW)
+  var SECTION = /^(home|books|web|workshop|lab|notes|dose|above|daydreams|newsstand)$/i;   // the lake page's sections (scene.js LINK_VIEW)
   function kind(w) { return w in SEASON ? 'season' : NIGHT.test(w) || DAY.test(w) ? 'light' : LAKE.test(w) ? 'lake' : WEATHER.test(w) ? 'weather' : ''; }
   function words(q) { return decodeURIComponent(q || '').replace(/^\?/, '').split(/[+&,;\s]+/).map(function (w) { return w.split('=')[0]; }).filter(Boolean); }
   function look(ws) { return ws.map(function (w) { return w.toLowerCase(); }).filter(kind); }

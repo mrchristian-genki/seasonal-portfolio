@@ -20,7 +20,7 @@ The address after `?` is words joined by `+`, in any order.
 
 | Page | Words | Owner |
 |---|---|---|
-| the lake page `/` | `home` `web` `workshop` `lab` | `js/scene.js` (VIEW_WORD) |
+| the lake page `/` | `home` `books` `web` `workshop` `lab` | `js/scene.js` (VIEW_WORD) |
 | | Play's sections `notes` `dose` `above` `daydreams` `newsstand`, a Note or series id, `grid` `list` `oldest` `p2`, tags | `js/play-inline.js` |
 | | a Workshop project's slug | `js/ws-cards.js` |
 | | `about`, `beach` | `js/about.js`, `js/getaway.js` |
@@ -33,7 +33,7 @@ The address after `?` is words joined by `+`, in any order.
 - `js/carry.js` (on every page, in the head) adds the look to any link to another of the site's pages as it's
   followed. A word the link already names stays the link's. It also keeps the look in the tab's session, so a page
   reached by `location.href` (the village's doors) or typed in still gets it.
-- A page with no lake (Books, Play's pages, the Tumble, About, Privacy) shows the season and night where its styles
+- A page with no lake (Play's pages, the Tumble, About, Privacy) shows the season and night where its styles
   follow `html[data-season]` and `html.night-page`, and writes the look into its own address, so Back, a reload and
   a copied link keep it.
 - A link to the lake page with no section gets `home` (a season alone there opens the section it used to mean:
@@ -44,8 +44,8 @@ The address after `?` is words joined by `+`, in any order.
 
 | Page | Lake | Look shown | Look carried |
 |---|---|---|---|
-| `/` Home, Web, Workshop, Play tabs | yes | all of it | yes |
-| `coloring-books/` Books | no | logo, shelf | yes |
+| `/` Home, Books, Web, Workshop, Play tabs | yes | all of it | yes |
+| `coloring-books/` | sends its visitors to the Books tab (`?books`), with their look and any `#part` | | yes |
 | `play/…` Play's pages (built by `field/tools/publish.mjs`) | the lake strip | logo, lake strip | yes |
 | `web/` the Tumble | no (its own era look) | no | yes |
 | `about/`, `privacy/` | no | logo | yes |
@@ -53,6 +53,6 @@ The address after `?` is words joined by `+`, in any order.
 
 ## Still open
 
-- Books and Play's pages don't go dark at night beyond the logo (and the lake strip on Play's pages). Christian
-  wants Books to have the same shell as the other sections: the main and sub nav, the lake, the weather, night and day.
+- Books is a tab on the lake page again (Oct 20), so it has the lake, the weather, night and day like Web, Workshop
+  and Play. Play's own pages still don't go dark at night beyond the logo and the lake strip.
 - Weather started by hand (not from the address) isn't written into the address, so it doesn't travel.

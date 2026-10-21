@@ -212,12 +212,12 @@ ${ICONS}
 <link rel="stylesheet" href="${rel}../css/alta.css?v=12">
 <link rel="stylesheet" href="${rel}../css/marley.css?v=10">
 <script>/* Logo season from the calendar, as on About. */document.documentElement.dataset.season=["winter","winter","spring","spring","spring","summer","summer","summer","fall","fall","fall","winter"][new Date().getMonth()];</script>
-<script src="${rel}../js/carry.js?v=2"></script>
+<script src="${rel}../js/carry.js?v=3"></script>
 <link rel="stylesheet" href="${rel}../css/route-dash.css?v=${V}">
 </head>
 <body>
 <header class="bar"><a class="brand" href="${rel}../">${LOGO}Christian Gehrke</a>
-<nav class="site" aria-label="Site"><a href="${rel}../">Home</a><a href="${rel}../coloring-books/">Books</a><a href="${rel}../?web">Web</a><a href="${rel}../?workshop">Workshop</a><a class="on" href="${rel}" aria-current="page">Play</a></nav></header>
+<nav class="site" aria-label="Site"><a href="${rel}../">Home</a><a href="${rel}../?books">Books</a><a href="${rel}../?web">Web</a><a href="${rel}../?workshop">Workshop</a><a class="on" href="${rel}" aria-current="page">Play</a></nav></header>
 <nav class="playbar" aria-label="Play">${PLAYBAR.map(([id, label, href]) => `<a href="${href.startsWith('/') ? href : rel + href}"${id === sub ? ' class="on" aria-current="page"' : ''}>${label}</a>`).join('')}<button type="button" class="chip" id="units" hidden>mi · ft</button></nav>
 ${lakeBand(meta.lake || 'notes')}
 `;
