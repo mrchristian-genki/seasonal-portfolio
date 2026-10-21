@@ -2,7 +2,7 @@
    hillside, painted by Christian (assets/homestead: each place by day, by night, and both in snow, all four lined up).
    - A place follows the lake: snow in winter, its windows lit in night mode, each change a slow cross-fade (CLAUDE.md:
      lights ease on and off, nothing snaps). Only the picture a place needs now is loaded; the others when they're needed.
-   - Each place is a door: a section of this page (its tab), Play's Notes of that kind, or a page of its own. Hover or
+   - Each place is a door: a section of this page (its tab), Play's Notes of that kind, a Play section or Note, or a page of its own. Hover or
      focus lifts it a little and warms its glow; its name sits on a small plate under it.
    - The ground is Christian's painted hill, every season by day and by night, cross-fading like the places: a wide
      painting for wide screens and a tall one for phones, each place standing where he painted it on both.
@@ -17,11 +17,12 @@
 
   // x, y, w: its top left corner and width on Christian's wide painting of the hill (2000 x 1116, assets/homestead/ground-*);
   // mx, my, mw the same on his tall painting for phones (1116 x 2000, phone-ground-*); z, mz: its base, for stacking.
-  // Each was found by matching the place's cut-out against his painting with the buildings in. go: where its door leads.
+  // Each was found by matching the place's cut-out against his painting with the buildings in. go: where its door leads
+  // (view: a tab; tags: Play's Notes of that kind; play: a Play section or one Note, in the Play tab; href: a page of its own).
   var PLACES = [
-    { id: 'tubes', name: "A.L.T.A.'s tubes", line: 'Her way in and out of the lake', x: 50, y: 51, w: 140, z: 313, mx: 18, my: 119, mw: 138, mz: 377, go: { href: 'play/' } },
+    { id: 'tubes', name: "A.L.T.A.'s tubes", line: 'Her way in and out of the lake', x: 50, y: 51, w: 140, z: 313, mx: 18, my: 119, mw: 138, mz: 377, go: { play: '2026-10-09-a-l-t-a' } },
     { id: 'labs', name: 'The Automaton Labs', line: 'Science, tech and AI', x: 296, y: 159, w: 418, z: 368, mx: 196, my: 237, mw: 406, mz: 440, go: { tags: ['science', 'tech', 'ai'] } },
-    { id: 'alta', name: "A.L.T.A.'s station", line: 'The lake guardian\'s booth', x: 746, y: 82, w: 156, z: 272, mx: 536, my: 105, mw: 154, mz: 293, go: { href: 'play/' } },
+    { id: 'alta', name: "A.L.T.A.'s station", line: 'The lake guardian\'s booth', x: 746, y: 82, w: 156, z: 272, mx: 536, my: 105, mw: 154, mz: 293, go: { play: '2026-10-09-a-l-t-a' } },
     { id: 'tower', name: "GlazyArray's tower", line: 'Mini-Cast, on the air', x: 1263, y: 62, w: 161, z: 239, mx: 692, my: 164, mw: 160, mz: 340, go: { tags: ['mini-cast'] } },
     { id: 'observatory', name: 'The Observatory', line: 'The Tumble: back to 1990', x: 1615, y: 24, w: 220, z: 259, mx: 866, my: 217, mw: 214, mz: 446, go: { href: 'web/' } },
     { id: 'workshop', name: 'The Workshop', line: 'Builds, light jars, projects', x: 382, y: 366, w: 292, z: 553, mx: 140, my: 560, mw: 292, mz: 747, go: { view: 'workshop' } },
@@ -29,11 +30,11 @@
     { id: 'house', name: 'The House', line: 'Websites since 1997', x: 1155, y: 351, w: 276, z: 544, mx: 616, my: 721, mw: 304, mz: 934, go: { view: 'signal' } },
     { id: 'doghouse', name: "Marley's house", line: 'Knock first', x: 1398, y: 483, w: 84, z: 561, mx: 879, my: 870, mw: 94, mz: 957, go: { tags: ['with-marley'] } },
     { id: 'library', name: 'The Library', line: 'The coloring books', x: 1512, y: 295, w: 159, z: 549, mx: 924, my: 614, mw: 178, mz: 898, go: { view: 'books' } },
-    { id: 'newsstand', name: 'The Newsstand', line: 'The magazines', x: 262, y: 520, w: 156, z: 715, mx: 73, my: 741, mw: 178, mz: 964, go: { href: 'magazine/' } },
+    { id: 'newsstand', name: 'The Newsstand', line: 'The magazines', x: 262, y: 520, w: 156, z: 715, mx: 73, my: 741, mw: 178, mz: 964, go: { play: 'newsstand' } },
     { id: 'barn', name: 'The Screening Barn', line: 'Videos, photos, Daydreams', x: 522, y: 569, w: 300, z: 772, mx: 152, my: 1054, mw: 310, mz: 1264, go: { view: 'lab' } },
     { id: 'depot', name: 'The Parts Depot', line: 'The parts catalog', x: 1060, y: 594, w: 260, z: 771, mx: 595, my: 1150, mw: 280, mz: 1341, go: { href: 'catalog/' } },
-    { id: 'kinetic', name: 'The Kinetic Garden', line: 'Digital art', x: 1402, y: 603, w: 220, z: 781, mx: 878, my: 963, mw: 238, mz: 1155, go: { tags: ['digital-art'] } },
-    { id: 'starlee', name: "Starlee's dock", line: 'Where she charges', x: 1783, y: 631, w: 214, z: 758, mx: 940, my: 1232, mw: 149, mz: 1320, go: { href: 'play/' } },
+    { id: 'kinetic', name: 'The Kinetic Garden', line: 'Digital art', x: 1402, y: 603, w: 220, z: 781, mx: 878, my: 963, mw: 238, mz: 1155, go: { play: 'daydreams' } },
+    { id: 'starlee', name: "Starlee's dock", line: 'Where she charges', x: 1783, y: 631, w: 214, z: 758, mx: 940, my: 1232, mw: 149, mz: 1320, go: { play: '2026-10-12-robot-marley' } },
     { id: 'bikepark', name: 'The Bike Park', line: 'Rides', x: 298, y: 820, w: 411, z: 1033, mx: 62, my: 1568, mw: 411, mz: 1781, go: { tags: ['ride'] } },
     { id: 'trailhead', name: 'The Trailhead', line: 'Hikes and foraging walks', x: 885, y: 792, w: 348, z: 997, mx: 460, my: 1389, mw: 319, mz: 1577, go: { tags: ['hike'] } },
     { id: 'climbing', name: 'The Climbing Wall', line: 'Adventures', x: 1273, y: 824, w: 292, z: 1016, mx: 764, my: 1410, mw: 292, mz: 1602, go: { tags: ['adventure'] } },
@@ -90,7 +91,7 @@
   var places = PLACES.map(function (p) {
     var a = document.createElement('a');
     a.className = 'hs-place hs-' + p.id;
-    a.href = p.go.href || ('?' + (p.go.view ? { books: 'books', signal: 'web', workshop: 'workshop', lab: 'lab' }[p.go.view] : 'lab+' + p.go.tags[0]));
+    a.href = p.go.href || ('?' + (p.go.view ? { books: 'books', signal: 'web', workshop: 'workshop', lab: 'lab' }[p.go.view] : 'lab+' + (p.go.play || p.go.tags[0])));
     a.style.cssText = vars(p);
     a.setAttribute('aria-label', p.name + ': ' + p.line);
     a.innerHTML = '<span class="hs-art" aria-hidden="true"></span><span class="hs-name">' + p.name + '<small>' + p.line + '</small></span>';
@@ -418,6 +419,7 @@
     if (!tab) return false;
     if (tab.getAttribute('aria-selected') !== 'true') tab.click();
     if (p.go.tags) filter(p.go.tags);
+    if (p.go.play) toPlay([p.go.play]);
     var about = document.getElementById('about');
     if (about && window.easeScroll) setTimeout(function () { easeScroll.to(about); }, 550);
     return true;
@@ -432,16 +434,20 @@
   function filter(tags) {
     counts().then(function (c) {
       var use = tags.filter(function (t) { return c[t]; }).sort(function (a, b) { return c[b] - c[a]; }).slice(0, 1);
-      (function wait(n) {
-        if (!window.__playWords || !document.querySelector('#about .pi-in')) {
-          if (n < 60) setTimeout(function () { wait(n + 1); }, 250); return;
-        }
-        // the season, night, lake and weather stay (js/carry.js)
-        var look = window.__look ? window.__look() : [];
-        try { history.replaceState(null, '', location.pathname + '?' + ['lab', 'notes'].concat(use, look).join('+') + location.hash); } catch (e) { return; }
-        dispatchEvent(new PopStateEvent('popstate'));
-      })(0);
+      toPlay(['notes'].concat(use));
     });
+  }
+  // Once Play is ready, its words go into the address (a section, a Note's id, or notes and a tag) and Play follows
+  function toPlay(ws) {
+    (function wait(n) {
+      if (!window.__playWords || !document.querySelector('#about .pi-in')) {
+        if (n < 60) setTimeout(function () { wait(n + 1); }, 250); return;
+      }
+      // the season, night, lake and weather stay (js/carry.js)
+      var look = window.__look ? window.__look() : [];
+      try { history.replaceState(null, '', location.pathname + '?' + ['lab'].concat(ws, look).join('+') + location.hash); } catch (e) { return; }
+      dispatchEvent(new PopStateEvent('popstate'));
+    })(0);
   }
 
   // ── the firefly: one glowing pixel, somewhere new each season; tap it and it drifts off to another spot ──
