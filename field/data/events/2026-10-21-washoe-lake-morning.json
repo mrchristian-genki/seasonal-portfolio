@@ -31,16 +31,6 @@
    "from": "IMG_8197 (1).JPG"
   },
   {
-   "src": "data/photos/2026-10-21-washoe-lake-morning/05.jpg",
-   "caption": "A great blue heron sitting on a house.",
-   "takenAt": "2026:10:21 09:32:27",
-   "w": 1600,
-   "h": 900,
-   "use": "post",
-   "cover": false,
-   "from": "IMG_8226 (1).JPG"
-  },
-  {
    "src": "data/photos/2026-10-21-washoe-lake-morning/clip-4.mp4",
    "poster": "data/photos/2026-10-21-washoe-lake-morning/clip-4.jpg",
    "video": true,
@@ -168,51 +158,113 @@
  "consent": "",
  "source": "Rides/October 21 2026 - Washoe Lake - Morning",
  "feature": {
-  "lookbook": {
-   "title": "The Wild Mustangs",
-   "dek": "",
-   "before": "",
-   "items": [
-    {
-     "name": "",
-     "when": "Wild mustangs on the beaches of Washoe Lake.",
-     "alt": "Wild mustangs on the beaches of Washoe Lake.",
-     "src": "data/photos/2026-10-21-washoe-lake-morning/clip-1.mp4",
-     "w": 960,
-     "h": 540,
-     "video": true,
-     "poster": "data/photos/2026-10-21-washoe-lake-morning/clip-1.jpg"
-    },
-    {
-     "name": "",
-     "when": "A larger group grazing under yellow cottonwoods, a pinto out in front.",
-     "alt": "A larger group grazing under yellow cottonwoods, a pinto out in front.",
-     "src": "data/photos/2026-10-21-washoe-lake-morning/04.jpg",
-     "w": 1600,
-     "h": 900
-    },
-    {
-     "name": "",
-     "when": "Two horses on the dry grass above the lake.",
-     "alt": "Two horses on the dry grass above the lake.",
-     "src": "data/photos/2026-10-21-washoe-lake-morning/03.jpg",
-     "w": 1600,
-     "h": 900
-    },
-    {
-     "name": "",
-     "when": "Two wild mustangs in the morning.",
-     "alt": "Two wild mustangs in the morning.",
-     "src": "data/photos/2026-10-21-washoe-lake-morning/clip-4.mp4",
-     "w": 960,
-     "h": 540,
-     "video": true,
-     "poster": "data/photos/2026-10-21-washoe-lake-morning/clip-4.jpg"
-    }
-   ],
-   "layout": "hero3",
-   "label": "real"
-  },
+  "lookbook": [
+   {
+    "title": "The Wild Mustangs",
+    "dek": "",
+    "before": "",
+    "items": [
+     {
+      "name": "",
+      "when": "Wild mustangs on the beaches of Washoe Lake.",
+      "alt": "Wild mustangs on the beaches of Washoe Lake.",
+      "src": "data/photos/2026-10-21-washoe-lake-morning/clip-1.mp4",
+      "w": 960,
+      "h": 540,
+      "video": true,
+      "poster": "data/photos/2026-10-21-washoe-lake-morning/clip-1.jpg"
+     },
+     {
+      "name": "",
+      "when": "A larger group grazing under yellow cottonwoods, a pinto out in front.",
+      "alt": "A larger group grazing under yellow cottonwoods, a pinto out in front.",
+      "src": "data/photos/2026-10-21-washoe-lake-morning/04.jpg",
+      "w": 1600,
+      "h": 900
+     },
+     {
+      "name": "",
+      "when": "Two horses on the dry grass above the lake.",
+      "alt": "Two horses on the dry grass above the lake.",
+      "src": "data/photos/2026-10-21-washoe-lake-morning/03.jpg",
+      "w": 1600,
+      "h": 900
+     },
+     {
+      "name": "",
+      "when": "Two wild mustangs in the morning.",
+      "alt": "Two wild mustangs in the morning.",
+      "src": "data/photos/2026-10-21-washoe-lake-morning/clip-4.mp4",
+      "w": 960,
+      "h": 540,
+      "video": true,
+      "poster": "data/photos/2026-10-21-washoe-lake-morning/clip-4.jpg"
+     }
+    ],
+    "layout": "hero3",
+    "label": "real"
+   },
+   {
+    "title": "Over the Lake",
+    "dek": "",
+    "before": "",
+    "items": [
+     {
+      "name": "",
+      "when": "A quick flight down the beach.",
+      "alt": "A quick flight down the beach.",
+      "src": "data/photos/2026-10-21-washoe-lake-morning/clip-2.mp4",
+      "w": 960,
+      "h": 540,
+      "video": true,
+      "poster": "data/photos/2026-10-21-washoe-lake-morning/clip-2.jpg"
+     },
+     {
+      "name": "",
+      "when": "Washoe Lake from above: still water, low cloud and a wide muddy shoreline crossed by tire tracks.",
+      "alt": "Washoe Lake from above: still water, low cloud and a wide muddy shoreline crossed by tire tracks.",
+      "src": "data/photos/2026-10-21-washoe-lake-morning/01.jpg",
+      "w": 1600,
+      "h": 900
+     },
+     {
+      "name": "",
+      "when": "Hoofprints along the waterline, with yellowing brush and the hills behind.",
+      "alt": "Hoofprints along the waterline, with yellowing brush and the hills behind.",
+      "src": "data/photos/2026-10-21-washoe-lake-morning/02.jpg",
+      "w": 1600,
+      "h": 900
+     }
+    ],
+    "layout": "side",
+    "label": "real"
+   },
+   {
+    "title": "The Bird of Prey",
+    "dek": "",
+    "before": "",
+    "items": [
+     {
+      "name": "",
+      "when": "Bird of prey taking off over Washoe Lake with something in it's claws.",
+      "alt": "Bird of prey taking off over Washoe Lake with something in it's claws.",
+      "src": "data/photos/2026-10-21-washoe-lake-morning/07.jpg",
+      "w": 1600,
+      "h": 900
+     },
+     {
+      "name": "",
+      "when": "Bird of prey taking off with something in it's claws.",
+      "alt": "Bird of prey taking off with something in it's claws.",
+      "src": "data/photos/2026-10-21-washoe-lake-morning/06.jpg",
+      "w": 1600,
+      "h": 900
+     }
+    ],
+    "layout": "grid2",
+    "label": "real"
+   }
+  ],
   "theme": "lineofsight",
   "masthead": "LINE OF SIGHT",
   "tagline": "The quarterly of the patient aerial",
