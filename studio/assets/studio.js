@@ -3922,7 +3922,20 @@
       $('#vtMake').disabled = over || len < 0.5;
       var sel = $('.vt-sel i'); sel.style.left = (vt.from / sec * 100) + '%'; sel.style.width = ((vt.to - vt.from) / sec * 100) + '%';
     };
-    var seek = function (t) { try { v.currentTime = t; } catch (e) {} };
+    // one seek at a time: iPhone Safari drops a seek when the next one comes before it lands (a slider fires
+    // dozens a second), and goes on reading the old time until it does, so the newest waits for 'seeked'
+    var want = null;
+    var seekNow = function () { var t = want; want = null; try { v.currentTime = t; } catch (e) {} };
+    var seek = function (t) { want = t; if (!v.seeking) seekNow(); };
+    v.addEventListener('seeked', function () { if (want != null) seekNow(); });
+    // iPhone Safari loads no frames until the video has been played once; a muted play and pause on the
+    // first touch loads it, so a scrub shows the frame
+    var primed = false;
+    var prime = function () {
+      if (primed) return; primed = true;
+      var p = v.play(); if (p && p.then) p.then(function () { if (!looping) v.pause(); }, function () {});
+    };
+    [S, En].forEach(function (r) { r.addEventListener('pointerdown', prime); r.addEventListener('touchstart', prime, { passive: true }); });
     S.oninput = function () { vt.from = Math.min(+S.value, vt.to - 0.5); S.value = vt.from; if (!looping) { v.pause(); seek(vt.from); } show(); };
     En.oninput = function () { vt.to = Math.max(+En.value, vt.from + 0.5); En.value = vt.to; if (!looping) { v.pause(); seek(vt.to); } show(); };
     $('#vtAtS').onclick = function () { vt.from = Math.min(v.currentTime, vt.to - 0.5); S.value = vt.from; show(); };
@@ -3930,7 +3943,7 @@
     // playing the loop: back to the start whenever the playhead passes the end, checked every frame
     var tick = function () {
       if (!looping || VT !== vt) return;
-      if (v.currentTime >= vt.to || v.currentTime < vt.from - 0.25) seek(vt.from);
+      if (!v.seeking && want == null && (v.currentTime >= vt.to || v.currentTime < vt.from - 0.25)) seek(vt.from);
       requestAnimationFrame(tick);
     };
     var lb = $('#vtLoop');
