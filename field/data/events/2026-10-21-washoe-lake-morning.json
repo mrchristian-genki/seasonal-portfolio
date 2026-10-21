@@ -4,7 +4,7 @@
  "date": "2026-10-21",
  "kind": "aerial",
  "place": "Washoe Lake",
- "status": "draft",
+ "status": "published",
  "summary": "Christian and Marley drove out to Washoe Lake on a cool, cloudy October morning to fly the drone. A hawk landed right in front of them as they arrived, the drone found two groups of wild mustangs near the shore, and the morning ended with a few throws of the ball for Marley.",
  "trailhead": null,
  "links": [],
@@ -361,5 +361,6 @@
   "backdrop": "high-desert-lake-shore",
   "fit": "new",
   "scene": "a still high-desert lake shore with dry gold grass, yellow cottonwoods and blue-grey hills under low morning cloud"
- }
+ },
+ "publishedAt": "2026-10-21T17:53:46Z"
 }
