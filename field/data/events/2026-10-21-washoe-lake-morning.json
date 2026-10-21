@@ -207,8 +207,16 @@
    {
     "title": "Over the Lake",
     "dek": "",
-    "before": "The same soft light",
+    "before": "Tracks in the mud",
     "items": [
+     {
+      "name": "",
+      "when": "Hoofprints along the waterline, with yellowing brush and the hills behind.",
+      "alt": "Hoofprints along the waterline, with yellowing brush and the hills behind.",
+      "src": "data/photos/2026-10-21-washoe-lake-morning/02.jpg",
+      "w": 1600,
+      "h": 900
+     },
      {
       "name": "",
       "when": "A quick flight down the beach.",
@@ -224,14 +232,6 @@
       "when": "Washoe Lake from above: still water, low cloud and a wide muddy shoreline crossed by tire tracks.",
       "alt": "Washoe Lake from above: still water, low cloud and a wide muddy shoreline crossed by tire tracks.",
       "src": "data/photos/2026-10-21-washoe-lake-morning/01.jpg",
-      "w": 1600,
-      "h": 900
-     },
-     {
-      "name": "",
-      "when": "Hoofprints along the waterline, with yellowing brush and the hills behind.",
-      "alt": "Hoofprints along the waterline, with yellowing brush and the hills behind.",
-      "src": "data/photos/2026-10-21-washoe-lake-morning/02.jpg",
       "w": 1600,
       "h": 900
      }
