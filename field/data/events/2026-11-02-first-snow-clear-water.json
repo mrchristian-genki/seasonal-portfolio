@@ -1,0 +1,560 @@
+{
+ "id": "2026-11-02-first-snow-clear-water",
+ "title": "First snow, clear water",
+ "date": "2026-11-02",
+ "kind": "aerial",
+ "place": "",
+ "status": "draft",
+ "summary": "After the first snow of the season reached Lake Tahoe, Christian and Marley drove up on a sunny, cold morning to fly the drone over Chimney Beach on the east shore, with a stop at Spooner Lake to play in the snow.",
+ "trailhead": null,
+ "links": [],
+ "track": null,
+ "photos": [
+  {
+   "src": "data/photos/2026-11-02-first-snow-clear-water/03.jpg",
+   "caption": "8:37. A dusting of snow on the path, the dog in a red coat, water through the trees.",
+   "takenAt": "2026:11:02 08:37:08",
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "IMG_8464.JPG"
+  },
+  {
+   "src": "data/photos/2026-11-02-first-snow-clear-water/04.jpg",
+   "caption": "Quick selfie under the pines. The dog is up ahead, nose down.",
+   "takenAt": "2026:11:02 08:40:38",
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "IMG_8469.JPG"
+  },
+  {
+   "src": "data/photos/2026-11-02-first-snow-clear-water/05.jpg",
+   "caption": "9:04. Granite boulders, a small beach and clear turquoise water from above.",
+   "takenAt": "2026:11:02 09:04:17",
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261102_090418_884_1793640652804_aeb.jpg"
+  },
+  {
+   "src": "data/photos/2026-11-02-first-snow-clear-water/06.jpg",
+   "caption": "Straight down over a sandy cove and its boulders.",
+   "takenAt": "2026:11:02 09:05:27",
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261102_090528_890_1793640641533_aeb.jpg"
+  },
+  {
+   "src": "data/photos/2026-11-02-first-snow-clear-water/07.jpg",
+   "caption": "Rocks on the bottom, shading from green to deep blue.",
+   "takenAt": "2026:11:02 09:06:42",
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261102_090642_893_1793640635319_aeb.jpg"
+  },
+  {
+   "src": "data/photos/2026-11-02-first-snow-clear-water/01.jpg",
+   "caption": "Turquoise shallows dropping off into blue.",
+   "takenAt": "2026:11:02 09:07:35",
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261102_090734_898_1793640622506_aeb.jpg + dji_fly_20261102_090734_899_1793640624576_aeb.jpg + dji_fly_20261102_090736_900_1793640626666_aeb.jpg",
+   "hdr": 3
+  },
+  {
+   "src": "data/photos/2026-11-02-first-snow-clear-water/12.jpg",
+   "caption": "9:09. Snow between the pines and the granite, tree shadows stretched across the lakebed.",
+   "takenAt": "2026:11:02 09:09:31",
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261102_090932_909_1793640598266_aeb.jpg"
+  },
+  {
+   "src": "data/photos/2026-11-02-first-snow-clear-water/08.jpg",
+   "caption": "The wide view: forested shoreline and snow on the far mountains.",
+   "takenAt": "2026:11:02 09:09:43",
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261102_090944_911_1793640590622_aeb.jpg + dji_fly_20261102_090944_912_1793640591998_aeb.jpg + dji_fly_20261102_090944_913_1793640593472_aeb.jpg",
+   "hdr": 3
+  },
+  {
+   "src": "data/photos/2026-11-02-first-snow-clear-water/10.jpg",
+   "caption": "9:15. Boulders off a small point, rippled clouds overhead.",
+   "takenAt": "2026:11:02 09:15:32",
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261102_091532_916_1793640182888_aeb.jpg + dji_fly_20261102_091532_917_1793640184320_aeb.jpg + dji_fly_20261102_091532_918_1793640185795_aeb.jpg",
+   "hdr": 3
+  },
+  {
+   "src": "data/photos/2026-11-02-first-snow-clear-water/15.jpg",
+   "caption": "9:17. A dusting of snow right down to the water's edge.",
+   "takenAt": "2026:11:02 09:17:34",
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261102_091734_920_1793640179116_aeb.jpg"
+  },
+  {
+   "src": "data/photos/2026-11-02-first-snow-clear-water/13.jpg",
+   "caption": "Point after point of forest along the shore.",
+   "takenAt": "2026:11:02 09:18:10",
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261102_091810_922_1793640172105_aeb.jpg + dji_fly_20261102_091810_923_1793640174307_aeb.jpg + dji_fly_20261102_091810_924_1793640175842_aeb.jpg",
+   "hdr": 3
+  },
+  {
+   "src": "data/photos/2026-11-02-first-snow-clear-water/16.jpg",
+   "caption": "9:19. Stones on pale sand in very clear water.",
+   "takenAt": "2026:11:02 09:19:27",
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261102_091928_930_1793640088210_aeb.jpg"
+  },
+  {
+   "src": "data/photos/2026-11-02-first-snow-clear-water/17.jpg",
+   "caption": "I tried Marley on the way home driving the mountain back home.",
+   "takenAt": "2026:11:02 09:48:09",
+   "w": 900,
+   "h": 1600,
+   "use": "post",
+   "cover": false,
+   "from": "IMG_8527.JPG"
+  },
+  {
+   "src": "data/photos/2026-11-02-first-snow-clear-water/clip-1.mp4",
+   "poster": "data/photos/2026-11-02-first-snow-clear-water/clip-1.jpg",
+   "video": true,
+   "caption": "Marley chasing a ball on some slippery ice and snow.",
+   "takenAt": "2026:11:02 11:01:22",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "IMG_8468(1).mp4",
+   "range": [
+    0,
+    7.17
+   ]
+  },
+  {
+   "src": "data/photos/2026-11-02-first-snow-clear-water/clip-2.mp4",
+   "poster": "data/photos/2026-11-02-first-snow-clear-water/clip-2.jpg",
+   "video": true,
+   "caption": "Marley jumping after a ball on some slippery ice and snow.",
+   "takenAt": "2026:11:02 11:01:43",
+   "w": 960,
+   "h": 538,
+   "use": "post",
+   "cover": false,
+   "from": "IMG_8467(1).mp4",
+   "range": [
+    0,
+    8
+   ]
+  },
+  {
+   "src": "data/photos/2026-11-02-first-snow-clear-water/clip-3.mp4",
+   "poster": "data/photos/2026-11-02-first-snow-clear-water/clip-3.jpg",
+   "video": true,
+   "caption": "Marley jumping after a ball on some slippery ice and snow.",
+   "takenAt": "2026:11:02 11:01:48",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "IMG_8468.mp4",
+   "range": [
+    0,
+    8
+   ]
+  },
+  {
+   "src": "data/photos/2026-11-02-first-snow-clear-water/clip-4.mp4",
+   "poster": "data/photos/2026-11-02-first-snow-clear-water/clip-4.jpg",
+   "video": true,
+   "caption": "Marley jumping after a ball on some slippery ice and snow.",
+   "takenAt": "2026:11:02 11:01:57",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "IMG_8466.mp4",
+   "range": [
+    0,
+    6.3
+   ]
+  },
+  {
+   "src": "data/photos/2026-11-02-first-snow-clear-water/clip-5.mp4",
+   "poster": "data/photos/2026-11-02-first-snow-clear-water/clip-5.jpg",
+   "video": true,
+   "caption": "Chimney Beach aerial shot. Pulling back higher up.",
+   "takenAt": "2026:11:02 11:02:51",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": true,
+   "from": "dji_fly_20261102_090956_914_1793640588545_video.mp4",
+   "range": [
+    0,
+    3.7
+   ]
+  },
+  {
+   "src": "data/photos/2026-11-02-first-snow-clear-water/clip-6.mp4",
+   "poster": "data/photos/2026-11-02-first-snow-clear-water/clip-6.jpg",
+   "video": true,
+   "caption": "Aerial forward shot with a seagull.",
+   "takenAt": "2026:11:02 11:03:12",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261102_091842_928_1793640164942_video.mp4",
+   "range": [
+    0,
+    8
+   ]
+  },
+  {
+   "src": "data/photos/2026-11-02-first-snow-clear-water/clip-7.mp4",
+   "poster": "data/photos/2026-11-02-first-snow-clear-water/clip-7.jpg",
+   "video": true,
+   "caption": "Chimney Beach aerial shot. Pushing forward.",
+   "takenAt": "2026:11:02 11:03:46",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261102_090336_882_1793640708583_video.mp4",
+   "range": [
+    0,
+    7.3
+   ]
+  },
+  {
+   "src": "data/photos/2026-11-02-first-snow-clear-water/clip-8.mp4",
+   "poster": "data/photos/2026-11-02-first-snow-clear-water/clip-8.jpg",
+   "video": true,
+   "caption": "Chimney Beach aerial shot. Pushing forward.",
+   "takenAt": "2026:11:02 11:04:25",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261102_090244_881_1793640775856_video.mp4",
+   "range": [
+    0,
+    10.15
+   ]
+  }
+ ],
+ "fieldNotes": "First snow and lake side up at Lake Tahoe over the weekend. Marley and I went for a drive to fly the drone. Was sunny but cold. Chimney Beach on the East side of Lake Tahoe. We also stopped at Spooner lake to play in the snow. ",
+ "post": {
+  "title": "First snow, clear water",
+  "body": "The first snow of the season came down to the lake over the weekend, so on a sunny, cold morning Marley and I went for a drive to fly the drone. We headed for Chimney Beach on the east side of Lake Tahoe, and we also stopped at Spooner Lake so Marley could play in the snow.\n\n## Red coat, white path\n\nAt 8:37 she was standing in the middle of a snowy path in her red coat, with water showing through the trees behind her and one tree still holding its yellow leaves. A few minutes later I stopped for a quick selfie under the pines. The snow was patchy there, white in the open and gone wherever the needles were thick, and Marley was already off ahead, nose down.\n\n## Up over Chimney Beach\n\nJust after nine the drone was up over the shore. From up there the water does things you never see from the beach. Near the boulders it's pale turquoise, then green, then a deep blue where the bottom drops away. You can count the rocks on the lakebed. In a couple of shots the trees on the shore throw long shadows straight out across the bottom, like stripes.\n\n> From up there the water does things you never see from the beach.\n\nThe snow had reached the shoreline too. Looking straight down at 9:09 and again at 9:17, there's a dusting of white between the granite and the trees, right at the edge of all that blue.\n\n## Going wide\n\nThen I turned the camera for the wide view. The forest runs down to the water in one long line, point after point, and the mountains across the lake already had snow on top. The sky was full of thin rippled cloud. At 9:19 I went straight down into the shallows again: stones scattered on pale sand, the water so clear it barely looks like water.\n\nWhat I learned: the first snow and a clear, cold morning are worth the early drive. The same shoreline looks completely different from above, and a short flight that goes close, straight down, then wide gives you a whole story to work with."
+ },
+ "episode": {
+  "title": "Snow on the shore",
+  "script": "Narrated by GlazyArray.\n\nIt was the second of November, a little after half past eight, sunny and cold, and the first snow of the season had come all the way down to Lake Tahoe.\n\nSo Christian and Marley went for a drive. The plan was simple. Fly the drone over Chimney Beach, on the east side of the lake. And on the way, a stop at Spooner Lake, so Marley could play in the snow.\n\nThere wasn't much of it. Just enough to turn a path white and show every footprint. Marley stood in the middle of it in her bright red coat. Behind her, through the trees, there was water. And off to one side, one stubborn tree was still holding on to its yellow leaves, as if nobody had told it what month it was.\n\nA few minutes later, under the tall pines, Christian stopped for a selfie. A small, satisfied smile. In the background Marley had already moved on. Her nose was down, and her red coat was the brightest thing in the forest.\n\n***\n\nThen, just after nine, the story changed altitude.\n\nThe drone went up over the shore at Chimney Beach. And this is where Christian's eye shows. He didn't settle for one pretty view. He went straight down over the boulders, where the water turns from pale turquoise to green to a deep, deep blue. He caught the rocks on the bottom, sharp enough to count. And he caught the morning shadows of the shoreline trees, stretched out across the lakebed like long dark stripes.\n\nLook closely and the snow is there too. A fine white dusting sat between the granite and the pines, right at the edge of the water. That's the first snow, meeting a lake that still looked like summer.\n\n***\n\nThen he turned the camera outward. The forest ran down to the water in one long line, point after point. Far across the lake, the mountains already wore white caps. Thin rippled clouds filled the sky.\n\nAt nineteen past nine he went straight down again into the shallows. Scattered stones sat on pale sand, under water so clear it hardly looked like water at all.\n\nHe could have kept every shot. What he kept was a sequence. It starts close, goes straight down, then wide, and ends close again. Knowing how to put the pictures in order is half of telling a story.\n\nSome mornings are about where you went. This one was about how you looked at it.",
+  "audio": null,
+  "sections": []
+ },
+ "questions": [
+  "The drive is told from Spooner Lake and Chimney Beach only, with nothing about where it started. Is that how you want it?",
+  "Were the 8:37 and 8:40 snowy-path photos taken at Spooner Lake, and did that stop come before or after the drone flight?",
+  "Photo 17 (9:48) didn't come through for me. What does it show, so I can caption it (and is it Spooner Lake)?",
+  "Do you want to name the drone, or say anything about where flying is allowed around Chimney Beach? I left both out rather than guess.",
+  "Your notes say \"first snow and lake side up\". Did you mean the snow reached lake level? I wrote it as the first snow of the season coming down to the lake."
+ ],
+ "consent": "Christian Marley",
+ "source": "Rides/November 2 2026",
+ "narratorBackdrop": {
+  "backdrop": "lake-tahoe-with-snow",
+  "fit": "existing",
+  "scene": ""
+ },
+ "media": "real",
+ "palette": [
+  "#37a1be",
+  "#6983d4"
+ ],
+ "feature": {
+  "theme": "lineofsight",
+  "masthead": "LINE OF SIGHT",
+  "tagline": "The quarterly of the patient aerial",
+  "issue": "The Blue Hour Issue",
+  "label": "How I Got the Shot",
+  "byline": "By GlazyArray, Aerial Desk",
+  "blocks": [
+   {
+    "type": "specs",
+    "title": "Settings",
+    "before": "Up over Chimney Beach",
+    "rows": [
+     [
+      "Place",
+      "Chimney Beach, east shore of Lake Tahoe"
+     ],
+     [
+      "Also",
+      "A stop at Spooner Lake"
+     ],
+     [
+      "Conditions",
+      "Sunny and cold, first snow of the season"
+     ],
+     [
+      "Crew",
+      "Christian and Marley"
+     ],
+     [
+      "Angles",
+      "Close, straight down, then wide"
+     ]
+    ],
+    "note": "The scene, from the Note. Drone and camera settings to come."
+   },
+   {
+    "type": "stats",
+    "title": "Flight log",
+    "before": "Going wide",
+    "items": [
+     [
+      "8:37",
+      "Marley on the snowy path"
+     ],
+     [
+      "9:04",
+      "First frame from above"
+     ],
+     [
+      "9:09",
+      "Snow between the pines and the granite"
+     ],
+     [
+      "9:19",
+      "Last look straight down into the shallows"
+     ],
+     [
+      "4",
+      "Aerial clips"
+     ]
+    ],
+    "note": "Times from the photo captions; there is no flight track."
+   },
+   {
+    "type": "box",
+    "title": "Close, straight down, then wide",
+    "kicker": "How I Got the Shot",
+    "text": "Near the boulders the water is pale turquoise, then green, then a deep blue where the bottom drops away. Straight down, the rocks on the lakebed are sharp enough to count, and the shoreline trees throw long shadows across the bottom like stripes.\n\nThen the camera turned for the wide view: the forest running down to the water point after point, snow on the mountains across the lake. And at 9:19, straight down into the shallows again. A short flight that goes close, straight down, then wide gives you a whole story to work with."
+   }
+  ],
+  "coverLines": [
+   "First snow, clear water: Chimney Beach from above",
+   "Close, straight down, then wide: one short flight, a whole story",
+   "You can count the rocks on the lakebed",
+   "Marley's red coat on a snowy path, with a stop at Spooner Lake"
+  ],
+  "questions": [
+   "The template's Settings panel is meant for camera settings, but the Note doesn't give the drone model, altitude, exposure or lens. I filled it with the scene instead (place, conditions, angles). Do you want to add the real settings?",
+   "The Airspace etiquette box needs the rules for flying at Chimney Beach, which the Note doesn't cover, so I used the box for your close, straight down, then wide sequence instead. Do you want an etiquette box, and what rules did you follow there?",
+   "The Flight log uses only caption times and counts the four aerial clips (clips 5 to 8). Is that right, and do you have flight time or altitude from the drone's log?",
+   "Should the subhead \"Red coat, white path\" stay generic, or was that snowy path at Spooner Lake so I can name it?"
+  ],
+  "lookbook": [
+   {
+    "title": "Snow Ball Dog",
+    "dek": "",
+    "before": "",
+    "items": [
+     {
+      "name": "",
+      "when": "Marley chasing a ball on some slippery ice and snow.",
+      "alt": "Marley chasing a ball on some slippery ice and snow.",
+      "src": "data/photos/2026-11-02-first-snow-clear-water/clip-1.mp4",
+      "w": 960,
+      "h": 540,
+      "video": true,
+      "poster": "data/photos/2026-11-02-first-snow-clear-water/clip-1.jpg"
+     },
+     {
+      "name": "",
+      "when": "Marley jumping after a ball on some slippery ice and snow.",
+      "alt": "Marley jumping after a ball on some slippery ice and snow.",
+      "src": "data/photos/2026-11-02-first-snow-clear-water/clip-2.mp4",
+      "w": 960,
+      "h": 538,
+      "video": true,
+      "poster": "data/photos/2026-11-02-first-snow-clear-water/clip-2.jpg"
+     },
+     {
+      "name": "",
+      "when": "Marley jumping after a ball on some slippery ice and snow.",
+      "alt": "Marley jumping after a ball on some slippery ice and snow.",
+      "src": "data/photos/2026-11-02-first-snow-clear-water/clip-4.mp4",
+      "w": 960,
+      "h": 540,
+      "video": true,
+      "poster": "data/photos/2026-11-02-first-snow-clear-water/clip-4.jpg"
+     },
+     {
+      "name": "",
+      "when": "Marley jumping after a ball on some slippery ice and snow.",
+      "alt": "Marley jumping after a ball on some slippery ice and snow.",
+      "src": "data/photos/2026-11-02-first-snow-clear-water/clip-3.mp4",
+      "w": 960,
+      "h": 540,
+      "video": true,
+      "poster": "data/photos/2026-11-02-first-snow-clear-water/clip-3.jpg"
+     },
+     {
+      "name": "",
+      "when": "One tired Marley on the way home.",
+      "alt": "One tired Marley on the way home.",
+      "src": "data/photos/2026-11-02-first-snow-clear-water/17.jpg",
+      "w": 900,
+      "h": 1600
+     },
+     {
+      "name": "",
+      "when": "Quick selfie under the pines. The dog is up ahead, nose down.",
+      "alt": "Quick selfie under the pines. The dog is up ahead, nose down.",
+      "src": "data/photos/2026-11-02-first-snow-clear-water/04.jpg",
+      "w": 1600,
+      "h": 900
+     },
+     {
+      "name": "",
+      "when": "8:37. A dusting of snow on the path, the dog in a red coat, water through the trees.",
+      "alt": "8:37. A dusting of snow on the path, the dog in a red coat, water through the trees.",
+      "src": "data/photos/2026-11-02-first-snow-clear-water/03.jpg",
+      "w": 1600,
+      "h": 900
+     }
+    ],
+    "label": "real",
+    "layout": "grid2"
+   },
+   {
+    "title": "Directly Above",
+    "dek": "",
+    "before": "",
+    "items": [
+     {
+      "name": "",
+      "when": "Rocks on the bottom, shading from green to deep blue.",
+      "alt": "Rocks on the bottom, shading from green to deep blue.",
+      "src": "data/photos/2026-11-02-first-snow-clear-water/07.jpg",
+      "w": 1600,
+      "h": 900
+     },
+     {
+      "name": "",
+      "when": "Turquoise shallows dropping off into blue.",
+      "alt": "Turquoise shallows dropping off into blue.",
+      "src": "data/photos/2026-11-02-first-snow-clear-water/01.jpg",
+      "w": 1600,
+      "h": 900
+     },
+     {
+      "name": "",
+      "when": "9:09. Snow between the pines and the granite, tree shadows stretched across the lakebed.",
+      "alt": "9:09. Snow between the pines and the granite, tree shadows stretched across the lakebed.",
+      "src": "data/photos/2026-11-02-first-snow-clear-water/12.jpg",
+      "w": 1600,
+      "h": 900
+     },
+     {
+      "name": "",
+      "when": "Straight down over a sandy cove and its boulders.",
+      "alt": "Straight down over a sandy cove and its boulders.",
+      "src": "data/photos/2026-11-02-first-snow-clear-water/06.jpg",
+      "w": 1600,
+      "h": 900
+     },
+     {
+      "name": "",
+      "when": "9:17. A dusting of snow right down to the water's edge.",
+      "alt": "9:17. A dusting of snow right down to the water's edge.",
+      "src": "data/photos/2026-11-02-first-snow-clear-water/15.jpg",
+      "w": 1600,
+      "h": 900
+     },
+     {
+      "name": "",
+      "when": "9:19. Stones on pale sand in very clear water.",
+      "alt": "9:19. Stones on pale sand in very clear water.",
+      "src": "data/photos/2026-11-02-first-snow-clear-water/16.jpg",
+      "w": 1600,
+      "h": 900
+     }
+    ],
+    "layout": "side"
+   },
+   {
+    "title": "Above the Trees",
+    "dek": "",
+    "before": "",
+    "items": [
+     {
+      "name": "",
+      "when": "Point after point of forest along the shore.",
+      "alt": "Point after point of forest along the shore.",
+      "src": "data/photos/2026-11-02-first-snow-clear-water/13.jpg",
+      "w": 1600,
+      "h": 900
+     },
+     {
+      "name": "",
+      "when": "9:15. Boulders off a small point, rippled clouds overhead.",
+      "alt": "9:15. Boulders off a small point, rippled clouds overhead.",
+      "src": "data/photos/2026-11-02-first-snow-clear-water/10.jpg",
+      "w": 1600,
+      "h": 900
+     },
+     {
+      "name": "",
+      "when": "The wide view: forested shoreline and snow on the far mountains.",
+      "alt": "The wide view: forested shoreline and snow on the far mountains.",
+      "src": "data/photos/2026-11-02-first-snow-clear-water/08.jpg",
+      "w": 1600,
+      "h": 900
+     },
+     {
+      "name": "",
+      "when": "9:04. Granite boulders, a small beach and clear turquoise water from above.",
+      "alt": "9:04. Granite boulders, a small beach and clear turquoise water from above.",
+      "src": "data/photos/2026-11-02-first-snow-clear-water/05.jpg",
+      "w": 1600,
+      "h": 900
+     }
+    ]
+   }
+  ]
+ }
+}
