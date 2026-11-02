@@ -296,7 +296,11 @@
  ],
  "consent": "Christian Marley",
  "source": "Rides/November 2 2026",
- "narratorBackdrop": null,
+ "narratorBackdrop": {
+  "backdrop": "lake-tahoe-beach-winter",
+  "fit": "existing",
+  "scene": "a snowy Lake Tahoe shoreline in winter, snow on granite boulders and pines"
+ },
  "media": "real",
  "palette": [
   "#37a1be",
@@ -556,7 +560,14 @@
    }
   ]
  },
- "narratorLook": null,
+ "narratorLook": {
+  "look": "winter-holidays",
+  "fit": "existing",
+  "about": "",
+  "why": "",
+  "prompt": "",
+  "bulb": false
+ },
  "tags": [
   "with-marley"
  ],
