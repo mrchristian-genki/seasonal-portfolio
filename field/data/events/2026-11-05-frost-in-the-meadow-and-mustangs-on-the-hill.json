@@ -17,20 +17,31 @@
    "w": 1598,
    "h": 900,
    "use": "post",
-   "cover": true,
+   "cover": false,
    "from": "dji_fly_20261104_073138_933_1793889581788_aeb.jpg + dji_fly_20261104_073140_934_1793889583758_aeb.jpg + dji_fly_20261104_073140_935_1793889585305_aeb.jpg",
    "hdr": 3
   },
   {
-   "src": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/02.jpg",
-   "caption": "The 3 exposures behind the HDR photo, darkest to brightest.",
-   "takenAt": "2026:11:04 07:31:39",
-   "w": 2149,
-   "h": 400,
-   "use": "skip",
+   "src": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/03.jpg",
+   "caption": "",
+   "takenAt": "2026:11:04 07:32:31",
+   "w": 1598,
+   "h": 900,
+   "use": "post",
    "cover": false,
-   "from": "dji_fly_20261104_073138_933_1793889581788_aeb.jpg + dji_fly_20261104_073140_934_1793889583758_aeb.jpg + dji_fly_20261104_073140_935_1793889585305_aeb.jpg",
-   "strip": 3
+   "from": "dji_fly_20261104_073230_936_1793889576159_aeb.jpg + dji_fly_20261104_073230_937_1793889578237_aeb.jpg + dji_fly_20261104_073232_938_1793889580048_aeb.jpg",
+   "hdr": 3
+  },
+  {
+   "src": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/05.jpg",
+   "caption": "",
+   "takenAt": "2026:11:04 07:54:43",
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261104_075444_942_1793889392574_aeb.jpg + dji_fly_20261104_075444_943_1793889395212_aeb.jpg + dji_fly_20261104_075444_944_1793889396818_aeb.jpg",
+   "hdr": 3
   },
   {
    "src": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/clip-1.mp4",
@@ -121,12 +132,66 @@
    "w": 960,
    "h": 540,
    "use": "post",
-   "cover": false,
+   "cover": true,
    "from": "dji_fly_20261104_073414_939_1793889574072_video.mov",
    "range": [
     0,
     4.52
    ]
+  },
+  {
+   "src": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/07.jpg",
+   "caption": "",
+   "takenAt": "2026:11:05 09:29:31",
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261105_092930_946_1793901564161_aeb.jpg + dji_fly_20261105_092932_947_1793901566222_aeb.jpg + dji_fly_20261105_092932_948_1793901567977_aeb.jpg",
+   "hdr": 3
+  },
+  {
+   "src": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/09.jpg",
+   "caption": "",
+   "takenAt": "2026:11:05 09:29:46",
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261105_092946_949_1793901558495_aeb.jpg + dji_fly_20261105_092946_950_1793901560569_aeb.jpg + dji_fly_20261105_092948_951_1793901562405_aeb.jpg",
+   "hdr": 3
+  },
+  {
+   "src": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/11.jpg",
+   "caption": "",
+   "takenAt": "2026:11:05 09:30:27",
+   "w": 1598,
+   "h": 898,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261105_093026_952_1793901553074_aeb.jpg + dji_fly_20261105_093026_953_1793901554883_aeb.jpg + dji_fly_20261105_093028_954_1793901556433_aeb.jpg + dji_fly_20261105_093030_955_1793901547971_aeb.jpg + dji_fly_20261105_093030_956_1793901549757_aeb.jpg",
+   "hdr": 5
+  },
+  {
+   "src": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/13.jpg",
+   "caption": "",
+   "takenAt": "2026:11:05 09:30:30",
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261105_093030_957_1793901551269_aeb.jpg"
+  },
+  {
+   "src": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/14.jpg",
+   "caption": "",
+   "takenAt": "2026:11:05 09:31:37",
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261105_093136_958_1793901542071_aeb.jpg + dji_fly_20261105_093136_959_1793901543810_aeb.jpg + dji_fly_20261105_093138_960_1793901545888_aeb.jpg",
+   "hdr": 3
   },
   {
    "src": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/clip-7.mp4",
@@ -143,6 +208,28 @@
     18.3,
     24.35
    ]
+  },
+  {
+   "src": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/16.jpg",
+   "caption": "",
+   "takenAt": "2026:11:05 09:32:22",
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261105_093222_962_1793901472370_aeb.jpg + dji_fly_20261105_093222_963_1793901474095_aeb.jpg + dji_fly_20261105_093222_964_1793901475904_aeb.jpg",
+   "hdr": 3
+  },
+  {
+   "src": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/18.jpg",
+   "caption": "",
+   "takenAt": "2026:11:05 09:32:32",
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261105_093232_965_1793901466420_aeb.jpg + dji_fly_20261105_093232_966_1793901468499_aeb.jpg + dji_fly_20261105_093232_967_1793901470304_aeb.jpg",
+   "hdr": 3
   },
   {
    "src": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/clip-8.mp4",
@@ -177,6 +264,17 @@
    ]
   },
   {
+   "src": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/20.jpg",
+   "caption": "",
+   "takenAt": "2026:11:05 09:35:38",
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261105_093538_970_1793901381302_aeb.jpg + dji_fly_20261105_093538_971_1793901383377_aeb.jpg + dji_fly_20261105_093538_972_1793901385982_aeb.jpg",
+   "hdr": 3
+  },
+  {
    "src": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/clip-10.mp4",
    "poster": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/clip-10.jpg",
    "video": true,
@@ -191,6 +289,17 @@
     10.05,
     30
    ]
+  },
+  {
+   "src": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/22.jpg",
+   "caption": "",
+   "takenAt": "2026:11:05 09:38:42",
+   "w": 1600,
+   "h": 900,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261105_093842_974_1793901303896_aeb.jpg + dji_fly_20261105_093842_975_1793901305994_aeb.jpg + dji_fly_20261105_093842_976_1793901308086_aeb.jpg",
+   "hdr": 3
   }
  ],
  "fieldNotes": "over two days and two locations. One is up in a meadow that will close soon due snow. It was down to 17F while flying. The other was nearby Carson City NV with wild mustangs on the hillside on the outskirts of of the city. All real and legal and allowed.\n\nIs the Carson City hillside close to home? If so, should the Note say only 'western Nevada' or leave the second location out?\nClose to home is fine.\n\nWhat is the meadow called, or what public land is it on, so it can be named at that level?\nMeadow near Blue Lakes, CA. public land.\n\nThe Carson City/mustang day was November 5. Is that right?\nYes\n\nAre there photos or video of the mustangs, or more from the meadow, to add?\nYes\n\nWas this flown with a drone? Okay to say so in the text?\nYes\n\nDid you keep a set distance from the horses? It would be worth mentioning in the post if so.\nYes\n\nIs it the road or access to the meadow that closes for the snow? Do you know when?\nYes\n\nSince the Carson City hillside is close to home: do any mustang clips show houses, streets or landmarks that could place home? If so, they should be cropped or left out.\nNo It's all good. write it from Starlee point of view now.\n\nYour answer to the closing question was \"Yes\": is it the road or the meadow access that closes for the snow, and when?\nCloses for snow but still open now. Closing soon.\n\nDates: 01.jpg says November 4, but the meadow clips say November 5 around 8:11 a.m., and the mustangs 9:32 the same morning. Which day was the meadow flown?\nTwo different mornings. Similar times in the morning on two days. Meadow 4th and mustangs on the 5th.\n\nWant to give the actual distance you kept from the horses, or keep it as \"a set distance\"?\ncomfortable distance. So they do not react.\n\nThe magazine's Airspace etiquette box still says \"a set distance\"; update it to \"a comfortable distance, so they didn't react\" to match the post and script?\nWhere are the missing images? I only see one.",
@@ -222,8 +331,8 @@
   "scene": ""
  },
  "palette": [
-  "#2088d8",
-  "#595ce7"
+  "#338fd6",
+  "#6f71e2"
  ],
  "feature": {
   "theme": "lineofsight",
