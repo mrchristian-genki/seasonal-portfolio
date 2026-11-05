@@ -286,9 +286,15 @@ final class Drive {
         $m = is_file($f) ? (json_decode((string) file_get_contents($f), true) ?: []) : [];
         return array_map(fn($v) => is_array($v) ? $v : ['id' => (string) $v, 'at' => 0], $m);
     }
-    public function remember(string $source, string $id): void {
+    // 'at' is how far the note has taken in the folder: files that arrived after it are offered as new. It moves only
+    // when files are brought in ($upTo, the newest arrival the page saw then), not on every Save: a later Save used to
+    // move it past photos that reached the server after the folder was processed, so they were never offered (Nov 5).
+    public function remember(string $source, string $id, ?int $upTo = null): void {
         if ($this->resolve($source) === null) return;
-        $m = $this->processed(); $m[$source] = ['id' => $id, 'at' => time()];
+        $m = $this->processed(); $old = $m[$source] ?? null;
+        $at = $old && $old['id'] === $id ? (int) ($old['at'] ?? 0) : ($upTo ?? time());
+        if ($upTo !== null) $at = max($at, min($upTo, time()));
+        $m[$source] = ['id' => $id, 'at' => $at];
         file_put_contents($this->mapFile(), json_encode($m, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), LOCK_EX);
     }
 
