@@ -4,7 +4,7 @@
  "date": "2026-11-05",
  "kind": "aerial",
  "place": "",
- "status": "draft",
+ "status": "published",
  "summary": "Two days of drone flying in early November: a snowy meadow near Blue Lakes, California, at 17°F, still open but soon to close for the season, and a hillside on the outskirts of Carson City, Nevada, where wild mustangs grazed. The meadow's frosted pines and winding creek open the Note.",
  "trailhead": null,
  "links": [],
@@ -310,7 +310,7 @@
  "episode": {
   "title": "Seventeen degrees",
   "script": "Narrated by Starlee.\n\nSeven thirty in the morning, the fourth of November, and the thermometer said seventeen degrees.\n\nChristian was up in a meadow near Blue Lakes, California, on public land. It was still open, but not for long. The snow would close it soon. He wasn't there to ride or hike. He was there to fly his drone.\n\nFrom the air, the whole place opened up. The sky was that deep, clean blue you only get on a cold, clear morning. A long ridge of mountains stood white from one end to the other. Closer in, every pine was frosted, as if someone had gone over the forest with a dusting brush.\n\nAnd down in the middle of the meadow, a creek ran dark through the snow, curling back on itself the way creeks do when they are in no hurry at all.\n\n***\n\nHere's what I like about that picture. There's a lot of white in it, and a lot of trees. It would be easy to get lost. But Christian put that one dark ribbon of water right where the eye wants to land, and the rest of the scene arranges itself around it. Finding the line that holds a picture together is the whole job, and he found it at seventeen degrees.\n\nHe also chose the moment. A meadow about to close for the season gives you a short window, and he took it.\n\n***\n\nThe next morning, the fifth of November, at about the same hour, the second location could hardly have been more different. On the outskirts of Carson City, Nevada, the hillsides belong in part to wild mustangs. Same cold season, a different country altogether: open desert slopes, and horses that answer to no one.\n\nChristian kept a comfortable distance from them the whole time, far enough that they didn't react. He eased in a little, then pulled back away and let them be. Knowing when to back off is part of the craft too.\n\nAll of it, the meadow and the mustangs, was flown where flying is allowed, and done by the rules.\n\nTwo mornings, two places, one sky.\n\nSome seasons end quietly. This one, he caught on the way out.",
-  "audio": null,
+  "audio": "data/audio/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill.mp3",
   "sections": [
    "Seventeen degrees at Blue Lakes",
    "Mustangs outside Carson City",
@@ -342,7 +342,7 @@
   "tagline": "The quarterly of the patient aerial",
   "issue": "The Blue Hour Issue",
   "label": "How I Got the Shot",
-  "byline": "By GlazyArray, Aerial Desk",
+  "byline": "By StarLee, Aerial Desk",
   "blocks": [
    {
     "type": "specs",
@@ -426,6 +426,237 @@
    "Want to give the actual distance you kept from the horses for the Airspace etiquette box, or keep it as \"a set distance\"?",
    "Is it the road or the meadow access that closes for the snow, and when? It could go in the Flight log."
   ],
-  "coverLabel": "real"
- }
+  "coverLabel": "real",
+  "lookbook": [
+   {
+    "title": "Frosty Meadow",
+    "dek": "",
+    "before": "Seventeen degrees at Blue Lakes",
+    "items": [
+     {
+      "name": "",
+      "when": "Flying over a meadow on the way to Blue Lakes, CA.",
+      "alt": "Flying over a meadow on the way to Blue Lakes, CA.",
+      "src": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/clip-1.mp4",
+      "w": 960,
+      "h": 540,
+      "video": true,
+      "poster": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/clip-1.jpg"
+     },
+     {
+      "name": "",
+      "when": "Frosty flight over the snowy meadow near Blue Lakes, CA.",
+      "alt": "Frosty flight over the snowy meadow near Blue Lakes, CA.",
+      "src": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/clip-3.mp4",
+      "w": 960,
+      "h": 540,
+      "video": true,
+      "poster": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/clip-3.jpg"
+     },
+     {
+      "name": "",
+      "when": "Low and slow over the frost and snow.",
+      "alt": "Low and slow over the frost and snow.",
+      "src": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/clip-4.mp4",
+      "w": 960,
+      "h": 540,
+      "video": true,
+      "poster": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/clip-4.jpg"
+     },
+     {
+      "name": "",
+      "when": "Launch up and over the frosty meadow near Blue Lakes.",
+      "alt": "Launch up and over the frosty meadow near Blue Lakes.",
+      "src": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/clip-5.mp4",
+      "w": 960,
+      "h": 540,
+      "video": true,
+      "poster": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/clip-5.jpg"
+     },
+     {
+      "name": "",
+      "when": "Frosty flight over the frosty creek in a meadow near Blue Lakes, CA.",
+      "alt": "Frosty flight over the frosty creek in a meadow near Blue Lakes, CA.",
+      "src": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/clip-6.mp4",
+      "w": 960,
+      "h": 540,
+      "video": true,
+      "poster": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/clip-6.jpg"
+     },
+     {
+      "name": "",
+      "when": "A frosty morning flying over a meadow.",
+      "alt": "A frosty morning flying over a meadow.",
+      "src": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/clip-2.mp4",
+      "w": 960,
+      "h": 540,
+      "video": true,
+      "poster": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/clip-2.jpg"
+     }
+    ],
+    "layout": "grid2"
+   },
+   {
+    "title": "Mustangs in the Morning",
+    "dek": "",
+    "before": "Mustangs outside Carson City",
+    "items": [
+     {
+      "name": "",
+      "when": "Wild mustangs on the mountains",
+      "alt": "Wild mustangs on the mountains",
+      "src": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/clip-7.mp4",
+      "w": 960,
+      "h": 540,
+      "video": true,
+      "poster": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/clip-7.jpg"
+     },
+     {
+      "name": "",
+      "when": "Wild mustangs on the mountains with fall trees in the background.",
+      "alt": "Wild mustangs on the mountains with fall trees in the background.",
+      "src": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/clip-10.mp4",
+      "w": 960,
+      "h": 540,
+      "video": true,
+      "poster": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/clip-10.jpg"
+     },
+     {
+      "name": "",
+      "when": "Wild mustangs on the mountains. Pulling back away.",
+      "alt": "Wild mustangs on the mountains. Pulling back away.",
+      "src": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/clip-9.mp4",
+      "w": 960,
+      "h": 540,
+      "video": true,
+      "poster": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/clip-9.jpg"
+     },
+     {
+      "name": "",
+      "when": "Wild mustangs on the mountains. Pushing in closer.",
+      "alt": "Wild mustangs on the mountains. Pushing in closer.",
+      "src": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/clip-8.mp4",
+      "w": 960,
+      "h": 540,
+      "video": true,
+      "poster": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/clip-8.jpg"
+     }
+    ],
+    "layout": "grid2"
+   },
+   {
+    "title": "Meadow Photos",
+    "dek": "",
+    "before": "",
+    "items": [
+     {
+      "name": "",
+      "when": "7:31 a.m. Snow on the peaks, frost on the pines, and a creek winding through the meadow below.",
+      "alt": "7:31 a.m. Snow on the peaks, frost on the pines, and a creek winding through the meadow below.",
+      "src": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/01.jpg",
+      "w": 1598,
+      "h": 900
+     },
+     {
+      "name": "",
+      "when": "7:32 a.m. The creek bends through the snowy meadow, frosted pines on the right and white peaks behind.",
+      "alt": "7:32 a.m. The creek bends through the snowy meadow, frosted pines on the right and white peaks behind.",
+      "src": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/03.jpg",
+      "w": 1598,
+      "h": 900
+     },
+     {
+      "name": "",
+      "when": "7:54 a.m. The sun clears the ridge, and the creek loops across the frosted meadow floor.",
+      "alt": "7:54 a.m. The sun clears the ridge, and the creek loops across the frosted meadow floor.",
+      "src": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/05.jpg",
+      "w": 1600,
+      "h": 900
+     }
+    ],
+    "layout": "strip"
+   },
+   {
+    "title": "Mustang Photos",
+    "dek": "",
+    "before": "",
+    "items": [
+     {
+      "name": "",
+      "when": "9:29 a.m. Wild mustangs grazing in the sagebrush, a river and yellow fall trees below, mountains across the valley.",
+      "alt": "9:29 a.m. Wild mustangs grazing in the sagebrush, a river and yellow fall trees below, mountains across the valley.",
+      "src": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/07.jpg",
+      "w": 1600,
+      "h": 900
+     },
+     {
+      "name": "",
+      "when": "9:32 a.m. Long morning shadows on the slope as the band grazes.",
+      "alt": "9:32 a.m. Long morning shadows on the slope as the band grazes.",
+      "src": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/18.jpg",
+      "w": 1600,
+      "h": 900
+     },
+     {
+      "name": "",
+      "when": "9:30 a.m. The band grazing above the river as it bends past the yellow trees.",
+      "alt": "9:30 a.m. The band grazing above the river as it bends past the yellow trees.",
+      "src": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/13.jpg",
+      "w": 1600,
+      "h": 900
+     },
+     {
+      "name": "",
+      "when": "9:35 a.m. Yellow fall trees along a rushing river beneath a dark ridge.",
+      "alt": "9:35 a.m. Yellow fall trees along a rushing river beneath a dark ridge.",
+      "src": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/20.jpg",
+      "w": 1600,
+      "h": 900
+     },
+     {
+      "name": "",
+      "when": "9:29 a.m. A small band of mustangs spread out through the sagebrush.",
+      "alt": "9:29 a.m. A small band of mustangs spread out through the sagebrush.",
+      "src": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/09.jpg",
+      "w": 1600,
+      "h": 900
+     },
+     {
+      "name": "",
+      "when": "9:31 a.m. Pulled back: the horses small on the long sagebrush slope.",
+      "alt": "9:31 a.m. Pulled back: the horses small on the long sagebrush slope.",
+      "src": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/14.jpg",
+      "w": 1600,
+      "h": 900
+     },
+     {
+      "name": "",
+      "when": "9:30 a.m. Heads down in the brush.",
+      "alt": "9:30 a.m. Heads down in the brush.",
+      "src": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/11.jpg",
+      "w": 1598,
+      "h": 898
+     },
+     {
+      "name": "",
+      "when": "9:38 a.m. Down the river valley: fall color along the water and steam rising from an industrial site beyond.",
+      "alt": "9:38 a.m. Down the river valley: fall color along the water and steam rising from an industrial site beyond.",
+      "src": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/22.jpg",
+      "w": 1600,
+      "h": 900
+     },
+     {
+      "name": "",
+      "when": "9:32 a.m. Mustangs grazing across a steep hillside above the river.",
+      "alt": "9:32 a.m. Mustangs grazing across a steep hillside above the river.",
+      "src": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/16.jpg",
+      "w": 1600,
+      "h": 900
+     }
+    ],
+    "layout": "strip"
+   }
+  ]
+ },
+ "publishedAt": "2026-11-05T21:44:13Z"
 }
