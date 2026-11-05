@@ -5,7 +5,7 @@
  "kind": "aerial",
  "place": "",
  "status": "draft",
- "summary": "Two days of flying in early November: a snowy high meadow at 17°F, soon to close for the season, and a hillside on the outskirts of Carson City, Nevada, where wild mustangs grazed. The meadow's frosted pines and winding creek open the Note.",
+ "summary": "Two days of drone flying in early November: a snowy meadow near Blue Lakes, California, at 17°F, soon to close for the season, and a hillside on the outskirts of Carson City, Nevada, where wild mustangs grazed. The meadow's frosted pines and winding creek open the Note.",
  "trailhead": null,
  "links": [],
  "track": null,
@@ -47,27 +47,168 @@
     0,
     13.65
    ]
+  },
+  {
+   "src": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/clip-3.mp4",
+   "poster": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/clip-3.jpg",
+   "video": true,
+   "caption": "Frosty flight over the snowy meadow near Blue Lakes, CA.",
+   "takenAt": "2026:11:05 08:12:05",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261104_073414_939_1793889574072_video.mp4",
+   "range": [
+    0,
+    9.6
+   ]
+  },
+  {
+   "src": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/clip-4.mp4",
+   "poster": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/clip-4.jpg",
+   "video": true,
+   "caption": "Low and slow over the frost and snow.",
+   "takenAt": "2026:11:05 08:12:51",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261104_075348_941_1793889493990_video.mov",
+   "range": [
+    0,
+    5.95
+   ]
+  },
+  {
+   "src": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/clip-5.mp4",
+   "poster": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/clip-5.jpg",
+   "video": true,
+   "caption": "Launch up and over the frosty meadow near Blue Lakes.",
+   "takenAt": "2026:11:05 08:13:10",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261104_075348_941_1793889493990_video.mp4",
+   "range": [
+    0,
+    14.3
+   ]
+  },
+  {
+   "src": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/clip-6.mp4",
+   "poster": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/clip-6.jpg",
+   "video": true,
+   "caption": "Frosty flight over the frosty creek in a meadow near Blue Lakes, CA.",
+   "takenAt": "2026:11:05 08:14:02",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261104_075516_945_1793889390717_video.mp4",
+   "range": [
+    0,
+    3.89
+   ]
+  },
+  {
+   "src": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/clip-2.mp4",
+   "poster": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/clip-2.jpg",
+   "video": true,
+   "caption": "A frosty morning flying over a meadow.",
+   "takenAt": "2026:11:05 08:15:00",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261104_073414_939_1793889574072_video.mov",
+   "range": [
+    0,
+    4.52
+   ]
+  },
+  {
+   "src": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/clip-7.mp4",
+   "poster": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/clip-7.jpg",
+   "video": true,
+   "caption": "Wild mustangs on the mountains",
+   "takenAt": "2026:11:05 09:32:02",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261105_093144_961_1793901539989_video.mp4",
+   "range": [
+    18.3,
+    24.35
+   ]
+  },
+  {
+   "src": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/clip-8.mp4",
+   "poster": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/clip-8.jpg",
+   "video": true,
+   "caption": "Wild mustangs on the mountains. Pushing in closer.",
+   "takenAt": "2026:11:05 09:32:50",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261105_093248_968_1793901464659_video.mp4",
+   "range": [
+    2.4,
+    12.5
+   ]
+  },
+  {
+   "src": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/clip-9.mp4",
+   "poster": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/clip-9.jpg",
+   "video": true,
+   "caption": "Wild mustangs on the mountains. Pulling back away.",
+   "takenAt": "2026:11:05 09:33:03",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261105_093248_968_1793901464659_video.mp4",
+   "range": [
+    15.75,
+    23
+   ]
+  },
+  {
+   "src": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/clip-10.mp4",
+   "poster": "data/photos/2026-11-05-frost-in-the-meadow-and-mustangs-on-the-hill/clip-10.jpg",
+   "video": true,
+   "caption": "Wild mustangs on the mountains with fall trees in the background.",
+   "takenAt": "2026:11:05 09:37:09",
+   "w": 960,
+   "h": 540,
+   "use": "post",
+   "cover": false,
+   "from": "dji_fly_20261105_093658_973_1793901379558_video.mp4",
+   "range": [
+    10.05,
+    30
+   ]
   }
  ],
- "fieldNotes": "over two days and two locations. One is up in a meadow that will close soon due snow. It was down to 17F while flying. The other was nearby Carson City NV with wild mustangs on the hillside on the outskirts of of the city. All real and legal and allowed. ",
+ "fieldNotes": "over two days and two locations. One is up in a meadow that will close soon due snow. It was down to 17F while flying. The other was nearby Carson City NV with wild mustangs on the hillside on the outskirts of of the city. All real and legal and allowed.\n\nIs the Carson City hillside close to home? If so, should the Note say only 'western Nevada' or leave the second location out?\nClose to home is fine.\n\nWhat is the meadow called, or what public land is it on, so it can be named at that level?\nMeadow near Blue Lakes, CA. public land.\n\nThe Carson City/mustang day was November 5. Is that right?\nYes\n\nAre there photos or video of the mustangs, or more from the meadow, to add?\nYes\n\nWas this flown with a drone? Okay to say so in the text?\nYes\n\nDid you keep a set distance from the horses? It would be worth mentioning in the post if so.\nYes\n\nIs it the road or access to the meadow that closes for the snow? Do you know when?\nYes",
  "post": {
   "title": "Seventeen degrees and wild mustangs",
-  "body": "November 4 and 5 were two days of flying in two very different places.\n\nThe first was up in a meadow that will close soon for the snow. It was 17°F while I was flying. At 7:31 in the morning the sky was a deep, clean blue, the ridgeline was white end to end, and every pine around the meadow was frosted. From above, the creek is the thing that holds the picture together: one dark line curling through the snow and brush, with the forest climbing toward the peaks on the right.\n\nI'm glad I went when I did. A place like this only gives you a short window before the snow shuts it until spring, and that morning felt like the last good look at it for a while.\n\nThe second location was near Carson City, Nevada, where wild mustangs live on the hillsides on the outskirts of the city. Same season, same cold, but a completely different subject: open desert slopes and horses instead of a frozen creek and pines.\n\nEverything here was flown where it's allowed and done by the rules.\n\nWhat I learned: when a place is about to close for the season, go now. The cold is part of the picture."
+  "body": "November 4 and 5 were two days of flying my drone in two very different places.\n\nThe first was a meadow near Blue Lakes, California, on public land, and it will close soon for the snow. It was 17°F while I was flying. At 7:31 in the morning the sky was a deep, clean blue, the ridgeline was white end to end, and every pine around the meadow was frosted. From above, the creek is the thing that holds the picture together: one dark line curling through the snow and brush, with the forest climbing toward the peaks on the right.\n\nI'm glad I went when I did. A place like this only gives you a short window before the snow shuts it until spring, and that morning felt like the last good look at it for a while.\n\nThe second location, on November 5, was near Carson City, Nevada, where wild mustangs live on the hillsides on the outskirts of the city. Same season, same cold, but a completely different subject: open desert slopes and horses instead of a frozen creek and pines. I kept a set distance from the horses the whole time, pushed in a little, then pulled back away and left them to it.\n\nEverything here was flown where it's allowed and done by the rules.\n\nWhat I learned: when a place is about to close for the season, go now. The cold is part of the picture."
  },
  "episode": {
   "title": "Seventeen degrees",
-  "script": "Narrated by GlazyArray.\n\nSeven thirty in the morning, the fourth of November, and the thermometer said seventeen degrees.\n\nChristian was up in a high meadow, one that would close soon for the snow. He wasn't there to ride or hike. He was there to fly.\n\nFrom the air, the whole place opened up. The sky was that deep, clean blue you only get on a cold, clear morning. A long ridge of mountains stood white from one end to the other. Closer in, every pine was frosted, as if someone had gone over the forest with a dusting brush.\n\nAnd down in the middle of the meadow, a creek ran dark through the snow, curling back on itself the way creeks do when they are in no hurry at all.\n\n***\n\nHere's what I like about that picture. There's a lot of white in it, and a lot of trees. It would be easy to get lost. But Christian put that one dark ribbon of water right where the eye wants to land, and the rest of the scene arranges itself around it. Finding the line that holds a picture together is the whole job, and he found it at seventeen degrees.\n\nHe also chose the moment. A meadow about to close for the season gives you a short window, and he took it.\n\n***\n\nThe second location could hardly have been more different. On the outskirts of Carson City, Nevada, the hillsides belong in part to wild mustangs. Same cold season, a different country altogether: open desert slopes, and horses that answer to no one.\n\nAll of it, the meadow and the mustangs, was flown where flying is allowed, and done by the rules.\n\nTwo days, two places, one sky.\n\nSome seasons end quietly. This one, he caught on the way out.",
+  "script": "Narrated by GlazyArray.\n\nSeven thirty in the morning, the fourth of November, and the thermometer said seventeen degrees.\n\nChristian was up in a meadow near Blue Lakes, California, on public land, one that would close soon for the snow. He wasn't there to ride or hike. He was there to fly his drone.\n\nFrom the air, the whole place opened up. The sky was that deep, clean blue you only get on a cold, clear morning. A long ridge of mountains stood white from one end to the other. Closer in, every pine was frosted, as if someone had gone over the forest with a dusting brush.\n\nAnd down in the middle of the meadow, a creek ran dark through the snow, curling back on itself the way creeks do when they are in no hurry at all.\n\n***\n\nHere's what I like about that picture. There's a lot of white in it, and a lot of trees. It would be easy to get lost. But Christian put that one dark ribbon of water right where the eye wants to land, and the rest of the scene arranges itself around it. Finding the line that holds a picture together is the whole job, and he found it at seventeen degrees.\n\nHe also chose the moment. A meadow about to close for the season gives you a short window, and he took it.\n\n***\n\nThe second location, on the fifth of November, could hardly have been more different. On the outskirts of Carson City, Nevada, the hillsides belong in part to wild mustangs. Same cold season, a different country altogether: open desert slopes, and horses that answer to no one.\n\nChristian kept a set distance from them the whole time. He eased in a little, then pulled back away and let them be. Knowing when to back off is part of the craft too.\n\nAll of it, the meadow and the mustangs, was flown where flying is allowed, and done by the rules.\n\nTwo days, two places, one sky.\n\nSome seasons end quietly. This one, he caught on the way out.",
   "audio": null,
   "sections": []
  },
  "questions": [
-  "Is the Carson City hillside close to home? If so, should the Note say only 'western Nevada' or leave the second location out?",
-  "What is the meadow called, or what public land is it on, so it can be named at that level?",
-  "The Carson City/mustang day was November 5. Is that right?",
-  "Are there photos or video of the mustangs, or more from the meadow, to add?",
-  "Was this flown with a drone? Okay to say so in the text?",
-  "Did you keep a set distance from the horses? It would be worth mentioning in the post if so.",
-  "Is it the road or access to the meadow that closes for the snow? Do you know when?"
+  "Since the Carson City hillside is close to home: do any mustang clips show houses, streets or landmarks that could place home? If so, they should be cropped or left out.",
+  "Your answer to the closing question was \"Yes\": is it the road or the meadow access that closes for the snow, and when?",
+  "Dates: 01.jpg says November 4, but the meadow clips say November 5 around 8:11 a.m., and the mustangs 9:32 the same morning. Which day was the meadow flown?",
+  "Want to give the actual distance you kept from the horses, or keep it as \"a set distance\"?"
  ],
  "consent": "",
  "source": "Rides/November 4-5 2026",
