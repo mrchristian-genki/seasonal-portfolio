@@ -21,6 +21,8 @@
   var posterBust = '';   // after a save with new poster frames, so the editor shows them and not a cached old one
   var posterNew = {}; // clip-N.jpg -> { blob, url } for a loop's poster frame picked here and not yet saved
   var DRIVEVID = null, VT = null;           // the videos in the note's Drive folder; the one being trimmed
+  var DRIVEAT = null;                       // the newest arrival in the Drive folder when its files were last brought in, sent with Save
+  function driveSeen(files) { var t = (files || []).reduce(function (a, f) { return Math.max(a, f.arrived || 0); }, 0); if (t) DRIVEAT = Math.max(DRIVEAT || 0, t); }
   var UPVID = [];                           // videos dropped into this note: { name, bytes, up } (on the server two weeks)
 
   // ---------- helpers ----------
@@ -1516,7 +1518,8 @@
     var L = loader('Processing', ['Read the folder', 'Bring in the track', 'Bring in the photos', 'Claude drafts the note', 'Ready for you to read'], label);
     L.at(0);
     api('inbox', null, '&f=' + encodeURIComponent(src)).then(function (j) {
-      INBOX = j; dirty = false; fresh = {}; removed = []; audioNew = null; audioGone = false; DRIVEAUD = null; DRIVETRK = null; trackRaw = null; trackSwap = false; clipsNew = {}; posterNew = {}; DRIVEVID = null; UPVID = []; stopTrim();
+      INBOX = j; dirty = false; fresh = {}; removed = []; audioNew = null; audioGone = false; DRIVEAUD = null; DRIVETRK = null; trackRaw = null; trackSwap = false; clipsNew = {}; posterNew = {}; DRIVEVID = null; DRIVEAT = null; UPVID = []; stopTrim();
+      driveSeen(j.files);
       var name = src.split('/').slice(1).join('/').replace(/^#/, ''), when = guessDate(name);
       E = blank(); savedStatus = null; E.source = src; E.title = guessTitle(name); E.fieldNotes = j.notes || '';
       if (when) E.date = when;
@@ -1540,7 +1543,7 @@
     L.at(0);
     Promise.all([api('inbox', null, '&f=' + encodeURIComponent(src)), edit(id)]).then(function (r) {
       var j = r[0]; if (!E || E.id !== id) return;
-      INBOX = j; E.source = src;
+      INBOX = j; E.source = src; driveSeen(j.files);
       var later = j.files.filter(function (f) { return f.arrived > since; });
       var photos = later.filter(function (f) { return f.kind === 'photo'; }), track = !E.track && later.filter(function (f) { return f.kind === 'track'; })[0];
       render();
@@ -1562,7 +1565,7 @@
   }
   function edit(id) {
     if (dirty && !confirm('Leave without saving?')) return;
-    dirty = false; fresh = {}; removed = []; audioNew = null; audioGone = false; DRIVEAUD = null; DRIVETRK = null; trackRaw = null; trackSwap = false; clipsNew = {}; posterNew = {}; DRIVEVID = null; UPVID = []; stopTrim();
+    dirty = false; fresh = {}; removed = []; audioNew = null; audioGone = false; DRIVEAUD = null; DRIVETRK = null; trackRaw = null; trackSwap = false; clipsNew = {}; posterNew = {}; DRIVEVID = null; DRIVEAT = null; UPVID = []; stopTrim();
     REVIEW = null; LIVE = null; BASE = { version: { live: null, review: null }, entry: null }; staleClose();
     if (!id) { E = blank(); savedStatus = null; route('new'); render(); return Promise.resolve(); }
     app.innerHTML = '<p class="muted">Opening…</p>';
@@ -1745,7 +1748,7 @@
         '<h3 class="ga-h">Her cap</h3><div id="lookBox"></div><h3 class="ga-h">The backdrop</h3><div id="bdBox"></div></details>') +
       (hasScript ? '' : audioPanel) +
       fold('photos', 'Photos', [nPh ? nPh + ' photo' + (nPh > 1 ? 's' : '') : '', nLoop ? nLoop + ' loop' + (nLoop > 1 ? 's' : '') : ''].filter(Boolean).join(' · '), !isLive,
-        (later ? '' : dropPhotos) + '<p class="swapBar" id="swapBar" hidden></p><p class="muted" id="photoOrderHint">The post shows them in this order, top to bottom: ↑ and ↓ move one. Once the post has subheads ("## " lines), each can sit right under one.</p><div id="photos" class="photos"></div>' + (later ? '<p class="muted" id="noPhotos">No photos yet. Add some under Add more.</p>' : '')) +
+        (later ? '' : dropPhotos) + '<p class="swapBar" id="swapBar" hidden></p><p class="muted" id="photoOrderHint">The post shows them in this order, top to bottom: ↑ and ↓ move one. Once the post has subheads ("## " lines), each can sit right under one.</p><p class="muted" id="driveMissing" hidden></p><div id="photos" class="photos"></div>' + (later ? '<p class="muted" id="noPhotos">No photos yet. Add some under Add more.</p>' : '')) +
       (E.id ? fold('social', 'Social', E.social && E.social.instagram ? 'captions written' : isLive ? 'next: share it' : 'Instagram and Facebook', false, '<div id="socialBox"></div>') : '') +
       fold('track', 'Track', E.track ? 'on the map' : trackTop ? '' : 'none yet', !isLive, (trackTop ? '' : '<p class="muted">Only if you want to add one.</p>') + '<div id="track"></div>') +
       fold('loops', 'Video loops', '', false, '<div id="loopBox"></div>') +
@@ -3038,8 +3041,41 @@
       .then(function () { RESCRIPTING = false; renderSync(); renderNext(); });
   }
   function subheads() { return ($('#postBody') ? $('#postBody').value : E.post.body || '').split(/\n\s*\n/).map(function (t) { return t.trim(); }).filter(function (t) { return /^## /.test(t); }).map(function (t) { return t.slice(3).trim(); }); }
+  // Photos in the Note's Drive folder that no picture here was made from (a photo's "from" names its Drive file, an HDR
+  // photo all of its shots): offered in one line above the photos, to bring in. Photos that reached the server after
+  // the folder was processed used to be missed for good once the Note was saved again (Nov 5: an HDR day's 33 shots).
+  var MISSING = { key: '', files: null };
+  function driveMissing() {
+    var el = $('#driveMissing'); if (!el) return;
+    var key = (E.id || '') + '|' + (E.source || '');
+    if (!E.id || !E.source) { el.hidden = true; return; }
+    if (MISSING.key !== key) {
+      MISSING = { key: key, files: null };
+      api('inbox', null, '&f=' + encodeURIComponent(E.source)).then(function (j) {
+        if (MISSING.key !== key) return;
+        MISSING.files = j.files; DRIVEVID = DRIVEVID || j.files.filter(function (f) { return f.kind === 'video'; });
+        driveMissing();
+      }).catch(function () { /* the folder may be gone from the server; nothing to offer */ });
+      el.hidden = true; return;
+    }
+    if (!MISSING.files) { el.hidden = true; return; }
+    var used = {};
+    E.photos.forEach(function (p) { String(p.from || '').split(' + ').forEach(function (n) { if (n) used[n.split('/').pop()] = 1; }); });
+    var miss = MISSING.files.filter(function (f) { return f.kind === 'photo' && !used[f.name.split('/').pop()]; });
+    el.hidden = !miss.length;
+    if (!miss.length) { el.innerHTML = ''; return; }
+    el.innerHTML = esc(miss.length + ' photo' + (miss.length === 1 ? '' : 's') + ' in ' + E.source + (miss.length === 1 ? ' isn\'t' : ' aren\'t') + ' in this Note yet' +
+      (miss.length > 1 ? ' (a drone\'s exposure brackets become one HDR photo each)' : '') + '.') + ' <button type="button" class="link" id="driveMissingGo">Bring ' + (miss.length === 1 ? 'it' : 'them') + ' in</button>';
+    $('#driveMissingGo').onclick = function () {
+      var src = E.source, L = loader('Bringing in from Drive', ['Read the folder', 'Bring in the track', 'Bring in the photos', 'Ready for you to look at'], src);
+      L.at(0); driveSeen(MISSING.files);
+      bringIn(src, miss, null, L, 1, 2).then(function () { L.at(3); L.done(); toast('Brought in. Caption them, then Save.'); })
+        .catch(function (err) { L.fail(err.message); toast(err.message, true); });
+    };
+  }
   function renderPhotos() {
     var box = $('#photos'), none = $('#noPhotos');
+    driveMissing();
     if (none) none.hidden = E.photos.length > 0;   // photos brought in after the page was drawn
     var U = photoUnits(), first = U.length ? U[0][0] : -1, last = U.length ? U[U.length - 1][0] : -1, subs = subheads();
     var oh = $('#photoOrderHint');
@@ -4558,7 +4594,7 @@
       if (audioNew) E.episode.audio = 'data/audio/' + E.id + '.mp3'; else if (audioGone) E.episode.audio = null;
       var clips = Object.keys(clipsNew).map(function (n) { return { name: n.replace(/\.mp4$/, ''), loop: clipsNew[n].token }; });
       if (clips.length) L.at(1, clips.length + ' video loop' + (clips.length > 1 ? 's' : ''));
-      return api('save', { entry: E, base: BASE.version, newPhotos: uploaded, newClips: clips, removePhotos: removed, newAudio: audioNew ? audioNew.sha : '', removeAudio: audioGone && !!hadAudio, newLook: lookUp, removeLook: LOOKDEL, categoryLooks: Object.keys(CATNEW).length ? CATNEW : null,
+      return api('save', { entry: E, base: BASE.version, newPhotos: uploaded, newClips: clips, removePhotos: removed, driveAt: DRIVEAT, newAudio: audioNew ? audioNew.sha : '', removeAudio: audioGone && !!hadAudio, newLook: lookUp, removeLook: LOOKDEL, categoryLooks: Object.keys(CATNEW).length ? CATNEW : null,
         newBackdrop: bdUp, categoryBackdrops: Object.keys(CATBDNEW).length ? CATBDNEW : null, offerBackdrop: bdUp && imgCats('bd').length ? { names: [bdUp.name], cats: imgCats('bd') } : null })
         .catch(function (err) { E.episode.audio = hadAudio; throw err; });
     }).then(function (j) {

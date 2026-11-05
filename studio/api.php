@@ -616,7 +616,7 @@ try {
                 // the review copy goes on the review branch, or on a new one made from the live branch
                 $sha = $gh->commit($files, "Studio ({$me['name']}): Save $id for review", rb($id), [EVENTS . "/$id.json" => $inReview ? $ver['review'] : $ver['live']]);
                 set_review($id, ['by' => $me['name'], 'at' => time(), 'state' => 'ready', 'live' => $wasLive]);
-                if (isset($e['source']) && is_string($e['source'])) (new Drive($cfg))->remember($e['source'], $id);
+                if (isset($e['source']) && is_string($e['source'])) (new Drive($cfg))->remember($e['source'], $id, isset($body['driveAt']) && is_numeric($body['driveAt']) ? (int) $body['driveAt'] : null);
                 json_out(['ok' => true, 'commit' => $sha, 'review' => true, 'entry' => $e, 'version' => ['live' => $ver['live'], 'review' => GitHub::blobSha($text)]]);
             }
             // The owner saves to the live branch. A note waiting for review takes its review in first (so
@@ -636,7 +636,7 @@ try {
             $sha = $gh->commit($files, "Studio: $what $id", null, $inReview ? [] : [EVENTS . "/$id.json" => $ver['live']]);
             if ($inReview) { $gh->deleteBranch(rb($id)); set_review($id, null); }
             // a note made from an inbox folder: remember which, so the folder shows it's done
-            if (isset($e['source']) && is_string($e['source'])) (new Drive($cfg))->remember($e['source'], $id);
+            if (isset($e['source']) && is_string($e['source'])) (new Drive($cfg))->remember($e['source'], $id, isset($body['driveAt']) && is_numeric($body['driveAt']) ? (int) $body['driveAt'] : null);
             json_out(['ok' => true, 'commit' => $sha, 'entry' => $e, 'version' => ['live' => GitHub::blobSha($text), 'review' => null]]);
 
         case 'POST draft':
